@@ -1,0 +1,1877 @@
+grammar de.thm.icampus.cjsl.Reverse with org.eclipse.xtext.common.Terminals
+
+generate reverse "http://www.thm.de/icampus/cjsl/Reverse"
+
+Application:
+	"Application: " name=ID
+	"The source path of the Joomla core: " joomlaPath=STRING
+	"The destination path for the Application: " applicationPath=STRING
+	cjsl_configuration=cJSL_Configuration
+	cjsl_user=cJSL_User
+	cjsl_content=cJSL_Content
+	cjsl_page=cJSL_Page
+	cjsl_menu=cJSL_Menu
+;
+
+//- begin configuration
+
+cJSL_Configuration:
+	"cJSL_Configuration {"
+	(
+		website_conf=website_Conf
+		&db_conf=db_Conf
+		&(ftp_conf=ftp_Conf)?
+		&(mailer_conf=mailer_Conf)?
+		&(system_conf=system_Conf)
+		&(editor+=Editor)*
+		&(viewLevel+=ViewLevel)*
+		&(template+=Template)*
+		&(language+=Language)*
+		&(help_server=HelpServer)?
+		&(timeZone+=TimeZone)*
+	)
+	"}"
+;
+
+website_Conf:
+	"Website Configuration ("
+		"Page title:" pagetitle=STRING
+		"Admin:" superadmin=User
+	(
+		("Example data:" exampledata=("yes"|"no"))?
+		&("Offline:" offline=("yes"|"no"))?
+		&("Offline message:" offline_message=STRING)?
+		&("Display offline message:" display_offline_message=domType)?
+		&("Offline image:" offline_image=STRING)?
+		&("*Editor:" editor= EditorTypeReference)?
+		&("Captcha:" captcha=STRING)?
+		&("Site access:" site_access=ViewLevelRights)?
+		&("List limit:" list_limit=INT)?
+		&("Feed limit:" feed_limit=INT)?
+		&("Feed email:" feed_email=feedEmailType)?
+		&("Description:" description=STRING)?
+		&("Keyword:" keyword+=STRING)?
+		&("Robot:" robot=robotType)?
+		&("Content right:" content_right=STRING)?
+		&("Show author meta tag:" show_author_meta_tag=("yes"|"no"))?
+		&("Show Joomla version:" show_joomla_version=("yes"|"no"))?
+		&("Use SEF-URLs:" use_sef=("yes"|"no"))?
+		&("URL rewrite:" url_rewrite=("yes"|"no"))?
+		&("Add suffix to URL:" add_suffix_to_url=("yes"|"no"))?
+		&("Unicode aliases:" unicode_aliases=("yes"|"no"))?
+		&("Include site name in page titles:" include_site_name_in_page_titles=inclSiteNameInPT)?
+		&("Cookie domain:" cookie_domain=STRING)?
+		&("Cookie path:" cookie_path=STRING)?
+	)
+	")"
+;
+
+mailer_Conf:
+	"Mailer Configuration ("
+		"Mailer:" mailer=mailerType
+		"Mail from:" mail_from=STRING
+		"Sender Name:" name_from=STRING
+	(
+		("Sendmail path:" sendmail_path=STRING)?
+		&(smtpconfig=smtp_Conf)?
+	)
+	")"
+;
+
+smtp_Conf:
+	"SMTP Configuration ("
+		"SMTP authentication:" smtp_auth=("yes"|"no")
+		"SMTP security:" smtp_security=smtpSecurityType
+		"SMTP port:" smtp_port=INT
+		"SMTP username:" smtp_username=STRING
+		"SMTP password:" smtp_password=STRING
+		"SMTP host:" smtp_host=HostValueType
+	")"
+;
+
+system_Conf:
+	"System Configuration ("
+		"Temp path:" temp_path=STRING
+		("Gzip compatibility:" gzip_compatibility=("yes"|"no"))?
+		("Error reporting type:" error_reporting_type=errorReportingType)?
+		("Force SSL:" force_ssl=forceSslType)?
+		("*Server time zone:" server_time_zone=[TimeZone])?
+		"Log path:" log_path=STRING
+		("*Help server:" help_server=[HelpServer])?
+		("Debug system:" debug_system=("yes"|"no"))?
+		("Debug language:" debug_language=("yes"|"no"))?
+		"Caching:" caching=cachingType
+		("Cache handler:" cache_handler=cacheHandlerType)?
+		"Cache time:" cache_time=INT
+		"Session lifetime:" session_lifetime=INT
+		("Session handler:" session_handler=sessionHandlerType)?
+	")"
+;
+
+ftp_Conf:
+	"FTP Configuration ("
+		"Enable:" enable=("yes"|"no")
+	(
+		("Host:" host=HostValueType)?
+		&("Port:" port=INT)?
+		&("FTP user:" ftp_user=ID)?
+		&("FTP password:" ftp_pass=ID)?
+		&("Root path:" root_path=ID)?
+	)
+	")"
+;
+
+db_Conf:
+	"DB Configuration ("
+		"Database:" database=ID
+		"User:" user=ID
+		"Password:" password=STRING
+		"Type:" dbtype=databaseType
+	(
+		("Prefix:" prefix=ID)?
+		&("Host:" host=HostValueType)?
+	)
+	")"
+;
+
+Template:
+	"Template definition" name=ID "("
+		"Name:" title=STRING
+		position+=Position*
+	")"
+;
+
+Position:
+	"Position:" name=ID
+;
+
+EditorTypeReference:
+	EditorReference | DefaultEditorReference
+;
+
+EditorReference:
+	reference=[Editor]
+;
+
+DefaultEditorReference:
+	reference = defaultEditor
+;
+
+Editor:
+	"Editorname: " name=ID
+;
+ViewLevelRights:
+	DefaultViewLevelReference | ViewLevelReference
+;
+ViewLevelReference:
+	ref=[ViewLevel]
+;
+
+DefaultViewLevelReference:
+	ref = defaultViewLevel
+;
+
+LanguageTypeReference:
+	LanguageReference | DefaultLanguageReference
+;
+
+LanguageTypeReferenceWithAll:
+	LanguageTypeReference | all="All"
+;
+
+LanguageReference:
+	reference=[Language]
+;
+
+DefaultLanguageReference:
+	reference=defaultLanguage
+;
+
+Language:
+	"Language: " name=ID
+;
+
+HelpServer:
+	"Help server" name=ID "("
+		"*Language:" language=LanguageTypeReference
+		"Title:" title=STRING
+		"Link:" link=STRING
+	")"
+;
+
+TimeZone:
+	"Timezone"  name = ID "("
+		"Continent:" continent=STRING
+		"Country:" country=STRING
+	")"
+;
+
+//- end configuration
+
+//- begin page
+
+cJSL_Page:
+	"cJSL_Page {"
+		page+=Page+
+	"}"
+;
+
+Page:
+	ArticlePage | UserPage | ContactPage | WebLinksPage | NewsFeedPage | SmartSearchPage | SearchPage | IFrameWrapperPage
+;
+
+ArticlePage:
+	ArchivedArticlesPage | SingleArticlePage | ListAllCategoriesPage | CategoryPage | FeaturedArticlesPage | CreateArticlePage
+;
+
+ArchivedArticlesPage:
+	"Archived articles:" name=ID "("
+	(
+		("Article order:" articleOrder=articleOrderType)?
+		&("Date for ordering:" orderDate=orderDateType)?
+		&("Articles to list:" articlesToList=articlesToListType)?
+		&("Filter field:" filterField=optionSettingType)?
+		&("Intro text limit:" introTextLimit=INT)?
+		&(articleLayoutOptions=ArticleSettingsOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+SingleArticlePage:
+	"Single article:" name=ID "("
+	(
+		("*Article:" content=[Content])
+		&(articleSettingsOptons=ArticleSettingsOptions)?
+		&(integrationOptions=IntegrationOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+ListAllCategoriesPage:
+	"List all categories:" name=ID "("
+	(
+		("*Root category:" rootCategory=[ArticleCategory])?
+		&("Categories options {"
+			categoriesOptions=CategoriesOptions
+		"}")?
+		&("Category options {"
+			categoryOptions=CategoryOptions
+		"}")?
+		&("Blog layout options {"
+			blogLayoutOptions=BlogLayoutOptions
+		"}")?
+		&("Ordering pagination options {"
+			orderingPaginationOptions=OrderingPaginationOptions
+		"}")?
+		&("List layout options {"
+			listLayoutOptions=ListLayoutOptions
+		"}")?
+		&(articleSettingsOptons=ArticleSettingsOptions)?
+		&(integrationOptions=IntegrationOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+CategoryPage:
+	"Category page:" name=ID "("
+	(
+		("*Category:" category=[ArticleCategory])
+		&("Show subcategories text:" showSubcatText=optionSettingType)?
+		&("Page subheading:" pageSubheading=STRING)?
+		&("Category options {"
+			categoryOptions=CategoryOptions
+		"}")?
+		&("Article layout options {"
+			articleLayoutOptions=ArticleLayoutOptions
+		"}")?
+		&("Ordering pagination options {"
+			orderingPaginationOptions=OrderingPaginationOptions
+		"}")?
+		&(articleSettingsOptons=ArticleSettingsOptions)?
+		&(integrationOptions=IntegrationOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+FeaturedArticlesPage:
+	"Featured articles:" name=ID "("
+	(
+		("*Categories:" categories+=[ArticleCategory])*
+		&("Layout options {"
+			layoutOptions=BlogLayoutOptions
+		"}")?
+		&("Ordering pagination options {"
+			orderingPaginationOptions=OrderingPaginationOptions
+		"}")?
+		&(articleSettingsOptons=ArticleSettingsOptions)?
+		&(integrationOptions=IntegrationOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+CreateArticlePage:
+	"Create article:" name=ID "("
+	(
+		(
+			("Just default category:" justDefaultCategory=("yes"|"no"))
+			("*Default category:" defaultCategory=[ArticleCategory])
+		)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+UserPage:
+	LoginPage | UserProfilePage | EditUserProfilePage | RegistrationPage | UsernameReminderRequestPage | PasswordResetPage
+;
+
+LoginPage:
+	"Login page:" name=ID "("
+	(
+		("Login redirect:" loginRedirect=STRING)?
+		&(
+			("Show login description:" showLoginDescription=optionSettingType)
+			("Login description text:" loginDescriptionText=STRING)
+		)?
+		&("Login image:" loginImage=STRING)?
+		&("Logout redirect:" logoutRedirect=STRING)?
+		&(
+			("Show logout description:" showLogoutDescription=optionSettingType)
+			("Logout description text:" logoutDescriptionText=STRING)
+		)?
+		&("Logout image:" logoutImage=STRING)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+UserProfilePage:
+	"User profile page:" name=ID "("
+		metadataOptions=MetadataOptions?
+	")"
+;
+
+EditUserProfilePage:
+	"Edit user profile:" name=ID "("
+		metadataOptions=MetadataOptions?
+	")"
+;
+
+RegistrationPage:
+	"Registration page:" name=ID "("
+		metadataOptions=MetadataOptions?
+	")"
+;
+
+UsernameReminderRequestPage:
+	"Username reminder request:" name=ID "("
+		metadataOptions=MetadataOptions?
+	")"
+;
+
+PasswordResetPage:
+	"Password reset page:" name=ID "("
+		metadataOptions=MetadataOptions?
+	")"
+;
+
+ContactPage:
+	ContactListAllCategoriesPage | ListContactInCategoryPage | SingleContactPage | FeaturedContactPage
+;
+
+ContactListAllCategoriesPage:
+	"List all categories (Contact):" name=ID "("
+	(
+		("*Root category:" rootCategory=[ContactCategory])?
+		&("Categories options {"
+			categoriesOptions=CategoriesOptions
+		"}")?
+		&("Top level category description:" topLevelCatDesc=STRING)?
+		&("Show contacts in category:" showContactsInCategory=optionSettingType)?
+		&("Category options {"
+			categoryOptions=CategoryOptions
+		"}")?
+		&("Contact list Layout options {"
+			contactListLayout=ContactListLayoutOptions
+		"}")?
+		&("Contact display options {"
+			contactDisplayOptions=ContactDisplayOptions
+		"}")?
+		&("Contact Email options {"
+			contactEmailOptions=ContactEmailOptions
+		"}")?
+		&(integrationOptions=IntegrationOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+ListContactInCategoryPage:
+	"List contact in a category:" name=ID "("
+	(
+		("*Category:" category=[ContactCategory])?
+		&("Category options {"
+			categoryOptions=CategoryOptions
+		"}")?
+		&("Show contacts in category:" showContactsInCategory=optionSettingType)?
+		&("Contact list Layout options {"
+			contactListLayout=ContactListLayoutOptions
+		"}")?
+		&("Contact display options {"
+			contactDisplayOptions=ContactDisplayOptions
+		"}")?
+		&("Contact Email options {"
+			contactEmailOptions=ContactEmailOptions
+		"}")?
+		&(integrationOptions=IntegrationOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+SingleContactPage:
+	"Single contact:" name=ID "("
+	(
+		("*Contact:" contact=[Contact])?
+		&("Contact display options {"
+			contactDisplayOptions=ContactDisplayOptions
+		"}")?
+		&("Contact Email options {"
+			contactEmailOptions=ContactEmailOptions
+		"}")?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+FeaturedContactPage:
+	"Featured contact page:" name=ID "("
+	(
+		("Contact list Layout options {"
+			contactListLayout=ContactListLayoutOptions
+		"}")?
+		&("Contact display options {"
+			contactDisplayOptions=ContactDisplayOptions
+		"}")?
+		&("Contact Email options {"
+			contactEmailOptions=ContactEmailOptions
+		"}")?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+WebLinksPage:
+	ListAllWeblinkCategoriesPage | ListWeblinkCategoryPage | WeblinkSubmitPage
+;
+
+ListAllWeblinkCategoriesPage:
+	"List all weblink categories:" name=ID "("
+	(
+		("*Root category:" rootCategory=[WeblinkCategory])?
+		&("Categories options {"
+			categoriesOptions=CategoriesOptions
+		"}")?
+		&("Top level category description:" topLevelCatDesc=STRING)?
+		&("Show the number of weblinks:" showNumberOfWeblinks=optionSettingType)?
+		&("Category options {"
+			categoryOptions=CategoryOptions
+		"}")?
+		&("Show weblink in category:" showWeblinkInCategory=optionSettingType)?
+		&("Weblink List layout options {"
+			weblinkListLayoutOptions=WeblinkListLayoutOptions
+		"}")?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+ListWeblinkCategoryPage:
+	"List a weblink category:" name=ID "("
+	(
+		("*Category:" category=[WeblinkCategory])?
+		&("Category options {"
+			categoryOptions=CategoryOptions
+		"}")?
+		&("Show weblink in category:" showWeblinkInCategory=optionSettingType)?
+		&("Weblink List layout options {"
+			weblinkListLayoutOptions=WeblinkListLayoutOptions
+		"}")?
+		&(integrationOptions=IntegrationOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+WeblinkSubmitPage:
+	"Submit a weblink:" name=ID "("
+	(
+		(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+NewsFeedPage:
+	ListAllNewsfeedCategoriesPage | ListNewsfeedInCategoryPage | SingleNewsfeedPage
+;
+
+ListAllNewsfeedCategoriesPage:
+	"List all newsfeed categories:" name=ID "("
+	(
+		("*Root category:" rootCategory=[NewsfeedCategory])?
+		&("Categories options {"
+			categoriesOptions=CategoriesOptions
+		"}")?
+		&("Top level category description:" topLevelCatDesc=STRING)?
+		&("Show the number of newsfeeds:" showNumberOfNewsfeeds=optionSettingType)?
+		&("Category options {"
+			categoryOptions=CategoryOptions
+		"}")?
+		&("Show newsfeed in category:" showNewsfeedInCategory=optionSettingType)?
+		&("Newsfeed List layout options {"
+			newsfeedListLayoutOptions=NewsfeedListLayoutOptions
+		"}")?
+		&("Newsfeed display options {"
+			newsfeedDisplayOptions=NewsfeedDisplayOptions
+		"}")?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+ListNewsfeedInCategoryPage:
+	"List a newsfeed in a category:" name=ID "("
+	(
+		("*Category:" category=[NewsfeedCategory])?
+		&("Category options {"
+			categoryOptions=CategoryOptions
+		"}")?
+		&("Show contacts in category:" showContactsInCategory=optionSettingType)?
+		&("Newsfeed List layout options {"
+			newsfeedListLayoutOptions=NewsfeedListLayoutOptions
+		"}")?
+		&("Newsfeed display options {"
+			newsfeedDisplayOptions=NewsfeedDisplayOptions
+		"}")?
+		&("Feed display order:" feedDisplayOrder=feedDisplayOrderType)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+SingleNewsfeedPage:
+	"Single newsfeed:" name=ID "("
+	(
+		("*Newsfeed:" newsfeed=[Newsfeed])?
+		&("Newsfeed display options {"
+			newsfeedDisplayOptions=NewsfeedDisplayOptions
+		"}")?
+		&("Feed display order:" feedDisplayOrder=feedDisplayOrderType)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+SmartSearchPage:
+	"Smart search page:" name=ID "("
+	(
+		("Search query:" searchQuery=STRING)?
+		&("Search filter:" searchFilter=STRING)?
+		&("Show date filters:" showDateFilters=optionSettingType)?
+		&("Show advanced search:" showAdvancedSearch=optionSettingType)?
+		&("Expand advanced search:" expandAdvancedSearch=optionSettingType)?
+		&(
+			("Show result description:" showResultDescription=optionSettingType)
+			("Result description:" reslutDescription=STRING)
+			("Description length:" descriptionLength=INT)?
+		)?
+		&("Show result URL:" showResultUrl=optionSettingType)?
+		&("Show pagination limit:" showPaginationLimit=optionSettingType)?
+		&("Show pagination:" showPagination=optionSettingType)?
+		&("Show pagination results:" showPaginationResults=optionSettingType)?
+		&("Allow empty search:" allowEmptySearch=("yes"|"no"))?
+		&("Sort field:" sortField=sortFieldType)?
+		&("Sort direction:" sortDirection=sortDirectionType)?
+		&("Show feed:" showFeed=optionSettingType)?
+		&("Show feed text:" showFeedText=("yes"|"no"))?
+		&(integrationOptions=IntegrationOptions)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+SearchPage:
+	"Search page:" name=ID "("
+	(
+		("Search term:" searchTerm=STRING)?
+		&("Use search areas:" useSearchAreas=optionSettingType)?
+		&("Show creation date:" showCreationDate=optionSettingType)?
+		&("Search for:" searchFor=searchForType)?
+		&("Results ordering:" searchResultsOrdering=searchResultsOrderingType)?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+IFrameWrapperPage:
+	"IFrame wrapper:" name=ID "("
+	(
+		("URL:" Url=STRING)
+		&("Scroll bars:" scrollBars=scrollBarsType)?
+		&("Width:" width=STRING)?
+		&("Height:" height=STRING)?
+		&("Auto height:" autoHeight=("yes"|"no"))?
+		&("Auto add:" autoAdd=("yes"|"no"))?
+		&("Frame border:" frameBorder=("yes"|"no"))?
+		&(metadataOptions=MetadataOptions)?
+	)
+	")"
+;
+
+//- end page
+
+//- begin user
+
+cJSL_User:
+	"cJSL_User {"
+		usergroups+=UserGroup*
+		user+=User+
+		viewlevel+=ViewLevel*
+	"}"
+;
+
+CrudAccessLevel:
+	"Access level ("
+	(
+		("*User group:" userGroup=[UserGroup])
+		&("Create:" create=accessLevelRight)?
+		&("Delete:" delete=accessLevelRight)?
+		&("Edit:" edit=accessLevelRight)?
+		&("Edit State:" edit_state=accessLevelRight)?
+		&("Edit Own:" edit_own=accessLevelRight)?
+	)
+	")"
+;
+
+UserGroup:
+	"User Group:" name=ID "("
+		("*Parent:" parent=[UserGroup])?
+		(globalAccess_level=CoreAccessLevelOptions)?
+	")"
+;
+
+User:
+	"User:" name=ID "("
+		"Name:" fullname=STRING
+		"EMail:" email=STRING
+	(
+		("*UserGroups:" usergroup+=[UserGroup] ("," usergroup+=[UserGroup])*)?
+		&("Password:" password=STRING)?
+		&("Blocked:" blocked=("yes"|"no"))
+		&("Receive system mail:" receiveSystemMail=("yes"|"no"))
+		&("*UserGroups:" usergroup+=[UserGroup] ("," usergroup+=[UserGroup])*)?
+		&("*Backend template style:" backendTemplateStyle=[Template])?
+		&("*Backend language:" backendLanguage=LanguageTypeReference)?
+		&("*Frontend language:" frontendLanguage=LanguageTypeReference)?
+		&("*Editor:" editor=EditorTypeReference)?
+		&("*Help server:" help_server=[HelpServer])?
+		&("*Time zone:" time_zone=[TimeZone])?
+		&("Register date:" registerDate=DATETIME)?
+		&("Last visit date:" lastVisitDate=DATETIME)?
+		&("Reset count:" resetCount=INT)?
+		&("Last reset:" lastResetTime=DATETIME)?
+		&("Activation:" activation=STRING)?
+		&userProfile=UserProfile?
+	)
+	")"
+;
+
+UserProfile:
+	{UserProfile}
+	"User profile: ("
+	(
+		"Address 1:" address1=STRING?
+		&"Address 2:" address2=STRING?
+		&"City:" city=STRING?
+		&"Region:" region=STRING?
+		&"Postal/ZIP code:" zipCode=INT?
+		&"Phone:" phone=STRING?
+		&"Website:" website=STRING?
+		&"Favorite book:" favBook=STRING?
+		&"About me:" aboutMe=STRING?
+		&"Date of birth:" dateOfBirth=DATE?
+	)
+	")"
+;
+
+ViewLevel:
+	"View level" name=ID "("
+	(
+		("Title:" title=STRING)?
+		&("*UserGroups:" usergroup+=[UserGroup] ("," usergroup+=[UserGroup])*)?
+
+	)
+	")"
+;
+
+//- end user
+
+//- begin content
+
+cJSL_Content:
+	"cJSL_Content {"
+		articleCategory+=ArticleCategory+
+	(
+		("Global Article category options {"
+			globalArticleCategoryOptions=CategoryOptions
+		"}")?
+		&("Global Banners category options {"
+			globalBannersCategoryOptions=CategoryOptions
+		"}")?
+		&("Global Weblink category options {"
+			globalWeblinkCategoryOptions=CategoryOptions
+		"}")?
+		&("Global Newsfeed category options {"
+			globalNewsfeedCategoryOptions=CategoryOptions
+		"}")?
+		&("Global Contact category options {"
+			globalContactCategoryOptions=CategoryOptions
+		"}")?
+		&("Global Category options {"
+			globalUserCategoryOptions=CategoryOptions
+		"}")?
+		&("Global Content options {"
+			globalContentOptions=ArticleSettingsOptions
+		"}")?
+		&("Global Newsfeed options {"
+			globalNewsfeedOptions=NewsfeedDisplayOptions
+		"}")?
+		&("Global Contact options {"
+			globalContactOptions=ContactDisplayOptions
+		"}")?
+	)
+	(
+		(bannerCategory+=BannerCategory)
+		| (weblinkCategory+=WeblinkCategory)
+		| (newsfeedCategory+=NewsfeedCategory)
+		| (contactCategory+=ContactCategory)
+		| (userCategory+=UserCategory)
+		| (content+=Content)
+		| (newsfeed+=Newsfeed)
+		| (weblink+=Weblink)
+		| (contact+=Contact)
+		| (bannerClient+=BannerClient)
+		| (banner+=Banner)
+		| (bannerTracks+=BannerTracks)
+	)*
+	"}"
+;
+
+ArticleCategory:
+	"Article category:" name=ID "("
+	(
+		("*Parent:" parent=[ArticleCategory])?
+		&("Category options {"
+			catOptions=ContentCategoryOptions
+		"}")?
+		&("Alternative layout:" alternativeLayout=categoryType)?
+	)
+	")"
+;
+
+BannerCategory:
+	"Banners category:" name=ID "("
+	(
+		("*Parent:" parent=[BannerCategory])?
+		&("Category options {"
+			catOptions=ContentCategoryOptions
+		"}")?
+		&("Alternative layout:" alternativeLayout=categoryType)?
+	)
+	")"
+;
+
+WeblinkCategory:
+	"Weblink category:" name=ID "("
+	(
+		("*Parent:" parent=[WeblinkCategory])?
+		&("Category options {"
+			catOptions=ContentCategoryOptions
+		"}")?
+		&("Alternative layout:" alternativeLayout="Default")?
+	)
+	")"
+;
+
+ContactCategory:
+	"Contact category:" name=ID "("
+	(
+		("*Parent:" parent=[ContactCategory])?
+		&("Category options {"
+			catOptions=ContentCategoryOptions
+		"}")?
+		&("Alternative layout:" alternativeLayout="Default")?
+	)
+	")"
+;
+
+UserCategory:
+	"User category:" name=ID "("
+	(
+		("*Parent:" parent=[UserCategory])?
+		&("Category options {"
+			catOptions=ContentCategoryOptions
+		"}")?
+		&("Alternative layout:" alternativeLayout="Default")?
+	)
+	")"
+;
+
+NewsfeedCategory:
+	"Newsfeed category:" name=ID "("
+	(
+		("*Parent:" parent=[NewsfeedCategory])?
+		&("Category options {"
+			catOptions=ContentCategoryOptions
+		"}")?
+		&("Alternative layout:" alternativeLayout="Default")?
+	)
+	")"
+;
+
+Content:
+	"Content:" name=ID "("
+	(
+
+		("Title:" title=STRING)?
+		&("Article text:" articleText=ContentBlock)
+		&("Intro text:" introText=ContentBlock)?
+		&("*Author:" author=[User])?
+		&("Author alias:" authorAlias=STRING)?
+		&("*Category:" category=[ArticleCategory])
+		&("*View level:" viewlevel=[ViewLevelRights])?
+		&("Status:" status=contentStatusType)?
+		&("Access level {"
+			access_level=CrudAccessLevel
+		"}")?
+		&("SectionId:" sectionId=STRING)?
+		&("Mask:" mask=STRING)?
+		&("Creation date:" creationDate=DATETIME)?
+		&("Modification date:" modificationDate=DATETIME)?
+		&("*Modified by:" modifiedBy=[User])?
+		&("Checked out:" checkedOut=("yes"|"no"))?
+		&("Checked out time:" checkedOutTime=DATETIME)?
+		&("Start publishing:" startPublishing=DATETIME)?
+		&("Finish publishing:" finishPublishing=DATETIME)?
+		&("Images options {"
+			imagesOptions=ContentImageOptions
+		"}")?
+		&("URL options {"
+			urlOptions=ContentUrlSettingOptions
+		"}")?
+		&("Attribute options {"
+			attributeOptions=ContentAttributeOptions
+		"}")?
+		&("Version:" version=STRING)?
+		&("*Parent article:" parentArticle=[Content])?
+		&("Ordering:" ordering=INT)?
+		&("Hits:" hits=INT)?
+		&("Content metadata options {"
+			contentMetadataOptions=ContentMetaDataOptions
+		"}")?
+		&("Featured:" featured=("yes"|"no"))?
+		&("Language:" language=LanguageTypeReferenceWithAll)?
+		&("External ressource description:" extRessourceDescription=STRING)?
+		&("Rating options {"
+			ratingOptions=ContentRatingOptions
+		"}")?
+	)
+	")"
+;
+
+ContentBlock:
+	value=STRING
+	media+=Media*
+;
+
+Media:
+	Picture | Audio | Video
+;
+
+Video:
+	"Video URL:" videoURL=STRING
+;
+
+Audio:
+	"Audio URL:" audioURL=STRING
+;
+
+Picture:
+	"Picture URL:" pictureURL=STRING
+;
+
+Newsfeed:
+	"Newsfeed:" name=ID "("
+	(
+		("Title:" title=STRING)
+		&("*Category:" category=[NewsfeedCategory])
+		&("*View level:" viewlevel=[ViewLevelRights])?
+		&("Link:" link=STRING)?
+		&("File name:" fileName=STRING)?
+		&("Status:" status=contentStatusType)?
+		&("*Author:" author=[User])?
+		&("Author alias:" authorAlias=STRING)?
+		&("Number of articles:" numberOfArticles=INT)?
+		&("Cache time:" cacheTime=INT)?
+		&("Checked out:" checkedOut=("yes"|"no"))?
+		&("Checked out time:" checkedOutTime=DATETIME)?
+		&("Ordering:" ordering=NewsfeedOrderingTypeReference)?
+		&("Language direction:" languageDirection=languageDirectionType)?
+		&("Language:" language=LanguageTypeReferenceWithAll)?
+		&("Feed display options: {"
+			feedDisplayOptions=NewsfeedDisplayOptions
+		"}")?
+		&("Feed display order:" feedDisplayOrder=feedDisplayOrderType)?
+		&("Newsfeed layout options {"
+			newsfeedLayout="Newsfeed layout: Default"
+		"}")?
+		&("Creation date:" creationDate=DATETIME)?
+		&("Modification date:" modificationDate=DATETIME)?
+		&("*Modified by:" modifiedBy=[User])?
+		&("Content metadata options {"
+			contentMetadataOptions=ContentMetaDataOptions
+		"}")?
+		&("External ressource description:" extRessourceDescription=STRING)?
+		&("Start publishing:" startPublishing=DATETIME)?
+		&("Finish publishing:" finishPublishing=DATETIME)?
+	)
+	")"
+;
+
+Weblink:
+	"Weblink:" name=ID "("
+	(
+		("Title:" title=STRING)
+		&("*Category:" category=[WeblinkCategory])
+		&("*View level:" viewlevel=[ViewLevelRights])?
+		&("SId:" sid=STRING)?
+		&("URL:" url=STRING)?
+		&("Description:" description=STRING)?
+		&("Date:" date=DATE)?
+		&("Hits:" hits=INT)?
+		&("Status:" status=contentStatusType)?
+		&("Checked out:" checkedOut=("yes"|"no"))?
+		&("Checked out time:" checkedOutTime=DATETIME)?
+		&("Ordering:" ordering=WeblinkOrderingTypeReference)?
+		&("Archived:" archived=("yes"|"no"))?
+		&("Approved:" approved=("yes"|"no"))?
+		&("Weblink parameter options {"
+			weblinkParamOptions=WeblinkParamOptions
+		"}")?
+		&("Language:" language=LanguageTypeReferenceWithAll)?
+		&("*Author:" author=[User])?
+		&("Author alias:" authorAlias=STRING)?
+		&("Creation date:" creationDate=DATETIME)?
+		&("Modification date:" modificationDate=DATETIME)?
+		&("*Modified by:" modifiedBy=[User])?
+		&("Content metadata options {"
+			contentMetadataOptions=ContentMetaDataOptions
+		"}")?
+		&("Featured:" featured=("yes"|"no"))?
+		&("External ressource description:" extRessourceDescription=STRING)?
+		&("Start publishing:" startPublishing=DATETIME)?
+		&("Finish publishing:" finishPublishing=DATETIME)?
+	)
+	")"
+;
+
+Contact:
+	"Contact:" name=ID "("
+	(
+		("Title:" title=STRING)
+		&("*Category:" category=[ContactCategory])
+		&("*View level:" viewlevel=[ViewLevelRights])?
+		&("Other information:" otherInformation=STRING)?
+		&("Status:" status=contentStatusType)?
+		&("Checked out:" checkedOut=("yes"|"no"))?
+		&("Checked out time:" checkedOutTime=DATETIME)?
+		&("Ordering:" ordering=ContactOrderingTypeReference)?
+		&("Language:" language=LanguageTypeReferenceWithAll)?
+		&("*Author:" author=[User])?
+		&("Author alias:" authorAlias=STRING)?
+		&("Modification date:" modificationDate=DATETIME)?
+		&("*Modified by:" modifiedBy=[User])?
+		&("Content metadata options {"
+			contentMetadataOptions=ContentMetaDataOptions
+		"}")?
+		&("Featured:" featured=("yes"|"no"))?
+		&("External ressource description:" extRessourceDescription=STRING)?
+		&("Start publishing:" startPublishing=DATETIME)?
+		&("Finish publishing:" finishPublishing=DATETIME)?
+		&("*Linked user:" linkedUser=[User])?
+		&("Contact Email options {"
+			contactEmailOptions=ContactEmailOptions
+		"}")?
+		&("Contact List layout options {"
+			contactListLayoutOptions=ContactListLayoutOptions
+		"}")?
+		&("Contact details options {"
+			contactDetailsOption=ContactDetailsOptions
+		"}")?
+	)
+	")"
+;
+
+BannerClient:
+	"Banner client:" name=ID "("
+	(
+		("Client name:" title=STRING)
+		&("Contact name:" contactName=STRING)?
+		&("Contact email:" contactEmail=STRING)?
+		&("Additional information:" AdditionalInformation=STRING)?
+		&("Status:" status=contentStatusType)?
+		&("Checked out:" checkedOut=("yes"|"no"))?
+		&("Checked out time:" checkedOutTime=DATETIME)?
+		&("Purchase type:" purchaseType=bannerPurchaseType)?
+		&("Track clicks:" trackClicks=("yes"|"no"))?
+		&("Track impressions:" trackImpressions=("yes"|"no"))?
+		&("Banner metadata options {"
+			bannerMetadataOptions=BannerMetadataOptions
+		"}")?
+	)
+	")"
+;
+
+BannerTracks:
+	"Banner tracks:" name=ID "("
+	(
+		("*Banner:" banner=[Banner])
+		&("Track date:" trackDate=DATETIME)?
+		&("Track type:" trackType=STRING)?
+	)
+	")"
+;
+
+Banner:
+	"Banner:" name=ID "("
+	(
+		("Name:" title=STRING)
+		&("*Client:" client=[BannerClient])
+		&("*Category:" category=[BannerCategory])
+		&("Type:" type=bannerType)?
+		&("Max. impressions:" maxImpressions=INT)?
+		&("Total impressions:" totalImpressions=INT)?
+		&("Clicks:" clicks=INT)?
+		&("Click URL:" clickUrl=STRING)?
+		&("Status:" status=contentStatusType)?
+		&("Description:" description=STRING)?
+		&("Custom banner code:" customBannerCode=STRING)?
+		&("Sticky:" sticky=("yes"|"no"))?
+		&("Ordering:" ordering=BannerOrderingTypeReference)?
+		&("Banner arameter options {"
+			bannerParamsOptions=BannerParamsOptions
+		"}")?
+		&("Banner metadata options {"
+			bannerMetadataOptions=BannerMetadataOptions
+		"}")?
+		&("Purchase type:" purchaseType=bannerPurchaseType)?
+		&("Track clicks:" trackClicks=("yes"|"no"))?
+		&("Track impressions:" trackImpressions=("yes"|"no"))?
+		&("Checked out:" checkedOut=("yes"|"no"))?
+		&("Checked out time:" checkedOutTime=DATETIME)?
+		&("Start publishing:" startPublishing=DATETIME)?
+		&("Finish publishing:" finishPublishing=DATETIME)?
+		&("Reset:" reset=INT)?
+		&("Creation date:" creationDate=DATETIME)?
+		&("Language:" language=LanguageTypeReferenceWithAll)?
+	)
+	")"
+;
+
+//- end content
+
+//- begin menu
+
+cJSL_Menu:
+	"cJSL_Menu {"
+		menu+=Menu+
+		menuRepresentation+=MenuRepresentation+
+	"}"
+;
+
+Menu:
+	"Menu:" name=ID "("
+		"Title:" title=STRING
+	(
+		("Menu type:" menuType=STRING)?
+		&("Description:" description=STRING)?
+		&(menuentries+=MenuItem)+
+	)
+	")"
+;
+
+MenuItem:
+	"Menu item:" name=ID "("
+	(
+		("*Parent:" parent=[MenuItem])?
+		&("*View level:" viewlevel=[ViewLevelRights])?
+		&(
+			("*Page reference:" page=[Page])
+			|
+			("*Menu item reference:" mIR=[MenuItem])
+			|
+			("External URL (" (linktypeOptionsExtUrl=LinkTypeOptions) ")")
+			|
+			("System link text separator")
+		)
+		&("Alias:" alias=STRING)?
+		&("Note:" note=STRING)?
+		&("Status:" status=statusType)?
+		&("Ordering:" ordering=MenuOrderingTypeReference)?
+		&("Target window:" targetWindow=targetWindowType)?
+		&("Default page:" defaultPage=("yes"|"no"))?
+		&("Language:" language=LanguageTypeReferenceWithAll)?
+		&("Template style:" templateStyle=Template)?
+		&("Link type options:" linktypeOptions=LinkTypeOptions)?
+		&("Page Display options:" pageDisplayOptions=PageDisplayOptions)?
+	)
+	")"
+;
+
+MenuRepresentation:
+	"Menu representation:" name=ID? "("
+		("*Menu reference:" menuRef=[Menu])
+		("*Template position:" templatePosition=[Position|FQN])
+	(
+		("Title:" title=STRING)?
+		&("Show title:" showTitle=("yes"|"no"))?
+		&("Status:" status=statusType)?
+		&("*View level:" viewlevel=[ViewLevelRights])?
+		&("*Ordering:" ordering=[MenuRepresentation])?
+		&("Start publishing:" startPublishing=DATETIME)?
+		&("End publishing:" endPublishing=DATETIME)?
+		&("Language:" language=LanguageTypeReferenceWithAll)?
+		&("Note:" note=STRING)?
+		&("Show menu on menu items:" assignment=MenuItemTypeReference)?
+		&("Start level:" startLevel=MENULEVEL)?
+		&("End level:" endLevel=(MENULEVEL|"All"))?
+		&("Show sub menu:" showSubMenu=("yes"|"no"))?
+		&cssAttributes=MenuRepresentationCssAttributes?
+	)
+	")"
+;
+
+MenuItemTypeReference:
+	MenuItemReferences | oap="On all pages"
+;
+
+MenuItemReferences:
+	reference+=[MenuItem] ("," reference+=[MenuItem])*
+;
+
+MenuRepresentationCssAttributes:
+	{MenuRepresentationCssAttributes}
+	"Menu representation CSS attributes: ("
+	(
+		("Menu tag ID:" menuTagId=STRING)?
+		&("Menu class suffix:" menuClassSuffix=STRING)?
+		&(popupTargetPosition=PopupTargetPositionOptions)?
+		&("Caching:" caching="No caching")?
+		&("Cache time:" cacheTime=INT)?
+	)
+	")"
+;
+//- end menu
+
+//- begin options
+CoreAccessLevelOptions:
+	{CoreAccessLevelOptions}
+	"Core Access level {"
+	(
+		("Site Login:" site_login=accessLevelRight)?
+		&("Admin Login:" admin_login=accessLevelRight)?
+		&("Offline Access:" offline_access=accessLevelRight)?
+		&("Super Admin:" super_admin=accessLevelRight)?
+		&("Access Administration Interface:" access_administration_interface=accessLevelRight)?
+		&("Create:" create=accessLevelRight)?
+		&("Delete:" delete=accessLevelRight)?
+		&("Edit:" edit=accessLevelRight)?
+		&("Edit State:" edit_state=accessLevelRight)?
+		&("Edit Own:" edit_own=accessLevelRight)?
+	)
+	"}"
+;
+
+LinkTypeOptions:
+	(
+		("Link title:" linkTitle=STRING)
+		&("Link CSS style:" linkCssStyle=STRING)?
+		&("Link image path:" linkImagePath=STRING)?
+		&("Add menu title:" addMenuTitle=("yes"|"no"))?
+	)
+;
+
+PageDisplayOptions:
+	{PageDisplayOptions}
+	(
+		("Browser page title:" browserPageTitle=STRING)?
+		&("Show page heading:" showPageHeading=("yes"|"no"))?
+		&("Page heading:" pageHeading=STRING)?
+		&("Page class:" pageClass=STRING)?
+	)
+;
+
+MetadataOptions:
+	{MetadataOptions}
+	"Metadata options {"
+	(
+		("Meta description:" metaDescription=STRING)?
+		&("Meta keywords:" metaKeywords=STRING)?
+		&("Robots:" metaRobots=robotType)?
+		&("Secure:" secure=secureType)?
+	)
+	"}"
+;
+
+IntegrationOptions:
+	{IntegrationOptions}
+	"Integration options {"
+	(
+		("Show feed link:" showFeedLink=optionSettingType)?
+		&("For each feed item show:" feedSummary=feedSummaryType)?
+	)
+	"}"
+;
+
+PopupTargetPositionOptions:
+	{PopupTargetPositionOptions}
+	"Popup target position: ("
+	(
+		("Top:" top=INT)?
+		&("Left:" left=INT)?
+		&("Witdh:" witdh=INT)?
+		&("Height:" height=INT)?
+	)
+	")"
+;
+
+ArticleLayoutOptions:
+	(
+		("Layout:" layout="blog")
+		(layoutOptions=BlogLayoutOptions)
+
+	)
+	|
+	(
+		("Layout:" layout="list")
+		(layoutOptions=ListLayoutOptions)
+	)
+;
+
+BlogLayoutOptions:
+	{BlogLayoutOptions}
+	(
+		("Number of leading articles:" numLeadingArticles=INT)?
+		&("Number of intro articles:" numIntroArticles=INT)?
+		&("Number of columns:" numColumns=INT)?
+		&("Number of links:" numLinks=INT)?
+		&("Multi column order:" multiColumnOrder=multiColumnOrderType)?
+	)
+;
+
+ListLayoutOptions:
+	{ListLayoutOptions}
+	(
+		("Show pagination limit:" showPaginationLimit=optionSettingType)?
+		&("Filter field:" filterField=optionSettingType)?
+		&("Table headings:" tableHeadings=optionSettingType)?
+		&("Show date:" showDate=optionSettingType)?
+		&("Date format:" dateFormat=STRING)?
+		&("Show hits in list:" listShowHits=optionSettingType)?
+		&("Show author in list:" listShowAuthor=optionSettingType)?
+		&("Articles to list:" articlesToList=articlesToListType)?
+	)
+;
+
+CategoryOptions:
+	{CategoryOptions}
+	(
+		("Category title:" showCategoryTitle=optionSettingType)?
+		&("Category description:" showCategoryDesc=optionSettingType)?
+		&("Category image:" showCategoryImage=optionSettingType)?
+		&("Subcategory Levels:" showSubcatLevels=optionSettingType)?
+		&("Empty categories:" showEmptyCategories=optionSettingType)?
+		&("No articles message:" showNoArticles=optionSettingType)?
+		&("Subcategories description:" showSubcatDesc=optionSettingType)?
+	)
+;
+
+CategoriesOptions:
+	{CategoriesOptions}
+	(
+		("Show top level category description:" showTopLevelCategoryDesc=optionSettingType)?
+		&("Subcategory Levels:" subcatLevels=maxLevelSettingType)?
+		&("Empty categories:" emptyCategories=optionSettingType)?
+		&("Subcategories description:" subcatDesc=optionSettingType)?
+	)
+;
+
+OrderingPaginationOptions:
+	{OrderingPaginationOptions}
+	(
+		("Category order:" categoryOrder=categoryOrderType)?
+		&("Article order:" articleOrder=articleOrderType)?
+		&("Date for ordering:" orderDate=orderDateType)?
+		&("Pagination:" showPagination=paginationType)?
+		&("Pagination results:" showPaginationResults=paginationResultsType)?
+	)
+;
+
+ArticleSettingsOptions:
+	{ArticleSettingsOptions}
+	"Article setting options {"
+	(
+		("Show title:" showTitle=articleSettingType)?
+		&("Link titles:" linkTitles=articleSettingType)?
+		&("Show intro:" showIntro=articleSettingType)?
+		&("Show category:" showCategory=articleSettingType)?
+		&("Link category:" linkCategory=articleSettingType)?
+		&("Show parent category:" showParentCategory=articleSettingType)?
+		&("Link parent category:" linkParentCategory=articleSettingType)?
+		&("Show author:" showAuthor=articleSettingType)?
+		&("Link author:" linkAuthor=articleSettingType)?
+		&("Show creation date:" showCreationDate=articleSettingType)?
+		&("Show modify date:" showModifyDate=articleSettingType)?
+		&("Show publish date:" showPublishDate=articleSettingType)?
+		&("Show item navigation:" showItemNavigation=articleSettingType)?
+		&("Show vote:" showVote=articleSettingType)?
+		&("Show readmore:" showReadmore=articleSettingType)?
+		&("Show readmore title:" showReadmoreTitle=articleSettingType)?
+		&("Show icons:" showIcons=articleSettingType)?
+		&("Show print icon:" showPrintIcon=articleSettingType)?
+		&("Show Email icon:" showEmailIcon=articleSettingType)?
+		&("Show hits:" showHits=articleSettingType)?
+		&("Show unauthorised links:" showUnauthorisedLinks=articleSettingType)?
+	)
+	"}"
+;
+
+ContactListLayoutOptions:
+	{ContactListLayoutOptions}
+	(
+		("Show pagination limit:" showPaginationLimit=optionSettingType)?
+		&("Show table headings:" showTableHeadings=optionSettingType)?
+		&("Show contact position:" showContactPosition=optionSettingType)?
+		&("Show Email:" showEmail=optionSettingType)?
+		&("Show phone:" showPhone=optionSettingType)?
+		&("Show mobile:" showMobile=optionSettingType)?
+		&("Show fax:" showFax=optionSettingType)?
+		&("Show city or suburb:" showCityOrSuburb=optionSettingType)?
+		&("Show state or country:" showStateOrCountry=optionSettingType)?
+		&("Show country:" showCountry=optionSettingType)?
+		&("Show pagination:" showPaginagtion=optionSettingType)?
+		&("Show pagination results:" showPaginationResults=optionSettingType)?
+	)
+;
+
+ContactEmailOptions:
+	{ContactEmailOptions}
+	(
+		("Show contact form:" showContactForm=optionSettingType)?
+		&("Send copy to submitter:" sendCopyToSubmitter=optionSettingType)?
+		&("Banned Email:" bannedEmail=STRING)?
+		&("Banned subject:" bannedSubject=STRING)?
+		&("Banned text:" bannedText=STRING)?
+		&("Session check:" sessionCheck=optionSettingType)?
+		&("Custom reply:" customReply=optionSettingType)?
+		&("Contact redirect link:" contactRedirectLink=STRING)?
+	)
+;
+
+ContactDisplayOptions:
+	{ContactDisplayOptions}
+	(
+		("Display format:" displayFormat=contactDisplayFormatType)?
+		&("Contact category:" contactCategory=contactCategoryType)?
+		&("Show contact list:" showContactList=optionSettingType)?
+		&("Show name:" showName=optionSettingType)?
+		&("Show contact position:" showContactPosition=optionSettingType)?
+		&("Show Email:" showEmail=optionSettingType)?
+		&("Show street address:" showStreetAddress=optionSettingType)?
+		&("Show city or suburb:" showCityOrSuburb=optionSettingType)?
+		&("Show state or country:" showStateOrCountry=optionSettingType)?
+		&("Show postal code:" showPostalCode=optionSettingType)?
+		&("Show country:" showCountry=optionSettingType)?
+		&("Show phone:" showPhone=optionSettingType)?
+		&("Show mobile:" showMobile=optionSettingType)?
+		&("Show fax:" showFax=optionSettingType)?
+		&("Show webpage:" showWebpage=optionSettingType)?
+		&("Show misc. information:" showMiscInformation=optionSettingType)?
+		&("Show image:" showImage=optionSettingType)?
+		&("Show vCard:" showVcard=optionSettingType)?
+		&("Show user articles:" showUserArticles=optionSettingType)?
+		&("Show links:" showLinks=optionSettingType)?
+		&("Additional link A:" addLinkA=STRING)?
+		&("Additional link B:" addLinkB=STRING)?
+		&("Additional link C:" addLinkC=STRING)?
+		&("Additional link D:" addLinkD=STRING)?
+		&("Additional link E:" addLinkE=STRING)?
+	)
+;
+
+WeblinkListLayoutOptions:
+	{WeblinkListLayoutOptions}
+	(
+		("Show pagination limit:" showPaginationLimit=optionSettingType)?
+		&("Show table headings:" showTableHeadings=optionSettingType)?
+		&("Show link description:" showLinkDescription=optionSettingType)?
+		&("Show hits:" showHits=optionSettingType)?
+		&("Show pagination:" showPaginagtion=optionSettingType)?
+		&("Show pagination results:" showPaginationResults=optionSettingType)?
+	)
+;
+
+NewsfeedListLayoutOptions:
+	{NewsfeedListLayoutOptions}
+	(
+		("Show pagination limit:" showPaginationLimit=optionSettingType)?
+		&("Show table headings:" showTableHeadings=optionSettingType)?
+		&("Show articles:" showArticles=optionSettingType)?
+		&("Show feed links:" showFeedLinks=optionSettingType)?
+		&("Show pagination:" showPaginagtion=optionSettingType)?
+		&("Show pagination results:" showPaginationResults=optionSettingType)?
+	)
+;
+
+NewsfeedDisplayOptions:
+	{NewsfeedDisplayOptions}
+	(
+		("Show Feed image:" showFeedImage=optionSettingType)?
+		&("Show feed description:" showfeedDescription=optionSettingType)?
+		&("Show content:" showContent=optionSettingType)?
+		&("Character count:" feedCharacterCount=INT)?
+	)
+;
+
+ContentMetaDataOptions:
+	{ContentMetaDataOptions}
+	"Content metadata options {"
+	(
+		("Meta keywords:" metaKeywords=STRING)?
+		&("Meta description:" metaDescription=STRING)?
+		&("Robots:" robots=robotType)?
+	)
+	"}"
+;
+
+ContentUrlSettingOptions:
+	{UrlSettingOptions}
+	(
+		("Link A:" linkA=STRING)?
+		&("Link A Text:" linkAText=STRING)?
+		&("URL Target window for Link A:" urlTargetWindowForLinkA=contentOpenWindowType)?
+		&("Link B:" linkB=STRING)?
+		&("Link B Text:" linkBText=STRING)?
+		&("URL Target window for Link B:" urlTargetWindowForLinkB=contentOpenWindowType)?
+		&("Link C:" linkC=STRING)?
+		&("Link C Text:" linkCText=STRING)?
+		&("URL Target window for Link C:" urlTargetWindowForLinkC=contentOpenWindowType)?
+	)
+;
+
+ContentAttributeOptions:
+	{ContentAttributeOptions}
+	(
+		(articleSettingOption=ArticleSettingsOptions)?
+		&("Positioning of the links:" urlsPositioning=STRING)?
+		&("Readmore text:" readmoreText=STRING)?
+		&("Alternative layout" alternativeLayout=STRING)?
+		&("Show publishing options:" showPublishingOptions=("yes"|"no"))?
+		&("ShowArticleOptions" showArticleOptions=("yes"|"no"))?
+		&("Show URL images (backend):" showUrlImagesBackend=("yes"|"no"))?
+		&("Show URL images (frontend):" showUrlImagesFrontend=("yes"|"no"))?
+		&("Intro image:" introImage=STRING)?
+		&("Image float:" imageFloat=positionOptionType)?
+		&("Alternative text:" altText=STRING)?
+		&("Caption:" caption=STRING)?
+	)
+;
+
+ContentImageOptions:
+	{ContentImageOptions}
+	(
+		("Image full text:" imageFulltext=STRING)?
+		&("Image full text float:" imageFulltextFloat=positionOptionType)?
+		&("Image full text alternative :" imageFulltextAlternative=STRING)?
+		&("Image full text caption:" imageFulltextCaption=STRING)?
+	)
+;
+
+ContentRatingOptions:
+	{ContentRatingOptions}
+	(
+		("Rating Sum:" ratingSum=STRING)?
+		&("Rating count:" ratingCount=STRING)?
+		&("Last IP:" lastIp=STRING)?
+	)
+;
+
+ContentCategoryOptions:
+	("Title:" title=STRING)
+	&(access_level=CrudAccessLevel)?
+	&("Ordering:" ordering=INT)?
+	&("Note:" note=STRING)?
+	&("Description:" description=STRING)?
+	&("Published:" published=contentStatusType)?
+	&("Checked out:" checkedOut=("yes"|"no"))?
+	&("Checked out time:" checkedOutTime=DATETIME)?
+	&("*View level:" viewlevel=[ViewLevelRights])?
+	&(contentMetadataOptions=ContentMetaDataOptions)?
+	&("*Author:" author=[User])?
+	&("Creation date:" creationDate=DATETIME)?
+	&("Modification date:" modificationDate=DATETIME)?
+	&("*Modified by:" modifiedBy=[User])?
+	&("Hits:" hits=INT)?
+	&("Language:" language=LanguageTypeReferenceWithAll)?
+	&("Image:" image=STRING)?
+;
+
+ContactDetailsOptions:
+	{ContactDetailsOptions}
+	(
+		("Position" position=STRING)?
+		&("Address" address=STRING)?
+		&("City or suburb" cityOrSuburb=STRING)?
+		&("State or province" stateOrProvince=STRING)?
+		&("Country" country=STRING)?
+		&("Postal/ZIP code" postalZipCode=STRING)?
+		&("Telephone" telephone=STRING)?
+		&("Fax" fax=STRING)?
+		&("Image" image=STRING)?
+		&("Email" email=STRING)?
+		&("Mobile" mobile=STRING)?
+		&("Webpage" webpage=STRING)?
+		&("First sort field" firstSortField=STRING)?
+		&("Second sort field" secondSortField=STRING)?
+		&("Third sort field" thirdSortField=STRING)?
+	)
+;
+
+WeblinkParamOptions:
+	{WeblinkParamOptions}
+	(
+		("Target:" target=contentOpenWindowType)?
+		&("Width:" width=contentOpenWindowType)?
+		&("Height:" height=contentOpenWindowType)?
+		&("Count clicks:" countClicks=contentOpenWindowType)?
+	)
+;
+
+BannerParamsOptions:
+	{BannerParamsOptions}
+	(
+		("Image:" image=STRING)?
+		&("Width:" width=STRING)?
+		&("Height:" height=STRING)?
+		&("Alt:" alt=STRING)?
+	)
+;
+
+BannerMetadataOptions:
+	{BannerMetadataOptions}
+	(
+		("Meta keyword:" metaKeyword=STRING)?
+		&("Use own prefix:" useOwnPrefix=("yes"|"no"))?
+		&("Meta keyword prefix:" metaKeywordPrefix=STRING)?
+	)
+;
+
+//- end options
+
+//- begin enums
+
+enum defaultEditor:
+	tinymce="TinyMCE" | codemirror="CodeMirror" | none="none"
+;
+
+enum databaseType:
+	mysqli="mysqli" | mysql="mysql"
+;
+enum defaultViewLevel:
+	public="public" | registered="registered" | special="special"
+;
+enum defaultLanguage:
+	en="english" | de="german"
+;
+
+enum HostValueType:
+	localhost="localhost" | localhostIP="127.0.0.1" | ID
+;
+
+enum domType:
+	hide="hide" | custom="custom" | default="default"
+;
+enum feedEmailType:
+	empty="\t" | author="author" | site="site" | no="no"
+;
+
+enum robotType:
+	index_follow="Index, Follow" |
+	index_nofollow="Index, No follow" |
+	noindex_follow="No index, Follow" |
+	noindex_nofollow="No index, No follow"
+;
+
+enum inclSiteNameInPT:
+	after="after" | before="before" | no="no"
+;
+
+enum mailerType:
+	phpmail="PHP Mail" | sendmail="Sendmail" | smtp="SMTP"
+;
+
+enum smtpSecurityType:
+	none="None" | ssl="SSL" | tls="TLS"
+;
+
+enum errorReportingType:
+	system_default="System default" |
+	none="None" | simple="Simple" |
+	maximum="Maximum" | development="Development"
+;
+
+enum forceSslType:
+	none="None" |
+	administrator_only="Administrator only" |
+	entire_site="Entire site"
+;
+
+enum categoryType:
+	blog="Blog" | list="List"
+;
+
+enum accessLevelRight:
+	denied="denied" | accepted="accepted" | inherited="inherited"
+;
+
+enum cachingType:
+	off="OFF-Caching disabled" |
+	on_conservative="ON-Conservative caching" |
+	on_progressive="ON-Progressive caching"
+;
+
+enum cacheHandlerType:
+	file="File" | cache_lite="Cache_Lite"
+;
+
+enum sessionHandlerType:
+	database="Database" | none="None"
+;
+
+enum statusType:
+	published="Published" | unpublished="Unpublished" | trashed="Trashed"
+;
+
+enum defaultOrdering:
+	first="-First-" | last="-Last-"
+;
+
+enum targetWindowType:
+	parent="Parent" |
+	newWindowWithNavigation="New Window With Navigation" |
+	newWindowWithoutNavigation="New Window Without Navigation"
+;
+
+enum secureType:
+	off="off" | on="on" | ignore="ignore"
+;
+
+enum articleSettingType:
+	useArticleSetting="Use article setting" | hide="hide" | show="show"
+;
+
+enum optionSettingType:
+	hide="hide" | show="show"
+;
+
+enum maxLevelSettingType:
+	all="all" | none="none" | one="1" | two="2" | three="3" | four="4" | five="5"
+;
+
+enum feedSummaryType:
+	introText="intro text" | fullText="full text"
+;
+
+enum multiColumnOrderType:
+	down="down" | across="across"
+;
+
+enum categoryOrderType:
+	noOrder="No order" |
+	titleAlphabetical="Title alphabetical" |
+	titleReverseAlphabetical="Title reverse alphabetical" |
+	categoryManagerOrder="Category manager order"
+;
+
+enum articleOrderType:
+	featuredArticleOrder="Featured article order" |
+	mostRecentFirst="Most recent first" |
+	oldestFirst="Oldest first" |
+	titleAlphabetical="Title alphabetical" |
+	titleReverseAlphabetical="Title reverse alphabetical" |
+	authorAlphabetical="Author alphabetical" |
+	authorAlphabeticalReverse="Author alphabetical reverse" |
+	mostHits="Most hits" |
+	leastsHits="Leasts hits" |
+	articleManagerOrder="Article Manager Order"
+;
+
+enum orderDateType:
+	created="created" | modified="modified" | published="published"
+;
+
+enum paginationType:
+	hide="hide" | show="show" | auto="auto"
+;
+
+enum paginationResultsType:
+	hide="hide" | show="show"
+;
+
+enum articlesToListType:
+	five="5" | ten="10" | fifteen="15" | twenty="20" | twentyfive="25" |
+	thirty="30" | fifty="50" | hundred="100" | all="All"
+;
+
+enum contactDisplayFormatType:
+	sliders="sliders" | tabs="tabs" | plain="plain"
+;
+
+enum contactCategoryType:
+	hide="hide" | showWithoutLink="show without link" | showWithLink="show with link"
+;
+
+enum feedDisplayOrderType:
+	mostRecentFirst="Most recent first" | oldestFirst="Oldest first"
+;
+
+enum sortFieldType:
+	relevance="relevance" | date="date" | price="price"
+;
+
+enum sortDirectionType:
+	descending="descending" | ascending="ascending"
+;
+
+enum searchForType:
+	allWords="All words" | anyWords="Any words" | exactPhrase="Exact phrase"
+;
+
+enum searchResultsOrderingType:
+	newestFirst="Newest first" | oldestFirst="Oldest first" | popularity="Popularity" | alphabetical="Alphabetical" | category="Category"
+;
+
+enum scrollBarsType:
+	no="no" | yes="yes" | auto="auto"
+;
+
+enum contentOpenWindowType:
+	openInParentWindow="Open in parent window" | openInNewWindow="Open in new window" | openInPopup="Open in popup" | modal="Modal"
+;
+
+enum positionOptionType:
+	right="right" | left="left" | none="none"
+;
+
+enum contentStatusType:
+	published="published" | unpublished="unpublished" | archived="archived" | trashed="trashed"
+;
+
+enum languageDirectionType:
+	leftToRight="Left to right direction" | rightToLeft="Right to left direction"
+;
+
+enum bannerPurchaseType:
+	useClientDefault="Use client default" | unlimited="Unlimited" | yearly="Yearly" | monthly="Monthly" | weekly="Weekly" | daily="Daily"
+;
+
+enum bannerType:
+	image="Image" | custom="Custom"
+;
+
+//-end enums
+
+//-begin terminals
+
+terminal MENULEVEL:
+	('0'..'1')('0') | ('1'..'9')
+;
+
+terminal DATE:
+	((('0'..'2') ('0'..'9') '.' ('02')) |
+	(('0'..'2') ('0'..'9') '.' ((('0') (('1') | ('3'..'9'))) | ('1') ('0'..'2')) | (('1') ('0'..'2'))) |
+	(('30') '.' ((('0') (('1') | ('3'..'9'))) | ('1') ('0'..'2'))) |
+	(('31') '.' ((('0') (('1') | ('3') | ('5') | ('7') | ('8'))) | (('1') (('0')| ('2'))))))
+	'.' ('0'..'2') ('0'..'9') ('0'..'9') ('0'..'9')
+;
+
+terminal DATETIME:
+	((('0'..'2') ('0'..'9') '.' ('02')) |
+	(('0'..'2') ('0'..'9') '.' ((('0') (('1') | ('3'..'9'))) | ('1') ('0'..'2')) | (('1') ('0'..'2'))) |
+	(('30') '.' ((('0') (('1') | ('3'..'9'))) | ('1') ('0'..'2'))) |
+	(('31') '.' ((('0') (('1') | ('3') | ('5') | ('7') | ('8'))) | (('1') (('0')| ('2'))))))
+	'.' ('0'..'2') ('0'..'9') ('0'..'9') ('0'..'9')
+	' ' ((('2') ('0'..'3')) | (('0'..'1') ('0'..'9'))) ':' ('0'..'5') ('0'..'9') ':' ('0'..'5') ('0'..'9')
+;
+
+//- end terminals
+
+//- begin misc
+
+FQN:
+	ID ("." ID)*
+;
+
+
+
+MenuOrderingTypeReference:
+	MenuOrderingReference | DefaultOrderingReference
+;
+MenuOrderingReference:
+	reference=[MenuItem]
+;
+NewsfeedOrderingTypeReference:
+	NewsfeedOrderingReference | DefaultOrderingReference
+;
+NewsfeedOrderingReference:
+	reference=[Newsfeed]
+;
+ContactOrderingTypeReference:
+	ContactOrderingReference | DefaultOrderingReference
+;
+ContactOrderingReference:
+	reference=[Contact]
+;
+WeblinkOrderingTypeReference:
+	WeblinkOrderingReference | DefaultOrderingReference
+;
+WeblinkOrderingReference:
+	reference=[Weblink]
+;
+BannerOrderingTypeReference:
+	BannerOrderingReference | DefaultOrderingReference
+;
+BannerOrderingReference:
+	reference=[Banner]
+;
+
+DefaultOrderingReference:
+	reference=defaultOrdering
+;
+
+//- end misc

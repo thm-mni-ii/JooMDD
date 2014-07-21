@@ -1,0 +1,138 @@
+grammar de.thm.icampus.ejsl.EJSL with org.eclipse.xtext.common.Terminals
+import "http://www.eclipse.org/xtext/common/JavaVMTypes" as jvmTypes
+generate eJSL "http://www.thm.de/icampus/ejsl/EJSL"
+
+EJSLModel returns EJSLModel:
+	{EJSLModel}
+	'eJSLModel'	name=STRING
+	'{'
+		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+		('entities' '{' (entities+=Entity)* '}')?
+		('pages' '{' (pages+=Page)* '}')?
+	'}';
+
+// data model
+
+Datatype returns Datatype:
+	{Datatype}
+	'Datatype'	name=STRING;
+	
+Parameter returns Parameter:
+	{Parameter}
+	'Parameter' name=ID 
+	'{'
+		'type' '=' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
+		('defaultvalue' '=' defaultvalue=STRING)?
+		('label' '=' label=STRING)?
+		('size' '=' size=INT)?
+		('description' '=' descripton=STRING)?
+	'}'
+;
+
+Entity returns Entity:
+	{Entity}
+	'Entity' name=ID 
+	'{'
+		('attributes' '{' (attributes+=Attribute)* '}')?
+		('references' '{' (references+=Reference)* '}')?
+	'}'
+;
+
+Attribute returns Attribute:
+	{Attribute}
+	'Attribute' name=ID ':' jvmtype=[jvmTypes::JvmType|QualifiedName]
+		
+;
+
+Reference returns Reference:
+	{Reference}
+	'Reference' name=ID 
+	'{'
+		'*Entity' entity=[Entity]
+		'lower' lower=NUMBER
+		'upper' upper=NUMBER 
+	'}'
+;
+
+// page model
+
+Page:
+	StaticPage | DynamicPage
+;
+
+StaticPage returns StaticPage:
+	{StaticPage}
+	'StaticPage' name=ID 
+	'{'
+		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
+		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('links' '{' (links+=Link)* '}')?
+		'HTMLBody' '{' HTMLBody = STRING '}'
+	'}'
+;
+
+DynamicPage:
+	IndexPage | DetailsPage
+;
+
+IndexPage returns IndexPage:
+	{IndexPage}
+	'IndexPage' name=ID 
+	'{'
+		('*Entities' entities+=[Entity] (',' entities+=[Entity])*)?
+		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
+		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('links' '{' links+=Link ( "," links+=Link)* '}')?
+	'}'
+;
+
+DetailsPage returns DetailsPage:
+	{DetailsPage}
+	'DetailsPage' name=ID 
+	'{'
+		('*Entities' entities+=[Entity] (',' entities+=[Entity])*)?
+		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
+		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('links' '{' (links+=Link)* '}')?
+	'}'
+;
+
+Link:
+	ExternalLink | InternalLink | ContextLink
+;
+
+
+ExternalLink returns ExternalLink:
+	{ExternalLink}
+	'ExternalLink' 
+	'{'
+		'target' '=' target=STRING
+		('label' '=' label=STRING)?
+	'}'
+;
+
+InternalLink returns InternalLink:
+	{InternalLink}
+	'InternalLink' name=ID 
+	'{'
+		'target' '=' '*'target=[Page|QualifiedName]
+	'}'
+;
+
+ContextLink returns ContextLink:
+	{ContextLink}
+	'InternalcontextLink' name=ID 
+	'{'
+		'target' '=' '*'target=[Page|QualifiedName]
+		'linkparameters' '{' (linkparameters+=LinkParameter)* '}'
+	'}'
+;
+
+LinkParameter:
+	'Parameter' name=ID '=' ('*Attribute 'attvalue=[Attribute|STRING] | value=STRING)
+;
+
+NUMBER : ('-')?INT;
+	
+QualifiedName: ID ('.' ID)* ;

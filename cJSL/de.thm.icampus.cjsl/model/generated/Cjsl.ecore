@@ -1,0 +1,1200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="cjsl" nsURI="http://www.thm.de/icampus/cjsl/Cjsl" nsPrefix="cjsl">
+  <eClassifiers xsi:type="ecore:EClass" name="Application">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="joomlaPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="applicationPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cjsl_configuration" eType="#//cJSL_Configuration"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cjsl_user" eType="#//cJSL_User"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cjsl_content" eType="#//cJSL_Content"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cjsl_page" eType="#//cJSL_Page"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cjsl_menu" eType="#//cJSL_Menu"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="cJSL_Configuration">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="website_conf" eType="#//website_Conf"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="db_conf" eType="#//db_Conf"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="system_conf" eType="#//system_Conf"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ftp_conf" eType="#//ftp_Conf"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mailer_conf" eType="#//mailer_Conf"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="editor" upperBound="-1"
+        eType="#//Editor" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="template" upperBound="-1"
+        eType="#//Template" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" upperBound="-1"
+        eType="#//Language" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="timeZone" upperBound="-1"
+        eType="#//TimeZone" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="website_Conf">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pagetitle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superadmin" eType="#//User"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exampledata" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offline" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offline_message" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offline_image" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="editor" eType="#//EditorType"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="site_access" eType="#//ViewLevelRights"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyword" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="robot" eType="#//robotKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="show_author_meta_tag" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="show_joomla_version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="use_sef" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_rewrite" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="include_site_name_in_page_titles"
+        eType="#//inclSiteNameInPTKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="mailer_Conf">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mailer" eType="#//mailerKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mail_from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_from" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sendmail_path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="smtpconfig" eType="#//smtp_Conf"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="smtp_Conf">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="smtp_auth" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="smtp_security" eType="#//smtpSecurityKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="smtp_port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="smtp_username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="smtp_password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="smtp_host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="system_Conf">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="error_reporting_type" eType="#//errorReportingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="force_ssl" eType="#//forceSslKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="server_time_zone" eType="#//TimeZone"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="debug_system" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="debug_language" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="caching" eType="#//cachingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cache_handler" eType="#//cacheHandlerKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cache_time" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="session_lifetime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ftp_Conf">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ftp_user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ftp_pass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="root_path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="db_Conf">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="database" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="user" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dbtype" eType="#//databaseKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="prefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="host" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Template">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" upperBound="-1"
+        eType="#//Position" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Position">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EditorType"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EditorReference" eSuperTypes="#//EditorType">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//Editor"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DefaultEditor" eSuperTypes="#//EditorType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reference" eType="#//defaultEditorKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Editor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewLevelRights"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewLevelReference" eSuperTypes="#//ViewLevelRights">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ref" eType="#//ViewLevel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DefaultViewLevelReference" eSuperTypes="#//ViewLevelRights">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ref" eType="#//defaultViewLevel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LanguageType" eSuperTypes="#//LanguageTypeWithAll"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LanguageTypeWithAll">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="all" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LanguageReference" eSuperTypes="#//LanguageType">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" eType="#//Language"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DefaultLanguage" eSuperTypes="#//LanguageType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reference" eType="#//defaultLanguageKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Language">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TimeZone">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="continent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="country" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="cJSL_Page">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="page" upperBound="-1" eType="#//Page"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Page">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metadataOptions" eType="#//PageMetadataOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArticlePage" eSuperTypes="#//Page"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ArchivedArticlesPage" eSuperTypes="#//ArticlePage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="articleOrder" eType="#//articleOrderKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="orderDate" eType="#//orderDateKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="articlesToList" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filterField" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleLayoutOptions" eType="#//ArticleSettingsOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SingleArticlePage" eSuperTypes="#//ArticlePage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="content" eType="#//Content"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleSettingsOptons"
+        eType="#//ArticleSettingsOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="integrationOptions" eType="#//IntegrationOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListAllCategoriesPage" eSuperTypes="#//ArticlePage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootCategory" eType="#//ArticleCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoriesOptions" eType="#//CategoriesOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryOptions" eType="#//CategoryOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="blogLayoutOptions" eType="#//BlogLayoutOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderingPaginationOptions"
+        eType="#//OrderingPaginationOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="listLayoutOptions" eType="#//ListLayoutOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleSettingsOptons"
+        eType="#//ArticleSettingsOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="integrationOptions" eType="#//IntegrationOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CategoryPage" eSuperTypes="#//ArticlePage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//ArticleCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showSubcatText" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageSubheading" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryOptions" eType="#//CategoryOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleLayoutOptions" eType="#//ArticleLayoutOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderingPaginationOptions"
+        eType="#//OrderingPaginationOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleSettingsOptons"
+        eType="#//ArticleSettingsOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="integrationOptions" eType="#//IntegrationOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeaturedArticlesPage" eSuperTypes="#//ArticlePage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categories" unique="false"
+        upperBound="-1" eType="#//ArticleCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="layoutOptions" eType="#//BlogLayoutOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderingPaginationOptions"
+        eType="#//OrderingPaginationOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleSettingsOptons"
+        eType="#//ArticleSettingsOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="integrationOptions" eType="#//IntegrationOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CreateArticlePage" eSuperTypes="#//ArticlePage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="defaultCategory" eType="#//ArticleCategory"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserPage" eSuperTypes="#//Page"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LoginPage" eSuperTypes="#//UserPage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loginRedirect" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loginDescriptionText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loginImage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="logoutRedirect" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="logoutDescriptionText"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="logoutImage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserProfilePage" eSuperTypes="#//UserPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EditUserProfilePage" eSuperTypes="#//UserPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RegistrationPage" eSuperTypes="#//UserPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UsernameReminderRequestPage" eSuperTypes="#//UserPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PasswordResetPage" eSuperTypes="#//UserPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ContactPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactDisplayOptions"
+        eType="#//ContactDisplayOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactEmailOptions" eType="#//ContactEmailOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContactListAllCategoriesPage" eSuperTypes="#//ContactPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootCategory" eType="#//ContactCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoriesOptions" eType="#//CategoriesOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topLevelCatDesc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showContactsInCategory"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryOptions" eType="#//CategoryOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactListLayout" eType="#//ContactListLayoutOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="integrationOptions" eType="#//IntegrationOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListContactInCategoryPage" eSuperTypes="#//ContactPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//ContactCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryOptions" eType="#//CategoryOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showContactsInCategory"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactListLayout" eType="#//ContactListLayoutOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="integrationOptions" eType="#//IntegrationOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SingleContactPage" eSuperTypes="#//ContactPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contact" eType="#//Contact"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FeaturedContactPage" eSuperTypes="#//ContactPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactListLayout" eType="#//ContactListLayoutOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WebLinksPage" eSuperTypes="#//Page"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ListAllWeblinkCategoriesPage" eSuperTypes="#//WebLinksPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootCategory" eType="#//WeblinkCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoriesOptions" eType="#//CategoriesOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topLevelCatDesc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showNumberOfWeblinks" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryOptions" eType="#//CategoryOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showWeblinkInCategory"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weblinkListLayoutOptions"
+        eType="#//WeblinkListLayoutOptions" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListWeblinkCategoryPage" eSuperTypes="#//WebLinksPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//WeblinkCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryOptions" eType="#//CategoryOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showWeblinkInCategory"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weblinkListLayoutOptions"
+        eType="#//WeblinkListLayoutOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="integrationOptions" eType="#//IntegrationOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WeblinkSubmitPage" eSuperTypes="#//WebLinksPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="NewsFeedPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsfeedDisplayOptions"
+        eType="#//NewsfeedDisplayOptions" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListAllNewsfeedCategoriesPage" eSuperTypes="#//NewsFeedPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootCategory" eType="#//NewsfeedCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoriesOptions" eType="#//CategoriesOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="topLevelCatDesc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showNumberOfNewsfeeds"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryOptions" eType="#//CategoryOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showNewsfeedInCategory"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsfeedListLayoutOptions"
+        eType="#//NewsfeedListLayoutOptions" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListNewsfeedInCategoryPage" eSuperTypes="#//NewsFeedPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//NewsfeedCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categoryOptions" eType="#//CategoryOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showContactsInCategory"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsfeedListLayoutOptions"
+        eType="#//NewsfeedListLayoutOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="feedDisplayOrder" eType="#//feedDisplayOrderKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SingleNewsfeedPage" eSuperTypes="#//NewsFeedPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsfeed" eType="#//Newsfeed"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="feedDisplayOrder" eType="#//feedDisplayOrderKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SmartSearchPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="searchQuery" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="searchFilter" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showDateFilters" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showAdvancedSearch" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="expandAdvancedSearch" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reslutDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showResultUrl" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationLimit" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationResults"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allowEmptySearch" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sortField" eType="#//sortFieldKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sortDirection" eType="#//sortDirectionKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showFeed" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showFeedText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="integrationOptions" eType="#//IntegrationOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SearchPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="searchTerm" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="useSearchAreas" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCreationDate" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="searchFor" eType="#//searchForKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="searchResultsOrdering"
+        eType="#//searchResultsOrderingKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IFrameWrapperPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scrollBars" eType="#//scrollBarsKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="frameBorder" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="cJSL_User">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="usergroups" upperBound="-1"
+        eType="#//UserGroup" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" upperBound="-1" eType="#//User"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewlevel" upperBound="-1"
+        eType="#//ViewLevel" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserGroup">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//UserGroup"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalAccess_level" eType="#//CoreAccessLevel"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="User">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="usergroup" unique="false"
+        upperBound="-1" eType="#//UserGroup"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="blocked" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="receiveSystemMail" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="backendTemplateStyle" eType="#//Template"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="backendLanguage" eType="#//LanguageType"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="frontendLanguage" eType="#//LanguageType"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="editor" eType="#//EditorType"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="time_zone" eType="#//TimeZone"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="userProfile" eType="#//UserProfile"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserProfile">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="userAttribute" upperBound="-1"
+        eType="#//UserProfileAttribute" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserProfileAttribute">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewLevel">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="usergroup" unique="false"
+        upperBound="-1" eType="#//UserGroup"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="cJSL_Content">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleCategory" upperBound="-1"
+        eType="#//ArticleCategory" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalArticleCategoryOptions"
+        eType="#//CategoryOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalBannersCategoryOptions"
+        eType="#//CategoryOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalWeblinkCategoryOptions"
+        eType="#//CategoryOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalNewsfeedCategoryOptions"
+        eType="#//CategoryOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalContactCategoryOptions"
+        eType="#//CategoryOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalContentOptions" eType="#//ArticleSettingsOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalNewsfeedOptions"
+        eType="#//NewsfeedDisplayOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalContactOptions" eType="#//ContactDisplayOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bannerCategory" upperBound="-1"
+        eType="#//BannerCategory" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weblinkCategory" upperBound="-1"
+        eType="#//WeblinkCategory" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsfeedCategory" upperBound="-1"
+        eType="#//NewsfeedCategory" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactCategory" upperBound="-1"
+        eType="#//ContactCategory" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="content" upperBound="-1"
+        eType="#//Content" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsfeed" upperBound="-1"
+        eType="#//Newsfeed" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weblink" upperBound="-1"
+        eType="#//Weblink" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contact" upperBound="-1"
+        eType="#//Contact" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bannerClient" upperBound="-1"
+        eType="#//BannerClient" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="banner" upperBound="-1"
+        eType="#//Banner" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArticleCategory">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//ArticleCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="catOptions" eType="#//ContentCategoryOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BannerCategory">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//BannerCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="catOptions" eType="#//ContentCategoryOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WeblinkCategory">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//WeblinkCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="catOptions" eType="#//ContentCategoryOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContactCategory">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//ContactCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="catOptions" eType="#//ContentCategoryOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewsfeedCategory">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//NewsfeedCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="catOptions" eType="#//ContentCategoryOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Content">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleText" eType="#//ContentBlock"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="authorAlias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//ArticleCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewlevel" eType="#//ViewLevelRights"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//contentStatusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="access_level" eType="#//CrudAccessLevel"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="finishPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="imagesOptions" eType="#//ContentImageOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="urlOptions" upperBound="-1"
+        eType="#//ContentUrlSettingOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributeOptions" eType="#//ContentAttributeOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentArticle" eType="#//Content"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contentMetadataOptions"
+        eType="#//ContentMetaDataOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="featured" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" eType="#//LanguageTypeWithAll"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extRessourceDescription"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContentBlock">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="media" upperBound="-1"
+        eType="#//Media" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Media"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Video" eSuperTypes="#//Media">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="videoURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Audio" eSuperTypes="#//Media">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="audioURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Picture" eSuperTypes="#//Media">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pictureURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Newsfeed">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//NewsfeedCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewlevel" eType="#//ViewLevelRights"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="link" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//contentStatusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="authorAlias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfArticles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cacheTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="languageDirection" eType="#//languageDirectionKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" eType="#//LanguageTypeWithAll"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="feedDisplayOptions" eType="#//NewsfeedDisplayOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="feedDisplayOrder" eType="#//feedDisplayOrderKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contentMetadataOptions"
+        eType="#//ContentMetaDataOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extRessourceDescription"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="finishPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Weblink">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//WeblinkCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewlevel" eType="#//ViewLevelRights"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//contentStatusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="archived" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="approved" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="weblinkParamOptions" eType="#//WeblinkParamOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" eType="#//LanguageTypeWithAll"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="authorAlias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contentMetadataOptions"
+        eType="#//ContentMetaDataOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="featured" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extRessourceDescription"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="finishPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Contact">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//ContactCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewlevel" eType="#//ViewLevelRights"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="otherInformation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//contentStatusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" eType="#//LanguageTypeWithAll"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="authorAlias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contentMetadataOptions"
+        eType="#//ContentMetaDataOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="featured" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extRessourceDescription"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="finishPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="linkedUser" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactEmailOptions" eType="#//ContactEmailOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactListLayoutOptions"
+        eType="#//ContactListLayoutOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contactDetailsOption" eType="#//ContactDetailsOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BannerClient">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactEmail" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="AdditionalInformation"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//contentStatusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="purchaseType" eType="#//bannerPurchaseKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trackClicks" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trackImpressions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bannerMetadataOptions"
+        eType="#//BannerMetadataOptions" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Banner">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="client" eType="#//BannerClient"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//BannerCategory"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//bannerKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxImpressions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="clickUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//contentStatusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="customBannerCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sticky" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bannerParamsOptions" eType="#//BannerParamsOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bannerMetadataOptions"
+        eType="#//BannerMetadataOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="purchaseType" eType="#//bannerPurchaseKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trackClicks" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trackImpressions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="finishPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" eType="#//LanguageTypeWithAll"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="cJSL_Menu">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="menu" upperBound="-1" eType="#//Menu"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="menuRepresentation" upperBound="-1"
+        eType="#//MenuRepresentation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Menu">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="menuType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="menuentries" upperBound="-1"
+        eType="#//MenuItem" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MenuItem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//MenuItem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewlevel" eType="#//ViewLevelRights"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="mIR" eType="#//MenuItem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="linktypeOptionsExtUrl"
+        eType="#//LinkTypeOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="note" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//statusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetWindow" eType="#//targetWindowKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultPage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" eType="#//LanguageTypeWithAll"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="templateStyle" eType="#//Template"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="linktypeOptions" eType="#//LinkTypeOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageDisplayOptions" eType="#//PageDisplayOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MenuRepresentation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="menuRef" eType="#//Menu"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="templatePosition" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showTitle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//statusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewlevel" eType="#//ViewLevelRights"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endPublishing" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" eType="#//LanguageTypeWithAll"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="note" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignment" eType="#//MenuItemType"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endLevel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showSubMenu" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cssAttributes" eType="#//MenuRepresentationCssAttributes"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MenuItemType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="oap" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MenuItemReferences" eSuperTypes="#//MenuItemType">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reference" unique="false"
+        upperBound="-1" eType="#//MenuItem"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MenuRepresentationCssAttributes">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="menuTagId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="menuClassSuffix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="popupTargetPosition" eType="#//PopupTargetPositionOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cacheTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CoreAccessLevel">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="site_login" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="admin_login" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offline_access" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="super_admin" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="access_administration_interface"
+        eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="create" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="delete" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="edit" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="edit_state" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="edit_own" eType="#//accessLevelRight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CrudAccessLevel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="userGroup" eType="#//UserGroup"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="create" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="delete" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="edit" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="edit_state" eType="#//accessLevelRight"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="edit_own" eType="#//accessLevelRight"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LinkTypeOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkTitle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkImagePath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="addMenuTitle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PageDisplayOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="browserPageTitle" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageHeading" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PageMetadataOptions">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metadataOptions" eType="#//MetaDataOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="secure" eType="#//secureKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IntegrationOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showFeedLink" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="feedSummary" eType="#//feedSummaryKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PopupTargetPositionOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="top" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="left" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="witdh" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArticleLayoutOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="layout" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="layoutOptions" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BlogLayoutOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numLeadingArticles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numIntroArticles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numColumns" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numLinks" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiColumnOrder" eType="#//multiColumnOrderKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ListLayoutOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationLimit" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filterField" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tableHeadings" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showDate" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateFormat" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="listShowHits" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="listShowAuthor" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="articlesToList" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CategoryOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCategoryTitle" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCategoryDesc" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCategoryImage" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showSubcatLevels" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showEmptyCategories" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showNoArticles" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showSubcatDesc" eType="#//optionSettingKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CategoriesOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showTopLevelCategoryDesc"
+        eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subcatLevels" eType="#//MaxLevelSettingType"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="emptyCategories" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="subcatDesc" eType="#//optionSettingKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MaxLevelSettingType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxLevelSettingDefault"
+        eType="#//maxLevelSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxLevelSettingNumber"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderingPaginationOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="categoryOrder" eType="#//categoryOrderKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="articleOrder" eType="#//articleOrderKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="orderDate" eType="#//orderDateKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPagination" eType="#//paginationKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationResults"
+        eType="#//optionSettingKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArticleSettingsOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showTitle" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkTitles" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showIntro" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCategory" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkCategory" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showParentCategory" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkParentCategory" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showAuthor" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkAuthor" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCreationDate" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showModifyDate" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPublishDate" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showItemNavigation" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showVote" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showReadmore" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showReadmoreTitle" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showIcons" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPrintIcon" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showEmailIcon" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showHits" eType="#//articleSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showUnauthorisedLinks"
+        eType="#//articleSettingKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContactListLayoutOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationLimit" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showTableHeadings" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showContactPosition" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showEmail" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPhone" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showMobile" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showFax" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCityOrSuburb" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showStateOrCountry" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCountry" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginagtion" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationResults"
+        eType="#//optionSettingKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContactEmailOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showContactForm" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sendCopyToSubmitter" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bannedEmail" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bannedSubject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bannedText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sessionCheck" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="customReply" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactRedirectLink" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContactDisplayOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayFormat" eType="#//contactDisplayFormatKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactCategory" eType="#//contactCategoryKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showContactList" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showName" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showContactPosition" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showEmail" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showStreetAddress" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCityOrSuburb" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showStateOrCountry" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPostalCode" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showCountry" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPhone" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showMobile" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showFax" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showWebpage" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showMiscInformation" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showImage" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showVcard" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showUserArticles" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showLinks" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="addLink" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WeblinkListLayoutOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationLimit" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showTableHeadings" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showLinkDescription" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showHits" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginagtion" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationResults"
+        eType="#//optionSettingKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewsfeedListLayoutOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationLimit" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showTableHeadings" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showArticles" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showFeedLinks" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginagtion" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPaginationResults"
+        eType="#//optionSettingKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewsfeedDisplayOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showFeedImage" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showfeedDescription" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showContent" eType="#//optionSettingKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="feedCharacterCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContentMetaDataOptions">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metadataOptions" eType="#//MetaDataOptions"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MetaDataOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metaKeywords" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metaDescription" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="robots" eType="#//robotKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContentUrlSettingOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="link" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="urlTargetWindowForLink"
+        eType="#//contentOpenWindowKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContentAttributeOptions">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articleSettingOption" eType="#//ArticleSettingsOptions"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="readmoreText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showPublishingOptions"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showArticleOptions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showUrlImagesBackend" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="showUrlImagesFrontend"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="introImage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="imageFloat" eType="#//positionOptionKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="altText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="caption" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContentImageOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="imageFulltext" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="imageFulltextFloat" eType="#//positionOptionKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="imageFulltextAlternative"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="imageFulltextCaption" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContentCategoryOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="access_level" eType="#//CrudAccessLevel"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="note" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="published" eType="#//contentStatusKind"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="viewlevel" eType="#//ViewLevelRights"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contentMetadataOptions"
+        eType="#//ContentMetaDataOptions" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" eType="#//LanguageTypeWithAll"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="image" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContactDetailsOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cityOrSuburb" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateOrProvince" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="country" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="postalZipCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="telephone" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fax" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="image" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mobile" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="webpage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="firstSortField" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="secondSortField" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="thirdSortField" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WeblinkParamOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="#//contentOpenWindowKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" eType="#//contentOpenWindowKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" eType="#//contentOpenWindowKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countClicks" eType="#//contentOpenWindowKind"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BannerParamsOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="image" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alt" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BannerMetadataOptions">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metaKeyword" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metaKeywordPrefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="accessLevelRight">
+    <eLiterals name="denied" literal="denied"/>
+    <eLiterals name="accepted" value="1" literal="accepted"/>
+    <eLiterals name="inherited" value="2" literal="inherited"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="defaultEditorKind">
+    <eLiterals name="tinymce" literal="TinyMCE"/>
+    <eLiterals name="codemirror" value="1" literal="CodeMirror"/>
+    <eLiterals name="none" value="2" literal="none"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="databaseKind">
+    <eLiterals name="mysqli" literal="mysqli"/>
+    <eLiterals name="mysql" value="1" literal="mysql"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="defaultViewLevel">
+    <eLiterals name="public" literal="public"/>
+    <eLiterals name="registered" value="1" literal="registered"/>
+    <eLiterals name="special" value="2" literal="special"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="defaultLanguageKind">
+    <eLiterals name="en" literal="english"/>
+    <eLiterals name="de" value="1" literal="german"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="robotKind">
+    <eLiterals name="index_follow" literal="Index, Follow"/>
+    <eLiterals name="index_nofollow" value="1" literal="Index, No follow"/>
+    <eLiterals name="noindex_follow" value="2" literal="No index, Follow"/>
+    <eLiterals name="noindex_nofollow" value="3" literal="No index, No follow"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="inclSiteNameInPTKind">
+    <eLiterals name="after" literal="after"/>
+    <eLiterals name="before" value="1" literal="before"/>
+    <eLiterals name="no" value="2" literal="no"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="mailerKind">
+    <eLiterals name="phpmail" literal="PHP Mail"/>
+    <eLiterals name="sendmail" value="1" literal="Sendmail"/>
+    <eLiterals name="smtp" value="2" literal="SMTP"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="smtpSecurityKind">
+    <eLiterals name="none" literal="None"/>
+    <eLiterals name="ssl" value="1" literal="SSL"/>
+    <eLiterals name="tls" value="2" literal="TLS"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="errorReportingKind">
+    <eLiterals name="system_default" literal="System default"/>
+    <eLiterals name="none" value="1" literal="None"/>
+    <eLiterals name="simple" value="2" literal="Simple"/>
+    <eLiterals name="maximum" value="3" literal="Maximum"/>
+    <eLiterals name="development" value="4" literal="Development"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="forceSslKind">
+    <eLiterals name="none" literal="None"/>
+    <eLiterals name="administrator_only" value="1" literal="Administrator only"/>
+    <eLiterals name="entire_site" value="2" literal="Entire site"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="cachingKind">
+    <eLiterals name="off" literal="OFF-Caching disabled"/>
+    <eLiterals name="on_conservative" value="1" literal="ON-Conservative caching"/>
+    <eLiterals name="on_progressive" value="2" literal="ON-Progressive caching"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="cacheHandlerKind">
+    <eLiterals name="file" literal="File"/>
+    <eLiterals name="cache_lite" value="1" literal="Cache_Lite"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="statusKind">
+    <eLiterals name="published" literal="Published"/>
+    <eLiterals name="unpublished" value="1" literal="Unpublished"/>
+    <eLiterals name="trashed" value="2" literal="Trashed"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="targetWindowKind">
+    <eLiterals name="parent" literal="Parent"/>
+    <eLiterals name="newWindowWithNavigation" value="1" literal="New Window With Navigation"/>
+    <eLiterals name="newWindowWithoutNavigation" value="2" literal="New Window Without Navigation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="secureKind">
+    <eLiterals name="off" literal="off"/>
+    <eLiterals name="on" value="1" literal="on"/>
+    <eLiterals name="ignore" value="2" literal="ignore"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="articleSettingKind">
+    <eLiterals name="useArticleSetting" literal="Use article setting"/>
+    <eLiterals name="hide" value="1" literal="hide"/>
+    <eLiterals name="show" value="2" literal="show"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="optionSettingKind">
+    <eLiterals name="hide" literal="hide"/>
+    <eLiterals name="show" value="1" literal="show"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="maxLevelSettingKind">
+    <eLiterals name="all" literal="all"/>
+    <eLiterals name="none" value="1" literal="none"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="feedSummaryKind">
+    <eLiterals name="introText" literal="intro text"/>
+    <eLiterals name="fullText" value="1" literal="full text"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="multiColumnOrderKind">
+    <eLiterals name="down" literal="down"/>
+    <eLiterals name="across" value="1" literal="across"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="categoryOrderKind">
+    <eLiterals name="noOrder" literal="No order"/>
+    <eLiterals name="titleAlphabetical" value="1" literal="Title alphabetical"/>
+    <eLiterals name="titleReverseAlphabetical" value="2" literal="Title reverse alphabetical"/>
+    <eLiterals name="categoryManagerOrder" value="3" literal="Category manager order"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="articleOrderKind">
+    <eLiterals name="featuredArticleOrder" literal="Featured article order"/>
+    <eLiterals name="mostRecentFirst" value="1" literal="Most recent first"/>
+    <eLiterals name="oldestFirst" value="2" literal="Oldest first"/>
+    <eLiterals name="titleAlphabetical" value="3" literal="Title alphabetical"/>
+    <eLiterals name="titleReverseAlphabetical" value="4" literal="Title reverse alphabetical"/>
+    <eLiterals name="authorAlphabetical" value="5" literal="Author alphabetical"/>
+    <eLiterals name="authorAlphabeticalReverse" value="6" literal="Author alphabetical reverse"/>
+    <eLiterals name="mostHits" value="7" literal="Most hits"/>
+    <eLiterals name="leastsHits" value="8" literal="Leasts hits"/>
+    <eLiterals name="articleManagerOrder" value="9" literal="Article Manager Order"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="orderDateKind">
+    <eLiterals name="created" literal="created"/>
+    <eLiterals name="modified" value="1" literal="modified"/>
+    <eLiterals name="published" value="2" literal="published"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="paginationKind">
+    <eLiterals name="hide" literal="hide"/>
+    <eLiterals name="show" value="1" literal="show"/>
+    <eLiterals name="auto" value="2" literal="auto"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="contactDisplayFormatKind">
+    <eLiterals name="sliders" literal="sliders"/>
+    <eLiterals name="tabs" value="1" literal="tabs"/>
+    <eLiterals name="plain" value="2" literal="plain"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="contactCategoryKind">
+    <eLiterals name="hide" literal="hide"/>
+    <eLiterals name="showWithoutLink" value="1" literal="show without link"/>
+    <eLiterals name="showWithLink" value="2" literal="show with link"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="feedDisplayOrderKind">
+    <eLiterals name="mostRecentFirst" literal="Most recent first"/>
+    <eLiterals name="oldestFirst" value="1" literal="Oldest first"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="sortFieldKind">
+    <eLiterals name="relevance" literal="relevance"/>
+    <eLiterals name="date" value="1" literal="date"/>
+    <eLiterals name="price" value="2" literal="price"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="sortDirectionKind">
+    <eLiterals name="descending" literal="descending"/>
+    <eLiterals name="ascending" value="1" literal="ascending"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="searchForKind">
+    <eLiterals name="allWords" literal="All words"/>
+    <eLiterals name="anyWords" value="1" literal="Any words"/>
+    <eLiterals name="exactPhrase" value="2" literal="Exact phrase"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="searchResultsOrderingKind">
+    <eLiterals name="newestFirst" literal="Newest first"/>
+    <eLiterals name="oldestFirst" value="1" literal="Oldest first"/>
+    <eLiterals name="popularity" value="2" literal="Popularity"/>
+    <eLiterals name="alphabetical" value="3" literal="Alphabetical"/>
+    <eLiterals name="category" value="4" literal="Category"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="scrollBarsKind">
+    <eLiterals name="no" literal="no"/>
+    <eLiterals name="yes" value="1" literal="yes"/>
+    <eLiterals name="auto" value="2" literal="auto"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="contentOpenWindowKind">
+    <eLiterals name="openInParentWindow" literal="Open in parent window"/>
+    <eLiterals name="openInNewWindow" value="1" literal="Open in new window"/>
+    <eLiterals name="openInPopup" value="2" literal="Open in popup"/>
+    <eLiterals name="modal" value="3" literal="Modal"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="positionOptionKind">
+    <eLiterals name="right" literal="right"/>
+    <eLiterals name="left" value="1" literal="left"/>
+    <eLiterals name="none" value="2" literal="none"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="contentStatusKind">
+    <eLiterals name="published" literal="published"/>
+    <eLiterals name="unpublished" value="1" literal="unpublished"/>
+    <eLiterals name="archived" value="2" literal="archived"/>
+    <eLiterals name="trashed" value="3" literal="trashed"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="languageDirectionKind">
+    <eLiterals name="leftToRight" literal="Left to right direction"/>
+    <eLiterals name="rightToLeft" value="1" literal="Right to left direction"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="bannerPurchaseKind">
+    <eLiterals name="useClientDefault" literal="Use client default"/>
+    <eLiterals name="unlimited" value="1" literal="Unlimited"/>
+    <eLiterals name="yearly" value="2" literal="Yearly"/>
+    <eLiterals name="monthly" value="3" literal="Monthly"/>
+    <eLiterals name="weekly" value="4" literal="Weekly"/>
+    <eLiterals name="daily" value="5" literal="Daily"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="bannerKind">
+    <eLiterals name="image" literal="Image"/>
+    <eLiterals name="custom" value="1" literal="Custom"/>
+  </eClassifiers>
+</ecore:EPackage>

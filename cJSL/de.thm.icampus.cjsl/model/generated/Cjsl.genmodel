@@ -1,0 +1,1025 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/de.thm.icampus.cjsl/src-gen" editDirectory="/de.thm.icampus.cjsl.edit/src"
+    editorDirectory="/de.thm.icampus.cjsl.editor/src" modelPluginID="de.thm.icampus.cjsl"
+    forceOverwrite="true" modelName="Cjsl" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="5.0" copyrightFields="false" editPluginID="de.thm.icampus.cjsl.edit"
+    editorPluginID="de.thm.icampus.cjsl.editor" runtimeVersion="2.9">
+  <genPackages prefix="Cjsl" basePackage="de.thm.icampus.cjsl" disposableProviderFactory="true"
+      loadInitialization="true" literalsInterface="false" fileExtensions="cJSL" ecorePackage="Cjsl.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//accessLevelRight">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//accessLevelRight/denied"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//accessLevelRight/accepted"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//accessLevelRight/inherited"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//defaultEditorKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultEditorKind/tinymce"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultEditorKind/codemirror"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultEditorKind/none"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//databaseKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//databaseKind/mysqli"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//databaseKind/mysql"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//defaultViewLevel">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultViewLevel/public"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultViewLevel/registered"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultViewLevel/special"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//defaultLanguageKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultLanguageKind/en"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultLanguageKind/de"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//robotKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//robotKind/index_follow"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//robotKind/index_nofollow"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//robotKind/noindex_follow"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//robotKind/noindex_nofollow"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//inclSiteNameInPTKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//inclSiteNameInPTKind/after"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//inclSiteNameInPTKind/before"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//inclSiteNameInPTKind/no"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//mailerKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//mailerKind/phpmail"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//mailerKind/sendmail"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//mailerKind/smtp"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//smtpSecurityKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//smtpSecurityKind/none"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//smtpSecurityKind/ssl"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//smtpSecurityKind/tls"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//errorReportingKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//errorReportingKind/system_default"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//errorReportingKind/none"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//errorReportingKind/simple"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//errorReportingKind/maximum"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//errorReportingKind/development"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//forceSslKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//forceSslKind/none"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//forceSslKind/administrator_only"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//forceSslKind/entire_site"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//cachingKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//cachingKind/off"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//cachingKind/on_conservative"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//cachingKind/on_progressive"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//cacheHandlerKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//cacheHandlerKind/file"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//cacheHandlerKind/cache_lite"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//statusKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//statusKind/published"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//statusKind/unpublished"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//statusKind/trashed"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//targetWindowKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//targetWindowKind/parent"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//targetWindowKind/newWindowWithNavigation"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//targetWindowKind/newWindowWithoutNavigation"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//secureKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//secureKind/off"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//secureKind/on"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//secureKind/ignore"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//articleSettingKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleSettingKind/useArticleSetting"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleSettingKind/hide"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleSettingKind/show"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//optionSettingKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//optionSettingKind/hide"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//optionSettingKind/show"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//maxLevelSettingKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//maxLevelSettingKind/all"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//maxLevelSettingKind/none"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//feedSummaryKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//feedSummaryKind/introText"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//feedSummaryKind/fullText"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//multiColumnOrderKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//multiColumnOrderKind/down"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//multiColumnOrderKind/across"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//categoryOrderKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//categoryOrderKind/noOrder"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//categoryOrderKind/titleAlphabetical"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//categoryOrderKind/titleReverseAlphabetical"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//categoryOrderKind/categoryManagerOrder"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//articleOrderKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/featuredArticleOrder"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/mostRecentFirst"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/oldestFirst"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/titleAlphabetical"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/titleReverseAlphabetical"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/authorAlphabetical"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/authorAlphabeticalReverse"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/mostHits"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/leastsHits"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//articleOrderKind/articleManagerOrder"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//orderDateKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//orderDateKind/created"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//orderDateKind/modified"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//orderDateKind/published"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//paginationKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//paginationKind/hide"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//paginationKind/show"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//paginationKind/auto"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//contactDisplayFormatKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contactDisplayFormatKind/sliders"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contactDisplayFormatKind/tabs"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contactDisplayFormatKind/plain"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//contactCategoryKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contactCategoryKind/hide"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contactCategoryKind/showWithoutLink"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contactCategoryKind/showWithLink"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//feedDisplayOrderKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//feedDisplayOrderKind/mostRecentFirst"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//feedDisplayOrderKind/oldestFirst"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//sortFieldKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//sortFieldKind/relevance"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//sortFieldKind/date"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//sortFieldKind/price"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//sortDirectionKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//sortDirectionKind/descending"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//sortDirectionKind/ascending"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//searchForKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//searchForKind/allWords"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//searchForKind/anyWords"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//searchForKind/exactPhrase"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//searchResultsOrderingKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//searchResultsOrderingKind/newestFirst"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//searchResultsOrderingKind/oldestFirst"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//searchResultsOrderingKind/popularity"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//searchResultsOrderingKind/alphabetical"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//searchResultsOrderingKind/category"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//scrollBarsKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//scrollBarsKind/no"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//scrollBarsKind/yes"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//scrollBarsKind/auto"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//contentOpenWindowKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contentOpenWindowKind/openInParentWindow"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contentOpenWindowKind/openInNewWindow"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contentOpenWindowKind/openInPopup"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contentOpenWindowKind/modal"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//positionOptionKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//positionOptionKind/right"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//positionOptionKind/left"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//positionOptionKind/none"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//contentStatusKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contentStatusKind/published"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contentStatusKind/unpublished"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contentStatusKind/archived"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//contentStatusKind/trashed"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//languageDirectionKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//languageDirectionKind/leftToRight"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//languageDirectionKind/rightToLeft"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//bannerPurchaseKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//bannerPurchaseKind/useClientDefault"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//bannerPurchaseKind/unlimited"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//bannerPurchaseKind/yearly"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//bannerPurchaseKind/monthly"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//bannerPurchaseKind/weekly"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//bannerPurchaseKind/daily"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//bannerKind">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//bannerKind/image"/>
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//bannerKind/custom"/>
+    </genEnums>
+    <genClasses ecoreClass="Cjsl.ecore#//Application">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Application/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Application/joomlaPath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Application/applicationPath"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Application/cjsl_configuration"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Application/cjsl_user"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Application/cjsl_content"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Application/cjsl_page"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Application/cjsl_menu"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//cJSL_Configuration">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/website_conf"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/db_conf"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/system_conf"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/ftp_conf"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/mailer_conf"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/editor"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/template"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/language"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Configuration/timeZone"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//website_Conf">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/pagetitle"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//website_Conf/superadmin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/exampledata"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/offline"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/offline_message"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/offline_image"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//website_Conf/editor"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//website_Conf/site_access"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/keyword"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/robot"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/show_author_meta_tag"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/show_joomla_version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/use_sef"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/url_rewrite"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//website_Conf/include_site_name_in_page_titles"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//mailer_Conf">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//mailer_Conf/mailer"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//mailer_Conf/mail_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//mailer_Conf/name_from"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//mailer_Conf/sendmail_path"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//mailer_Conf/smtpconfig"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//smtp_Conf">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//smtp_Conf/smtp_auth"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//smtp_Conf/smtp_security"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//smtp_Conf/smtp_port"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//smtp_Conf/smtp_username"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//smtp_Conf/smtp_password"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//smtp_Conf/smtp_host"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//system_Conf">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//system_Conf/error_reporting_type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//system_Conf/force_ssl"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//system_Conf/server_time_zone"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//system_Conf/debug_system"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//system_Conf/debug_language"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//system_Conf/caching"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//system_Conf/cache_handler"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//system_Conf/cache_time"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//system_Conf/session_lifetime"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ftp_Conf">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ftp_Conf/host"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ftp_Conf/port"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ftp_Conf/ftp_user"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ftp_Conf/ftp_pass"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ftp_Conf/root_path"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//db_Conf">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//db_Conf/database"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//db_Conf/user"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//db_Conf/password"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//db_Conf/dbtype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//db_Conf/prefix"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//db_Conf/host"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Template">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Template/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Template/title"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Template/position"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Position">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Position/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//EditorType"/>
+    <genClasses ecoreClass="Cjsl.ecore#//EditorReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//EditorReference/reference"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//DefaultEditor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//DefaultEditor/reference"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Editor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Editor/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ViewLevelRights"/>
+    <genClasses ecoreClass="Cjsl.ecore#//ViewLevelReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ViewLevelReference/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//DefaultViewLevelReference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//DefaultViewLevelReference/ref"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//LanguageType"/>
+    <genClasses ecoreClass="Cjsl.ecore#//LanguageTypeWithAll">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LanguageTypeWithAll/all"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//LanguageReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//LanguageReference/reference"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//DefaultLanguage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//DefaultLanguage/reference"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Language">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Language/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//TimeZone">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//TimeZone/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//TimeZone/continent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//TimeZone/country"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//cJSL_Page">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Page/page"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Page">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Page/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Page/metadataOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ArticlePage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//ArchivedArticlesPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArchivedArticlesPage/articleOrder"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArchivedArticlesPage/orderDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArchivedArticlesPage/articlesToList"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArchivedArticlesPage/filterField"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ArchivedArticlesPage/articleLayoutOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//SingleArticlePage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//SingleArticlePage/content"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//SingleArticlePage/articleSettingsOptons"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//SingleArticlePage/integrationOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ListAllCategoriesPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllCategoriesPage/rootCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllCategoriesPage/categoriesOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllCategoriesPage/categoryOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllCategoriesPage/blogLayoutOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllCategoriesPage/orderingPaginationOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllCategoriesPage/listLayoutOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllCategoriesPage/articleSettingsOptons"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllCategoriesPage/integrationOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//CategoryPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CategoryPage/category"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryPage/showSubcatText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryPage/pageSubheading"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CategoryPage/categoryOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CategoryPage/articleLayoutOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CategoryPage/orderingPaginationOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CategoryPage/articleSettingsOptons"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CategoryPage/integrationOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//FeaturedArticlesPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//FeaturedArticlesPage/categories"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//FeaturedArticlesPage/layoutOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//FeaturedArticlesPage/orderingPaginationOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//FeaturedArticlesPage/articleSettingsOptons"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//FeaturedArticlesPage/integrationOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//CreateArticlePage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CreateArticlePage/defaultCategory"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//UserPage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//LoginPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LoginPage/loginRedirect"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LoginPage/loginDescriptionText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LoginPage/loginImage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LoginPage/logoutRedirect"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LoginPage/logoutDescriptionText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LoginPage/logoutImage"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//UserProfilePage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//EditUserProfilePage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//RegistrationPage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//UsernameReminderRequestPage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//PasswordResetPage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//ContactPage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactPage/contactDisplayOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactPage/contactEmailOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContactListAllCategoriesPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactListAllCategoriesPage/rootCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactListAllCategoriesPage/categoriesOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListAllCategoriesPage/topLevelCatDesc"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListAllCategoriesPage/showContactsInCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactListAllCategoriesPage/categoryOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactListAllCategoriesPage/contactListLayout"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactListAllCategoriesPage/integrationOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ListContactInCategoryPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListContactInCategoryPage/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListContactInCategoryPage/categoryOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListContactInCategoryPage/showContactsInCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListContactInCategoryPage/contactListLayout"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListContactInCategoryPage/integrationOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//SingleContactPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//SingleContactPage/contact"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//FeaturedContactPage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//FeaturedContactPage/contactListLayout"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//WebLinksPage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//ListAllWeblinkCategoriesPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllWeblinkCategoriesPage/rootCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllWeblinkCategoriesPage/categoriesOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListAllWeblinkCategoriesPage/topLevelCatDesc"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListAllWeblinkCategoriesPage/showNumberOfWeblinks"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllWeblinkCategoriesPage/categoryOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListAllWeblinkCategoriesPage/showWeblinkInCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllWeblinkCategoriesPage/weblinkListLayoutOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ListWeblinkCategoryPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListWeblinkCategoryPage/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListWeblinkCategoryPage/categoryOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListWeblinkCategoryPage/showWeblinkInCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListWeblinkCategoryPage/weblinkListLayoutOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListWeblinkCategoryPage/integrationOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//WeblinkSubmitPage"/>
+    <genClasses ecoreClass="Cjsl.ecore#//NewsFeedPage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//NewsFeedPage/newsfeedDisplayOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ListAllNewsfeedCategoriesPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllNewsfeedCategoriesPage/rootCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllNewsfeedCategoriesPage/categoriesOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListAllNewsfeedCategoriesPage/topLevelCatDesc"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListAllNewsfeedCategoriesPage/showNumberOfNewsfeeds"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllNewsfeedCategoriesPage/categoryOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListAllNewsfeedCategoriesPage/showNewsfeedInCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListAllNewsfeedCategoriesPage/newsfeedListLayoutOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ListNewsfeedInCategoryPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListNewsfeedInCategoryPage/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListNewsfeedInCategoryPage/categoryOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListNewsfeedInCategoryPage/showContactsInCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ListNewsfeedInCategoryPage/newsfeedListLayoutOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListNewsfeedInCategoryPage/feedDisplayOrder"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//SingleNewsfeedPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//SingleNewsfeedPage/newsfeed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SingleNewsfeedPage/feedDisplayOrder"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//SmartSearchPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/searchQuery"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/searchFilter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/showDateFilters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/showAdvancedSearch"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/expandAdvancedSearch"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/reslutDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/showResultUrl"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/showPaginationLimit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/showPaginationResults"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/allowEmptySearch"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/sortField"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/sortDirection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/showFeed"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SmartSearchPage/showFeedText"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//SmartSearchPage/integrationOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//SearchPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SearchPage/searchTerm"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SearchPage/useSearchAreas"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SearchPage/showCreationDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SearchPage/searchFor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//SearchPage/searchResultsOrdering"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//IFrameWrapperPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//IFrameWrapperPage/Url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//IFrameWrapperPage/scrollBars"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//IFrameWrapperPage/width"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//IFrameWrapperPage/height"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//IFrameWrapperPage/frameBorder"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//cJSL_User">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_User/usergroups"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_User/user"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_User/viewlevel"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//UserGroup">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//UserGroup/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//UserGroup/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//UserGroup/globalAccess_level"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//User">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//User/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//User/fullname"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//User/email"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//User/usergroup"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//User/blocked"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//User/receiveSystemMail"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//User/backendTemplateStyle"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//User/backendLanguage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//User/frontendLanguage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//User/editor"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//User/time_zone"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//User/userProfile"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//UserProfile">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//UserProfile/userAttribute"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//UserProfileAttribute">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//UserProfileAttribute/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//UserProfileAttribute/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ViewLevel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ViewLevel/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ViewLevel/title"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ViewLevel/usergroup"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//cJSL_Content">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/articleCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/globalArticleCategoryOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/globalBannersCategoryOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/globalWeblinkCategoryOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/globalNewsfeedCategoryOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/globalContactCategoryOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/globalContentOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/globalNewsfeedOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/globalContactOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/bannerCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/weblinkCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/newsfeedCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/contactCategory"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/content"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/newsfeed"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/weblink"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/contact"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/bannerClient"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Content/banner"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ArticleCategory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleCategory/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ArticleCategory/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ArticleCategory/catOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//BannerCategory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerCategory/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//BannerCategory/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//BannerCategory/catOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//WeblinkCategory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkCategory/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//WeblinkCategory/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//WeblinkCategory/catOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContactCategory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactCategory/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactCategory/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContactCategory/catOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//NewsfeedCategory">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedCategory/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//NewsfeedCategory/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//NewsfeedCategory/catOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Content">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Content/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Content/title"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/articleText"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/author"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Content/authorAlias"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/viewlevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Content/status"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/access_level"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Content/startPublishing"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Content/finishPublishing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/imagesOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/urlOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/attributeOptions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/parentArticle"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/contentMetadataOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Content/featured"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Content/language"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Content/extRessourceDescription"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContentBlock">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentBlock/value"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContentBlock/media"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Media"/>
+    <genClasses ecoreClass="Cjsl.ecore#//Video">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Video/videoURL"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Audio">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Audio/audioURL"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Picture">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Picture/pictureURL"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Newsfeed">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/title"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Newsfeed/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Newsfeed/viewlevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/link"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/status"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Newsfeed/author"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/authorAlias"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/numberOfArticles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/cacheTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/languageDirection"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Newsfeed/language"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Newsfeed/feedDisplayOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/feedDisplayOrder"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Newsfeed/contentMetadataOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/extRessourceDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/startPublishing"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Newsfeed/finishPublishing"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Weblink">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/title"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Weblink/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Weblink/viewlevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/date"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/archived"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/approved"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Weblink/weblinkParamOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Weblink/language"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Weblink/author"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/authorAlias"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Weblink/contentMetadataOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/featured"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/extRessourceDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/startPublishing"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Weblink/finishPublishing"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Contact">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/title"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/viewlevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/otherInformation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/status"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/language"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/author"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/authorAlias"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/contentMetadataOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/featured"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/extRessourceDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/startPublishing"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Contact/finishPublishing"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/linkedUser"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/contactEmailOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/contactListLayoutOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Contact/contactDetailsOption"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//BannerClient">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/contactName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/contactEmail"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/AdditionalInformation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/purchaseType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/trackClicks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerClient/trackImpressions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//BannerClient/bannerMetadataOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Banner">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/title"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Banner/client"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Banner/category"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/maxImpressions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/clickUrl"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/customBannerCode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/sticky"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Banner/bannerParamsOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Banner/bannerMetadataOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/purchaseType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/trackClicks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/trackImpressions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/startPublishing"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Banner/finishPublishing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Banner/language"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//cJSL_Menu">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Menu/menu"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//cJSL_Menu/menuRepresentation"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//Menu">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Menu/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Menu/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Menu/menuType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//Menu/description"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//Menu/menuentries"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//MenuItem">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuItem/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/parent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/viewlevel"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/page"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/mIR"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/linktypeOptionsExtUrl"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuItem/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuItem/note"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuItem/status"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuItem/targetWindow"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuItem/defaultPage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/language"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/templateStyle"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/linktypeOptions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItem/pageDisplayOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//MenuRepresentation">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuRepresentation/menuRef"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuRepresentation/templatePosition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/title"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/showTitle"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/status"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuRepresentation/viewlevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/startPublishing"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/endPublishing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuRepresentation/language"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/note"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuRepresentation/assignment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/startLevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/endLevel"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentation/showSubMenu"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuRepresentation/cssAttributes"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//MenuItemType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuItemType/oap"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//MenuItemReferences">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuItemReferences/reference"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//MenuRepresentationCssAttributes">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentationCssAttributes/menuTagId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentationCssAttributes/menuClassSuffix"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//MenuRepresentationCssAttributes/popupTargetPosition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MenuRepresentationCssAttributes/cacheTime"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//CoreAccessLevel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/site_login"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/admin_login"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/offline_access"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/super_admin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/access_administration_interface"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/create"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/delete"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/edit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/edit_state"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CoreAccessLevel/edit_own"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//CrudAccessLevel">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CrudAccessLevel/userGroup"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CrudAccessLevel/create"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CrudAccessLevel/delete"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CrudAccessLevel/edit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CrudAccessLevel/edit_state"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CrudAccessLevel/edit_own"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//LinkTypeOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LinkTypeOptions/linkTitle"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LinkTypeOptions/linkImagePath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//LinkTypeOptions/addMenuTitle"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//PageDisplayOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//PageDisplayOptions/browserPageTitle"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//PageDisplayOptions/pageHeading"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//PageMetadataOptions">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//PageMetadataOptions/metadataOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//PageMetadataOptions/secure"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//IntegrationOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//IntegrationOptions/showFeedLink"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//IntegrationOptions/feedSummary"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//PopupTargetPositionOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//PopupTargetPositionOptions/top"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//PopupTargetPositionOptions/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//PopupTargetPositionOptions/witdh"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//PopupTargetPositionOptions/height"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ArticleLayoutOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleLayoutOptions/layout"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ArticleLayoutOptions/layoutOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//BlogLayoutOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BlogLayoutOptions/numLeadingArticles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BlogLayoutOptions/numIntroArticles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BlogLayoutOptions/numColumns"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BlogLayoutOptions/numLinks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BlogLayoutOptions/multiColumnOrder"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ListLayoutOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListLayoutOptions/showPaginationLimit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListLayoutOptions/filterField"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListLayoutOptions/tableHeadings"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListLayoutOptions/showDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListLayoutOptions/dateFormat"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListLayoutOptions/listShowHits"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListLayoutOptions/listShowAuthor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ListLayoutOptions/articlesToList"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//CategoryOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryOptions/showCategoryTitle"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryOptions/showCategoryDesc"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryOptions/showCategoryImage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryOptions/showSubcatLevels"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryOptions/showEmptyCategories"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryOptions/showNoArticles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoryOptions/showSubcatDesc"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//CategoriesOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoriesOptions/showTopLevelCategoryDesc"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//CategoriesOptions/subcatLevels"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoriesOptions/emptyCategories"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//CategoriesOptions/subcatDesc"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//MaxLevelSettingType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MaxLevelSettingType/maxLevelSettingDefault"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MaxLevelSettingType/maxLevelSettingNumber"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//OrderingPaginationOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//OrderingPaginationOptions/categoryOrder"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//OrderingPaginationOptions/articleOrder"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//OrderingPaginationOptions/orderDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//OrderingPaginationOptions/showPagination"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//OrderingPaginationOptions/showPaginationResults"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ArticleSettingsOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showTitle"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/linkTitles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showIntro"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showCategory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/linkCategory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showParentCategory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/linkParentCategory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showAuthor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/linkAuthor"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showCreationDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showModifyDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showPublishDate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showItemNavigation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showVote"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showReadmore"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showReadmoreTitle"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showIcons"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showPrintIcon"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showEmailIcon"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showHits"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ArticleSettingsOptions/showUnauthorisedLinks"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContactListLayoutOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showPaginationLimit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showTableHeadings"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showContactPosition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showEmail"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showPhone"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showMobile"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showFax"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showCityOrSuburb"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showStateOrCountry"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showCountry"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showPaginagtion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactListLayoutOptions/showPaginationResults"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContactEmailOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactEmailOptions/showContactForm"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactEmailOptions/sendCopyToSubmitter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactEmailOptions/bannedEmail"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactEmailOptions/bannedSubject"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactEmailOptions/bannedText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactEmailOptions/sessionCheck"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactEmailOptions/customReply"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactEmailOptions/contactRedirectLink"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContactDisplayOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/displayFormat"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/contactCategory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showContactList"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showContactPosition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showEmail"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showStreetAddress"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showCityOrSuburb"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showStateOrCountry"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showPostalCode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showCountry"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showPhone"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showMobile"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showFax"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showWebpage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showMiscInformation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showImage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showVcard"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showUserArticles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/showLinks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDisplayOptions/addLink"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//WeblinkListLayoutOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkListLayoutOptions/showPaginationLimit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkListLayoutOptions/showTableHeadings"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkListLayoutOptions/showLinkDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkListLayoutOptions/showHits"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkListLayoutOptions/showPaginagtion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkListLayoutOptions/showPaginationResults"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//NewsfeedListLayoutOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedListLayoutOptions/showPaginationLimit"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedListLayoutOptions/showTableHeadings"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedListLayoutOptions/showArticles"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedListLayoutOptions/showFeedLinks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedListLayoutOptions/showPaginagtion"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedListLayoutOptions/showPaginationResults"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//NewsfeedDisplayOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedDisplayOptions/showFeedImage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedDisplayOptions/showfeedDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedDisplayOptions/showContent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//NewsfeedDisplayOptions/feedCharacterCount"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContentMetaDataOptions">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContentMetaDataOptions/metadataOptions"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//MetaDataOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MetaDataOptions/metaKeywords"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MetaDataOptions/metaDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//MetaDataOptions/robots"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContentUrlSettingOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentUrlSettingOptions/link"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentUrlSettingOptions/linkText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentUrlSettingOptions/urlTargetWindowForLink"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContentAttributeOptions">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContentAttributeOptions/articleSettingOption"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/readmoreText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/showPublishingOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/showArticleOptions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/showUrlImagesBackend"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/showUrlImagesFrontend"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/introImage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/imageFloat"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/altText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentAttributeOptions/caption"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContentImageOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentImageOptions/imageFulltext"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentImageOptions/imageFulltextFloat"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentImageOptions/imageFulltextAlternative"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentImageOptions/imageFulltextCaption"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContentCategoryOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentCategoryOptions/title"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContentCategoryOptions/access_level"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentCategoryOptions/note"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentCategoryOptions/description"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentCategoryOptions/published"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContentCategoryOptions/viewlevel"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContentCategoryOptions/contentMetadataOptions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContentCategoryOptions/author"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cjsl.ecore#//ContentCategoryOptions/language"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContentCategoryOptions/image"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//ContactDetailsOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/position"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/address"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/cityOrSuburb"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/stateOrProvince"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/country"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/postalZipCode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/telephone"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/fax"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/image"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/email"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/mobile"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/webpage"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/firstSortField"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/secondSortField"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//ContactDetailsOptions/thirdSortField"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//WeblinkParamOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkParamOptions/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkParamOptions/width"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkParamOptions/height"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//WeblinkParamOptions/countClicks"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//BannerParamsOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerParamsOptions/image"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerParamsOptions/width"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerParamsOptions/height"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerParamsOptions/alt"/>
+    </genClasses>
+    <genClasses ecoreClass="Cjsl.ecore#//BannerMetadataOptions">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerMetadataOptions/metaKeyword"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cjsl.ecore#//BannerMetadataOptions/metaKeywordPrefix"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

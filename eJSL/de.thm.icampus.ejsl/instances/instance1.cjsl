@@ -1,0 +1,205 @@
+Application: icampus2016
+The source path of the Joomla core: "C:/icampus2014/joomla/Joomla_2.5.14-Stable-Full_Package_German.zip"
+The destination path for the Application: "C:/xampp/htdocs"
+cJSL_Configuration {
+
+	Website Configuration (
+		Page title:"Icampus"
+		Admin:User:Admin(
+			Name:"admin"
+			EMail:"admin@admin"
+			*UserGroups:SuperAdmin
+			Password:"pass"
+			Blocked:no
+			Receive system mail: yes
+			
+		)
+		Example data:yes
+        *Editor:CodeMirror 
+        Include site name in page titles:before
+        Feed email:author
+        
+	)
+
+	DB Configuration (
+		Database: joomlacampus
+		User: root
+		Password: "Password1234s"
+		Type:mysqli
+		Prefix: jos
+	)
+	System Configuration (
+	   Temp path: "C:\\xampp\\htdocs\\joomladrei/tmp"
+	   Gzip compatibility:no
+	   *Server time zone:time1
+	   Log path:"C:\\xampp\\htdocs\\joomladrei/logs"
+	  *Help server:test
+	  Caching:ON-Conservative caching
+	  Cache handler:File
+	  Cache time:150
+	  Session lifetime:223
+	)
+ 
+	Template definition beez (
+		Name: "Beez"
+		Position: center
+		Position: north
+	)     
+	Editorname: JoesMegaEditor
+	Editorname: easyEdit
+    Timezone time1 (Continent:"UTC" Country:"UTC")
+    Help server test (
+    	*Language: english
+    	Title: "joomla"
+    	Link:"http://help.joomla.org/proxy/index.php?option=com_help&amp;keyref=Help{major}{minor}:{keyref}"
+    )
+ 
+    View level icampus (
+		*UserGroups: Public , Manager
+	)
+
+	View level  swt (
+		*UserGroups: Manager
+	)
+    
+}
+cJSL_User {
+	User Group: SuperAdmin (
+		Core Access level {Super Admin:accepted 
+			Create:accepted 
+			Admin Login:accepted 
+			Access Administration Interface:accepted 
+			Edit Own:accepted
+			Delete:accepted
+			Edit State:accepted
+			Offline Access:accepted
+			Edit:accepted
+			Site Login:accepted
+			}	
+	)
+	User Group: Manager (
+		Core Access level { Admin Login:accepted
+			Create:accepted
+			Edit:accepted
+			Delete:denied
+			Site Login:accepted
+		}
+	)
+	User Group: Public (
+		Core Access level { Create:denied 
+							Delete:denied
+		}
+	
+	)
+	User: Dennis (
+		Name: "Priefer Dennis"
+		EMail: "dennis.priefer@mni.thm.de"
+		*UserGroups: SuperAdmin
+		Password: "123456"
+		*Editor: CodeMirror
+		Blocked: no
+		Receive system mail: no
+		*Help server:test
+		*Time zone:time1
+		*Backend language:german
+		*Backend template style:beez
+		Activation:"ja"
+		*Frontend language:english
+		
+	)
+
+	User: Dieudonne (
+		Name: "Timma Meyatchie Dieudonne"
+		EMail: "dieudonne.timma.meyatchie@mni.thm.de"
+		*UserGroups: Manager
+		Password: "123456"
+		*Editor: CodeMirror
+		Blocked: no
+		Receive system mail: no
+		*Help server:test
+		*Time zone:time1
+		*Backend language:german
+		*Backend template style:beez
+		Activation:"ja"
+		*Frontend language:english
+	)
+	User: peter (
+		Name: "Peter Kneisel"
+		EMail: "peter.kneisel@mni.thm.de"
+		*UserGroups: Public
+		Password: "myPass999"
+		*Editor: JoesMegaEditor
+		Blocked: no
+		Receive system mail: yes
+		*Help server:test
+		*Time zone:time1
+		*Backend language:german
+		*Backend template style:beez
+		Activation:"ja"
+		*Frontend language:english
+	)
+
+	
+}
+
+cJSL_Content {
+	
+     Article category: story (
+     	Category options {
+     		Title: "Story"
+     		*Author:Dennis 
+     		*Modified by:Dieudonne 
+     		Description:"Enthält  alle Beiträge über Icampus" 
+     		Creation date:16.01.2014 09:00:00
+     		Access level (
+     			*User group: Manager
+     			Create:accepted 
+     			Edit:accepted 
+     			Delete:accepted
+     		)	
+		}
+	)
+	
+	   Article category: news (
+	   	*Parent: story
+     	Category options {
+     		Title: "News"
+     		*Author:Dieudonne 
+     		*Modified by:peter 
+     		Description:"Enthält  alle News-Beiträge über Icampus" 
+     		Creation date:16.01.2014 09:30:00
+     		*View level: icampus
+     		Access level (
+     			*User group: Manager
+     			Create:accepted 
+     			Edit:accepted 
+     			Delete:accepted
+     		)	
+		}
+	)
+}
+
+cJSL_Page {
+	Categorypage
+	
+}
+cJSL_Menu {
+	Menu: Hauptmenu (
+		Title: "Home"
+		Description:"Das ist die Homepage"
+		Menu type:"hmenu"
+		Menu item:news (
+			Alias: "news"
+			*Page reference: Categorypage
+			Ordering:-Last-
+			*View level:swt
+		)
+	)
+	
+	Menu representation: hauptmenu (
+		*Menu reference:Hauptmenu
+		*Template position: beez.center
+	    Language:All
+	    *View level:public
+	)
+}
