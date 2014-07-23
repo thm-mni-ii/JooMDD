@@ -4,7 +4,7 @@
     editorDirectory="/de.thm.icampus.cjsl.editor/src" modelPluginID="de.thm.icampus.cjsl"
     forceOverwrite="true" modelName="Cjsl" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="5.0" copyrightFields="false" editPluginID="de.thm.icampus.cjsl.edit"
-    editorPluginID="de.thm.icampus.cjsl.editor" runtimeVersion="2.9">
+    editorPluginID="de.thm.icampus.cjsl.editor" runtimeVersion="2.10">
   <genPackages prefix="Cjsl" basePackage="de.thm.icampus.cjsl" disposableProviderFactory="true"
       loadInitialization="true" literalsInterface="false" fileExtensions="cJSL" ecorePackage="Cjsl.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//accessLevelRight">
