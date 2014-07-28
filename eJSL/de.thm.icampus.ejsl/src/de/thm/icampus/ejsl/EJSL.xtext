@@ -10,6 +10,7 @@ EJSLModel returns EJSLModel:
 		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
 		('entities' '{' (entities+=Entity)* '}')?
 		('pages' '{' (pages+=Page)* '}')?
+		('extensions' '{' (extensions+=Extension)* '}')?
 	'}';
 
 // data model
@@ -102,7 +103,6 @@ Link:
 	ExternalLink | InternalLink | ContextLink
 ;
 
-
 ExternalLink returns ExternalLink:
 	{ExternalLink}
 	'ExternalLink' 
@@ -129,8 +129,196 @@ ContextLink returns ContextLink:
 	'}'
 ;
 
-LinkParameter:
+LinkParameter returns LinkParameter:
+	{LinkParameter}
 	'Parameter' name=ID '=' ('*Attribute 'attvalue=[Attribute|STRING] | value=STRING)
+;
+
+// extension model
+
+Extension:
+	Package | Component | Module | Plugin | Library | Template	
+;
+
+Package returns ExtensionPackage:
+	{ExtensionPackage}
+	'Extension package' name=ID 
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		'*Extensions' extensions+=[Extension] (',' extensions+=[Extension])*
+	'}'
+	
+;
+
+Component returns Component:
+	{Component}
+	'Component' name=ID 
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		'sections' '{' (sections+=Section)+ '}'
+	'}'
+;
+
+Section:
+	Backend | Frontend
+;
+
+Backend returns BackendSection:
+	{BackendSection}
+	'Backend section' 
+	'{'
+		('*Pages' page+=[Page|QualifiedName] (',' page+=[Page|QualifiedName])*)?
+	'}'
+;
+
+Frontend returns FrontendSection:
+	{FrontendSection}
+	'Frontend section' 
+	'{'
+		('*Pages' page+=[Page|QualifiedName] (',' page+=[Page|QualifiedName])*)?
+	'}'
+;
+
+Module returns Module:
+	{Module}
+	'Module' name=ID 
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		('*Page' page=[Page|QualifiedName])?
+	'}'	
+;
+
+Plugin returns Plugin:
+	{Plugin}
+	'Plugin' name=ID 
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+	'}'	
+;
+
+Library returns Library:
+	{Library}
+	'Library' name=ID
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('classes' '{' (classes+=Class)* '}')?
+	'}'
+;
+
+Class returns Class:
+	{Class}
+    'Class' name=ID 
+    '{'
+        ('methods' '{' (methods+=Method)* '}')?
+    '}'
+;
+
+Method returns Method:
+	{Method}
+    'Method' name=ID
+    '{'
+        'Returnvalue' returnvalue=ID ':' type=[jvmTypes::JvmType|QualifiedName]
+        ('methodparameters' '{' (methodparameters+=MethodParameter)* '}')?
+    '}'
+;
+
+MethodParameter returns MethodParameter:
+	{MethodParameter}
+    'MethodParameter' name=ID ':' type=[jvmTypes::JvmType|QualifiedName]
+;
+
+Template returns Template:
+	{Template}
+	'Template' name=ID
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		('positions' '{' (positions+=Position)* '}')?
+		('cssblocks' '{' (cssblocks+=CssBlock)* '}')?
+	'}'
+;
+
+Manifestation returns Manifestation:
+	{Manifestation}
+	'authors' '{' (authors+=Author)+ '}'
+	('creationdate' '=' creationdate=DATE)?
+	('copyright' '=' copyright=STRING)?
+	('license' '=' license=STRING)?
+	('link' '=' link=STRING)?
+	('version' '=' version=STRING)?
+	('description' '=' description=STRING)?;
+
+terminal DATE:
+  ((('0'..'2') ('0'..'9') '.' ('02')) |
+  (('0'..'2') ('0'..'9') '.' ((('0') (('1') | ('3'..'9'))) | ('1') ('0'..'2')) | (('1') ('0'..'2'))) |
+  (('30') '.' ((('0') (('1') | ('3'..'9'))) | ('1') ('0'..'2'))) |
+  (('31') '.' ((('0') (('1') | ('3') | ('5') | ('7') | ('8'))) | (('1') (('0')| ('2'))))))
+  '.' ('0'..'2') ('0'..'9') ('0'..'9') ('0'..'9')
+;
+
+Author returns Author:
+	{Author}
+	'Author' name=STRING 
+	'{'
+		('authoremail' '=' authoremail=STRING)?
+		('authorurl' '=' authorurl=STRING)?
+	'}'
+;
+
+Language returns Language:
+	{Language}
+	'Language' name=LANGUAGE_CODE 
+	'{'
+    	('keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
+    '}'
+;
+
+terminal LANGUAGE_CODE:
+    'a'..'z' 'a'..'z' '-' 'A'..'Z' 'A'..'Z'
+;
+
+KeyValuePair returns KeyValuePair:
+	{KeyValuePair}
+	'Key' name=ID '=' value=STRING
+;
+
+Position returns Position:
+	{Position}
+	'Templateposition' (name=POSITION_TYPES | name=ID)
+	'{'
+		('positionparameters' '{' (positionparameters+=PositionParameter)* '}')?
+	'}'
+;
+
+terminal POSITION_TYPES:
+	'head' | 'contents' | 'footer' | 'left' | 'right'
+;
+
+PositionParameter:
+	'Position Parameter' name = ID
+	'{'
+		('divId' '=' divid = ID)?
+		('type' '=' type = POSITION_TYPES_NAMES)?
+		('CSS keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
+	'}'
+;
+
+terminal POSITION_TYPES_NAMES:
+	'modules' | 'component'
+;
+
+CssBlock:
+	'CssBlock' selector=STRING
+	'('
+		('keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
+	')'
 ;
 
 NUMBER : ('-')?INT;

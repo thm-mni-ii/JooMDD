@@ -13,6 +13,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/globalparameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/entities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/pages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/extensions"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Datatype">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Datatype/name"/>
@@ -73,6 +74,86 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//LinkParameter/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//LinkParameter/attvalue"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//LinkParameter/value"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Extension">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Extension/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Extension/manifest"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Extension/languages"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//ExtensionPackage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//ExtensionPackage/extensions"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Component">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Component/sections"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Section">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Section/page"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//BackendSection"/>
+    <genClasses ecoreClass="EJSL.ecore#//FrontendSection"/>
+    <genClasses ecoreClass="EJSL.ecore#//Module">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Module/page"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Plugin">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Plugin/entities"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Library">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Library/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Library/classes"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Class">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Class/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Class/methods"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Method">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Method/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Method/returnvalue"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Method/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Method/methodparameters"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//MethodParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//MethodParameter/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//MethodParameter/type"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Template">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Template/positions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Template/cssblocks"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Manifestation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Manifestation/authors"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Manifestation/creationdate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Manifestation/copyright"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Manifestation/license"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Manifestation/link"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Manifestation/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Manifestation/description"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Author">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Author/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Author/authoremail"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Author/authorurl"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Language">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Language/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Language/keyvaluepairs"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//KeyValuePair">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//KeyValuePair/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//KeyValuePair/value"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Position">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Position/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Position/positionparameters"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//PositionParameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//PositionParameter/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//PositionParameter/divid"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//PositionParameter/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//PositionParameter/keyvaluepairs"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//CssBlock">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//CssBlock/selector"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//CssBlock/keyvaluepairs"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

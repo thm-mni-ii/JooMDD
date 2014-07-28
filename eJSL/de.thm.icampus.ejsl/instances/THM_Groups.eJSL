@@ -1,0 +1,317 @@
+eJSLModel "THMGroups"
+{
+	datatypes
+	{ 
+		Datatype "Group", Datatype "RoleOrdering", Datatype "ShowAll"
+	}
+	
+	entities
+	{
+		Entity user
+		{
+			references 
+			{
+				Reference GroupRole
+				{
+					*Entity groupRole
+					lower 0
+					upper 0
+				}
+				
+				Reference Structure
+				{
+					*Entity structure
+					lower 0
+					upper 0
+				}
+			}
+		}
+		
+		Entity group 
+		{
+			attributes
+			{
+				Attribute name : java.lang.String
+				Attribute groupinfo : java.lang.String
+			}
+		}
+		
+		
+		Entity role 
+		{
+			attributes
+			{
+				Attribute name : java.lang.String
+			}
+		}
+			
+		Entity groupRole
+		{
+			references 
+			{
+				Reference Group
+				{
+					*Entity group
+					lower 1
+					upper 1
+				}
+				
+				Reference Role
+				{
+					*Entity role
+					lower 1
+					upper 1
+				}
+			}
+		}
+		
+		
+		Entity structure 
+		{
+			attributes
+			{
+				Attribute name : java.lang.String
+			}
+			references 
+			{
+				Reference StructureType
+				{
+					*Entity structureType
+					lower 1
+					upper 1
+				}
+			}
+		}
+
+		Entity structureType
+		{
+			attributes
+			{
+				Attribute ^type : java.lang.String
+				Attribute parameter : java.lang.String
+			}
+		}
+	}
+	
+	pages
+	{
+		StaticPage Home
+		{
+			links
+			{
+				InternalLink Membermanager
+				{
+					target = *THMGroups.Membermanager
+				}
+				InternalLink Groupmanager
+				{
+					target = *THMGroups.Groupmanager
+				}
+				InternalLink Rolemanager 
+				{
+					target = *THMGroups.Rolemanager	
+				}
+				InternalLink StructManager
+				{
+					target = *THMGroups.StructManager
+				}
+			}
+			HTMLBody 
+			{
+				"Entry page of THM Groups"
+			}	
+		}
+
+		IndexPage Membermanager
+		{
+			*Entities user
+			links
+			{
+				InternalcontextLink Details
+				{
+					target = *Member
+					linkparameters
+					{
+						Parameter userID=*Attribute "group.name"
+					}
+				}
+			}
+		}
+
+		DetailsPage Member
+		{
+			*Entities user
+		}
+		
+		IndexPage Groupmanager
+		{
+			*Entities group
+		}
+		
+		IndexPage Rolemanager
+		{
+			*Entities role
+		}
+		
+		IndexPage StructManager
+		{
+			*Entities structure
+		}
+	}
+	
+	extensions 
+	{
+		Component THM_Groups
+		{
+			Manifestation
+			{
+				authors 
+				{
+					Author "Dennis Priefer"
+					{
+						authoremail = "dennis.priefer@mni.thm.de"
+						authorurl = "www.mni.thm.de"
+					}
+					Author "Ilja Michajlow"
+					{
+						authoremail = "ilja.michajlow@mni.thm.de"
+						authorurl = "www.mni.thm.de"
+					}
+				}
+			}
+			sections 
+			{
+				Backend section
+				{
+					*Pages Home,Membermanager,Groupmanager,Rolemanager,StructManager	
+				}
+				Frontend section
+				{
+					*Pages Member
+				}
+			}
+		}
+		Module THM_Groups_Members
+		{
+			Manifestation
+			{
+				authors 
+				{
+					Author "Dennis Priefer"
+					{
+						authoremail = "dennis.priefer@mni.thm.de"
+						authorurl = "www.mni.thm.de"
+					}
+					Author "Ilja Michajlow"
+					{
+						authoremail = "ilja.michajlow@mni.thm.de"
+						authorurl = "www.mni.thm.de"
+					}
+				}
+			}
+			*Page Member
+		}
+		Plugin THM_Groups_Synch
+		{
+			Manifestation
+			{
+				authors 
+				{
+					Author "Dennis Priefer"
+					{
+						authoremail = "dennis.priefer@mni.thm.de"
+						authorurl = "www.mni.thm.de"
+					}
+				}
+			}
+			*Entities user,group,groupRole,role
+		}
+		Library THM_Groups
+		{
+			Manifestation
+			{
+				authors 
+				{
+					Author "Ilja Michajlow"
+					{
+						authoremail = "ilja.michajlow@mni.thm.de"
+						authorurl = "www.mni.thm.de"
+					}
+				} 
+			}
+			*Entities group,user,role,structure
+			classes 
+			{
+				Class ThmGroups
+				{
+					methods
+					{
+						 Method getUrl
+						 {
+						 	Returnvalue attribut : java.lang.String
+						 	methodparameters
+						 	{
+						 		MethodParameter ignored : java.lang.reflect.Array
+						 	}
+						 }
+						 Method canEdit
+						 {
+						 	Returnvalue bool : java.lang.Boolean
+						 }
+						 Method getDescription
+						 {
+						 	Returnvalue list : java.lang.String
+						 	methodparameters
+						 	{
+						 		MethodParameter gid : java.lang.Integer
+						 	} 
+						 }
+					}
+				}
+			}
+		}
+		Template THM_Style
+		{
+			Manifestation
+			{
+				authors 
+				{
+					Author "Dennis Priefer"
+					{
+						authoremail = "dennis.priefer@mni.thm.de"
+						authorurl = "www.mni.thm.de"
+					}
+				} 
+			}
+			positions
+			{
+				Templateposition contents
+				{
+					positionparameters 
+					{
+						Position Parameter Param1
+						{
+							divId = param1_div
+							type = component
+						}
+					}
+				}
+			}
+		}
+		Extension package THM_Groups
+		{
+			Manifestation
+			{
+				authors 
+				{
+					Author "Dennis Priefer"
+					{
+						authoremail = "dennis.priefer@mni.thm.de"
+						authorurl = "www.mni.thm.de"
+					}
+				} 
+			}
+			*Extensions THM_Groups, THM_Groups_Members, THM_Groups_Synch, THM_Style
+		}
+	}
+}
