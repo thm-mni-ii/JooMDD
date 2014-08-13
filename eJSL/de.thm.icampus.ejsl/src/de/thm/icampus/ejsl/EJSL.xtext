@@ -146,7 +146,7 @@ Package returns ExtensionPackage:
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
-		'*Extensions' extensions+=[Extension] (',' extensions+=[Extension])*
+		'extensions' '{' (extensions+=Extension)+ '}'
 	'}'
 	
 ;
