@@ -33,7 +33,7 @@ Parameter returns Parameter:
 
 Entity returns Entity:
 	{Entity}
-	'Entity' name=ID 
+	'Entity' name=ID ('extends' supertype=[Entity|QualifiedName])?
 	'{'
 		('attributes' '{' (attributes+=Attribute)* '}')?
 		('references' '{' (references+=Reference)* '}')?
@@ -43,7 +43,6 @@ Entity returns Entity:
 Attribute returns Attribute:
 	{Attribute}
 	'Attribute' name=ID ':' jvmtype=[jvmTypes::JvmType|QualifiedName]
-		
 ;
 
 Reference returns Reference:

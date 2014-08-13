@@ -29,6 +29,7 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Entity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Entity/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entity/supertype"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entity/attributes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entity/references"/>
     </genClasses>

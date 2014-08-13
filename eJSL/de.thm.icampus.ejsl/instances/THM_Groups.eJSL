@@ -161,143 +161,6 @@ eJSLModel "THMGroups"
 	
 	extensions 
 	{
-		Component THM_Groups
-		{
-			Manifestation
-			{
-				authors 
-				{
-					Author "Dennis Priefer"
-					{
-						authoremail = "dennis.priefer@mni.thm.de"
-						authorurl = "www.mni.thm.de"
-					}
-					Author "Ilja Michajlow"
-					{
-						authoremail = "ilja.michajlow@mni.thm.de"
-						authorurl = "www.mni.thm.de"
-					}
-				}
-			}
-			sections 
-			{
-				Backend section
-				{
-					*Pages Home,Membermanager,Groupmanager,Rolemanager,StructManager	
-				}
-				Frontend section
-				{
-					*Pages Member
-				}
-			}
-		}
-		Module THM_Groups_Members
-		{
-			Manifestation
-			{
-				authors 
-				{
-					Author "Dennis Priefer"
-					{
-						authoremail = "dennis.priefer@mni.thm.de"
-						authorurl = "www.mni.thm.de"
-					}
-					Author "Ilja Michajlow"
-					{
-						authoremail = "ilja.michajlow@mni.thm.de"
-						authorurl = "www.mni.thm.de"
-					}
-				}
-			}
-			*Page Member
-		}
-		Plugin THM_Groups_Synch
-		{
-			Manifestation
-			{
-				authors 
-				{
-					Author "Dennis Priefer"
-					{
-						authoremail = "dennis.priefer@mni.thm.de"
-						authorurl = "www.mni.thm.de"
-					}
-				}
-			}
-			*Entities user,group,groupRole,role
-		}
-		Library THM_Groups
-		{
-			Manifestation
-			{
-				authors 
-				{
-					Author "Ilja Michajlow"
-					{
-						authoremail = "ilja.michajlow@mni.thm.de"
-						authorurl = "www.mni.thm.de"
-					}
-				} 
-			}
-			*Entities group,user,role,structure
-			classes 
-			{
-				Class ThmGroups
-				{
-					methods
-					{
-						 Method getUrl
-						 {
-						 	Returnvalue attribut : java.lang.String
-						 	methodparameters
-						 	{
-						 		MethodParameter ignored : java.lang.reflect.Array
-						 	}
-						 }
-						 Method canEdit
-						 {
-						 	Returnvalue bool : java.lang.Boolean
-						 }
-						 Method getDescription
-						 {
-						 	Returnvalue list : java.lang.String
-						 	methodparameters
-						 	{
-						 		MethodParameter gid : java.lang.Integer
-						 	} 
-						 }
-					}
-				}
-			}
-		}
-		Template THM_Style
-		{
-			Manifestation
-			{
-				authors 
-				{
-					Author "Dennis Priefer"
-					{
-						authoremail = "dennis.priefer@mni.thm.de"
-						authorurl = "www.mni.thm.de"
-					}
-				} 
-			}
-			positions
-			{
-				Templateposition contents
-				{
-					positionparameters 
-					{
-						Position Parameter Param1
-						{
-							divId = param1_div
-							type = component
-						}
-					}
-				}
-			}
-		}
 		Extension package THM_Groups
 		{
 			Manifestation
@@ -311,7 +174,146 @@ eJSLModel "THMGroups"
 					}
 				} 
 			}
-			*Extensions THM_Groups, THM_Groups_Members, THM_Groups_Synch, THM_Style
+			extensions 
+			{
+				Component THM_Groups
+				{
+					Manifestation
+					{
+						authors 
+						{
+							Author "Dennis Priefer"
+							{
+								authoremail = "dennis.priefer@mni.thm.de"
+								authorurl = "www.mni.thm.de"
+							}
+							Author "Ilja Michajlow"
+							{
+								authoremail = "ilja.michajlow@mni.thm.de"
+								authorurl = "www.mni.thm.de"
+							}
+						}
+					}
+					sections 
+					{
+						Backend section
+						{
+							*Pages Home,Membermanager,Groupmanager,Rolemanager,StructManager	
+						}
+						Frontend section
+						{
+							*Pages Member
+						}
+					}
+				}
+				Module THM_Groups_Members
+				{
+					Manifestation
+					{
+						authors 
+						{
+							Author "Dennis Priefer"
+							{
+								authoremail = "dennis.priefer@mni.thm.de"
+								authorurl = "www.mni.thm.de"
+							}
+							Author "Ilja Michajlow"
+							{
+								authoremail = "ilja.michajlow@mni.thm.de"
+								authorurl = "www.mni.thm.de"
+							}
+						}
+					}
+					*Page Member
+				}
+				Plugin THM_Groups_Synch
+				{
+					Manifestation
+					{
+						authors 
+						{
+							Author "Dennis Priefer"
+							{
+								authoremail = "dennis.priefer@mni.thm.de"
+								authorurl = "www.mni.thm.de"
+							}
+						}
+					}
+					*Entities user,group,groupRole,role
+				}
+				Library THM_Groups
+				{
+					Manifestation
+					{
+						authors 
+						{
+							Author "Ilja Michajlow"
+							{
+								authoremail = "ilja.michajlow@mni.thm.de"
+								authorurl = "www.mni.thm.de"
+							}
+						} 
+					}
+					*Entities group,user,role,structure
+					classes 
+					{
+						Class ThmGroups
+						{
+							methods
+							{
+								 Method getUrl
+								 {
+								 	Returnvalue attribut : java.lang.String
+								 	methodparameters
+								 	{
+								 		MethodParameter ignored : java.lang.reflect.Array
+								 	}
+								 }
+								 Method canEdit
+								 {
+								 	Returnvalue bool : java.lang.Boolean
+								 }
+								 Method getDescription
+								 {
+								 	Returnvalue list : java.lang.String
+								 	methodparameters
+								 	{
+								 		MethodParameter gid : java.lang.Integer
+								 	} 
+								 }
+							}
+						}
+					}
+				}
+				Template THM_Style
+				{
+					Manifestation
+					{
+						authors 
+						{
+							Author "Dennis Priefer"
+							{
+								authoremail = "dennis.priefer@mni.thm.de"
+								authorurl = "www.mni.thm.de"
+							}
+						} 
+					}
+					positions
+					{
+						Templateposition contents
+						{
+							positionparameters 
+							{
+								Position Parameter Param1
+								{
+									divId = param1_div
+									type = component
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
