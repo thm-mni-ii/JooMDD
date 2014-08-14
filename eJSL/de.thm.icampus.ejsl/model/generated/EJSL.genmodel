@@ -12,6 +12,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/datatypes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/globalparameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/datapackages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/pages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/extensions"/>
     </genClasses>
@@ -27,6 +28,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/size"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/descripton"/>
     </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Datapackage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Datapackage/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/superpackage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/datatypes"/>
+    </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Entity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Entity/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entity/supertype"/>
@@ -35,6 +42,7 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/dtype"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/jvmtype"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Reference">

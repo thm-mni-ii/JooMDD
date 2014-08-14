@@ -9,6 +9,7 @@ EJSLModel returns EJSLModel:
 		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
 		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
 		('entities' '{' (entities+=Entity)* '}')?
+		('datapackages' '{' (datapackages+=Datapackage)* '}')?
 		('pages' '{' (pages+=Page)* '}')?
 		('extensions' '{' (extensions+=Extension)* '}')?
 	'}';
@@ -31,6 +32,16 @@ Parameter returns Parameter:
 	'}'
 ;
 
+Datapackage returns Datapackage:
+	{Datapackage}
+	'Datapackage' name=ID
+	'{'
+		('*Super package' '=' superpackage=[Datapackage|QualifiedName])?
+		('entities' '{' (entities+=Entity)* '}')?
+		('datatypes' '{' (datatypes+=Datatype)* '}')?
+	'}'
+;
+
 Entity returns Entity:
 	{Entity}
 	'Entity' name=ID ('extends' supertype=[Entity|QualifiedName])?
@@ -42,7 +53,7 @@ Entity returns Entity:
 
 Attribute returns Attribute:
 	{Attribute}
-	'Attribute' name=ID ':' jvmtype=[jvmTypes::JvmType|QualifiedName]
+	'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
 ;
 
 Reference returns Reference:
@@ -147,7 +158,6 @@ Package returns ExtensionPackage:
 		('languages' '{' (languages+=Language)* '}')?
 		'extensions' '{' (extensions+=Extension)+ '}'
 	'}'
-	
 ;
 
 Component returns Component:
