@@ -24,7 +24,8 @@ Parameter returns Parameter:
 	{Parameter}
 	'Parameter' name=ID 
 	'{'
-		'type' '=' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
+		//'type' '=' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
+		'type' '=' ((dtype=[Datatype|QualifiedName]))
 		('defaultvalue' '=' defaultvalue=STRING)?
 		('label' '=' label=STRING)?
 		('size' '=' size=INT)?
@@ -36,7 +37,7 @@ Datapackage returns Datapackage:
 	{Datapackage}
 	'Datapackage' name=ID
 	'{'
-		('*Super package' '=' superpackage=[Datapackage|QualifiedName])?
+		('datapackages' '{' (datapackages+=Datapackage)* '}')?
 		('entities' '{' (entities+=Entity)* '}')?
 		('datatypes' '{' (datatypes+=Datatype)* '}')?
 	'}'
@@ -53,7 +54,8 @@ Entity returns Entity:
 
 Attribute returns Attribute:
 	{Attribute}
-	'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
+	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
+	'Attribute' name=ID ':' (dtype=[Datatype|QualifiedName])
 ;
 
 Reference returns Reference:
@@ -94,7 +96,7 @@ IndexPage returns IndexPage:
 		('*Entities' entities+=[Entity] (',' entities+=[Entity])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
-		('links' '{' links+=Link ( "," links+=Link)* '}')?
+		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
 
@@ -110,7 +112,7 @@ DetailsPage returns DetailsPage:
 ;
 
 Link:
-	ExternalLink | InternalLink | ContextLink
+	ExternalLink | InternalLink 
 ;
 
 ExternalLink returns ExternalLink:
@@ -124,10 +126,10 @@ ExternalLink returns ExternalLink:
 
 InternalLink returns InternalLink:
 	{InternalLink}
-	'InternalLink' name=ID 
+	('InternalLink' name=ID 
 	'{'
 		'target' '=' '*'target=[Page|QualifiedName]
-	'}'
+	'}') | ContextLink
 ;
 
 ContextLink returns ContextLink:
@@ -233,14 +235,16 @@ Method returns Method:
 	{Method}
     'Method' name=ID
     '{'
-        'Returnvalue' returnvalue=ID ':' type=[jvmTypes::JvmType|QualifiedName]
+        //'Returnvalue' returnvalue=ID ':' type=[jvmTypes::JvmType|QualifiedName]
+        'Returnvalue' returnvalue=ID ':' type=[Datatype|QualifiedName]
         ('methodparameters' '{' (methodparameters+=MethodParameter)* '}')?
     '}'
 ;
 
 MethodParameter returns MethodParameter:
 	{MethodParameter}
-    'MethodParameter' name=ID ':' type=[jvmTypes::JvmType|QualifiedName]
+    //'MethodParameter' name=ID ':' type=[jvmTypes::JvmType|QualifiedName]
+    'MethodParameter' name=ID ':' type=[Datatype|QualifiedName]
 ;
 
 Template returns Template:

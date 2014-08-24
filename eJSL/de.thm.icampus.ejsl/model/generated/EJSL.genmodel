@@ -4,7 +4,7 @@
     editorDirectory="/de.thm.icampus.ejsl.editor/src" modelPluginID="de.thm.icampus.ejsl"
     forceOverwrite="true" modelName="EJSL" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="5.0" copyrightFields="false" editPluginID="de.thm.icampus.ejsl.edit"
-    editorPluginID="de.thm.icampus.ejsl.editor" runtimeVersion="2.10" usedGenPackages="platform:/resource/org.eclipse.xtext.common.types/model/JavaVMTypes.genmodel#//types">
+    editorPluginID="de.thm.icampus.ejsl.editor" runtimeVersion="2.10">
   <genPackages prefix="EJSL" basePackage="de.thm.icampus.ejsl" disposableProviderFactory="true"
       fileExtensions="eJSL" ecorePackage="EJSL.ecore#/">
     <genClasses ecoreClass="EJSL.ecore#//EJSLModel">
@@ -22,7 +22,6 @@
     <genClasses ecoreClass="EJSL.ecore#//Parameter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Parameter/dtype"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Parameter/jvmtype"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/defaultvalue"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/label"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/size"/>
@@ -30,7 +29,7 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Datapackage">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Datapackage/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/superpackage"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/datapackages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/entities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/datatypes"/>
     </genClasses>
@@ -43,7 +42,6 @@
     <genClasses ecoreClass="EJSL.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/dtype"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/jvmtype"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Reference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/name"/>
@@ -75,8 +73,6 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//InternalLink/target"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//ContextLink">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//ContextLink/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//ContextLink/target"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//ContextLink/linkparameters"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//LinkParameter">
