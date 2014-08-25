@@ -7,32 +7,18 @@ import de.thm.icampus.cjsl.cjsl.EditorReference
 import de.thm.icampus.cjsl.cjsl.EditorType
 import de.thm.icampus.cjsl.cjsl.LanguageReference
 import de.thm.icampus.cjsl.cjsl.LanguageType
+import de.thm.icampus.cjsl.cjsl.LanguageTypeWithAll
 import de.thm.icampus.cjsl.cjsl.Template
 import de.thm.icampus.cjsl.cjsl.TimeZone
 import de.thm.icampus.cjsl.cjsl.UserGroup
 import de.thm.icampus.cjsl.cjsl.ViewLevel
 import de.thm.icampus.cjsl.cjsl.ViewLevelRights
-
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.util.Calendar
-import java.util.Collection
-import java.util.Enumeration
-import java.util.HashMap
-import java.util.LinkedList
 import java.util.Random
-import java.util.zip.ZipEntry
-import java.util.zip.ZipFile
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObjectimport java.io.FileReader
-import java.io.BufferedReader
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.io.FileInputStream
-import de.thm.icampus.cjsl.cjsl.LanguageTypeWithAll
+import org.eclipse.emf.ecore.EObject
 
 /**
  * This class Content many Function to generate Code
