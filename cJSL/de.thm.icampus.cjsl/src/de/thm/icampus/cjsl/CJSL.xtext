@@ -1354,7 +1354,7 @@ BannerMetadataOptions:
 
 //- begin enums
 enum accessLevelRight:
-  denied="denied" | accepted="accepted" | inherited="inherited"
+	 inherited="inherited"| denied="denied" | accepted="accepted" 
 ;
 
 enum defaultEditorKind:
