@@ -1,0 +1,123 @@
+Application: joomfisch
+
+The source path of the Joomla core: "C:/Users/timma/Downloads/Joomla_2.5.9-Stable-Full_Package_German.zip"
+The destination path for the Application: "C:/xampp/htdocs"
+cJSL_Configuration {
+	Website Configuration (Page title:"Home of Joomla is d sthe fd best"
+		Admin:User:admin
+		(
+			Name: "Timma Meyatchie Dieudonne"
+			EMail: "dieudonne45@yahoo.fr"
+			*Backend language: english
+			*Editor: CodeMirror
+			*Frontend language: english
+			Blocked: no
+		    Receive system mail: yes
+		    )
+		    Example data:no
+		    Offline: no
+		    Offline message: "See you later, i love programming   "
+		    Offline image: "path"
+		    *Editor: CodeMirror
+		    Site access: public
+		    Description: "Joomla ist the best"
+		    Robot:No index, Follow
+		    Show Joomla version: no
+		    URL rewrite: no
+		    Include site name in page titles: after
+		  )
+		  DB Configuration (Database:joomfisch2
+		  	User:root
+		  	Password:""
+		  	Type:mysqli
+		  	Host:"localhost"
+		  	Prefix:cgt
+		  	)System Configuration (
+		  		Cache handler:Cache_Lite  
+		  		Cache time: 320
+		  		*Server time zone:UTC
+		  		Caching:ON-Conservative caching
+		  		Error reporting type:None
+		  		Force SSL:Administrator only
+		  		Debug language:no
+		  		Debug system:no
+		  		Session lifetime:230
+		  		)
+		  		Editorname: Editor1
+		  		Template definition Temp1 (Name: "temp1" Position: links)
+		  		Language: de
+		  		Language: en
+		  		Timezone yaounde (Continent: "Afrika" Country: "kameroun" ) 
+		  		Timezone UTC (Continent:"Europa"Country:"Berlin")
+		  		}
+		  		 cJSL_User {
+		  		 	User Group: Group1 ( Core Access level { Access Administration Interface: accepted Create:accepted })
+		  		 	User Group: Icampus ( *Parent: Group1 Core Access level {Access Administration Interface:accepted Create:accepted Delete:accepted  Edit: accepted Edit State: accepted  Edit Own:accepted })
+		  		 	User Group: Group2 ()
+		  		 	User Group: group3 (*Parent:Icampus)
+		  		 	User Group:group4 (*Parent:group3 Core Access level {Admin Login:accepted})
+		  		 	User: Timma ( 
+		  		 		Name: "Timma Meyatchie Dieudonne"
+		  		 		EMail:"dieudonnetimma@yahoo.fr"
+		  		 		*Backend language: de
+		  		 		*Backend template style: Temp1
+		  		 		*Editor: TinyMCE
+		  		 		*Frontend language:de
+		  		 		*Time zone:UTC
+		  		 		*UserGroups:Group1
+		  		 		Blocked: no
+		  		 		Receive system mail: no
+		  		 		User profile: ( 
+		  		 			User profile attribute { Attribute name: "Vorname" Value: "Dieudonne" } 
+		  		 			User profile attribute { Attribute name: "zweite addres" Value: "Eichendorffring 107 zi 202"}
+		  		 		)
+		  		 	)
+		  		 	User: peter (
+		  		 		Name: "Peter Haus"
+		  		 		EMail:"maxmuster@yahoo.de"
+		  		 		*Backend language:de
+		  		 		*Backend template style:Temp1
+		  		 		*Frontend language:de
+		  		 		*Editor:CodeMirror
+		  		 		*Time zone:yaounde
+		  		 		*UserGroups: Group2
+		  		 		Blocked:no
+		  		 		Receive system mail:no
+		  		 		User profile: ( 
+		  		 			User profile attribute { Attribute name: "Vorname" Value: "Peter" } 
+		  		 			User profile attribute { Attribute name: "zweite addres" Value: "Berliner Platzt 123d"}
+		  		 			
+		  		 		)
+		  		 	)
+		  		 	View level mni
+		  		 	(*UserGroups:Group1 
+		  		 		Title: "mni" )
+		  		  View level thm
+		  		 	(*UserGroups:Group1, Icampus 
+		  		 		Title: "thm" )
+		  		  View level EI
+		  		 	(*UserGroups:Group1,group3,Icampus 
+		  		 		Title: "EI" )
+		  		 	
+		  		 		}
+cJSL_Content {
+	Article category: event ( Content category options { Title: "Event" } )
+	Content: sproject ( Title: "Projeckt Phase" 
+		Article text: "Here is the text of this Article" *View level: mni *Author: Timma *Category: event Status: published
+	)
+	}
+	cJSL_Page {
+		Single article: event
+		( *Article: sproject
+			)
+		}
+		cJSL_Menu {
+			Menu: Home
+			( 
+				Title: "Home"
+				Menu type: "home"
+				Description:"For all Menuitem"
+				Menu item: event ( *Menu item reference: event *View level: public Status:Published )
+			)
+			Menu representation: event( *Menu reference: Home *Template position:Temp1.links Status:Published *View level: public )
+}
