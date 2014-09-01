@@ -207,6 +207,7 @@ Plugin returns Plugin:
 	'Plugin' name=ID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
+		'Type' '=' type=PLG_GROUP
 		('languages' '{' (languages+=Language)* '}')?
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 	'}'	
@@ -337,3 +338,9 @@ CssBlock:
 NUMBER : ('-')?INT;
 	
 QualifiedName: ID ('.' ID)* ;
+
+enum PLG_GROUP:
+    authenticate | captcha | content | contact |
+    editors | extensions | finder | quick_icons |
+    search | system | user | xml_rpc
+;
