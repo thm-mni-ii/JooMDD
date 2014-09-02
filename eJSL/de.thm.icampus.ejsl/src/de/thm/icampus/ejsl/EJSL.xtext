@@ -149,10 +149,10 @@ LinkParameter returns LinkParameter:
 // extension model
 
 Extension:
-	Package | Component | Module | Plugin | Library | Template	
+	ExtensionPackage | Component | Module | Plugin | Library | Template	
 ;
 
-Package returns ExtensionPackage:
+ExtensionPackage returns ExtensionPackage:
 	{ExtensionPackage}
 	'Extension package' name=ID 
 	'{'
@@ -221,13 +221,25 @@ Library returns Library:
 		('languages' '{' (languages+=Language)* '}')?
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('classes' '{' (classes+=Class)* '}')?
+		('packages' '{' (packages+=Package)* '}')?
+	'}'
+;
+
+Package returns Package:
+	{Package}
+	'Package' name=ID
+	'{'
+		('packages' '{' (packages+=Package)* '}')?
+		('classes' '{' (classes+=Class)* '}')?
 	'}'
 ;
 
 Class returns Class:
 	{Class}
-    'Class' name=ID 
+    'Class' name=ID ('extends' supertype=[Class|QualifiedName])?
     '{'
+    	('*Class references' references+=[Class|QualifiedName] (',' references+=[Class|QualifiedName])*)?
+    	('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
         ('methods' '{' (methods+=Method)* '}')?
     '}'
 ;

@@ -7,6 +7,20 @@
     editorPluginID="de.thm.icampus.ejsl.editor" runtimeVersion="2.10">
   <genPackages prefix="EJSL" basePackage="de.thm.icampus.ejsl" disposableProviderFactory="true"
       fileExtensions="eJSL" ecorePackage="EJSL.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//PLG_GROUP">
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/authenticate"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/captcha"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/content"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/contact"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/editors"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/extensions"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/finder"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/quick_icons"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/search"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/system"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/user"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/xml_rpc"/>
+    </genEnums>
     <genClasses ecoreClass="EJSL.ecore#//EJSLModel">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//EJSLModel/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/datatypes"/>
@@ -100,14 +114,24 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Module/page"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Plugin">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Plugin/type"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Plugin/entities"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Library">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Library/entities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Library/classes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Library/packages"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Package">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Package/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Package/packages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Package/classes"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Class">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Class/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Class/supertype"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Class/references"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Class/entities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Class/methods"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Method">
