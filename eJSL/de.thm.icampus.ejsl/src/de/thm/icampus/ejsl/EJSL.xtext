@@ -1,5 +1,5 @@
 grammar de.thm.icampus.ejsl.EJSL with org.eclipse.xtext.common.Terminals
-import "http://www.eclipse.org/xtext/common/JavaVMTypes" as jvmTypes
+//import "http://www.eclipse.org/xtext/common/JavaVMTypes" as jvmTypes
 generate eJSL "http://www.thm.de/icampus/ejsl/EJSL"
 
 EJSLModel returns EJSLModel:
@@ -15,17 +15,28 @@ EJSLModel returns EJSLModel:
 	'}';
 
 // data model
+Type:
+	DatatypeReference | SimpleDatatypes
+;
+
+DatatypeReference:
+	type=[Datatype|STRING]
+;
+
+SimpleDatatypes:
+	type=SimpleDatatypeKinds
+;
 
 Datatype returns Datatype:
 	{Datatype}
-	'Datatype'	name=STRING;
+	'Datatype' name=STRING;
 	
 Parameter returns Parameter:
 	{Parameter}
 	'Parameter' name=ID 
 	'{'
 		//'type' '=' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-		'type' '=' ((dtype=[Datatype|QualifiedName]))
+		'type' '=' ((dtype=Type))
 		('defaultvalue' '=' defaultvalue=STRING)?
 		('label' '=' label=STRING)?
 		('size' '=' size=INT)?
@@ -45,7 +56,7 @@ Datapackage returns Datapackage:
 
 Entity returns Entity:
 	{Entity}
-	'Entity' name=ID ('extends' supertype=[Entity|QualifiedName])?
+	'Entity' name=ID ('extends' supertype=[Entity|STRING])?
 	'{'
 		('attributes' '{' (attributes+=Attribute)* '}')?
 		('references' '{' (references+=Reference)* '}')?
@@ -55,14 +66,14 @@ Entity returns Entity:
 Attribute returns Attribute:
 	{Attribute}
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-	'Attribute' name=ID ':' (dtype=[Datatype|QualifiedName])
+	'Attribute' name=ID ':' (type=Type)
 ;
 
 Reference returns Reference:
 	{Reference}
 	'Reference' name=ID 
 	'{'
-		'*Entity' entity=[Entity]
+		'*Entity' entity=[Entity|STRING]
 		'lower' lower=NUMBER
 		'upper' upper=NUMBER 
 	'}'
@@ -93,7 +104,7 @@ IndexPage returns IndexPage:
 	{IndexPage}
 	'IndexPage' name=ID 
 	'{'
-		('*Entities' entities+=[Entity] (',' entities+=[Entity])*)?
+		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
 		('links' '{' (links+=Link)* '}')?
@@ -104,7 +115,7 @@ DetailsPage returns DetailsPage:
 	{DetailsPage}
 	'DetailsPage' name=ID 
 	'{'
-		('*Entities' entities+=[Entity] (',' entities+=[Entity])*)?
+		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
 		('links' '{' (links+=Link)* '}')?
@@ -207,9 +218,9 @@ Plugin returns Plugin:
 	'Plugin' name=ID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
-		'Type' '=' type=PLG_GROUP
+		'Plugintype' '=' type=PluginKinds
 		('languages' '{' (languages+=Language)* '}')?
-		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
 	'}'	
 ;
 
@@ -219,7 +230,7 @@ Library returns Library:
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
-		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
 		('classes' '{' (classes+=Class)* '}')?
 		('packages' '{' (packages+=Package)* '}')?
 	'}'
@@ -239,7 +250,7 @@ Class returns Class:
     'Class' name=ID ('extends' supertype=[Class|QualifiedName])?
     '{'
     	('*Class references' references+=[Class|QualifiedName] (',' references+=[Class|QualifiedName])*)?
-    	('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+    	('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
         ('methods' '{' (methods+=Method)* '}')?
     '}'
 ;
@@ -249,7 +260,7 @@ Method returns Method:
     'Method' name=ID
     '{'
         //'Returnvalue' returnvalue=ID ':' type=[jvmTypes::JvmType|QualifiedName]
-        'Returnvalue' returnvalue=ID ':' type=[Datatype|QualifiedName]
+        'Returnvalue' returnvalue=ID ':' type=Type
         ('methodparameters' '{' (methodparameters+=MethodParameter)* '}')?
     '}'
 ;
@@ -257,7 +268,7 @@ Method returns Method:
 MethodParameter returns MethodParameter:
 	{MethodParameter}
     //'MethodParameter' name=ID ':' type=[jvmTypes::JvmType|QualifiedName]
-    'MethodParameter' name=ID ':' type=[Datatype|QualifiedName]
+    'MethodParameter' name=ID ':' type=Type
 ;
 
 Template returns Template:
@@ -331,7 +342,7 @@ PositionParameter:
 	'Position Parameter' name = ID
 	'{'
 		('divId' '=' divid = ID)?
-		('type' '=' type = POSITION_TYPES_NAMES)?
+		('Positiontype' '=' type = POSITION_TYPES_NAMES)?
 		('CSS keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
 	'}'
 ;
@@ -351,8 +362,12 @@ NUMBER : ('-')?INT;
 	
 QualifiedName: ID ('.' ID)* ;
 
-enum PLG_GROUP:
+enum PluginKinds:
     authenticate | captcha | content | contact |
     editors | extensions | finder | quick_icons |
     search | system | user | xml_rpc
+;
+
+enum SimpleDatatypeKinds:
+	string | bool | int | float | array
 ;

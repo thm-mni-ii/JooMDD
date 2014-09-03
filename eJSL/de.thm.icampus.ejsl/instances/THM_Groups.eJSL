@@ -7,7 +7,7 @@ eJSLModel "THMGroups"
 	
 	entities
 	{
-		Entity user
+		Entity ^user
 		{
 			references 
 			{
@@ -31,8 +31,8 @@ eJSLModel "THMGroups"
 		{
 			attributes
 			{
-				Attribute name : java.lang.String
-				Attribute groupinfo : java.lang.String
+				Attribute name : string
+				Attribute groupinfo : "ShowAll"
 			}
 		}
 		
@@ -41,7 +41,7 @@ eJSLModel "THMGroups"
 		{
 			attributes
 			{
-				Attribute name : java.lang.String
+				Attribute name : string
 			}
 		}
 			
@@ -70,7 +70,7 @@ eJSLModel "THMGroups"
 		{
 			attributes
 			{
-				Attribute name : java.lang.String
+				Attribute name : string
 			}
 			references 
 			{
@@ -87,8 +87,8 @@ eJSLModel "THMGroups"
 		{
 			attributes
 			{
-				Attribute ^type : java.lang.String
-				Attribute parameter : java.lang.String
+				Attribute ^type : string
+				Attribute parameter : string
 			}
 		}
 	}
@@ -124,7 +124,7 @@ eJSLModel "THMGroups"
 
 		IndexPage Membermanager
 		{
-			*Entities user
+			*Entities ^user
 			links
 			{
 				InternalcontextLink Details
@@ -140,7 +140,7 @@ eJSLModel "THMGroups"
 
 		DetailsPage Member
 		{
-			*Entities user
+			*Entities ^user
 		}
 		
 		IndexPage Groupmanager
@@ -239,6 +239,7 @@ eJSLModel "THMGroups"
 							}
 						}
 					}
+					Plugintype = system
 					*Entities user,group,groupRole,role
 				}
 				Library THM_Groups

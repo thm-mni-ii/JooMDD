@@ -16,12 +16,20 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="extensions" upperBound="-1"
         eType="#//Extension" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Type"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DatatypeReference" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Datatype"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleDatatypes" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SimpleDatatypeKinds"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Datatype">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Parameter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dtype" eType="#//Datatype"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dtype" eType="#//Type"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultvalue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -46,7 +54,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Attribute">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dtype" eType="#//Datatype"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reference">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -115,7 +123,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Plugin" eSuperTypes="#//Extension">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PLG_GROUP"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PluginKinds"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
         upperBound="-1" eType="#//Entity"/>
   </eClassifiers>
@@ -147,13 +155,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="Method">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="returnvalue" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Datatype"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="methodparameters" upperBound="-1"
         eType="#//MethodParameter" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MethodParameter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Datatype"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Template" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="positions" upperBound="-1"
@@ -202,7 +210,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="keyvaluepairs" upperBound="-1"
         eType="#//KeyValuePair" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="PLG_GROUP">
+  <eClassifiers xsi:type="ecore:EEnum" name="PluginKinds">
     <eLiterals name="authenticate" literal="authenticate"/>
     <eLiterals name="captcha" value="1" literal="captcha"/>
     <eLiterals name="content" value="2" literal="content"/>
@@ -215,5 +223,12 @@
     <eLiterals name="system" value="9" literal="system"/>
     <eLiterals name="user" value="10" literal="user"/>
     <eLiterals name="xml_rpc" value="11" literal="xml_rpc"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SimpleDatatypeKinds">
+    <eLiterals name="string" literal="string"/>
+    <eLiterals name="bool" value="1" literal="bool"/>
+    <eLiterals name="int" value="2" literal="int"/>
+    <eLiterals name="float" value="3" literal="float"/>
+    <eLiterals name="array" value="4" literal="array"/>
   </eClassifiers>
 </ecore:EPackage>

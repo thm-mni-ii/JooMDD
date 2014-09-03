@@ -7,19 +7,26 @@
     editorPluginID="de.thm.icampus.ejsl.editor" runtimeVersion="2.10">
   <genPackages prefix="EJSL" basePackage="de.thm.icampus.ejsl" disposableProviderFactory="true"
       fileExtensions="eJSL" ecorePackage="EJSL.ecore#/">
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//PLG_GROUP">
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/authenticate"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/captcha"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/content"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/contact"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/editors"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/extensions"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/finder"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/quick_icons"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/search"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/system"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/user"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PLG_GROUP/xml_rpc"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//PluginKinds">
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/authenticate"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/captcha"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/content"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/contact"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/editors"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/extensions"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/finder"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/quick_icons"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/search"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/system"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/user"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/xml_rpc"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//SimpleDatatypeKinds">
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SimpleDatatypeKinds/string"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SimpleDatatypeKinds/bool"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SimpleDatatypeKinds/int"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SimpleDatatypeKinds/float"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SimpleDatatypeKinds/array"/>
     </genEnums>
     <genClasses ecoreClass="EJSL.ecore#//EJSLModel">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//EJSLModel/name"/>
@@ -30,12 +37,19 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/pages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/extensions"/>
     </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Type"/>
+    <genClasses ecoreClass="EJSL.ecore#//DatatypeReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DatatypeReference/type"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//SimpleDatatypes">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//SimpleDatatypes/type"/>
+    </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Datatype">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Datatype/name"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Parameter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Parameter/dtype"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Parameter/dtype"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/defaultvalue"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/label"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/size"/>
@@ -55,7 +69,7 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/dtype"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/type"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Reference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/name"/>
@@ -137,12 +151,12 @@
     <genClasses ecoreClass="EJSL.ecore#//Method">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Method/name"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Method/returnvalue"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Method/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Method/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Method/methodparameters"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//MethodParameter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//MethodParameter/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//MethodParameter/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//MethodParameter/type"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Template">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Template/positions"/>
