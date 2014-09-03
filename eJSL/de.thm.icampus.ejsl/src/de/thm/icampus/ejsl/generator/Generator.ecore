@@ -24,8 +24,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="linkClient" eType="#//LinkGeneratorClient"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//AbstractPageGenerator"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StaticPage"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StaticPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//AbstractPageGenerator"/>
   <eClassifiers xsi:type="ecore:EClass" name="AbstractLinkGenerator" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="InternalLink" eSuperTypes="#//AbstractLinkGenerator"/>
