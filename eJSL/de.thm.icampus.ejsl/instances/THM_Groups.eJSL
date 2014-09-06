@@ -2,9 +2,8 @@ eJSLModel "THMGroups"
 {
 	datatypes
 	{ 
-		Datatype "Group", Datatype "RoleOrdering", Datatype "ShowAll"
+		Datatype "Group", Datatype "RoleOrdering", Datatype "ShowAll", Datatype "varchar(50)"
 	}
-	
 	entities
 	{
 		Entity ^user
@@ -13,21 +12,21 @@ eJSLModel "THMGroups"
 			{
 				Reference GroupRole
 				{
-					*Entity groupRole
+					*Entity "user"
 					lower 0
 					upper 0
 				}
 				
 				Reference Structure
 				{
-					*Entity structure
+					*Entity "structure"
 					lower 0
 					upper 0
 				}
 			}
 		}
 		
-		Entity group 
+		Entity group
 		{
 			attributes
 			{
@@ -41,7 +40,7 @@ eJSLModel "THMGroups"
 		{
 			attributes
 			{
-				Attribute name : string
+				Attribute name : "varchar(50)"
 			}
 		}
 			
@@ -51,14 +50,14 @@ eJSLModel "THMGroups"
 			{
 				Reference Group
 				{
-					*Entity group
+					*Entity "group"
 					lower 1
 					upper 1
 				}
 				
 				Reference Role
 				{
-					*Entity role
+					*Entity "role"
 					lower 1
 					upper 1
 				}
@@ -76,7 +75,7 @@ eJSLModel "THMGroups"
 			{
 				Reference StructureType
 				{
-					*Entity structureType
+					*Entity "structureType"
 					lower 1
 					upper 1
 				}
@@ -124,7 +123,7 @@ eJSLModel "THMGroups"
 
 		IndexPage Membermanager
 		{
-			*Entities ^user
+			*Entities "user"
 			links
 			{
 				InternalcontextLink Details
@@ -140,22 +139,22 @@ eJSLModel "THMGroups"
 
 		DetailsPage Member
 		{
-			*Entities ^user
+			*Entities "user"
 		}
 		
 		IndexPage Groupmanager
 		{
-			*Entities group
+			*Entities "group"
 		}
 		
 		IndexPage Rolemanager
 		{
-			*Entities role
+			*Entities "role"
 		}
 		
 		IndexPage StructManager
 		{
-			*Entities structure
+			*Entities "structure"
 		}
 	}
 	
@@ -240,7 +239,7 @@ eJSLModel "THMGroups"
 						}
 					}
 					Plugintype = system
-					*Entities user,group,groupRole,role
+					*Entities "user","group","groupRole","role"
 				}
 				Library THM_Groups
 				{
@@ -255,7 +254,7 @@ eJSLModel "THMGroups"
 							}
 						} 
 					}
-					*Entities group,user,role,structure
+					*Entities "group","user","role","structure"
 					classes 
 					{
 						Class ThmGroups
@@ -264,22 +263,22 @@ eJSLModel "THMGroups"
 							{
 								 Method getUrl
 								 {
-								 	Returnvalue attribut : java.lang.String
+								 	Returnvalue attribut : string
 								 	methodparameters
 								 	{
-								 		MethodParameter ignored : java.lang.reflect.Array
+								 		MethodParameter ignored : array
 								 	}
 								 }
 								 Method canEdit
 								 {
-								 	Returnvalue bool : java.lang.Boolean
+								 	Returnvalue boolean : bool
 								 }
 								 Method getDescription
 								 {
-								 	Returnvalue list : java.lang.String
+								 	Returnvalue list : string
 								 	methodparameters
 								 	{
-								 		MethodParameter gid : java.lang.Integer
+								 		MethodParameter gid : int
 								 	} 
 								 }
 							}
@@ -308,7 +307,7 @@ eJSLModel "THMGroups"
 								Position Parameter Param1
 								{
 									divId = param1_div
-									type = component
+									Positiontype = component
 								}
 							}
 						}
