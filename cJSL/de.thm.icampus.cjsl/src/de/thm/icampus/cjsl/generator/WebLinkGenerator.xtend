@@ -4,16 +4,15 @@ import de.thm.icampus.cjsl.generator.ContentGenerator
 import de.thm.icampus.cjsl.cjsl.Application
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.cjsl.cjsl.Weblink
-import org.eclipse.emf.ecore.EObject
 import de.thm.icampus.cjsl.cjsl.cJSL_Content
-
+import de.thm.icampus.cjsl.cjsl.WeblinkCategory
 
 class WebLinkGenerator extends ContentGenerator {
 	
 	Application app
 	EList<Weblink> allweblinks
 	cJSL_Content contentContainer
-	EList<? extends EObject> allcat
+	EList<WeblinkCategory> allcat
 	int weblinkStartid
 	int assetAktuellID
 	int catAktuellID
@@ -37,7 +36,7 @@ class WebLinkGenerator extends ContentGenerator {
 		catAktuellID = categorieStartindex
 		userStartid = userStartindex
 		viewLevelid = viewLevelMaxindex
-		allcat.addAll(contentContainer.weblinkCategory)
+		allcat = contentContainer.weblinkCategory
 		
 
 	}

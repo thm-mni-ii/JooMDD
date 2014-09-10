@@ -5,14 +5,14 @@ import de.thm.icampus.cjsl.cjsl.Application
 import de.thm.icampus.cjsl.cjsl.cJSL_Content
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.cjsl.cjsl.Contact
-import org.eclipse.emf.ecore.EObject
+import de.thm.icampus.cjsl.cjsl.ContactCategory
 
 class ContactGenerator extends ContentGenerator {
 	
 	Application app
 	EList<Contact> allcontacts
 	cJSL_Content contentContainer
-	EList<? extends EObject> allcat
+	EList<ContactCategory> allcat
 	int contactStartid
 	int assetAktuellID
 	int catAktuellID
@@ -36,7 +36,7 @@ class ContactGenerator extends ContentGenerator {
 		catAktuellID = categorieStartindex
 		userStartid = userStartindex
 		viewLevelid = viewLevelMaxindex
-		allcat.addAll(contentContainer.contactCategory)
+		allcat = contentContainer.contactCategory
 		
 
 	}

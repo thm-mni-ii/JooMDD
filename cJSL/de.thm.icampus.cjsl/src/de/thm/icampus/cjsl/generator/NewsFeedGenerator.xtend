@@ -4,16 +4,15 @@ import de.thm.icampus.cjsl.generator.ContentGenerator
 import de.thm.icampus.cjsl.cjsl.Application
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.cjsl.cjsl.Newsfeed
-import org.eclipse.emf.ecore.EObject
 import de.thm.icampus.cjsl.cjsl.cJSL_Content
-
+import de.thm.icampus.cjsl.cjsl.NewsfeedCategory
 
 class NewsFeedGenerator extends ContentGenerator {
 	
 	Application app
 	EList<Newsfeed> allnewsfeeds
 	cJSL_Content contentContainer
-	EList<? extends EObject> allcat
+	EList<NewsfeedCategory> allcat
 	int newsfeedStartid
 	int assetAktuellID
 	int catAktuellID
@@ -37,7 +36,7 @@ class NewsFeedGenerator extends ContentGenerator {
 		catAktuellID = categorieStartindex
 		userStartid = userStartindex
 		viewLevelid = viewLevelMaxindex
-		allcat.addAll(contentContainer.newsfeedCategory)
+		allcat=contentContainer.newsfeedCategory
 		
 
 	}

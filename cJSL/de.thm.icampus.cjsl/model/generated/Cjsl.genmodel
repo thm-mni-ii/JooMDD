@@ -8,9 +8,9 @@
   <genPackages prefix="Cjsl" basePackage="de.thm.icampus.cjsl" disposableProviderFactory="true"
       loadInitialization="true" literalsInterface="false" fileExtensions="cJSL" ecorePackage="Cjsl.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//accessLevelRight">
+      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//accessLevelRight/inherited"/>
       <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//accessLevelRight/denied"/>
       <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//accessLevelRight/accepted"/>
-      <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//accessLevelRight/inherited"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="Cjsl.ecore#//defaultEditorKind">
       <genEnumLiterals ecoreEnumLiteral="Cjsl.ecore#//defaultEditorKind/tinymce"/>

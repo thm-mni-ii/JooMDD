@@ -996,9 +996,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="metaKeywordPrefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="accessLevelRight">
-    <eLiterals name="denied" literal="denied"/>
-    <eLiterals name="accepted" value="1" literal="accepted"/>
-    <eLiterals name="inherited" value="2" literal="inherited"/>
+    <eLiterals name="inherited" literal="inherited"/>
+    <eLiterals name="denied" value="1" literal="denied"/>
+    <eLiterals name="accepted" value="2" literal="accepted"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="defaultEditorKind">
     <eLiterals name="tinymce" literal="TinyMCE"/>
