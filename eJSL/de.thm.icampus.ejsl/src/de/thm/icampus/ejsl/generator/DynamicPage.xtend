@@ -21,21 +21,28 @@ import de.thm.icampus.ejsl.eJSL.Parameter
  */
 public class DynamicPageTemplate extends AbstractPageGenerator {
 	
-
-	def  CharSequence generateView(Page page, Component component) '''
-		<?php
-		/**
+	
+	def CharSequence generateFileDoc(Page page, Component component)'''
+	<?php
+		
 		* @version v0.0.1
 		* @category Joomla component
 		* @package «(component.eContainer as Package).name»
 		* @subpackage com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
 		* @name «component.name»View
-		* @description «(page as DynamicPage).entities.get(0).name»View for «component.name»
 		«FOR author : component.manifest.authors»
 			* @author «author.name», <«author.authoremail»>
 		«ENDFOR»
 		* @copyright «component.manifest.copyright»
 		* @license «component.manifest.license»
+		
+	'''
+
+	def  CharSequence generateView(Page page, Component component) '''
+		<?php
+		/**
+		«generateFileDoc(page,component)»
+		* @description «(page as DynamicPage).entities.get(0).name»View for «component.name»
 		*/
 		defined('_JEXEC') or die('Restricted access');
 		jimport('joomla.application.component.view');
