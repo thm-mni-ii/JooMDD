@@ -6,6 +6,8 @@ package de.thm.icampus.ejsl.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.eJSL.EJSLModel
+import de.thm.icampus.ejsl.eJSL.Extension
 
 /**
  * Generates code from your model files on save.
@@ -15,6 +17,19 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 class EJSLGenerator implements IGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		fsa.generateFile('greetings.txt', 'People to greet: ')
+		
+		var ExtensionGeneratorClient extClient = new ExtensionGeneratorClient(fsa)
+		
+		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
+			
+			var EJSLModel domainModel = e;
+			  
+			for( b : domainModel.getExtensions())
+			{
+				var Extension ext = b
+				extClient.setExtension(ext);
+				extClient.generateExtension
+			}
+		}
 	}
 }

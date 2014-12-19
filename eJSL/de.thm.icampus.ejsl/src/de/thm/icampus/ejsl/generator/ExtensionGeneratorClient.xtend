@@ -2,24 +2,77 @@
  */
 package de.thm.icampus.ejsl.generator
 
-import org.eclipse.emf.ecore.EObject;
-
+import de.thm.icampus.ejsl.eJSL.Component
+import de.thm.icampus.ejsl.eJSL.Extension
+import de.thm.icampus.ejsl.eJSL.ExtensionPackage
+import de.thm.icampus.ejsl.eJSL.Library
+import de.thm.icampus.ejsl.eJSL.Module
+import de.thm.icampus.ejsl.eJSL.Plugin
+import de.thm.icampus.ejsl.eJSL.Template
+import org.eclipse.xtext.generator.IFileSystemAccess
 
 public class  ExtensionGeneratorClient  {
 	
-	AbstractExtensionGenerator extensions 
+	AbstractExtensionGenerator extensionsgenerator
+	IFileSystemAccess fsa
+	Extension ext
+	String path
 	
-	public def AbstractExtensionGenerator getExtension(){
-		return this.extensions
+	new(IFileSystemAccess access) {
+		fsa=access
+	}
+	
+	public def AbstractExtensionGenerator getExtensiongenerator(){
+		return this.extensionsgenerator
 	}
 
 	
-	def void setExtension(AbstractExtensionGenerator value){
-		this.extensions = value
+	def void setExtensiongenerator(AbstractExtensionGenerator value){
+		this.extensionsgenerator = value
+	}
+	
+	def void setPath(String path) {
+		this.path = path
 	}
 	
 	public def CharSequence generateExtension(){
-		return extensions.generate
+		switch ext {
+			ExtensionPackage : {
+					var ExtensionPackage tempext  =  ext as ExtensionPackage
+					extensionsgenerator = new PackageGenerator(tempext,fsa)
+				}
+			Component :{
+				var Component tempext  =  ext as Component
+					extensionsgenerator = new ComponentGenerator(tempext,fsa)
+			}
+			Module :{
+				var Module tempext  =  ext as Module
+					extensionsgenerator = new ModuleGenerator(tempext,fsa)
+			}
+			Plugin :{
+				var Plugin tempext  =  ext as Plugin
+					extensionsgenerator = new PluginGenerator(tempext,fsa)
+			}
+			Library :{
+				var Library tempext  =  ext as Library
+					extensionsgenerator = new LibraryGenerator(tempext,fsa)
+			}
+			Template :{
+				var Template tempext  =  ext as Template
+					extensionsgenerator = new TemplateGenerator(tempext,fsa)
+			}
+			default : {
+				System.out.println("ExtensionGeneratorClient default")
+			}	
+		}
+		if(path != null) {
+			extensionsgenerator.setPath(this.path)
+		}
+		return extensionsgenerator.generate
+	}
+	
+	def setExtension(Extension extensions) {
+		this.ext = extensions;
 	}
 
 } // ExtensionGeneratorClient
