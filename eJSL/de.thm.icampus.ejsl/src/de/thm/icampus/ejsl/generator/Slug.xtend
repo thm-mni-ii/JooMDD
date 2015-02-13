@@ -2,6 +2,11 @@
  */
 package de.thm.icampus.ejsl.generator
 
+import de.thm.icampus.ejsl.eJSL.BackendSection
+import de.thm.icampus.ejsl.eJSL.Component
+import org.eclipse.emf.common.util.EList
+import de.thm.icampus.ejsl.eJSL.Section
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Slug</b></em>'.
@@ -59,5 +64,27 @@ public class Slug  {
 		}
 		
 		return res.toString
+	}
+	/*
+	 * Takes the name of an Extension and Prefix like (com ,name)and return com_name  .
+	 * Needed for class names.
+	 */
+	def static String nameExtensionBind(String prefix, String name) {
+		
+		return prefix + "_" + name
+	}
+	
+	def static BackendSection getBackendSectionViews(Component com)
+	{
+		for(Section sec: com.sections){
+			
+			switch sec{
+				 BackendSection:{
+				 	return sec
+				 }
+				
+			}
+		}
+		return null ;
 	}
 } // Slug

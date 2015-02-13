@@ -239,7 +239,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <menu>«component.name»</menu>
 		        <submenu>
 				«FOR page : indexPages» 
-					<menu link="option=«component.name»&amp;view=«page.name»" view="«page.name»">«page.name»</menu>
+					<menu link="option=«component.name.toLowerCase»&amp;view=«page.name.toLowerCase»" 
+					view="«page.name.toLowerCase»">«page.name»</menu>
 				«ENDFOR»
 		        </submenu>
 		        <!-- Administration Main File Copy Section -->
@@ -260,6 +261,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <folder>views</folder>
 		            <folder>controllers</folder>
 		            <folder>helpers</folder>
+		            <folder>assets</folder>
 		        </files>
 				
 				<languages folder="administrator">
@@ -324,7 +326,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateJoomlaDirectory("admin/views")
 
 		generateJoomlaDirectory("admin/controllers")
-		generateJoomlaDirectory("admin/helpers")
+		generateJoomlaDirectory("admin/helpers/")
+		generateFile("admin/helpers/" + component.name.toLowerCase + ".php", generateHelperComponent)
+		
+		generateJoomlaDirectory("admin/assets")
+		
 
 		// commented out old model generation code
 		/*           
@@ -545,25 +551,23 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     '''
     
     def CharSequence phpAdminContent(Component component) '''
-        <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted access');
-            
-            // import joomla controller library
-            jimport('joomla.application.component.controller');
-            
-            // Get an instance of the controller prefixed by «component.name»
-            $controller = JController::getInstance('«component.name»');
-            
-            // Get the task
-            $jinput = JFactory::getApplication()->input;
-            $task = $jinput->get('task', "", 'STR' );
-            
-            // Perform the Request task
-            $controller->execute($task);
-            
-            // Redirect if set by the controller
-            $controller->redirect();
+		<?php
+		// no direct access
+		defined('_JEXEC') or die;
+		
+		// Access check.
+		if (!JFactory::getUser()->authorise('core.manage', '«Slug::nameExtensionBind("com",component.name )»')) 
+		{
+			throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+		}
+		
+		// Include dependancies
+		jimport('joomla.application.component.controller');
+		
+		// Get an instance of the controller prefixed by «Slug::nameExtensionBind("com",component.name )»
+		$controller	= JControllerLegacy::getInstance('«component.name.toUpperCase»');
+		$controller->execute(JFactory::getApplication()->input->get('task'));
+		$controller->redirect();
     '''
     
     def CharSequence phpAdminControllerContent(Component component) '''
@@ -577,22 +581,22 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
             /**
              * General Controller of «class_name» component
              */
-            class «class_name»Controller extends JController
+            class «class_name»Controller extends JControllerLegacy
             {
                     /**
                      * display task
                      *
                      * @return void
                      */
-                    function display($cachable = false) 
-                    {
-                            // set default view if not set
-                            $input = JFactory::getApplication()->input;
-                            $input->set('view', $input->getCmd('view', '«class_name»s'));
-            
-                            // call parent behavior
-                            parent::display($cachable);
-                    }
+                     public function display($cachable = false, $urlparams = false) 
+                     {
+                     	
+                        require_once JPATH_COMPONENT . '/helpers/«component.name.toLowerCase».php';
+                        $view = JFactory::getApplication()->input->getCmd('view', '«class_name»s');
+                        JFactory::getApplication()->input->set('view', $view);
+                        parent::display($cachable, $urlparams);
+                        return $this;
+                      }
             }
     '''
     
@@ -786,6 +790,54 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			«ENDFOR»
 			</fieldset>
 		</config>
+    '''
+    def CharSequence generateHelperComponent() '''
+    <?php
+    // No direct access
+defined('_JEXEC') or die;
+
+/**
+ * «component.name.toUpperCase»  helper.
+ */
+class «component.name.toFirstUpper»Helper {
+
+    /**
+     * Configure the Linkbar.
+     */
+    public static function addSubmenu($vName = '') {
+        		JHtmlSidebar::addEntry(
+			JText::_('«Slug::getBackendSectionViews(component).page.get(0).name.toUpperCase»'),
+			'index.php?option=com_mdd&view=«Slug::getBackendSectionViews(component).page.get(0).name.toLowerCase»',
+			$vName == '«Slug::getBackendSectionViews(component).page.get(0).name.toLowerCase»'
+		);
+
+    }
+
+    /**
+     * Gets a list of the actions that can be performed.
+     *
+     * @return	JObject
+     * @since	1.6
+     */
+    public static function getActions() {
+        $user = JFactory::getUser();
+        $result = new JObject;
+
+        $assetName = '«Slug::nameExtensionBind('com', component.name)»';
+
+        $actions = array(
+            'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
+        );
+
+        foreach ($actions as $action) {
+            $result->set($action, $user->authorise($action, $assetName));
+        }
+
+        return $result;
+    }
+
+
+}
     '''
     		
 	override getProtectedRegions() {
