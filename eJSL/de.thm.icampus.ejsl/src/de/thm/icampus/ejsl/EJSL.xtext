@@ -8,6 +8,7 @@ EJSLModel returns EJSLModel:
 	'{'
 		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
 		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+		('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
 		('entities' '{' (entities+=Entity)* '}')?
 		('datapackages' '{' (datapackages+=Datapackage)* '}')?
 		('pages' '{' (pages+=Page)* '}')?
@@ -44,6 +45,15 @@ Parameter returns Parameter:
 	'}'
 ;
 
+ParameterGroup returns ParameterGroup:
+	{ParameterGroup}
+	'ParameterGroup' name=ID 
+	'{'
+		('label' '=' label=STRING)?
+		('Parameters' '{' ((globalparameters+=[Parameter]) | (parameters+=Parameter))* '}')
+	'}'
+;
+
 Datapackage returns Datapackage:
 	{Datapackage}
 	'Datapackage' name=ID
@@ -66,7 +76,10 @@ Entity returns Entity:
 Attribute returns Attribute:
 	{Attribute}
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-	'Attribute' name=ID ':' (type=Type)
+	'Attribute' name=ID '{' 
+		'dbtype' '=' (dbtype=Type)
+		'htmltype' '=' (htmltype=Type)
+	'}'
 ;
 
 Reference returns Reference:
@@ -89,6 +102,7 @@ StaticPage returns StaticPage:
 	{StaticPage}
 	'StaticPage' name=ID 
 	'{'
+		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
 		('links' '{' (links+=Link)* '}')?
@@ -105,8 +119,10 @@ IndexPage returns IndexPage:
 	'IndexPage' name=ID 
 	'{'
 		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('filters' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
@@ -116,8 +132,10 @@ DetailsPage returns DetailsPage:
 	'DetailsPage' name=ID 
 	'{'
 		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('filters' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
