@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="CMSDSL" nsURI="http://www.icampus.thm.de/CMSDSL" nsPrefix="CMSDSL">
+  <eClassifiers xsi:type="ecore:EClass" name="CMSModel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="part" lowerBound="1" eType="#//CMSPart"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CMSCore" eSuperTypes="#//CMSPart">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="corefeatures" upperBound="-1"
+        eType="#//CoreFeature" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CMSPart" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="feature" upperBound="-1"
+        eType="#//Feature" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Configuration"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Menu">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="menuItems" upperBound="-1"
+        eType="#//MenuItem" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MenuItem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//MenuItem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="alias" eType="#//MenuItem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Property"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CMSFeature" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="configuration" eType="#//Configuration"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
+        eType="#//Property" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CoreFeature" abstract="true" eSuperTypes="#//CMSFeature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="menus" upperBound="-1"
+        eType="#//Menu" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Feature" abstract="true" eSuperTypes="#//CMSFeature"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Page" eSuperTypes="#//Feature"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Section" eSuperTypes="#//Feature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Contentpackage" eSuperTypes="#//Feature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contentPackages" upperBound="-1"
+        eType="#//Contentpackage" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
+        eType="#//Entity" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="datatypes" upperBound="-1"
+        eType="#//Datatype" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CMSExtension" eSuperTypes="#//CMSPart"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Entity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="References" upperBound="-1"
+        eType="#//Reference" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Attributes" upperBound="-1"
+        eType="#//Attribute" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="supertype" eType="#//Entity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Reference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityReference" eType="#//Entity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Datatype"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Attribute">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dbtype" upperBound="-1"
+        eType="#//Type" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="htmltype" upperBound="-1"
+        eType="#//Type" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Type" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleDataType" eSuperTypes="#//Type"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DatatypeReference" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="datatype" eType="#//Datatype"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="NewEnum1"/>
+</ecore:EPackage>
