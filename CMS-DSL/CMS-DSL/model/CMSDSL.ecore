@@ -39,8 +39,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Feature" abstract="true" eSuperTypes="#//CMSFeature"/>
   <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Page" eSuperTypes="#//Feature"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newEReference1" eType="#//Entity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Page" eSuperTypes="#//Feature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
+        eType="#//Parameter" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Section" eSuperTypes="#//Feature">
     <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
   </eClassifiers>
@@ -73,9 +78,19 @@
         eType="#//Type" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Type" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="SimpleDataType" eSuperTypes="#//Type"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleDataType" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SimpleDatatypeKinds"
+        defaultValueLiteral="string"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DatatypeReference" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EReference" name="datatype" eType="#//Datatype"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="NewEnum1"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="SimpleDatatypeKinds">
+    <eLiterals name="bool"/>
+    <eLiterals name="string"/>
+    <eLiterals name="int"/>
+    <eLiterals name="float"/>
+    <eLiterals name="array"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter"/>
 </ecore:EPackage>

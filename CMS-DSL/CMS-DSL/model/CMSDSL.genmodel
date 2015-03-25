@@ -5,7 +5,13 @@
     complianceLevel="7.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
   <foreignModel>CMSDSL.ecore</foreignModel>
   <genPackages prefix="CMSDSL" disposableProviderFactory="true" ecorePackage="CMSDSL.ecore#/">
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="CMSDSL.ecore#//NewEnum1"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="CMSDSL.ecore#//SimpleDatatypeKinds">
+      <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SimpleDatatypeKinds/bool"/>
+      <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SimpleDatatypeKinds/string"/>
+      <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SimpleDatatypeKinds/int"/>
+      <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SimpleDatatypeKinds/float"/>
+      <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SimpleDatatypeKinds/array"/>
+    </genEnums>
     <genClasses ecoreClass="CMSDSL.ecore#//CMSModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//CMSModel/part"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute CMSDSL.ecore#//CMSModel/name"/>
@@ -37,8 +43,12 @@
     </genClasses>
     <genClasses image="false" ecoreClass="CMSDSL.ecore#//Feature"/>
     <genClasses ecoreClass="CMSDSL.ecore#//StaticPage"/>
-    <genClasses ecoreClass="CMSDSL.ecore#//DynamicPage"/>
-    <genClasses ecoreClass="CMSDSL.ecore#//Page"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//DynamicPage">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//DynamicPage/newEReference1"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Page">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Page/localparameters"/>
+    </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Section">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Section/page"/>
     </genClasses>
@@ -64,9 +74,12 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Attribute/htmltype"/>
     </genClasses>
     <genClasses image="false" ecoreClass="CMSDSL.ecore#//Type"/>
-    <genClasses ecoreClass="CMSDSL.ecore#//SimpleDataType"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//SimpleDataType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute CMSDSL.ecore#//SimpleDataType/type"/>
+    </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//DatatypeReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//DatatypeReference/datatype"/>
     </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Parameter"/>
   </genPackages>
 </genmodel:GenModel>
