@@ -40,11 +40,18 @@
   <eClassifiers xsi:type="ecore:EClass" name="Feature" abstract="true" eSuperTypes="#//CMSFeature"/>
   <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page"/>
   <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="newEReference1" eType="#//Entity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
+        eType="#//Entity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Page" eSuperTypes="#//Feature">
     <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
-        eType="#//Parameter" containment="true"/>
+        eType="#//Attribute" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="globalparameters" upperBound="-1"
+        eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" upperBound="-1"
+        eType="#//Parametergroup" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
+        eType="#//Link" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Section" eSuperTypes="#//Feature">
     <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
@@ -72,10 +79,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Datatype"/>
   <eClassifiers xsi:type="ecore:EClass" name="Attribute">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dbtype" upperBound="-1"
-        eType="#//Type" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="htmltype" upperBound="-1"
-        eType="#//Type" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dbtype" eType="#//Type"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="htmltype" eType="#//Type"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Type" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleDataType" eSuperTypes="#//Type">
@@ -92,5 +99,20 @@
     <eLiterals name="float"/>
     <eLiterals name="array"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Parameter"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Parametergroup">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//Attribute" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Link"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ExternalLink" eSuperTypes="#//Link"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InternalLink" eSuperTypes="#//Link">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Page"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContextLink" eSuperTypes="#//InternalLink">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="linkparameters" upperBound="-1"
+        eType="#//LinkParameter" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LinkParameter">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributereference" eType="#//Attribute"/>
+  </eClassifiers>
 </ecore:EPackage>

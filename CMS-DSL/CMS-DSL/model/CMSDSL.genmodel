@@ -44,10 +44,13 @@
     <genClasses image="false" ecoreClass="CMSDSL.ecore#//Feature"/>
     <genClasses ecoreClass="CMSDSL.ecore#//StaticPage"/>
     <genClasses ecoreClass="CMSDSL.ecore#//DynamicPage">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//DynamicPage/newEReference1"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//DynamicPage/entities"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Page">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Page/localparameters"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Page/globalparameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Page/parametergroups"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Page/links"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Section">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Section/page"/>
@@ -80,6 +83,21 @@
     <genClasses ecoreClass="CMSDSL.ecore#//DatatypeReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//DatatypeReference/datatype"/>
     </genClasses>
-    <genClasses ecoreClass="CMSDSL.ecore#//Parameter"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//Parametergroup">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Parametergroup/parameters"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Link">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//InternalLink/target"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//ExternalLink"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//InternalLink">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//InternalLink/target"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//ContextLink">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//ContextLink/linkparameters"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//LinkParameter">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//LinkParameter/attributereference"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
