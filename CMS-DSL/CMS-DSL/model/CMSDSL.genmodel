@@ -12,6 +12,10 @@
       <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SimpleDatatypeKinds/float"/>
       <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SimpleDatatypeKinds/array"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="CMSDSL.ecore#//SectionKind">
+      <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SectionKind/backend"/>
+      <genEnumLiterals ecoreEnumLiteral="CMSDSL.ecore#//SectionKind/frontend"/>
+    </genEnums>
     <genClasses ecoreClass="CMSDSL.ecore#//CMSModel">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//CMSModel/part"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute CMSDSL.ecore#//CMSModel/name"/>
@@ -53,20 +57,25 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Page/links"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Section">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Section/page"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Section/pages"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute CMSDSL.ecore#//Section/sectionKind"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Contentpackage">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Contentpackage/contentPackages"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Contentpackage/entities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Contentpackage/datatypes"/>
     </genClasses>
-    <genClasses ecoreClass="CMSDSL.ecore#//CMSExtension"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//CMSExtension">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//CMSExtension/manifest"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//CMSExtension/languages"/>
+    </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//IndexPage"/>
     <genClasses ecoreClass="CMSDSL.ecore#//DetailsPage"/>
     <genClasses ecoreClass="CMSDSL.ecore#//Entity">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Entity/References"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Entity/Attributes"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Entity/supertype"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Class/supertype"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Reference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Reference/entityReference"/>
@@ -98,6 +107,58 @@
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//LinkParameter">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//LinkParameter/attributereference"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//ExtensionPackage">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//ExtensionPackage/extensions"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Component">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Component/sections"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Module">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Module/page"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Plugin">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Plugin/entities"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Library">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Library/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Library/classes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Library/packages"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Template">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Template/positions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Template/cssblocks"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Class">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Class/methods"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Class/supertype"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Class/references"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Method">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Method/parameters"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//MethodParameter">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//MethodParameter/type"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Package">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Package/classes"/>
+      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Package/packages"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Manifestation">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Manifestation/authors"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Author"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//Language">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//KVPairObject/keyvaluepairs"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//KeyValuePair"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//CSSBlock"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//PositionParameter"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//KVPairObject">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//KVPairObject/keyvaluepairs"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//Position">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Position/positionparameters"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

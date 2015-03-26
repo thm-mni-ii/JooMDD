@@ -54,7 +54,9 @@
         eType="#//Link" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Section" eSuperTypes="#//Feature">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pages" upperBound="-1"
+        eType="#//Page"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sectionKind" eType="#//SectionKind"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Contentpackage" eSuperTypes="#//Feature">
     <eStructuralFeatures xsi:type="ecore:EReference" name="contentPackages" upperBound="-1"
@@ -64,7 +66,12 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="datatypes" upperBound="-1"
         eType="#//Datatype" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CMSExtension" eSuperTypes="#//CMSPart"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CMSExtension" eSuperTypes="#//CMSPart">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="manifest" eType="#//Manifestation"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="languages" upperBound="-1"
+        eType="#//Language" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="Entity">
@@ -114,5 +121,74 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LinkParameter">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributereference" eType="#//Attribute"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtensionPackage" eSuperTypes="#//CMSExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extensions" upperBound="-1"
+        eType="#//CMSExtension" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Component" eSuperTypes="#//CMSExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sections" upperBound="-1"
+        eType="#//Section" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Module" eSuperTypes="#//CMSExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Plugin" eSuperTypes="#//CMSExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
+        eType="#//Entity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Library" eSuperTypes="#//CMSExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
+        eType="#//Entity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1"
+        eType="#//Class" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" upperBound="-1"
+        eType="#//Package" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Template" eSuperTypes="#//CMSExtension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="positions" upperBound="-1"
+        eType="#//Position" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cssblocks" upperBound="-1"
+        eType="#//CSSBlock" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SectionKind">
+    <eLiterals name="backend"/>
+    <eLiterals name="frontend"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Class">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" upperBound="-1"
+        eType="#//Method" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="supertype" eType="#//Class"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="references" eType="#//Class"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Method">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
+        eType="#//MethodParameter" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MethodParameter">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Package">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1"
+        eType="#//Class" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" eType="#//Package"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Manifestation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="authors" upperBound="-1"
+        eType="#//Author" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Author"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Language" eSuperTypes="#//KVPairObject"/>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyValuePair"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CSSBlock" eSuperTypes="#//KVPairObject"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PositionParameter" eSuperTypes="#//KVPairObject"/>
+  <eClassifiers xsi:type="ecore:EClass" name="KVPairObject" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="keyvaluepairs" upperBound="-1"
+        eType="#//KeyValuePair" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Position">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="positionparameters" upperBound="-1"
+        eType="#//PositionParameter" containment="true"/>
   </eClassifiers>
 </ecore:EPackage>
