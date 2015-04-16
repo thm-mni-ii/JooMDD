@@ -16,15 +16,6 @@
         eType="#//Feature" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Configuration"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Menu">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="menuItems" upperBound="-1"
-        eType="#//MenuItem" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MenuItem">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//MenuItem"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="alias" eType="#//MenuItem"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Property"/>
   <eClassifiers xsi:type="ecore:EClass" name="CMSFeature" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -33,10 +24,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1"
         eType="#//Property" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CoreFeature" abstract="true" eSuperTypes="#//CMSFeature">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="menus" upperBound="-1"
-        eType="#//Menu" containment="true"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CoreFeature" abstract="true" eSuperTypes="#//CMSFeature"/>
   <eClassifiers xsi:type="ecore:EClass" name="Feature" abstract="true" eSuperTypes="#//CMSFeature"/>
   <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page"/>
   <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page">
@@ -58,9 +46,9 @@
         eType="#//Page"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sectionKind" eType="#//SectionKind"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Contentpackage" eSuperTypes="#//Feature">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="contentPackages" upperBound="-1"
-        eType="#//Contentpackage" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Entitypackage" eSuperTypes="#//Feature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entityPackages" upperBound="-1"
+        eType="#//Entitypackage" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
         eType="#//Entity" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="datatypes" upperBound="-1"
@@ -75,14 +63,20 @@
   <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="References" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="references" upperBound="-1"
         eType="#//Reference" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="Attributes" upperBound="-1"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
         eType="#//Attribute" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="supertype" eType="#//Entity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="accesslevels" upperBound="-1"
+        eType="#//AccessLevel" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributepackages" upperBound="-1"
+        eType="#//AttributePackage" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reference">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entityReference" eType="#//Entity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageReference" eType="#//Page"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="containment" eType="ecore:EDataType http://www.eclipse.org/emf/2003/XMLType#//Boolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Datatype"/>
   <eClassifiers xsi:type="ecore:EClass" name="Attribute">
@@ -191,4 +185,24 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="positionparameters" upperBound="-1"
         eType="#//PositionParameter" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AccessLevel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1"
+        eType="#//Action" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="references" upperBound="-1"
+        eType="#//Reference" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rights" upperBound="-1"
+        eType="#//Right" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Right"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AttributePackage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1"
+        eType="#//Attribute" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Enum" eSuperTypes="#//Datatype">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="literals" upperBound="-1"
+        eType="#//Enumliteral" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Enumliteral"/>
 </ecore:EPackage>
