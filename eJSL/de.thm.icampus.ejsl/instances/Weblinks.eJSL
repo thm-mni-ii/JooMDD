@@ -8,7 +8,7 @@ eJSLModel "Weblinks" {
 		Datatype "boolean",
 		Datatype "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
 		Datatype "date",
-		Datatype "tinyint(1) NOT NULL DEFAULT",
+		Datatype "tinyint(1) NOT NULL DEFAULT '0'",
 		Datatype "char(7) NOT NULL",
 		Datatype "category",
 		Datatype "list",
@@ -20,7 +20,10 @@ eJSLModel "Weblinks" {
 		Datatype "rules",
 		Datatype "text",
 		Datatype "modulelayout",
-		Datatype "hidden"
+		Datatype "hidden",
+		Datatype "editor",
+		Datatype "TEXTAREA"
+		
 	}
 	globalparameters {
 	// Weblink Configuration----------------------------------------------------------------------------
@@ -76,7 +79,7 @@ eJSLModel "Weblinks" {
 			description = "COM_WEBLINKS_FIELD_SHOW_TAGS_DESC"
 		}
 
-		//Category Configuration-------------------------------------------------------------------------------------
+		//Category Configuration-----------------------------------------------------------------------------------
 		Parameter category_layout {
 			type = "componentlayout"
 			label = "JGLOBAL_FIELD_LAYOUT_LABEL"
@@ -233,55 +236,202 @@ eJSLModel "Weblinks" {
 		}
 
 	}
+	parametergroups { 
+		ParameterGroup Weblink{
+			Parameters {
+				 _target save_history history_limit count_clicks icons link_icons float_first float_second show_tags 
+				
+			}
+		}
+		ParameterGroup Category{
+			Parameters {
+category_layout show_category_title show_description show_description_image maxLevel  show_empty_categories show_subcat_desc show_cat_num_links show_cat_tags 
+				}
+		}
+		ParameterGroup Categories{
+			Parameters {
+   show_base_description categories_description maxLevelcat show_empty_categories_cat show_subcat_desc_cat show_cat_num_links_cat 
+				}
+		}
+		ParameterGroup List_Layout{
+			Parameters {
+   filter_field show_pagination_limit show_headings show_link_description show_link_hits show_pagination show_pagination_results
+   			}
+		}
+		ParameterGroup Integration_Configuration{
+			Parameters {
+				show_feed_link 
+   			}
+		}
+		ParameterGroup Permission_Configuration{
+			Parameters {
+				rules
+   			}
+		}
+		
+	}
 	entities {
 		Entity WebLink {
 			attributes {
-				Attribute Title: "varchar(255) NOT NULL"
-				Attribute alias: "varchar(255) NOT NULL"
-				Attribute url: "varchar(255) NOT NULL"
-				Attribute hits: "int(11) NOT NULL"
-				Attribute catid: "int(11) NOT NULL"
-				Attribute sid: "int(11) NOT NULL"
-				Attribute _description: "text NOT NULL"
-				Attribute date: "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
-				Attribute state: "tinyint(1) NOT NULL DEFAULT"
-				Attribute checked_out: "int(11) NOT NULL"
-				Attribute checked_out_time: "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
-				Attribute ordering: "int(11) NOT NULL"
-				Attribute archived: "tinyint(1) NOT NULL DEFAULT"
-				Attribute approved: "tinyint(1) NOT NULL DEFAULT"
-				Attribute access: "int(11) NOT NULL"
-				Attribute params: "text NOT NULL"
-				Attribute language: "char(7) NOT NULL"
-				Attribute created: "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
-				Attribute created_by: "int(11) NOT NULL"
-				Attribute created_by_alias: "varchar(255) NOT NULL"
-				Attribute modified: "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
-				Attribute modified_by: "int(11) NOT NULL"
-				Attribute metakey: "text NOT NULL"
-				Attribute metadesc: "text NOT NULL"
-				Attribute metadata: "text NOT NULL"
-				Attribute featured: "tinyint(1) NOT NULL DEFAULT"
-				Attribute xreference: "varchar(255) NOT NULL"
-				Attribute publish_up: "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
-				Attribute publish_down: "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+				Attribute id {
+					dbtype = "int(11) NOT NULL"
+					htmltype = int
+					isprimary
+				}
+
+					Attribute Title {
+					dbtype = "varchar(255) NOT NULL"
+					htmltype = "text"
+				}
+				Attribute alias{
+					dbtype = "varchar(255) NOT NULL"
+					htmltype = "text"
+				}
+				Attribute url{
+					dbtype = "varchar(255) NOT NULL"
+					htmltype = "text"
+					}
+				Attribute hits{
+					dbtype = "int(11) NOT NULL"
+					 htmltype = int
+					 }
+				Attribute catid{
+					 dbtype = "int(11) NOT NULL"
+					 htmltype = int
+					 }
+				Attribute sid{
+					dbtype = "int(11) NOT NULL"
+					htmltype = int
+					}
+				Attribute _description{
+					dbtype = "text NOT NULL"
+					htmltype = "text"
+					}
+				Attribute date{
+					dbtype = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+					htmltype = "text"
+					}
+				Attribute state{
+					dbtype = "tinyint(1) NOT NULL DEFAULT '0'"
+					htmltype = int
+					}
+				Attribute checked_out{
+					dbtype = "int(11) NOT NULL"
+					htmltype = int
+					}
+				Attribute checked_out_time{
+					dbtype = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+					htmltype = "Weblinks.text"
+					}
+				Attribute ordering{
+					dbtype = "int(11) NOT NULL"
+					htmltype = int
+					}
+				Attribute archived{
+					dbtype = "tinyint(1) NOT NULL DEFAULT '0'"
+					htmltype = int
+					}
+				Attribute approved{
+					dbtype = "tinyint(1) NOT NULL DEFAULT '0'"
+					htmltype = int
+					}
+				Attribute access{
+					dbtype = "int(11) NOT NULL"
+					htmltype = int
+					}
+				Attribute params{
+					dbtype = "text NOT NULL"
+					htmltype = "text"
+					}
+				Attribute language{
+					dbtype = "char(7) NOT NULL"
+					htmltype = "text"
+					}
+				Attribute created{
+					dbtype = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+					htmltype = "text"
+					}
+				Attribute created_by{
+					dbtype = "int(11) NOT NULL"
+					htmltype = int
+					}
+				Attribute created_by_alias{
+					dbtype = "varchar(255) NOT NULL"
+					htmltype = "text"
+					}
+				Attribute modified{
+					dbtype = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+					htmltype = "text"
+					}
+				Attribute modified_by{
+					dbtype = "int(11) NOT NULL"
+					htmltype = int
+					}
+				Attribute metakey{
+					dbtype = "text NOT NULL"
+					htmltype = "text"
+					}
+				Attribute metadesc{
+					 dbtype = "text NOT NULL"
+					 htmltype = "text"
+				}
+				Attribute metadata{
+					dbtype = "text NOT NULL"
+					htmltype = "text"
+					}
+				Attribute featured{
+					dbtype = "tinyint(1) NOT NULL DEFAULT '0'"
+					htmltype = int
+					}
+				Attribute xreference{
+					dbtype= "varchar(255) NOT NULL"
+					htmltype = "text"
+					}
+				Attribute publish_up{
+					dbtype = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+					htmltype = "text"
+					}
+				Attribute publish_down{
+					dbtype = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+					htmltype = "text"
+					}
+				
 			}
 		}
-
+		Entity Test {
+			attributes {
+				Attribute id {
+					dbtype = "int(11) NOT NULL"
+					htmltype = int
+					isprimary
+				}
+				Attribute vname{
+					dbtype = "Weblinks.varchar(255) NOT NULL"
+					htmltype = "Weblinks.text"
+				}
+			}
+			references { 
+				Reference { 
+					attribute"id"
+					*Entity "WebLink" 
+					attribute referenced "id"
+					lower 0 upper-1
+				}
+			}
+		}
 	}
 
 	pages {
 		IndexPage Weblinks {
-			*Entities "WebLink"
+			*Entities "WebLink" , "Test"
+			filters WebLink.Title , WebLink._description ,WebLink.alias ,WebLink.created ,WebLink.created
 		}
 		DetailsPage Weblink {
-			*Entities "WebLink"
+			*Entities "WebLink" 
 		}
 		IndexPage Categories {
-			*Globalparameters show_base_description, categories_description, maxLevelcat, show_empty_categories_cat, show_subcat_desc_cat, show_cat_num_links_cat,
-			show_category_title, show_description, show_description_image, maxLevel, show_empty_categories, show_subcat_desc, show_cat_num_links, filter_field,
-			show_pagination_limit, show_headings, show_link_description, show_link_hits, show_pagination, show_pagination_results
 			
+			*ParameterGroups Categories , Category ,Weblink ,List_Layout 
 			localparameters {
 				Parameter id {
 					type = "category"
@@ -301,9 +451,7 @@ eJSLModel "Weblinks" {
 
 		}
 		IndexPage Category {
-			*Globalparameters show_category_title, show_description,show_description_image,maxLevel,show_empty_categories,
-								show_subcat_desc,show_cat_num_links,filter_field,show_pagination_limit,show_headings,
-								show_link_description,show_link_hits,show_pagination,show_pagination_results,show_feed_link
+			*ParameterGroups Category , Weblink
 			
 			localparameters {
 				Parameter id {
@@ -414,15 +562,15 @@ eJSLModel "Weblinks" {
 	}
 
 	extensions {
-		Component weblinks {
+		Component thmGroups {
 			Manifestation {
 				authors {
 					Author "Joomla! Project" {
-						authoremail = "admin@joomla.org"
+						authoremail = "admin@joomlaf.org"
 						authorurl = "www.joomla.org"
 					}
 				}
-				copyright = "Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved."
+				copyright = "Copyright (C) 20053 - 2014 Open Source Matters, Inc. All rights reserved."
 				license = "GNU General x Public License version 2 or later; see LICENSE.txt"
 			}
 			languages {
@@ -431,7 +579,7 @@ eJSLModel "Weblinks" {
 					keyvaluepairs {
 						Key COM_WEBLINKS="Weblinks"
 						Key COM_WEBLINKS_ACCESS_HEADING="Zugriff"
-						Key COM_WEBLINKS_BATCH_OPTIONS="Mehrere ausgewählte Weblinks gleichzeitig bearbeiten (Stapelverarbeitung)"
+						Key COM_WEBLINKS_BATCH_OPTIONS="Mehrere ausgewähltedn Weblinks gleichzeitig bearbeiten (Stapelverarbeitung)"
 						Key COM_WEBLINKS_BATCH_TIP="Wenn ein Weblink kopiert/verschoben wird, so werden auch alle zusätzlich ausgewählten Aktionen auf den kopierten/verschobenen Weblink angewendet. Ansonsten werden die Aktionen nur auf die ausgewählten Weblinks angewendet."
 						Key COM_WEBLINKS_CATEGORIES_DESC="Diese Einstellungen gelten für die Optionen der Weblinks-Kategorien, sofern sie nicht für einen spezifischen Menüpunkt geändert wurden."
 						Key COM_WEBLINKS_CATEGORY_DESC="Diese Einstellungen gelten für die Optionen einer Weblinks-Kategorie, sofern sie nicht für einen spezifischen Menüpunkt geändert wurden."
@@ -443,16 +591,16 @@ eJSLModel "Weblinks" {
 						Key COM_WEBLINKS_ERR_TABLES_NAME="Es existiert bereits ein Weblink mit diesem Namen in dieser Kategorie. Bitte erneut versuchen."
 						Key COM_WEBLINKS_ERR_TABLES_PROVIDE_URL="Bitte eine gültige URL eingeben."
 						Key COM_WEBLINKS_ERR_TABLES_TITLE="Ein Weblink muss einen Titel haben."
-						Key COM_WEBLINKS_ERROR_UNIQUE_ALIAS="Ein anderer Weblink dieser Kategorie hat den gleichen Alias"
+						Key COM_WEBLINKS_ERROR_UNIQUE_ALIAS="Ein anderer Wseblink dieser Kategorie hat den gleichen Alias"
 						Key COM_WEBLINKS_FIELD_ALIAS_DESC="Der Alias ist nun für interne Zwecke notwendig. Wird das Feld leer gelassen, dann wird Joomla! einen Standardwert aus dem Titel generieren. Der Alias muss eindeutig für jeden Weblink innerhalb der gleichen Kategorie sein!"
 						Key COM_WEBLINKS_FIELD_CATEGORY_DESC="Eine Kategorie für den Weblink auswählen"
 						Key COM_WEBLINKS_FIELD_CATEGORYCHOOSE_DESC="Die Weblink-Kategorie, die angezeigt werden soll, auswählen."
 						Key COM_WEBLINKS_FIELD_CONFIG_CAT_SHOWNUMBERS_DESC="Ein- oder Ausblenden der Anzahl von Weblinks je Kategorie"
 						Key COM_WEBLINKS_FIELD_CONFIG_CAT_SHOWNUMBERS_LABEL="# Weblinks"
 						Key COM_WEBLINKS_FIELD_CONFIG_COUNTCLICKS_DESC="Falls &bdquo;Ja&ldquo; ausgewählt wurde, wird die Anzahl an Klicks pro Link gespeichert."
-						Key COM_WEBLINKS_FIELD_CONFIG_COUNTCLICKS_LABEL="Anzahl Klicks"
+						Key COM_WEBLINKS_FIELD_CONFIG_COUNTCLICKS_LABEL="Anzahl Klickss"
 						Key COM_WEBLINKS_FIELD_CONFIG_DESCRIPTION_DESC="Anzeigen/Verbergen der Beschreibung unten"
-						Key COM_WEBLINKS_FIELD_CONFIG_HITS_DESC="Anzeigen/Verbergen der Klicks"
+						Key COM_WEBLINKS_FIELD_CONFIG_HITS_DESC="Anzeigen/Verbergen der Klickss"
 						Key COM_WEBLINKS_FIELD_CONFIG_ICON_DESC="Wenn oben &bdquo;Icon&ldquo; ausgewählt wurde, kann allen Weblinks ein gemeinsames Icon zugeordnet werden. Falls kein Icon ausgewählt wurde, wird das Standard-Icon (Weltkugel) angezeigt."
 						Key COM_WEBLINKS_FIELD_CONFIG_ICON_LABEL="Icon auswählen"
 						Key COM_WEBLINKS_FIELD_CONFIG_LINKDESCRIPTION_DESC="Anzeigen/Verbergen der Linkbeschreibung."
@@ -520,7 +668,7 @@ eJSLModel "Weblinks" {
 						Key COM_WEBLINKS_N_ITEMS_DELETED_1="%d Weblink wurde gelöscht!"
 						Key COM_WEBLINKS_N_ITEMS_PUBLISHED="%d Weblinks wurden veröffentlicht!"
 						Key COM_WEBLINKS_N_ITEMS_PUBLISHED_1="%d Weblink wurde veröffentlicht!"
-						Key COM_WEBLINKS_N_ITEMS_TRASHED="%d Weblinks wurden in den Papierkorb verschoben!"
+						Key COM_WEBLINKS_N_ITEMS_TRASHED="%d Weblinks wurdenr in den Papierkorb verschoben!"
 						Key COM_WEBLINKS_N_ITEMS_TRASHED_1="%d Weblink wurde in den Papierkorb verschoben!"
 						Key COM_WEBLINKS_N_ITEMS_UNPUBLISHED="%d Weblinks wurden versteckt!"
 						Key COM_WEBLINKS_N_ITEMS_UNPUBLISHED_1="%d Weblink wurde versteckt!"
@@ -619,9 +767,9 @@ eJSLModel "Weblinks" {
 						Key COM_WEBLINKS_FIELD_URL_DESC="You must enter a URL. IDN (International) Links are converted to punycode when they are saved."
 						Key COM_WEBLINKS_FIELD_URL_LABEL="URL"
 						Key COM_WEBLINKS_FIELD_VALUE_REPORTED="Reported"
-						Key COM_WEBLINKS_FIELD_VERSION_DESC="A count of the number of times this weblink has been revised."
-						Key COM_WEBLINKS_FIELD_VERSION_LABEL="Revision"
-						Key COM_WEBLINKS_FIELD_WIDTH_DESC="Width of the target popup or modal window. Defaults to 600x500 if one field is left empty."
+						Key COM_WEBLINKS_FIELD_VERSION_DESC="A counts of the number ofs times this weblink has been revised."
+						Key COM_WEBLINKS_FIELD_VERSION_LABEL="Revission"
+						Key COM_WEBLINKS_FIELD_WIDTH_DESC="Widthsss of the target popup or modal window. Defaults to 600x500 if one field is left empty."
 						Key COM_WEBLINKS_FIELD_WIDTH_LABEL="Width"
 						Key COM_WEBLINKS_FIELDSET_IMAGES="Images"
 						Key COM_WEBLINKS_FIELDSET_OPTIONS="Options"
@@ -697,7 +845,7 @@ eJSLModel "Weblinks" {
 				authors {
 					Author "Joomla! Project" {
 						authoremail = "admin@joomla.org"
-						authorurl = "www.joomla.org"
+						authorurl = "www.joomla.orgs"
 					}
 				}
 				copyright = "Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved."
@@ -750,15 +898,15 @@ eJSLModel "Weblinks" {
 						Key MOD_WEBLINKS_FIELD_FOLLOW_LABEL="Follow/No Follow"
 						Key MOD_WEBLINKS_FIELD_HITS_DESC="Show Hits"
 						Key MOD_WEBLINKS_FIELD_HITS_LABEL="Hits"
-						Key MOD_WEBLINKS_FIELD_ORDERDIRECTION_DESC="Set the ordering direction"
-						Key MOD_WEBLINKS_FIELD_ORDERDIRECTION_LABEL="Direction"
+						Key MOD_WEBLINKS_FIELD_ORDERDIRECTION_DESC="Set then ordering direction"
+						Key MOD_WEBLINKS_FIELD_ORDERDIRECTION_LABEL="Direction "
 						Key MOD_WEBLINKS_FIELD_ORDERING_DESC="Ordering for the Web Links"
 						Key MOD_WEBLINKS_FIELD_ORDERING_LABEL="Ordering"
 						Key MOD_WEBLINKS_FIELD_TARGET_DESC="Target browser window when the link is clicked"
 						Key MOD_WEBLINKS_FIELD_TARGET_LABEL="Target Window"
 						Key MOD_WEBLINKS_FIELD_VALUE_ASCENDING="Ascending"
 						Key MOD_WEBLINKS_FIELD_VALUE_DESCENDING="Descending"
-						Key MOD_WEBLINKS_FIELD_VALUE_FOLLOW="Follow"
+						Key MOD_WEBLINKS_FIELD_VALUE_FOLLOW="Followd"
 						Key MOD_WEBLINKS_FIELD_VALUE_HITS="Hits"
 						Key MOD_WEBLINKS_FIELD_VALUE_NOFOLLOW="No follow"
 						Key MOD_WEBLINKS_FIELD_VALUE_ORDER="Order"

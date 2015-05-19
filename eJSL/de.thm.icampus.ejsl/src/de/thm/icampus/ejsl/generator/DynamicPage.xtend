@@ -22,6 +22,8 @@ import de.thm.icampus.ejsl.eJSL.Parameter
 public class DynamicPageTemplate extends AbstractPageGenerator {
 	
 	
+	
+	
 	def CharSequence generateFileDoc(Page page, Component component)'''
 	<?php
 		
@@ -149,6 +151,7 @@ def static CharSequence generateController(Page page, Component component) '''
 		 />
 		«ENDFOR»
 		'''
+	
 	override getLinkClient() {
 	}
 

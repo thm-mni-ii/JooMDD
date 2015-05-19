@@ -69,6 +69,7 @@ Entity returns Entity:
 	'Entity' name=ID ('extends' supertype=[Entity|STRING])?
 	'{'
 		('attributes' '{' (attributes+=Attribute)* '}')?
+		// Kardinalität
 		('references' '{' (references+=Reference)* '}')?
 	'}'
 ;
@@ -79,14 +80,17 @@ Attribute returns Attribute:
 	'Attribute' name=ID '{' 
 		'dbtype' '=' (dbtype=Type)
 		'htmltype' '=' (htmltype=Type)
+		(isprimary ?= "isprimary")?
 	'}'
 ;
 
 Reference returns Reference:
 	{Reference}
-	'Reference' name=ID 
+	'Reference'  
 	'{'
+		'attribute' attribute=[Attribute|STRING]
 		'*Entity' entity=[Entity|STRING]
+		'attribute referenced' attributerefereced=[Attribute|STRING]
 		'lower' lower=NUMBER
 		'upper' upper=NUMBER 
 	'}'
@@ -196,6 +200,7 @@ Component returns Component:
 	'Component' name=ID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
+		('Global parameter' '{' (globalParamter+=ParameterGroup)* '}')?
 		('languages' '{' (languages+=Language)* '}')?
 		'sections' '{' (sections+=Section)+ '}'
 	'}'

@@ -138,26 +138,13 @@ abstract public class AbstractExtensionGenerator {
 		this.path = old_path
 	}
 	
-	def String getTypeName(Type typ){
-		var String result = "";
-		switch typ{
-			DatatypeReference :{
-				var DatatypeReference temptyp = typ as DatatypeReference
-				result = temptyp.type.name
-			}
-			SimpleDatatypes:{
-				var SimpleDatatypes temptyp = typ as SimpleDatatypes
-				result = temptyp.type.toString
-			}
-		}
-		return result
-	}
+	
 	
 	def CharSequence generateParameter(EList<Parameter>listParams)'''
 		«FOR param : listParams»
 		 <field
 		 name="«param.name»"
-		 type="«getTypeName(param.dtype)»"
+		 type="«Slug.getTypeName(param.dtype)»"
 		 label="«param.label »"
 		 description="«param.descripton»"
 		 />

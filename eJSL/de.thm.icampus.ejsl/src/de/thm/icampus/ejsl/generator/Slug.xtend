@@ -6,6 +6,15 @@ import de.thm.icampus.ejsl.eJSL.BackendSection
 import de.thm.icampus.ejsl.eJSL.Component
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.ejsl.eJSL.Section
+import de.thm.icampus.ejsl.eJSL.Entity
+import de.thm.icampus.ejsl.eJSL.Attribute
+import de.thm.icampus.ejsl.eJSL.Type
+import de.thm.icampus.ejsl.eJSL.DatatypeReference
+import de.thm.icampus.ejsl.eJSL.SimpleDatatypes
+import de.thm.icampus.ejsl.eJSL.Reference
+import java.util.HashSet
+import java.util.LinkedList
+import java.util.List
 
 /**
  * <!-- begin-user-doc -->
@@ -65,6 +74,20 @@ public class Slug  {
 		
 		return res.toString
 	}
+	def static String getTypeName(Type typ){
+		var String result = "";
+		switch typ{
+			DatatypeReference :{
+				var DatatypeReference temptyp = typ as DatatypeReference
+				result = temptyp.type.name
+			}
+			SimpleDatatypes:{
+				var SimpleDatatypes temptyp = typ as SimpleDatatypes
+				result = temptyp.type.toString
+			}
+		}
+		return result
+	}
 	/*
 	 * Takes the name of an Extension and Prefix like (com ,name)and return com_name  .
 	 * Needed for class names.
@@ -87,4 +110,80 @@ public class Slug  {
 		}
 		return null ;
 	}
+	
+	def static CharSequence generateEntytiesHiddenAttribute(Entity entity, List<Entity> toSchowEntities) {
+		var StringBuffer buff = new StringBuffer()
+		
+		for(Attribute e : entity.attributes){
+			
+			if(getTypeName(e.htmltype).toLowerCase.compareTo("hidden") == 0){
+				buff.append(inputHiddenFeldTemplate(e) + "\n");
+			}
+		}
+		
+		for(Attribute e : getAllAttributeOfreference(entity, toSchowEntities)){
+			
+			if(getTypeName(e.htmltype).toLowerCase.compareTo("hidden") == 0){
+				buff.append(inputHiddenFeldTemplate(e) + "\n");
+			}
+		}
+		
+		return buff.toString
+	}
+	
+	def static HashSet<Attribute> getAllAttributeOfreference(Entity ent, List<Entity> toSchowEntities) {
+		var HashSet<Attribute> result  = new HashSet<Attribute>
+		var LinkedList<Entity> tovisitEntity = new LinkedList <Entity>() 
+		tovisitEntity.add(ent)
+		for(Entity en: tovisitEntity){
+			for(Reference re: en.references){
+			if( toSchowEntities.contains(re.entity)){
+				var Attribute refered = re.attributerefereced
+				for(Attribute attr: re.entity.attributes){
+					if(attr.name.equals(refered.name) && !result.contains(attr) && attr.name.equalsIgnoreCase("id")){
+						
+						result.add(attr)
+					}
+				}
+				if(!tovisitEntity.contains(re.entity)){
+					tovisitEntity.add(re.entity)
+				}
+			}
+			
+			}
+		}
+		return result
+	}
+	
+	def static CharSequence inputHiddenFeldTemplate(Attribute attr) '''
+	<input type="hidden" name="jform[«attr.name»]" value="<?php echo $this->item->«attr.name»; ?>" />
+	'''
+	
+	def static CharSequence generateEntytiesInputAttribute(Entity entity, List<Entity> toSchowEntities) {
+		var StringBuffer buff = new StringBuffer()
+		
+		for(Attribute e : entity.attributes){
+			
+			if(getTypeName(e.htmltype).toLowerCase.compareTo("hidden") != 0){
+				buff.append(inputFeldTemplate(e) + "\n");
+			}
+		}
+		
+		for(Attribute e : getAllAttributeOfreference(entity, toSchowEntities)){
+			
+			if(getTypeName(e.htmltype).toLowerCase.compareTo("hidden") != 0){
+				buff.append(inputFeldTemplate(e) + "\n");
+			}
+		}
+		
+		return buff.toString
+	}
+	
+	def static CharSequence inputFeldTemplate(Attribute attr) '''
+	<div class="control-group">
+		<div class="control-label"><?php echo $this->form->getLabel('«attr.name»'); ?></div>
+		<div class="controls"><?php echo $this->form->getInput('«attr.name»'); ?></div>
+	</div>
+	'''
+	
 } // Slug

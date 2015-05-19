@@ -17,6 +17,10 @@ import java.util.Calendar
 import java.util.HashSet
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess
+import java.util.HashMap
+import de.thm.icampus.ejsl.eJSL.ParameterGroup
+import de.thm.icampus.ejsl.eJSL.Attribute
+import de.thm.icampus.ejsl.eJSL.Reference
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
@@ -117,49 +121,65 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		return entities;
 	}
 	
-	 def CharSequence sqlAdminSqlInstallContent(Component component) '''
-        «/*val entities=component.eAllContents.toIterable.filter(typeof(Entity))*/»
-        «val entities=getEntities(component)»
-        «FOR e:entities»
-        	DROP TABLE IF EXISTS `#__«e.name.toLowerCase»`;
+	 def CharSequence sqlAdminSqlInstallContent(Component component) {
+        val Iterable<Entity> entities=getEntities(component)
+        var HashSet<Entity> visited = new HashSet<Entity>();
+        var StringBuffer result = new StringBuffer;
+        while(visited.size != entities.size){
+	        for (Entity e:entities){
+	        	if(e.references.empty && !visited.contains(e)){
+	        		result.append(generateSQLTable(e));
+	        		visited.addAll(e);
+	        	}
+	        	if(!visited.contains(e) && !e.references.empty && isAllreferenVisited(e.references, visited) ){
+	        
+	        	   result.append(generateSQLTable(e))
+	        	   visited.addAll(e);
+	        	}
+	        }
+	       }
+         return result.toString
+     
+   }
+	
+	def boolean isAllreferenVisited(EList<Reference> list, HashSet<Entity> entities) {
+		
+		for(Reference r: list){
+			if(!entities.contains(r.entity))
+			return false
+		}
+		return true
+	}
+    
+    def CharSequence generateSQLTable(Entity table)'''
+    DROP TABLE IF EXISTS `#__«table.name.toLowerCase»`;
 
-        	CREATE TABLE `#__«e.name.toLowerCase»` (
-        		`id` int(11) NOT NULL AUTO_INCREMENT,
-        		«FOR a:e.attributes»
-        			`«a.name.toLowerCase»` «getTypeName(a.type)»,
+        	CREATE TABLE `#__«table.name.toLowerCase»` (
+        		«FOR a:table.attributes»
+        			`«a.name.toLowerCase»` «Slug.getTypeName(a.dbtype)»,
         		«ENDFOR»
-        		«FOR r:e.references»
-        			«IF r.upper.equals("1")»
-        				`«r.name.toLowerCase»_id` int(11),
-        			«ENDIF»
-        		«ENDFOR»
-        		PRIMARY KEY (`id`)
-        	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-        	
-        	«FOR r:e.references»
-        		«IF !r.upper.equals("1")»
-        			DROP TABLE IF EXISTS `#__«e.name»_«r.name.toLowerCase»`;
-
-        			CREATE TABLE `#__«e.name.toLowerCase»_«r.name.toLowerCase»` (
-        				 `«e.name.toLowerCase»_id` int(11) NOT NULL,
-        				 `«r.name.toLowerCase»_id` int(11) NOT NULL,
-        				 PRIMARY KEY (`«e.name.toLowerCase»_id`, `«r.name.toLowerCase»_id`)
-        			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-        		«ENDIF»
+        	«FOR r:table.references»
+        		FOREIGN KEY (`«r.attribute.name.toLowerCase»`) REFERENCES `#__«r.entity.name.toLowerCase»` (`«r.attributerefereced.name.toLowerCase»`)
+        		ON UPDATE CASCADE
+        		ON DELETE CASCADE,
         	«ENDFOR»
-        «ENDFOR»
+        	PRIMARY KEY (`«getPrimaryKeyOfTable(table).name»`)
+        	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     '''
+	
+	def Attribute getPrimaryKeyOfTable(Entity entity) {
+		
+		for(Attribute e : entity.attributes){
+			if(e.isprimary)
+			return e
+		}
+	}
     
    def CharSequence sqlAdminSqlUninstallContent(Component component) '''
         «/*val entities=component.eAllContents.toIterable.filter(typeof(Entity))*/»
         «val entities=getEntities(component)»
         «FOR e:entities»
         	DROP TABLE IF EXISTS `#__«e.name.toLowerCase»`;
-        	«FOR r:e.references»
-        		«IF !r.upper.equals("1")»
-        			DROP TABLE IF EXISTS `#__«e.name.toLowerCase»_«r.name.toLowerCase»`;
-        		«ENDIF»
-        	«ENDFOR»
         «ENDFOR»
     '''
     
@@ -752,21 +772,27 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     def CharSequence xmlAccessContent(Component component) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<access component="«name»">
-		        <section name="component">
-		                <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
-		                <action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
-		        </section>
+		<section name="component">
+			<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+			<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+			<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+			<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+			<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+			<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+			<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+		</section>
 		</access>
     '''
     // Alle untergeordneten (über Referenzen) Entities finden
-	def Iterable<Parameter> getGlobalparameters(Component component) {
-		var params=new HashSet<Parameter>();
+	def Iterable<ParameterGroup> getGlobalparameters(Component component) {
+		var params=new HashSet<ParameterGroup>();
 		
 		// Section -> Page -> GlobalParameter
 		for(Section s :component.sections) {
 			for(Page p : s.page) {
-				for(Parameter para : p.globalparameters) {
-					params.add(para)
+				for(ParameterGroup para : p.parametergroups) {
+					if(!params.contains(para))
+					params.add(para);
 				}
 			}
 		}
@@ -779,17 +805,30 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		<?xml version="1.0" encoding="utf-8"?>
 		<config>
 			<fieldset name="component" label="«name.toUpperCase»_LABEL" description="«name.toUpperCase»_DESC">
-			«FOR p:params»
-			<field
-				name="«p.name»"
-				type="«getTypeName(p.dtype)»"
-			    default="«p.defaultvalue»"
-			    label="«p.label»"
-			    description="«p.descripton»"
-			    >
+			«FOR g:component.globalParamter»
+			«FOR p:g.parameters»
+			«writeParameter(p)»
+			«ENDFOR»
 			«ENDFOR»
 			</fieldset>
+			«FOR page_param:params»
+			<fieldset name="«page_param.name»" label="«page_param.name.toUpperCase»_LABEL" description="«page_param.name.toUpperCase»_DESC">
+			«FOR page_param_item:page_param.globalparameters»
+			«writeParameter(page_param_item)»
+			«ENDFOR»
+			</fieldset>
+			«ENDFOR»
+			
 		</config>
+    '''
+    def CharSequence writeParameter(Parameter param)'''
+    <field
+    name="«param.name»"
+    type="«Slug.getTypeName(param.dtype)»"
+    default="«param.defaultvalue»"
+    label="«param.label»"
+    description="«param.descripton»"
+    >
     '''
     def CharSequence generateHelperComponent() '''
     <?php

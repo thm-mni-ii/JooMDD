@@ -7,6 +7,7 @@ import de.thm.icampus.ejsl.eJSL.Package
 import java.util.Calendar
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.eJSL.Type
 
 /**
  * <!-- begin-user-doc -->
@@ -93,7 +94,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 				{
 					«FOR attribute : entity.attributes»
 						/**
-						 * @var		«attribute.type.typeName»	Variable description
+						 * @var		«attribute.dbtype.typeName»	Variable description
 						 * @since	3.3
 						 */
 						private $«attribute.name»;
@@ -304,6 +305,10 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 			«ENDFOR»
 		?>
 	'''
+	
+	def CharSequence getTypeName(Type type){
+		return Slug.getTypeName(type)
+	}
 
 	def CharSequence iniLanguage(Library library, String languageFileName) '''
 		«FOR pageLang : library.languages»

@@ -65,7 +65,7 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 		c.setLinewrap(1).after(parameterAccess.labelSTRINGTerminalRuleCall_8_2_0)
 
 		/* Attribute rule */
-		c.setLinewrap(1).after(attributeAccess.typeAssignment_4)
+	//	c.setLinewrap(1).after(attributeAccess.typeAssignment_4)
 
 		/* Reference rule */
 		c.setLinewrap(1).after(referenceAccess.entityEntityCrossReference_5_0)
@@ -82,13 +82,13 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 
 		/* Page rules */
 		/* Static */
-		c.setLinewrap(1).before(staticPageAccess.localparametersKeyword_5_0)
-		/* Dynamic, Index */
-		c.setLinewrap(1).before(indexPageAccess.globalparametersKeyword_5_0)
-		c.setLinewrap(1).before(indexPageAccess.localparametersKeyword_6_0)
-		/* Dynamic, Details */
-		c.setLinewrap(1).before(detailsPageAccess.globalparametersKeyword_5_0)
-		c.setLinewrap(1).before(detailsPageAccess.localparametersKeyword_6_0)
+//		c.setLinewrap(1).before(staticPageAccess.localparametersKeyword_5_0)
+//		/* Dynamic, Index */
+//		c.setLinewrap(1).before(indexPageAccess.globalparametersKeyword_5_0)
+//		c.setLinewrap(1).before(indexPageAccess.localparametersKeyword_6_0)
+//		/* Dynamic, Details */
+//		c.setLinewrap(1).before(detailsPageAccess.globalparametersKeyword_5_0)
+//		c.setLinewrap(1).before(detailsPageAccess.localparametersKeyword_6_0)
 
 		/* Manifestation rule */
 		c.setLinewrap(1).after(manifestationAccess.creationdateDATETerminalRuleCall_5_2_0)
