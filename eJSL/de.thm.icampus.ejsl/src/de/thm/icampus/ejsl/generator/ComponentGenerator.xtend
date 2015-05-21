@@ -21,6 +21,8 @@ import java.util.HashMap
 import de.thm.icampus.ejsl.eJSL.ParameterGroup
 import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.eJSL.Reference
+import de.thm.icampus.ejsl.eJSL.DynamicPage
+import de.thm.icampus.ejsl.eJSL.StaticPage
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
@@ -256,11 +258,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    
 		    <administration>
 		        <!-- Administration Menu Section -->
-		        <menu>«component.name»</menu>
+		        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
 		        <submenu>
 				«FOR page : indexPages» 
-					<menu link="option=«component.name.toLowerCase»&amp;view=«page.name.toLowerCase»" 
-					view="«page.name.toLowerCase»">«page.name»</menu>
+					<menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
+					view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_«page.name.toUpperCase»</menu>
 				«ENDFOR»
 		        </submenu>
 		        <!-- Administration Main File Copy Section -->
@@ -315,13 +317,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		val pagerefs = section.page
 		for (pageref : pagerefs) {
 			println(pageref.name)
-			pageref.generate("site")
-
-			// TODO maybe put this into page generate method 
-			generateFile(
-				"site/models/" + Slug.slugify(pageref.name) + ".php",
-				component.phpSiteModelContent(pageref)
-			)
+			pageref.generate("com_"+component.name.toLowerCase + "/site","site")
 		}
 	}
 
@@ -342,6 +338,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateJoomlaDirectory("admin/models")
 		generateJoomlaDirectory("admin/models/fields")
 		generateJoomlaDirectory("admin/tables")
+		generateTable("admin/tables/")
 
 		generateJoomlaDirectory("admin/views")
 
@@ -353,38 +350,37 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 
 		// commented out old model generation code
-		/*           
-            for (entity : pkg.emol.entities) {
-                val filename = entity.name.slugify
-                generateFile("admin/models/" + filename + ".php", entity.generateAdminModel(component))
-                generateFile("admin/models/" + filename + "s.php", entity.generateAdminModels(component))
-                generateFile("admin/models/fields/" + filename + ".php", entity.generateAdminModelFields(component))
-                generateFile("admin/models/forms/" + filename + ".xml", entity.generateAdminModelXmlForms(component))
-                generateFile("admin/tables/" + filename+ ".php", entity.generateAdminTable(component))
-            }*/
+		
 		val pagerefs = section.page
 		for (pageref : pagerefs) {
-			pageref.generate("admin")
+			pageref.generate("com_"+component.name.toLowerCase + "/admin","admin")
 
-			// TODO maybe put this into page generate method 
-			generateFile(
-				"admin/models/" + Slug.slugify(pageref.name) + ".php",
-				component.phpAdminSimpleModelContent(pageref)
-			)
+		}
+	}
+	
+	def generateTable(String path) {
+		for(Section sect: component.sections){
+			for(Page pg: sect.page){
+				switch pg{
+					DetailsPage :{
+						generateFile(path + pg.name.toLowerCase + ".php", phpAdminTableContent(pg))
+					}
+				}
+			}
 		}
 	}
 
-    def generate(Page pageref, String path) {
-        if (pageref instanceof DynamicPageTemplate) {
+    def generate(Page pageref, String path, String section) {
+        if (pageref instanceof DynamicPage) {
             val name = Slug.slugify(pageref.name)        
             
-            generateJoomlaDirectory(path + "/views/" + name)
-            generateFile(path + "/views/" + name + "/view.html.php", PageGeneratorClient.generateView(pageref, component))
-            generateJoomlaDirectory(path + "/views/" + name + "/tmpl")
-            generateFile(path + "/views/" + name + "/tmpl/default.php", PageGeneratorClient.generateTemplate(pageref, component))
-            
-            generateFile(path + "/controllers/" + name + ".php", PageGeneratorClient.generateController(pageref, component))
-        } else if (pageref instanceof StaticPageTemplate) {
+            var String viewPath = path + "/views";
+            PageGeneratorClient.generateView(pageref, component, section, viewPath, fsa)
+            var String controllerpath = path + "/controllers"
+            PageGeneratorClient.generateController(pageref, component, section, controllerpath,fsa)
+            var String modelpath = path + "/models"
+            PageGeneratorClient.generateModel(pageref, component, section, modelpath,fsa)
+        } else if (pageref instanceof StaticPage) {
             PageGeneratorClient.generateStaticPage(pageref)
         }
     }
@@ -585,7 +581,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		jimport('joomla.application.component.controller');
 		
 		// Get an instance of the controller prefixed by «Slug::nameExtensionBind("com",component.name )»
-		$controller	= JControllerLegacy::getInstance('«component.name.toUpperCase»');
+		$controller	= JControllerLegacy::getInstance('«component.name.toFirstUpper»');
 		$controller->execute(JFactory::getApplication()->input->get('task'));
 		$controller->redirect();
     '''
@@ -705,7 +701,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     '''
     
         
-    def CharSequence phpAdminTableContent(Component component) '''
+    def CharSequence phpAdminTableContent(DynamicPage page) '''
         <?php
             // No direct access
             defined('_JEXEC') or die('Restricted access');
@@ -714,9 +710,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
             jimport('joomla.database.table');
              
             /**
-             * «class_name» Table class
+             * «page.name.toFirstUpper» Table class
              */
-            class «class_name»Table«class_name» extends JTable
+            class «component.name.toFirstUpper»Table«page.name.toFirstUpper» extends JTable
             {
                 /**
                  * Constructor
@@ -725,7 +721,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
                  */
                 function __construct(&$db) 
                 {
-                        parent::__construct('#__«name»', 'id', $db);
+                        parent::__construct('#__«page.entities.get(0).name.toLowerCase»', 'id', $db);
                 }
             }
     '''
@@ -781,8 +777,24 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
 			<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
 		</section>
+		«xmlAccessContentPage(component.sections)»
 		</access>
     '''
+	
+	def xmlAccessContentPage(EList<Section> list) '''
+	«FOR Section s: list»
+	 «FOR Page dyn: s.page»
+	 <section name="«dyn.name.toLowerCase»">
+	 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+	 <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+	 <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+	 <action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+	 <action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+	 </section>
+	 «ENDFOR»
+	«ENDFOR»
+	'''
+	
     // Alle untergeordneten (über Referenzen) Entities finden
 	def Iterable<ParameterGroup> getGlobalparameters(Component component) {
 		var params=new HashSet<ParameterGroup>();

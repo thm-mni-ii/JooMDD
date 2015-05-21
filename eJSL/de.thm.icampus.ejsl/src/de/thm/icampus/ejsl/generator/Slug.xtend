@@ -156,7 +156,7 @@ public class Slug  {
 	}
 	
 	def static CharSequence inputHiddenFeldTemplate(Attribute attr) '''
-	<input type="hidden" name="jform[«attr.name»]" value="<?php echo $this->item->«attr.name»; ?>" />
+	<input type="hidden" name="jform[«attr.name.toLowerCase»]" value="<?php echo $this->item->«attr.name.toLowerCase»; ?>" />
 	'''
 	
 	def static CharSequence generateEntytiesInputAttribute(Entity entity, List<Entity> toSchowEntities) {
@@ -181,9 +181,10 @@ public class Slug  {
 	
 	def static CharSequence inputFeldTemplate(Attribute attr) '''
 	<div class="control-group">
-		<div class="control-label"><?php echo $this->form->getLabel('«attr.name»'); ?></div>
-		<div class="controls"><?php echo $this->form->getInput('«attr.name»'); ?></div>
+		<div class="control-label"><?php echo $this->form->getLabel('«attr.name.toLowerCase»'); ?></div>
+		<div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
 	</div>
 	'''
+	
 	
 } // Slug

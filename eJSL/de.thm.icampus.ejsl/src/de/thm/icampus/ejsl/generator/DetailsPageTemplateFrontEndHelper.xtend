@@ -3,13 +3,14 @@ package de.thm.icampus.ejsl.generator
 import de.thm.icampus.ejsl.eJSL.DetailsPage
 import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.Section
+import de.thm.icampus.ejsl.eJSL.Attribute
 
 class DetailsPageTemplateFrontEndHelper {
 	private DetailsPage dpage
 	private Component  com
-	private Section sec
+	private String sec
 	
-	new(DetailsPage dp, Component cp, Section section){
+	new(DetailsPage dp, Component cp, String section){
 		
 		dpage = dp
 		com = cp
@@ -190,7 +191,7 @@ class DetailsPageTemplateFrontEndHelper {
 		            // Get the user data.
 		            $id = $app->input->getInt('id', 0);
 		
-		            // Attempt to save the data.
+		            // Attempt to delete the data.
 		            $return = $model->delete($id);
 		
 		
@@ -352,6 +353,295 @@ class DetailsPageTemplateFrontEndHelper {
 	        return true;
 	    }
 	'''
+	def CharSequence generateSiteModelCheckout()'''
+	/**
+	     * Method to check out an item for editing.
+	     *
+	     * @param	integer		The id of the row to check out.
+	     * @return	boolean		True on success, false on failure.
+	     * @since	1.6
+	*/
+	    public function checkout($id = null) {
+	        // Get the user id.
+	        $id = (!empty($id)) ? $id : (int) $this->getState('«dpage.name.toLowerCase».id');
+	
+	        if ($id) {
+	
+	            // Initialise the table
+	            $table = $this->getTable();
+	
+	            // Get the current user object.
+	            $user = JFactory::getUser();
+	
+	            // Attempt to check the row out.
+	            if (method_exists($table, 'checkout')) {
+	                if (!$table->checkout($user->get('id'), $id)) {
+	                    $this->setError($table->getError());
+	                    return false;
+	                }
+	            }
+	        }
+
+	        return true;
+	    }
+	'''
+	def CharSequence generateSiteModelSave()'''
+	/**
+	 * Method to save the form data.
+	 *
+	 * @param	array		The form data.
+	 * @return	mixed		The user id on success, false on failure.
+	 * @since	1.6
+	 */
+		public function save($data)
+		{
+			$id = (!empty($data['id'])) ? $data['id'] : (int)$this->getState('«dpage.name.toLowerCase».id');
+	        $state = (!empty($data['state'])) ? 1 : 0;
+	        $user = JFactory::getUser();
+	
+	        if($id) {
+	            //Check the user can edit this item
+	            $authorised = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) 
+	            || $authorised = $user->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id);
+	            if($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1){ //The user cannot edit the state of the item.
+	                $data['state'] = 0;
+	            }
+	        } else {
+	            //Check the user can create new items in this section
+	            $authorised = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+	            if($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1){ //The user cannot edit the state of the item.
+	                $data['state'] = 0;
+	            }
+	        }
+	
+	        if ($authorised !== true) {
+	            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+	            return false;
+	        }
+	        
+	        $table = $this->getTable();
+	        if ($table->save($data) === true) {
+	            return $table->id;
+	        } else {
+	            return false;
+	        }
+	        
+		}
+	
+	'''
+	def CharSequence generateSiteModelDelete()'''
+	/**
+	* to Delete Data of a Item
+	*@param Int $data   content the Id
+	*
+	*/
+		 function delete($data)
+	    {
+	        $id = (!empty($data)) ? $data : (int)$this->getState('«dpage.name.toLowerCase».id');
+	        if(JFactory::getUser()->authorise('core.delete', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true){
+	            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
+	            return false;
+	        }
+	        $table = $this->getTable();
+	        if ($table->delete($data) === true) {
+	            return $id;
+	        } else {
+	            return false;
+	        }
+	        
+	        return true;
+	    }
+	'''
+	def CharSequence generateSiteModelgetCategory()'''
+	/**
+	* to search the Category name
+	*@param Int $id   content the Id
+	*
+	*/
+	public function getCategoryName($id) {
+	    $db = JFactory::getDbo();
+	    $query = $db->getQuery(true);
+	    $query
+	            ->select('title')
+	            ->from('#__categories')
+	            ->where('id = ' . $id);
+	    $db->setQuery($query);
+	    return $db->loadObject();
+	}
+	'''
+	def CharSequence generateSiteModelpublish()'''
+	/**
+	* check, if the item published
+	*@param Int $id   content the Id
+	*@param Int $state
+	*
+	*/ 
+	public function publish($id, $state) {
+	    $table = $this->getTable();
+	    $table->load($id);
+	    $table->state = $state;
+	    return $table->store();
+	}
+	'''
+	def CharSequence generateSiteViewDisplay(Boolean isedit)'''
+	/**
+	* Display the view
+	*/
+	    public function display($tpl = null) {
+			
+	        $app = JFactory::getApplication();
+	        $user = JFactory::getUser();
+	
+	        $this->state = $this->get('State');
+	        $this->item = $this->get('Data');
+	        $this->params = $app->getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+			«IF isedit»
+			$this->setLayout('Edit');
+			$this->form		= $this->get('Form');
+			«ELSE»
+			if (!empty($this->item)) {
+			
+			$this->form		= $this->get('Form');
+			}
+			«ENDIF»
+	
+	        // Check for errors.
+	        if (count($errors = $this->get('Errors'))) {
+	            throw new Exception(implode("\n", $errors));
+	        }
+	
+	        
+			«IF !isedit»
+			if ($this->_layout == 'edit') {
+			
+			$authorised = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+			
+			if ($authorised !== true) {
+			throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+			}
+			}
+			«ENDIF»
+	        $this->_prepareDocument();
+	
+	        parent::display($tpl);
+	}
+	'''
+	def CharSequence generateSiteViewprepareDocument()'''
+	 /**
+	 * Prepares the document
+	 */
+	    protected function _prepareDocument() {
+	        $app = JFactory::getApplication();
+	        $menus = $app->getMenu();
+	        $title = null;
+	 
+	        // Because the application sets a default page title,
+	        // we need to get it from the menu item itself
+	        $menu = $menus->getActive();
+	        if ($menu) {
+	            $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+	        } else {
+	            $this->params->def('page_heading', JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
+	        }
+	        $title = $this->params->get('page_title', '');
+	        if (empty($title)) {
+	            $title = $app->getCfg('sitename');
+	        } elseif ($app->getCfg('sitename_pagetitles', 0) == 1) {
+	            $title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
+	        } elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
+	            $title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+	        }
+	        $this->document->setTitle($title);
+	 
+	        if ($this->params->get('menu-meta_description')) {
+	            $this->document->setDescription($this->params->get('menu-meta_description'));
+	        }
+	 
+	        if ($this->params->get('menu-meta_keywords')) {
+	            $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+	        }
+	 
+	        if ($this->params->get('robots')) {
+	            $this->document->setMetadata('robots', $this->params->get('robots'));
+	        }
+	    }
+	 
+	'''
+	
+	def generateSiteViewLayoutEditForm() '''
+	<form id="form-«dpage.name.toLowerCase»" action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+	«Slug.generateEntytiesHiddenAttribute(dpage.entities.get(0),dpage.entities)»
+	<?php if(empty($this->item->created_by)): ?>
+		<input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>" />
+	<?php else: ?>
+		<input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
+	<?php endif; ?>
+	«Slug.generateEntytiesInputAttribute(dpage.entities.get(0), dpage.entities)»
+	<div class="fltlft" <?php if (!JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')): ?> style="display:none;" <?php endif; ?> >
+	                <?php echo JHtml::_('sliders.start', 'permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
+	                <?php echo JHtml::_('sliders.panel', JText::_('ACL Configuration'), 'access-rules'); ?>
+	                <fieldset class="panelform">
+	                    <?php echo $this->form->getLabel('rules'); ?>
+	                    <?php echo $this->form->getInput('rules'); ?>
+	                </fieldset>
+	                <?php echo JHtml::_('sliders.end'); ?>
+	            </div>
+					<?php if (!JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')): ?>
+	                <script type="text/javascript">
+	                    jQuery.noConflict();
+	                    jQuery('.tab-pane select').each(function(){
+	                       var option_selected = jQuery(this).find(':selected');
+	                       var input = document.createElement("input");
+	                       input.setAttribute("type", "hidden");
+	                       input.setAttribute("name", jQuery(this).attr('name'));
+	                       input.setAttribute("value", option_selected.val());
+	                       document.getElementById("form-«dpage.name.toLowerCase»").appendChild(input);
+	                    });
+	                </script>
+	             <?php endif; ?>
+	        <div class="control-group">
+	            <div class="controls">
+	                <button type="submit" class="validate btn btn-primary"><?php echo JText::_('JSUBMIT'); ?></button>
+	                <a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.cancel'); ?>" title="<?php echo JText::_('JCANCEL'); ?>"><?php echo JText::_('JCANCEL'); ?></a>
+	            </div>
+	        </div>
+	        
+	        <input type="hidden" name="option" value="«Slug.nameExtensionBind("com", com.name).toLowerCase»" />
+	        <input type="hidden" name="task" value="«dpage.name.toLowerCase»edit.save" />
+	        <?php echo JHtml::_('form.token'); ?>
+	    </form>
+</div>
+	'''
+	def generateSiteViewLayoutShow() '''
+	<?php if ($this->item && $this->item->state == 1) : ?>
+
+	<div class="item_fields">
+	<table class="table">
+	«FOR Attribute a: dpage.entities.get(0).attributes»
+	«attributShowTemplate(a)»
+	«ENDFOR»
+	</table>
+	</div>
+	<?php if($canEdit && $this->item->checked_out == 0): ?>
+		<a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase».edit&id='.$this->item->id); ?>">
+		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
+	<?php endif; ?>
+	<?php if(JFactory::getUser()->authorise('core.delete','«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$this->item->id)):?>
+		<a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase».remove&id=' . $this->item->id, false, 2); ?>">
+		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
+	<?php endif; ?>
+	<?php
+else:
+	echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_ITEM_NOT_LOADED');
+endif;
+?>
+	'''
+	def  CharSequence attributShowTemplate(Attribute attr) '''
+	<tr>
+			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«dpage.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+			<td><?php echo $this->item->«attr.name.toLowerCase»; ?></td></tr>
+	'''
+	
 	
 	
 }
