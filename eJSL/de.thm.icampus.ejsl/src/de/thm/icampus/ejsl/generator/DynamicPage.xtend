@@ -8,6 +8,8 @@ import de.thm.icampus.ejsl.eJSL.BackendSection
 import de.thm.icampus.ejsl.eJSL.DynamicPage
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.ejsl.eJSL.Parameter
+import de.thm.icampus.ejsl.eJSL.Entity
+import de.thm.icampus.ejsl.eJSL.Attribute
 
 /**
  * <!-- begin-user-doc -->
@@ -22,12 +24,13 @@ import de.thm.icampus.ejsl.eJSL.Parameter
 public class DynamicPageTemplate extends AbstractPageGenerator {
 	
 	
-	def CharSequence generateFileDoc(Page page, Component component)'''
+	
+	
+	def CharSequence generateFileDoc(Page page, Component component, boolean denied)'''
 	<?php
-		
+		/**
 		* @version v0.0.1
 		* @category Joomla component
-		* @package «(component.eContainer as Package).name»
 		* @subpackage com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
 		* @name «component.name»View
 		«FOR author : component.manifest.authors»
@@ -36,89 +39,13 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 		* @copyright «component.manifest.copyright»
 		* @license «component.manifest.license»
 		
-	'''
-
-	def  CharSequence generateView(Page page, Component component) '''
-		<?php
-		/**
-		«generateFileDoc(page,component)»
-		* @description «(page as DynamicPage).entities.get(0).name»View for «component.name»
-		*/
+		«IF denied»
 		defined('_JEXEC') or die('Restricted access');
-		jimport('joomla.application.component.view');
-		jimport('joomla.filesystem.path');
-		/**
-		* «component.name»View class for component com_«Slug.slugify(component.name)»
-		*
-		* @category Joomla.Component.«if(page.eContainer instanceof BackendSection) "Admin" else "Site"»
-		* @package com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
-		* @since Class available since Release x.x.x
+		«ENDIF»
 		*/
-		class «component.name»View«(page as DynamicPage).entities.get(0).name» extends JViewLegacy
-		{
-		/**
-		* @var JObject A cache for the available actions.
-		* @since 1.6
-		*/
-		protected static $actions;
-		/**
-		* Method to get display
-		*
-		* @param Object $tpl template
-		*
-		* @return void
-		*/
-		public function display($tpl = null)
-		{
-		$uid = JRequest::getVar('id');
-		$data = new ArrayObject();
-		$model = $this->getModel();
-		$data = $model->getData($uid);
-		$this->assignRef('data', $data);
-		parent::display($tpl);
-		}
-		}
 	'''
 
-def static CharSequence generateController(Page page, Component component) '''
-		<?php
-		/**
-		* @version v0.0.1
-		* @category Joomla component
-		* @package «(component.eContainer as Package).name»
-		* @subpackage com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
-		* @name THMSocialNetworkViewController«(page as DynamicPage).entities.get(0).name»
-		* @description «(page as DynamicPage).entities.get(0).name»Controller for THM Social Network
-		«FOR author : component.manifest.authors»
-			* @author «author.name», <«author.authoremail»>
-		«ENDFOR»
-		* @copyright «component.manifest.copyright»
-		* @license «component.manifest.license»
-		*/
-		defined('_JEXEC') or die();
-		jimport('joomla.application.component.controller');
-		/**
-		* «component.name»Controller class for component com_«Slug.slugify(component.name)»
-		*
-		* @category Joomla.Component.Admin
-		* @package com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
-		* @since Class available since Release x.x.x
-		*/
-		class «component.name»Controller«(page as DynamicPage).entities.get(0).name» extends JControllerLegacy
-		{
-		/**
-		* constructor (registers additional tasks to methods)
-		*
-		* @generated
-		*/
-		public function __construct()
-		{
-			parent::__construct();
-			$this->registerTask('publish', '');
-			$this->registerTask('unpublish', '');;
-		}
-		}
-	'''
+
     
     def CharSequence xmlSiteTemplateContent(Page page,Component component, String name) '''
         <?xml version="1.0" encoding="utf-8"?>
@@ -149,6 +76,37 @@ def static CharSequence generateController(Page page, Component component) '''
 		 />
 		«ENDFOR»
 		'''
+		def CharSequence xmlAdminFields(DynamicPage page,Component component, String name) '''
+				<?xml version="1.0" encoding="utf-8"?>
+				<form>
+					<fieldset>
+					«FOR Entity e : page.entities»
+					«FOR Attribute attr : e.attributes»
+					 <field name="«attr.name.toLowerCase»" 
+					 type="«Slug.getTypeName(attr.htmltype).toLowerCase»" 
+					 label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«page.name.toUpperCase»_«attr.name.toUpperCase»"
+					 /> 
+					«ENDFOR»
+					«ENDFOR»
+					</fieldset> 
+
+					 <fieldset name="accesscontrol">
+					<field name="asset_id" type="hidden" filter="unset" />
+					<field name="rules"
+					type="rules"
+					label="JFIELD_RULES_LABEL"
+					translate_label="false"
+					filter="rules"
+					validate="rules"
+					class="inputbox"
+					component="«Slug.nameExtensionBind("com",component.name).toLowerCase»"
+					section="«page.name.toLowerCase»"
+					/>
+
+				</fieldset>
+				</form>
+   		 '''
+	
 	override getLinkClient() {
 	}
 

@@ -78,10 +78,12 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/dbtype"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/htmltype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/isprimary"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Reference">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/attribute"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/entity"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/attributerefereced"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/lower"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/upper"/>
     </genClasses>
@@ -127,6 +129,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//ExtensionPackage/extensions"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Component">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Component/globalParamter"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Component/sections"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Section">
