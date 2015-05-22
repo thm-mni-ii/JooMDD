@@ -334,7 +334,7 @@ class DetailsPageTemplateFrontEndHelper {
 	 */
 	    public function checkin($id = null) {
 	        // Get the id.
-	        $id = (!empty($id)) ? $id : (int) $this->getState('«dpage».id');
+	        $id = (!empty($id)) ? $id : (int) $this->getState('«dpage.name.toLowerCase».id');
 	 
 	        if ($id) {
 	 
@@ -570,7 +570,13 @@ class DetailsPageTemplateFrontEndHelper {
 	
 	def generateSiteViewLayoutEditForm() '''
 	<form id="form-«dpage.name.toLowerCase»" action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+				<input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
+				<input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
+				<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
+				<input type="hidden" name="jform[checked_out]" value="<?php echo $this->item->checked_out; ?>" />
+				<input type="hidden" name="jform[checked_out_time]" value="<?php echo $this->item->checked_out_time; ?>" />
 	«Slug.generateEntytiesHiddenAttribute(dpage.entities.get(0),dpage.entities)»
+
 	<?php if(empty($this->item->created_by)): ?>
 		<input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>" />
 	<?php else: ?>
@@ -613,10 +619,23 @@ class DetailsPageTemplateFrontEndHelper {
 </div>
 	'''
 	def generateSiteViewLayoutShow() '''
-	<?php if ($this->item && $this->item->state == 1) : ?>
+	<?php if ($this->item ) : ?>
 
 	<div class="item_fields">
 	<table class="table">
+	 <tr>
+			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ID'); ?></th>
+			<td><?php echo $this->item->id; ?></td>
+	</tr>
+	<tr>
+			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_STATE'); ?></th>
+			<td>
+			<i class="icon-<?php echo ($this->item->state == 1) ? 'publish' : 'unpublish'; ?>"></i></td>
+	</tr>
+	<tr>
+			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY'); ?></th>
+			<td><?php echo $this->item->created_by_name; ?></td>
+	</tr>
 	«FOR Attribute a: dpage.entities.get(0).attributes»
 	«attributShowTemplate(a)»
 	«ENDFOR»

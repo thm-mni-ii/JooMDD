@@ -15,6 +15,9 @@ import de.thm.icampus.ejsl.eJSL.Reference
 import java.util.HashSet
 import java.util.LinkedList
 import java.util.List
+import de.thm.icampus.ejsl.eJSL.DynamicPage
+import de.thm.icampus.ejsl.eJSL.Page
+import de.thm.icampus.ejsl.eJSL.DetailsPage
 
 /**
  * <!-- begin-user-doc -->
@@ -185,6 +188,35 @@ public class Slug  {
 		<div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
 	</div>
 	'''
+	def static HashSet<DetailsPage>  getAllAttributeOfAComponente(Component c){
+		var HashSet<DetailsPage> result = new HashSet<DetailsPage> ()
+		for(Section sec : c.sections){
+			for(Page dyn: sec.page){
+				switch dyn{
+					DetailsPage :{
+					result.add(dyn);
+					}
+				}
+			}
+		}
+		return result
+	}
+	def static CharSequence generateFileDoc( Component component, boolean denied)'''
 	
+		/**
+		* @version v0.0.1
+		* @category Joomla component
+		* @name «component.name»View
+		«FOR author : component.manifest.authors»
+			* @author «author.name», <«author.authoremail»>
+		«ENDFOR»
+		* @copyright «component.manifest.copyright»
+		* @license «component.manifest.license»
+		
+		«IF denied»
+		defined('_JEXEC') or die('Restricted access');
+		«ENDIF»
+		*/
+	'''
 	
 } // Slug

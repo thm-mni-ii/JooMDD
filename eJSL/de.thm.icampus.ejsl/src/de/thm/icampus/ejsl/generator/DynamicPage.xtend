@@ -80,6 +80,14 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 				<?xml version="1.0" encoding="utf-8"?>
 				<form>
 					<fieldset>
+					  <field name="id" type="text" default="0" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID"
+				readonly="true" class="readonly"
+				description="JGLOBAL_FIELD_ID_DESC" /> 
+
+				<field name="created_by" type="createdby" default="" 
+				label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"
+				description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
+					
 					«FOR Entity e : page.entities»
 					«FOR Attribute attr : e.attributes»
 					 <field name="«attr.name.toLowerCase»" 

@@ -157,17 +157,23 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     DROP TABLE IF EXISTS `#__«table.name.toLowerCase»`;
 
         	CREATE TABLE `#__«table.name.toLowerCase»` (
-        		«FOR a:table.attributes»
-        			`«a.name.toLowerCase»` «Slug.getTypeName(a.dbtype)»,
-        		«ENDFOR»
-        	«FOR r:table.references»
-        		FOREIGN KEY (`«r.attribute.name.toLowerCase»`) REFERENCES `#__«r.entity.name.toLowerCase»` (`«r.attributerefereced.name.toLowerCase»`)
-        		ON UPDATE CASCADE
-        		ON DELETE CASCADE,
-        	«ENDFOR»
-        	PRIMARY KEY (`«getPrimaryKeyOfTable(table).name»`)
-        	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-    '''
+    `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,    
+    `ordering` INT(11)  NOT NULL ,
+    `state` TINYINT(1)  NOT NULL ,
+    `checked_out` INT(11)  NOT NULL ,
+    `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	`created_by` INT(11)  NOT NULL ,
+	«FOR a:table.attributes»
+		`«a.name.toLowerCase»` «Slug.getTypeName(a.dbtype)»,
+	«ENDFOR»
+«FOR r:table.references»
+	FOREIGN KEY (`«r.attribute.name.toLowerCase»`) REFERENCES `#__«r.entity.name.toLowerCase»` (`«r.attributerefereced.name.toLowerCase»`)
+	ON UPDATE CASCADE
+	ON DELETE CASCADE,
+«ENDFOR»
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+'''
 	
 	def Attribute getPrimaryKeyOfTable(Entity entity) {
 		
@@ -190,9 +196,20 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     }
     
 	def CharSequence languageFileContent(Language lang) '''
-		«FOR e : lang.keyvaluepairs»
-			«e.name»="«e.value»"
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID = ID
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT = Checked out
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT_TIME = Checked out Time
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ORDERING = Ordering
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY = Created By
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_STATE= state
+	«FOR DetailsPage dynp: Slug.getAllAttributeOfAComponente(component)»
+	    «FOR Attribute attr: dynp.entities.last.attributes»
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_«dynp.name.toUpperCase»_«attr.name.toUpperCase» = «attr.name.toLowerCase»
 		«ENDFOR»
+	«ENDFOR»
+	«FOR e : lang.keyvaluepairs»
+		«e.name»="«e.value»"
+	«ENDFOR»
 	'''
 
 	def CharSequence xmlContent(Component component, ArrayList<Page> indexPages) '''
@@ -301,12 +318,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateJoomlaDirectory("/site")
 		generateFile("site/" + noPrefixName + ".php", component.phpSiteContent)
 		generateFile("site/controller.php", component.phpSiteControllerContent)
+		generateFile("site/router.php", component.phpSiteRouterContent)
 		generateJoomlaDirectory("site/views")
-		generateJoomlaDirectory("site/views/" + slug)
-		generateFile("site/views/" + slug + "/view.html.php", component.phpSiteViewContent)
-		generateJoomlaDirectory("site/views/" + '/tmpl')
-		generateFile("site/views/" + slug + "/tmpl/default.xml", component.xmlSiteTemplateContent)
-		generateFile("site/views/" + slug + "/tmpl/default.php", component.phpSiteTemplateContent)
+//		generateJoomlaDirectory("site/views/" + slug)
+//		generateFile("site/views/" + slug + "/view.html.php", component.phpSiteViewContent)
+//		generateFile("site/views/" + slug + "/tmpl/default.xml", component.xmlSiteTemplateContent)
+//		generateFile("site/views/" + slug + "/tmpl/default.php", component.phpSiteTemplateContent)
 
 		generateJoomlaDirectory("site/models")
 
@@ -320,6 +337,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			pageref.generate("com_"+component.name.toLowerCase + "/site","site")
 		}
 	}
+	
+	
 
 	private def void generateBackendSection(Section section) {
 		generateJoomlaDirectory("admin")
@@ -330,10 +349,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile("admin/config.xml", component.xmlConfigContent)
 		
 		generateJoomlaDirectory("admin/views")
-		generateJoomlaDirectory("admin/views/" + slug)
-		generateFile("admin/views/" + slug + "/view.html.php", component.phpAdminViewContent)
-		generateJoomlaDirectory("admin/views/" + slug + "/tmpl")
-		generateFile("admin/views/" + slug + "/tmpl/default.php", component.phpAdminTemplateContent)
+//		generateJoomlaDirectory("admin/views/" + slug)
+//		generateFile("admin/views/" + slug + "/view.html.php", component.phpAdminViewContent)
+//		generateJoomlaDirectory("admin/views/" + slug + "/tmpl")
+//		generateFile("admin/views/" + slug + "/tmpl/default.php", component.phpAdminTemplateContent)
 
 		generateJoomlaDirectory("admin/models")
 		generateJoomlaDirectory("admin/models/fields")
@@ -387,17 +406,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
 	def CharSequence phpSiteContent(Component component) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted access');
+             «Slug.generateFileDoc(component,true)»
             
             // Get parameters
             // $.. = $params->get(..);
             
             // import joomla controller library
-            jimport('joomla.application.component.controller')
+            jimport('joomla.application.component.controller');
             
             // Get an instance of the controller prefixed by «class_name»
-            $controller = JController::getInstance('«class_name»');
+            $controller = JControllerLegacy::getInstance('«class_name»');
             
             // Perform the Request task
             $input = JFactory::getApplication()->input;
@@ -409,8 +427,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
     def CharSequence phpSiteControllerContent(Component component) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted access');
+             «Slug.generateFileDoc(component,true)»
             
             // import Joomla controller library
             jimport('joomla.application.component.controller');
@@ -418,7 +435,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
             /**
              * General Controller of «component.name» component
              */
-            class «class_name»Controller extends JController
+            class «class_name»Controller extends JControllerLegacy
             {
                     /**
                      * display task
@@ -439,8 +456,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
     def CharSequence phpSiteViewContent(Component component) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted access');
+             «Slug.generateFileDoc(component,true)»
             
             // import Joomla view library
             jimport('joomla.application.component.view');
@@ -504,8 +520,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
     def CharSequence phpSiteModelContent(Component component, Page pageref) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted access');
+            «Slug.generateFileDoc(component,true)»
              
             // import Joomla modelitem library
             jimport('joomla.application.component.modelitem');
@@ -568,8 +583,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
     def CharSequence phpAdminContent(Component component) '''
 		<?php
-		// no direct access
-		defined('_JEXEC') or die;
+		 «Slug.generateFileDoc(component,true)»
 		
 		// Access check.
 		if (!JFactory::getUser()->authorise('core.manage', '«Slug::nameExtensionBind("com",component.name )»')) 
@@ -588,8 +602,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
     def CharSequence phpAdminControllerContent(Component component) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted access');
+             «Slug.generateFileDoc(component,true)»
             
             // import Joomla controller library
             jimport('joomla.application.component.controller');
@@ -624,8 +637,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     def CharSequence phpAdminSimpleModelContent(Component component, Page pageref)'''
 		<?php
 		
-		// No direct access to this file
-		defined('_JEXEC') or die;
+		 «Slug.generateFileDoc(component,true)»
 
 		jimport('joomla.application.component.modeladmin');
 
@@ -636,8 +648,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
     def CharSequence phpAdminTemplateContent(Component component) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted Access');
+             «Slug.generateFileDoc(component,true)»
              
             // load tooltip behavior
             JHtml::_('behavior.tooltip');
@@ -653,8 +664,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
     def CharSequence phpAdminTemplateHeadContent(Component component) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted Access');
+             «Slug.generateFileDoc(component,true)»
             ?>
             <tr>
                     <th width="5">
@@ -671,8 +681,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
     def CharSequence phpAdminTemplateBodyContent(Component component) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted Access');
+            «Slug.generateFileDoc(component,true)»
         ?>
         <?php foreach($this->items as $i => $item): ?>
             <tr class="row<?php echo $i % 2; ?>">
@@ -703,8 +712,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
         
     def CharSequence phpAdminTableContent(DynamicPage page) '''
         <?php
-            // No direct access
-            defined('_JEXEC') or die('Restricted access');
+            «Slug.generateFileDoc(component,true)»
              
             // import Joomla table library
             jimport('joomla.database.table');
@@ -728,9 +736,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     
     def CharSequence phpAdminViewContent(Component component) '''
         <?php
-            // No direct access to this file
-            defined('_JEXEC') or die('Restricted access');
-             
+            «Slug.generateFileDoc(component,true)»
             // import Joomla view library
             jimport('joomla.application.component.view');
              
@@ -844,8 +850,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     '''
     def CharSequence generateHelperComponent() '''
     <?php
-    // No direct access
-defined('_JEXEC') or die;
+     «Slug.generateFileDoc(component,true)»
 
 /**
  * «component.name.toUpperCase»  helper.
@@ -890,6 +895,58 @@ class «component.name.toFirstUpper»Helper {
 
 }
     '''
+    def CharSequence phpSiteRouterContent(Component component)'''
+ <?php
+   «Slug.generateFileDoc(component,true)»
+  /**
+ * @param	array	A named array
+ * @return	array
+ */
+function «component.name.toFirstUpper»BuildRoute(&$query) {
+    $segments = array();
+
+    if (isset($query['task'])) {
+        $segments[] = implode('/', explode('.', $query['task']));
+        unset($query['task']);
+    }
+    if (isset($query['view'])) {
+        $segments[] = $query['view'];
+        unset($query['view']);
+    }
+    if (isset($query['id'])) {
+        $segments[] = $query['id'];
+        unset($query['id']);
+    }
+
+    return $segments;
+}
+
+/**
+ * @param	array	A named array
+ * @param	array
+ *
+ *
+ */
+function «component.name.toFirstUpper»ParseRoute($segments) {
+    $vars = array();
+
+    // view is always the first element of the array
+    $vars['view'] = array_shift($segments);
+
+    while (!empty($segments)) {
+        $segment = array_pop($segments);
+        if (is_numeric($segment)) {
+            $vars['id'] = $segment;
+        } else {
+            $vars['task'] = $vars['view'] . '.' . $segment;
+        }
+    }
+
+    return $vars;
+}
+    
+    
+	'''
     		
 	override getProtectedRegions() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")

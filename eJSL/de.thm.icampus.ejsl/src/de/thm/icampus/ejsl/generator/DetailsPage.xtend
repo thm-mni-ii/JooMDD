@@ -251,6 +251,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		«frontHelp.generateSiteModelPopulatestate()»
 		«frontHelp.generateSiteModelgetData(false)»
 		«frontHelp.generateSiteModelCheckin()»
+		«frontHelp.generateSiteModelgetTable»
 		«frontHelp.generateSiteModelCheckout()»
 		«frontHelp.generateSiteModelgetCategory()»
 		«frontHelp.generateSiteModelpublish()»
@@ -338,14 +339,14 @@ class «com.name.toFirstUpper»View« if(isedit)dpage.name.toFirstUpper + "Edit"
 	'''
 	def CharSequence generateSiteViewLayoutShow()'''
 	«generateFileDoc(dpage,com,false)»
-	/Load admin language file
-$lang = JFactory::getLanguage();
-$lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
-$canEdit = JFactory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->id);
-if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->id)) {
-	$canEdit = JFactory::getUser()->id == $this->item->created_by;
-}
-?>
+	//Load admin language file
+	$lang = JFactory::getLanguage();
+	$lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
+	$canEdit = JFactory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->id);
+	if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->id)) {
+		$canEdit = JFactory::getUser()->id == $this->item->created_by;
+	}
+	?>
 	«frontHelp.generateSiteViewLayoutShow»
 	 '''
 }
