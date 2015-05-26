@@ -111,6 +111,26 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		return $data;
 	}
 	'''
+	def CharSequence generateModelGetItemFunction() '''
+	/**
+	 * Method to get a single record.
+	 *
+	 * @param	integer	The id of the primary key.
+	 *
+	 * @return	mixed	Object on success, false on failure.
+	 * @since	1.6
+	 * @generated
+	 */
+	public function getItem($pk = null)
+	{
+		if ($item = parent::getItem($pk)) {
+
+
+		}
+
+		return $item;
+	}
+	'''
 	
 	def CharSequence generateModelGetFormFunction()'''
 	
@@ -155,7 +175,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		«backHelp.generateAdminModelTableFunction()»
 		«generateModelGetFormFunction()»
 		«generateModelLoadFormDataFunction()»
-		«backHelp.generateAdminModelGetItemFunction()»
+		«generateModelGetItemFunction()»
 		«backHelp.generateAdminModelprepareTableFunction()»
 	}
 		'''
@@ -275,6 +295,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		«frontHelp.generateSiteModelCheckout()»
 		«frontHelp.generateSiteModelgetTable()»
 		«generateModelGetFormFunction()»
+		«generateModelGetItemFunction()»
 		«generateModelLoadFormDataFunction()»
 		«frontHelp.generateSiteModelSave()»
 		«frontHelp.generateSiteModelDelete()»

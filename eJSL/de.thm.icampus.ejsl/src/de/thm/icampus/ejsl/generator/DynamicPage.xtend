@@ -10,6 +10,7 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.ejsl.eJSL.Parameter
 import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.eJSL.Attribute
+import de.thm.icampus.ejsl.eJSL.ParameterGroup
 
 /**
  * <!-- begin-user-doc -->
@@ -58,21 +59,25 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
                 addfieldpath="administrator/components/«name»/models/fields"
             >
                 <fieldset name="request">
-                	«generateParameter(page.globalparameters)»
-                    «generateParameter(page.localparameters)»
+                	«generateParameter(page.globalparameters, component)»
+                    «generateParameter(page.localparameters, component)»
+                    «FOR ParameterGroup e : page.parametergroups »
+                    «generateParameter(e.globalparameters, component)»
+                    «generateParameter(e.parameters,component)»
+                    «ENDFOR»
                 </fieldset>
             </fields>
         </metadata>
     '''
 		def  CharSequence generateTemplate(Page page, Component component) '''
 		'''
-		def CharSequence generateParameter(EList<Parameter>listParams)'''
+		def CharSequence generateParameter(EList<Parameter>listParams, Component component)'''
 		«FOR param : listParams»
 		 <field
 		 name="«param.name»"
 		 type="«getTypeName(param.dtype)»"
-		 label="«param.label »"
-		 description="«param.descripton»"
+		 label="«Slug.generateKeysName(component, param.label) »"
+		 description="«Slug.generateKeysName(component,param.descripton)»"
 		 />
 		«ENDFOR»
 		'''

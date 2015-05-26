@@ -36,7 +36,8 @@ public class PageGeneratorClient {
 				dp.generateView()
 			}
 			IndexPage : {
-				
+				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
+				dp.generateView()
 			}
 			StaticPage :{
 				
@@ -53,7 +54,8 @@ public class PageGeneratorClient {
 				dp.generateController()
 			}
 			IndexPage : {
-				
+				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
+				dp.generateController()
 			}
 			StaticPage :{
 				
@@ -68,7 +70,8 @@ public class PageGeneratorClient {
 				dp.generateModel()
 			}
 			IndexPage : {
-				
+				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
+				dp.generateModel()
 			}
 			StaticPage :{
 				

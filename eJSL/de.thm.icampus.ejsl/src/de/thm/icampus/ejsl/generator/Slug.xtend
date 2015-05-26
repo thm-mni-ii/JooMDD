@@ -18,6 +18,7 @@ import java.util.List
 import de.thm.icampus.ejsl.eJSL.DynamicPage
 import de.thm.icampus.ejsl.eJSL.Page
 import de.thm.icampus.ejsl.eJSL.DetailsPage
+import de.thm.icampus.ejsl.eJSL.IndexPage
 
 /**
  * <!-- begin-user-doc -->
@@ -218,5 +219,29 @@ public class Slug  {
 		«ENDIF»
 		*/
 	'''
+	
+	def static String generateKeysName(Component com, String name){
+		return "COM_" + com.name.toUpperCase + "_" + name.toUpperCase
+	}
+	
+	def static String generateKeysNamePage(Component com, Page page ,String name){
+		return "COM_" + com.name.toUpperCase + "_FIELD_" + page.name.toUpperCase + "_" + name.toUpperCase
+	}
+	
+	def static DetailsPage getPageForDetails(IndexPage inpage, Component com) {
+		for(Section tempSec: com.sections){
+			if(tempSec.page.contains(inpage)){
+				for(Page pg : tempSec.page ){
+					switch(pg){
+						DetailsPage :{
+							if(pg.entities.contains(inpage.entities.get(0)))
+							return pg;
+						}
+					}
+				}
+			}
+		}
+		return null
+	}
 	
 } // Slug

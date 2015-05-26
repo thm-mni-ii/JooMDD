@@ -40,25 +40,7 @@ class DetailsPageTemplateBackendHelper {
 	}
 	'''
 	
-	def CharSequence generateAdminModelGetItemFunction() '''
-	/**
-	 * Method to get a single record.
-	 *
-	 * @param	integer	The id of the primary key.
-	 *
-	 * @return	mixed	Object on success, false on failure.
-	 * @since	1.6
-	 */
-	public function getItem($pk = null)
-	{
-		if ($item = parent::getItem($pk)) {
-
-
-		}
-
-		return $item;
-	}
-	'''
+	
 	
 	
 	def generateAdminModelTableFunction()'''
@@ -150,8 +132,10 @@ class DetailsPageTemplateBackendHelper {
 	                <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
 				<input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
 				<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
-				<input type="hidden" name="jform[checked_out]" value="<?php echo $this->item->checked_out; ?>" />
-				<input type="hidden" name="jform[checked_out_time]" value="<?php echo $this->item->checked_out_time; ?>" />
+				<input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)){
+				 echo $this->item->checked_out;}else{ echo JFactory::getUser()->id;} ?>" />
+				<input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)){
+				 echo $this->item->checked_out_time;}else{ echo date("Y-m-d H:i:s") ;} ?>" />
 				
 			«Slug.generateEntytiesHiddenAttribute(dpage.entities.get(0),dpage.entities)»
 			<?php if(empty($this->item->created_by)){ ?>

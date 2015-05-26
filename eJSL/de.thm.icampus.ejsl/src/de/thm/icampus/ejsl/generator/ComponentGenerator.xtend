@@ -160,7 +160,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,    
     `ordering` INT(11)  NOT NULL ,
     `state` TINYINT(1)  NOT NULL ,
-    `checked_out` INT(11)  NOT NULL ,
+    `checked_out` INT(11)  NOT NULL,
     `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`created_by` INT(11)  NOT NULL ,
 	«FOR a:table.attributes»
@@ -208,7 +208,7 @@ PRIMARY KEY (`id`)
 		«ENDFOR»
 	«ENDFOR»
 	«FOR e : lang.keyvaluepairs»
-		«e.name»="«e.value»"
+		«Slug.generateKeysName(component,e.name)»="«e.value»"
 	«ENDFOR»
 	'''
 
