@@ -213,11 +213,11 @@ public class Slug  {
 		«ENDFOR»
 		* @copyright «component.manifest.copyright»
 		* @license «component.manifest.license»
-		
+		*/
 		«IF denied»
 		defined('_JEXEC') or die('Restricted access');
 		«ENDIF»
-		*/
+		
 	'''
 	
 	def static String generateKeysName(Component com, String name){
@@ -234,6 +234,22 @@ public class Slug  {
 				for(Page pg : tempSec.page ){
 					switch(pg){
 						DetailsPage :{
+							if(pg.entities.contains(inpage.entities.get(0)))
+							return pg;
+						}
+					}
+				}
+			}
+		}
+		return null
+	}
+	
+	def static IndexPage  getPageForAll(DetailsPage inpage, Component com) {
+		for(Section tempSec: com.sections){
+			if(tempSec.page.contains(inpage)){
+				for(Page pg : tempSec.page ){
+					switch(pg){
+						IndexPage :{
 							if(pg.entities.contains(inpage.entities.get(0)))
 							return pg;
 						}

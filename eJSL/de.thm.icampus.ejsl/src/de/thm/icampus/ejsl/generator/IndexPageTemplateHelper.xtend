@@ -353,7 +353,7 @@ class IndexPageTemplateHelper {
 		</div>        
 	
 	 '''
-	 def private CharSequence genAdminViewLayoutData()'''
+	 def private CharSequence genAdminViewLayoutData(EList<Attribute>filters)'''
  <table class="table table-striped" id="«dpage.name.toFirstUpper»List">
 		<thead>
 			<tr>
@@ -372,7 +372,7 @@ class IndexPageTemplateHelper {
             <?php endif; ?>
        «FOR Attribute attr : dpage.filters»
 	<th class='left'>
-	<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«dpage.name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr»', $listDirn, $listOrder); ?>
+	<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«details.name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 	</th>
      «ENDFOR»
 	
@@ -443,21 +443,22 @@ class IndexPageTemplateHelper {
 	<?php if (isset($item->checked_out) && $item->checked_out) : ?>
 		<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, '«dpage.name.toLowerCase».', $canCheckin); ?>
 	<?php endif; ?>
+	
+	« var String first = if(!filters.empty) dpage.filters.remove(0).name.toLowerCase»
+	
 	<?php if ($canEdit) : ?>
 		<a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»&id='.(int) $item->id); ?>">
-			<?php echo $this->escape($item->title); ?></a>
+			<?php echo $this->escape($item->«first»); ?></a>
 		<?php else : ?>
-			<?php echo $this->escape($item->title); ?>
+			<?php echo $this->escape($item->«first»); ?>
 		<?php endif; ?>
 		</td>
+		«FOR Attribute a: filters»
 		<td>
 
-			<?php echo $item->user; ?>
+			<?php echo $item->«a.name.toLowerCase»; ?>
 		</td>
-		<td>
-
-			<?php echo $item->alias; ?>
-		</td>
+		«ENDFOR»
 
 
         <?php if (isset($this->items[0]->id)): ?>
@@ -481,7 +482,7 @@ def  CharSequence genAdminViewLayoutForm()'''
 	<div id="j-main-container">
 <?php endif;?>
 «genAdminViewLayoutFilters»
-«genAdminViewLayoutData»
+«genAdminViewLayoutData(dpage.filters)»
 <input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
 		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />

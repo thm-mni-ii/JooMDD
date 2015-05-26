@@ -51,10 +51,14 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 */
 		var indexPages = new ArrayList();
 		for(Section s :component.sections) {
-			for(Page p : s.page) {
-				if(p instanceof IndexPage) {
-					indexPages.add(p);			
+			switch (s){
+				BackendSection : {
+				for(Page p : s.page) {
+					if(p instanceof IndexPage) {
+						indexPages.add(p);			
+					}
 				}
+			}
 			}
 		}
 		
@@ -96,11 +100,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		// Generate sql stuff
 		generateJoomlaDirectory("admin/sql")
-		generateFile("admin/sql/install.mysql.utf8.sql", component.sqlAdminSqlInstallContent)
+		generateFile("admin/sql/install.mysql.utf8.sql", component.sqlAdminSqlInstallContent(false))
 		generateFile("admin/sql/uninstall.mysql.utf8.sql", component.sqlAdminSqlUninstallContent)
 		generateJoomlaDirectory("admin/sql/updates")
 		generateJoomlaDirectory("admin/sql/updates/mysql")
-		generateFile("admin/sql/updates/mysql/0.0.1.mysql.utf8.sql", component.sqlAdminSqlUpdateContent)
+		generateFile("admin/sql/updates/mysql/1.0.1.mysql.utf8.sql", component.sqlAdminSqlUpdateContent(true))
 		
 		return ""
 	}
@@ -123,19 +127,19 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		return entities;
 	}
 	
-	 def CharSequence sqlAdminSqlInstallContent(Component component) {
+	 def CharSequence sqlAdminSqlInstallContent(Component component, boolean isupdate) {
         val Iterable<Entity> entities=getEntities(component)
         var HashSet<Entity> visited = new HashSet<Entity>();
         var StringBuffer result = new StringBuffer;
         while(visited.size != entities.size){
 	        for (Entity e:entities){
 	        	if(e.references.empty && !visited.contains(e)){
-	        		result.append(generateSQLTable(e));
+	        		result.append(generateSQLTable(e, isupdate));
 	        		visited.addAll(e);
 	        	}
 	        	if(!visited.contains(e) && !e.references.empty && isAllreferenVisited(e.references, visited) ){
 	        
-	        	   result.append(generateSQLTable(e))
+	        	   result.append(generateSQLTable(e, isupdate))
 	        	   visited.addAll(e);
 	        	}
 	        }
@@ -153,10 +157,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		return true
 	}
     
-    def CharSequence generateSQLTable(Entity table)'''
+    def CharSequence generateSQLTable(Entity table, boolean isupdate)'''
+    «IF !isupdate»
     DROP TABLE IF EXISTS `#__«table.name.toLowerCase»`;
+    «ENDIF»
 
-        	CREATE TABLE `#__«table.name.toLowerCase»` (
+   CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`#__«table.name.toLowerCase»` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,    
     `ordering` INT(11)  NOT NULL ,
     `state` TINYINT(1)  NOT NULL ,
@@ -191,20 +197,27 @@ PRIMARY KEY (`id`)
         «ENDFOR»
     '''
     
-	def CharSequence sqlAdminSqlUpdateContent(Component component) {
-		return sqlAdminSqlInstallContent(component);
+	def CharSequence sqlAdminSqlUpdateContent(Component component, boolean isupdate) {
+		return sqlAdminSqlInstallContent(component, isupdate);
     }
     
 	def CharSequence languageFileContent(Language lang) '''
+	«Slug.nameExtensionBind("com", component.name).toUpperCase» = «component.name.toFirstUpper»
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME = Home
 	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID = ID
 	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT = Checked out
 	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT_TIME = Checked out Time
 	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ORDERING = Ordering
 	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY = Created By
 	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_STATE= state
+	«FOR Section sec: component.sections»
+	«FOR Page pag: sec.page»
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pag.name.toUpperCase» = «pag.name.toFirstUpper»
+	«ENDFOR»
+	«ENDFOR»
 	«FOR DetailsPage dynp: Slug.getAllAttributeOfAComponente(component)»
 	    «FOR Attribute attr: dynp.entities.last.attributes»
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_«dynp.name.toUpperCase»_«attr.name.toUpperCase» = «attr.name.toLowerCase»
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_«dynp.name.toUpperCase»_«attr.name.toUpperCase» = «attr.name.toFirstUpper»
 		«ENDFOR»
 	«ENDFOR»
 	«FOR e : lang.keyvaluepairs»
@@ -234,7 +247,7 @@ PRIMARY KEY (`id`)
 		    «IF (component.manifest.description != null)»
 		    	<description>«component.manifest.description»</description>
 		    «ENDIF»
-		    
+		     <version>1.0.1</version>
 		    <!-- Install Section -->
 		    <install>
 		        <sql>
@@ -277,9 +290,11 @@ PRIMARY KEY (`id`)
 		        <!-- Administration Menu Section -->
 		        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
 		        <submenu>
-				«FOR page : indexPages» 
+				«FOR page : indexPages»
+					
 					<menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
-					view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_«page.name.toUpperCase»</menu>
+					alias="«page.name.toFirstUpper»"
+					view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«page.name.toUpperCase»</menu>
 				«ENDFOR»
 		        </submenu>
 		        <!-- Administration Main File Copy Section -->
@@ -320,10 +335,11 @@ PRIMARY KEY (`id`)
 		generateFile("site/controller.php", component.phpSiteControllerContent)
 		generateFile("site/router.php", component.phpSiteRouterContent)
 		generateJoomlaDirectory("site/views")
-//		generateJoomlaDirectory("site/views/" + slug)
-//		generateFile("site/views/" + slug + "/view.html.php", component.phpSiteViewContent)
-//		generateFile("site/views/" + slug + "/tmpl/default.xml", component.xmlSiteTemplateContent)
-//		generateFile("site/views/" + slug + "/tmpl/default.php", component.phpSiteTemplateContent)
+		var tempSlug = slug + "s"
+//		generateJoomlaDirectory("site/views/" + tempSlug)
+//		generateFile("site/views/" + tempSlug + "/view.html.php", component.phpSiteViewContent)
+//		generateFile("site/views/" + tempSlug + "/tmpl/default.xml", component.xmlSiteTemplateContent)
+//		generateFile("site/views/" + tempSlug + "/tmpl/default.php", component.phpSiteTemplateContent)
 
 		generateJoomlaDirectory("site/models")
 
@@ -349,10 +365,12 @@ PRIMARY KEY (`id`)
 		generateFile("admin/config.xml", component.xmlConfigContent)
 		
 		generateJoomlaDirectory("admin/views")
-//		generateJoomlaDirectory("admin/views/" + slug)
-//		generateFile("admin/views/" + slug + "/view.html.php", component.phpAdminViewContent)
-//		generateJoomlaDirectory("admin/views/" + slug + "/tmpl")
-//		generateFile("admin/views/" + slug + "/tmpl/default.php", component.phpAdminTemplateContent)
+		println(slug)
+		var tempSlug = slug + "s"
+		generateJoomlaDirectory("admin/views/" + tempSlug)
+		generateFile("admin/views/" + tempSlug + "/view.html.php", component.phpAdminViewContent)
+		generateJoomlaDirectory("admin/views/" + tempSlug + "/tmpl")
+		generateFile("admin/views/" + tempSlug + "/tmpl/default.php", component.phpAdminTemplateContent)
 
 		generateJoomlaDirectory("admin/models")
 		generateJoomlaDirectory("admin/models/fields")
@@ -647,19 +665,27 @@ PRIMARY KEY (`id`)
     '''
     
     def CharSequence phpAdminTemplateContent(Component component) '''
-        <?php
-             «Slug.generateFileDoc(component,true)»
-             
-            // load tooltip behavior
-            JHtml::_('behavior.tooltip');
-            ?>
-            <form action="<?php echo JRoute::_('index.php?option=com_«name»'); ?>" method="post" name="adminForm">
-                    <table class="adminlist">
-                            <thead><?php echo $this->loadTemplate('head');?></thead>
-                            <tfoot><?php echo $this->loadTemplate('foot');?></tfoot>
-                            <tbody><?php echo $this->loadTemplate('body');?></tbody>
-                    </table>
-            </form>
+<?php
+ «Slug.generateFileDoc(component,true)»
+?>
+<div >
+	</div>
+	<p class="text-center"> <h1><?php echo JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1> </p> 
+	<div id="cpanel" class='cpanel'>
+	<?php foreach ($this->views as $view)
+	{
+	?>
+	    <div class="icon">
+	        <h3><a href='<?php echo $view['url']; ?>'
+	            <span><?php echo $view['title']; ?></span>
+	        </a></h3>
+	        <br />
+	    </div>
+	<?php
+	}
+	?>
+</div>  
+			
     '''
     
     def CharSequence phpAdminTemplateHeadContent(Component component) '''
@@ -735,40 +761,85 @@ PRIMARY KEY (`id`)
     '''
     
     def CharSequence phpAdminViewContent(Component component) '''
-        <?php
-            «Slug.generateFileDoc(component,true)»
-            // import Joomla view library
-            jimport('joomla.application.component.view');
-             
-            /**
-             * «class_name» View
-             */
-            class «class_name»View«class_name»s extends JView
-            {
-                /**
-                 * «class_name» view display method
-                 * @return void
-                 */
-                function display($tpl = null) 
-                {
-                    // Get data from the model
-                    $items = $this->get('Items');
-                    $pagination = $this->get('Pagination');
+<?php
+«Slug.generateFileDoc(component,true)»
+// import Joomla view library
+jimport('joomla.application.component.view');
+ 
+/**
+ * «class_name» View
+ */
+class «class_name»View«class_name»s extends JViewLegacy
+{
 
-                    // Check for errors.
-                    if (count($errors = $this->get('Errors'))) 
-                    {
-                        JError::raiseError(500, implode('<br />', $errors));
-                        return false;
-                    }
-                    // Assign data to the view
-                    $this->items = $items;
-                    $this->pagination = $pagination;
+ /** Method to get display
+ *
+ * @param   Object  $tpl  template
+ *
+ * @return void
+ * @generated
+ */
+    public function display($tpl = null)
+    {
+        if (!JFactory::getUser()->authorise('core.administrator'))
+        {
+            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+        }
 
-                    // Display the template
-                    parent::display($tpl);
-                }
-            }
+        JHtml::_('behavior.tooltip');
+
+        $document = JFactory::getDocument();
+
+        JHtml::_('tabs.start');
+
+        $application = JFactory::getApplication("administrator");
+        $this->option = $application->scope;
+
+        $this->addToolBar();
+
+        $this->addViews();
+
+        parent::display($tpl);
+    }
+
+/**
+ * creates a joomla administratoristrative tool bar
+ *
+ * @return void
+ * @generated
+ */
+    private function addToolBar()
+    {
+        JToolBarHelper::title(JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . ': ' . JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'), 'logo');
+        JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
+    }
+
+/**
+ * creates html elements for the main menu
+ *
+ * @return void
+ * @generated
+ */
+    private function addViews()
+    {
+        $views = array();
+«FOR Page pg: Slug::getBackendSectionViews(component).page»
+
+     «switch (pg) {
+     	
+     	IndexPage :{
+     		'''
+		$views['«pg.name.toLowerCase»'] = array();
+		$views['«pg.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.name.toUpperCase»');
+		$views['«pg.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.name.toLowerCase»";
+     		'''
+     	}
+     }»
+«ENDFOR»
+      
+$this->views = $views;
+}
+}
     '''
     
     def CharSequence xmlAccessContent(Component component) '''
@@ -861,13 +932,24 @@ class «component.name.toFirstUpper»Helper {
      * Configure the Linkbar.
      */
     public static function addSubmenu($vName = '') {
+    	«FOR Page pg: Slug::getBackendSectionViews(component).page»
+    	
+    	     «switch (pg) {
+    	     	
+    	     	IndexPage :{
+    	     		'''
         		JHtmlSidebar::addEntry(
-			JText::_('«Slug::getBackendSectionViews(component).page.get(0).name.toUpperCase»'),
-			'index.php?option=com_mdd&view=«Slug::getBackendSectionViews(component).page.get(0).name.toLowerCase»',
-			$vName == '«Slug::getBackendSectionViews(component).page.get(0).name.toLowerCase»'
-		);
+        		
+        		JText::_('«pg.name.toUpperCase»'),
+        		'index.php?option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&view=«pg.name.toLowerCase»',
+        		$vName == '«pg.name.toLowerCase»'
+        		);
+    	     		'''
+    	     	}
+    	     }»
+        «ENDFOR»
 
-    }
+        		}
 
     /**
      * Gets a list of the actions that can be performed.

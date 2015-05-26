@@ -79,12 +79,13 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		
 		/**
 		 * «dpage.name.toFirstUpper» controller class.
+		 * @generated
 		 */
 		class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends JControllerForm
 		{
 		
 		    function __construct() {
-		        $this->view_list = '«dpage.name.toFirstUpper»';
+		        $this->view_list = '«Slug.getPageForAll(dpage, com).name.toLowerCase»';
 		        parent::__construct();
 		    }
 		
@@ -98,6 +99,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	 *
 	 * @return	mixed	The data for the form.
 	 * @since	1.6
+	 * @generated
 	 */
 	protected function loadFormData()
 	{
@@ -141,6 +143,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
 	 * @return	JForm	A JForm object on success, false on failure
 	 * @since	1.6
+	 * @generated
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
