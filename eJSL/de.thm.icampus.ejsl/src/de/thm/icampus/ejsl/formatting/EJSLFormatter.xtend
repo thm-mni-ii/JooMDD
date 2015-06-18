@@ -68,9 +68,9 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 	//	c.setLinewrap(1).after(attributeAccess.typeAssignment_4)
 
 		/* Reference rule */
-		c.setLinewrap(1).after(referenceAccess.entityEntityCrossReference_5_0)
-		c.setLinewrap(1).after(referenceAccess.lowerNUMBERParserRuleCall_7_0)
-		c.setLinewrap(1).after(referenceAccess.upperNUMBERParserRuleCall_9_0)
+		//c.setLinewrap(1).after(referenceAccess.entityEntityCrossReference_5_0)
+		//c.setLinewrap(1).after(referenceAccess.lowerNUMBERParserRuleCall_7_0)
+		//c.setLinewrap(1).after(referenceAccess.upperNUMBERParserRuleCall_9_0)
 
 		/* Author rule */
 		c.setLinewrap(1).after(authorAccess.authoremailSTRINGTerminalRuleCall_4_2_0)

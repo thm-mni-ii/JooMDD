@@ -30,8 +30,8 @@ eJSLModel "Weblinks" {
 		Parameter _target {
 			type = "list"
 			defaultvalue = "0"
-			label = "COM_WEBLINKS_FIELD_TARGET_LABEL"
-			description = "COM_WEBLINKS_FIELD_TARGET_DESC"
+			label = "Target"
+			description = "This ist the description for the target"
 		}
 		Parameter save_history {
 			type = "radio"
