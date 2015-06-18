@@ -1,0 +1,14 @@
+«IMPORT de::thm::icampus::ejsl::ui::wizard»
+
+«DEFINE main FOR EJSLProjectInfo»
+«EXPAND model FOR this»
+«ENDDEFINE»
+
+«DEFINE model FOR EJSLProjectInfo»
+«FILE "src/model/Model.eJSL"-»
+/*
+ * This is an example model
+ */
+Hello Xtext!
+«ENDFILE»
+«ENDDEFINE»
