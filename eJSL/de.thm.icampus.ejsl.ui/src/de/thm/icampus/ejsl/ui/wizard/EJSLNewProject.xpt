@@ -48,11 +48,11 @@ eJSLModel "name of the model" {
 			}
 			references {
 				Reference {
-					attribute"<attribute2>"
-					*Entity "<entity1>"
-					attribute referenced "<entity1>.<attribute1>"
-					lower 1
-					upper 1
+					Entity attribute = "<attribute2>"
+					*Entity = "<entity1>"
+					*Attribute = "<entity1>.<attribute1>"
+					lower = 1
+					upper = 1
 				}
 			}
 		}
@@ -60,23 +60,23 @@ eJSLModel "name of the model" {
 
 	pages {
 		IndexPage <IndexPage1> {
-			*Entities "Participant"
-			filters Participant.name, 
-				Participant.affiliation
+			*Entities "<entity1>"
+			table columns = <entity1>.<attribute1>, 
+				<entity1>.<attribute2>
 		}
 		DetailsPage <DetailsPage1> {
-			*Entities "Participant" 
+			*Entities "<entity1>"
 		}
 		IndexPage <IndexPage2> {
-			*Entities "Talk", "Participant"
-			filters Talk.title, 
-				Talk.speaker
+			*Entities "<entity1>", "<entity2>"
+			table columns = <entity2>.<attribute1>, 
+				<entity2>.<attribute2>
 		}
 		DetailsPage <DetailsPage2> {
-			*Entities "Talk"
+			*Entities "<entity2>"
 		}
 	}
-	
+	/* todo
 	extensions {
 		Component JandBeyond {
 			Manifestation {

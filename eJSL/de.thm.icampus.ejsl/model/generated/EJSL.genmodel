@@ -99,6 +99,7 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//DynamicPage">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/entities"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/tablecolumns"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/filters"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//IndexPage"/>

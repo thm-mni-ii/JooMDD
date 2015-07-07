@@ -80,7 +80,7 @@ Attribute returns Attribute:
 	'Attribute' name=ID '{' 
 		'dbtype' '=' (dbtype=Type)
 		'htmltype' '=' (htmltype=Type)
-		(isprimary ?= "isprimary")?
+		(isprimary ?= "Primary attribute")?
 	'}'
 ;
 
@@ -88,11 +88,11 @@ Reference returns Reference:
 	{Reference}
 	'Reference'  
 	'{'
-		'attribute' attribute=[Attribute|STRING]
-		'*Entity' entity=[Entity|STRING]
-		'attribute referenced' attributerefereced=[Attribute|STRING]
-		'lower' lower=NUMBER
-		'upper' upper=NUMBER 
+		'Attribute' '=' attribute=[Attribute|STRING]
+		'*Entity' '=' entity=[Entity|STRING]
+		'*Attribute' '=' attributerefereced=[Attribute|STRING]
+		'lower' '=' lower=NUMBER
+		'upper' '=' upper=NUMBER 
 	'}'
 ;
 
@@ -126,7 +126,8 @@ IndexPage returns IndexPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
-		('filters' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
+		('table columns' '=' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
+		('filters' '=' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
@@ -139,7 +140,8 @@ DetailsPage returns DetailsPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
-		('filters' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
+		('table columns' '=' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
+		('filters' '=' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
