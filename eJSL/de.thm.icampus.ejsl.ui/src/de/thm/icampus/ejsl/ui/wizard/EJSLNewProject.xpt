@@ -7,8 +7,105 @@
 «DEFINE model FOR EJSLProjectInfo»
 «FILE "src/model/Model.eJSL"-»
 /*
- * This is an example model
+ * This is an example model with the needed model elements entities, pages, and extensions
+ * '<..>' are just placeholders for names and should be replaced in concrete models!
  */
-Hello Xtext!
+eJSLModel "name of the model" {
+	datatypes {
+		Datatype "varchar(255) NOT NULL",
+		Datatype "text NOT NULL",
+		Datatype "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+		Datatype "date",
+		Datatype "textarea",
+		Datatype "text",
+		Datatype "editor"		
+	}
+	entities { 
+		Entity <entity1> {
+			attributes {
+				Attribute <attribute1> {
+					dbtype = "varchar(255) NOT NULL"
+					htmltype = "text"
+					isprimary
+				}
+				Attribute <attribute2> {
+					dbtype = "varchar(255) NOT NULL"
+					htmltype = "editor"
+				}
+			}
+		}
+		Entity <entity2> {
+			attributes { 
+				Attribute <attribute1> {
+					dbtype = "varchar(255) NOT NULL"
+					htmltype = "text"
+					isprimary
+				}
+				Attribute <attribute2> {
+					dbtype = "varchar(255) NOT NULL"
+					htmltype = "text"
+				}
+			}
+			references {
+				Reference {
+					attribute"<attribute2>"
+					*Entity "<entity1>"
+					attribute referenced "<entity1>.<attribute1>"
+					lower 1
+					upper 1
+				}
+			}
+		}
+	}
+
+	pages {
+		IndexPage <IndexPage1> {
+			*Entities "Participant"
+			filters Participant.name, 
+				Participant.affiliation
+		}
+		DetailsPage <DetailsPage1> {
+			*Entities "Participant" 
+		}
+		IndexPage <IndexPage2> {
+			*Entities "Talk", "Participant"
+			filters Talk.title, 
+				Talk.speaker
+		}
+		DetailsPage <DetailsPage2> {
+			*Entities "Talk"
+		}
+	}
+	
+	extensions {
+		Component JandBeyond {
+			Manifestation {
+				authors {
+					Author "Dennis Priefer" {
+						authoremail = "dennis.priefer@mni.thm.de"
+						authorurl = "www.priefer.net"
+					}
+				}
+				copyright = "Copyright (C) 20053 - 2014 Open Source Matters, Inc. All rights reserved."
+				license = "GNU General x Public License version 2 or later; see LICENSE.txt"
+			}
+			languages {
+				Language de-DE {
+	   			}
+				Language en-GB {
+				}
+			}
+			sections {
+				Frontend section {
+					*Pages Participants, Talks
+				}
+				Backend section {
+					*Pages Participants, Participant, Talks, Talk, Rooms, Room, Agendaitems, Agendaitem
+				}
+			}
+		}
+	}
+	*/
+}
 «ENDFILE»
 «ENDDEFINE»

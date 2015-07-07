@@ -394,5 +394,15 @@
             extensions="eJSL">
     </provider>
   </extension>
-
+	   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.xtext.projectwiz"
+            class="de.thm.icampus.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.ejsl.ui.wizard.EJSLNewProjectWizard"
+            icon="src/de/thm/icampus/ejsl/ui/wizard/eJSL_icon.png"
+            id="de.thm.icampus.ejsl.ui.wizard.EJSLNewProjectWizard"
+            name="EJSL Project"
+            project="true">
+      </wizard>
+   </extension>
 </plugin>

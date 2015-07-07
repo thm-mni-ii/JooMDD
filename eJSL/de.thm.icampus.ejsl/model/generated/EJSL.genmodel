@@ -4,7 +4,7 @@
     editorDirectory="/de.thm.icampus.ejsl.editor/src" modelPluginID="de.thm.icampus.ejsl"
     forceOverwrite="true" modelName="EJSL" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     complianceLevel="6.0" copyrightFields="false" editPluginID="de.thm.icampus.ejsl.edit"
-    editorPluginID="de.thm.icampus.ejsl.editor" runtimeVersion="2.10">
+    editorPluginID="de.thm.icampus.ejsl.editor" runtimeVersion="2.11">
   <genPackages prefix="EJSL" basePackage="de.thm.icampus.ejsl" disposableProviderFactory="true"
       fileExtensions="eJSL" ecorePackage="EJSL.ecore#/">
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//PluginKinds">

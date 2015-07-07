@@ -8,7 +8,7 @@ eJSLModel "Conference" {
 		Datatype "text",
 		Datatype "editor"		
 	}
-	entities {
+	entities { 
 		Entity Participant {
 			attributes {
 				Attribute name {
