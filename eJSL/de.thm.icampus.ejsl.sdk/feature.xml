@@ -7,21 +7,22 @@
 
    <description url="http://icampus.thm.de/JooMDD/eJSL">
       Modeling language for Joomla extensions. 
-Includes textual editor for the creation of model instances.
-... generator templates for the code creation of Joomla extensions
-(2.5/3.x) are in progress.
+Includes textual editor for the creation of model instances and generator templates for the code creation of Joomla extensions
+(Joomla version 3.x).
    </description>
 
    <copyright>
       /*******************************************************************************
-* Copyright (c) 2014 Dennis Priefer (THM - iCampus).
+* Copyright (c) 2015 Dennis Priefer (THM - iCampus).
 * All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
+* are made available under the terms of the Eclipse Public License
+v1.0
 * which accompanies this distribution, and is available at
 * http://www.eclipse.org/legal/epl-v10.html
 *
 * Contributors:
-*    Dennis Priefer - initial API and implementation and/or initial documentation
+*    Dennis Priefer - initial API and implementation and/or initial
+documentation
 *******************************************************************************/
    </copyright>
 
@@ -97,6 +98,10 @@ Everyone is permitted to copy and distribute copies of this Agreement, but in or
 
 This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
    </license>
+
+   <url>
+      <discovery label="JooMDD Home Page" url="http://icampus.thm.de/joomdd"/>
+   </url>
 
    <plugin
          id="de.thm.icampus.ejsl"
