@@ -66,7 +66,7 @@ Datapackage returns Datapackage:
 
 Entity returns Entity:
 	{Entity}
-	'Entity' name=ID ('extends' supertype=[Entity|STRING])?
+	'Entity' name=MYID ('extends' supertype=[Entity|QualifiedName])?
 	'{'
 		('attributes' '{' (attributes+=Attribute)* '}')?
 		// Kardinalität
@@ -77,7 +77,7 @@ Entity returns Entity:
 Attribute returns Attribute:
 	{Attribute}
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-	'Attribute' name=ID '{' 
+	'Attribute' name=MYID '{' 
 		'dbtype' '=' (dbtype=Type)
 		'htmltype' '=' (htmltype=Type)
 		(isprimary ?= "Primary attribute")?
@@ -88,9 +88,9 @@ Reference returns Reference:
 	{Reference}
 	'Reference'  
 	'{'
-		'Attribute' '=' attribute=[Attribute|STRING]
-		'*Entity' '=' entity=[Entity|STRING]
-		'*Attribute' '=' attributerefereced=[Attribute|STRING]
+		'Attribute' '=' attribute=[Attribute|QualifiedName]
+		'*Entity' '=' entity=[Entity|QualifiedName]
+		'Reference' '=' attributerefereced=[Attribute|QualifiedName]
 		'lower' '=' lower=NUMBER
 		'upper' '=' upper=NUMBER 
 	'}'
@@ -104,7 +104,7 @@ Page:
 
 StaticPage returns StaticPage:
 	{StaticPage}
-	'StaticPage' name=ID 
+	'StaticPage' name=MYID 
 	'{'
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
@@ -120,9 +120,9 @@ DynamicPage:
 
 IndexPage returns IndexPage:
 	{IndexPage}
-	'IndexPage' name=ID 
+	'IndexPage' name=MYID 
 	'{'
-		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
@@ -134,9 +134,9 @@ IndexPage returns IndexPage:
 
 DetailsPage returns DetailsPage:
 	{DetailsPage}
-	'DetailsPage' name=ID 
+	'DetailsPage' name=MYID 
 	'{'
-		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
@@ -161,7 +161,7 @@ ExternalLink returns ExternalLink:
 
 InternalLink returns InternalLink:
 	{InternalLink}
-	('InternalLink' name=ID 
+	('InternalLink' name=MYID 
 	'{'
 		'target' '=' '*'target=[Page|QualifiedName]
 	'}') | ContextLink
@@ -169,7 +169,7 @@ InternalLink returns InternalLink:
 
 ContextLink returns ContextLink:
 	{ContextLink}
-	'InternalcontextLink' name=ID 
+	'InternalcontextLink' name=MYID 
 	'{'
 		'target' '=' '*'target=[Page|QualifiedName]
 		'linkparameters' '{' (linkparameters+=LinkParameter)* '}'
@@ -178,7 +178,7 @@ ContextLink returns ContextLink:
 
 LinkParameter returns LinkParameter:
 	{LinkParameter}
-	'Parameter' name=ID '=' ('*Attribute 'attvalue=[Attribute|STRING] | value=STRING)
+	'Parameter' name=MYID '=' ('*Attribute 'attvalue=[Attribute|STRING] | value=STRING)
 ;
 
 // extension model
@@ -189,7 +189,7 @@ Extension:
 
 ExtensionPackage returns ExtensionPackage:
 	{ExtensionPackage}
-	'Extension package' name=ID 
+	'Extension package' name=MYID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
@@ -199,7 +199,7 @@ ExtensionPackage returns ExtensionPackage:
 
 Component returns Component:
 	{Component}
-	'Component' name=ID 
+	'Component' name=MYID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('Global parameter' '{' (globalParamter+=ParameterGroup)* '}')?
@@ -230,7 +230,7 @@ Frontend returns FrontendSection:
 
 Module returns Module:
 	{Module}
-	'Module' name=ID 
+	'Module' name=MYID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
@@ -240,7 +240,7 @@ Module returns Module:
 
 Plugin returns Plugin:
 	{Plugin}
-	'Plugin' name=ID 
+	'Plugin' name=MYID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		'Plugintype' '=' type=PluginKinds
@@ -251,7 +251,7 @@ Plugin returns Plugin:
 
 Library returns Library:
 	{Library}
-	'Library' name=ID
+	'Library' name=MYID
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
@@ -263,7 +263,7 @@ Library returns Library:
 
 Package returns Package:
 	{Package}
-	'Package' name=ID
+	'Package' name=MYID
 	'{'
 		('packages' '{' (packages+=Package)* '}')?
 		('classes' '{' (classes+=Class)* '}')?
@@ -272,7 +272,7 @@ Package returns Package:
 
 Class returns Class:
 	{Class}
-    'Class' name=ID ('extends' supertype=[Class|QualifiedName])?
+    'Class' name=MYID ('extends' supertype=[Class|QualifiedName])?
     '{'
     	('*Class references' references+=[Class|QualifiedName] (',' references+=[Class|QualifiedName])*)?
     	('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
@@ -282,7 +282,7 @@ Class returns Class:
 
 Method returns Method:
 	{Method}
-    'Method' name=ID
+    'Method' name=MYID
     '{'
         //'Returnvalue' returnvalue=ID ':' type=[jvmTypes::JvmType|QualifiedName]
         'Returnvalue' returnvalue=ID ':' type=Type
@@ -298,7 +298,7 @@ MethodParameter returns MethodParameter:
 
 Template returns Template:
 	{Template}
-	'Template' name=ID
+	'Template' name=MYID
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
@@ -385,7 +385,9 @@ CssBlock:
 
 NUMBER : ('-')?INT;
 	
-QualifiedName: ID ('.' ID)* ;
+QualifiedName: MYID ('.' MYID)*;
+
+MYID : ('<')? ID ('>')?;
 
 enum PluginKinds:
     authenticate | captcha | content | contact |

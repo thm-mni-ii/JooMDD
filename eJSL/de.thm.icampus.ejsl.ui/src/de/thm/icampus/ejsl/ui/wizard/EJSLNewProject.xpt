@@ -26,7 +26,7 @@ eJSLModel "name of the model" {
 				Attribute <attribute1> {
 					dbtype = "varchar(255) NOT NULL"
 					htmltype = "text"
-					isprimary
+					Primary attribute
 				}
 				Attribute <attribute2> {
 					dbtype = "varchar(255) NOT NULL"
@@ -39,7 +39,7 @@ eJSLModel "name of the model" {
 				Attribute <attribute1> {
 					dbtype = "varchar(255) NOT NULL"
 					htmltype = "text"
-					isprimary
+					Primary attribute
 				}
 				Attribute <attribute2> {
 					dbtype = "varchar(255) NOT NULL"
@@ -48,9 +48,9 @@ eJSLModel "name of the model" {
 			}
 			references {
 				Reference {
-					Entity attribute = "<attribute2>"
-					*Entity = "<entity1>"
-					*Attribute = "<entity1>.<attribute1>"
+					Attribute = <attribute2>
+					*Entity = <entity1>
+					Reference = <entity1>.<attribute1>
 					lower = 1
 					upper = 1
 				}
@@ -60,34 +60,33 @@ eJSLModel "name of the model" {
 
 	pages {
 		IndexPage <IndexPage1> {
-			*Entities "<entity1>"
+			*Entities <entity1>
 			table columns = <entity1>.<attribute1>, 
 				<entity1>.<attribute2>
 		}
 		DetailsPage <DetailsPage1> {
-			*Entities "<entity1>"
+			*Entities <entity1>
 		}
 		IndexPage <IndexPage2> {
-			*Entities "<entity1>", "<entity2>"
+			*Entities <entity1>, <entity2>
 			table columns = <entity2>.<attribute1>, 
 				<entity2>.<attribute2>
 		}
 		DetailsPage <DetailsPage2> {
-			*Entities "<entity2>"
+			*Entities <entity2>
 		}
 	}
-	/* todo
 	extensions {
-		Component JandBeyond {
+		Component <Component1> {
 			Manifestation {
 				authors {
-					Author "Dennis Priefer" {
-						authoremail = "dennis.priefer@mni.thm.de"
-						authorurl = "www.priefer.net"
+					Author "forename surname" {
+						authoremail = "name@provider.domain"
+						authorurl = "www.anyurl.com"
 					}
 				}
-				copyright = "Copyright (C) 20053 - 2014 Open Source Matters, Inc. All rights reserved."
-				license = "GNU General x Public License version 2 or later; see LICENSE.txt"
+				copyright = "Copyright"
+				license = "License"
 			}
 			languages {
 				Language de-DE {
@@ -97,15 +96,14 @@ eJSLModel "name of the model" {
 			}
 			sections {
 				Frontend section {
-					*Pages Participants, Talks
+					*Pages <IndexPage1>, <IndexPage2>
 				}
 				Backend section {
-					*Pages Participants, Participant, Talks, Talk, Rooms, Room, Agendaitems, Agendaitem
+					*Pages <IndexPage1>, <DetailsPage1>, <IndexPage2>, <DetailsPage2>
 				}
 			}
 		}
 	}
-	*/
 }
 «ENDFILE»
 «ENDDEFINE»
