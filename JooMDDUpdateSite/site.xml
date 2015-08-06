@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/de.thm.icampus.cjsl.sdk_1.0.0.201409031327.jar" id="de.thm.icampus.cjsl.sdk" version="1.0.0.201409031327">
+   <feature url="features/de.thm.icampus.cjsl.sdk_1.0.0.201508061426.jar" id="de.thm.icampus.cjsl.sdk" version="1.0.0.201508061426">
       <category name="JooMDD"/>
    </feature>
-   <feature url="features/de.thm.icampus.ejsl.sdk_1.0.0.201508061235.jar" id="de.thm.icampus.ejsl.sdk" version="1.0.0.201508061235">
+   <feature url="features/de.thm.icampus.ejsl.sdk_1.0.0.201508061426.jar" id="de.thm.icampus.ejsl.sdk" version="1.0.0.201508061426">
       <category name="JooMDD"/>
    </feature>
    <category-def name="JooMDD" label="JooMDD: Joomla extension and concrete data modeling">
