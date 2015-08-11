@@ -88,4 +88,13 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 			}
 		]
 	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_ATTRIBUTE_NAME)
+	def attributename(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to attribute', 'Change the name.', '') [
+			context |
+			val xtextDocument = context.xtextDocument		
+			xtextDocument.replace(issue.offset+issue.length-1, 1, "_ID_X ")
+			]
+	}
 }
