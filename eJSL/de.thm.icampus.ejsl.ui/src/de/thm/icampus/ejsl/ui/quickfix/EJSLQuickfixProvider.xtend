@@ -17,8 +17,8 @@ import org.eclipse.xtext.validation.Issue
 class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
 
 	@Fix(EJSLValidator::AMBIGUOUS_ENTITY)
-	def capitalizeNamealternative(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Add ID to Entity', 'Change the name.', 'test.png') [
+	def addIDtoEntity(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Add ID to Entity', 'Change the name.', 'upcase.png') [
 			context |
 			val xtextDocument = context.xtextDocument		
 			xtextDocument.replace(issue.offset+issue.length, 1, "_ID_X ")
@@ -26,30 +26,44 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 	}
 	
 	@Fix(EJSLValidator::AMBIGUOUS_LANGUAGE)
-	def addID(Issue issue, IssueResolutionAcceptor acceptor){
-		acceptor.accept(issue, 'Delete Language', 'Remove the entity.', 'upcase.png')[
+	def deletedoubleLanguageKey(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Delete Language', 'Remove the LanguageKey.', 'default.png')[
 			context | 
 			val xtextDocument = context.xtextDocument
 			System.out.print(acceptor.toString)
 			val lineofffset = xtextDocument.getLineOffset(issue.lineNumber - 1)
-			xtextDocument.replace(lineofffset, 20, "")
-				
+			xtextDocument.replace(lineofffset, 20, "")				
 		]
 	}
 	
-	
+	@Fix(EJSLValidator::AMBIGUOUS_DATATYPE)
+	def addIDtoDatatype(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Add ID to Datatype', 'Change the name.', 'upcase.png') [
+			context |
+			val xtextDocument = context.xtextDocument		
+			xtextDocument.replace(issue.offset+issue.length-1, 1, "_ID_X\" ")
+		]
+		acceptor.accept(issue, 'Delete Datatype', 'Remove the Datatype.', 'upcase.png')[
+			context | 
+			val xtextDocument = context.xtextDocument
+			System.out.print(acceptor.toString)
+			val lineofffset = xtextDocument.getLineOffset(issue.lineNumber - 1)
+			xtextDocument.replace(lineofffset, 20, "")				
+		]
+	}
+		
 	
 	@Fix(EJSLValidator::INVALID_AUTHOR_URL)
 	def validURL(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Set "http" before', 'Setting HTTP:// before unvalid URL', 'upcase.png') [
+		acceptor.accept(issue, 'Set "http" before', 'Setting HTTP:// before invalid URL', 'upcase.png') [
 			context | 
 			val xtextDocument = context.xtextDocument
-			xtextDocument.replace(issue.offset, 1, "\"http://") // http:// vor dem "-Zeichen
+			xtextDocument.replace(issue.offset, 1, "\"http://") // http:// bevor "-char
 		]
-		acceptor.accept(issue, 'Set "https" before', 'Setting HTTPS:// before unvalid URL', 'upcase.png') [
+		acceptor.accept(issue, 'Set "https" before', 'Setting HTTPS:// before invalid URL', 'upcase.png') [
 			context | 
 			val xtextDocument = context.xtextDocument
-			xtextDocument.replace(issue.offset, 1, "\"https://") // https:// vor dem "-Zeichen
+			xtextDocument.replace(issue.offset, 1, "\"https://") // https:// bevor "-char
 		]
 	}
 }
