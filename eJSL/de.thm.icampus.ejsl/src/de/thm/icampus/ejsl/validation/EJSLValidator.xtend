@@ -22,6 +22,7 @@ import java.util.regex.Pattern
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.validation.Check
+import de.thm.icampus.ejsl.eJSL.Reference
 
 /**
  * Custom validation rules. 
@@ -51,6 +52,8 @@ class EJSLValidator extends AbstractEJSLValidator {
 	public static val MORE_THAN_ONE_FRONTEND = 'moreThanOneFrontend'
 	public static val PAGE_USED_MULTIPLE_TIMES = 'pageUsedMultipleTimes'
 	public static val MISSING_PRIMARY_ATTRIBUTE = 'missingPrimaryAttribute'
+	public static val NOT_PRIMARY_REFERENCE = 'notPrimaryReference'
+	
 
 	/**
 	 * A domain consists of one or more domain parts. A domain part may contain
@@ -418,8 +421,18 @@ class EJSLValidator extends AbstractEJSLValidator {
 					MISSING_PRIMARY_ATTRIBUTE
 				)
 		}
-		
 	}
 	
-	
+	@Check
+	def refToAttributeMustBePrimary(Reference reference){
+		if(!reference.attributerefereced.isprimary){
+			error(
+				'The referenced attribute has to be a primary attribute.',
+				reference,
+				EJSLPackage.Literals.REFERENCE__ATTRIBUTEREFERECED,
+				NOT_PRIMARY_REFERENCE
+			)
+		}
+	}
+
 }

@@ -9,6 +9,7 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 import de.thm.icampus.ejsl.eJSL.Attribute
+import de.thm.icampus.ejsl.eJSL.Reference
 
 /**
  * Custom quickfixes.
@@ -64,9 +65,27 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 	@Fix(EJSLValidator::MISSING_PRIMARY_ATTRIBUTE)
 	def fixNonExistingPrimaryAttribute(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, 'Add primary attribute', 'Adding primary attribute to the first Attribute', '')[ element, context |
-			val allAttributes = element.eContents
-			val firstAttribute = allAttributes.get(0) as Attribute;
-			firstAttribute.isprimary = true
+			val allAttributes = element.eContents						// get all attributes from the entity 
+			val firstAttribute = allAttributes.get(0) as Attribute		// select the first attribute and convert it to de.thm.icampus.ejsl.eJSL.Attribute
+			firstAttribute.isprimary = true								// set the Primary attribute to true
+		]
+	}
+	
+	@Fix(EJSLValidator::NOT_PRIMARY_REFERENCE)
+	def fixReferenceAttributeError(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Change to a primary attribute.', 'Change the attribute to a primary attribute from the same entity.', '')[ reference, context |
+			val ref = reference as Reference
+			var hasNewReference = false
+			val parentEntity = ref.getEntity				// first get the parent entity of the reference
+			val allAttributes = parentEntity.eContents		// then get all attributes of this entity
+			
+			for(att : allAttributes){						// now look which of the attributes is a primary and set the first as attributereferenced
+				val a = att as Attribute
+				if(a.isIsprimary && !hasNewReference){
+					ref.attributerefereced = a
+					hasNewReference = true
+				}
+			}
 		]
 	}
 }
