@@ -36,4 +36,20 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 				
 		]
 	}
+	
+	
+	
+	@Fix(EJSLValidator::INVALID_AUTHOR_URL)
+	def validURL(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Set "http" before', 'Setting HTTP:// before unvalid URL', 'upcase.png') [
+			context | 
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset, 1, "\"http://") // http:// vor dem "-Zeichen
+		]
+		acceptor.accept(issue, 'Set "https" before', 'Setting HTTPS:// before unvalid URL', 'upcase.png') [
+			context | 
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset, 1, "\"https://") // https:// vor dem "-Zeichen
+		]
+	}
 }

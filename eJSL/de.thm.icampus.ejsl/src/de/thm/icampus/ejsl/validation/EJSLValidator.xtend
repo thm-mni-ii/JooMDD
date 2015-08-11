@@ -50,6 +50,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 	public static val MORE_THAN_ONE_BACKEND = 'moreThanOneBackend'
 	public static val MORE_THAN_ONE_FRONTEND = 'moreThanOneFrontend'
 	public static val PAGE_USED_MULTIPLE_TIMES = 'pageUsedMultipleTimes'
+	public static val MISSING_PRIMARY_ATTRIBUTE = 'missingPrimaryAttribute'
 
 	/**
 	 * A domain consists of one or more domain parts. A domain part may contain
