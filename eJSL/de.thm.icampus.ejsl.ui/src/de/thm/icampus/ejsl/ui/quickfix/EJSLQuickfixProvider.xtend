@@ -17,13 +17,23 @@ import org.eclipse.xtext.validation.Issue
 class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
 
 	@Fix(EJSLValidator::AMBIGUOUS_ENTITY)
-	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Change Name', 'Change the name.', 'upcase.png') [
+	def capitalizeNamealternative(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Add ID to Entity', 'Change the name.', 'test.png') [
 			context |
+			val xtextDocument = context.xtextDocument		
+			xtextDocument.replace(issue.offset+issue.length, 1, "_ID_X ")
+		]
+	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_LANGUAGE)
+	def addID(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Delete Language', 'Remove the entity.', 'upcase.png')[
+			context | 
 			val xtextDocument = context.xtextDocument
-			
-			val firstLetter = xtextDocument.get(issue.offset, 1)
-			xtextDocument.replace(issue.offset, 1, "_"+firstLetter)
+			System.out.print(acceptor.toString)
+			val lineofffset = xtextDocument.getLineOffset(issue.lineNumber - 1)
+			xtextDocument.replace(lineofffset, 20, "")
+				
 		]
 	}
 }
