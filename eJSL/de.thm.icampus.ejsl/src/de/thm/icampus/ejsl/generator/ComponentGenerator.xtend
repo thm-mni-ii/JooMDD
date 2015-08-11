@@ -178,6 +178,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	ON DELETE CASCADE,
 «ENDFOR»
 PRIMARY KEY (`id`)
+«FOR a:table.attributes»
+«IF a.isprimary»
+,  UNIQUE KEY («a.name»)
+«ENDIF»
+«ENDFOR»
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 '''
 	
