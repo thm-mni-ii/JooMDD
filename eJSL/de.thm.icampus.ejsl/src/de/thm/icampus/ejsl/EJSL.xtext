@@ -246,6 +246,7 @@ Plugin returns Plugin:
 		'Plugintype' '=' type=PluginKinds
 		('languages' '{' (languages+=Language)* '}')?
 		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('parameters' '{' (localparameters+=Parameter)* '}')?
 	'}'	
 ;
 
@@ -285,7 +286,7 @@ Method returns Method:
     'Method' name=MYID
     '{'
         //'Returnvalue' returnvalue=ID ':' type=[jvmTypes::JvmType|QualifiedName]
-        'Returnvalue' returnvalue=ID ':' type=Type
+        ('Returnvalue' returnvalue=ID ':' type=Type)?
         ('methodparameters' '{' (methodparameters+=MethodParameter)* '}')?
     '}'
 ;
@@ -302,6 +303,7 @@ Template returns Template:
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
+		('parameters' '{' (localparameters+=Parameter)* '}')?
 		('positions' '{' (positions+=Position)* '}')?
 		('cssblocks' '{' (cssblocks+=CssBlock)* '}')?
 	'}'

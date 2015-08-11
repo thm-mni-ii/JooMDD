@@ -149,6 +149,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PluginKinds"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
         upperBound="-1" eType="#//Entity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
+        eType="#//Parameter" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Library" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
@@ -187,6 +189,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Template" eSuperTypes="#//Extension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
+        eType="#//Parameter" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="positions" upperBound="-1"
         eType="#//Position" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cssblocks" upperBound="-1"
