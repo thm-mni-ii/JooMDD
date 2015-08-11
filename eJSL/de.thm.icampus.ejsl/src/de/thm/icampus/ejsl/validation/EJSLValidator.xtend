@@ -400,4 +400,26 @@ class EJSLValidator extends AbstractEJSLValidator {
 	def isUrlValid(String url) {
 		return httpUrlPattern.matcher(url).matches
 	}
+	
+	@Check
+	def checkPrimaryAttributeExist(Entity entity) {
+		var hasPrimary = false;
+		
+		for (attribute : entity.attributes) {
+			if(attribute.isIsprimary){
+				hasPrimary = true;
+			}
+		}
+		if(!hasPrimary){
+			error(
+					'Attributes must have a primary attribute.',
+					entity,
+					EJSLPackage.Literals.ENTITY__NAME,
+					MISSING_PRIMARY_ATTRIBUTE
+				)
+		}
+		
+	}
+	
+	
 }
