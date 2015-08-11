@@ -144,6 +144,7 @@
     <genClasses ecoreClass="EJSL.ecore#//Plugin">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Plugin/type"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Plugin/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Plugin/localparameters"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Library">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Library/entities"/>
@@ -173,6 +174,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//MethodParameter/type"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Template">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Template/localparameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Template/positions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Template/cssblocks"/>
     </genClasses>
