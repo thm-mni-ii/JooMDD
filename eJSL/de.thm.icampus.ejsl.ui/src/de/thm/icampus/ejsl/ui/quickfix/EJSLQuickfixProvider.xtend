@@ -128,5 +128,23 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 			val doc = context.xtextDocument
 			doc.replace((issue.offset - 1), (issue.length+1), " " )
 			]
-	}	
+	}
+	
+	@Fix(EJSLValidator::ENTITY_USED_MULTIPLE_TIMES)
+	def entityUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this entity', 'Delete this entity.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset - 1), (issue.length+1), " " )
+			]
+	}
+	
+	@Fix(EJSLValidator::EXTPACKAGE_CONTAINS_EXTPACKAGE)
+	def extpackageContainsExtpackage(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this Extension package', 'Delete this Extension package.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset), (issue.length), " " )
+			]
+	}
 }
