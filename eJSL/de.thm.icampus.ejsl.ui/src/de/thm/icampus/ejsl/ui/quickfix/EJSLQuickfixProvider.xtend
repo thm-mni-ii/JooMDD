@@ -10,6 +10,10 @@ import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.eJSL.Reference
+import de.thm.icampus.ejsl.eJSL.Manifestation
+import de.thm.icampus.ejsl.eJSL.Author
+import de.thm.icampus.ejsl.eJSL.Language
+import de.thm.icampus.ejsl.eJSL.Component
 
 /**
  * Custom quickfixes.
@@ -28,11 +32,10 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 
 	@Fix(EJSLValidator::AMBIGUOUS_LANGUAGE)
 	def deletedoubleLanguageKey(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Delete Language', 'Remove the LanguageKey.', 'default.png') [ context |
-			val xtextDocument = context.xtextDocument
-			System.out.print(acceptor.toString)
-			val lineofffset = xtextDocument.getLineOffset(issue.lineNumber - 1)
-			xtextDocument.replace(lineofffset, 20, "")
+		acceptor.accept(issue, 'Delete Language', 'Remove the LanguageKey.', '') [ language, context |
+			val doubleLang = language as Language
+			val c = doubleLang.eContainer as Component
+			c.languages.remove(doubleLang)
 		]
 	}
 
@@ -93,8 +96,20 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 	def attributename(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Add ID to attribute', 'Change the name.', '') [
 			context |
-			val xtextDocument = context.xtextDocument		
+			val xtextDocument = context.xtextDocument
 			xtextDocument.replace(issue.offset+issue.length-1, 1, "_ID_X ")
 			]
 	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_AUTHOR)
+	def uniqueManifestationAuthors(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Delete this author', 'Delete the name of the author.', '') [
+			element, context |
+			
+			val doubleAuthor = element as Author
+			val man = doubleAuthor.eContainer as Manifestation
+			man.authors.remove(doubleAuthor)
+		]
+	}
+	
 }
