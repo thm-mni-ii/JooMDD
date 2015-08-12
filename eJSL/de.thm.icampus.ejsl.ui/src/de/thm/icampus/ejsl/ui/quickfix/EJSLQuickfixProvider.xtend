@@ -112,4 +112,21 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 		]
 	}
 	
+	@Fix(EJSLValidator::AMBIGUOUS_PAGE)
+	def pagename(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to page', 'Change the name.', '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+	
+	@Fix(EJSLValidator::PAGE_USED_MULTIPLE_TIMES)
+	def pageUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this page', 'Delete this page.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset - 1), (issue.length+1), " " )
+			]
+	}	
 }
