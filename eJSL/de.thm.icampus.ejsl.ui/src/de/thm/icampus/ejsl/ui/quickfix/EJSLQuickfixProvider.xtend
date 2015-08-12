@@ -97,7 +97,7 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 				acceptor.accept(issue, 'Add ID to attribute', 'Change the name.', '') [
 			context |
 			val xtextDocument = context.xtextDocument
-			xtextDocument.replace(issue.offset+issue.length-1, 1, "_ID_X ")
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_X ")
 			]
 	}
 	

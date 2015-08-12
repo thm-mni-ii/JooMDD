@@ -434,5 +434,28 @@ class EJSLValidator extends AbstractEJSLValidator {
 			)
 		}
 	}
+	
+	@Check
+	def checkAttributename(Entity entity) {
+		for (attribute : entity.attributes) {			
+			if (attribute.name == "id") {				
+				error(
+					'\"id\" is not a valid attribute name!',
+					attribute,
+					EJSLPackage.Literals.ATTRIBUTE__NAME,
+					AMBIGUOUS_ATTRIBUTE_NAME
+				)
+			}
+			System.out.println("Name= "+attribute.name)
+			if(attribute.name == "ordering"||attribute.name =="state"||attribute.name =="checked_out" ||
+				attribute.name == "checked_out_time" ||attribute.name == "created_by"){ 				
+				warning("Attribute name should not be: " + attribute.name +"!",
+					attribute,
+					EJSLPackage.Literals.ATTRIBUTE__NAME,
+					AMBIGUOUS_ATTRIBUTE_NAME
+				)				
+			}
+		}
+	}	
 
 }
