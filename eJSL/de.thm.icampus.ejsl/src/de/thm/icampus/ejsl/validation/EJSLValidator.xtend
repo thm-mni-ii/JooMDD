@@ -251,7 +251,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 			}
 		}
 	}
-
+/*
 	@Check
 	def checkGlobalparametersAreUnique(Page p) {
 		var params = new HashSet<String>
@@ -267,7 +267,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 			}
 		}
 	}
-
+ */ // double Code
 	@Check
 	def checkPageGlobalparametersAreUnique(EJSLModel model) {
 		var params = new HashSet<String>

@@ -147,4 +147,13 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 			doc.replace((issue.offset), (issue.length), " " )
 			]
 	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_LOCALPARAMETER)
+	def localParameter(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to Parameter', 'Change the name.', '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}	
 }
