@@ -378,7 +378,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 	def checkAuthorEmailIsValid(Author author) {
 		if (!author.authoremail.isEmailAdressValid) {
 			warning(
-				'Invalid e-mail address.',
+				'Invalid e-mail address. Should be in this format: xxx@xx.xx',
 				EJSLPackage.Literals.AUTHOR__AUTHOREMAIL,
 				INVALID_AUTHOR_EMAIL
 			)
@@ -389,7 +389,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 	def checkAuthorUrlIsValid(Author author) {
 		if (!author.authorurl.isUrlValid) {
 			warning(
-				'Invalid URL.',
+				'Invalid URL. Should be in this format: http(s)//:www.xxx.xx',
 				EJSLPackage.Literals.AUTHOR__AUTHORURL,
 				INVALID_AUTHOR_URL
 			)
@@ -445,8 +445,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 					EJSLPackage.Literals.ATTRIBUTE__NAME,
 					AMBIGUOUS_ATTRIBUTE_NAME
 				)
-			}
-			System.out.println("Name= "+attribute.name)
+			}			
 			if(attribute.name == "ordering"||attribute.name =="state"||attribute.name =="checked_out" ||
 				attribute.name == "checked_out_time" ||attribute.name == "created_by"){ 				
 				warning("Attribute name should not be: " + attribute.name +"!",
