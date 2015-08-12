@@ -24,9 +24,9 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 
 	@Fix(EJSLValidator::AMBIGUOUS_ENTITY)
 	def addIDtoEntity(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Add ID to Entity', 'Change the name.', 'upcase.png') [ context |
+		acceptor.accept(issue, 'Add ID to Entity', 'Change the name.', '') [ context |
 			val xtextDocument = context.xtextDocument
-			xtextDocument.replace(issue.offset + issue.length, 1, "_ID_X ")
+			xtextDocument.replace(issue.offset + issue.length, 1, "_ID_"+ issue.lineNumber.toString +" " )
 		]
 	}
 
@@ -41,11 +41,11 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 
 	@Fix(EJSLValidator::AMBIGUOUS_DATATYPE)
 	def addIDtoDatatype(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Add ID to Datatype', 'Change the name.', 'upcase.png') [ context |
-			val xtextDocument = context.xtextDocument
-			xtextDocument.replace(issue.offset + issue.length - 1, 1, "_ID_X\" ")
+		acceptor.accept(issue, 'Add ID to Datatype', 'Change the name.', '') [ context |
+			val xtextDocument = context.xtextDocument					
+			xtextDocument.replace(issue.offset + issue.length - 1, 1, "_ID_"+ issue.lineNumber.toString +"\" ")
 		]
-		acceptor.accept(issue, 'Delete Datatype', 'Remove the Datatype.', 'upcase.png') [ context |
+		acceptor.accept(issue, 'Delete Datatype', 'Remove the Datatype.', '') [ context |
 			val xtextDocument = context.xtextDocument
 			System.out.print(acceptor.toString)
 			val lineofffset = xtextDocument.getLineOffset(issue.lineNumber - 1)
@@ -55,11 +55,11 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 
 	@Fix(EJSLValidator::INVALID_AUTHOR_URL)
 	def validURL(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Set "http" before', 'Setting HTTP:// before invalid URL', 'upcase.png') [ context |
+		acceptor.accept(issue, 'Set "http" before', 'Setting HTTP:// before invalid URL', '') [ context |
 			val xtextDocument = context.xtextDocument
 			xtextDocument.replace(issue.offset, 1, "\"http://") // http:// bevor "-char
 		]
-		acceptor.accept(issue, 'Set "https" before', 'Setting HTTPS:// before invalid URL', 'upcase.png') [ context |
+		acceptor.accept(issue, 'Set "https" before', 'Setting HTTPS:// before invalid URL', '') [ context |
 			val xtextDocument = context.xtextDocument
 			xtextDocument.replace(issue.offset, 1, "\"https://") // https:// bevor "-char
 		]
@@ -97,7 +97,7 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 				acceptor.accept(issue, 'Add ID to attribute', 'Change the name.', '') [
 			context |
 			val xtextDocument = context.xtextDocument
-			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_X ")
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
 			]
 	}
 	
