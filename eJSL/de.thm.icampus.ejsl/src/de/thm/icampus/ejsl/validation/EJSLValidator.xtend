@@ -53,6 +53,8 @@ class EJSLValidator extends AbstractEJSLValidator {
 	public static val PAGE_USED_MULTIPLE_TIMES = 'pageUsedMultipleTimes'
 	public static val MISSING_PRIMARY_ATTRIBUTE = 'missingPrimaryAttribute'
 	public static val NOT_PRIMARY_REFERENCE = 'notPrimaryReference'
+	public static val AMBIGUOUS_TABLE_COLUMN_ATTRIBUTE = 'ambiguousTableColumnAttribute'
+	public static val AMBIGUOUS_FILTER_ATTRIBUTE = 'ambiguousFilterAttribute'
 	
 
 	/**
@@ -456,5 +458,37 @@ class EJSLValidator extends AbstractEJSLValidator {
 			}
 		}
 	}	
+@Check
+    def nonDeclaredFilterAttribute(DynamicPage p){        
+        
+        for(filt : p.filters){
+            val enti = filt.eContainer as Entity
+            if(!p.entities.contains(enti)){
+                error(
+                        'Entity for the filter attribute must be declared before.',
+                        p,
+                        EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS,
+                        AMBIGUOUS_FILTER_ATTRIBUTE
+                    )
+            }
+        }
+    }
+
+    @Check
+    def nonDeclaredColumnAttribute(DynamicPage p){        
+        
+        for(column : p.tablecolumns){
+            val enti = column.eContainer as Entity
+            if(!p.entities.contains(enti)){
+                error(
+                        'Entity for the table column attribute must be declared before.',
+                        p,
+                        EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS,
+                        AMBIGUOUS_TABLE_COLUMN_ATTRIBUTE
+                    )
+            }
+        }
+    }
+
 
 }
