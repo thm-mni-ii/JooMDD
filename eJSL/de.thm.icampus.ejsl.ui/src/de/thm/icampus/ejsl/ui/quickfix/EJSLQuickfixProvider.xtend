@@ -19,6 +19,7 @@ import de.thm.icampus.ejsl.eJSL.IndexPage
 import de.thm.icampus.ejsl.eJSL.Entity
 import java.util.HashSet
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
+import de.thm.icampus.ejsl.eJSL.impl.EntityImpl
 
 /**
  * Custom quickfixes.
@@ -239,5 +240,47 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 			val xtextDocument = context.xtextDocument
 			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
 			]
+	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_FILTER_ATTRIBUTE)
+	def handleMissingFilterEntity(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Add the missing entity.', 'Add the missing entity to the page to fix this failure', '')[
+			page, context |
+			val p = page as IndexPage
+			for(f : p.filters){
+				val enti = f.eContainer as Entity
+				if(!p.entities.contains(enti)){
+					p.entities.add(enti)
+				}
+			}
+		]
+		acceptor.accept(issue, 'Remove this attribute', 'Remove this filter attribute to fix this failure', '') [
+			context |
+			val doc = context.xtextDocument
+			val off = issue.offset
+			doc.replace((issue.offset), (issue.length), " " )
+			deleteUntil(off, ",", doc)
+		]
+	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_TABLE_COLUMN_ATTRIBUTE)
+	def handleMissingTableColumnEntity(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Add the missing entity.', 'Add the missing entity to the page to fix this failure', '')[
+			page, context |
+			val p = page as IndexPage
+			for(tc : p.tablecolumns){
+				val enti = tc.eContainer as Entity
+				if(!p.entities.contains(enti)){
+					p.entities.add(enti)
+				}
+			}
+		]
+		acceptor.accept(issue, 'Remove this attribute', 'Remove this table column attribute to fix this failure', '') [
+			context |
+			val doc = context.xtextDocument
+			val off = issue.offset
+			doc.replace((issue.offset), (issue.length), " " )
+			deleteUntil(off, ",", doc)
+		]
 	}
 }
