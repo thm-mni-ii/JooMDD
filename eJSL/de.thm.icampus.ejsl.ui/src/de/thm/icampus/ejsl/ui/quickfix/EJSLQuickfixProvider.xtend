@@ -177,4 +177,67 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 				offset = offset-1
 			}
 	}
+	
+	@Fix(EJSLValidator::MORE_THAN_ONE_BACKEND)
+	def moreThanOneBackend(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this Backend', 'Delete this Backend.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset), (issue.length), " " )
+			]
+	}
+	
+	@Fix(EJSLValidator::MORE_THAN_ONE_FRONTEND)
+	def moreThanOneFronted(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this Fronted', 'Delete this Fronted.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset), (issue.length), " " )
+			]
+	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_GLOBALPARAMETER)
+	def globalParameter(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to Parameter', "Change the name of the parameter.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_CLASS)
+	def className(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to Class', "Change the name of the Class.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+	
+	@Fix(EJSLValidator::AMBIGUOUS_EXTENSION)
+	def extensionName(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to extension', "Change the name of the extension.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+
+	@Fix(EJSLValidator::AMBIGUOUS_KEY)
+	def keyValuePairsName(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Delete Name and give a unique one', "Change the name of the the keyvalue.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset, issue.length, "x_"+ issue.lineNumber.toString +" " )
+			]
+	}
+
+	@Fix(EJSLValidator::AMBIGUOUS_METHOD)
+	def methodeName(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to methode', "Change the name of the methode.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
 }
