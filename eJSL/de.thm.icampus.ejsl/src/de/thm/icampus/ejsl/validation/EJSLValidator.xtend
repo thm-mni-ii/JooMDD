@@ -55,6 +55,8 @@ class EJSLValidator extends AbstractEJSLValidator {
 	public static val NOT_PRIMARY_REFERENCE = 'notPrimaryReference'
 	public static val AMBIGUOUS_TABLE_COLUMN_ATTRIBUTE = 'ambiguousTableColumnAttribute'
 	public static val AMBIGUOUS_FILTER_ATTRIBUTE = 'ambiguousFilterAttribute'
+	public static val COLUMNS_USED_MULTIPLE_TIMES = 'columnsUsedMultipleTimes'
+	public static val FILTER_USED_MULTIPLE_TIMES = 'filterUsedMultipleTimes'
 	
 
 	/**
@@ -253,23 +255,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 			}
 		}
 	}
-/*
-	@Check
-	def checkGlobalparametersAreUnique(Page p) {
-		var params = new HashSet<String>
 
-		for (param : p.localparameters) {
-			if (!params.add(param.name)) {
-				error(
-					'Localparameter name must be unique per page.',
-					param,
-					EJSLPackage.Literals.PARAMETER__NAME,
-					AMBIGUOUS_LOCALPARAMETER
-				)
-			}
-		}
-	}
- */ // double Code
 	@Check
 	def checkPageGlobalparametersAreUnique(EJSLModel model) {
 		var params = new HashSet<String>
@@ -379,7 +365,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 	@Check
 	def checkAuthorEmailIsValid(Author author) {
 		if (!author.authoremail.isEmailAdressValid) {
-			warning(
+			error(
 				'Invalid e-mail address. Should be in this format: xxx@xx.xx',
 				EJSLPackage.Literals.AUTHOR__AUTHOREMAIL,
 				INVALID_AUTHOR_EMAIL
@@ -489,6 +475,33 @@ class EJSLValidator extends AbstractEJSLValidator {
             }
         }
     }
-
+    
+	@Check
+	def checkTableColumnsAreUnique(DynamicPage p){
+		var columns = new HashSet<String>
+		for (column : p.tablecolumns)
+			if (!columns.add(column.name)) {
+				error(
+                        'Entity for the table column used multiple times.',
+                        p,
+                        EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS,
+                        COLUMNS_USED_MULTIPLE_TIMES
+                    )
+			}
+	}
+	
+	@Check
+	def checkFiltersAreUnique(DynamicPage p){
+		var filters = new HashSet<String>
+		for (filter : p.filters)
+			if (!filters.add(filter.name)) {
+				error(
+                        'Entity for the filter used multiple times.',
+                        p,
+                        EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS,
+                        FILTER_USED_MULTIPLE_TIMES
+                    )
+			}
+	}
 
 }

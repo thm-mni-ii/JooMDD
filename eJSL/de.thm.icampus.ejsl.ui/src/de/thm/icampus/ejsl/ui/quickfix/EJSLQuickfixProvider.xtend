@@ -3,30 +3,27 @@
  */
 package de.thm.icampus.ejsl.ui.quickfix
 
+import de.thm.icampus.ejsl.eJSL.Attribute
+import de.thm.icampus.ejsl.eJSL.Author
+import de.thm.icampus.ejsl.eJSL.Component
+import de.thm.icampus.ejsl.eJSL.Entity
+import de.thm.icampus.ejsl.eJSL.IndexPage
+import de.thm.icampus.ejsl.eJSL.Language
+import de.thm.icampus.ejsl.eJSL.Manifestation
+import de.thm.icampus.ejsl.eJSL.Reference
 import de.thm.icampus.ejsl.validation.EJSLValidator
-
+import org.eclipse.xtext.ui.editor.model.IXtextDocument
+import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
-import de.thm.icampus.ejsl.eJSL.Attribute
-import de.thm.icampus.ejsl.eJSL.Reference
-import de.thm.icampus.ejsl.eJSL.Manifestation
-import de.thm.icampus.ejsl.eJSL.Author
-import de.thm.icampus.ejsl.eJSL.Language
-import de.thm.icampus.ejsl.eJSL.Component
-import de.thm.icampus.ejsl.eJSL.Page
-import de.thm.icampus.ejsl.eJSL.IndexPage
-import de.thm.icampus.ejsl.eJSL.Entity
-import java.util.HashSet
-import org.eclipse.xtext.ui.editor.model.IXtextDocument
-import de.thm.icampus.ejsl.eJSL.impl.EntityImpl
 
 /**
  * Custom quickfixes.
  * 
  * see http://www.eclipse.org/Xtext/documentation.html#quickfixes
  */
-class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider {
+class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 
 	@Fix(EJSLValidator::AMBIGUOUS_ENTITY)
 	def addIDtoEntity(Issue issue, IssueResolutionAcceptor acceptor) {
@@ -283,4 +280,27 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 			deleteUntil(off, ",", doc)
 		]
 	}
+	
+	@Fix(EJSLValidator::FILTER_USED_MULTIPLE_TIMES)			
+	def filterUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this filter', 'Delete this filter.', '') [
+			context |
+			val doc = context.xtextDocument
+			var off = issue.offset			
+			doc.replace((issue.offset), (issue.length), "" )
+			deleteUntil(off, ",", doc)
+			]
+	}
+	
+	@Fix(EJSLValidator::COLUMNS_USED_MULTIPLE_TIMES)			
+	def tableColumnUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this table column', 'Delete this table column.', '') [
+			context |
+			val doc = context.xtextDocument
+			var off = issue.offset			
+			doc.replace((issue.offset), (issue.length), "" )
+			deleteUntil(off, ",", doc)
+			]	
+	}		
+	
 }
