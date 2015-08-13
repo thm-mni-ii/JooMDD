@@ -14,6 +14,11 @@ import de.thm.icampus.ejsl.eJSL.Manifestation
 import de.thm.icampus.ejsl.eJSL.Author
 import de.thm.icampus.ejsl.eJSL.Language
 import de.thm.icampus.ejsl.eJSL.Component
+import de.thm.icampus.ejsl.eJSL.Page
+import de.thm.icampus.ejsl.eJSL.IndexPage
+import de.thm.icampus.ejsl.eJSL.Entity
+import java.util.HashSet
+import org.eclipse.xtext.ui.editor.model.IXtextDocument
 
 /**
  * Custom quickfixes.
@@ -135,7 +140,10 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 				acceptor.accept(issue, 'Remove this entity', 'Delete this entity.', '') [
 			context |
 			val doc = context.xtextDocument
-			doc.replace((issue.offset - 1), (issue.length+1), " " )
+			var off = issue.offset
+			
+			doc.replace((issue.offset), (issue.length), "" )
+			deleteUntil(off, ",", doc)
 			]
 	}
 	
@@ -156,4 +164,17 @@ class EJSLQuickfixProvider extends org.eclipse.xtext.ui.editor.quickfix.DefaultQ
 			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
 			]
 	}	
+	
+	def deleteUntil(int off, String searchChar, IXtextDocument doc){
+		var offset = off
+		var e=true
+		while(e){
+				var getchar = doc.get((offset -1), 1)
+				if(getchar.equals(searchChar)){
+					e=false
+				}
+				doc.replace((offset - 1), (1), "" )
+				offset = offset-1
+			}
+	}
 }
