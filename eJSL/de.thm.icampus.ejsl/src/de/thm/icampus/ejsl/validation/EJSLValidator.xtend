@@ -445,6 +445,9 @@ class EJSLValidator extends AbstractEJSLValidator {
 		}
 	}
 	
+	/**
+	 * Check if the entity in the filter is declared 
+ 	*/
 	@Check
     def nonDeclaredFilterAttribute(DynamicPage p){ 
         for(filt : p.filters){
@@ -460,6 +463,9 @@ class EJSLValidator extends AbstractEJSLValidator {
         }
     }
 
+	/**
+	 * Check if the entity in the table column is declared 
+ 	*/
     @Check
     def nonDeclaredColumnAttribute(DynamicPage p){   
         for(column : p.tablecolumns){
@@ -475,6 +481,9 @@ class EJSLValidator extends AbstractEJSLValidator {
         }
     }
 
+	/**
+	 * Check table column are only one time in a page
+	 */
 	@Check
 	def checkTableColumnsAreUnique(DynamicPage p){
 		var enticolumns = new HashSet<String>
@@ -490,7 +499,10 @@ class EJSLValidator extends AbstractEJSLValidator {
 			}	
 		}
 	}
-
+	
+	/**
+	 * Check Filters are only one time in a page
+	 */
 	@Check
 	def checkFiltersAreUnique(DynamicPage p){
 		var entifilters = new HashSet<String>

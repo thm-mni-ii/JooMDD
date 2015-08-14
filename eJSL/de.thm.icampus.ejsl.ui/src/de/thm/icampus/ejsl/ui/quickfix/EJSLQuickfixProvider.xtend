@@ -37,7 +37,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 
 	@Fix(EJSLValidator::AMBIGUOUS_LANGUAGE)
 	def deletedoubleLanguageKey(Issue issue, IssueResolutionAcceptor acceptor) {
-		acceptor.accept(issue, 'Delete Language', 'Remove the LanguageKey.', '') [ language, context |
+		acceptor.accept(issue, 'Hilf mir Quickfix', 'Remove the LanguageKey.', '') [ language, context |
 			val doubleLang = language as Language
 			val c = doubleLang.eContainer as Component
 			c.languages.remove(doubleLang)
@@ -52,9 +52,9 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 		]
 		acceptor.accept(issue, 'Delete Datatype', 'Remove the Datatype.', '') [ context |
 			val xtextDocument = context.xtextDocument
-			System.out.print(acceptor.toString)
-			val lineofffset = xtextDocument.getLineOffset(issue.lineNumber - 1)
-			xtextDocument.replace(lineofffset, 20, "")
+			val doc = context.xtextDocument
+			xtextDocument.replace(issue.offset, issue.length, "")
+			deleteUntil(issue.offset,",",doc)			
 		]
 	}
 
