@@ -17,6 +17,8 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
+import de.thm.icampus.ejsl.eJSL.DynamicPage
+import java.util.HashSet
 
 /**
  * Custom quickfixes.
@@ -251,12 +253,10 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 				}
 			}
 		]
-		acceptor.accept(issue, 'Remove this attribute', 'Remove this filter attribute to fix this failure', '') [
+		acceptor.accept(issue, 'Remove this page', 'Remove this page to fix this failure', '') [
 			context |
-			val doc = context.xtextDocument
-			val off = issue.offset
+			val doc = context.xtextDocument			
 			doc.replace((issue.offset), (issue.length), " " )
-			deleteUntil(off, ",", doc)
 		]
 	}
 	
@@ -272,35 +272,59 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 				}
 			}
 		]
-		acceptor.accept(issue, 'Remove this attribute', 'Remove this table column attribute to fix this failure', '') [
+		acceptor.accept(issue, 'Remove this page', 'Remove this page to fix this failure', '') [
 			context |
-			val doc = context.xtextDocument
-			val off = issue.offset
-			doc.replace((issue.offset), (issue.length), " " )
-			deleteUntil(off, ",", doc)
+			val doc = context.xtextDocument			
+			doc.replace((issue.offset), (issue.length), " " )			
 		]
 	}
 	
 	@Fix(EJSLValidator::FILTER_USED_MULTIPLE_TIMES)			
 	def filterUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
-				acceptor.accept(issue, 'Remove this filter', 'Delete this filter.', '') [
+				acceptor.accept(issue, 'Remove this page', 'Delete the whole page.', '') [
 			context |
-			val doc = context.xtextDocument
-			var off = issue.offset			
-			doc.replace((issue.offset), (issue.length), "" )
-			deleteUntil(off, ",", doc)
+			val doc = context.xtextDocument					
+			doc.replace((issue.offset), (issue.length), "" )			
+			]
+				acceptor.accept(issue, 'Remove this multiple filter', 'Delete this filter.', '') [
+			page,context |
+			val p = page as DynamicPage
+			var entiattr = new HashSet<Attribute>
+			for (attr : p.filters) {
+				val enti = attr.eContainer as Entity				
+				if (!entiattr.add(attr)) {
+					p.filters.remove(enti)					
+				}
+			}
+			p.filters.clear
+			for (var i=0; i< entiattr.size; i++){				
+				p.filters.add(i,entiattr.get(i))	
+			}			
 			]
 	}
 	
 	@Fix(EJSLValidator::COLUMNS_USED_MULTIPLE_TIMES)			
 	def tableColumnUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
-				acceptor.accept(issue, 'Remove this table column', 'Delete this table column.', '') [
+				acceptor.accept(issue, 'Remove this multiple table column', 'Delete this table column.', '') [
+			page, context | 
+			val p = page as DynamicPage
+			var entiattr = new HashSet<Attribute>
+			for (attr : p.tablecolumns) {
+				val enti = attr.eContainer as Entity				
+				if (!entiattr.add(attr)) { 					
+					p.tablecolumns.remove(enti)					
+				}
+			}
+			p.tablecolumns.clear
+			for (var i=0; i< entiattr.size; i++){				
+				p.tablecolumns.add(i,entiattr.get(i))	
+			}
+			]
+				acceptor.accept(issue, 'Remove this page', 'Delete the whole page.', '') [
 			context |
-			val doc = context.xtextDocument
-			var off = issue.offset			
-			doc.replace((issue.offset), (issue.length), "" )
-			deleteUntil(off, ",", doc)
-			]	
+			val doc = context.xtextDocument					
+			doc.replace((issue.offset), (issue.length), "" )			
+			]
 	}		
 	
 }

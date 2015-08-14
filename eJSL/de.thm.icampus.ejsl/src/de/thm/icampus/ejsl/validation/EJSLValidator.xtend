@@ -443,17 +443,17 @@ class EJSLValidator extends AbstractEJSLValidator {
 				)				
 			}
 		}
-	}	
-@Check
-    def nonDeclaredFilterAttribute(DynamicPage p){        
-        
+	}
+	
+	@Check
+    def nonDeclaredFilterAttribute(DynamicPage p){ 
         for(filt : p.filters){
             val enti = filt.eContainer as Entity
             if(!p.entities.contains(enti)){
                 error(
                         'Entity for the filter attribute must be declared before.',
                         p,
-                        EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS,
+                        EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
                         AMBIGUOUS_FILTER_ATTRIBUTE
                     )
             }
@@ -461,47 +461,49 @@ class EJSLValidator extends AbstractEJSLValidator {
     }
 
     @Check
-    def nonDeclaredColumnAttribute(DynamicPage p){        
-        
+    def nonDeclaredColumnAttribute(DynamicPage p){   
         for(column : p.tablecolumns){
             val enti = column.eContainer as Entity
             if(!p.entities.contains(enti)){
                 error(
                         'Entity for the table column attribute must be declared before.',
                         p,
-                        EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS,
+                        EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
                         AMBIGUOUS_TABLE_COLUMN_ATTRIBUTE
                     )
             }
         }
     }
-    
+
 	@Check
 	def checkTableColumnsAreUnique(DynamicPage p){
-		var columns = new HashSet<String>
-		for (column : p.tablecolumns)
-			if (!columns.add(column.name)) {
+		var enticolumns = new HashSet<String>
+		for (column : p.tablecolumns){
+			val enti = column.eContainer as Entity	
+			if (!enticolumns.add(enti.name+column.name)) {
 				error(
-                        'Entity for the table column used multiple times.',
+                        'table column used multiple times in this Page.',
                         p,
-                        EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS,
+                        EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
                         COLUMNS_USED_MULTIPLE_TIMES
                     )
-			}
-	}
-	
-	@Check
-	def checkFiltersAreUnique(DynamicPage p){
-		var filters = new HashSet<String>
-		for (filter : p.filters)
-			if (!filters.add(filter.name)) {
-				error(
-                        'Entity for the filter used multiple times.',
-                        p,
-                        EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS,
-                        FILTER_USED_MULTIPLE_TIMES
-                    )
-			}
+			}	
+		}
 	}
 
+	@Check
+	def checkFiltersAreUnique(DynamicPage p){
+		var entifilters = new HashSet<String>
+		for (filter : p.filters){
+			val enti = filter.eContainer as Entity	
+			if (!entifilters.add(enti.name+filter.name)) {
+				error(
+                        'Filter used multiple times in this Page!',
+                        p,
+                        EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
+                        FILTER_USED_MULTIPLE_TIMES
+                    )
+			}	
+		}
+	}
 }
