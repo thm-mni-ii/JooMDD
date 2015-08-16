@@ -36,7 +36,7 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 			c.setLinewrap(0).before(pair.getFirst())
 			c.setLinewrap(1).after(pair.getFirst())
 			c.setLinewrap(1).before(pair.getSecond())
-			c.setLinewrap(1, 1, 1).after(pair.getSecond())
+			c.setLinewrap(1, 1, 1).after(pair.getSecond())    // Linewrap must be (1,1,1) or else there will be some white lines before the }-keyword
 		}
 
 		/* Whitespace after ":" and "," but not before */
@@ -102,7 +102,10 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 		c.setLinewrap(1).after(keyValuePairAccess.valueSTRINGTerminalRuleCall_4_0)
 		
 		
-		/* New formatting rules SS15 */
+		/* 	New formatting rules SS15: 
+			set a Linewrap before the following keywords (table columns, filters, dbtype, ...) 
+			to set the belonging attributes under each other
+		*/
 		for (Keyword k : findKeywords("table columns")) {
 			c.setLinewrap.before(k)
 		}
