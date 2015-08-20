@@ -1,6 +1,6 @@
 /**
  */
-package de.thm.icampus.ejsl.generator;
+package de.thm.icampus.ejsl.generator.pages;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -16,6 +16,6 @@ import org.eclipse.emf.ecore.EObject;
  */
 abstract public class AbstractLinkGenerator  {
 	
-	public def CharSequence generateLink();
+	public def CharSequence generateLink(String sect, String compname);
 	
 } // AbstractLinkGenerator

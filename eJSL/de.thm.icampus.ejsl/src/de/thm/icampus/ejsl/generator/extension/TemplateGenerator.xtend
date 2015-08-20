@@ -1,11 +1,14 @@
 /**
  */
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.^extension
 
 import de.thm.icampus.ejsl.eJSL.Template
 import org.eclipse.xtext.generator.IFileSystemAccess
 import java.util.Calendar
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.generator.util.ProtectedRegion
+import de.thm.icampus.ejsl.generator.util.KVPairGeneratorClient
 
 /**
  * <!-- begin-user-doc -->
@@ -242,7 +245,7 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
-	override setSlug(Slug slug) {
+	override setSlug( Slug slug) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
@@ -250,7 +253,7 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
-	override setKvPairClient(KVPairGeneratorClient e) {
+	override setKvPairClient( KVPairGeneratorClient e) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 

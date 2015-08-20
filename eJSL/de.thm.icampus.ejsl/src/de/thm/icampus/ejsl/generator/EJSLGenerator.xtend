@@ -8,6 +8,7 @@ import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.eJSL.EJSLModel
 import de.thm.icampus.ejsl.eJSL.Extension
+import de.thm.icampus.ejsl.generator.^extension.ExtensionGeneratorClient
 
 /**
  * Generates code from your model files on save.

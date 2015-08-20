@@ -1,6 +1,6 @@
 /**
  */
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.pages
 
 import de.thm.icampus.ejsl.eJSL.Page
 

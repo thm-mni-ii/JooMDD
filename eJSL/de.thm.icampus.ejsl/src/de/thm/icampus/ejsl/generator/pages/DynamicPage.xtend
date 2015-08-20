@@ -1,6 +1,6 @@
 /**
  */
-package de.thm.icampus.ejsl.generator;
+package de.thm.icampus.ejsl.generator.pages;
 
 import de.thm.icampus.ejsl.eJSL.Page
 import de.thm.icampus.ejsl.eJSL.Component
@@ -11,6 +11,7 @@ import de.thm.icampus.ejsl.eJSL.Parameter
 import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.eJSL.ParameterGroup
+import de.thm.icampus.ejsl.generator.util.Slug
 
 /**
  * <!-- begin-user-doc -->
@@ -123,10 +124,13 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 	override getLinkClient() {
 	}
 
-	override setLinkClient(LinkGeneratorClient value) {
-	}
+
 
 	override generatePage() {
+	}
+	
+	override setLinkClient(LinkGeneratorClient value) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
 } // DynamicPage

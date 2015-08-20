@@ -1,14 +1,15 @@
 /**
  */
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.^extension
 
-import de.thm.icampus.ejsl.generator.Slug
 import de.thm.icampus.ejsl.eJSL.Plugin
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.eJSL.Language
 import java.util.Calendar
-import de.thm.icampus.ejsl.generator.AbstractExtensionGenerator
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.generator.util.ProtectedRegion
+import de.thm.icampus.ejsl.generator.util.KVPairGeneratorClient
 
 /**
  * <!-- begin-user-doc -->

@@ -1,17 +1,18 @@
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.pages
 
 import de.thm.icampus.ejsl.eJSL.DetailsPage
 import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.Section
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.generator.util.Slug
 
-class DetailsPageTemplate extends DynamicPageTemplate {
+class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	private DetailsPage dpage
 	private Component  com
 	private String sec
-	private DetailsPageTemplateBackendHelper backHelp
-	private DetailsPageTemplateFrontEndHelper frontHelp
+	private   DetailsPageTemplateBackendHelper backHelp
+	private   DetailsPageTemplateFrontEndHelper frontHelp
 	private String path
 	private String pagename
 	
@@ -20,8 +21,8 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		dpage = dp
 		com = cp
 		sec = section
-		backHelp = new DetailsPageTemplateBackendHelper(dpage, com, sec)
-		frontHelp = new DetailsPageTemplateFrontEndHelper(dpage, com, sec)
+		backHelp = new   DetailsPageTemplateBackendHelper(dpage, com, sec)
+		frontHelp = new   DetailsPageTemplateFrontEndHelper(dpage, com, sec)
 		this.path = path
 		pagename = dpage.name.toLowerCase
 		this.fsa = fsa

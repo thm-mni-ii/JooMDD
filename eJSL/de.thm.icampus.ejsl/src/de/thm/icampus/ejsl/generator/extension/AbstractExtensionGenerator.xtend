@@ -1,6 +1,6 @@
 /**
  */
-package de.thm.icampus.ejsl.generator;
+package de.thm.icampus.ejsl.generator.^extension;
 
 import de.thm.icampus.ejsl.eJSL.Author
 import org.eclipse.emf.common.util.EList
@@ -10,6 +10,9 @@ import de.thm.icampus.ejsl.eJSL.Type
 import de.thm.icampus.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.ejsl.eJSL.SimpleDatatypes
 import de.thm.icampus.ejsl.eJSL.Parameter
+import de.thm.icampus.ejsl.generator.util.ProtectedRegion
+import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.generator.util.KVPairGeneratorClient
 
 abstract public class AbstractExtensionGenerator {
 

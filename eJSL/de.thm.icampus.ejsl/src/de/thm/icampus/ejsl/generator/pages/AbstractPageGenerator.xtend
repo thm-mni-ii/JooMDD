@@ -1,6 +1,6 @@
 /**
  */
-package de.thm.icampus.ejsl.generator;
+package de.thm.icampus.ejsl.generator.pages;
 
 import org.eclipse.emf.ecore.EObject;
 import de.thm.icampus.ejsl.eJSL.Type
@@ -13,9 +13,9 @@ abstract public class AbstractPageGenerator {
 	@Property String name
 	@Property String path = ""
 	
-	public def LinkGeneratorClient getLinkClient();
+	public def  LinkGeneratorClient getLinkClient();
 
-	 def void setLinkClient(LinkGeneratorClient value);
+	 def void setLinkClient( LinkGeneratorClient value);
 	 
 	 public def CharSequence generatePage();
 	 

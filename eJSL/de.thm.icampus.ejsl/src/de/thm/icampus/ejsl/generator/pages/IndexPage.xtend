@@ -1,4 +1,4 @@
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.pages
 
 import de.thm.icampus.ejsl.eJSL.IndexPage
 import de.thm.icampus.ejsl.eJSL.Component
@@ -8,6 +8,7 @@ import de.thm.icampus.ejsl.eJSL.Entity
 import java.util.List
 import de.thm.icampus.ejsl.eJSL.Attribute
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.generator.util.Slug
 
 class IndexPageTemplate extends DynamicPageTemplate {
 
