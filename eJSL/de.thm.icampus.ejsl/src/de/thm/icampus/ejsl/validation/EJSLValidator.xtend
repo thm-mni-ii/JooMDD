@@ -50,6 +50,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 	public static val MORE_THAN_ONE_BACKEND = 'moreThanOneBackend'
 	public static val MORE_THAN_ONE_FRONTEND = 'moreThanOneFrontend'
 	public static val PAGE_USED_MULTIPLE_TIMES = 'pageUsedMultipleTimes'
+	public static val MISSING_PRIMARY_ATTRIBUTE = 'missingPrimaryAttribute'
 
 	/**
 	 * A domain consists of one or more domain parts. A domain part may contain
@@ -399,4 +400,26 @@ class EJSLValidator extends AbstractEJSLValidator {
 	def isUrlValid(String url) {
 		return httpUrlPattern.matcher(url).matches
 	}
+	
+	@Check
+	def checkPrimaryAttributeExist(Entity entity) {
+		var hasPrimary = false;
+		
+		for (attribute : entity.attributes) {
+			if(attribute.isIsprimary){
+				hasPrimary = true;
+			}
+		}
+		if(!hasPrimary){
+			error(
+					'Attributes must have a primary attribute.',
+					entity,
+					EJSLPackage.Literals.ENTITY__NAME,
+					MISSING_PRIMARY_ATTRIBUTE
+				)
+		}
+		
+	}
+	
+	
 }
