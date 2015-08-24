@@ -1,6 +1,6 @@
 /**
  */
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.^extension
 
 import de.thm.icampus.ejsl.eJSL.Library
 import de.thm.icampus.ejsl.eJSL.Package
@@ -8,6 +8,9 @@ import java.util.Calendar
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.eJSL.Type
+import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.generator.util.ProtectedRegion
+import de.thm.icampus.ejsl.generator.util.KVPairGeneratorClient
 
 /**
  * <!-- begin-user-doc -->

@@ -1,6 +1,6 @@
 /**
  */
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.^extension
 
 import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.ExtensionPackage
@@ -11,6 +11,9 @@ import de.thm.icampus.ejsl.eJSL.Template
 import java.util.Calendar
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.generator.util.ProtectedRegion
+import de.thm.icampus.ejsl.generator.util.KVPairGeneratorClient
+import de.thm.icampus.ejsl.generator.util.Slug
 
 public class PackageGenerator extends AbstractExtensionGenerator {
 	

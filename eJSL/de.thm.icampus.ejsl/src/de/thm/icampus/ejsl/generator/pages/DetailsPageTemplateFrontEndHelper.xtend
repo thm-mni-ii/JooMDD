@@ -1,9 +1,10 @@
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.pages
 
 import de.thm.icampus.ejsl.eJSL.DetailsPage
 import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.Section
 import de.thm.icampus.ejsl.eJSL.Attribute
+import de.thm.icampus.ejsl.generator.util.Slug
 
 class DetailsPageTemplateFrontEndHelper {
 	private DetailsPage dpage

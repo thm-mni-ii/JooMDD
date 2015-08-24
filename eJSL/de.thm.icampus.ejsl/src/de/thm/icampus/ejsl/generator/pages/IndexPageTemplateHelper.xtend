@@ -1,4 +1,4 @@
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.pages
 
 import de.thm.icampus.ejsl.eJSL.DetailsPage
 import de.thm.icampus.ejsl.eJSL.Component
@@ -7,6 +7,7 @@ import de.thm.icampus.ejsl.eJSL.IndexPage
 import org.eclipse.emf.common.util.EList
 import java.util.HashSet
 import java.util.Set
+import de.thm.icampus.ejsl.generator.util.Slug
 
 class IndexPageTemplateHelper {
 	private IndexPage dpage

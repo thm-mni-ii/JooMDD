@@ -1,6 +1,6 @@
 /**
  */
-package de.thm.icampus.ejsl.generator
+package de.thm.icampus.ejsl.generator.^extension
 
 import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.Extension
