@@ -247,7 +247,7 @@ Module returns Module:
 		('languages' '{' (languages+=Language)* '}')?
 		
 		'*Pages' '{'
-			pageRef += PageReference*
+			pageRef = PageReference*
 		'}'
 	'}'	
 ;
