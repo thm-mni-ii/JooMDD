@@ -245,10 +245,7 @@ Module returns Module:
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
-		
-		'*Pages' '{'
-			pageRef = PageReference*
-		'}'
+		('*Page ' page=PageReference)?
 	'}'	
 ;
 
