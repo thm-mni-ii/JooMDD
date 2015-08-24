@@ -233,7 +233,9 @@ Frontend returns FrontendSection:
 	{FrontendSection}
 	'Frontend section' 
 	'{'
-		('*Pages' page+=[Page|QualifiedName] (',' page+=[Page|QualifiedName])*)?
+		'*Pages' '{'
+			pageRef += PageReference*
+		'}'
 	'}'
 ;
 
@@ -243,7 +245,10 @@ Module returns Module:
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
-		'*Page ' page=[Page|QualifiedName] ('from: ' pagescr=[Section|QualifiedName])?
+		
+		'*Pages' '{'
+			pageRef += PageReference*
+		'}'
 	'}'	
 ;
 
