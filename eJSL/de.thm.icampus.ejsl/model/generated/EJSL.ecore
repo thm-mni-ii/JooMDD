@@ -101,7 +101,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Link"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Link">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="linkedAttribute" eType="#//Attribute"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExternalLink" eSuperTypes="#//Link">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -136,14 +138,22 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="sections" upperBound="-1"
         eType="#//Section" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Section">
+  <eClassifiers xsi:type="ecore:EClass" name="Section"/>
+  <eClassifiers xsi:type="ecore:EClass" name="BackendSection" eSuperTypes="#//Section">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageRef" upperBound="-1"
+        eType="#//PageReference" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PageReference">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pagescr" eType="#//Section"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FrontendSection" eSuperTypes="#//Section">
     <eStructuralFeatures xsi:type="ecore:EReference" name="page" unique="false" upperBound="-1"
         eType="#//Page"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BackendSection" eSuperTypes="#//Section"/>
-  <eClassifiers xsi:type="ecore:EClass" name="FrontendSection" eSuperTypes="#//Section"/>
   <eClassifiers xsi:type="ecore:EClass" name="Module" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pagescr" eType="#//Section"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Plugin" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PluginKinds"/>

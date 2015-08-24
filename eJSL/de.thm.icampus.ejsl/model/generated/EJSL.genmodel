@@ -104,7 +104,9 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//IndexPage"/>
     <genClasses ecoreClass="EJSL.ecore#//DetailsPage"/>
-    <genClasses ecoreClass="EJSL.ecore#//Link"/>
+    <genClasses ecoreClass="EJSL.ecore#//Link">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Link/linkedAttribute"/>
+    </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//ExternalLink">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//ExternalLink/target"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//ExternalLink/label"/>
@@ -133,13 +135,20 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Component/globalParamter"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Component/sections"/>
     </genClasses>
-    <genClasses ecoreClass="EJSL.ecore#//Section">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Section/page"/>
+    <genClasses ecoreClass="EJSL.ecore#//Section"/>
+    <genClasses ecoreClass="EJSL.ecore#//BackendSection">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//BackendSection/pageRef"/>
     </genClasses>
-    <genClasses ecoreClass="EJSL.ecore#//BackendSection"/>
-    <genClasses ecoreClass="EJSL.ecore#//FrontendSection"/>
+    <genClasses ecoreClass="EJSL.ecore#//PageReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//PageReference/page"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//PageReference/pagescr"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//FrontendSection">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//FrontendSection/page"/>
+    </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Module">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Module/page"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Module/pagescr"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Plugin">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Plugin/type"/>
