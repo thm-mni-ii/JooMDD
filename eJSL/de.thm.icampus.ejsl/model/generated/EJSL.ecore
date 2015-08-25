@@ -138,22 +138,20 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="sections" upperBound="-1"
         eType="#//Section" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Section"/>
-  <eClassifiers xsi:type="ecore:EClass" name="BackendSection" eSuperTypes="#//Section">
+  <eClassifiers xsi:type="ecore:EClass" name="Section">
     <eStructuralFeatures xsi:type="ecore:EReference" name="pageRef" upperBound="-1"
         eType="#//PageReference" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BackendSection" eSuperTypes="#//Section"/>
   <eClassifiers xsi:type="ecore:EClass" name="PageReference">
     <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="pagescr" eType="#//Section"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pagescr" eType="#//Component"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sect" eType="#//SectionReference"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="FrontendSection" eSuperTypes="#//Section">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="page" unique="false" upperBound="-1"
-        eType="#//Page"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FrontendSection" eSuperTypes="#//Section"/>
   <eClassifiers xsi:type="ecore:EClass" name="Module" eSuperTypes="#//Extension">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="pagescr" eType="#//Section"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageRef" eType="#//PageReference"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Plugin" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//PluginKinds"/>
@@ -267,5 +265,9 @@
     <eLiterals name="int" value="2" literal="int"/>
     <eLiterals name="float" value="3" literal="float"/>
     <eLiterals name="array" value="4" literal="array"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SectionReference">
+    <eLiterals name="backend" literal=".backend"/>
+    <eLiterals name="frontend" value="1" literal=".frontend"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -22,6 +22,7 @@ import java.util.regex.Pattern
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.validation.Check
+import org.eclipse.emf.ecore.EStructuralFeature
 
 /**
  * Custom validation rules. 
@@ -72,6 +73,8 @@ class EJSLValidator extends AbstractEJSLValidator {
 	 * http:// and https://
 	 */
 	public static val httpUrlPattern = Pattern.compile("https?://" + domainPattern + "(/.*)?")
+	
+	static EStructuralFeature SECTION__PAGE
 
 	@Check
 	def checkDatatypesAreUnique(EJSLModel model) {
@@ -358,11 +361,11 @@ class EJSLValidator extends AbstractEJSLValidator {
 		var pages = new HashSet<String>
 
 		var i = 0
-		for (page : section.page) {
-			if (!pages.add(page.name)) {
+		for (page : section.pageRef) {
+			if (!pages.add(page.page.name)) {
 				warning(
 					'Page is used multiple times for this section.',
-					EJSLPackage.Literals.SECTION__PAGE,
+					EJSLPackage.Literals.SECTION__PAGE_REF,
 					i,
 					PAGE_USED_MULTIPLE_TIMES
 				)

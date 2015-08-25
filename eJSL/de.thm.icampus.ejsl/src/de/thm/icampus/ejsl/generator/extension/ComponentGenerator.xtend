@@ -28,6 +28,7 @@ import de.thm.icampus.ejsl.generator.util.ProtectedRegion
 import de.thm.icampus.ejsl.generator.util.KVPairGeneratorClient
 import de.thm.icampus.ejsl.generator.pages.PageGeneratorClient
 import de.thm.icampus.ejsl.generator.entity.EntityGenerator
+import de.thm.icampus.ejsl.eJSL.PageReference
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
@@ -60,9 +61,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		for(Section s :component.sections) {
 			switch (s){
 				BackendSection : {
-				for(Page p : s.page) {
-					if(p instanceof IndexPage) {
-						indexPages.add(p);			
+				for(PageReference p : s.pageRef) {
+					if(p.page instanceof IndexPage) {
+						indexPages.add(p.page);			
 					}
 				}
 			}
@@ -132,8 +133,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY = Created By
 	«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_STATE= state
 	«FOR Section sec: component.sections»
-	«FOR Page pag: sec.page»
-	«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pag.name.toUpperCase» = «pag.name.toFirstUpper»
+	«FOR PageReference pag: sec.pageRef»
+	«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pag.page.name.toUpperCase» = «pag.page.name.toFirstUpper»
 	«ENDFOR»
 	«ENDFOR»
 	«FOR DetailsPage dynp: Slug.getAllAttributeOfAComponente(component)»
@@ -268,10 +269,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		generateJoomlaDirectory("site/controllers")
 
-		val pagerefs = section.page
+		val pagerefs = section.pageRef
 		for (pageref : pagerefs) {
-			println(pageref.name)
-			pageref.generate("com_"+component.name.toLowerCase + "/site","site")
+			println(pageref.page.name)
+			pageref.page.generate("com_"+component.name.toLowerCase + "/site","site")
 		}
 	}
 	
@@ -309,19 +310,20 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		// commented out old model generation code
 		
-		val pagerefs = section.page
+		val pagerefs = section.pageRef
 		for (pageref : pagerefs) {
-			pageref.generate("com_"+component.name.toLowerCase + "/admin","admin")
+			pageref.page.generate("com_"+component.name.toLowerCase + "/admin","admin")
 
 		}
 	}
 	
 	def generateTable(String path) {
 		for(Section sect: component.sections){
-			for(Page pg: sect.page){
-				switch pg{
+			for(PageReference pg: sect.pageRef){
+				switch pg.page{
 					DetailsPage :{
-						generateFile(path + pg.name.toLowerCase + ".php", phpAdminTableContent(pg))
+						var DetailsPage dt = pg.page as DetailsPage
+						generateFile(path + dt.name.toLowerCase + ".php", phpAdminTableContent(dt))
 					}
 				}
 			}
@@ -744,15 +746,15 @@ class «class_name»View«class_name»s extends JViewLegacy
     private function addViews()
     {
         $views = array();
-«FOR Page pg: Slug::getBackendSectionViews(component).page»
+«FOR PageReference pg: Slug::getBackendSectionViews(component).pageRef»
 
-     «switch (pg) {
+     «switch (pg.page) {
      	
      	IndexPage :{
      		'''
-		$views['«pg.name.toLowerCase»'] = array();
-		$views['«pg.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.name.toUpperCase»');
-		$views['«pg.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.name.toLowerCase»";
+		$views['«pg.page.name.toLowerCase»'] = array();
+		$views['«pg.page.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.page.name.toUpperCase»');
+		$views['«pg.page.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.page.name.toLowerCase»";
      		'''
      	}
      }»
@@ -781,8 +783,8 @@ $this->views = $views;
 	
 	def xmlAccessContentPage(EList<Section> list) '''
 	«FOR Section s: list»
-	 «FOR Page dyn: s.page»
-	 <section name="«dyn.name.toLowerCase»">
+	 «FOR PageReference dyn: s.pageRef»
+	 <section name="«dyn.page.name.toLowerCase»">
 	 <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
 	 <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
 	 <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -799,8 +801,8 @@ $this->views = $views;
 		
 		// Section -> Page -> GlobalParameter
 		for(Section s :component.sections) {
-			for(Page p : s.page) {
-				for(ParameterGroup para : p.parametergroups) {
+			for(PageReference p : s.pageRef) {
+				for(ParameterGroup para : p.page.parametergroups) {
 					if(!params.contains(para))
 					params.add(para);
 				}
@@ -853,17 +855,17 @@ class «component.name.toFirstUpper»Helper {
      * Configure the Linkbar.
      */
     public static function addSubmenu($vName = '') {
-    	«FOR Page pg: Slug::getBackendSectionViews(component).page»
+    	«FOR PageReference pg: Slug::getBackendSectionViews(component).pageRef»
     	
-    	     «switch (pg) {
+    	     «switch (pg.page) {
     	     	
     	     	IndexPage :{
     	     		'''
         		JHtmlSidebar::addEntry(
         		
-        		JText::_('«pg.name.toUpperCase»'),
-        		'index.php?option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&view=«pg.name.toLowerCase»',
-        		$vName == '«pg.name.toLowerCase»'
+        		JText::_('«pg.page.name.toUpperCase»'),
+        		'index.php?option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&view=«pg.page.name.toLowerCase»',
+        		$vName == '«pg.page.name.toLowerCase»'
         		);
     	     		'''
     	     	}

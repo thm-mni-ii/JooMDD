@@ -11,6 +11,7 @@ import de.thm.icampus.ejsl.eJSL.Section
 import de.thm.icampus.ejsl.eJSL.Page
 import de.thm.icampus.ejsl.eJSL.IndexPage
 import de.thm.icampus.ejsl.eJSL.DetailsPage
+import de.thm.icampus.ejsl.eJSL.PageReference
 
 class EntityGenerator {
 	
@@ -24,11 +25,11 @@ class EntityGenerator {
 		
 		// Section -> Page -> Entities
 		for(Section s :component.sections) {
-			for(Page p : s.page) {
-				if(p instanceof IndexPage) {
-					entities.addAll((p as IndexPage).entities)
+			for(PageReference p : s.pageRef) {
+				if(p.page instanceof IndexPage) {
+					entities.addAll((p.page as IndexPage).entities)
 				} else if(p instanceof DetailsPage) {
-					entities.addAll((p as DetailsPage).entities)
+					entities.addAll((p.page as DetailsPage).entities)
 				}
 			}
 		}

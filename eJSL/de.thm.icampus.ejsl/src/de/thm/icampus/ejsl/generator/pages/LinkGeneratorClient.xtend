@@ -20,6 +20,10 @@ public class LinkGeneratorClient  {
 		
 	}
 	
+	new( Link link) {
+		this.link = link
+	}
+	
 	
 	
 	public def CharSequence generateLink(){

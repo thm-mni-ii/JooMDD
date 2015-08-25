@@ -19,6 +19,10 @@ import de.thm.icampus.ejsl.eJSL.DynamicPage
 import de.thm.icampus.ejsl.eJSL.Page
 import de.thm.icampus.ejsl.eJSL.DetailsPage
 import de.thm.icampus.ejsl.eJSL.IndexPage
+import de.thm.icampus.ejsl.eJSL.PageReference
+import java.util.Calendar
+import de.thm.icampus.ejsl.eJSL.Module
+import java.util.GregorianCalendar
 
 /**
  * <!-- begin-user-doc -->
@@ -35,6 +39,7 @@ public class Slug  {
 	 * Slugify an String and replace all german special characters
 	 * e.g.: This is a String => this_is_a_string
 	 */
+	 public static Calendar cal = new GregorianCalendar();
 	
 	def static String slugify(String str) {
 		var res = str
@@ -192,10 +197,11 @@ public class Slug  {
 	def static HashSet<DetailsPage>  getAllAttributeOfAComponente(Component c){
 		var HashSet<DetailsPage> result = new HashSet<DetailsPage> ()
 		for(Section sec : c.sections){
-			for(Page dyn: sec.page){
-				switch dyn{
+			for(PageReference dyn: sec.pageRef){
+				switch dyn.page{
 					DetailsPage :{
-					result.add(dyn);
+						var DetailsPage pg = dyn.page as DetailsPage
+					result.add(pg);
 					}
 				}
 			}
@@ -230,12 +236,13 @@ public class Slug  {
 	
 	def static DetailsPage getPageForDetails(IndexPage inpage, Component com) {
 		for(Section tempSec: com.sections){
-			if(tempSec.page.contains(inpage)){
-				for(Page pg : tempSec.page ){
-					switch(pg){
+			if(tempSec.pageRef.filter(e | e.page == inpage).size >0){
+				for(PageReference pg : tempSec.pageRef ){
+					switch(pg.page){
 						DetailsPage :{
-							if(pg.entities.contains(inpage.entities.get(0)))
-							return pg;
+							var DetailsPage dt = pg.page as DetailsPage
+							if(dt.entities.contains(inpage.entities.get(0)))
+							return dt;
 						}
 					}
 				}
@@ -246,12 +253,13 @@ public class Slug  {
 	
 	def static IndexPage  getPageForAll(DetailsPage inpage, Component com) {
 		for(Section tempSec: com.sections){
-			if(tempSec.page.contains(inpage)){
-				for(Page pg : tempSec.page ){
-					switch(pg){
+			if(tempSec.pageRef.filter(e | e.page == inpage).size >0){
+				for(PageReference pg : tempSec.pageRef ){
+					switch(pg.page){
 						IndexPage :{
-							if(pg.entities.contains(inpage.entities.get(0)))
-							return pg;
+							var IndexPage in = pg.page as IndexPage
+							if(in.entities.contains(inpage.entities.get(0)))
+							return in;
 						}
 					}
 				}
@@ -259,5 +267,23 @@ public class Slug  {
 		}
 		return null
 	}
+	def static CharSequence generateFileDoc( Module module, boolean denied)'''
+	
+		/**
+		* @version 		v0.0.1
+		* @category 	Joomla module
+		* @package		
+		* @subpackage	
+		* @name 		«module.name»
+		* @description	
+		«FOR author :module.manifest.authors»
+		* @author 		«author.name», <«author.authoremail»>
+		«ENDFOR»
+		* @copyright	«cal.get(Calendar.YEAR)»  «module.manifest.copyright»
+		* @license 		«module.manifest.license»
+		* @link			
+		*/
+		
+	'''
 	
 } // Slug

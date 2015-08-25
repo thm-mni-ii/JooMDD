@@ -226,7 +226,7 @@ Backend returns BackendSection:
 ;
 
 PageReference returns PageReference:
-	'*Page ' page=[Page|QualifiedName] ('from: ' pagescr=[Section|QualifiedName])?
+	'*Page:' page=[Page|QualifiedName] ('from:' pagescr=[Component|QualifiedName] sect = SectionReference)?
 ;
 
 Frontend returns FrontendSection:
@@ -245,7 +245,7 @@ Module returns Module:
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
-		('*Page ' page=PageReference)?
+		( pageRef=PageReference)?
 	'}'	
 ;
 
@@ -410,4 +410,7 @@ enum PluginKinds:
 
 enum SimpleDatatypeKinds:
 	string | bool | int | float | array
+;
+enum SectionReference:
+	backend='.backend' | frontend='.frontend'
 ;
