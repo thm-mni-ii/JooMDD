@@ -10,18 +10,18 @@ import java.util.Set
 import de.thm.icampus.ejsl.generator.util.Slug
 
 class IndexPageTemplateHelper {
-	private IndexPage dpage
+	 IndexPage indexpage
 	private Component  com
 	private String sec
 	private DetailsPage details
 	
 	new(IndexPage dp, Component cp, String section){
 		
-		dpage = dp
+		indexpage = dp
 		com = cp
 		sec = section
-		System.out.println("<<<<<" + dp.links.get(0) + "<<<<" + cp.name)
-		details = Slug.getPageForDetails(dpage,com)
+		details = Slug.getPageForDetails(indexpage,com)
+		
 	}
 	
 	def CharSequence genAdminControllerContructer()'''
@@ -29,7 +29,7 @@ class IndexPageTemplateHelper {
 	 * Constructor.
 	 *
 	 * @param   array  $config	An optional associative array of configuration settings.
-	 * @return  «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper»
+	 * @return  «com.name.toFirstUpper»Controller«indexpage.name.toFirstUpper»
 	 * @see     JController
 	 * @since   1.6
 	 * @generated
@@ -52,7 +52,7 @@ class IndexPageTemplateHelper {
 	    public function saveordering(){
 	        $app = JFactory::getApplication();
 	        $ids = $app->input->get('cid', array(), 'array');
-	        $model = $this->getModel('«dpage.name.toLowerCase»');
+	        $model = $this->getModel('«indexpage.name.toLowerCase»');
 	        $result = $model->saveOrdering($ids);
 	        if($result)
 	        {
@@ -99,7 +99,7 @@ class IndexPageTemplateHelper {
 	                        'list.select', 'DISTINCT a.*'
 	                )
 	        );
-	        $query->from('`#__«dpage.entities.get(0).name.toLowerCase»` AS a');
+	        $query->from('`#__«indexpage.entities.get(0).name.toLowerCase»` AS a');
 	        // Join over the users for the checked out user
 		$query->select("uc.name AS editor");
 		$query->join("LEFT", "#__users AS uc ON uc.id=a.checked_out");
@@ -128,12 +128,15 @@ class IndexPageTemplateHelper {
 	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
-	                $query->where('( a.«filters.remove(0).name.toLowerCase» LIKE '.$search. 
-	                «FOR Attribute attr : dpage.filters»
+	                $query->where('( a.«filters.get(0).name.toLowerCase» LIKE '.$search. 
+	                «FOR Attribute attr : indexpage.filters»
+	                «IF filters.indexOf(attr) > 0»
 	                 'OR  a.«attr.name.toLowerCase» LIKE '.$search.
-	                 «ENDFOR»
 	                 «ENDIF»
+	                 «ENDFOR»
+	                 
 	                 ')');   
+	                 «ENDIF»
 	            }}
 	            //Filtering user
 		
@@ -180,7 +183,7 @@ class IndexPageTemplateHelper {
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	
-	        $statement = 'Update #__«dpage.entities.get(0).name.toLowerCase» Set `ordering` = CASE';
+	        $statement = 'Update #__«indexpage.entities.get(0).name.toLowerCase» Set `ordering` = CASE';
 	        foreach ($datas_ID  as $order => $profileID)
 	        {
 	            $statement .= ' WHEN id = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
@@ -192,7 +195,7 @@ class IndexPageTemplateHelper {
 	        if ($response)
 	        {
 	            $query = $db->getQuery(true);
-	            $query->select('`id`, `ordering`')->from('#__«dpage.entities.get(0).name.toLowerCase»');
+	            $query->select('`id`, `ordering`')->from('#__«indexpage.entities.get(0).name.toLowerCase»');
 	            $db->setQuery($query);
 	            return $db->loadObjectList();
 	        }
@@ -218,7 +221,7 @@ class IndexPageTemplateHelper {
 	            throw new Exception(implode("\n", $errors));
 	        }
 	
-	        «com.name.toFirstUpper»Helper::addSubmenu('«dpage.name.toLowerCase»');
+	        «com.name.toFirstUpper»Helper::addSubmenu('«indexpage.name.toLowerCase»');
 	
 	        $this->addToolbar();
 	
@@ -239,7 +242,7 @@ class IndexPageTemplateHelper {
 		        $state = $this->get('State');
 		        $canDo = «com.name.toFirstUpper»Helper::getActions($state->get('filter.category_id'));
 		 
-		        JToolBarHelper::title(JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«dpage.name.toUpperCase»'));
+		        JToolBarHelper::title(JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«indexpage.name.toUpperCase»'));
 		 
 		        //Check if the form exists before showing the add/edit buttons
 		        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«details.name.toLowerCase»';
@@ -258,29 +261,29 @@ class IndexPageTemplateHelper {
 		 
 		            if (isset($this->items[0]->state)) {
 		                JToolBarHelper::divider();
-		                JToolBarHelper::custom('«dpage.name.toLowerCase».publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-		                JToolBarHelper::custom('«dpage.name.toLowerCase».unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+		                JToolBarHelper::custom('«indexpage.name.toLowerCase».publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
+		                JToolBarHelper::custom('«indexpage.name.toLowerCase».unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
 		            } else if (isset($this->items[0])) {
 		                //If this component does not use state then show a direct delete button as we can not trash
-		                JToolBarHelper::deleteList('', '«dpage.name.toLowerCase».delete', 'JTOOLBAR_DELETE');
+		                JToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_DELETE');
 		            }
 		 
 		            if (isset($this->items[0]->state)) {
 		                JToolBarHelper::divider();
-		                JToolBarHelper::archiveList('«dpage.name.toLowerCase».archive', 'JTOOLBAR_ARCHIVE');
+		                JToolBarHelper::archiveList('«indexpage.name.toLowerCase».archive', 'JTOOLBAR_ARCHIVE');
 		            }
 		            if (isset($this->items[0]->checked_out)) {
-		                JToolBarHelper::custom('«dpage.name.toLowerCase».checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
+		                JToolBarHelper::custom('«indexpage.name.toLowerCase».checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
 		            }
 		        }
 		
 		        //Show trash and delete for components that uses the state field
 		        if (isset($this->items[0]->state)) {
 		            if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
-		                JToolBarHelper::deleteList('', '«dpage.name.toLowerCase».delete', 'JTOOLBAR_EMPTY_TRASH');
+		                JToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_EMPTY_TRASH');
 		                JToolBarHelper::divider();
 		            } else if ($canDo->get('core.edit.state')) {
-		                JToolBarHelper::trash('«dpage.name.toLowerCase».trash', 'JTOOLBAR_TRASH');
+		                JToolBarHelper::trash('«indexpage.name.toLowerCase».trash', 'JTOOLBAR_TRASH');
 		                JToolBarHelper::divider();
 		            }
 		        }
@@ -290,7 +293,7 @@ class IndexPageTemplateHelper {
 		        }
 		 
 		        //Set sidebar action - New in 3.0
-		        JHtmlSidebar::setAction('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«dpage.name.toLowerCase»');
+		        JHtmlSidebar::setAction('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»');
 		 
 		        $this->extra_sidebar = '';
 		        
@@ -316,8 +319,8 @@ class IndexPageTemplateHelper {
 		'a.id' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ID'),
 		'a.ordering' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ORDERING'),
 		'a.state' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_STATE')
-        «FOR Attribute attr : dpage.filters»
-		  , 'a.«attr.name.toLowerCase»' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«dpage.name.toUpperCase»_«attr.name.toUpperCase»')
+        «FOR Attribute attr : indexpage.filters»
+		  , 'a.«attr.name.toLowerCase»' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«indexpage.name.toUpperCase»_«attr.name.toUpperCase»')
          «ENDFOR»
 		
 		);
@@ -356,7 +359,7 @@ class IndexPageTemplateHelper {
 	
 	 '''
 	 def private CharSequence genAdminViewLayoutData(EList<Attribute>filters)'''
- <table class="table table-striped" id="«dpage.name.toFirstUpper»List">
+ <table class="table table-striped" id="«indexpage.name.toFirstUpper»List">
 		<thead>
 			<tr>
             <?php if (isset($this->items[0]->ordering)): ?>
@@ -437,16 +440,15 @@ class IndexPageTemplateHelper {
 		</td>
     <?php if (isset($this->items[0]->state)): ?>
 		<td class="center">
-			<?php echo JHtml::_('jgrid.published', $item->state, $i, '«dpage.name.toLowerCase».', $canChange, 'cb'); ?>
+			<?php echo JHtml::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
 		</td>
     <?php endif; ?>
         
 	<td>
 	<?php if (isset($item->checked_out) && $item->checked_out) : ?>
-		<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, '«dpage.name.toLowerCase».', $canCheckin); ?>
+		<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, '«indexpage.name.toLowerCase».', $canCheckin); ?>
 	<?php endif; ?>
-	
-	« var String first = if(!filters.empty) dpage.filters.remove(0).name.toLowerCase»
+	« var String first = if(!filters.empty) filters.get(0).name.toLowerCase»
 	
 	<?php if ($canEdit) : ?>
 		<a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»&id='.(int) $item->id); ?>">
@@ -457,8 +459,9 @@ class IndexPageTemplateHelper {
 		</td>
 		«FOR Attribute a: filters»
 		<td>
-
-			<?php echo $item->«a.name.toLowerCase»; ?>
+            «IF filters.indexOf(a) > 0»
+              <?php echo $item->«a.name.toLowerCase»; ?>
+			«ENDIF»
 		</td>
 		«ENDFOR»
 
@@ -474,7 +477,7 @@ class IndexPageTemplateHelper {
 </table>
 '''
 def  CharSequence genAdminViewLayoutForm()''' 
-<form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«dpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
 <?php if(!empty($this->sidebar)): ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
@@ -484,7 +487,7 @@ def  CharSequence genAdminViewLayoutForm()'''
 	<div id="j-main-container">
 <?php endif;?>
 «genAdminViewLayoutFilters»
-«genAdminViewLayoutData(dpage.tablecolumns)»
+«genAdminViewLayoutData(indexpage.tablecolumns)»
 <input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
 		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
@@ -504,8 +507,8 @@ $canOrder	= $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com",
 $saveOrder	= $listOrder == 'a.ordering';
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', '«dpage.name.toFirstUpper»List', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+	$saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
+	JHtml::_('sortablelist.sortable', '«indexpage.name.toFirstUpper»List', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 $sortFields = $this->getSortFields();
 ?>

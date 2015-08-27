@@ -28,8 +28,7 @@ public class ContextLinkGen extends AbstractLinkGenerator {
 	}
 	
 	override generateLink(String sect, String compname) '''
-		 «if (sect.isEmpty) '' else sect»"/index?option="«compname»&view=«lk.target.name.toLowerCase»«genLinkOption(lk.linkparameters)»
-	'''
+		 «if (sect.isEmpty) '' else sect +"/"»index.php?option=«compname»&view=«lk.target.name.toLowerCase»«genLinkOption(lk.linkparameters)»'''
 	
 	def CharSequence genLinkOption(EList<LinkParameter> params)'''
 	«FOR LinkParameter lp : params»

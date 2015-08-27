@@ -25,6 +25,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		com = cp
 		sec = section
 		helper = new IndexPageTemplateHelper(ipage,com,sec)
+		System.out.println(">>>>>>>>>>>>>>>>>>>" + ipage.name + ">>>>" + ipage.tablecolumns.size )
 		this.path = path
 		pagename = dp.name.toLowerCase
 		this.fsa = fsa

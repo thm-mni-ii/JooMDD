@@ -229,7 +229,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 				<?php else : ?>					
 					«FOR Attribute : mpage.tablecolumns»
 					<?php $«Attribute.name» = $item->«Attribute.name.toLowerCase»;?>
-					<?php echo $«checkLinkOfAttributes(Attribute, module.pageRef.page.links)»; ?>
+					<?php echo «checkLinkOfAttributes(Attribute, module.pageRef.page.links)»; ?>
 					«ENDFOR»	
 				«ENDIF»
 				<?php endif; ?>
@@ -241,17 +241,17 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	def checkLinkOfAttributes(Attribute attribute, EList<Link> listLink) {
 		var String result = attribute.name.toString
 		if(module.pageRef.sect == null || module.pageRef.pagescr == null)
-		return result;
+		return "$" + result;
 		
 		for(Link lk: listLink){
 			if(lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){
 			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, Slug.getSectioName(module.pageRef.sect),  Slug.nameExtensionBind('com', module.pageRef.pagescr.name.toLowerCase) ) 
 				
-			   result = '''JRoute::_('«lkClient.generateLink»')'''
+			   return '''JHtml::_('link',"«lkClient.generateLink»&id=" . $item->id, $item->«attribute.name.toLowerCase»)'''
 			   
 			   }
 		}
-		return result
+		return "$" + result;
 	}
 	
 	

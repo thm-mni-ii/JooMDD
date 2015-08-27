@@ -241,18 +241,17 @@ public class Slug  {
 	def static DetailsPage getPageForDetails(IndexPage inpage, Component com) {
 		
 		for(Link lk: inpage.links){
-			switch lk{
-				case InternalLink:{
-					System.out.println(">>>>>>>>>>>>>>>>> hallo")
-					var InternalLink lkin = lk as InternalLink
-					if(lkin.target instanceof DetailsPage)
-					  return lkin.target as DetailsPage
-				}
-				case ContextLink:{
-					var InternalLink lkin = lk as InternalLink
-					if(lkin.target instanceof DetailsPage)
-					  return lkin.target as DetailsPage
-				}
+			switch lk {
+		   ContextLink:{
+				var InternalLink lkin = lk as InternalLink
+				if(lkin.target instanceof DetailsPage)
+				  return lkin.target as DetailsPage
+			}
+			 InternalLink :{
+				var InternalLink lkin = lk as InternalLink
+				if(lkin.target instanceof DetailsPage)
+				  return lkin.target as DetailsPage
+			}
 			}
 		}
 		return null
@@ -260,15 +259,15 @@ public class Slug  {
 	
 	def static IndexPage  getPageForAll(DetailsPage inpage, Component com) {
 		for(Link lk: inpage.links){
-			switch(lk){
-				case InternalLink:{
+			switch lk{
+				 ContextLink:{
 					var InternalLink lkin = lk as InternalLink
-					if(lkin.target instanceof DetailsPage)
+					if(lkin.target instanceof IndexPage)
 					  return lkin.target as IndexPage
 				}
-				case ContextLink:{
+				 InternalLink:{
 					var InternalLink lkin = lk as InternalLink
-					if(lkin.target instanceof DetailsPage)
+					if(lkin.target instanceof IndexPage)
 					  return lkin.target as IndexPage
 				}
 			}

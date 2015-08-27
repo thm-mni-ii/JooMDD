@@ -29,7 +29,6 @@ public class PageGeneratorClient {
 	'''
 
 	def static void generateView(Page page, Component component, String sec, String path,IFileSystemAccess fsa) {
-		
 		switch page{
 			DetailsPage : {
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path, fsa)
