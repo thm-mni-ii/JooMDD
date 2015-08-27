@@ -22,8 +22,8 @@ public class InternalLinkGen extends AbstractLinkGenerator {
 		this.link = link
 	}
 	
-	override generateLink(String sect, String compname) {
-				
-	}
+	override generateLink(String sect, String compname) '''
+		 «if (sect.isEmpty) '' else sect»"/index?option="«compname»&view=«link.target.name.toLowerCase»
+	'''
 	
 } // InternalLink

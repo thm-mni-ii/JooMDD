@@ -11,10 +11,11 @@ import de.thm.icampus.ejsl.eJSL.ContextLink
 public class LinkGeneratorClient  {
 	
 	Link link
-	String sect
+	String sect = ''
 	String compname
 	new( Link link, String section, String componentname){
 		this.link = link
+		if(sect.equalsIgnoreCase('BackendSection'))
 		sect = section
 		compname = componentname
 		

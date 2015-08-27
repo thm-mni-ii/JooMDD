@@ -23,6 +23,7 @@ import de.thm.icampus.ejsl.eJSL.PageReference
 import java.util.Calendar
 import de.thm.icampus.ejsl.eJSL.Module
 import java.util.GregorianCalendar
+import de.thm.icampus.ejsl.eJSL.SectionReference
 
 /**
  * <!-- begin-user-doc -->
@@ -285,5 +286,14 @@ public class Slug  {
 		*/
 		
 	'''
+	
+	def static String getSectioName(SectionReference  reference) {
+		if(reference.getName().equals('backend'))
+		return 'BackendSection'
+		
+		return ''
+		
+	}
+	
 	
 } // Slug

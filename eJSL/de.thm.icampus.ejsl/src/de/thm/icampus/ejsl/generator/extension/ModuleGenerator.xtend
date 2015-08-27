@@ -242,7 +242,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		var String result = attribute.name.toString
 		for(Link lk: listLink){
 			if(lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){
-			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, module.pageRef.sect.getName(),  module.pageRef.pagescr.name ) 
+			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, Slug.getSectioName(module.pageRef.sect),  Slug.nameExtensionBind('com', module.pageRef.pagescr.name.toLowerCase) ) 
 				
 			   result = '''JRoute::_('«lkClient.generateLink»')'''
 			   

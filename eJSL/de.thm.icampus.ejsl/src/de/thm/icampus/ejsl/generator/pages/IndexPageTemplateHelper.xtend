@@ -483,7 +483,7 @@ def  CharSequence genAdminViewLayoutForm()'''
 	<div id="j-main-container">
 <?php endif;?>
 «genAdminViewLayoutFilters»
-«genAdminViewLayoutData(dpage.filters)»
+«genAdminViewLayoutData(dpage.tablecolumns)»
 <input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
 		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
