@@ -20,6 +20,7 @@ class IndexPageTemplateHelper {
 		dpage = dp
 		com = cp
 		sec = section
+		System.out.println("<<<<<" + dp.links.get(0) + "<<<<" + cp.name)
 		details = Slug.getPageForDetails(dpage,com)
 	}
 	
@@ -371,7 +372,7 @@ class IndexPageTemplateHelper {
 					<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 				</th>
             <?php endif; ?>
-       «FOR Attribute attr : dpage.filters»
+       «FOR Attribute attr : filters»
 	<th class='left'>
 	<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«details.name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 	</th>

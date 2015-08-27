@@ -24,6 +24,9 @@ import java.util.Calendar
 import de.thm.icampus.ejsl.eJSL.Module
 import java.util.GregorianCalendar
 import de.thm.icampus.ejsl.eJSL.SectionReference
+import de.thm.icampus.ejsl.eJSL.Link
+import de.thm.icampus.ejsl.eJSL.InternalLink
+import de.thm.icampus.ejsl.eJSL.ContextLink
 
 /**
  * <!-- begin-user-doc -->
@@ -236,16 +239,19 @@ public class Slug  {
 	}
 	
 	def static DetailsPage getPageForDetails(IndexPage inpage, Component com) {
-		for(Section tempSec: com.sections){
-			if(tempSec.pageRef.filter(e | e.page == inpage).size >0){
-				for(PageReference pg : tempSec.pageRef ){
-					switch(pg.page){
-						DetailsPage :{
-							var DetailsPage dt = pg.page as DetailsPage
-							if(dt.entities.contains(inpage.entities.get(0)))
-							return dt;
-						}
-					}
+		
+		for(Link lk: inpage.links){
+			switch lk{
+				case InternalLink:{
+					System.out.println(">>>>>>>>>>>>>>>>> hallo")
+					var InternalLink lkin = lk as InternalLink
+					if(lkin.target instanceof DetailsPage)
+					  return lkin.target as DetailsPage
+				}
+				case ContextLink:{
+					var InternalLink lkin = lk as InternalLink
+					if(lkin.target instanceof DetailsPage)
+					  return lkin.target as DetailsPage
 				}
 			}
 		}
@@ -253,16 +259,17 @@ public class Slug  {
 	}
 	
 	def static IndexPage  getPageForAll(DetailsPage inpage, Component com) {
-		for(Section tempSec: com.sections){
-			if(tempSec.pageRef.filter(e | e.page == inpage).size >0){
-				for(PageReference pg : tempSec.pageRef ){
-					switch(pg.page){
-						IndexPage :{
-							var IndexPage in = pg.page as IndexPage
-							if(in.entities.contains(inpage.entities.get(0)))
-							return in;
-						}
-					}
+		for(Link lk: inpage.links){
+			switch(lk){
+				case InternalLink:{
+					var InternalLink lkin = lk as InternalLink
+					if(lkin.target instanceof DetailsPage)
+					  return lkin.target as IndexPage
+				}
+				case ContextLink:{
+					var InternalLink lkin = lk as InternalLink
+					if(lkin.target instanceof DetailsPage)
+					  return lkin.target as IndexPage
 				}
 			}
 		}

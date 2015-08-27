@@ -240,6 +240,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	
 	def checkLinkOfAttributes(Attribute attribute, EList<Link> listLink) {
 		var String result = attribute.name.toString
+		if(module.pageRef.sect == null || module.pageRef.pagescr == null)
+		return result;
+		
 		for(Link lk: listLink){
 			if(lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){
 			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, Slug.getSectioName(module.pageRef.sect),  Slug.nameExtensionBind('com', module.pageRef.pagescr.name.toLowerCase) ) 
