@@ -161,78 +161,78 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
 	def CharSequence phpContent(Module modul) {
 		'''
-			«IF modul.pageRef.pagescr != null»
-				«var c = modul.pageRef.pagescr»
-				<?php
-				«Slug.generateFileDoc(module, true)»
-					
-				// Define used Jimports here 
-				
-				//No direct access to this file
+		«IF modul.pageRef.pagescr != null»
+			«var c = modul.pageRef.pagescr»
+		<?php
+		«Slug.generateFileDoc(module, true)»
+		
+			// Define used Jimports here
+
+			// No direct access to this file
 				defined('_JEXEC') or die;
 		
 				// Include the «module.name» functions only once
 				require_once __DIR__ . '/helper.php';
 				require_once JPATH_ADMINISTRATOR . '/components/com_«c.name.toLowerCase»/helpers/«c.name.toLowerCase».php';
-				//«modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::updateReset();
+
+				// «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::updateReset();
 				$list = &«modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::getList($params);
 				$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-				
+
 				// Models, Functions should be implementated here
 			«ELSE»
-				<?php
-				«Slug.generateFileDoc(module, true)»
-					
-				// Define used Jimports here 
-				
-				//No direct access to this file
+		<?php
+		«Slug.generateFileDoc(module, true)»
+		
+			// Define used Jimports here
+		
+			// No direct access to this file
 				defined('_JEXEC') or die;
 		
 				// Include the «module.name» functions only once
 				require_once __DIR__ . '/helper.php';
-				
+
 				// Models, Functions should be implementated here
 			«ENDIF»
-			
+
 			require JModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
-			?>
 			'''
 	}
 	
 	 def CharSequence defaultTemplate(Module module, DynamicPage mpage) {
 		'''
 		<?php
-			«Slug.generateFileDoc(module, true)»
+		«Slug.generateFileDoc(module, true)»
 			// No direct access to this file
-			defined( '_JEXEC' ) or die;
+			defined('_JEXEC') or die;
 			/**
-			*if Component-Helper to be used
-			*
-			*require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php';
-			*$baseurl = JUri::base();
-			*/
+			 *if Component-Helper to be used
+			 *
+			 *require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php';
+			 *$baseurl = JUri::base();
+			 */
 			?>
 			<ul class="«module.name»<?php echo $moduleclass_sfx; ?>">
-			<?php // if ($headerText) : ?>
-				<?php // echo $headerText; ?>
-			<?php // endif; ?>
+			<?php// if ($headerText) : ?>
+				<?php// echo $headerText; ?>
+			<?php// endif; ?>
 			
 			<?php foreach ($list as $item) : ?>
 			<div class="«module.pageRef.page.name»item">
-			<?php if (empty($item)) :?>
+			<?php if (empty($item)) : ?>
 				«IF mpage.entities.isEmpty»
-					<?php // itemlist is empty ;?>
+					<?php// itemlist is empty ;?>
 					<!DOCTYPE html><titel></titel>
 				«ELSE»
 					<?php echo "itemlist is empty" ?>
 					<!DOCTYPE html><titel></titel>
-				<?php else :?>					
+				<?php else : ?>					
 					«FOR Attribute : mpage.tablecolumns»
 					<?php $«Attribute.name» = $item->«Attribute.name.toLowerCase»;?>
 					<?php echo $«checkLinkOfAttributes(Attribute, module.pageRef.page.links)»; ?>
 					«ENDFOR»	
 				«ENDIF»
-				<?php endif;?>
+				<?php endif; ?>
 		</div>
 		<?php endforeach; ?>
 		'''
@@ -258,47 +258,51 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		«Slug.generateFileDoc(module, true)»
 		
 		// No direct access to this file
-		defined( '_JEXEC' ) or die;
+		defined('_JEXEC') or die;
 		/**
-		*Helper for «module.name»
-		*@since
-		*/
+		 *Helper for «module.name»
+		 *
+		 * @category
+		 * @package
+		 * @since
+		 *
+		 */
 		class «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper
-		{ 
-			/**
-			* @params
-			*
-			* @return
-			*
-			* @since
-			**/
-		    public static function &getList(&$params)
-		    {
-			    /**
-				* placeholder "<>" are to be replaced
-				*/
-		    	JModelLegacy::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
-		    	//$app = JFactory::getApplictation();
+		{
+		/**
+		 * @param
+		 *
+		 * @return
+		 *
+		 * @since
+		 **/
+		public static function &getList(&$params)
+		{
+		/**
+		 * placeholder "<>" are to be replaced
+		*/
+		JModelLegacy::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
+		
+		// $app = JFactory::getApplictation();
 			    «IF (modul.pageRef.pagescr != null )»
-			    $model = JModelLegacy::getInstance('«modul.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
-				$elements = $model->getItems();
-				//$model->impress();
+		$model = JModelLegacy::getInstance('«modul.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
+		$elements = $model->getItems();
+		
+		// $model->impress();
 
-				return $elements;
-				}
-			}
+		return $elements;
+		}
+		}
 		?>
 				«ELSE»
-					$model = JModelLegacy::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
-			    	$model = $model->getItems();
-			    	$model->impress();
-			    	
-					return <type>;
+			$model = JModelLegacy::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
+			$model = $model->getItems();
+			$model->impress();
+			
+			return <type>;
 			    }
 			}
-			?>
 				«ENDIF»
-		
 		'''
 	}
 	

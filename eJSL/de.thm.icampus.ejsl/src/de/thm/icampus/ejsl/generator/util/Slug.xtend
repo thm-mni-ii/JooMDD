@@ -267,23 +267,23 @@ public class Slug  {
 		}
 		return null
 	}
-	def static CharSequence generateFileDoc( Module module, boolean denied)'''
+	def static CharSequence generateFileDoc( Module module, boolean denied)
+	'''
 	
-		/**
-		* @version 		v0.0.1
-		* @category 	Joomla module
-		* @package		
-		* @subpackage	
-		* @name 		«module.name»
-		* @description	
-		«FOR author :module.manifest.authors»
-		* @author 		«author.name», <«author.authoremail»>
-		«ENDFOR»
-		* @copyright	«cal.get(Calendar.YEAR)»  «module.manifest.copyright»
-		* @license 		«module.manifest.license»
-		* @link			
-		*/
-		
+	/**
+	 * @version     CVS: 1.0
+	 * @category    Joomla module
+	 * @package     Packagename
+	 * @subpackage  Subpackagename
+	 * @name        «module.name»
+	 * @description 
+	 «FOR author :module.manifest.authors»
+	 * @author      «author.name», <«author.authoremail»>
+	 «ENDFOR»
+	 * @copyright   «cal.get(Calendar.YEAR)»  «module.manifest.copyright»
+	 * @license     «module.manifest.license»
+	 * @link        www.link.com
+	 */
 	'''
 	
 } // Slug
