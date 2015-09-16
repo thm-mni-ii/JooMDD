@@ -15,7 +15,7 @@ public class LinkGeneratorClient  {
 	String compname
 	new( Link link, String section, String componentname){
 		this.link = link
-		if(sect.equalsIgnoreCase('BackendSection'))
+		if(section.equalsIgnoreCase('BackendSection'))
 		sect = section
 		compname = componentname
 		

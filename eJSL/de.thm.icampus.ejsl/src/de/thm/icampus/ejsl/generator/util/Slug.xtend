@@ -301,5 +301,9 @@ public class Slug  {
 		
 	}
 	
+	def static CharSequence databaseName(String componentName, String entityName) {
+		return "#__" + componentName.toLowerCase + "_" + entityName.toLowerCase
+	}
+	
 	
 } // Slug

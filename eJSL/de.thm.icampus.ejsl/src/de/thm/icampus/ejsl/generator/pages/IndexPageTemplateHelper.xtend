@@ -8,6 +8,7 @@ import org.eclipse.emf.common.util.EList
 import java.util.HashSet
 import java.util.Set
 import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.eJSL.Entity
 
 class IndexPageTemplateHelper {
 	 IndexPage indexpage
@@ -40,6 +41,17 @@ class IndexPageTemplateHelper {
 	 
 	    }
 	 
+	'''
+	public def genAdminControllerGetModel()'''
+	/**
+	 * Overwrite the  getModel.
+	 * @since	1.6
+	 */
+	public function getModel($name = '«details.name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
+	{
+		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
+		return $model;
+	}
 	'''
 	
 	def CharSequence genAdminControllerSaveOrdering()'''
@@ -75,7 +87,12 @@ class IndexPageTemplateHelper {
 	                                'id', 'a.id',
 	                'ordering', 'a.ordering',
 	                'state', 'a.state',
-	                'created_by', 'a.created_by');}
+	                'created_by', 'a.created_by'
+	                , 'published', 'a.published'
+	                «FOR Attribute attr: indexpage.filters»
+	                ,'«attr.name.toLowerCase»', 'a.«attr.name.toLowerCase»'
+	                «ENDFOR»
+	                );}
 	                parent::__construct($config);
 	}
 	'''
@@ -99,7 +116,7 @@ class IndexPageTemplateHelper {
 	                        'list.select', 'DISTINCT a.*'
 	                )
 	        );
-	        $query->from('`#__«indexpage.entities.get(0).name.toLowerCase»` AS a');
+	        $query->from('`#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»` AS a');
 	        // Join over the users for the checked out user
 		$query->select("uc.name AS editor");
 		$query->join("LEFT", "#__users AS uc ON uc.id=a.checked_out");
@@ -183,7 +200,7 @@ class IndexPageTemplateHelper {
 	        $db = JFactory::getDbo();
 	        $query = $db->getQuery(true);
 	
-	        $statement = 'Update #__«indexpage.entities.get(0).name.toLowerCase» Set `ordering` = CASE';
+	        $statement = 'Update #__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase» Set `ordering` = CASE';
 	        foreach ($datas_ID  as $order => $profileID)
 	        {
 	            $statement .= ' WHEN id = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
@@ -195,7 +212,7 @@ class IndexPageTemplateHelper {
 	        if ($response)
 	        {
 	            $query = $db->getQuery(true);
-	            $query->select('`id`, `ordering`')->from('#__«indexpage.entities.get(0).name.toLowerCase»');
+	            $query->select('`id`, `ordering`')->from('#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»');
 	            $db->setQuery($query);
 	            return $db->loadObjectList();
 	        }
@@ -320,7 +337,7 @@ class IndexPageTemplateHelper {
 		'a.ordering' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ORDERING'),
 		'a.state' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_STATE')
         «FOR Attribute attr : indexpage.filters»
-		  , 'a.«attr.name.toLowerCase»' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«indexpage.name.toUpperCase»_«attr.name.toUpperCase»')
+		  , 'a.«attr.name.toLowerCase»' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«(attr.eContainer as Entity).name.toUpperCase»_«attr.name.toUpperCase»')
          «ENDFOR»
 		
 		);
@@ -377,7 +394,7 @@ class IndexPageTemplateHelper {
             <?php endif; ?>
        «FOR Attribute attr : filters»
 	<th class='left'>
-	<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«details.name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+	<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.eContainer as Entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 	</th>
      «ENDFOR»
 	
@@ -533,6 +550,34 @@ if (!empty($this->extra_sidebar)) {
 }
 ?>
 
+ '''
+ 
+ public def CharSequence genAdminModelPopulateState()'''
+  /**
+     * Method to auto-populate the model state.
+     *
+     * Note. Calling getState in this method will result in recursion.
+     */
+    protected function populateState($ordering = null, $direction = null) {
+        // Initialise variables.
+        $app = JFactory::getApplication('administrator');
+
+        // Load the filter state.
+        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
+        $this->setState('filter.search', $search);
+
+        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
+        $this->setState('filter.published', $published);
+
+        
+
+        // Load the parameters.
+        $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');
+        $this->setState('params', $params);
+
+        // List state information.
+        parent::populateState('a.id', 'asc');
+    }
  '''
 }
 

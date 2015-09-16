@@ -54,7 +54,7 @@ class DetailsPageTemplateBackendHelper {
 	 * @return	JTable	A database object
 	 * @since	1.6
 	 */
-	public function getTable($type = '«dpage.name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array())
+	public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
