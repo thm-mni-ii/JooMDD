@@ -14,7 +14,7 @@ eJSLModel "Conference" {
     Attribute name {
      dbtype = "varchar(255) NOT NULL"
      htmltype = "text"
-     isprimary
+     Primary attribute
     }
     
     Attribute affiliation {
@@ -36,7 +36,7 @@ eJSLModel "Conference" {
     Attribute title {
      dbtype = "varchar(255) NOT NULL"
      htmltype = "text"
-     isprimary
+     Primary attribute 
     }
     Attribute ^description {
      dbtype = "varchar(255) NOT NULL"
@@ -49,11 +49,11 @@ eJSLModel "Conference" {
    }
    references {
     Reference {
-     attribute"speaker"
-     *Entity "Participant"
-     attribute referenced "Participant.name"
-     lower 1
-     upper 1
+    	Attribute = speaker 
+    	*Entity = Participant
+     	Reference = Participant.name
+     lower =  1
+     upper = 1
     }
    }
   }
@@ -62,7 +62,7 @@ eJSLModel "Conference" {
     Attribute roomname {
      dbtype = "varchar(255) NOT NULL"
      htmltype = "text"
-     isprimary
+     Primary attribute
     }
     Attribute position {
      dbtype = "varchar(255) NOT NULL"
@@ -75,7 +75,7 @@ eJSLModel "Conference" {
     Attribute title {
      dbtype = "varchar(255) NOT NULL"
      htmltype = "text"
-     isprimary
+     Primary attribute
     }
     Attribute time {
      dbtype = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
@@ -92,18 +92,18 @@ eJSLModel "Conference" {
    }
    references {
     Reference {
-     attribute"talk"
-     *Entity "Talk"
-     attribute referenced "Talk.title"
-     lower 0
-     upper 1
+     Attribute = talk
+     *Entity= Talk
+     Reference = Talk.title
+     lower=0
+     upper = 1
     }
     Reference {
-     attribute"room"
-     *Entity "Room"
-     attribute referenced "Room.roomname"
-     lower 1
-     upper 1
+     Attribute = room
+     *Entity = Room
+      Reference = Room.roomname
+     lower = 1
+     upper = 1
     }
    }
   }
@@ -111,43 +111,103 @@ eJSLModel "Conference" {
 
  pages {
   IndexPage Participants {
-   *Entities "Participant"
-   filters Participant.name, 
+   *Entities Participant
+   table columns = Participant.name , Participant.address , Participant.affiliation
+   filters = Participant.name, 
     Participant.affiliation
+    links {
+    	InternalcontextLink Details {
+    		target= * Participant linked attribute =* Participant.name
+    		linkparameters {
+    			Parameter name = *Attribute  "Participant.name"
+    		}
+    	}
+    }
   }
   DetailsPage Participant {
-   *Entities "Participant" 
+   *Entities Participant
+   links {
+   	 InternalLink Index {
+   	 	target = * Participants linked attribute = * name
+   	 }
+   }
   }
   IndexPage Talks {
-   *Entities "Talk", "Participant"
-   filters Talk.title, 
+   *Entities Talk
+     table columns = Talk.title , Talk.speaker
+   filters = Talk.title, 
     Talk.speaker
+     links {
+    	InternalcontextLink Details {
+    		target= * Talk linked attribute =* Talk.title
+    		linkparameters {
+    			Parameter title = *Attribute  "Talk.title"
+    		}
+    	}
+    }
   }
   DetailsPage Talk {
-   *Entities "Talk"
+   *Entities Talk
+    links {
+   	 InternalLink Index {
+   	 	target = * Talks linked attribute = * title
+   	 }
+   }
   }
   IndexPage Rooms {
-   *Entities "Room"
-   filters Room.roomname,
+   *Entities Room
+   table columns = Room.roomname,
     Room.position
+   filters = Room.roomname,
+    Room.position
+    links {
+    	InternalcontextLink Details {
+    		target= * Room linked attribute =* Room.roomname
+    		linkparameters {
+    			Parameter roomname = *Attribute  "Room.roomname"
+    		}
+    	}
+    }
   }
   DetailsPage Room {
-   *Entities "Room"
+   *Entities Room
+   links {
+   	 InternalLink Index {
+   	 	target = * Rooms linked attribute = * roomname
+   	 }
+   }
   }
   IndexPage Agendaitems {
-      *Entities "AgendaItem"
-      filters AgendaItem.room, 
+      *Entities AgendaItem
+      table columns = AgendaItem.room, 
        AgendaItem.talk, 
        AgendaItem.time, 
        AgendaItem.title
+      filters = AgendaItem.room, 
+       AgendaItem.talk, 
+       AgendaItem.time, 
+       AgendaItem.title
+       links {
+    	InternalcontextLink Details {
+    		target= * Agendaitem linked attribute =* AgendaItem.title
+    		linkparameters {
+    			Parameter title = *Attribute  "AgendaItem.title"
+    		}
+    	}
+    }
     }
   DetailsPage Agendaitem {
-   *Entities "AgendaItem"
+   *Entities AgendaItem
+   links {
+   	 InternalLink Index {
+   	 	target = * Agendaitems linked attribute = * AgendaItem.title
+   	 }
+   }
   }
  }
 
  extensions {
-  Component JandBeyond {
+  Component JoomlaDays {
    Manifestation {
     authors {
      Author "Dennis Priefer" {
@@ -156,7 +216,7 @@ eJSLModel "Conference" {
      }
     }
     copyright = "Copyright (C) 20053 - 2014 Open Source Matters, Inc. All right reserved."
-    license = "GNU General x Public License version 2 or later; see LICENSE.txt"
+    license = "GNU General x Public License version 22 orz later; see LICENSE.txt"
    }
    languages {
     Language de-DE {
@@ -166,10 +226,23 @@ eJSLModel "Conference" {
    }
    sections {
     Frontend section {
-     *Pages Participants, Talks
+    	*Pages {
+    		*Page: Participants
+    		*Page: Talks
+    	}
     }
     Backend section {
-     *Pages Participants, Participant, Talks, Talk, Rooms, Room, Agendaitems, Agendaitem
+     *Pages {
+     	*Page: Participants 
+     	*Page: Participant
+     	*Page: Talks
+     	*Page: Talk
+     	*Page: Rooms
+     	*Page: Room
+     	*Page: Agendaitems
+     	*Page: Agendaitem
+     	
+     }
     }
    }
   }

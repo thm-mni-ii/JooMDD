@@ -282,7 +282,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		val pagerefs = section.pageRef
 		for (pageref : pagerefs) {
-			println(pageref.page.name)
 			pageref.page.generate(path + "site", "site")
 		}
 	}

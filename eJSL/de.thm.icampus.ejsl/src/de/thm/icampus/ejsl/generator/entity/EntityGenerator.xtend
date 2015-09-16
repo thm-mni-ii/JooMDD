@@ -83,7 +83,7 @@ class EntityGenerator {
 	«FOR a:table.attributes»
 		`«a.name.toLowerCase»` «Slug.getTypeName(a.dbtype)»,
 	«ENDFOR»
-	`published` int(11) NOT NULL,
+	`published` TINYINT(1),
 	`params` TEXT,
 «FOR r:table.references»
 	FOREIGN KEY (`«r.attribute.name.toLowerCase»`) REFERENCES `#__«comp.name.toLowerCase»_«r.entity.name.toLowerCase»` (`«r.attributerefereced.name.toLowerCase»`)

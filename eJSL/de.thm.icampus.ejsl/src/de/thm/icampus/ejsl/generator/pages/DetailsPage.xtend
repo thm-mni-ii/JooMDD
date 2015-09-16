@@ -61,7 +61,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		}
 	}
 	def void generateModel(){
-		if(sec.compareTo("admin")==0){
+		if(sec.equalsIgnoreCase("admin")==0){
 		
 		  generateFile(path+"/" + pagename + ".php", generateAdminModel())
 		   generateFile(path + "/forms"+"/" + pagename + ".xml", xmlAdminFields(dpage,com,com.name))
