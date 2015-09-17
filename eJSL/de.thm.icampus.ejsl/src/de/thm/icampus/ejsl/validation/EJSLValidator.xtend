@@ -397,11 +397,11 @@ class EJSLValidator extends AbstractEJSLValidator {
 		var pages = new HashSet<String>
 
 		var i = 0
-		for (page : section.page) {
-			if (!pages.add(page.name)) {
+		for (page : section.pageRef) {
+			if (!pages.add(page.page.name)) {
 				warning(
 					'Page is used multiple times for this section.',
-					EJSLPackage.Literals.SECTION__PAGE,
+					EJSLPackage.Literals.PAGE_REFERENCE__PAGESCR,
 					i,
 					PAGE_USED_MULTIPLE_TIMES
 				)
