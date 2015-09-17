@@ -148,6 +148,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			«ENDFOR»
 		«ENDFOR»
 		«FOR DetailsPage dynp : Slug.getAllAttributeOfAComponente(component)»
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«dynp.name.toUpperCase»EDIT_TITLE = "«dynp.name.toFirstUpper»"edit
+				«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«dynp.name.toUpperCase»EDIT_DESC = "«dynp.name.toFirstUpper»"edit
 			«FOR Attribute attr: dynp.entities.last.attributes»
 				«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_«dynp.entities.last.name.toUpperCase»_«attr.name.toUpperCase» = "«attr.name.toFirstUpper»"
 			«ENDFOR»

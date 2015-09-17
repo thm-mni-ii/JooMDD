@@ -50,15 +50,15 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 
 
     
-    def CharSequence xmlSiteTemplateContent(Page page,Component component, String name) '''
+    def CharSequence xmlSiteTemplateContent(String pagename, Page page,Component component) '''
         <?xml version="1.0" encoding="utf-8"?>
         <metadata>
-            <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«page.name.toUpperCase»_TITLE" option="View">
-                <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«page.name.toUpperCase»_DESC]]></message>
+            <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
+                <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_DESC]]></message>
             </layout>
             <fields
                 name="request"
-                addfieldpath="administrator/components/«name»/models/fields"
+                addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
             >
                 <fieldset name="request">
                 	«generateParameter(page.globalparameters, component)»
