@@ -405,4 +405,112 @@
             project="true">
       </wizard>
    </extension>
+
+  <!-- XMI Serialization -->  
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="de.thm.icampus.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.ejsl.ui.handler.SerializationHandler"
+           commandId="de.thm.icampus.ejsl.ui.handler.SerializationCommand">
+     </handler>
+  </extension>
+       
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           id="de.thm.icampus.ejsl.ui.handler.SerializationCommand"
+           name="eJSL --&gt; XMI">
+     </command>
+  </extension>
+  
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
+        <menu
+              label="eJSL Serialization">
+           <command
+                 commandId="de.thm.icampus.ejsl.ui.handler.SerializationCommand"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate>
+                    <adapt
+                          type="org.eclipse.core.resources.IResource">
+                       <test
+                             property="org.eclipse.core.resources.name"
+                             value="*.xmi">
+                       </test>
+                    </adapt>
+                 </iterate>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="de.thm.icampus.ejsl.ui.handler.DeserializationCommand"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate>
+                    <adapt
+                          type="org.eclipse.core.resources.IResource">
+                       <test
+                             property="org.eclipse.core.resources.name"
+                             value="*.xmi">
+                       </test>
+                    </adapt>
+                 </iterate>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="de.thm.icampus.ejsl.ui.handler.SerializationCommand"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate>
+                    <adapt
+                          type="org.eclipse.core.resources.IResource">
+                       <test
+                             property="org.eclipse.core.resources.name"
+                             value="*.eJSL">
+                       </test>
+                    </adapt>
+                 </iterate>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="de.thm.icampus.ejsl.ui.handler.DeserializationCommand"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="false">
+                 <iterate>
+                    <adapt
+                          type="org.eclipse.core.resources.IResource">
+                       <test
+                             property="org.eclipse.core.resources.name"
+                             value="*.eJSL">
+                       </test>
+                    </adapt>
+                 </iterate>
+              </visibleWhen>
+           </command>
+        </menu>
+     </menuContribution>
+  </extension>
+  
+   <!-- XMI Deserialization -->
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="de.thm.icampus.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.ejsl.ui.handler.DeserializationHandler"
+           commandId="de.thm.icampus.ejsl.ui.handler.DeserializationCommand">
+     </handler>
+  </extension>
+       
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           id="de.thm.icampus.ejsl.ui.handler.DeserializationCommand"
+           name="eJSL &lt;-- XMI">
+     </command>
+  </extension>   
 </plugin>
