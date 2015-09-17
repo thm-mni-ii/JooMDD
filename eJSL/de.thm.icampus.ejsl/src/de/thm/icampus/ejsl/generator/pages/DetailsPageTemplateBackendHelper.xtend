@@ -133,6 +133,8 @@ class DetailsPageTemplateBackendHelper {
 	                <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
 				<input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
 				<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
+				<input type="hidden" name="jform[published]" value="<?php if($this->item->id != 0) echo $this->item->state; else echo 1;?>"/>
+				
 				<input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)){
 				 echo $this->item->checked_out;}else{ echo JFactory::getUser()->id;} ?>" />
 				<input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)){

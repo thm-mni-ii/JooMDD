@@ -102,7 +102,7 @@ protected function getReferencedata($id)
           ->from( $this->referenceStruct["table"] . " as a")
           ->leftJoin($this->referenceStruct["foreignTable"] . " as b on "
               . " b." . $this->referenceStruct["foreignKeys"] . '=' . " a." . $this->referenceStruct["keys"])
-         ->where("b.published = 1")
+         ->where("b.state = 1")
          ->where("a.id =" . $id)
          ->order($this->referenceStruct["foreignKeys"] . " ASC");
     $db->setQuery($query);
@@ -122,11 +122,11 @@ protected function getReferencedata($id)
         ->from( $this->referenceStruct["table"] . " as a")
         ->leftJoin($this->referenceStruct["foreignTable"]. " as b on "
             . " b." . $this->referenceStruct["foreignKeys"] . "=  a." . $this->referenceStruct["keys"])
-        ->where("b.published = 1")
+        ->where("b.state = 1")
         ->where("a.id =" . $id);
     $queryALL->select("*")
         ->from($this->referenceStruct["foreignTable"])
-        ->where("published = 1")
+        ->where("state = 1")
         ->where("id not in (" . $query  .")")
         ->order($this->referenceStruct["foreignKeys"] . " ASC");
     $db->setQuery($queryALL);
@@ -140,7 +140,7 @@ protected function getReferencedata($id)
     $queryALL = $db->getQuery(true);
     $queryALL->select("*")
         ->from($this->referenceStruct["foreignTable"])
-        ->where("published = 1")
+        ->where("state = 1")
         ->order($this->referenceStruct["foreignKeys"] . " ASC");
     $db->setQuery($queryALL);
     return $db->loadObjectList();

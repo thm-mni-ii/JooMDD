@@ -143,6 +143,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		«FOR Section sec : component.sections»
 			«FOR PageReference pag: sec.pageRef»
 				«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pag.page.name.toUpperCase» = "«pag.page.name.toFirstUpper»"
+				«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pag.page.name.toUpperCase»_TITLE = "«pag.page.name.toFirstUpper»"
+				«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pag.page.name.toUpperCase»_DESC = "«pag.page.name.toFirstUpper»"
 			«ENDFOR»
 		«ENDFOR»
 		«FOR DetailsPage dynp : Slug.getAllAttributeOfAComponente(component)»

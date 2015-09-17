@@ -53,8 +53,8 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
     def CharSequence xmlSiteTemplateContent(Page page,Component component, String name) '''
         <?xml version="1.0" encoding="utf-8"?>
         <metadata>
-            <layout title="«name.toUpperCase»_VIEW_DEFAULT_TITLE">
-                <message><![CDATA[«name.toUpperCase»_VIEW_DEFAULT_DESC]]></message>
+            <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«page.name.toUpperCase»_TITLE" option="View">
+                <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«page.name.toUpperCase»_DESC]]></message>
             </layout>
             <fields
                 name="request"
@@ -114,7 +114,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 					        <option value="2">JARCHIVED</option>
 					        <option value="-2">JTRASHED</option>
 					    </field> 
-
+         <field name="published" type="hidden" filter="unset" />
 		<field name="checked_out" type="hidden" filter="unset" />
         <field name="checked_out_time" type="hidden" filter="unset" /> 
 					</fieldset> 

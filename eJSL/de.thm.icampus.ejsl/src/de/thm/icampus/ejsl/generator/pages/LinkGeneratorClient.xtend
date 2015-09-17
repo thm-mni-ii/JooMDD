@@ -13,12 +13,13 @@ public class LinkGeneratorClient  {
 	Link link
 	String sect = ''
 	String compname
-	new( Link link, String section, String componentname){
+	String valueF
+	new( Link link, String section, String componentname, String vaLueFeatures){
 		this.link = link
 		if(section.equalsIgnoreCase('BackendSection'))
 		sect = section
 		compname = componentname
-		
+		valueF = vaLueFeatures
 	}
 	
 	new( Link link) {
@@ -36,7 +37,7 @@ public class LinkGeneratorClient  {
 			
 			InternalLink:{
 			if(link instanceof ContextLink) {
-				var ContextLinkGen intern = new ContextLinkGen(link)
+				var ContextLinkGen intern = new ContextLinkGen(link,valueF)
 				return intern.generateLink(sect,compname)
 			}
 			else{

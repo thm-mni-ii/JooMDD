@@ -375,7 +375,7 @@ class IndexPageTemplateHelper {
 		</div>        
 	
 	 '''
-	 def private CharSequence genAdminViewLayoutData(EList<Attribute>filters)'''
+	 def private CharSequence genAdminViewLayoutData(EList<Attribute>column)'''
  <table class="table table-striped" id="«indexpage.name.toFirstUpper»List">
 		<thead>
 			<tr>
@@ -392,14 +392,12 @@ class IndexPageTemplateHelper {
 					<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 				</th>
             <?php endif; ?>
-       «FOR Attribute attr : filters»
+       «FOR Attribute attr : column»
 	<th class='left'>
 	<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.eContainer as Entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 	</th>
      «ENDFOR»
-	
-        
-        
+     
     <?php if (isset($this->items[0]->id)): ?>
 		<th width="1%" class="nowrap center hidden-phone">
 			<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
@@ -460,29 +458,7 @@ class IndexPageTemplateHelper {
 			<?php echo JHtml::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
 		</td>
     <?php endif; ?>
-        
-	<td>
-	<?php if (isset($item->checked_out) && $item->checked_out) : ?>
-		<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, '«indexpage.name.toLowerCase».', $canCheckin); ?>
-	<?php endif; ?>
-	« var String first = if(!filters.empty) filters.get(0).name.toLowerCase»
-	
-	<?php if ($canEdit) : ?>
-		<a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»&id='.(int) $item->id); ?>">
-			<?php echo $this->escape($item->«first»); ?></a>
-		<?php else : ?>
-			<?php echo $this->escape($item->«first»); ?>
-		<?php endif; ?>
-		</td>
-		«FOR Attribute a: filters»
-		<td>
-            «IF filters.indexOf(a) > 0»
-              <?php echo $item->«a.name.toLowerCase»; ?>
-			«ENDIF»
-		</td>
-		«ENDFOR»
-
-
+		«genAdminModelAttributeReference(column)»
         <?php if (isset($this->items[0]->id)): ?>
 			<td class="center hidden-phone">
 				<?php echo (int) $item->id; ?>
@@ -578,6 +554,25 @@ if (!empty($this->extra_sidebar)) {
         // List state information.
         parent::populateState('a.id', 'asc');
     }
+ '''
+ public def CharSequence genAdminModelAttributeReference(EList<Attribute>column)'''
+    
+ 	« FOR Attribute attr : column»
+	«IF Slug.isAttributeLinked(attr, indexpage)»
+	<?php if ($canEdit) : ?>
+	<td>
+		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")» . '&id='.(int) $item->id); ?>">
+			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?></a>
+		<?php else : ?>
+			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
+		<?php endif; ?>
+		</td>
+	«ELSE»
+		<td>
+           <?php echo $item->«attr.name.toLowerCase»; ?>
+		</td>
+	«ENDIF»
+	«ENDFOR»
  '''
 }
 
