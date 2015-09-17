@@ -22,17 +22,19 @@ public class ContextLinkGen extends AbstractLinkGenerator {
 	
 	
 	ContextLink lk
+	String valueF
 	
-	new(ContextLink link) {
+	new(ContextLink link, String valueFeatures) {
 		lk = link
+		valueF= valueFeatures
 	}
 	
 	override generateLink(String sect, String compname) '''
-		 «if (sect.isEmpty) '' else sect +"/"»index.php?option=«compname»&view=«lk.target.name.toLowerCase»«genLinkOption(lk.linkparameters)»'''
+		 «if (sect.isEmpty) '' else sect +"/"»'index.php?option=com_«compname.toLowerCase»&view=«lk.target.name.toLowerCase»' «genLinkOption(lk.linkparameters)»'''
 	
 	def CharSequence genLinkOption(EList<LinkParameter> params)'''
 	«FOR LinkParameter lp : params»
-	&«lp.name»=«lp.attvalue»«lp.attvalue»
+	. '&«lp.name»=' . «valueF»«lp.attvalue.name.toLowerCase»
 	«ENDFOR»
 	'''
 	

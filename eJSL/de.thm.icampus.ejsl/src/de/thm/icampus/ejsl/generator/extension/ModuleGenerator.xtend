@@ -245,9 +245,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		for(Link lk: listLink){
 			if(lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){
-			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, Slug.getSectioName(module.pageRef.sect),  Slug.nameExtensionBind('com', module.pageRef.pagescr.name.toLowerCase) ) 
+			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, Slug.getSectioName(module.pageRef.sect),  Slug.nameExtensionBind('com', module.pageRef.pagescr.name.toLowerCase),"$item->") 
 				
-			   return '''JHtml::_('link',"«lkClient.generateLink»&id=" . $item->id, $item->«attribute.name.toLowerCase»)'''
+			   return '''JHtml::_('link',«lkClient.generateLink» . "&id=" . $item->id, $item->«attribute.name.toLowerCase»)'''
 			   
 			   }
 		}

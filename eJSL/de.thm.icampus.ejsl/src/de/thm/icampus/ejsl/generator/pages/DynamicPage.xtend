@@ -12,6 +12,7 @@ import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.eJSL.ParameterGroup
 import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.eJSL.Reference
 
 /**
  * <!-- begin-user-doc -->
@@ -49,15 +50,15 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 
 
     
-    def CharSequence xmlSiteTemplateContent(Page page,Component component, String name) '''
+    def CharSequence xmlSiteTemplateContent(String pagename, Page page,Component component) '''
         <?xml version="1.0" encoding="utf-8"?>
         <metadata>
-            <layout title="«name.toUpperCase»_VIEW_DEFAULT_TITLE">
-                <message><![CDATA[«name.toUpperCase»_VIEW_DEFAULT_DESC]]></message>
+            <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
+                <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_DESC]]></message>
             </layout>
             <fields
                 name="request"
-                addfieldpath="administrator/components/«name»/models/fields"
+                addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
             >
                 <fieldset name="request">
                 	«generateParameter(page.globalparameters, component)»
@@ -97,11 +98,25 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 					«FOR Entity e : page.entities»
 					«FOR Attribute attr : e.attributes»
 					 <field name="«attr.name.toLowerCase»" 
-					 type="«Slug.getTypeName(attr.htmltype).toLowerCase»" 
-					 label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«page.name.toUpperCase»_«attr.name.toUpperCase»"
+					 type="«getHtmlTypeOfAttribute(attr,e,component).toLowerCase»" 
+					 label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»"
 					 /> 
 					«ENDFOR»
 					«ENDFOR»
+					   <field name="state" type="list"
+					        label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS"
+					        description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JFIELD_PUBLISHED_DESC"
+					        class="inputbox"
+					        size="1"
+					        default="1">
+					        <option value="1">JPUBLISHED</option>
+					        <option value="0">JUNPUBLISHED</option>
+					        <option value="2">JARCHIVED</option>
+					        <option value="-2">JTRASHED</option>
+					    </field> 
+         <field name="published" type="hidden" filter="unset" />
+		<field name="checked_out" type="hidden" filter="unset" />
+        <field name="checked_out_time" type="hidden" filter="unset" /> 
 					</fieldset> 
 
 					 <fieldset name="accesscontrol">
@@ -120,6 +135,17 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 				</fieldset>
 				</form>
    		 '''
+   		 
+   	def String getHtmlTypeOfAttribute(Attribute attr, Entity en,Component com){
+   		
+   		for(Reference ref: en.references){
+   			if(ref.attribute.equals(attr)){
+   				return en.name + "To" +ref.entity.name
+   			}
+   		}
+   		
+   		return Slug.getTypeName(attr.htmltype);
+   	}
 	
 	override getLinkClient() {
 	}

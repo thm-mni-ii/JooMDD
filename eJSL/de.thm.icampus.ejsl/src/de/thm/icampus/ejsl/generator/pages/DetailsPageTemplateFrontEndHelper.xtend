@@ -5,6 +5,7 @@ import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.Section
 import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.eJSL.Entity
 
 class DetailsPageTemplateFrontEndHelper {
 	private DetailsPage dpage
@@ -320,7 +321,7 @@ class DetailsPageTemplateFrontEndHelper {
 	'''
 	
 	def CharSequence generateSiteModelgetTable()'''
-	public function getTable($type = '«dpage.name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array()) {
+	public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array()) {
 	        $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
 	        return JTable::getInstance($type, $prefix, $config);
 	    }
@@ -640,7 +641,7 @@ class DetailsPageTemplateFrontEndHelper {
 			<td><?php echo $this->item->created_by_name; ?></td>
 	</tr>
 	«FOR Attribute a: dpage.entities.get(0).attributes»
-	«attributShowTemplate(a)»
+	«attributShowTemplate(a, dpage.entities.get(0) )»
 	«ENDFOR»
 	</table>
 	</div>
@@ -658,9 +659,9 @@ else:
 endif;
 ?>
 	'''
-	def  CharSequence attributShowTemplate(Attribute attr) '''
+	def  CharSequence attributShowTemplate(Attribute attr, Entity e) '''
 	<tr>
-			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«dpage.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
 			<td><?php echo $this->item->«attr.name.toLowerCase»; ?></td></tr>
 	'''
 	

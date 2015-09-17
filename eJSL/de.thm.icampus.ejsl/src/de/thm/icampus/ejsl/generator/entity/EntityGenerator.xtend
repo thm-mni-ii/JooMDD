@@ -69,11 +69,12 @@ class EntityGenerator {
     
     def CharSequence generateSQLTable(Entity table, boolean isupdate)'''
     «IF !isupdate»
-    DROP TABLE IF EXISTS `#__«table.name.toLowerCase»`;
+    DROP TABLE IF EXISTS `#__«comp.name.toLowerCase»_«table.name.toLowerCase»`;
     «ENDIF»
 
-   CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`#__«table.name.toLowerCase»` (
-    `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,    
+   CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`#__«comp.name.toLowerCase»_«table.name.toLowerCase»` (
+    `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0',    
     `ordering` INT(11)  NOT NULL ,
     `state` TINYINT(1)  NOT NULL ,
     `checked_out` INT(11)  NOT NULL,
@@ -82,8 +83,10 @@ class EntityGenerator {
 	«FOR a:table.attributes»
 		`«a.name.toLowerCase»` «Slug.getTypeName(a.dbtype)»,
 	«ENDFOR»
+	`published` TINYINT(1),
+	`params` TEXT,
 «FOR r:table.references»
-	FOREIGN KEY (`«r.attribute.name.toLowerCase»`) REFERENCES `#__«r.entity.name.toLowerCase»` (`«r.attributerefereced.name.toLowerCase»`)
+	FOREIGN KEY (`«r.attribute.name.toLowerCase»`) REFERENCES `#__«comp.name.toLowerCase»_«r.entity.name.toLowerCase»` (`«r.attributerefereced.name.toLowerCase»`)
 	ON UPDATE CASCADE
 	ON DELETE CASCADE,
 «ENDFOR»
@@ -108,7 +111,7 @@ PRIMARY KEY (`id`)
         «/*val entities=component.eAllContents.toIterable.filter(typeof(Entity))*/»
         «val entities=getEntities(component)»
         «FOR e:entities»
-        	DROP TABLE IF EXISTS `#__«e.name.toLowerCase»`;
+        	DROP TABLE IF EXISTS `#__«comp.name.toLowerCase»_«e.name.toLowerCase»`;
         «ENDFOR»
     '''
 }

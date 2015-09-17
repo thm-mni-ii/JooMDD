@@ -27,6 +27,7 @@ import de.thm.icampus.ejsl.eJSL.SectionReference
 import de.thm.icampus.ejsl.eJSL.Link
 import de.thm.icampus.ejsl.eJSL.InternalLink
 import de.thm.icampus.ejsl.eJSL.ContextLink
+import de.thm.icampus.ejsl.generator.pages.LinkGeneratorClient
 
 /**
  * <!-- begin-user-doc -->
@@ -300,6 +301,26 @@ public class Slug  {
 		return ''
 		
 	}
+	
+	def static CharSequence databaseName(String componentName, String entityName) {
+		return "#__" + componentName.toLowerCase + "_" + entityName.toLowerCase
+	}
+	
+	def static Boolean isAttributeLinked(Attribute attr, DynamicPage page) {
+		for(Link ref: page.links){
+			if(ref.linkedAttribute.equals(attr))
+			return true
+		}
+		return false
+	}
+	
+	def static CharSequence linkOfAttribut(Attribute attribute, DynamicPage  page, String compname, String valuefeatures) '''
+	«FOR Link lk: page.links»
+	«IF lk.linkedAttribute.equals(attribute)»
+	«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»
+	«ENDIF»
+	«ENDFOR»
+	'''
 	
 	
 } // Slug

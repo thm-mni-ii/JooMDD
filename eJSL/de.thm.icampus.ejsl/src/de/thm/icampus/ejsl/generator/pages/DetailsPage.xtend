@@ -42,13 +42,13 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		  generateFile(path+"/" + pagename+"edit"+"/"+ "view.html.php", generateSiteView(true))
 		  generateJoomlaDirectory(path+"/" + pagename+ "edit"+"/" + "tmpl")
 		   generateFile(path+"/" + pagename+ "edit"+"/" + "tmpl"+"/" + "default.php" , generateSiteViewLayoutEdit())
-		   generateFile(path+"/" + pagename + "edit"+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(dpage,com,com.name))
+		   generateFile(path+"/" + pagename + "edit"+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename+ "edit", dpage, com))
 		   
 		   generateJoomlaDirectory(path+"/" + pagename)
 		  generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView(false))
 		  generateJoomlaDirectory(path +"/"+ pagename+"/" + "tmpl")
 		   generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow())
-		   generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(dpage,com,com.name))
+		   generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
 		 }
 		
 	}
@@ -61,7 +61,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		}
 	}
 	def void generateModel(){
-		if(sec.compareTo("admin")==0){
+		if(sec.equalsIgnoreCase("admin")){
 		
 		  generateFile(path+"/" + pagename + ".php", generateAdminModel())
 		   generateFile(path + "/forms"+"/" + pagename + ".xml", xmlAdminFields(dpage,com,com.name))

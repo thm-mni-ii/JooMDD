@@ -3,6 +3,7 @@
 package de.thm.icampus.ejsl.generator.pages
 
 import de.thm.icampus.ejsl.eJSL.InternalLink
+import de.thm.icampus.ejsl.generator.util.Slug
 
 /**
  * <!-- begin-user-doc -->
@@ -23,6 +24,6 @@ public class InternalLinkGen extends AbstractLinkGenerator {
 	}
 	
 	override generateLink(String sect, String compname) '''
-		 «if (sect.isEmpty) '' else sect + "/"»index.php?option=«compname»&view=«link.target.name.toLowerCase»'''
+		 «if (sect.isEmpty) '' else sect + "/"»"index.php?option=com_«compname.toLowerCase»&view=«link.target.name.toLowerCase»"'''
 	
 } // InternalLink
