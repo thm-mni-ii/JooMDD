@@ -24,7 +24,7 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 	override protected void configureFormatting(FormattingConfig c) {
 		c.setAutoLinewrap(120)
 		c.setWrappedLineIndentation(1)
-
+		
 		c.setLinewrap(0, 1, 2).before(SL_COMMENTRule)
 		c.setLinewrap(0, 1, 2).before(ML_COMMENTRule)
 		c.setLinewrap(0, 1, 1).after(ML_COMMENTRule)
@@ -36,7 +36,7 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 			c.setLinewrap(0).before(pair.getFirst())
 			c.setLinewrap(1).after(pair.getFirst())
 			c.setLinewrap(1).before(pair.getSecond())
-			c.setLinewrap(1, 1, 2).after(pair.getSecond())
+			c.setLinewrap(1, 1, 1).after(pair.getSecond())    // Linewrap must be (1,1,1) or else there will be some white lines before the }-keyword
 		}
 
 		/* Whitespace after ":" and "," but not before */
@@ -100,5 +100,43 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 		
 		/* KeyValuePair rule */
 		c.setLinewrap(1).after(keyValuePairAccess.valueSTRINGTerminalRuleCall_4_0)
+		
+		
+		/* 	New formatting rules SS15: 
+			set a Linewrap before the following keywords (table columns, filters, dbtype, ...) 
+			to set the belonging attributes under each other
+		*/
+		for (Keyword k : findKeywords("table columns")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("filters")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("htmltype")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("Primary attribute")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("dbtype")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("lower")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("upper")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("Attribute")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("*Entity")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("Reference")) {
+			c.setLinewrap.before(k)
+		}
+		
+		
 	}
 }

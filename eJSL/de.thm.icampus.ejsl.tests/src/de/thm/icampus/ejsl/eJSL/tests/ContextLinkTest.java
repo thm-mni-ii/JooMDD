@@ -13,7 +13,7 @@ import junit.textui.TestRunner;
  * <!-- end-user-doc -->
  * @generated
  */
-public class ContextLinkTest extends LinkTest {
+public class ContextLinkTest extends InternalLinkTest {
 
 	/**
 	 * <!-- begin-user-doc -->
