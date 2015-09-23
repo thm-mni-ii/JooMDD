@@ -1,12 +1,8 @@
-# JooMDD #
+# JooMDD <img src="http://icampus.thm.de/images/JooMDD_Logo_transp.png" alt="JooMDDLogo" height="100" style="max-width:100%;float:right;">#
 
-[![iCampusLogo] (http://icampus.thm.de/images/iCampusLogo_V2.png)](http://icampus.thm.de "Homepage of iCampus") 
-
-**JooMDD** provides an MDD infrastructure for the model-driven development of Joomla extension packages and Joomla application packages with concrete data.
-
+**JooMDD** provides an MDD infrastructure for the model-driven development of Joomla extension packages and Joomla application packages with concrete data. 
 The current version of the infrastructure can be used as plugins within the Eclipse IDE. We are currently working on support for IntelliJ-based IDEs. We are also working on a web-based solution for a simple and independent use of our approach.
 
-![JooMDDLogo] (http://icampus.thm.de/images/JooMDD_Logo_transp.png)
 ***
 ## Installation of JooMDD ##
 Install the JooMDD tools through the use of the following update site within the update manager in Eclipse. Please use the plugins within Eclipse Kepler, Luna, or Mars.
@@ -14,7 +10,7 @@ Install the JooMDD tools through the use of the following update site within the
 ### JooMDD update site: <http://icampus.thm.de/JooMDDUpdateSite> ###
 ***
 ## Getting Started ##
-### eJSL ###
+### eJSL <img src="http://icampus.thm.de/images/eJSL_Logo_trans.png" alt="eJSLLogo" height="50" style="max-width:100%;float:right;">###
 The eJSL part of JooMDD can be used to create extensions for the Joomla CMS in a model-driven way. Through the creation of eJSL-specific models a tremendous amount of code becomes generated automatically. eJSL supports the definition of several Joomla extension types like components, modules, plugins, and libraries. The generated code can be used within web pages, running on [Joomla 3.x](https://www.joomla.org/3). 
 
 Please make sure, that you've installed the eJSL part of JooMDD to follow the next steps.
@@ -35,7 +31,7 @@ eJSL allows you the definition of different parts of a Joomla extension. Startin
 #### 3. Code generation ####
 When you save your model, the code generator creates your modelled Joomla extensions within the project's src-gen folder. The extensions are installable within Joomla 3 web sites and don't need any additional line of code. However, if you knwo what you do, you can extend the generated code through individual features. But beware: All the code within the src-gen folder becomes COMPLETELY overwritten, when you change your model and save it. Therefore we recommend to copy generated extensions to another folder within your project, where you can extend them without loosing them after a new code generation. Another and cleaner option is using a versioning tool like git to store your individual added code.
 
-### cJSL ###
+### cJSL <img src="http://icampus.thm.de/images/cJSL_Logo_trans.png" alt="cJSLLogo" height="50" style="max-width:100%;float:right;">###
 With cJSL you have the possibility to create Joomla-based websites through the definition of so called cJSL files.
 ***
 ## Sources of JooMDD ##
