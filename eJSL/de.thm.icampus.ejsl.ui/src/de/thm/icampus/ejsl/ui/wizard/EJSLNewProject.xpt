@@ -8,81 +8,102 @@
 «FILE "src/model/Model.eJSL"-»
 /*
  * This is an example model with the needed model elements entities, pages, and extensions
- * '<..>' are just placeholders for names and should be replaced in concrete models!
+ * '_.._' are just placeholders for names and should be replaced in concrete models!
  */
 eJSLModel "name of the model" {
 	datatypes {
 		Datatype "varchar(255) NOT NULL",
 		Datatype "text NOT NULL",
-		Datatype "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+		Datatype "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'",
 		Datatype "date",
 		Datatype "textarea",
 		Datatype "text",
-		Datatype "editor"		
+		Datatype "editor"
 	}
-	entities { 
-		Entity <entity1> {
+	entities {
+		Entity _entity1_ {
 			attributes {
-				Attribute <attribute1> {
+				Attribute _attribute1_ {
 					dbtype = "varchar(255) NOT NULL"
 					htmltype = "text"
 					Primary attribute
 				}
-				Attribute <attribute2> {
+				Attribute _attribute2_ {
 					dbtype = "varchar(255) NOT NULL"
 					htmltype = "editor"
 				}
 			}
 		}
-		Entity <entity2> {
-			attributes { 
-				Attribute <attribute1> {
+		Entity _entity2_ {
+			attributes {
+				Attribute _attribute1_ {
 					dbtype = "varchar(255) NOT NULL"
 					htmltype = "text"
 					Primary attribute
 				}
-				Attribute <attribute2> {
+				Attribute _attribute2_ {
 					dbtype = "varchar(255) NOT NULL"
 					htmltype = "text"
 				}
 			}
 			references {
 				Reference {
-					Attribute = <attribute2>
-					*Entity = <entity1>
-					Reference = <entity1>.<attribute1>
+					Attribute = _attribute2_
+					*Entity = _entity1_
+					Reference = _entity1_._attribute1_
 					lower = 1
 					upper = 1
 				}
 			}
 		}
 	}
-
 	pages {
-		IndexPage <IndexPage1> {
-			*Entities <entity1>
-			table columns = <entity1>.<attribute1>, 
-				<entity1>.<attribute2>
+		IndexPage _IndexPage1_ {
+			*Entities _entity1_
+			table columns = _entity1_._attribute1_, _entity1_._attribute2_
+			filters = _entity1_._attribute1_, _entity1_._attribute2_ links {
+				InternalcontextLink Details {
+					target = _DetailsPage1_ linked attribute = _entity1_._attribute2_
+					linkparameters {
+						Parameter _p1_1_ = *Attribute  "_entity1_._attribute1_"
+					}
+				}
+			}
 		}
-		DetailsPage <DetailsPage1> {
-			*Entities <entity1>
+		DetailsPage _DetailsPage1_ {
+			*Entities _entity1_ links {
+				InternalLink Index {
+					target = _IndexPage1_ linked attribute = _entity1_._attribute1_
+				}
+			}
 		}
-		IndexPage <IndexPage2> {
-			*Entities <entity1>, <entity2>
-			table columns = <entity2>.<attribute1>, 
-				<entity2>.<attribute2>
+		IndexPage _IndexPage2_ {
+			*Entities _entity2_
+			table columns = _entity2_._attribute1_, _entity2_._attribute2_
+			filters = _entity2_._attribute1_, _entity2_._attribute2_ links {
+				InternalcontextLink Details {
+					target = _DetailsPage2_ linked attribute = _entity2_._attribute2_
+					linkparameters {
+						Parameter _p2_1_ = *Attribute  "_entity2_._attribute2_"
+					}
+				}
+			}
 		}
-		DetailsPage <DetailsPage2> {
-			*Entities <entity2>
+		DetailsPage _DetailsPage2_ {
+			*Entities _entity2_ links {
+				InternalLink Index {
+					target = _IndexPage2_ linked attribute = _entity2_._attribute1_
+				}
+			}
 		}
 	}
 	extensions {
-		Component <Component1> {
+		Component _Component1_ {
 			Manifestation {
 				authors {
 					Author "forename surname" {
 						authoremail = "name@provider.domain"
-						authorurl = "www.anyurl.com"
+						authorurl = "http://www.anyurl.com"
 					}
 				}
 				copyright = "Copyright"
@@ -90,16 +111,110 @@ eJSLModel "name of the model" {
 			}
 			languages {
 				Language de-DE {
-	   			}
+				}
 				Language en-GB {
 				}
 			}
 			sections {
 				Frontend section {
-					*Pages <IndexPage1>, <IndexPage2>
+					*Pages {
+						*Page: _IndexPage1_
+						*Page: _IndexPage2_
+					}
 				}
 				Backend section {
-					*Pages <IndexPage1>, <DetailsPage1>, <IndexPage2>, <DetailsPage2>
+					*Pages {
+						*Page: _IndexPage1_
+						*Page: _DetailsPage1_
+						*Page: _IndexPage2_
+						*Page: _DetailsPage2_
+					}
+				}
+			}
+		}
+		Module _Module1_ {
+			Manifestation {
+				authors {
+					Author "forename surname" {
+						authoremail = "name@provider.domain"
+						authorurl = "http://www.anyurl.com"
+					}
+				}
+				copyright = "Copyright"
+				license = "License"
+			}
+			languages {
+				Language de-DE {
+				}
+				Language en-GB {
+				}
+			}
+			*Page: _IndexPage1_ from: _Component1_ .backend
+		}
+		Extension package _ExtensionPackage1_ {
+			Manifestation {
+				authors {
+					Author "forename surname" {
+						authoremail = "name@provider.domain"
+						authorurl = "http://www.anyurl.com"
+					}
+				}
+				copyright = "Copyright"
+				license = "License"
+			}
+			extensions {
+				Component _Component2_ {
+					Manifestation {
+						authors {
+							Author "forename surname" {
+								authoremail = "name@provider.domain"
+								authorurl = "https://www.anyurl.com"
+							}
+						}
+						copyright = "Copyright"
+						license = "License"
+					}
+					languages {
+						Language de-DE {
+						}
+						Language en-GB {
+						}
+					}
+					sections {
+						Frontend section {
+							*Pages {
+								*Page: _IndexPage1_
+								*Page: _IndexPage2_
+							}
+						}
+						Backend section {
+							*Pages {
+								*Page: _IndexPage1_
+								*Page: _DetailsPage1_
+								*Page: _IndexPage2_
+								*Page: _DetailsPage2_
+							}
+						}
+					}
+				}
+				Module _Module2_ {
+					Manifestation {
+						authors {
+							Author "forename surname" {
+								authoremail = "name@provider.domain"
+								authorurl = "http://www.anyurl.com"
+							}
+						}
+						copyright = "Copyright"
+						license = "License"
+					}
+					languages {
+						Language de-DE {
+						}
+						Language en-GB {
+						}
+					}
+					*Page: _IndexPage1_ from: _Component2_ .backend
 				}
 			}
 		}
