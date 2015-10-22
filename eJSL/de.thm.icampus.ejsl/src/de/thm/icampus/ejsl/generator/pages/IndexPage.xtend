@@ -28,7 +28,17 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		this.path = path
 		pagename = dp.name.toLowerCase
 		this.fsa = fsa
+		ipage.formatName
 	}
+	
+	def void formatName(IndexPage page){
+		page.name = Slug.slugify(page.name)
+		for(Entity e: page.entities){
+			for(Attribute attr : e.attributes){
+				attr.name = Slug.slugify(attr.name)
+			}
+		}
+		}
 	
 	def void generateView(){
 		

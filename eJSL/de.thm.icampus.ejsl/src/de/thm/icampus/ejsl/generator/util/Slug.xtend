@@ -170,7 +170,7 @@ public class Slug  {
 	}
 	
 	def static CharSequence inputHiddenFeldTemplate(Attribute attr) '''
-	<input type="hidden" name="jform[«attr.name.toLowerCase»]" value="<?php echo $this->item->«attr.name.toLowerCase»; ?>" />
+	<input type="hidden" name="jform[«Slug.slugify(attr.name).toLowerCase»]" value="<?php echo $this->item->«Slug.slugify(attr.name).toLowerCase»; ?>" />
 	'''
 	
 	def static CharSequence generateEntytiesInputAttribute(Entity entity, List<Entity> toSchowEntities) {
@@ -232,11 +232,11 @@ public class Slug  {
 	'''
 	
 	def static String generateKeysName(Component com, String name){
-		return "COM_" + com.name.toUpperCase + "_" + name.toUpperCase
+		return "COM_" + com.name.toUpperCase + "_" + Slug.slugify(name).toUpperCase
 	}
 	
 	def static String generateKeysNamePage(Component com, Page page ,String name){
-		return "COM_" + com.name.toUpperCase + "_FIELD_" + page.name.toUpperCase + "_" + name.toUpperCase
+		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(page.name).toUpperCase + "_" + Slug.slugify(name).toUpperCase
 	}
 	
 	def static DetailsPage getPageForDetails(IndexPage inpage, Component com) {

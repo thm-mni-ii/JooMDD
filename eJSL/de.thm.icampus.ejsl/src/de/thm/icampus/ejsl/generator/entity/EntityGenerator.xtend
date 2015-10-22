@@ -109,6 +109,7 @@ PRIMARY KEY (`id`)
     
    def CharSequence sqlAdminSqlUninstallContent(Component component) '''
         «/*val entities=component.eAllContents.toIterable.filter(typeof(Entity))*/»
+        SET foreign_key_checks = 0;
         «val entities=getEntities(component)»
         «FOR e:entities»
         	DROP TABLE IF EXISTS `#__«comp.name.toLowerCase»_«e.name.toLowerCase»`;

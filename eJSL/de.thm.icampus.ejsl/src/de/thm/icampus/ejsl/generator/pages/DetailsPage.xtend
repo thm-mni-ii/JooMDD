@@ -5,6 +5,8 @@ import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.Section
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.eJSL.Entity
+import de.thm.icampus.ejsl.eJSL.Attribute
 
 class DetailsPageTemplate extends   DynamicPageTemplate {
 	
@@ -26,6 +28,16 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		this.path = path
 		pagename = dpage.name.toLowerCase
 		this.fsa = fsa
+		dpage.formatName
+	}
+	
+	def void formatName(DetailsPage page){
+		page.name= Slug.slugify(page.name)
+		for(Entity e: page.entities){
+			for(Attribute attr : e.attributes){
+				attr.name = Slug.slugify(attr.name)
+			}
+		}
 	}
 	
 	def void generateView(){

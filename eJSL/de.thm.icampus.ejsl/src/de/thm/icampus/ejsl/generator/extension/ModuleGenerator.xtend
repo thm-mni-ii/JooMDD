@@ -47,9 +47,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	var String modelOfComponent2 = null;
 	
 	private IndexPage dpage
-		new(IndexPage dp){
-		dpage = dp
-	}
+	
 
 	Module module
 
@@ -59,6 +57,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		this.module = module
 		
 		this.ComponentInformation(module)
+		this.module.formatName
+	}
+	
+	def void formatName(Module module){
+		module.name = Slug.slugify(module.name)
 	}
 
 	public def PageGeneratorClient getPageClient() {
