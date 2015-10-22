@@ -69,7 +69,6 @@ public class SerializationHandler extends AbstractHandler implements IHandler {
 
 		// store in a xmi-resoure
 		Resource xmiResource = resourceSet.createResource(xmiModelURI);
-		System.out.println(xmiResource);
 		xmiResource.getContents().add(xtextResource.getContents().get(0));
 		try {
 			xmiResource.save(null);

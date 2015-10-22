@@ -136,7 +136,12 @@ class EJSLFormatter extends AbstractDeclarativeFormatter {
 		for (Keyword k : findKeywords("Reference")) {
 			c.setLinewrap.before(k)
 		}
-		
+		for (Keyword k : findKeywords("linkparameters")) {
+			c.setLinewrap.before(k)
+		}
+		for (Keyword k : findKeywords("*Page")) {
+			c.setLinewrap.before(k)
+		}
 		
 	}
 }

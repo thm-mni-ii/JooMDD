@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/de.thm.icampus.cjsl.sdk_1.0.0.201508061426.jar" id="de.thm.icampus.cjsl.sdk" version="1.0.0.201508061426">
-      <category name="JooMDD"/>
-   </feature>
-   <feature url="features/de.thm.icampus.ejsl.sdk_1.0.0.201508061426.jar" id="de.thm.icampus.ejsl.sdk" version="1.0.0.201508061426">
+   <feature url="features/de.thm.icampus.ejsl.sdk_1.0.0.201510081243.jar" id="de.thm.icampus.ejsl.sdk" version="1.0.0.201510081243">
       <category name="JooMDD"/>
    </feature>
    <category-def name="JooMDD" label="JooMDD: Joomla extension and concrete data modeling">
       <description>
          eJSL - Extension modeling for the Joomla CMS 
-cJSL - Concrete data modeling for a Joomla based application
       </description>
    </category-def>
 </site>

@@ -155,7 +155,7 @@ ExternalLink returns ExternalLink:
 	'ExternalLink' 
 	'{'
 		'target' '=' target=STRING
-		'linked attribute' '=' '*' linkedAttribute=[Attribute|QualifiedName]
+		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
 		('label' '=' label=STRING)?
 	'}'
 ;
@@ -164,8 +164,8 @@ InternalLink returns InternalLink:
 	{InternalLink}
 	('InternalLink' name=MYID 
 	'{'
-		'target' '=' '*'target=[Page|QualifiedName]
-		'linked attribute' '=' '*' linkedAttribute=[Attribute|QualifiedName]
+		'target' '=' target=[Page|QualifiedName]
+		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
 	'}') | ContextLink
 ;
 
@@ -173,8 +173,8 @@ ContextLink returns ContextLink:
 	{ContextLink}
 	'InternalcontextLink' name=MYID 
 	'{'
-		'target' '=' '*'target=[Page|QualifiedName]
-		'linked attribute' '=' '*' linkedAttribute=[Attribute|QualifiedName]
+		'target' '=' target=[Page|QualifiedName]
+		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
 		'linkparameters' '{' (linkparameters+=LinkParameter)* '}'
 	'}'
 ;
@@ -226,7 +226,7 @@ Backend returns BackendSection:
 ;
 
 PageReference returns PageReference:
-	'*Page:' page=[Page|QualifiedName] ('from:' pagescr=[Component|QualifiedName] sect = SectionReference)?
+	'*Page' ':' page=[Page|QualifiedName] ('from' ':' pagescr=[Component|QualifiedName] sect = SectionReference)?
 ;
 
 Frontend returns FrontendSection:
@@ -245,7 +245,7 @@ Module returns Module:
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
-		( pageRef=PageReference)?
+		(pageRef=PageReference)?
 	'}'	
 ;
 
