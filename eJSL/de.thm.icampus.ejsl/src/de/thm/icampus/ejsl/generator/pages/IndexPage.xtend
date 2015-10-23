@@ -112,11 +112,13 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	 */
 	class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends JModelList {
 		
+		«Slug.genLinkedInfo(ipage,com)»
 		«helper.genAdminModelConstruct»
 		«helper.genAdminModelGetItem»
 		«helper.genAdminModelGetListQuery(ipage.filters)»
 		«helper.genAdminModelSaveOrder»
 		«helper.genAdminModelPopulateState»
+		«helper.genGetIdOfReferenceItem»
 	}
 	
 	'''

@@ -28,6 +28,7 @@ import de.thm.icampus.ejsl.eJSL.Link
 import de.thm.icampus.ejsl.eJSL.InternalLink
 import de.thm.icampus.ejsl.eJSL.ContextLink
 import de.thm.icampus.ejsl.generator.pages.LinkGeneratorClient
+import de.thm.icampus.ejsl.eJSL.ExternalLink
 
 /**
  * <!-- begin-user-doc -->
@@ -317,10 +318,60 @@ public class Slug  {
 	def static CharSequence linkOfAttribut(Attribute attribute, DynamicPage  page, String compname, String valuefeatures) '''
 	«FOR Link lk: page.links»
 	«IF lk.linkedAttribute.equals(attribute)»
-	«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»
+	«switch lk{
+		ExternalLink :{
+			'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»'''
+			}
+		 InternalLink:{
+		 if(!(lk as InternalLink).target.class.simpleName.equalsIgnoreCase("IndexPage")){
+		   if(page.equals(lk.target)){
+		   	
+		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->id'''
+		    
+		   	}		   	   
+		    else{
+		 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem(«(lk as InternalLink).name.toLowerCase»,$item->«attribute.name.toLowerCase»)'''
+		 	  }
+		 	}else{}
+		 	}
+		}»
+	
 	«ENDIF»
 	«ENDFOR»
 	'''
+	
+	def static Boolean isLinkedAttributeReference(Attribute attribute, DynamicPage page) {
+		
+		for(Entity e: page.entities){
+			for(Reference ref: e.references){
+				if(ref.attribute.equals(attribute))
+				return true
+			}
+		}
+		return false
+	}
+	
+	def static Reference searchLinkedAttributeReference(Attribute attribute, DynamicPage page) {
+		for(Entity e: page.entities){
+			for(Reference ref: e.references){
+				if(ref.attribute.equals(attribute))
+				return ref
+			}
+		}
+		return null
+	}
+	 static def CharSequence genLinkedInfo(DynamicPage page, Component com)'''
+ 	private  $entitiesRef = array(
+ 	«FOR Link linkItem: page.links»
+ 	«switch linkItem {
+ 		InternalLink :{
+ 			if(isLinkedAttributeReference(linkItem.linkedAttribute, page)){
+ 				var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
+ 				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => "«ref.attributerefereced.name»"),'''	
+ 			} 				
+ 		}	
+ 	}»«ENDFOR»null);
+ '''
 	
 	
 } // Slug

@@ -9,6 +9,11 @@ import java.util.HashSet
 import java.util.Set
 import de.thm.icampus.ejsl.generator.util.Slug
 import de.thm.icampus.ejsl.eJSL.Entity
+import org.w3c.dom.stylesheets.LinkStyle
+import de.thm.icampus.ejsl.eJSL.Link
+import de.thm.icampus.ejsl.eJSL.InternalLink
+import de.thm.icampus.ejsl.eJSL.DynamicPage
+import de.thm.icampus.ejsl.eJSL.Reference
 
 class IndexPageTemplateHelper {
 	 IndexPage indexpage
@@ -556,7 +561,6 @@ if (!empty($this->extra_sidebar)) {
     }
  '''
  public def CharSequence genAdminModelAttributeReference(EList<Attribute>column)'''
-    
  	« FOR Attribute attr : column»
 	«IF Slug.isAttributeLinked(attr, indexpage)»
 	<?php if ($canEdit) : ?>
@@ -569,11 +573,35 @@ if (!empty($this->extra_sidebar)) {
 		</td>
 	«ELSE»
 		<td>
-           <?php echo $item->«attr.name.toLowerCase»; ?>
+		<?php echo $item->«attr.name.toLowerCase»; ?>
 		</td>
 	«ENDIF»
 	«ENDFOR»
  '''
+
+ public def CharSequence genGetIdOfReferenceItem ()'''
+  /**
+     * Method to get the id of Reference
+     * @param String  $linkName   containt the name of a Attribute
+     * @param String  $attrvaluen  containt the value of a Row
+     *
+     * @return the ID of a Row
+     *
+     */
+    public function getIdOfReferenceItem($linkName, $attrvalue){
+        $dbtable = $this->entitiesRef[$linkName]["db"];
+        $attribute = $this->entitiesRef[$linkName]["refattr"];
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query->select("id")
+            ->from($dbtable)
+            ->where($attribute . " = '$attrvalue'");
+        $db->setQuery($query);
+        $result = $db->loadObject();
+        return $result;
+
+    }
+  '''
 }
 
 		
