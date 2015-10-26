@@ -323,16 +323,18 @@ public class Slug  {
 			'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»'''
 			}
 		 InternalLink:{
-		 if(!(lk as InternalLink).target.class.simpleName.equalsIgnoreCase("IndexPage")){
-		   if(page.equals(lk.target)){
+		 if((lk as InternalLink).target instanceof DetailsPage){
+		   if((page as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)){
 		   	
 		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->id'''
 		    
 		   	}		   	   
 		    else{
-		 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem(«(lk as InternalLink).name.toLowerCase»,$item->«attribute.name.toLowerCase»)'''
+		 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item->«attribute.name.toLowerCase»)'''
 		 	  }
-		 	}else{}
+		 	}else{
+		 		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
+		 		}
 		 	}
 		}»
 	
@@ -368,7 +370,7 @@ public class Slug  {
  			if(isLinkedAttributeReference(linkItem.linkedAttribute, page)){
  				var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
  				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => "«ref.attributerefereced.name»"),'''	
- 			} 				
+ 			}				
  		}	
  	}»«ENDFOR»null);
  '''

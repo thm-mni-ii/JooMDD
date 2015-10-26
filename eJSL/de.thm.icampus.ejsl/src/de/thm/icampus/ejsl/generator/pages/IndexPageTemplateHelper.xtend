@@ -565,7 +565,7 @@ if (!empty($this->extra_sidebar)) {
 	«IF Slug.isAttributeLinked(attr, indexpage)»
 	<?php if ($canEdit) : ?>
 	<td>
-		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")» . '&id='.(int) $item->id); ?>">
+		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")»); ?>">
 			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?></a>
 		<?php else : ?>
 			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
@@ -589,17 +589,17 @@ if (!empty($this->extra_sidebar)) {
      *
      */
     public function getIdOfReferenceItem($linkName, $attrvalue){
-        $dbtable = $this->entitiesRef[$linkName]["db"];
-        $attribute = $this->entitiesRef[$linkName]["refattr"];
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select("id")
-            ->from($dbtable)
-            ->where($attribute . " = '$attrvalue'");
-        $db->setQuery($query);
-        $result = $db->loadObject();
-        return $result;
+      $dbtable = $this->entitiesRef["$linkName"]["db"];
+      $attribute = $this->entitiesRef["$linkName"]["refattr"];
+      $db = JFactory::getDbo();
+      $query = $db->getQuery(true);
+      $query->select("id")
+          ->from($dbtable)
+          ->where($attribute . " like '$attrvalue'");
+      $db->setQuery($query);
+      $result = $db->loadObject();
 
+      return intval($result->id);
     }
   '''
 }
