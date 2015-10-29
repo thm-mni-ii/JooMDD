@@ -138,10 +138,35 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	public function getItem($pk = null)
 	{
-		if ($item = parent::getItem($pk)) {
+		    $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
+        $table = $this->getTable();
 
+        if ($pk > 0)
+        {
+            // Attempt to load the row.
+            $return = $table->load($pk);
 
-		}
+            // Check for a table object error.
+            if ($return === false && $table->getError())
+            {
+                $this->setError($table->getError());
+
+                return false;
+            }
+        }
+
+        // Convert to the JObject before adding other data.
+        $properties = $table->getProperties(1);
+        $item = JArrayHelper::toObject($properties, 'JObject');
+
+        if (property_exists($item, 'params'))
+        {
+            $registry = new Registry;
+            $registry->loadString($item->params);
+            $item->params = $registry->toArray();
+        }
+
+        return $item;
 
 		return $item;
 	}
@@ -279,6 +304,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	jimport('joomla.application.component.modelitem');
 	jimport('joomla.event.dispatcher');
+	use Joomla\Registry\Registry;
 	
 	/**
 	 * Model to show a Dataitem
@@ -299,6 +325,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	jimport('joomla.application.component.modelform');
 	jimport('joomla.event.dispatcher');
+	use Joomla\Registry\Registry;
 	
 	/**
 	 * Model to Edit  a Dataitem

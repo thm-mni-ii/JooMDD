@@ -15,7 +15,8 @@ import de.thm.icampus.ejsl.eJSL.InternalLink
 import de.thm.icampus.ejsl.eJSL.DynamicPage
 import de.thm.icampus.ejsl.eJSL.Reference
 
-class IndexPageTemplateHelper {
+class IndexPageTemplateAdminHelper {
+	
 	 IndexPage indexpage
 	private Component  com
 	private String sec
@@ -463,7 +464,7 @@ class IndexPageTemplateHelper {
 			<?php echo JHtml::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
 		</td>
     <?php endif; ?>
-		«genAdminModelAttributeReference(column)»
+		«genAdminModelAttributeReference(column, indexpage, com)»
         <?php if (isset($this->items[0]->id)): ?>
 			<td class="center hidden-phone">
 				<?php echo (int) $item->id; ?>
@@ -560,24 +561,7 @@ if (!empty($this->extra_sidebar)) {
         parent::populateState('a.id', 'asc');
     }
  '''
- public def CharSequence genAdminModelAttributeReference(EList<Attribute>column)'''
- 	« FOR Attribute attr : column»
-	«IF Slug.isAttributeLinked(attr, indexpage)»
-	<?php if ($canEdit) : ?>
-	<td>
-		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")»); ?>">
-			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?></a>
-		<?php else : ?>
-			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
-		<?php endif; ?>
-		</td>
-	«ELSE»
-		<td>
-		<?php echo $item->«attr.name.toLowerCase»; ?>
-		</td>
-	«ENDIF»
-	«ENDFOR»
- '''
+ 
 
  public def CharSequence genGetIdOfReferenceItem ()'''
   /**
@@ -602,6 +586,24 @@ if (!empty($this->extra_sidebar)) {
       return intval($result->id);
     }
   '''
+  public  def CharSequence genAdminModelAttributeReference(EList<Attribute>column, IndexPage indexpage, Component com )'''
+ 	« FOR Attribute attr : column»
+	«IF Slug.isAttributeLinked(attr, indexpage)»
+	<?php if ($canEdit) : ?>
+	<td>
+		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")»); ?>">
+			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?></a>
+		<?php else : ?>
+			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
+		<?php endif; ?>
+		</td>
+	«ELSE»
+		<td>
+		<?php echo $item->«attr.name.toLowerCase»; ?>
+		</td>
+	«ENDIF»
+	«ENDFOR»
+ '''
 }
 
 		

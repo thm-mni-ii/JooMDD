@@ -37,7 +37,7 @@ class DetailsPageTemplateFrontEndHelper {
 			
 		        // Get the model.
 		        «IF isedit»
-		        $model = $this->getModel('«dpage.name.toFirstUpper»'Edit, '«com.name.toFirstUpper»Model');
+		        $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
 		        «ELSE»
 		        $model = $this->getModel('«dpage.name.toFirstUpper»', '«com.name.toFirstUpper»Model');
 		        «ENDIF»
@@ -69,7 +69,7 @@ class DetailsPageTemplateFrontEndHelper {
 	
 	        // Initialise variables.
 	        $app = JFactory::getApplication();
-		        $model = $this->getModel('«dpage.name.toFirstUpper»'Edit, '«com.name.toFirstUpper»Model');
+		        $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
 	
 	        // Get the user data.
 	        $data = JFactory::getApplication()->input->get('jform', array(), 'array');
@@ -159,7 +159,7 @@ class DetailsPageTemplateFrontEndHelper {
 		        $editId = (int) $app->getUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».id');
 		
 		        // Get the model.
-		       $model = $this->getModel('«dpage.name.toFirstUpper»'Edit, '«com.name.toFirstUpper»Model');
+		       $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
 
 		
 		        // Check in the item
@@ -646,11 +646,11 @@ class DetailsPageTemplateFrontEndHelper {
 	</table>
 	</div>
 	<?php if($canEdit && $this->item->checked_out == 0): ?>
-		<a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase».edit&id='.$this->item->id); ?>">
+		<a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.edit&id='.$this->item->id); ?>">
 		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
 	<?php endif; ?>
 	<?php if(JFactory::getUser()->authorise('core.delete','«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$this->item->id)):?>
-		<a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase».remove&id=' . $this->item->id, false, 2); ?>">
+		<a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.remove&id=' . $this->item->id, false, 2); ?>">
 		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
 	<?php endif; ?>
 	<?php

@@ -13,6 +13,7 @@ import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.eJSL.ParameterGroup
 import de.thm.icampus.ejsl.generator.util.Slug
 import de.thm.icampus.ejsl.eJSL.Reference
+import de.thm.icampus.ejsl.eJSL.IndexPage
 
 /**
  * <!-- begin-user-doc -->
@@ -41,11 +42,11 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 		«ENDFOR»
 		* @copyright «component.manifest.copyright»
 		* @license «component.manifest.license»
-		
+		*/
 		«IF denied»
 		defined('_JEXEC') or die('Restricted access');
 		«ENDIF»
-		*/
+		
 	'''
 
 
@@ -60,14 +61,29 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
                 name="request"
                 addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
             >
-                <fieldset name="request">
-                	«generateParameter(page.globalparameters, component)»
-                    «generateParameter(page.localparameters, component)»
-                    «FOR ParameterGroup e : page.parametergroups »
-                    «generateParameter(e.globalparameters, component)»
-                    «generateParameter(e.parameters,component)»
-                    «ENDFOR»
+           
+            «IF page instanceof IndexPage»
+             <fieldset name="request">
+                <field name="template_layout" type="list"
+                label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_TEMPLATE_LAYOUT"
+		        description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_TEMPLATE_LAYOUT_DESC"
+		        class="inputbox"
+		        size="1"
+		        default="1">
+		        <option value="1">JTEMPLATE_LAYOUT_LIST</option>
+		        <option value="2">JTEMPLATE_LAYOUT_TABLE</option>
+				</field> 
+				</fieldset>
+			«ENDIF»
+            	«generateParameter(page.globalparameters, component)»
+                «generateParameter(page.localparameters, component)»
+                «FOR ParameterGroup e : page.parametergroups »
+                <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_«page.name.toUpperCase»_«e.name.toUpperCase»" 
+                «generateParameter(e.globalparameters, component)»
+                «generateParameter(e.parameters,component)»
                 </fieldset>
+                «ENDFOR»
+               
             </fields>
         </metadata>
     '''
