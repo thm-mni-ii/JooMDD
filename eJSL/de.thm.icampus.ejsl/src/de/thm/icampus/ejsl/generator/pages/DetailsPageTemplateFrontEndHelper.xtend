@@ -495,7 +495,7 @@ class DetailsPageTemplateFrontEndHelper {
 	        $user = JFactory::getUser();
 	
 	        $this->state = $this->get('State');
-	        $this->item = $this->get('Data');
+	        $this->item = $this->get('Item');
 	        $this->params = $app->getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 			«IF isedit»
 			$this->setLayout('Edit');
@@ -638,7 +638,7 @@ class DetailsPageTemplateFrontEndHelper {
 	</tr>
 	<tr>
 			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY'); ?></th>
-			<td><?php echo $this->item->created_by_name; ?></td>
+			<td><?php echo $this->item->created_by; ?></td>
 	</tr>
 	«FOR Attribute a: dpage.entities.get(0).attributes»
 	«attributShowTemplate(a, dpage.entities.get(0) )»

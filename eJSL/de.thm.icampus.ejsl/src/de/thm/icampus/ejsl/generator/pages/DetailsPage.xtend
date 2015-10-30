@@ -138,7 +138,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	public function getItem($pk = null)
 	{
-		    $pk = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
+		    $pk = (!empty($pk)) ? $pk : (int) $this->getState('«dpage.name.toLowerCase».id');
         $table = $this->getTable();
 
         if ($pk > 0)
@@ -311,7 +311,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends JModelItem {
 		«frontHelp.generateSiteModelPopulatestate()»
-		«frontHelp.generateSiteModelgetData(false)»
+		«generateModelGetItemFunction»
 		«frontHelp.generateSiteModelCheckin()»
 		«frontHelp.generateSiteModelgetTable»
 		«frontHelp.generateSiteModelCheckout()»
