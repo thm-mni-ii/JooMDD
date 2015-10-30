@@ -202,6 +202,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	«generateFileDoc(dpage,com,true)»
 	
 	jimport('joomla.application.component.modeladmin');
+	use Joomla\Registry\Registry;
 
 	/**
 	 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
