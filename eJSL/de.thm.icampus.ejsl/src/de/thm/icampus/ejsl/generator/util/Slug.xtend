@@ -297,7 +297,7 @@ public class Slug  {
 	
 	def static String getSectioName(SectionReference  reference) {
 		if(reference.getName().equals('backend'))
-		return 'BackendSection'
+		return 'admin'
 		
 		return ''
 		

@@ -178,11 +178,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 				require_once __DIR__ . '/helper.php';
 				require_once JPATH_ADMINISTRATOR . '/components/com_«c.name.toLowerCase»/helpers/«c.name.toLowerCase».php';
 
-				// «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::updateReset();
-				$list = &«modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::getList($params);
-				$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-
-				// Models, Functions should be implementated here
+				
 			«ELSE»
 		<?php
 		«Slug.generateFileDoc(module, true)»
@@ -194,10 +190,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 				// Include the «module.name» functions only once
 				require_once __DIR__ . '/helper.php';
-
-				// Models, Functions should be implementated here
 			«ENDIF»
-
+			// Models, Functions should be implementated here
+		    // «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::updateReset();
+			$items = &«modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::getList($params);
+			$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 			require JModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
 			'''
 	}
@@ -220,7 +217,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 				<?php// echo $headerText; ?>
 			<?php// endif; ?>
 			
-			<?php foreach ($list as $item) : ?>
+			<?php foreach ($items as $item) : ?>
 			<div class="«module.pageRef.page.name»item">
 			<?php if (empty($item)) : ?>
 				«IF mpage.entities.isEmpty»
@@ -299,7 +296,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		return $elements;
 		}
 		}
-		?>
+		
 				«ELSE»
 			$model = JModelLegacy::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
 			$model = $model->getItems();
