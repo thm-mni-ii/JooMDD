@@ -5,9 +5,39 @@ The current version of the infrastructure can be used as plugins within the Ecli
 
 ***
 ## Installation of JooMDD ##
+### Installation in Eclipse ###
 Install the JooMDD tools through the use of the following update site within the update manager in Eclipse. Please use the plugins within Eclipse Kepler, Luna, or Mars.
 
-### JooMDD update site: <http://icampus.thm.de/JooMDDUpdateSite> ###
+#### JooMDD update site: <http://icampus.thm.de/JooMDDUpdateSite> ####
+### Installation in PHPStorm ###
+#### Precondition: ####
+IntelliJ IDEA 15, PHPStorm 10, Xtext IDEA Core 2.9 (available here: <http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip>)
+#### Prepare PHPStorm (only first time): ###
+*	Merge the IntellijIDEA\lib\openpi.jar into the PHPStorm\lib\openapi.jar (copy all missing content to PHPStorm)
+*	Copy the IntellijIDEA\lib\idea.jar to PHPStorm\lib\.
+*	Edit the downloaded Plugin org.eclipse.xtext.idea\META-INF\plugin.xml. 
+    * Change the "JUnit" dependency to "com.intellij.modules.lang" (Line 9)
+    * Now you add the Plugin in PHPStorm via the Plugin manager (Install plugin from disk…)
+
+#### Add the language to PHPStorm: ####
+*	Add the update site in the Plugin Manager and install the Plugin.
+    * 	Update Site: ...
+*	Now you must configure the Plugin via the Project file (the Project file is in the work directory of the Project in the folder .idea\....iml
+
+Example for adding the configuration in the project file:
+
+    <component name="FacetManager">
+      <facet type="de.thm.icampus.ejsl.EJSL" name="EJSL">
+        <configuration>
+          <option name="activated" value="true" />
+          <option name="createDirectory" value="true" />
+          <option name="outputDirectory" value="src-gen" />
+          <option name="overwriteExisting" value="true" />
+          <option name="testOutputDirectory" value="src-gen" />
+        </configuration>
+      </facet>
+    </component>
+
 ***
 ## Getting Started ##
 ### eJSL <img src="http://icampus.thm.de/images/eJSL_Logo_trans.png" alt="eJSLLogo" height="50" style="max-width:100%;float:right;">###
