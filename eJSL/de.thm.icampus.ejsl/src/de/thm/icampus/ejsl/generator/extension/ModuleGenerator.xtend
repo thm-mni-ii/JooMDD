@@ -99,7 +99,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	
 	def languageFileGen(EList<KeyValuePair> list) '''
 	«FOR KeyValuePair key: list»
-	«key.name.toUpperCase» = "«key.value»"
+	MOD_«module.name.toUpperCase»_«key.name.toUpperCase» = "«key.value»"
 	«ENDFOR»
 	'''
 	
@@ -160,6 +160,22 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			</languages>
 			<!-- Optional parameters -->
 			<config>
+			<fields name="params">
+			   <fieldset name="basic">
+			   <field
+					name="start"
+					type="int"
+					default="0"
+					label="MOD_«module.name.toUpperCase»_START_LABEL"
+					description="MOD_«module.name.toUpperCase»_START_DESC" />
+				 <field
+					name="limit"
+					type="int"
+					default="10"
+					label="MOD_«module.name.toUpperCase»_LIMIT_LABEL"
+					description="MOD_«module.name.toUpperCase»_LIMIT_DESC" />
+			   </fieldset>
+			</fields>
 			</config>
 		</extension>
 		'''
