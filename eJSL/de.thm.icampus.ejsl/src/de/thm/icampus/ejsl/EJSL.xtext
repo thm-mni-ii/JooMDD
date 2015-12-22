@@ -17,15 +17,15 @@ EJSLModel returns EJSLModel:
 
 // data model
 Type:
-	DatatypeReference | SimpleDatatypes
+	DatatypeReference | StandardTypes
 ;
 
 DatatypeReference:
 	type=[Datatype|STRING]
 ;
 
-SimpleDatatypes:
-	type=SimpleDatatypeKinds
+StandardTypes:
+	type=StandardTypeKinds (notnull?='Not Null')? ('Default' '=' default?=STRING)? (autoincrement?='Auto Increment')?
 ;
 
 Datatype returns Datatype:
@@ -78,9 +78,8 @@ Attribute returns Attribute:
 	{Attribute}
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
 	'Attribute' name=MYID '{' 
-		'dbtype' '=' (dbtype=Type)
-		'htmltype' '=' (htmltype=Type)
-		(isprimary ?= "Primary attribute")?
+		'type' '=' (type=Type)
+		(isunique ?= 'Unique attribute' ('with' (withattribute?=[Attribute|QualifiedName] | 'ID'))?)?
 	'}'
 ;
 
@@ -137,6 +136,7 @@ DetailsPage returns DetailsPage:
 	'DetailsPage' name=MYID 
 	'{'
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('edit_fields' '{' (editfields+=DetailPageField)* '}')?
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
@@ -144,6 +144,23 @@ DetailsPage returns DetailsPage:
 		('filters' '=' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
 	'}'
+;
+
+DetailPageField returns DetailPageField:
+	{DetailPageField}
+	attribute = [Attribute|QualifiedName] ':' htmltype = HTMLTypes
+;
+
+HTMLTypes:
+	SimpleHTMLTypes | ComplexHTMLTypes
+;
+
+SimpleHTMLTypes:
+	htmltype = SimpleHTMLTypeKinds
+;
+
+ComplexHTMLTypes:
+	htmltype = ComplexHTMLTypeKinds "(" keyvaluepairs+=KeyValuePair (',' keyvaluepairs+=KeyValuePair)* ")"
 ;
 
 Link:
@@ -408,9 +425,15 @@ enum PluginKinds:
     search | system | user | xml_rpc
 ;
 
-enum SimpleDatatypeKinds:
-	string | bool | int | float | array
+enum StandardTypeKinds:
+	Integer | Boolean | Textarea | Textfield | Time | Date | Datetime | Link | Image | File | Label
 ;
 enum SectionReference:
 	backend='.backend' | frontend='.frontend'
+;
+enum SimpleHTMLTypeKinds:
+	Integer | Yes_No_Buttons | Textarea | Text_Field |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	
+;
+enum ComplexHTMLTypeKinds:
+	Multiselect | Checkbox | Radiobutto
 ;

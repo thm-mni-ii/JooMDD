@@ -22,8 +22,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="DatatypeReference" eSuperTypes="#//Type">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Datatype"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SimpleDatatypes" eSuperTypes="#//Type">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//SimpleDatatypeKinds"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StandardTypes" eSuperTypes="#//Type">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//StandardTypeKinds"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notnull" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="default" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="autoincrement" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Datatype">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -64,11 +67,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Attribute">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dbtype" eType="#//Type"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="htmltype" eType="#//Type"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isprimary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isunique" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="withattribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reference">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//Attribute"/>
@@ -100,7 +101,24 @@
         upperBound="-1" eType="#//Attribute"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
-  <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="editfields" upperBound="-1"
+        eType="#//DetailPageField" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DetailPageField">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="htmltype" eType="#//HTMLTypes"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HTMLTypes"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleHTMLTypes" eSuperTypes="#//HTMLTypes">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="htmltype" eType="#//SimpleHTMLTypeKinds"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComplexHTMLTypes" eSuperTypes="#//HTMLTypes">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="htmltype" eType="#//ComplexHTMLTypeKinds"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="keyvaluepairs" upperBound="-1"
+        eType="#//KeyValuePair" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Link">
     <eStructuralFeatures xsi:type="ecore:EReference" name="linkedAttribute" eType="#//Attribute"/>
   </eClassifiers>
@@ -259,15 +277,37 @@
     <eLiterals name="user" value="10" literal="user"/>
     <eLiterals name="xml_rpc" value="11" literal="xml_rpc"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="SimpleDatatypeKinds">
-    <eLiterals name="string" literal="string"/>
-    <eLiterals name="bool" value="1" literal="bool"/>
-    <eLiterals name="int" value="2" literal="int"/>
-    <eLiterals name="float" value="3" literal="float"/>
-    <eLiterals name="array" value="4" literal="array"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="StandardTypeKinds">
+    <eLiterals name="Integer" literal="Integer"/>
+    <eLiterals name="Boolean" value="1" literal="Boolean"/>
+    <eLiterals name="Textarea" value="2" literal="Textarea"/>
+    <eLiterals name="Textfield" value="3" literal="Textfield"/>
+    <eLiterals name="Time" value="4" literal="Time"/>
+    <eLiterals name="Date" value="5" literal="Date"/>
+    <eLiterals name="Datetime" value="6" literal="Datetime"/>
+    <eLiterals name="Link" value="7" literal="Link"/>
+    <eLiterals name="Image" value="8" literal="Image"/>
+    <eLiterals name="File" value="9" literal="File"/>
+    <eLiterals name="Label" value="10" literal="Label"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="SectionReference">
     <eLiterals name="backend" literal=".backend"/>
     <eLiterals name="frontend" value="1" literal=".frontend"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SimpleHTMLTypeKinds">
+    <eLiterals name="Integer" literal="Integer"/>
+    <eLiterals name="Yes_No_Buttons" value="1" literal="Yes_No_Buttons"/>
+    <eLiterals name="Textarea" value="2" literal="Textarea"/>
+    <eLiterals name="Text_Field" value="3" literal="Text_Field"/>
+    <eLiterals name="Datepicker" value="4" literal="Datepicker"/>
+    <eLiterals name="Imagepicker" value="5" literal="Imagepicker"/>
+    <eLiterals name="Filepicker" value="6" literal="Filepicker"/>
+    <eLiterals name="Text_Field_NE" value="7" literal="Text_Field_NE"/>
+    <eLiterals name="Editor" value="8" literal="Editor"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ComplexHTMLTypeKinds">
+    <eLiterals name="Multiselect" literal="Multiselect"/>
+    <eLiterals name="Checkbox" value="1" literal="Checkbox"/>
+    <eLiterals name="Radiobutto" value="2" literal="Radiobutto"/>
   </eClassifiers>
 </ecore:EPackage>
