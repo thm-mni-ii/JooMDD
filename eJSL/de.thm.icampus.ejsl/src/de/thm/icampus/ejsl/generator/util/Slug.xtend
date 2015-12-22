@@ -28,6 +28,7 @@ import de.thm.icampus.ejsl.eJSL.Link
 import de.thm.icampus.ejsl.eJSL.InternalLink
 import de.thm.icampus.ejsl.eJSL.ContextLink
 import de.thm.icampus.ejsl.generator.pages.LinkGeneratorClient
+import de.thm.icampus.ejsl.eJSL.ExternalLink
 
 /**
  * <!-- begin-user-doc -->
@@ -170,7 +171,7 @@ public class Slug  {
 	}
 	
 	def static CharSequence inputHiddenFeldTemplate(Attribute attr) '''
-	<input type="hidden" name="jform[«attr.name.toLowerCase»]" value="<?php echo $this->item->«attr.name.toLowerCase»; ?>" />
+	<input type="hidden" name="jform[«Slug.slugify(attr.name).toLowerCase»]" value="<?php echo $this->item->«Slug.slugify(attr.name).toLowerCase»; ?>" />
 	'''
 	
 	def static CharSequence generateEntytiesInputAttribute(Entity entity, List<Entity> toSchowEntities) {
@@ -232,11 +233,11 @@ public class Slug  {
 	'''
 	
 	def static String generateKeysName(Component com, String name){
-		return "COM_" + com.name.toUpperCase + "_" + name.toUpperCase
+		return "COM_" + com.name.toUpperCase + "_" + Slug.slugify(name).toUpperCase
 	}
 	
 	def static String generateKeysNamePage(Component com, Page page ,String name){
-		return "COM_" + com.name.toUpperCase + "_FIELD_" + page.name.toUpperCase + "_" + name.toUpperCase
+		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(page.name).toUpperCase + "_" + Slug.slugify(name).toUpperCase
 	}
 	
 	def static DetailsPage getPageForDetails(IndexPage inpage, Component com) {
@@ -296,7 +297,7 @@ public class Slug  {
 	
 	def static String getSectioName(SectionReference  reference) {
 		if(reference.getName().equals('backend'))
-		return 'BackendSection'
+		return 'admin'
 		
 		return ''
 		
@@ -317,10 +318,63 @@ public class Slug  {
 	def static CharSequence linkOfAttribut(Attribute attribute, DynamicPage  page, String compname, String valuefeatures) '''
 	«FOR Link lk: page.links»
 	«IF lk.linkedAttribute.equals(attribute)»
-	«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»
+	«switch lk{
+		ExternalLink :{
+			'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»'''
+			}
+		 InternalLink:{
+		 if((lk as InternalLink).target instanceof DetailsPage){
+		   if((page as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)){
+		   	
+		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->id'''
+		    
+		   	}		   	   
+		    else{
+		 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item->«attribute.name.toLowerCase»)'''
+		 	  }
+		 	}else{
+		 		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
+		 		}
+		 	}
+		}»
+	
 	«ENDIF»
 	«ENDFOR»
 	'''
 	
+	def static Boolean isLinkedAttributeReference(Attribute attribute, DynamicPage page) {
+		
+		for(Entity e: page.entities){
+			for(Reference ref: e.references){
+				if(ref.attribute.equals(attribute))
+				return true
+			}
+		}
+		return false
+	}
+	
+	def static Reference searchLinkedAttributeReference(Attribute attribute, DynamicPage page) {
+		for(Entity e: page.entities){
+			for(Reference ref: e.references){
+				if(ref.attribute.equals(attribute))
+				return ref
+			}
+		}
+		return null
+	}
+	 static def CharSequence genLinkedInfo(DynamicPage page, Component com)'''
+ 	private  $entitiesRef = array(
+ 	«FOR Link linkItem: page.links»
+ 	«switch linkItem {
+ 		InternalLink :{
+ 			if(isLinkedAttributeReference(linkItem.linkedAttribute, page)){
+ 				var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
+ 				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => "«ref.attributerefereced.name»"),'''	
+ 			}				
+ 		}	
+ 	}»«ENDFOR»null);
+ '''
+	
+ 
 	
 } // Slug

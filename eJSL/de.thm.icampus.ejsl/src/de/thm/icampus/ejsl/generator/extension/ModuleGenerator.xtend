@@ -22,6 +22,7 @@ import de.thm.icampus.ejsl.generator.util.KVPairGeneratorClient
 import de.thm.icampus.ejsl.generator.util.ProtectedRegion
 import de.thm.icampus.ejsl.eJSL.Link
 import de.thm.icampus.ejsl.generator.pages.LinkGeneratorClient
+import de.thm.icampus.ejsl.eJSL.KeyValuePair
 
 /**
  * <!-- begin-user-doc -->
@@ -47,9 +48,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	var String modelOfComponent2 = null;
 	
 	private IndexPage dpage
-		new(IndexPage dp){
-		dpage = dp
-	}
+	
 
 	Module module
 
@@ -59,6 +58,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		this.module = module
 		
 		this.ComponentInformation(module)
+		this.module.formatName
+	}
+	
+	def void formatName(Module module){
+		module.name = Slug.slugify(module.name)
 	}
 
 	public def PageGeneratorClient getPageClient() {
@@ -76,9 +80,6 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		generateFile(name + ".php", this.module.phpContent)
 		generateFile("helper.php", helperPHP(module, module.pageRef.page as DynamicPage	))
 		
-		for (lang : module.languages) {
-			generateFile(lang.name + "." + name + ".ini", "")
-		}
 		
 		generateJoomlaDirectory("tmpl")
 		generateFile("tmpl/default.php", defaultTemplate(module, module.pageRef.page as DynamicPage))
@@ -86,18 +87,23 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		for (lang : module.languages) {
 			val ldir = lang.name
-			generateFile("language/" + ldir + "/" + ldir + "." + name + ".ini", this.module.LanguageFile)
-			generateFile("language/" + ldir + "/" + ldir + "." + name + ".sys.ini", this.module.LanguageFile)
+			generateFile("language/" + ldir + "/" + ldir + "." + name + ".ini", languageFileGen(lang.keyvaluepairs))
+			generateFile("language/" + ldir + "/" + ldir + "." + name + ".sys.ini", languageFileGen(lang.keyvaluepairs))
 		}
 
-			generateFile("language/de-DE/de-DE." + name + ".ini", this.module.LanguageFile )
-			generateFile("language/de-DE/de-DE." + name + ".sys.ini",  this.module.LanguageFile)
-			generateFile("language/en-GB/en-GB." + name + ".ini",  this.module.LanguageFile)
-			generateFile("language/en-GB/en-GB." + name + ".sys.ini",  this.module.LanguageFile)
+			
 		 
 
 		return ''
 	}
+	
+	def languageFileGen(EList<KeyValuePair> list) '''
+	«FOR KeyValuePair key: list»
+	MOD_«module.name.toUpperCase»_«key.name.toUpperCase» = "«key.value»"
+	«ENDFOR»
+	'''
+	
+	
  
 
 	
@@ -154,6 +160,22 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			</languages>
 			<!-- Optional parameters -->
 			<config>
+			<fields name="params">
+			   <fieldset name="basic">
+			   <field
+					name="start"
+					type="int"
+					default="0"
+					label="MOD_«module.name.toUpperCase»_START_LABEL"
+					description="MOD_«module.name.toUpperCase»_START_DESC" />
+				 <field
+					name="limit"
+					type="int"
+					default="10"
+					label="MOD_«module.name.toUpperCase»_LIMIT_LABEL"
+					description="MOD_«module.name.toUpperCase»_LIMIT_DESC" />
+			   </fieldset>
+			</fields>
 			</config>
 		</extension>
 		'''
@@ -175,11 +197,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 				require_once __DIR__ . '/helper.php';
 				require_once JPATH_ADMINISTRATOR . '/components/com_«c.name.toLowerCase»/helpers/«c.name.toLowerCase».php';
 
-				// «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::updateReset();
-				$list = &«modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::getList($params);
-				$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-
-				// Models, Functions should be implementated here
+				
 			«ELSE»
 		<?php
 		«Slug.generateFileDoc(module, true)»
@@ -191,10 +209,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 				// Include the «module.name» functions only once
 				require_once __DIR__ . '/helper.php';
-
-				// Models, Functions should be implementated here
 			«ENDIF»
-
+			// Models, Functions should be implementated here
+		    // «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::updateReset();
+			$items = &«modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::getList($params);
+			$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 			require JModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
 			'''
 	}
@@ -217,7 +236,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 				<?php// echo $headerText; ?>
 			<?php// endif; ?>
 			
-			<?php foreach ($list as $item) : ?>
+			<?php foreach ($items as $item) : ?>
 			<div class="«module.pageRef.page.name»item">
 			<?php if (empty($item)) : ?>
 				«IF mpage.entities.isEmpty»
@@ -272,40 +291,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 */
 		class «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper
 		{
-		/**
-		 * @param
-		 *
-		 * @return
-		 *
-		 * @since
-		 **/
-		public static function &getList(&$params)
-		{
-		/**
-		 * placeholder "<>" are to be replaced
-		*/
-		JModelLegacy::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
-		
-		// $app = JFactory::getApplictation();
-			    «IF (modul.pageRef.pagescr != null )»
-		$model = JModelLegacy::getInstance('«modul.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
-		$elements = $model->getItems();
-		
-		// $model->impress();
-
-		return $elements;
-		}
-		}
-		?>
-				«ELSE»
-			$model = JModelLegacy::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
-			$model = $model->getItems();
-			$model->impress();
 			
-			return <type>;
-			    }
-			}
-				«ENDIF»
+		}
 		'''
 	}
 	
@@ -336,12 +323,44 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 	}
 	
-		def CharSequence LanguageFile(Module moul){
-			'''
+	public def genGetList()'''
+	/**
+		 * @param
+		 *
+		 * @return
+		 *
+		 * @since
+		 **/
+		public static function &getList($params = null)
+		{
+		
+		/**
+		 * placeholder "<>" are to be replaced
+		*/
+		JModelLegacy::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
+		
+		// $app = JFactory::getApplictation();
+			    «IF (module.pageRef.pagescr != null )»
+			    $model = JModelLegacy::getInstance('«module.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
+			    
+				«ELSE»
+			$model = JModelLegacy::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
+		
+				«ENDIF»
+			$model->setState('filter.state', $params->state);
+			$model->setState('filter.search', $params->search);
+			$model->setState('list.ordering', $params->ordering);
+			$model->setState('list.direction', $params->direction);
+			$model->setState('list.start', $params->start);
+			$model_>setState('list.limit', $params->limit);
+			
+			$items = $model->getItems();
 
-			'''
-		}
+			 return $items;
+			}	
+	'''
 	
+		
 	override getProtectedRegions() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}

@@ -33,6 +33,11 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		// Variable for subpackage tag in manifest and for installation
 		this.subpackageName = library.name
 		this.fsa = access
+		library.formatName
+	}
+	
+	def void formatName(Library library){
+		library.name = Slug.slugify(library.name)
 	}
 
 	override generate() {

@@ -5,6 +5,8 @@ import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.Section
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.generator.util.Slug
+import de.thm.icampus.ejsl.eJSL.Entity
+import de.thm.icampus.ejsl.eJSL.Attribute
 
 class DetailsPageTemplate extends   DynamicPageTemplate {
 	
@@ -26,6 +28,16 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		this.path = path
 		pagename = dpage.name.toLowerCase
 		this.fsa = fsa
+		dpage.formatName
+	}
+	
+	def void formatName(DetailsPage page){
+		page.name= Slug.slugify(page.name)
+		for(Entity e: page.entities){
+			for(Attribute attr : e.attributes){
+				attr.name = Slug.slugify(attr.name)
+			}
+		}
 	}
 	
 	def void generateView(){
@@ -126,10 +138,35 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	public function getItem($pk = null)
 	{
-		if ($item = parent::getItem($pk)) {
+		    $pk = (!empty($pk)) ? $pk : (int) $this->getState('«dpage.name.toLowerCase».id');
+        $table = $this->getTable();
 
+        if ($pk > 0)
+        {
+            // Attempt to load the row.
+            $return = $table->load($pk);
 
-		}
+            // Check for a table object error.
+            if ($return === false && $table->getError())
+            {
+                $this->setError($table->getError());
+
+                return false;
+            }
+        }
+
+        // Convert to the JObject before adding other data.
+        $properties = $table->getProperties(1);
+        $item = JArrayHelper::toObject($properties, 'JObject');
+
+        if (property_exists($item, 'params'))
+        {
+            $registry = new Registry;
+            $registry->loadString($item->params);
+            $item->params = $registry->toArray();
+        }
+
+        return $item;
 
 		return $item;
 	}
@@ -165,6 +202,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	«generateFileDoc(dpage,com,true)»
 	
 	jimport('joomla.application.component.modeladmin');
+	use Joomla\Registry\Registry;
 
 	/**
 	 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
@@ -267,13 +305,14 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	jimport('joomla.application.component.modelitem');
 	jimport('joomla.event.dispatcher');
+	use Joomla\Registry\Registry;
 	
 	/**
 	 * Model to show a Dataitem
 	 */
 	class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends JModelItem {
 		«frontHelp.generateSiteModelPopulatestate()»
-		«frontHelp.generateSiteModelgetData(false)»
+		«generateModelGetItemFunction»
 		«frontHelp.generateSiteModelCheckin()»
 		«frontHelp.generateSiteModelgetTable»
 		«frontHelp.generateSiteModelCheckout()»
@@ -287,6 +326,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	jimport('joomla.application.component.modelform');
 	jimport('joomla.event.dispatcher');
+	use Joomla\Registry\Registry;
 	
 	/**
 	 * Model to Edit  a Dataitem

@@ -46,10 +46,15 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.slug = Slug.slugify(component.name)
 		this.noPrefixName = this.slug
 		this.name = "com_" + this.slug
-
+        
 		this.component = component
 		this.class_name = this.noPrefixName.toFirstUpper
+		this.component.formatName
 		entgen = new EntityGenerator(component)
+	}
+	
+	def void formatName(Component component){
+		component.name = Slug.slugify(component.name)
 	}
 
 	override generate() {
@@ -96,8 +101,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		// Generate language files
 		for (lang : component.languages) {
 			val ldir = lang.name
-			generateFile("language/" + ldir + "/" + ldir + "." + name + ".ini", lang.languageFileContent)
-			generateFile("language/" + ldir + "/" + ldir + "." + name + ".sys.ini", lang.languageFileContent)
+			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".ini", lang.languageFileContent("FrontendSection"))
+			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".sys.ini", lang.languageFileContent("FrontendSection"))
+		    generateFile("language/admin/" + ldir + "/" + ldir + "." + name + ".ini", lang.languageFileContent("BackendSection"))
+			generateFile("language/admin/" + ldir + "/" + ldir + "." + name + ".sys.ini", lang.languageFileContent("BackendSection"))
 		}
 
 		// Generate backend section 
@@ -125,34 +132,38 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		return entgen.sqlAdminSqlInstallContent(component, isupdate);
 	}
 
-	def CharSequence languageFileContent(Language lang) '''
-		«Slug.nameExtensionBind("com", component.name).toUpperCase» = "«component.name.toFirstUpper»"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME = "Home"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID = "ID"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT = "Checked out"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT_TIME = "Checked out Time"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ORDERING = "Ordering"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY = "Created By"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_STATE= "state"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS = "state"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_JFIELD_PUBLISHED_DESC = "State Description"
-		 JPUBLISHED = "published"
-		JUNPUBLISHED = "unpublished"
-		JARCHIVED = "archived"
-		JTRASHED = "trashed"
+	def CharSequence languageFileContent(Language lang, String sectionName) '''
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»="«component.name.toFirstUpper»"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME="Home"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID="ID"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT="Checked out"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT_TIME="Checked out Time"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ORDERING="Ordering"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY="Created By"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_STATE="state"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS="state"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_JFIELD_PUBLISHED_DESC="State Description"
+		JPUBLISHED="published"
+		JUNPUBLISHED="unpublished"
+		JARCHIVED="archived"
+		JTRASHED="trashed"
 		«FOR Section sec : component.sections»
+		«IF sec.eClass.name.equalsIgnoreCase(sectionName)»
 			«FOR PageReference pag: sec.pageRef»
-				«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pag.page.name.toUpperCase» = "«pag.page.name.toFirstUpper»"
-				«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pag.page.name.toUpperCase»_TITLE = "«pag.page.name.toFirstUpper»"
-				«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pag.page.name.toUpperCase»_DESC = "«pag.page.name.toFirstUpper»"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«Slug.slugify(pag.page.name).toUpperCase»="«pag.page.name.toFirstUpper»"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_TITLE="«pag.page.name.toFirstUpper»"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_DESC="«pag.page.name.toFirstUpper»"
 			«ENDFOR»
+		«ENDIF»
 		«ENDFOR»
 		«FOR DetailsPage dynp : Slug.getAllAttributeOfAComponente(component)»
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«dynp.name.toUpperCase»EDIT_TITLE = "«dynp.name.toFirstUpper»"edit
-				«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«dynp.name.toUpperCase»EDIT_DESC = "«dynp.name.toFirstUpper»"edit
-			«FOR Attribute attr: dynp.entities.last.attributes»
-				«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_«dynp.entities.last.name.toUpperCase»_«attr.name.toUpperCase» = "«attr.name.toFirstUpper»"
-			«ENDFOR»
+			«IF sectionName.equalsIgnoreCase("FrontendSection")»
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(dynp.name).toUpperCase»EDIT_TITLE="«dynp.name.toFirstUpper»edit"
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(dynp.name).toUpperCase»EDIT_DESC="«dynp.name.toFirstUpper»edit"
+					«ENDIF»
+		«FOR Attribute attr: dynp.entities.last.attributes»
+		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_«Slug.slugify(dynp.entities.last.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»="«Slug.slugify(attr.name).toFirstUpper»"
+		«ENDFOR»
 		«ENDFOR»
 		«FOR e : lang.keyvaluepairs»
 			«Slug.generateKeysName(component,e.name)»="«e.value»"
@@ -216,7 +227,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    
 		    <languages>
 		    	«FOR lang : component.languages»
-		    		<language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».ini</language>
+		    		<language tag="«lang.name»">language/site/«lang.name»/«lang.name».«this.name».ini</language>
+		    		<language tag="«lang.name»">language/site/«lang.name»/«lang.name».«this.name».sys.ini</language>
 		    	«ENDFOR»
 		    </languages>
 		    
@@ -254,8 +266,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				
 				<languages >
 				  	«FOR lang : component.languages»
-				  		<language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».ini</language>
-				  		<language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+				  		<language tag="«lang.name»">language/admin/«lang.name»/«lang.name».«this.name».ini</language>
+				  		<language tag="«lang.name»">language/admin/«lang.name»/«lang.name».«this.name».sys.ini</language>
 				  	«ENDFOR»
 				</languages>
 				  </administration>
@@ -270,11 +282,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile("site/controller.php", component.phpSiteControllerContent)
 		generateFile("site/router.php", component.phpSiteRouterContent)
 		generateJoomlaDirectory("site/views")
-		var tempSlug = slug + "s"
-//		generateJoomlaDirectory("site/views/" + tempSlug)
-//		generateFile("site/views/" + tempSlug + "/view.html.php", component.phpSiteViewContent)
-//		generateFile("site/views/" + tempSlug + "/tmpl/default.xml", component.xmlSiteTemplateContent)
-//		generateFile("site/views/" + tempSlug + "/tmpl/default.php", component.phpSiteTemplateContent)
 		generateJoomlaDirectory("site/models")
 		generateJoomlaDirectory("site/models/fields")
 		generateFields("site/models/fields")
@@ -995,7 +1002,7 @@ function «component.name.toFirstUpper»ParseRoute($segments) {
     
     
 	'''
-
+    
 	override getProtectedRegions() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}

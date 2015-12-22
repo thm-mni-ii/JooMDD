@@ -20,6 +20,7 @@ public class LinkGeneratorClient  {
 		sect = section
 		compname = componentname
 		valueF = vaLueFeatures
+		
 	}
 	
 	new( Link link) {
