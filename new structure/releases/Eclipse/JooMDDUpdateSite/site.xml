@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/de.thm.icampus.ejsl.sdk_1.0.0.201511261335.jar" id="de.thm.icampus.ejsl.sdk" version="1.0.0.201511261335">
+      <category name="JooMDD"/>
+   </feature>
+   <category-def name="JooMDD" label="JooMDD: Joomla extension and concrete data modeling">
+      <description>
+         eJSL - Extension modeling for the Joomla CMS
+      </description>
+   </category-def>
+</site>

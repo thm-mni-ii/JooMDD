@@ -1,0 +1,93 @@
+<idea-plugin version="2">
+	<extensions defaultExtensionNs="org.eclipse.xtext.idea">
+		<package
+			uri="http://www.thm.de/icampus/joomdd/ejsl/EJSL"
+			class="de.thm.icampus.joomdd.ejsl.eJSL.EJSLPackage"
+		/>
+		<resourceFactory 
+			type="eJSL"
+			class="org.eclipse.xtext.resource.IResourceFactory"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+		/>
+		<resourceServiceProvider
+			uriExtension="eJSL"
+			class="org.eclipse.xtext.idea.resource.IResourceIdeaServiceProvider"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+		/>
+
+		<lang.setup
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			implementationClass="de.thm.icampus.joomdd.ejsl.idea.EJSLIdeaSetup"
+		/>
+	</extensions>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<psi.treeChangePreprocessor implementation="de.thm.icampus.joomdd.ejsl.idea.lang.psi.EJSLCodeBlockModificationListener"/>
+
+		<fileTypeFactory implementation="de.thm.icampus.joomdd.ejsl.idea.lang.EJSLFileTypeFactory"/>
+		<stubElementTypeHolder class="de.thm.icampus.joomdd.ejsl.idea.lang.EJSLElementTypeProvider"/>
+		<lang.ast.factory 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.lang.BaseXtextASTFactory"
+		/>
+		<lang.parserDefinition 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="de.thm.icampus.joomdd.ejsl.idea.lang.parser.EJSLParserDefinition"
+		/>
+		<lang.findUsagesProvider 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.findusages.BaseXtextFindUsageProvider"
+		/>
+		<lang.refactoringSupport 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.refactoring.BaseXtextRefactoringSupportProvider"
+		/>
+		<lang.namesValidator 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="com.intellij.lang.refactoring.NamesValidator"
+		/>
+		<lang.syntaxHighlighterFactory key="de.thm.icampus.joomdd.ejsl.EJSL" implementationClass="de.thm.icampus.joomdd.ejsl.idea.highlighting.EJSLSyntaxHighlighterFactory" />
+		<lang.braceMatcher 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="com.intellij.lang.PairedBraceMatcher"
+		/>
+		<annotator 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.annotation.IssueAnnotator"
+		/>
+		<completion.contributor language="de.thm.icampus.joomdd.ejsl.EJSL" implementationClass="de.thm.icampus.joomdd.ejsl.idea.completion.EJSLCompletionContributor"/>
+		<pom.declarationSearcher implementation="de.thm.icampus.joomdd.ejsl.idea.lang.pom.EJSLPomDeclarationSearcher"/>
+
+		<lang.psiStructureViewFactory 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="com.intellij.lang.PsiStructureViewFactory"
+		/>
+		<facetType implementation="de.thm.icampus.joomdd.ejsl.idea.facet.EJSLFacetType"/>
+      	<lang.documentationProvider 
+      		language="de.thm.icampus.joomdd.ejsl.EJSL"
+      		factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+      		implementationClass="org.eclipse.xtext.idea.documentation.IdeaDocumentationProvider"
+      	/>
+		<colorSettingsPage implementation="de.thm.icampus.joomdd.ejsl.idea.highlighting.EJSLColorSettingsPage"/>
+		<highlightVisitor implementation="de.thm.icampus.joomdd.ejsl.idea.highlighting.EJSLSemanticHighlightVisitor"/>
+
+		<lang.formatter 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="com.intellij.formatting.FormattingModelBuilder"
+		/>
+		<lang.commenter 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="com.intellij.lang.CodeDocumentationAwareCommenter"
+		/>
+	</extensions>
+</idea-plugin>

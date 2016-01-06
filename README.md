@@ -18,12 +18,15 @@ Install the JooMDD tools through the use of the following update site within the
 ### Installation in IntelliJ IDEA ###
 Install the JooMDD tools through the use of the following update site within IntelliJ's plugin manager. The currently supported 
 (tested)version is IntelliJ IDEA 15. Please feel free to try JooMDD within other IntelliJ versions.
-
+#### Precondition: ####
+Xtext IDEA Core 2.9 (available here: 
+<http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip>)
 #### JooMDD update site (IntelliJ IDEA): <http://icampus.thm.de/JooMDDUpdateSite_IntelliJ> ####
 
 ### Installation in PHPStorm ###
 Due to the fact, that the PHPStorm support is in a kind of beta state, you need some more effort for the installation. But don't 
-be scared, it's just copy&paste of some files ;-).
+be scared, it's just copy&paste of some files ;-). Please ensure, that you have the latest version of PHPStorm installed. We tested 
+the following instructions with version 10.0.2.
 #### Precondition: ####
 IntelliJ IDEA 15, PHPStorm 10, Xtext IDEA Core 2.9 (available here: 
 <http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip>)
