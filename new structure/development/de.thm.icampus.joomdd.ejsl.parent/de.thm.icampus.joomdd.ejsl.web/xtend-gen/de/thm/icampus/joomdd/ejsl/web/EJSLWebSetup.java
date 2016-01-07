@@ -3,24 +3,36 @@
  */
 package de.thm.icampus.joomdd.ejsl.web;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.Provider;
+import com.google.inject.util.Modules;
+import de.thm.icampus.joomdd.ejsl.EJSLRuntimeModule;
+import de.thm.icampus.joomdd.ejsl.EJSLStandaloneSetup;
+import de.thm.icampus.joomdd.ejsl.web.EJSLWebModule;
 import java.util.concurrent.ExecutorService;
+import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor;
 
 /**
  * Initialization support for running Xtext languages in web applications.
  */
-/* @FinalFieldsConstructor */@SuppressWarnings("all")
-public class EJSLWebSetup /* implements EJSLStandaloneSetup  */{
-  private final /* Provider<ExecutorService> */Object executorServiceProvider;
+@FinalFieldsConstructor
+@SuppressWarnings("all")
+public class EJSLWebSetup extends EJSLStandaloneSetup {
+  private final Provider<ExecutorService> executorServiceProvider;
   
   @Override
-  public /* Injector */Object createInjector() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nEJSLRuntimeModule cannot be resolved."
-      + "\nThe method or field Guice is undefined"
-      + "\nThe method or field Modules is undefined"
-      + "\nInvalid number of arguments. The constructor EJSLWebModule() is not applicable for the arguments (Provider)"
-      + "\ncreateInjector cannot be resolved"
-      + "\noverride cannot be resolved"
-      + "\nwith cannot be resolved");
+  public Injector createInjector() {
+    final EJSLRuntimeModule runtimeModule = new EJSLRuntimeModule();
+    final EJSLWebModule webModule = new EJSLWebModule(this.executorServiceProvider);
+    Modules.OverriddenModuleBuilder _override = Modules.override(runtimeModule);
+    Module _with = _override.with(webModule);
+    return Guice.createInjector(_with);
+  }
+  
+  public EJSLWebSetup(final Provider<ExecutorService> executorServiceProvider) {
+    super();
+    this.executorServiceProvider = executorServiceProvider;
   }
 }

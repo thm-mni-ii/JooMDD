@@ -1,5 +1,6 @@
 module de.thm.icampus.joomdd.ejsl.GenerateEJSL
 
+import org.eclipse.emf.mwe.utils.*
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
 import org.eclipse.xtext.ui.generator.*
@@ -45,6 +46,11 @@ Workflow {
 			validator = {
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}
+			formatter = {
+				generateStub = true
+			}
+			
+			
 			
 //			fragment = projectWizard.SimpleProjectWizardFragment {
 //    			generatorProjectName = "${projectName}.generator"

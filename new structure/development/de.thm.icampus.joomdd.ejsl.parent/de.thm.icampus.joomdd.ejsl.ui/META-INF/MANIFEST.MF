@@ -5,8 +5,9 @@ Bundle-Vendor: My Company
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: de.thm.icampus.joomdd.ejsl.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: de.thm.icampus.joomdd.ejsl,
+Require-Bundle: de.thm.icampus.joomdd.ejsl;visibility:=reexport,
  de.thm.icampus.joomdd.ejsl.ide,
+ de.thm.icampus.joomdd.ejsl.ui,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.ui.shared,
  org.eclipse.xtext.ui.codetemplates.ui,

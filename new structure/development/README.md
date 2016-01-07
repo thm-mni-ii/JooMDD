@@ -4,6 +4,7 @@
 
 ### Language Development ###
 ### Editor Development ###
+#### Project Wizard ####
 ### Generator Development ###
 ### Plugin Development ###
 #### Eclipse ####

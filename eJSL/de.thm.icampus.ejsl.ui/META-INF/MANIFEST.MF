@@ -28,5 +28,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: de.thm.icampus.ejsl.ui.quickfix,
  de.thm.icampus.ejsl.ui.contentassist,
  de.thm.icampus.ejsl.ui.contentassist.antlr,
- de.thm.icampus.ejsl.ui.internal
+ de.thm.icampus.ejsl.ui.internal,
+ de.thm.icampus.ejsl.ui.contentassist.antlr.internal
 Bundle-Activator: de.thm.icampus.ejsl.ui.internal.EJSLActivator
