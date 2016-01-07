@@ -435,13 +435,17 @@
 	</extension>
 	<!-- Project wizard -->
 	<extension point="org.eclipse.ui.newWizards">
-	  <category
-	   id = "de.thm.icampus.joomdd.ejsl.ui.ejsl"
-	   parentCategory="org.eclipse.ui.Examples"
-	   name="%NewWizard.category">
-	  </category>
+	  <category 
+          id="de.thm.icampus.joomdd.ejsl.ui.MyWizard" 
+          name="eJSL Wizard">
+      </category> 
+      <!--<category 
+          id="org.eclipse.faq.examples.WizardSubCategory" 
+          name="More Specific FAQ Wizards">
+          parentCategory="org.eclipse.faq.examples.MyWizard" 
+      </category> -->
       <wizard
-            category="org.eclipse.ui.Examples"
+            category="de.thm.icampus.joomdd.ejsl.ui.MyWizard"
             class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.wizard.MyWizard"
             icon="src/de/thm/icampus/joomdd/ejsl/ui/wizard_old/eJSL_icon.png"
             id="de.thm.icampus.joomdd.ejsl.ui.wizard.EJSLNewProjectWizard"

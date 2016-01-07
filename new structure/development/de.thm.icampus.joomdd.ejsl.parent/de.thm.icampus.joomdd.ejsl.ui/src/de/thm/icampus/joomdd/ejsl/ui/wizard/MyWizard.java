@@ -1,37 +1,41 @@
 package de.thm.icampus.joomdd.ejsl.ui.wizard;
+
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
+public class MyWizard extends Wizard implements INewWizard {
 
-public class MyWizard extends Wizard {
+	private WizardNewProjectCreationPage _pageOne;
+	
+	public MyWizard() {
+		// TODO Auto-generated constructor stub
+		setWindowTitle("Window Title");
+	}
 
-  protected MyPageOne one;
-  protected MyPageTwo two;
+	@Override
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		// TODO Auto-generated method stub
 
-  public MyWizard() {
-    super();
-    setNeedsProgressMonitor(true);
-  }
+	}
+	
+	@Override
+	 public void addPages() {
+	 super.addPages();
 
-  @Override
-  public String getWindowTitle() {
-    return "Export My Data";
-  }
+	 _pageOne = new WizardNewProjectCreationPage("From Scratch Project Wizard");
+	 _pageOne.setTitle("From Scratch Project");
+	 _pageOne.setDescription("Creating something from scratch");
 
-  @Override
-  public void addPages() {
-    one = new MyPageOne();
-    two = new MyPageTwo();
-    addPage(one);
-    addPage(two);
-  }
+	 addPage(_pageOne);
+	 }
 
-  @Override
-  public boolean performFinish() {
-    // Print the result to the console
-    System.out.println(one.getText1());
-    System.out.println(two.getText1());
+	@Override
+	public boolean performFinish() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
-    return true;
-  }
 }
- 
