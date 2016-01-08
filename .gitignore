@@ -1,0 +1,10 @@
+*/src-gen/*
+*/xtend-gen/*
+*/bin/*
+!*/.gitkeep
+# Don't ignore .gitignore
+!.gitignore
+
+*/plugin.xml_gen
+.metadata/*
+/new structure/
