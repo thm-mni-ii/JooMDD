@@ -3,32 +3,53 @@
  */
 package de.thm.icampus.joomdd.ejsl.web;
 
+import com.google.inject.Provider;
+import de.thm.icampus.joomdd.ejsl.web.EJSLWebSetup;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+import javax.servlet.annotation.WebServlet;
+import org.eclipse.xtext.web.servlet.XtextServlet;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
+import org.eclipse.xtext.xbase.lib.Exceptions;
+import org.eclipse.xtext.xbase.lib.ObjectExtensions;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 /**
  * Deploy this class into a servlet container to enable DSL-specific services.
  */
-/* @WebServlet(, ) */@SuppressWarnings("all")
-public class EJSLServlet /* implements XtextServlet  */{
-  private final List<ExecutorService> executorServices /* Skipped initializer because of errors */;
+@WebServlet(name = "XtextServices", urlPatterns = "/xtext-service/*")
+@SuppressWarnings("all")
+public class EJSLServlet extends XtextServlet {
+  private final List<ExecutorService> executorServices = CollectionLiterals.<ExecutorService>newArrayList();
   
   @Override
-  public Object init() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nProvider cannot be resolved to a type."
-      + "\nThe method or field super is undefined"
-      + "\n=> cannot be resolved."
-      + "\n+= cannot be resolved."
-      + "\nThe method createInjectorAndDoEMFRegistration() is undefined for the type EJSLWebSetup"
-      + "\nInvalid number of arguments. The constructor EJSLWebSetup() is not applicable for the arguments (Provider)"
-      + "\ninit cannot be resolved");
+  public void init() {
+    try {
+      super.init();
+      final Provider<ExecutorService> _function = () -> {
+        ExecutorService _newCachedThreadPool = Executors.newCachedThreadPool();
+        final Procedure1<ExecutorService> _function_1 = (ExecutorService it) -> {
+          this.executorServices.add(it);
+        };
+        return ObjectExtensions.<ExecutorService>operator_doubleArrow(_newCachedThreadPool, _function_1);
+      };
+      final Provider<ExecutorService> executorServiceProvider = _function;
+      EJSLWebSetup _eJSLWebSetup = new EJSLWebSetup(executorServiceProvider);
+      _eJSLWebSetup.createInjectorAndDoEMFRegistration();
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
   }
   
   @Override
-  public Object destroy() {
-    throw new Error("Unresolved compilation problems:"
-      + "\nThe method or field super is undefined"
-      + "\ndestroy cannot be resolved");
+  public void destroy() {
+    final Consumer<ExecutorService> _function = (ExecutorService it) -> {
+      it.shutdown();
+    };
+    this.executorServices.forEach(_function);
+    this.executorServices.clear();
+    super.destroy();
   }
 }

@@ -4,7 +4,15 @@
 
 ### Language Development ###
 ### Editor Development ###
+#### Project Wizard ####
 ### Generator Development ###
+#### Monolithic vs dynamic generator structure ####
+The generator structure consists of a platform-independent and a platform-specific part. The platform-independent part 
+extends the generated API for the language by additional domain-specific functionality, whereas the platform-specific part 
+contains the generator template for the platform-specific code generation.
+
+#### Ressource Transformator ####
+
 ### Plugin Development ###
 #### Eclipse ####
 #### IntelliJ ####
