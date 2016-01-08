@@ -8,11 +8,14 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
 public class MyWizard extends Wizard implements INewWizard {
 
+	private static final String PAGE_NAME = "Custom Plug-in Project Wizard"; //$NON-NLS-1$
+	private static final String WIZARD_NAME = "New Custom Plug-in Project"; //$NON-NLS-1$
+	
 	private WizardNewProjectCreationPage _pageOne;
 	
 	public MyWizard() {
 		// TODO Auto-generated constructor stub
-		setWindowTitle("Window Title");
+		setWindowTitle(WIZARD_NAME);
 	}
 
 	@Override
@@ -25,9 +28,9 @@ public class MyWizard extends Wizard implements INewWizard {
 	 public void addPages() {
 	 super.addPages();
 
-	 _pageOne = new WizardNewProjectCreationPage("From Scratch Project Wizard");
-	 _pageOne.setTitle("From Scratch Project");
-	 _pageOne.setDescription("Creating something from scratch");
+	 _pageOne = new WizardNewProjectCreationPage(PAGE_NAME);
+	 _pageOne.setTitle("EJSL Project");
+	 _pageOne.setDescription("Create a new EJSL project.");
 
 	 addPage(_pageOne);
 	 }

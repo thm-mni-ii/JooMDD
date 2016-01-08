@@ -3,8 +3,8 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator;
 
-import de.thm.icampus.joomdd.ejsl.generator.AbstractEJSLGenerator;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
 
@@ -14,7 +14,7 @@ import org.eclipse.xtext.generator.IGeneratorContext;
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 @SuppressWarnings("all")
-public class EJSLGenerator extends AbstractEJSLGenerator {
+public class AbstractEJSLGenerator extends AbstractGenerator {
   @Override
   public void doGenerate(final Resource resource, final IFileSystemAccess2 fsa, final IGeneratorContext context) {
   }
