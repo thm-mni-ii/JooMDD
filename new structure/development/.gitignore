@@ -1,8 +1,0 @@
-*/src-gen/*
-*/xtend-gen/*
-*/bin/*
-!*/.gitkeep
-
-*/plugin.xml_gen
-.metadata/*
-

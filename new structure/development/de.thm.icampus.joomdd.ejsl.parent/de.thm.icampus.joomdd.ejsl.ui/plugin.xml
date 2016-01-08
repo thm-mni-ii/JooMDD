@@ -471,6 +471,24 @@
      </command>
   </extension>
   
+   <!-- XMI Deserialization -->
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationHandler"
+           commandId="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand">
+     </handler>
+  </extension>
+       
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           id="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand"
+           name="eJSL &lt;-- XMI">
+     </command>
+  </extension>   
+
+<!-- (De-)Serialization Context Menu -->
   <extension
         point="org.eclipse.ui.menus">
      <menuContribution
@@ -544,21 +562,4 @@
         </menu>
      </menuContribution>
   </extension>
-  
-   <!-- XMI Deserialization -->
-  <extension
-        point="org.eclipse.ui.handlers">
-     <handler
-           class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationHandler"
-           commandId="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand">
-     </handler>
-  </extension>
-       
-  <extension
-        point="org.eclipse.ui.commands">
-     <command
-           id="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand"
-           name="eJSL &lt;-- XMI">
-     </command>
-  </extension>   
 </plugin>
