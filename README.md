@@ -19,30 +19,23 @@ Install the JooMDD tools through the use of the following update site within the
 Install the JooMDD tools through the use of the following update site within IntelliJ's plugin manager. The currently supported 
 (tested)version is IntelliJ IDEA 15. Please feel free to try JooMDD within other IntelliJ versions.
 #### Precondition: ####
-Xtext IDEA Core 2.9 (available here: 
-<http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip>)
+Install Xtext IDEA Core from the repositories of IntelliJ. (In IntelliJ go to: File/Settings/Plugins/Browse Repositories search: "Xtext Idea Core" and install the plugin)
+
 #### JooMDD update site (IntelliJ IDEA): <http://icampus.thm.de/JooMDDUpdateSite_IntelliJ> ####
 
 ### Installation in PHPStorm ###
 Due to the fact, that the PHPStorm support is in a kind of beta state, you need some more effort for the installation. But don't 
 be scared, it's just copy&paste of some files ;-). Please ensure, that you have the latest version of PHPStorm installed. We tested 
-the following instructions with version 10.0.2.
+the following instructions with version 10.0.3.
 #### Precondition: ####
-IntelliJ IDEA 15, PHPStorm 10, Xtext IDEA Core 2.9 (available here: 
-<http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip>)
-#### Prepare PHPStorm (only first time): ###
-*	Merge the IntellijIDEA\lib\openpi.jar into the PHPStorm\lib\openapi.jar (copy all missing 
-content to PHPStorm)
-*	Copy the IntellijIDEA\lib\idea.jar to PHPStorm\lib\.
-*	Edit the downloaded Plugin org.eclipse.xtext.idea\META-INF\plugin.xml. 
-    * Change the "JUnit" dependency to "com.intellij.modules.lang" (Line 9)
-    * Now you add the Plugin in PHPStorm via the Plugin manager (Install plugin from disk…)
+PHPStorm 10.0.3, Download of some files (includes configurated xtext and the EJSL language) here: ...
 
-#### Add the language to PHPStorm: ####
-*	Add the update site in the Plugin Manager and install the Plugin.
-    * 	Update Site: ...
-*	Now you must configure the Plugin via the Project file (the Project file is in the work 
-directory of the Project in the folder .idea\....iml
+#### Prepare PHPStorm (only first time): ###
+*	Copy openapi.jar and idea.jar into Path: PHPStorm installation\lib\  (you must replace the openapi.jar).
+*	Now copy the two folder (*.idea) into the user Plugin folder (Path: ~\.WebIde100\config\plugins\  ).
+
+#### Add the language to your Project: ####
+*	Now you must configure the Plugin via the Project file (the Project file is in the work directory of the Project in the folder .idea\....iml)
 
 Example for adding the configuration in the project file:
 
