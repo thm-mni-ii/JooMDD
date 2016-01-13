@@ -31,11 +31,11 @@ the following instructions with version 10.0.3.
 PHPStorm 10.0.3, Download of some files (includes configurated xtext and the EJSL language) here: ...
 
 #### Prepare PHPStorm (only first time): ###
-*	Copy openapi.jar and idea.jar into Path: PHPStorm installation\lib\  (you must replace the openapi.jar).
-*	Now copy the two folder (*.idea) into the user Plugin folder (Path: ~\.WebIde100\config\plugins\  ).
+*	Copy openapi.jar and idea.jar into path: PHPStorm installation\lib\  (you must replace the openapi.jar).
+*	Now copy the two folder (*.idea) into the user plugin folder (Path: ~\.WebIde100\config\plugins\  ).
 
 #### Add the language to your Project: ####
-*	Now you must configure the Plugin via the Project file (the Project file is in the work directory of the Project in the folder .idea\....iml)
+*	Now you must configure the plugin via the project file (the project file is in the work directory of the project in the folder .idea\"ProjectName".iml).
 
 Example for adding the configuration in the project file:
 
@@ -50,6 +50,8 @@ Example for adding the configuration in the project file:
         </configuration>
       </facet>
     </component>
+
+*    To use the language you must create a folder in the project and mark it as "Sources Root".
 
 ***
 ## Getting Started ##
