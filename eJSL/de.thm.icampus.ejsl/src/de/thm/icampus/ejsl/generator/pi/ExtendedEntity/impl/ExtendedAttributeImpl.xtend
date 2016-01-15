@@ -8,6 +8,8 @@ import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.ejsl.eJSL.StandardTypes
 import de.thm.icampus.ejsl.eJSL.Type
+import de.thm.icampus.ejsl.generator.pi.util.PlattformIUtil
+import de.thm.icampus.ejsl.eJSL.Extension
 
 class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	
@@ -18,7 +20,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	new(Attribute attr, Reference e){
 		
 		this.type = attr.type
-		this.name = attr.name
+		this.name = PlattformIUtil.slugify(attr.name)
 		this.isunique = attr.isIsunique
 		this.withattribute = attr.withattribute
 		entity = attr.eContainer as Entity
@@ -48,9 +50,13 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		switch (eJSlType.type.getName()){
 			case "Integer" :{
 				value = "int(11) "
+				if(eJSlType.^default == null)
+				    eJSlType.^default = "0"
 			}
 			case "Boolean" :{
 				value = "tinyint(1) "
+				if(eJSlType.^default == null)
+				    eJSlType.^default = "0"
 			}
 			case "Textarea" :{
 				value = "text "
@@ -66,6 +72,8 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 			}
 			case "Datetime" :{
 				value = "datetime "
+				if(eJSlType.^default == null)
+				    eJSlType.^default = "0000-00-00 00:00:00"
 			}
 			case "Link" :{
 				value = "text "
@@ -85,7 +93,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		if(eJSlType.notnull)
 		    result = result +  "NOT NULL "
 		if(!eJSlType.^default.toString.empty)
-		  result = result + "DEFAULT " + eJSlType.^default.toString
+		  result = result + "DEFAULT " + '''"«eJSlType.^default.toString»"'''
 		if(eJSlType.autoincrement)
 		   result = result + "AUTO_INCREMENT "
 		   
@@ -105,6 +113,13 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	override getInstance() {
 		return instance
 	}
+	
+	
+	override genReference(Extension ex) '''
+	FOREIGN KEY (`«this.name.toLowerCase»`) REFERENCES `#__«PlattformIUtil.slugify(ex.name).toLowerCase»_«PlattformIUtil.slugify(reference.entity.name).toLowerCase»` (`«PlattformIUtil.slugify(reference.attributerefereced.name).toLowerCase»`)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+	'''
 	
 	
 	
