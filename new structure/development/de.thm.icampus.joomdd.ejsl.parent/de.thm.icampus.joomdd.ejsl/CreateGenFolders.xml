@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Directory.make" default="make" basedir=".">
+
+	<target name="make">
+		<mkdir dir="src" />
+		<mkdir dir="src-gen" />
+		<mkdir dir="xtend-gen" />
+	</target>
+
+</project>
