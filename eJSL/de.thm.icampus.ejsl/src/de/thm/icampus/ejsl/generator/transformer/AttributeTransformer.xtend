@@ -1,4 +1,4 @@
-package de.thm.icampus.ejsl.generator.transformer
+  package de.thm.icampus.ejsl.generator.transformer
 
 import de.thm.icampus.ejsl.eJSL.Type
 import de.thm.icampus.ejsl.eJSL.DatatypeReference
