@@ -28,11 +28,11 @@ Due to the fact, that the PHPStorm support is in a kind of beta state, you need 
 be scared, it's just copy&paste of some files ;-). Please ensure, that you have the latest version of PHPStorm installed. We tested 
 the following instructions with version 10.0.3.
 #### Precondition: ####
-PHPStorm 10.0.3, Download of some files (includes configurated xtext and the EJSL language) here: ...
+PHPStorm 10.0.3, Download of some files (includes configurated Xtext and the EJSL language) here: ...
 
 #### Prepare PHPStorm (only first time): ###
-*	Copy openapi.jar and idea.jar into path: PHPStorm installation\lib\  (you must replace the openapi.jar).
-*	Now copy the two folder (*.idea) into the user plugin folder (Path: ~\.WebIde100\config\plugins\  ).
+*	Copy IntelliJdepencies.jar into path: PHPStorm installation\lib\  .
+*	Now install the two downloaded plugins (Xtext and EJSL) via "Install plugin from disk ..." (Menu: File/Settings/Plugins/).
 
 #### Add the language to your Project: ####
 *	Now you must configure the plugin via the project file (the project file is in the work directory of the project in the folder .idea\"ProjectName".iml).
