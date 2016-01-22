@@ -56,8 +56,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Entitypackage/datatypes"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//CMSExtension">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//CMSExtension/manifest"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//CMSExtension/languages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//CMSExtension/extension"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//IndexPage"/>
     <genClasses ecoreClass="CMSDSL.ecore#//DetailsPage"/>
@@ -77,7 +76,6 @@
     <genClasses ecoreClass="CMSDSL.ecore#//Datatype"/>
     <genClasses ecoreClass="CMSDSL.ecore#//Attribute">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Attribute/dbtype"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Attribute/htmltype"/>
     </genClasses>
     <genClasses image="false" ecoreClass="CMSDSL.ecore#//Type"/>
     <genClasses ecoreClass="CMSDSL.ecore#//SimpleDataType">
@@ -105,19 +103,13 @@
     <genClasses ecoreClass="CMSDSL.ecore#//ExtensionPackage">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//ExtensionPackage/extensions"/>
     </genClasses>
-    <genClasses ecoreClass="CMSDSL.ecore#//Component">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Component/sections"/>
-    </genClasses>
-    <genClasses ecoreClass="CMSDSL.ecore#//Module">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Module/page"/>
-    </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Plugin">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Plugin/sections"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Plugin/entities"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Library">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Library/entities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Library/classes"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Library/packages"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Template">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Template/positions"/>
@@ -133,10 +125,6 @@
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//MethodParameter">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//MethodParameter/type"/>
-    </genClasses>
-    <genClasses ecoreClass="CMSDSL.ecore#//Package">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Package/classes"/>
-      <genFeatures children="true" createChild="true" propertySortChoices="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Package/packages"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Manifestation">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Manifestation/authors"/>
@@ -170,5 +158,10 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Enum/literals"/>
     </genClasses>
     <genClasses ecoreClass="CMSDSL.ecore#//Enumliteral"/>
+    <genClasses ecoreClass="CMSDSL.ecore#//Extension">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Extension/language"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference CMSDSL.ecore#//Extension/manifestation"/>
+    </genClasses>
+    <genClasses ecoreClass="CMSDSL.ecore#//CustomPage"/>
   </genPackages>
 </genmodel:GenModel>
