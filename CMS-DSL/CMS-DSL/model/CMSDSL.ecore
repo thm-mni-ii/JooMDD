@@ -55,10 +55,8 @@
         eType="#//Datatype" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CMSExtension" eSuperTypes="#//CMSPart">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="manifest" eType="#//Manifestation"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="languages" upperBound="-1"
-        eType="#//Language" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extension" upperBound="-1"
+        eType="#//Extension" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage"/>
@@ -81,8 +79,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="Datatype"/>
   <eClassifiers xsi:type="ecore:EClass" name="Attribute">
     <eStructuralFeatures xsi:type="ecore:EReference" name="dbtype" eType="#//Type"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="htmltype" eType="#//Type"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Type" abstract="true"/>
@@ -116,30 +112,23 @@
   <eClassifiers xsi:type="ecore:EClass" name="LinkParameter">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributereference" eType="#//Attribute"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ExtensionPackage" eSuperTypes="#//CMSExtension">
+  <eClassifiers xsi:type="ecore:EClass" name="ExtensionPackage" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="extensions" upperBound="-1"
-        eType="#//CMSExtension" containment="true"/>
+        eType="#//Extension" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Component" eSuperTypes="#//CMSExtension">
+  <eClassifiers xsi:type="ecore:EClass" name="Plugin" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="sections" upperBound="-1"
         eType="#//Section" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Module" eSuperTypes="#//CMSExtension">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="page" eType="#//Page"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Plugin" eSuperTypes="#//CMSExtension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
         eType="#//Entity"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Library" eSuperTypes="#//CMSExtension">
+  <eClassifiers xsi:type="ecore:EClass" name="Library" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" upperBound="-1"
         eType="#//Entity"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1"
         eType="#//Class" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" upperBound="-1"
-        eType="#//Package" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Template" eSuperTypes="#//CMSExtension">
+  <eClassifiers xsi:type="ecore:EClass" name="Template" eSuperTypes="#//Extension">
     <eStructuralFeatures xsi:type="ecore:EReference" name="positions" upperBound="-1"
         eType="#//Position" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="cssblocks" upperBound="-1"
@@ -161,12 +150,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MethodParameter">
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Package">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1"
-        eType="#//Class" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="packages" eType="#//Package"
-        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Manifestation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="authors" upperBound="-1"
@@ -205,4 +188,11 @@
         eType="#//Enumliteral" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Enumliteral"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Extension">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="language" upperBound="-1"
+        eType="#//Language" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="manifestation" upperBound="-1"
+        eType="#//Manifestation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CustomPage" eSuperTypes="#//Page"/>
 </ecore:EPackage>

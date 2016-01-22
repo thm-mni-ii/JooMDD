@@ -650,28 +650,21 @@ function setDocumentScrollTop(ypos)
 <h4> <a id="user-content-joomdd-update-site-eclipse-httpicampusthmdejoomddupdatesite_eclipse" class="anchor" href="#joomdd-update-site-eclipse-httpicampusthmdejoomddupdatesite_eclipse" aria-hidden="true"><span class="octicon octicon-link"></span></a>JooMDD update site (Eclipse): <a href="http://icampus.thm.de/JooMDDUpdateSite_Eclipse">http://icampus.thm.de/JooMDDUpdateSite_Eclipse</a> </h4> 
 <h3> <a id="user-content-installation-in-intellij-idea" class="anchor" href="#installation-in-intellij-idea" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation in IntelliJ IDEA</h3> 
 <p>Install the JooMDD tools through the use of the following update site within IntelliJ's plugin manager. The currently supported (tested)version is IntelliJ IDEA 15. Please feel free to try JooMDD within other IntelliJ versions.</p> 
+<h4> <a id="user-content-precondition" class="anchor" href="#precondition" aria-hidden="true"><span class="octicon octicon-link"></span></a>Precondition:</h4> 
+<p>Install Xtext IDEA Core from the repositories of IntelliJ. (In IntelliJ go to: File/Settings/Plugins/Browse Repositories search: &quot;Xtext Idea Core&quot; and install the plugin)</p> 
 <h4> <a id="user-content-joomdd-update-site-intellij-idea-httpicampusthmdejoomddupdatesite_intellij" class="anchor" href="#joomdd-update-site-intellij-idea-httpicampusthmdejoomddupdatesite_intellij" aria-hidden="true"><span class="octicon octicon-link"></span></a>JooMDD update site (IntelliJ IDEA): <a href="http://icampus.thm.de/JooMDDUpdateSite_IntelliJ">http://icampus.thm.de/JooMDDUpdateSite_IntelliJ</a> </h4> 
 <h3> <a id="user-content-installation-in-phpstorm" class="anchor" href="#installation-in-phpstorm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation in PHPStorm</h3> 
-<p>Due to the fact, that the PHPStorm support is in a kind of beta state, you need some more effort for the installation. But don't be scared, it's just copy&amp;paste of some files ;-). Please ensure, that you have the latest version of PHPStorm installed. We tested the following instructions with version 10.0.2.</p> 
-<h4> <a id="user-content-precondition" class="anchor" href="#precondition" aria-hidden="true"><span class="octicon octicon-link"></span></a>Precondition:</h4> 
-<p>IntelliJ IDEA 15, PHPStorm 10, Xtext IDEA Core 2.9 (available here: <a href="http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip">http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip</a>)</p> 
+<p>Due to the fact, that the PHPStorm support is in a kind of beta state, you need some more effort for the installation. But don't be scared, it's just copy&amp;paste of some files ;-). Please ensure, that you have the latest version of PHPStorm installed. We tested the following instructions with version 10.0.3.</p> 
+<h4> <a id="user-content-precondition-1" class="anchor" href="#precondition-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>Precondition:</h4> 
+<p>PHPStorm 10.0.3, Download of some files (includes configurated xtext and the EJSL language) here: ...</p> 
 <h4> <a id="user-content-prepare-phpstorm-only-first-time" class="anchor" href="#prepare-phpstorm-only-first-time" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prepare PHPStorm (only first time):</h4> 
 <ul> 
- <li> Merge the IntellijIDEA\lib\openpi.jar into the PHPStorm\lib\openapi.jar (copy all missing content to PHPStorm)</li> 
- <li> Copy the IntellijIDEA\lib\idea.jar to PHPStorm\lib.</li> 
- <li> Edit the downloaded Plugin org.eclipse.xtext.idea\META-INF\plugin.xml. 
-  <ul> 
-   <li>Change the &quot;JUnit&quot; dependency to &quot;com.intellij.modules.lang&quot; (Line 9)</li> 
-   <li>Now you add the Plugin in PHPStorm via the Plugin manager (Install plugin from disk…)</li> 
-  </ul> </li> 
+ <li> Copy openapi.jar and idea.jar into path: PHPStorm installation\lib\ (you must replace the openapi.jar).</li> 
+ <li> Now copy the two folder (*.idea) into the user plugin folder (Path: ~.WebIde100\config\plugins\ ).</li> 
 </ul> 
-<h4> <a id="user-content-add-the-language-to-phpstorm" class="anchor" href="#add-the-language-to-phpstorm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add the language to PHPStorm:</h4> 
+<h4> <a id="user-content-add-the-language-to-your-project" class="anchor" href="#add-the-language-to-your-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add the language to your Project:</h4> 
 <ul> 
- <li> Add the update site in the Plugin Manager and install the Plugin. 
-  <ul> 
-   <li> Update Site: ...</li> 
-  </ul> </li> 
- <li> Now you must configure the Plugin via the Project file (the Project file is in the work directory of the Project in the folder .idea....iml</li> 
+ <li> Now you must configure the plugin via the project file (the project file is in the work directory of the project in the folder .idea\&quot;ProjectName&quot;.iml).</li> 
 </ul> 
 <p>Example for adding the configuration in the project file:</p> 
 <pre><code>&lt;component name=&quot;FacetManager&quot;&gt;
@@ -686,6 +679,9 @@ function setDocumentScrollTop(ypos)
   &lt;/facet&gt;
 &lt;/component&gt;
 </code></pre> 
+<ul> 
+ <li> To use the language you must create a folder in the project and mark it as &quot;Sources Root&quot;.</li> 
+</ul> 
 <hr /> 
 <h2> <a id="user-content-getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started</h2> 
 <h3> <a id="user-content-ejsl-" class="anchor" href="#ejsl-" aria-hidden="true"><span class="octicon octicon-link"></span></a>eJSL <a href="https://camo.githubusercontent.com/89d54feb2a4a5e4a93e26bcd269422ba2175cc5d/687474703a2f2f6963616d7075732e74686d2e64652f696d616765732f654a534c5f4c6f676f5f7472616e732e706e67" target="_blank"><img src="https://camo.githubusercontent.com/89d54feb2a4a5e4a93e26bcd269422ba2175cc5d/687474703a2f2f6963616d7075732e74686d2e64652f696d616765732f654a534c5f4c6f676f5f7472616e732e706e67" alt="eJSLLogo" height="50" data-canonical-src="http://icampus.thm.de/images/eJSL_Logo_trans.png" style="max-width:100%;" /></a> </h3> 
