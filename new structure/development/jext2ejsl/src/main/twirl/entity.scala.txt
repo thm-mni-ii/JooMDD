@@ -1,0 +1,14 @@
+@(ent: de.thm.icampus.mdd.model.extensions.JEntity)
+Entity @{ent.name} {
+    attributes {
+        @for(attr <- ent.attributes) {
+            Attribute @{attr.name} {
+                dbtype = "@{attr.dbtype}"
+                htmltype = "@{attr.htmltype}"
+                @if(attr.isPrimary) {
+                Primary attribute
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+@(model: de.thm.icampus.mdd.model.EJSLModel)
+eJSLModel "@{model.name}" {
+	datatypes {
+		@model.datatypes.map(e ⇒ "Datatype " + "\"" + e + "\"").mkString(",\n")
+	}
+	globalparameters {
+		@for(p <- model.globalParams) {
+			@param(p)
+		}
+	}
+	parametergroups {
+		@for(pg <- model.paramGroups) { @if(pg.params.nonEmpty) {
+			@paramgroup(pg)
+		}}
+	}
+	entities {
+		@for(ent <- model.entities) {
+			@entity(ent)
+		}
+	}
+	pages {
+		@for(p <- model.pages) {
+			@page(p)
+		}
+	}
+	extensions {
+		@for(ext <- model.extensions) {
+			@extension(ext)
+		}
+	}
+}
