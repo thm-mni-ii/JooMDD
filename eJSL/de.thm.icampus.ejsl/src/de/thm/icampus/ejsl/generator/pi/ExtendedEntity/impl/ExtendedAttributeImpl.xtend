@@ -12,13 +12,14 @@ import de.thm.icampus.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.ejsl.eJSL.Extension
 
 class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
-	
+
 	Entity entity
 	Reference reference
 	String genType
 	Attribute instance
-	new(Attribute attr, Reference e){
-		
+
+	new(Attribute attr, Reference e) {
+
 		this.type = attr.type
 		this.name = PlattformIUtil.slugify(attr.name)
 		this.isunique = attr.isIsunique
@@ -27,108 +28,101 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		reference = e
 		genType = generatorType()
 		instance = attr
-		
+
 	}
-	
+
 	override generatorType() {
-			switch type{
-			DatatypeReference :{
+		switch type {
+			DatatypeReference: {
 				var DatatypeReference temptyp = type as DatatypeReference
 				return temptyp.type.name
 			}
-			StandardTypes:{
+			StandardTypes: {
 				var StandardTypes temptyp = type as StandardTypes
 				return parsingType(temptyp)
 			}
 		}
-		
+
 	}
-	
+
 	def String parsingType(StandardTypes eJSlType) {
-		
-		    var String value = "";
-		switch (eJSlType.type.getName()){
-			case "Integer" :{
+
+		var String value = "";
+		switch (eJSlType.type.getName()) {
+			case "Integer": {
 				value = "int(11) "
-				if(eJSlType.^default == null)
-				    eJSlType.^default = "0"
+				if (eJSlType.^default == null)
+					eJSlType.^default = "0"
 			}
-			case "Boolean" :{
+			case "Boolean": {
 				value = "tinyint(1) "
-				if(eJSlType.^default == null)
-				    eJSlType.^default = "0"
+				if (eJSlType.^default == null)
+					eJSlType.^default = "0"
 			}
-			case "Textarea" :{
+			case "Textarea": {
 				value = "text "
 			}
-			case "Textfield" :{
+			case "Textfield": {
 				value = "varchar(255) "
-			} 
-			case "Time":{
+			}
+			case "Time": {
 				value = "time "
 			}
-			case "Date":{
+			case "Date": {
 				value = "date "
 			}
-			case "Datetime" :{
+			case "Datetime": {
 				value = "datetime "
-				if(eJSlType.^default == null)
-				    eJSlType.^default = "0000-00-00 00:00:00"
+				if (eJSlType.^default == null)
+					eJSlType.^default = "0000-00-00 00:00:00"
 			}
-			case "Link" :{
+			case "Link": {
 				value = "text "
 			}
-			case "Image":{
+			case "Image": {
 				value = "text "
 			}
-			case "File" :{
+			case "File": {
 				value = "text "
 			}
-			case "Label":{
+			case "Label": {
 				value = "varchar(255) "
 			}
-			
 		}
 		var String result = value
-		if(eJSlType.notnull)
-		    result = result +  "NOT NULL "
-		if(!eJSlType.^default.toString.empty)
-		  result = result + "DEFAULT " + '''"«eJSlType.^default.toString»"'''
-		if(eJSlType.autoincrement)
-		   result = result + "AUTO_INCREMENT "
-		   
+		if (eJSlType.notnull)
+			result = result + "NOT NULL "
+		if (!eJSlType.^default.toString.empty)
+			result = result + "DEFAULT " + '''"«eJSlType.^default.toString»"'''
+		if (eJSlType.autoincrement)
+			result = result + "AUTO_INCREMENT "
+
 		return result
 	}
-	
+
 	override getReference() {
 		return reference
 	}
-	
+
 	override getEntity() {
 		return entity
 	}
-	
-	
-	
+
 	override getInstance() {
 		return instance
 	}
-	
-	
-	override genReference( String extensionName) '''
-	FOREIGN KEY (`«this.name.toLowerCase»`) REFERENCES `#__«extensionName.toLowerCase»_«PlattformIUtil.slugify(reference.entity.name).toLowerCase»` (`«PlattformIUtil.slugify(reference.attributerefereced.name).toLowerCase»`)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE
+
+	override genReference(
+		String extensionName) '''
+		FOREIGN KEY (`«this.name.toLowerCase»`) REFERENCES `#__«extensionName.toLowerCase»_«PlattformIUtil.slugify(reference.entity.name).toLowerCase»` (`«PlattformIUtil.slugify(reference.attributerefereced.name).toLowerCase»`)
+			ON UPDATE CASCADE
+			ON DELETE CASCADE
 	'''
-	
+
 	override hasReference() {
-		if(reference != null)
-		   return true
-	return false
+		if (reference != null)
+			return true
+		return false
 	}
-	
-	
-	
-	
-	
+
 }

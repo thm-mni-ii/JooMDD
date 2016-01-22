@@ -17,7 +17,7 @@ import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
 
-class ExtendedCompoenetImpl extends ComponentImpl implements ExtendedComponent {
+class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	
 	Component instance
 	EList<ExtendedPageReference> backEndPagesReference

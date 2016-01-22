@@ -9,7 +9,7 @@ class ExtensionGenerator extends AbstracteGenerator{
 	}
 	
 	override dogenerate(String path, IFileSystemAccess fileGen) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		
 	}
 	
 }

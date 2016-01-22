@@ -25,8 +25,8 @@ class JoomlaEntityGenerator extends EntityGenerator{
 	}
 	
 	override dogenerate(String path, IFileSystemAccess fileGen) {
-		fileGen.generateFile(path + "/install",sqlAdminSqlInstallContent(extendsionN,update))
-		fileGen.generateFile(path+ "/uninstal",sqlAdminSqlUninstallContent(extendsionN))
+		fileGen.generateFile(path + "/install.sql",sqlAdminSqlInstallContent(extendsionN,update))
+		fileGen.generateFile(path+ "/uninstal.sql",sqlAdminSqlUninstallContent(extendsionN))
 	}
 	
 	 def CharSequence sqlAdminSqlInstallContent(String extensionName, boolean isupdate) {

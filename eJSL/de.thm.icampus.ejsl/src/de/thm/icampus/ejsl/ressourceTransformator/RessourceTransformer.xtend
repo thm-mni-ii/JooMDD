@@ -11,6 +11,7 @@ import de.thm.icampus.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.ejsl.eJSL.EJSLPackage
 import de.thm.icampus.ejsl.eJSL.SimpleHTMLTypeKinds
 
+
 class RessourceTransformer {
 	EJSLModel modelInstance
 	new (EJSLModel model){
@@ -19,6 +20,7 @@ class RessourceTransformer {
 	}
 	def dotransformation(){
 		transformEmptyHtmlAttribute();
+		
 	}
 	def transformEmptyHtmlAttribute(){
 		

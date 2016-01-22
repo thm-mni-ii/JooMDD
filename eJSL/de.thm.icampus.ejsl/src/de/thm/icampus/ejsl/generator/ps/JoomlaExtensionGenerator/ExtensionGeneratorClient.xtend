@@ -10,6 +10,7 @@ import de.thm.icampus.ejsl.eJSL.Module
 import de.thm.icampus.ejsl.eJSL.Plugin
 import de.thm.icampus.ejsl.eJSL.Template
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 
 public class  ExtensionGeneratorClient  {
 	
@@ -42,7 +43,7 @@ public class  ExtensionGeneratorClient  {
 					extensionsgenerator = new PackageGenerator(tempext,fsa)
 				}
 			Component :{
-				var Component tempext  =  ext as Component
+				var ExtendedComponent tempext  = new ExtendedComponentImpl(ext as Component)
 					extensionsgenerator = new ComponentGenerator(tempext,fsa)
 			}
 			Module :{
