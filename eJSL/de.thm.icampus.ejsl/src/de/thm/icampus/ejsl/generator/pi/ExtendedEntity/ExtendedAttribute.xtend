@@ -12,7 +12,8 @@ interface ExtendedAttribute extends Attribute {
 	def Reference getReference()
 	def Entity getEntity()
 	def Attribute getInstance()
-	def String genReference(Extension ex)
+	def String genReference(String exName)
+	def boolean hasReference()
 	
 	
 }

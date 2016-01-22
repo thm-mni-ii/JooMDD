@@ -115,11 +115,19 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	}
 	
 	
-	override genReference(Extension ex) '''
-	FOREIGN KEY (`«this.name.toLowerCase»`) REFERENCES `#__«PlattformIUtil.slugify(ex.name).toLowerCase»_«PlattformIUtil.slugify(reference.entity.name).toLowerCase»` (`«PlattformIUtil.slugify(reference.attributerefereced.name).toLowerCase»`)
+	override genReference( String extensionName) '''
+	FOREIGN KEY (`«this.name.toLowerCase»`) REFERENCES `#__«extensionName.toLowerCase»_«PlattformIUtil.slugify(reference.entity.name).toLowerCase»` (`«PlattformIUtil.slugify(reference.attributerefereced.name).toLowerCase»`)
 		ON UPDATE CASCADE
 		ON DELETE CASCADE
 	'''
+	
+	override hasReference() {
+		if(reference != null)
+		   return true
+	return false
+	}
+	
+	
 	
 	
 	
