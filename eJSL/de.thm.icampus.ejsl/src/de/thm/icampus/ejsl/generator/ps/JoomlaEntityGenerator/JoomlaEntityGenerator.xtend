@@ -29,7 +29,7 @@ class JoomlaEntityGenerator extends EntityGenerator{
 		fileGen.generateFile(path+ "/uninstal.sql",sqlAdminSqlUninstallContent(extendsionN))
 	}
 	
-	 def CharSequence sqlAdminSqlInstallContent(String extensionName, boolean isupdate) {
+	 public def CharSequence sqlAdminSqlInstallContent(String extensionName, boolean isupdate) {
         
         var HashSet<ExtendedEntity> visited = new HashSet<ExtendedEntity>();
         var StringBuffer result = new StringBuffer;
@@ -91,7 +91,7 @@ PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 '''
 	
-   def CharSequence sqlAdminSqlUninstallContent(String extensionName) '''
+   public def CharSequence sqlAdminSqlUninstallContent(String extensionName) '''
         «/*val entities=component.eAllContents.toIterable.filter(typeof(Entity))*/»
         SET foreign_key_checks = 0;
         
