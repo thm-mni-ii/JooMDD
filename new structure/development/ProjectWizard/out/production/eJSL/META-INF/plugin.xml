@@ -1,11 +1,11 @@
 <idea-plugin version="2">
-  <id>com.your.company.unique.plugin.id</id>
-  <name>Plugin display name here</name>
+  <id>com.your.company.unique.plugin.joomdd</id>
+  <name>Joo MDD Project Wizard</name>
   <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+  <vendor email="support@yourcompany.com" url="http://www.mni.thm.de">YourCompany</vendor>
 
   <description><![CDATA[
-      Enter short description for your plugin here.<br>
+      JooMDD Project Wizard.<br>
       <em>most HTML tags may be used</em>
     ]]></description>
 
