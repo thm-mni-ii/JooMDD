@@ -25,7 +25,7 @@ DatatypeReference:
 ;
 
 StandardTypes:
-	type=StandardTypeKinds (notnull?='Not Null')? ('Default' '=' default?=STRING)? (autoincrement?='Auto Increment')?
+	type=StandardTypeKinds (notnull?='Not Null')? ('Default' '=' default=STRING)? (autoincrement?='Auto Increment')?
 ;
 
 Datatype returns Datatype:
@@ -79,7 +79,7 @@ Attribute returns Attribute:
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
 	'Attribute' name=MYID '{' 
 		'type' '=' (type=Type)
-		(isunique ?= 'Unique attribute' ('with' (withattribute?=[Attribute|QualifiedName] | 'ID'))?)?
+		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | 'ID'))?)?
 	'}'
 ;
 
