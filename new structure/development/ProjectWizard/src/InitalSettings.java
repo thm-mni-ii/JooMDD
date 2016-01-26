@@ -24,37 +24,42 @@ public class InitalSettings implements ProjectComponent{
 
     @Override
     public void projectClosed() {
-        try {
-            FileWriter fw = new FileWriter(project.getBasePath() + "/" +project.getName() + ".iml" );
-            BufferedWriter bw = new BufferedWriter(fw);
+        File projectfile = new File(project.getBasePath()+"/"+project.getName()+ ".iml");
 
-            bw.write(getProjectConfig());
+        if (projectfile.length() < 300){
+            try {
+                projectfile.createNewFile();
+                FileWriter fw = new FileWriter(project.getBasePath() + "/" +project.getName() + ".iml" );
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(getProjectConfig());
+                bw.close();
+            }catch (Exception e){
 
-            bw.close();
-        }catch (Exception e){
-
+            }
         }
     }
 
     @Override
     public void initComponent() {
-
         File src = new File(project.getBasePath() + "/src");
         File src_gen = new File(project.getBasePath() + "/src-gen");
         File model = new File(project.getBasePath() + "/src/model.eJSL");
-
-        File projectfile = new File(project.getBasePath()+"/"+project.getName()+ ".iml");
-
         try{
             src.mkdir();
             src_gen.mkdir();
-            model.createNewFile();
-            projectfile.createNewFile();
 
-            FileWriter fw = new FileWriter(project.getBasePath() + "/src/model.eJSL");
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(geteJSLExample());
-            bw.close();
+            if (!model.exists()) {
+                try {
+                    model.createNewFile();
+                    FileWriter fw = new FileWriter(project.getBasePath() + "/src/model.eJSL");
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(geteJSLExample());
+                    bw.close();
+                } catch (Exception e) {
+
+                }
+            }
+
         }catch (Exception e){
 
         }
