@@ -10,9 +10,9 @@ import java.awt.event.ActionListener;
  */
 public class eJSLWizardStep extends ModuleWizardStep {
 
-    private static int option = 1;
+    private static String option = "Conference";
 
-    public static int getOption(){
+    public static String getOption(){
         return option;
     }
 
@@ -51,7 +51,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(radio1.isSelected()){
-                    option = 1;
+                    option = "Conference";
                     lbl1.setVisible(true);
                     lbl2.setVisible(false);
                     lbl3.setVisible(false);
@@ -64,7 +64,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(radio2.isSelected()){
-                    option = 2;
+                    option = "Model";
                     lbl2.setVisible(true);
                     lbl1.setVisible(false);
                     lbl3.setVisible(false);
@@ -76,7 +76,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(radio3.isSelected()){
-                    option = 3;
+                    option = "Weblinks";
                     lbl3.setVisible(true);
                     lbl1.setVisible(false);
                     lbl2.setVisible(false);
