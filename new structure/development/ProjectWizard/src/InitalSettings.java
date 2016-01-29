@@ -4,6 +4,7 @@ import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.channels.FileLock;
 
 /**
  * Created by Leon on 21.01.16.
@@ -24,23 +25,24 @@ public class InitalSettings implements ProjectComponent {
 
     @Override
     public void projectClosed() {
+
+    }
+
+    @Override
+    public void initComponent() {
         File projectfile = new File(project.getBasePath() + "/" + project.getName() + ".iml");
 
-
-        StringBuilder projectconfig = new StringBuilder();
-
-        if (projectfile.length() < 300) {
+        if (!projectfile.exists()) {
             try {
+                StringBuilder projectconfig = new StringBuilder();
                 FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/projectfile.xml");
                 BufferedReader br = new BufferedReader(fr);
-                String zeile = "";
-                while ((zeile = br.readLine()) != null) {
-                    projectconfig.append((zeile + "\n"));
+                String buffer = "";
+                while ((buffer = br.readLine()) != null) {
+                    projectconfig.append((buffer + "\n"));
                 }
                 br.close();
-
-
-
+                fr.close();
 
                 projectfile.createNewFile();
                 FileWriter fw = new FileWriter(project.getBasePath() + "/" + project.getName() + ".iml");
@@ -48,50 +50,42 @@ public class InitalSettings implements ProjectComponent {
 
                 bw.write(projectconfig.toString());
                 bw.close();
+                fw.close();
+
+                FileLock lock = new RandomAccessFile(project.getBasePath() + "/" + project.getName() + ".iml", "r").getChannel().tryLock(0L, Long.MAX_VALUE,true);
+                lock.release();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            File src = new File(project.getBasePath() + "/src");
+            File src_gen = new File(project.getBasePath() + "/src-gen");
+            File model = new File(project.getBasePath() + "/src/model.eJSL");
+
+            StringBuilder example = new StringBuilder();
+
+            try {
+                src.mkdir();
+                src_gen.mkdir();
+                FileWriter fw = new FileWriter(project.getBasePath() + "/src/model.eJSL");
+
+                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/" + eJSLWizardStep.getOption() + ".eJSL");
+                BufferedReader br = new BufferedReader(fr);
+                String buffer = "";
+                while ((buffer = br.readLine()) != null) {
+                    example.append((buffer + "\n"));
+                }
+                br.close();
+
+                model.createNewFile();
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(example.toString());
+                bw.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void initComponent() {
-
-        File src = new File(project.getBasePath() + "/src");
-        File src_gen = new File(project.getBasePath() + "/src-gen");
-        File model = new File(project.getBasePath() + "/src/model.eJSL");
-
-        StringBuilder example = new StringBuilder();
-        try {
-            src.mkdir();
-            src_gen.mkdir();
-
-            if (!model.exists()) {
-                try {
-
-                    FileWriter fw = new FileWriter(project.getBasePath() + "/src/model.eJSL");
-
-                    FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/" + eJSLWizardStep.getOption() + ".eJSL");
-                    BufferedReader br = new BufferedReader(fr);
-                    String zeile = "";
-                    while ((zeile = br.readLine()) != null) {
-                        example.append((zeile + "\n"));
-                    }
-                    br.close();
-
-
-                    model.createNewFile();
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    bw.write(example.toString());
-                    bw.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
