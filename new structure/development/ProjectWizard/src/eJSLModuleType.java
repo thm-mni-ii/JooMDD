@@ -1,7 +1,9 @@
 import com.intellij.icons.AllIcons;
+import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.module.ModuleType;
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.builders.ModuleBasedBuildTargetType;
 
 import javax.swing.*;
 
@@ -47,4 +49,16 @@ public class eJSLModuleType extends ModuleType<eJSLModuleBuilder> {
     public Icon getNodeIcon(@Deprecated boolean b) {
         return AllIcons.General.Information;
     }
+
+
+    @NotNull
+    @Override
+    public ModuleWizardStep[] createWizardSteps(@NotNull WizardContext wizardContext, @NotNull eJSLModuleBuilder moduleBuilder, @NotNull ModulesProvider modulesProvider) {
+
+
+        return super.createWizardSteps(wizardContext, moduleBuilder, modulesProvider);
+
+
+    }
+
 }

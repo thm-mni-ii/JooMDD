@@ -23,12 +23,13 @@
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <moduleType id="eJSL" implementationClass="eJSLModuleType" />
+    <moduleBuilder builderClass="eJSLModuleBuilder" id="DEMO_STEP" order="first"/>
   </extensions>
 
   <actions>
     <!-- Add your actions here -->
   </actions>
+
 
   <project-components>
     <component>
