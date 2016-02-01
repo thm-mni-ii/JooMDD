@@ -11,10 +11,13 @@ import java.awt.event.ActionListener;
 public class eJSLWizardStep extends ModuleWizardStep {
 
     private static String option = "Conference";
+    private static boolean wizardstatus = false;
 
+    public static void setwizardstatus(boolean status) {wizardstatus = status;}
     public static String getOption(){
         return option;
     }
+    public static boolean getwizardactive() {return  wizardstatus;}
 
     @Override
     public JComponent getComponent() {
@@ -88,6 +91,6 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
     @Override
     public void updateDataModel() {
-
+        wizardstatus = true ;
     }
 }

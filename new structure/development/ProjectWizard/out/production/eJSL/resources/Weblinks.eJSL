@@ -375,19 +375,17 @@ category_layout show_category_title show_description show_description_image maxL
 				
 			}
 		}
-		
 	}
-
 	pages {
 		IndexPage Weblinks {
-			*Entities "Rettred222" 
-			filters Rettred222.Title ,Rettred222.alias ,Rettred222.created 
+			*Entities Rettred222
+			filters = Rettred222.Title ,Rettred222.alias ,Rettred222.created
 		}
 		DetailsPage Weblink {
-			*Entities "Rettred222" 
+			*Entities Rettred222
 		}
 		IndexPage Categories {
-			*Entities "Rettred222"
+			*Entities Rettred222
 			*ParameterGroups Categories , Category ,Weblink ,List_Layout 
 			localparameters {
 				Parameter id {
@@ -408,7 +406,7 @@ category_layout show_category_title show_description show_description_image maxL
 
 		}
 		IndexPage Category {
-			*Entities "Rettred222"
+			*Entities Rettred222
 			*ParameterGroups Category , Weblink
 			
 			localparameters {
@@ -430,12 +428,12 @@ category_layout show_category_title show_description show_description_image maxL
 			
 		}
 		DetailsPage Form {
-			*Entities "Rettred222"
+			*Entities Rettred222
 			*ParameterGroups Weblink
 			
 		}
 		IndexPage ModulPage {
-			*Entities "Rettred222"
+			*Entities Rettred222
 			localparameters{
 				Parameter catid {
 					type="category"
@@ -793,10 +791,15 @@ category_layout show_category_title show_description show_description_image maxL
 			}
 			sections {
 				Frontend section {
-					*Pages Weblink, Weblinks
+					*Pages	{
+						*Page :Weblink
+						*Page: Weblinks
+					}
 				}
 				Backend section {
-					*Pages Weblinks, Weblink
+					*Pages {
+						*Page: Weblink
+					}
 				}
 			}
 		}
@@ -877,7 +880,7 @@ category_layout show_category_title show_description show_description_image maxL
 					}
 				}
 			}
-			*Page ModulPage
+			*Page : ModulPage
 		}
 	}
 

@@ -30,10 +30,10 @@ public class InitalSettings implements ProjectComponent {
 
     @Override
     public void initComponent() {
-        File projectfile = new File(project.getBasePath() + "/" + project.getName() + ".iml");
-
-        if (!projectfile.exists()) {
+        if (eJSLWizardStep.getwizardactive()) {
+            eJSLWizardStep.setwizardstatus(false);
             try {
+                File projectfile = new File(project.getBasePath() + "/" + project.getName() + ".iml");
                 StringBuilder projectconfig = new StringBuilder();
                 FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/projectfile.xml");
                 BufferedReader br = new BufferedReader(fr);
