@@ -8,7 +8,7 @@ The core part should also consist of the feature section. Which should be used t
 Extensions, which can be modelled are currently specific for Joomla (Component, Module, Plugin, Template, Library). In further versions Component, Module and Plugin 
 will be abstracted and clustered to Plugin.
  
-![ejsl model with containments](documentation/images/ejsl_model.jpg "eJSL Model with Containments")
+![ejsl model with containments](/documentation/images/ejsl_model.jpg "eJSL Model with Containments")
 
 
 	EJSLModel returns EJSLModel:
