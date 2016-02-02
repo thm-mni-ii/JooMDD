@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>com.your.company.unique.plugin.joomdd</id>
   <name>Joo MDD Project Wizard</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <vendor email="support@yourcompany.com" url="http://www.mni.thm.de">YourCompany</vendor>
 
   <description><![CDATA[
@@ -10,7 +10,7 @@
     ]]></description>
 
   <change-notes><![CDATA[
-      Hallo?neu?<br>
+      Hallo<br>
       <em>Beta</em>
     ]]>
   </change-notes>

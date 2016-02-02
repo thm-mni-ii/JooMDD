@@ -35,7 +35,7 @@ public class InitalSettings implements ProjectComponent {
             try {
                 File projectfile = new File(project.getBasePath() + "/" + project.getName() + ".iml");
                 StringBuilder projectconfig = new StringBuilder();
-                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/projectfile.xml");
+                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/settings/projectfile.xml");
                 BufferedReader br = new BufferedReader(fr);
                 String buffer = "";
                 while ((buffer = br.readLine()) != null) {
@@ -69,8 +69,7 @@ public class InitalSettings implements ProjectComponent {
                 src.mkdir();
                 src_gen.mkdir();
                 FileWriter fw = new FileWriter(project.getBasePath() + "/src/model.eJSL");
-
-                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/" + eJSLWizardStep.getOption() + ".eJSL");
+                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/" + eJSLWizardStep.getOption());
                 BufferedReader br = new BufferedReader(fr);
                 String buffer = "";
                 while ((buffer = br.readLine()) != null) {
