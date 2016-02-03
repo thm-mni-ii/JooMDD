@@ -21,6 +21,12 @@ You can easy create new eJSL projects with this wizard and you can choose exampl
 *	If you want to export the plugin go to Path: C:\Users\"user"\ .IdeaIC15\system\plugins-sandbox\plugins\ .
 Compress the ProjectWizard-folder into a zip file. Now you can install the .zip via install plugin from disk...
 
+*   Merge Plugin with eJSL:
+you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip).  ("EJSL2.9.1" is just the project name)
+copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
+copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. Past it between .../depends>  (here)  <xi:include...
+
+
 *	for PhpStorm compatibility the "projectfile".iml is in the folder .idea and not visible in the ide.
 
 #### (De-)Serializer Handlers ####

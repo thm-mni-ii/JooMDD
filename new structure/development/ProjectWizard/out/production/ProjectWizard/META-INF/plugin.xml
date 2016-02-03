@@ -28,7 +28,9 @@
   </extensions>
 
   <actions>
-    <!-- Add your actions here -->
+    <action id="eJSLFile" class="classes.eJSLFile" text= "eJSLFile">
+      <add-to-group group-id="NewGroup" anchor="first"/>
+    </action>
   </actions>
 
 
