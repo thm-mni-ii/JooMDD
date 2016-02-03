@@ -1,8 +1,10 @@
-import com.intellij.icons.AllIcons;
+package classes;
+
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -15,7 +17,7 @@ public class eJSLModuleType extends ModuleType<eJSLModuleBuilder> {
     private static final eJSLModuleType INSTANCE = new eJSLModuleType();
 
     public eJSLModuleType() {
-        super("eJSLModuleType");
+        super("classes.eJSLModuleType");
     }
 
     public static eJSLModuleType getInstance() {
@@ -42,12 +44,16 @@ public class eJSLModuleType extends ModuleType<eJSLModuleBuilder> {
 
     @Override
     public Icon getBigIcon() {
-        return AllIcons.General.Information;
+        ImageIcon icon = new ImageIcon(PathUtil.getJarPathForClass(getClass())+ "/resources/icons/eJSL.png", "hi");
+        return icon;
+        //AllIcons.General.Information;
     }
 
     @Override
     public Icon getNodeIcon(@Deprecated boolean b) {
-        return AllIcons.General.Information;
+        ImageIcon icon =  new ImageIcon(PathUtil.getJarPathForClass(getClass())+ "/resources/icons/eJSL.png", "hi");
+        return icon;
+         // AllIcons.General.Information;
     }
 
 

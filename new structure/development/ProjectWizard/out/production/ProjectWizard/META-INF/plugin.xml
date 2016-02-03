@@ -24,7 +24,7 @@
 
 
   <extensions defaultExtensionNs="com.intellij">
-    <moduleBuilder builderClass="eJSLModuleBuilder" id="DEMO_STEP" order="first"/>
+    <moduleBuilder builderClass="classes.eJSLModuleBuilder" id="DEMO_STEP" order="first"/>
   </extensions>
 
   <actions>
@@ -34,7 +34,7 @@
 
   <project-components>
     <component>
-      <implementation-class>InitalSettings</implementation-class>
+      <implementation-class>classes.InitalSettings</implementation-class>
     </component>
   </project-components>
 

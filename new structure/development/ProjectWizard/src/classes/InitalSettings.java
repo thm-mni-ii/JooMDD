@@ -1,3 +1,5 @@
+package classes;
+
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.PathUtil;
@@ -35,22 +37,24 @@ public class InitalSettings implements ProjectComponent {
             try {
                 File projectfile = new File(project.getBasePath() + "/" + project.getName() + ".iml");
                 StringBuilder projectconfig = new StringBuilder();
-                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/settings/projectfile.xml");
+                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/settings/projectfile.xml");
                 BufferedReader br = new BufferedReader(fr);
                 String buffer = "";
                 while ((buffer = br.readLine()) != null) {
                     projectconfig.append((buffer + "\n"));
                 }
-                br.close();
-                fr.close();
+
 
                 projectfile.createNewFile();
                 FileWriter fw = new FileWriter(project.getBasePath() + "/" + project.getName() + ".iml");
                 BufferedWriter bw = new BufferedWriter(fw);
 
                 bw.write(projectconfig.toString());
+
+                br.close();
                 bw.close();
                 fw.close();
+                fr.close();
 
                 FileLock lock = new RandomAccessFile(project.getBasePath() + "/" + project.getName() + ".iml", "r").getChannel().tryLock(0L, Long.MAX_VALUE,true);
                 lock.release();
@@ -69,18 +73,21 @@ public class InitalSettings implements ProjectComponent {
                 src.mkdir();
                 src_gen.mkdir();
                 FileWriter fw = new FileWriter(project.getBasePath() + "/src/model.eJSL");
-                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/" + eJSLWizardStep.getOption());
+                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/eJSLexamples/" + eJSLWizardStep.getOption());
                 BufferedReader br = new BufferedReader(fr);
                 String buffer = "";
                 while ((buffer = br.readLine()) != null) {
                     example.append((buffer + "\n"));
                 }
-                br.close();
 
                 model.createNewFile();
                 BufferedWriter bw = new BufferedWriter(fw);
                 bw.write(example.toString());
+
+                br.close();
                 bw.close();
+                fr.close();
+                fw.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -95,6 +102,6 @@ public class InitalSettings implements ProjectComponent {
     @NotNull
     @Override
     public String getComponentName() {
-        return "InitalSettings";
+        return "classes.InitalSettings";
     }
 }

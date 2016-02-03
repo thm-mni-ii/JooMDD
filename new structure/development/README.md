@@ -10,6 +10,18 @@ The eJSL Language consists of three main parts: ***entities***, ***pages***, and
 ##### Formatter #####
 ##### Validator #####
 ##### Project Wizard #####
+The project Wizard is available for IntelliJ and soon for PhpStorm.
+You can easy create new eJSL projects with this wizard and you can choose examples
+
+##### Developer information #####
+*	If you want to add an example just copy it into "resources/eJSLexamples/". The Wizard shows all files in this folder.
+*	To add a preview just add it to "resources/previews/ with the same name as the example.
+
+*	If you want to change the description, version ... go to the plugin.xml
+*	If you want to export the plugin go to Path: C:\Users\"user"\ .IdeaIC15\system\plugins-sandbox\plugins\ .
+Compress the ProjectWizard-folder into a zip file. Now you can install the .zip via install plugin from disk...
+
+*	for PhpStorm compatibility the "projectfile".iml is in the folder .idea and not visible in the ide.
 
 #### (De-)Serializer Handlers ####
 The Eclipse editor provides an extension to (de-)serialize *eJSL-instances* to/from *xmi-files*. This is done by two 
@@ -151,12 +163,12 @@ Within the structure of the JooMDD project, a set of installable plugins for the
 Installation (user):
 you need to install Xtext IDEA Core Plugin via Plugin manager and the eJSL Plugin from ...
 
-Development:
-To create an Xtext Project you need the 3 Plugins (Xtend Support, Xtext and Xtext IDEA Core).
+##### Developer information #####
+*	To create an Xtext Project you need the 3 Plugins (Xtend Support, Xtext and Xtext IDEA Core).
 
-You can create eJSL plugins for IntelliJ (Gradle: Path= *.parent/*.idea/Task/build/ideaZip) 
+*	You can create eJSL plugins for IntelliJ (Gradle: Path= *.parent/*.idea/Task/build/ideaZip) 
 The created *.zip is in *.idea/build/distributions/
-For PhpStorm you must change the plugin.xml (Add <depends>com.intellij.modules.lang</depends>)
+*	For PhpStorm you must change the plugin.xml (Add <depends>com.intellij.modules.lang</depends>)
 Infomation:
 in the plugin.xml you can change all Meta-Inf like: description, Plugin version, Plugin name ...
 #### PHPStorm ####
@@ -184,14 +196,12 @@ Example for adding the configuration in the project file:
 *    To use the language you must create a folder in the project and mark it as "Sources Root".
 
 ##### Developer information #####
-IntelliJdepencies.jar contains idea.jar and some files from openapi.jar. (IntelliJ Version 15.0.2)
+*	IntelliJdepencies.jar contains idea.jar and some files from openapi.jar. (IntelliJ Version 15.0.2)
 Care that cou do not overwrite files that exists in the current openapi.jar. Doubled classes cause a startup error in PHPStorm
 It is possible that an update crash the Xtext plugins.
 
 
-The Xtext plugin (Version 2.9.1) has a changed plugin.xml the dependency "JUnit" is changed to "com.intellij.modules.lang"
-
-    
+*	The Xtext plugin (Version 2.9.1) has a changed plugin.xml the dependency "JUnit" is changed to "com.intellij.modules.lang"
 
 ### Instances ###
 #### Simple Default ####

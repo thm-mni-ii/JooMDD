@@ -1,3 +1,5 @@
+package classes;
+
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.module.ModuleType;
