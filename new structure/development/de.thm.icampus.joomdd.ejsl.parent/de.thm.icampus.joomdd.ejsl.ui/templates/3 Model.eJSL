@@ -59,8 +59,8 @@ eJSLModel "name of the model" {
 		filters = Person.Name ,Person.Vorname
 		links {
 			InternalLink Test {
-				target = * DetailsPage1
-				linked attribute = * Person.Name
+				target = DetailsPage1
+				linked attribute = Person.Name
 			}
 		}
 		}
@@ -68,8 +68,8 @@ eJSLModel "name of the model" {
 			*Entities Person
 			links {
 				InternalLink forall {
-					target = * IndexPage1
-					linked attribute = * Person.Name
+					target = IndexPage1
+					linked attribute = Person.Name
 				}
 			}
 		}
@@ -79,8 +79,8 @@ eJSLModel "name of the model" {
 		filters = Person.Name , Person.Vorname
 				links {
 					InternalLink Link {
-						target = * DetailsPage1
-						linked attribute = * Person.Name
+						target = DetailsPage1
+						linked attribute = Person.Name
 					}
 				}
 				
@@ -89,8 +89,8 @@ eJSLModel "name of the model" {
 			*Entities entity2
 			links {
 				InternalLink forall {
-					target = * IndexPage2
-					linked attribute = * entity2.attribute1
+					target = IndexPage2
+					linked attribute = entity2.attribute1
 				}
 			} 
 		}
@@ -162,63 +162,64 @@ eJSLModel "name of the model" {
 						authorurl = "www.joomla.de"
 					}
 				}
-				}extensions {
-					Module mod1 {
-						Manifestation {
-							authors {
-								Author "Klaus Muller"
-								{
-									authoremail = "Klaus.Mullerr@mni.thm.de"
-									authorurl = "www.clox-fitness.de"
-								}
-								Author "Max Mustermann"
-								{
-									authoremail = "Max.Mustermann@mni.thm.de"
-									authorurl = "www.joomla.de"
-								}			
+			}
+			extensions {
+				Module mod1 {
+					Manifestation {
+						authors {
+							Author "Klaus Muller"
+							{
+								authoremail = "Klaus.Mullerr@mni.thm.de"
+								authorurl = "www.clox-fitness.de"
 							}
-							creationdate = 23.06.1337
-							copyright="MDD SS15"
-							description = "Master"
+							Author "Max Mustermann"
+							{
+								authoremail = "Max.Mustermann@mni.thm.de"
+								authorurl = "www.joomla.de"
+							}
 						}
-						*Page: IndexPage2 from: Component1 .backend
+						creationdate = 23.06.1337
+						copyright="MDD SS15"
+						description = "Master"
 					}
-					Component Component1 {
-			Manifestation {
-				authors {
-					Author "forename surname" {
-						authoremail = "name@provider.domaiss"
-						authorurl = "www.anyurl.com"
+					*Page: IndexPage2 from: Component1 .backend
+				}
+				Component Component1 {
+					Manifestation {
+						authors {
+							Author "forename surname" {
+								authoremail = "name@provider.domaiss"
+								authorurl = "www.anyurl.com"
+							}
+						}
+						creationdate=20.04.1222
+						copyright = "Copyright"
+						license = "License"
 					}
-				} 
-				creationdate=20.04.1222			
-				copyright = "Copyright"
-				license = "License"
-			}
-			languages {
-				Language de-DE {
-	   			}
-				Language en-GB {
-				}
-			}
-				sections {
-				Frontend section {
-				   *Pages {
-				   	*Page: IndexPage1
-				   	*Page:  DetailsPage1 
-				   }
-				}
-				Backend section {
-					*Pages {
-					*Page: IndexPage1
-				   	*Page:  DetailsPage1 
-				   	*Page:  IndexPage2
-				   	*Page: DetailsPage2
+					languages {
+						Language de-DE {
+						}
+						Language en-GB {
+						}
+					}
+					sections {
+						Frontend section {
+						   *Pages {
+							*Page: IndexPage1
+							*Page:  DetailsPage1
+						   }
+						}
+						Backend section {
+							*Pages {
+							*Page: IndexPage1
+							*Page:  DetailsPage1
+							*Page:  IndexPage2
+							*Page: DetailsPage2
+							}
+						}
 					}
 				}
 			}
 		}
-	}
-   } 
-  }
+	 }
 }

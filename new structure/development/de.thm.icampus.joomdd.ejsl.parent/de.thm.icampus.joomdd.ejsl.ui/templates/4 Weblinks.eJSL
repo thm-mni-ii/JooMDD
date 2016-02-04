@@ -375,19 +375,17 @@ category_layout show_category_title show_description show_description_image maxL
 				
 			}
 		}
-		
 	}
-
 	pages {
 		IndexPage Weblinks {
-			*Entities "Rettred222" 
-			filters Rettred222.Title ,Rettred222.alias ,Rettred222.created 
+			*Entities Rettred222
+			filters = Rettred222.Title ,Rettred222.alias ,Rettred222.created
 		}
 		DetailsPage Weblink {
-			*Entities "Rettred222" 
+			*Entities Rettred222
 		}
 		IndexPage Categories {
-			*Entities "Rettred222"
+			*Entities Rettred222
 			*ParameterGroups Categories , Category ,Weblink ,List_Layout 
 			localparameters {
 				Parameter id {
@@ -408,7 +406,7 @@ category_layout show_category_title show_description show_description_image maxL
 
 		}
 		IndexPage Category {
-			*Entities "Rettred222"
+			*Entities Rettred222
 			*ParameterGroups Category , Weblink
 			
 			localparameters {
@@ -430,12 +428,12 @@ category_layout show_category_title show_description show_description_image maxL
 			
 		}
 		DetailsPage Form {
-			*Entities "Rettred222"
+			*Entities Rettred222
 			*ParameterGroups Weblink
 			
 		}
 		IndexPage ModulPage {
-			*Entities "Rettred222"
+			*Entities Rettred222
 			localparameters{
 				Parameter catid {
 					type="category"
@@ -662,11 +660,11 @@ category_layout show_category_title show_description show_description_image maxL
 						Key ACCESS_HEADING="Access"
 						Key BATCH_OPTIONS="Batch process the selected links"
 						Key BATCH_TIP="If a category is selected for move/copy, any actions selected will be applied to the copied or moved links. Otherwise, all actions are applied to the selected links."
-						Key CATEGORIES_DESC="These settings apply for Web Links Categories Options unless they are changed for a specific menu item."
-						Key CATEGORY_DESC="These settings apply for Web Links Category Options unless they are changed for a specific menu item."
-						Key COMPONENT_DESC="These settings apply for Web Links unless they are changed for a specific menu item or web link."
+						Key CATEGORIES_DESC="These resources.settings apply for Web Links Categories Options unless they are changed for a specific menu item."
+						Key CATEGORY_DESC="These resources.settings apply for Web Links Category Options unless they are changed for a specific menu item."
+						Key COMPONENT_DESC="These resources.settings apply for Web Links unless they are changed for a specific menu item or web link."
 						Key COMPONENT_LABEL="Weblink"
-						Key CONFIG_INTEGRATION_SETTINGS_DESC="These settings determine how the Weblinks Component will integrate with other extensions."
+						Key CONFIG_INTEGRATION_SETTINGS_DESC="These resources.settings determine how the Weblinks Component will integrate with other extensions."
 						Key CONFIGURATION="Web Links Manager Options"
 						Key EDIT_WEBLINK="Edit Web Link"
 						Key ERR_TABLES_NAME="There is already a Web Link with that name in this category. Please try again."
@@ -739,7 +737,7 @@ category_layout show_category_title show_description show_description_image maxL
 						Key FLOAT_LABEL="Image Float"
 						Key HITS_DESC="Number of hits for this weblink"
 						Key LEFT="Left"
-						Key LIST_LAYOUT_DESC="These settings apply for Weblinks List Layout Options unless they are changed for a specific menu item."
+						Key LIST_LAYOUT_DESC="These resources.settings apply for Weblinks List Layout Options unless they are changed for a specific menu item."
 						Key MANAGER_WEBLINK="Web Links Manager: Web Link"
 						Key MANAGER_WEBLINKS="Web Links Manager: Web Links"
 						Key N_ITEMS_ARCHIVED="%d weblinks successfully archived"
@@ -773,7 +771,7 @@ category_layout show_category_title show_description show_description_image maxL
 						Key JGLOBAL_NEWITEMSLAST_DESC="New Weblinks default to the last position. Ordering can be changed after this Weblink is saved."
 						Key JLIB_APPLICATION_ERROR_BATCH_CANNOT_CREATE="You are not allowed to create new weblinks in this category."
 						Key JLIB_APPLICATION_ERROR_BATCH_CANNOT_EDIT="You are not allowed to edit one or more of these weblinks."
-						Key JLIB_RULES_SETTING_NOTES="1. If you change the setting, it will apply to this component. Note that:<br /><em>Inherited</em> means that the permissions from global configuration and parent group will be used.<br /><em>Denied</em> means that no matter what the global configuration or parent group settings are, the group being edited cannot take this action on this component.<br /><em>Allowed</em> means that the group being edited will be able to take this action for this component (but if this is in conflict with the global configuration or parent group it will have no impact; a conflict will be indicated by <em>Not Allowed (Locked)</em> under Calculated Settings).<br />2. If you select a new setting, click <em>Save</em> to refresh the calculated settings."
+						Key JLIB_RULES_SETTING_NOTES="1. If you change the setting, it will apply to this component. Note that:<br /><em>Inherited</em> means that the permissions from global configuration and parent group will be used.<br /><em>Denied</em> means that no matter what the global configuration or parent group resources.settings are, the group being edited cannot take this action on this component.<br /><em>Allowed</em> means that the group being edited will be able to take this action for this component (but if this is in conflict with the global configuration or parent group it will have no impact; a conflict will be indicated by <em>Not Allowed (Locked)</em> under Calculated Settings).<br />2. If you select a new setting, click <em>Save</em> to refresh the calculated resources.settings."
 						
 						Key	LINKS="Links"
 						Key	CATEGORIES="Categories"
@@ -793,10 +791,15 @@ category_layout show_category_title show_description show_description_image maxL
 			}
 			sections {
 				Frontend section {
-					*Pages Weblink, Weblinks
+					*Pages	{
+						*Page :Weblink
+						*Page: Weblinks
+					}
 				}
 				Backend section {
-					*Pages Weblinks, Weblink
+					*Pages {
+						*Page: Weblink
+					}
 				}
 			}
 		}
@@ -877,7 +880,7 @@ category_layout show_category_title show_description show_description_image maxL
 					}
 				}
 			}
-			*Page ModulPage
+			*Page : ModulPage
 		}
 	}
 
