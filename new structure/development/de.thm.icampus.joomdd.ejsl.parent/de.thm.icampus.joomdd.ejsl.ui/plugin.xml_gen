@@ -7,7 +7,7 @@
 			class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
-			extensions="eJSL,ejsl,EJSL"
+			extensions="eJSL"
 			id="de.thm.icampus.joomdd.ejsl.EJSL"
 			name="EJSL Editor">
 		</editor>
@@ -218,32 +218,6 @@
 	        uriExtension="eJSL">
 	    </resourceServiceProvider>
 	</extension>
-	<extension
-		point="org.eclipse.emf.ecore.extension_parser">
-		<parser
-			class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="ejsl">
-		</parser>
-	</extension>
-	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
-	    <resourceServiceProvider
-	        class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-	        uriExtension="ejsl">
-	    </resourceServiceProvider>
-	</extension>
-	<extension
-		point="org.eclipse.emf.ecore.extension_parser">
-		<parser
-			class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="EJSL">
-		</parser>
-	</extension>
-	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
-	    <resourceServiceProvider
-	        class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-	        uriExtension="EJSL">
-	    </resourceServiceProvider>
-	</extension>
 	<!-- marker definitions for de.thm.icampus.joomdd.ejsl.EJSL -->
 	<extension
 			id="ejsl.check.fast"
@@ -433,133 +407,4 @@
 			type="text">
 		</fileTypes>
 	</extension>
-	<!-- Project wizard -->
-	<extension point="org.eclipse.ui.newWizards">
-	  <category 
-          id="de.thm.icampus.joomdd.ejsl.ui.MyWizard" 
-          name="eJSL Wizard">
-      </category> 
-      <!--<category 
-          id="org.eclipse.faq.examples.WizardSubCategory" 
-          name="More Specific FAQ Wizards">
-          parentCategory="org.eclipse.faq.examples.MyWizard" 
-      </category> -->
-      <wizard
-            category="de.thm.icampus.joomdd.ejsl.ui.MyWizard"
-            class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.wizard.MyWizard"
-            icon="src/de/thm/icampus/joomdd/ejsl/ui/wizard/eJSL.PNG"
-            id="de.thm.icampus.joomdd.ejsl.ui.wizard.EJSLNewProjectWizard"
-            name="EJSL Project"
-            project="true">
-      </wizard>
-   </extension>
-
-  <!-- XMI Serialization -->  
-  <extension
-        point="org.eclipse.ui.handlers">
-     <handler
-           class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.handler.SerializationHandler"
-           commandId="de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand">
-     </handler>
-  </extension>
-       
-  <extension
-        point="org.eclipse.ui.commands">
-     <command
-           id="de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand"
-           name="eJSL --&gt; XMI">
-     </command>
-  </extension>
-  
-   <!-- XMI Deserialization -->
-  <extension
-        point="org.eclipse.ui.handlers">
-     <handler
-           class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationHandler"
-           commandId="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand">
-     </handler>
-  </extension>
-       
-  <extension
-        point="org.eclipse.ui.commands">
-     <command
-           id="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand"
-           name="eJSL &lt;-- XMI">
-     </command>
-  </extension>   
-
-<!-- (De-)Serialization Context Menu -->
-  <extension
-        point="org.eclipse.ui.menus">
-     <menuContribution
-           locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
-        <menu
-              label="eJSL Serialization">
-           <command
-                 commandId="de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand"
-                 style="push">
-              <visibleWhen
-                    checkEnabled="false">
-                 <iterate>
-                    <adapt
-                          type="org.eclipse.core.resources.IResource">
-                       <test
-                             property="org.eclipse.core.resources.name"
-                             value="*.xmi">
-                       </test>
-                    </adapt>
-                 </iterate>
-              </visibleWhen>
-           </command>
-           <command
-                 commandId="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand"
-                 style="push">
-              <visibleWhen
-                    checkEnabled="false">
-                 <iterate>
-                    <adapt
-                          type="org.eclipse.core.resources.IResource">
-                       <test
-                             property="org.eclipse.core.resources.name"
-                             value="*.xmi">
-                       </test>
-                    </adapt>
-                 </iterate>
-              </visibleWhen>
-           </command>
-           <command
-                 commandId="de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand"
-                 style="push">
-              <visibleWhen
-                    checkEnabled="false">
-                 <iterate>
-                    <adapt
-                          type="org.eclipse.core.resources.IResource">
-                       <test
-                             property="org.eclipse.core.resources.name"
-                             value="*.eJSL">
-                       </test>
-                    </adapt>
-                 </iterate>
-              </visibleWhen>
-           </command>
-           <command
-                 commandId="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand"
-                 style="push">
-              <visibleWhen
-                    checkEnabled="false">
-                 <iterate>
-                    <adapt
-                          type="org.eclipse.core.resources.IResource">
-                       <test
-                             property="org.eclipse.core.resources.name"
-                             value="*.eJSL">
-                       </test>
-                    </adapt>
-                 </iterate>
-              </visibleWhen>
-           </command>
-        </menu>
-     </menuContribution>
-  </extension>
 </plugin>
