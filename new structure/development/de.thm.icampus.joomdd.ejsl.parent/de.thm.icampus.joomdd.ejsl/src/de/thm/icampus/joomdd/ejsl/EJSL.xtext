@@ -6,14 +6,59 @@ EJSLModel returns EJSLModel:
 	{EJSLModel}
 	'eJSLModel'	name=STRING
 	'{'
+		('eJSL part' ejslPart=EJSLPart)
+	'}';
+
+EJSLPart:
+	CMSCore | CMSExtension
+;
+
+CMSCore:
+	{CMSCore}
+	'CMS Core' '{'
 		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
 		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
 		('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
-		('entities' '{' (entities+=Entity)* '}')?
-		('datapackages' '{' (datapackages+=Datapackage)* '}')?
-		('pages' '{' (pages+=Page)* '}')?
-		('extensions' '{' (extensions+=Extension)* '}')?
-	'}';
+		feature += Feature*
+	//	(coreFeature += coreFeature*) // for further implementation of core features
+	'}'
+;
+
+coreFeature:
+	{coreFeature}
+	'coreFeature'
+;
+
+CMSExtension:
+	{CMSExtension}
+		'CMS Extension' '{'
+			('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+			('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+			('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+			features += Feature*
+			('extensions' '{' (extensions+=Extension)* '}')?
+	'}'
+;
+
+Feature:
+	{Feature}
+	
+	
+	//new features
+	(entitypackages+=Entitypackage)*
+	(entities+=Entity)*
+	(pages+=Page)*
+	(sections+=Section)+
+	
+// old features	
+//	('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+//	('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+//	('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+//	('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
+//	('entities' '{' (entities+=Entity)* '}')?
+//	('pages' '{' (pages+=Page)* '}')?
+//	('sections' '{' (sections+=Section)+ '}')?
+;
 
 // data model
 Type:
@@ -54,11 +99,11 @@ ParameterGroup returns ParameterGroup:
 	'}'
 ;
 
-Datapackage returns Datapackage:
-	{Datapackage}
-	'Datapackage' name=ID
+Entitypackage returns Entitypackage:
+	{Entitypackage}
+	'Entitypackage' name=ID
 	'{'
-		('datapackages' '{' (datapackages+=Datapackage)* '}')?
+		('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
 		('entities' '{' (entities+=Entity)* '}')?
 		('datatypes' '{' (datatypes+=Datatype)* '}')?
 	'}'
@@ -98,7 +143,7 @@ Reference returns Reference:
 // page model
 
 Page:
-	StaticPage | DynamicPage
+	StaticPage | DynamicPage 
 ;
 
 StaticPage returns StaticPage:
@@ -114,7 +159,7 @@ StaticPage returns StaticPage:
 ;
 
 DynamicPage:
-	IndexPage | DetailsPage
+	IndexPage | DetailsPage | CustomPage
 ;
 
 IndexPage returns IndexPage:
@@ -136,7 +181,7 @@ DetailsPage returns DetailsPage:
 	'DetailsPage' name=MYID 
 	'{'
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
-		('edit_fields' '{' (editfields+=DetailPageField)* '}')?
+		('editFields' '{' (editfields+=DetailPageField)* '}')?
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
@@ -149,6 +194,16 @@ DetailsPage returns DetailsPage:
 DetailPageField returns DetailPageField:
 	{DetailPageField}
 	attribute = [Attribute|QualifiedName] ':' htmltype = HTMLTypes
+;
+
+
+CustomPage:
+	{StaticPage}
+	'CustomPage' name=MYID 
+	'{'
+		'Page type:' pageType = PageKinds
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+	'}'
 ;
 
 HTMLTypes:
@@ -243,7 +298,7 @@ Backend returns BackendSection:
 ;
 
 PageReference returns PageReference:
-	'*Page :' page=[Page|QualifiedName] ('from :' pagescr=[Component|QualifiedName] sect = SectionReference)?
+	'*Page :' page=[Page|QualifiedName] ('from :' pagescr=[Component|QualifiedName] sect = SectionKinds)?
 ;
 
 Frontend returns FrontendSection:
@@ -428,8 +483,11 @@ enum PluginKinds:
 enum StandardTypeKinds:
 	Integer | Boolean | Textarea | Textfield | Time | Date | Datetime | Link | Image | File | Label
 ;
-enum SectionReference:
+enum SectionKinds:
 	backend='.backend' | frontend='.frontend'
+;
+enum PageKinds:
+	list='list' | details='details' | custom='custom'
 ;
 enum SimpleHTMLTypeKinds:
 	Integer | Yes_No_Buttons | Textarea | Text_Field |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	
