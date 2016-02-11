@@ -6,7 +6,7 @@ EJSLModel returns EJSLModel:
 	{EJSLModel}
 	'eJSLModel'	name=STRING
 	'{'
-		('eJSL part' ejslPart=EJSLPart)
+		('eJSL part:' ejslPart=EJSLPart)
 	'}';
 
 EJSLPart:
@@ -19,7 +19,7 @@ CMSCore:
 		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
 		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
 		('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
-		feature += Feature*
+		feature = Feature
 	//	(coreFeature += coreFeature*) // for further implementation of core features
 	'}'
 ;
@@ -35,29 +35,17 @@ CMSExtension:
 			('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
 			('globalparameters' '{' (globalparameters+=Parameter)* '}')?
 			('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
-			features += Feature*
+			features = Feature
 			('extensions' '{' (extensions+=Extension)* '}')?
 	'}'
 ;
 
 Feature:
 	{Feature}
-	
-	
-	//new features
-	(entitypackages+=Entitypackage)*
-	(entities+=Entity)*
-	(pages+=Page)*
-	(sections+=Section)+
-	
-// old features	
-//	('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
-//	('globalparameters' '{' (globalparameters+=Parameter)* '}')?
-//	('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
-//	('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
-//	('entities' '{' (entities+=Entity)* '}')?
-//	('pages' '{' (pages+=Page)* '}')?
-//	('sections' '{' (sections+=Section)+ '}')?
+	('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
+	('entities' '{' (entities+=Entity)* '}')?
+	('pages' '{' (pages+=Page)* '}')?
+	('sections' '{' (sections+=Section)+ '}')?
 ;
 
 // data model
@@ -132,9 +120,9 @@ Reference returns Reference:
 	{Reference}
 	'Reference'  
 	'{'
-		'Attribute =' attribute=[Attribute|QualifiedName]
+		'EntityAttribute =' attribute=[Attribute|QualifiedName]
 		'*Entity =' entity=[Entity|QualifiedName]
-		'Reference =' attributerefereced=[Attribute|QualifiedName]
+		'EntityReference =' attributerefereced=[Attribute|QualifiedName]
 		'lower =' lower=NUMBER
 		'upper =' upper=NUMBER 
 	'}'
@@ -170,8 +158,8 @@ IndexPage returns IndexPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
-		('table columns' '=' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
-		('filters' '=' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
+		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
+		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
