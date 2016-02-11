@@ -47,14 +47,22 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					backEndPagesReference.addAll(s.pageRef.map[t|new ExtendedPageReferenceImpl(t)])
 					for(ExtendedPageReference pf: backEndPagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
-						allextendedEntity.addAll(extp.extendedEntityList.filter[t|!allextendedEntity.contains(t)])
+						for(ExtendedEntity entBackend: extp.extendedEntityList){
+							if(!allextendedEntity.contains(entBackend))
+							allextendedEntity.add(entBackend)
+							
+						}
 					}
 				}
 				FrontendSection:{
 					fronEndpagesReference.addAll(s.pageRef.map[t|new ExtendedPageReferenceImpl(t)])
 					for(ExtendedPageReference pf: fronEndpagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
-						allextendedEntity.addAll(extp.extendedEntityList.filter[t|!allextendedEntity.contains(t)])
+						for(ExtendedEntity entFrontend: extp.extendedEntityList){
+							if(!allextendedEntity.contains(entFrontend))
+							allextendedEntity.add(entFrontend)
+							
+						}
 					}	
 					}
 			}

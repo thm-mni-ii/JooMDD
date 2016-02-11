@@ -111,7 +111,7 @@ PRIMARY KEY (`id`)
     	
     }
 	
-	def completeReferenceOfEntity(ExtendedEntity ent) {
+	def completeAttributeOfEntity(ExtendedEntity ent) {
 		if(!ent.haveIdAttribute()){
 			var Attribute id = EJSLFactory.eINSTANCE.createAttribute
 			id.name = "id"
@@ -194,21 +194,14 @@ PRIMARY KEY (`id`)
 		}
 	}
 	
-	def void  completeAttributeOfEntity(ExtendedEntity ent) {
+	def void  completeReferenceOfEntity(ExtendedEntity ent) {
 		
 		for(Reference ref : ent.references){
 			if(ref.id){
 				if(ent.searchIdAttribute != null){
-					var Attribute id = EJSLFactory.eINSTANCE.createAttribute
-					id.name = "id"
-					var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
-					typeid.type =  StandardTypeKinds.INTEGER
-					typeid.notnull = true
-					typeid.autoincrement = true
-					id.type = typeid
-					ent.putNewAttributeInEntity(id)
-				}
 				ref.attributerefereced.add(ent.searchIdAttribute)
+				
+				}
 			}
 		}
 	}

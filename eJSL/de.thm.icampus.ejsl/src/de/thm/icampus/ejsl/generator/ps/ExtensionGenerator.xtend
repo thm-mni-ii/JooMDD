@@ -19,6 +19,7 @@ class ExtensionGenerator extends AbstracteGenerator{
 	override dogenerate(String path, IFileSystemAccess fileGen) {
 		
 		for(ext: extensions){
+			
 		var ExtensionGeneratorClient extClient = new ExtensionGeneratorClient(fileGen,ext)
 		extClient.generateExtension
 		}

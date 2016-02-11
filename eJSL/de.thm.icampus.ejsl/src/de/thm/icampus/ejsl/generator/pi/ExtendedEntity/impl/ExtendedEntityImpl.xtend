@@ -64,9 +64,9 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		
 		return result
 	}
-	public override boolean haveIdAttribute(){
-    	for(attr: attributes){
-    		if(attr.name.compareToIgnoreCase("id")==0){
+	 override boolean haveIdAttribute(){
+    	for(attr: extendedAttributeList){
+    		if(attr.name.toLowerCase.equalsIgnoreCase("id")){
     			attr.name = "id"
     			return true
     		}
@@ -80,7 +80,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		
 		override searchIdAttribute() {
 			for( attr: extendedAttributeList){
-				if(attr.name.equalsIgnoreCase("id")==0){
+				if(attr.name.toLowerCase.equalsIgnoreCase("id")){
 					return attr
 				}
 			}

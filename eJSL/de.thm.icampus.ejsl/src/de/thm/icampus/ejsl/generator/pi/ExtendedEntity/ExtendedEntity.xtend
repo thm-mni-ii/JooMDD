@@ -12,7 +12,7 @@ interface ExtendedEntity extends Entity {
 	def EList<ExtendedAttribute> getAllattribute()
 	def boolean haveIdAttribute()
 	def void putNewAttributeInEntity(Attribute e)
-	def Attribute searchIdAttribute()
+	def ExtendedAttribute searchIdAttribute()
 	
 	
 }
