@@ -1,0 +1,39 @@
+<idea-plugin version="2">
+  <id>com.your.company.unique.plugin.joomdd</id>
+  <name>Joo MDD Project Wizard</name>
+  <version>1.0</version>
+  <vendor email="support@yourcompany.com" url="http://www.mni.thm.de">YourCompany</vendor>
+
+  <description><![CDATA[
+      JooMDD Project Wizard.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="141.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <moduleType id="eJSL" implementationClass="eJSLModuleType" />
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+  <project-components>
+    <component>
+      <implementation-class>InitalSettings</implementation-class>
+    </component>
+  </project-components>
+
+</idea-plugin>

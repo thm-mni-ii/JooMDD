@@ -1,0 +1,20 @@
+@(p: de.thm.icampus.mdd.model.extensions.Page)
+@p match {
+    case indexPage: de.thm.icampus.mdd.model.extensions.IndexPage => {
+        IndexPage @{indexPage.name} {
+            *Entities "<You have to choose the right entity :(>"
+            @if(indexPage.globalParamNames.nonEmpty) {
+                *ParameterGroups @{indexPage.globalParamNames.mkString(", ")}
+            }
+        }
+    }
+    case detailsPage: de.thm.icampus.mdd.model.extensions.DetailsPage => {
+        DetailsPage @{detailsPage.name} {
+            *Entities "<You have to choose the right entity :(>"
+            @if(detailsPage.globalParamNames.nonEmpty) {
+                *ParameterGroups @{detailsPage.globalParamNames.mkString(", ")}
+            }
+        }
+    }
+}
+

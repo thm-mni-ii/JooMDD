@@ -13,8 +13,10 @@ import de.thm.icampus.ejsl.eJSL.Parameter
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
+import de.thm.icampus.ejsl.generator.ps.ExtensionGenerator
+import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameter
 
-abstract public class AbstractExtensionGenerator {
+abstract public class AbstractExtensionGenerator extends ExtensionGenerator {
 
 	@Property IFileSystemAccess fsa
 	@Property String name
@@ -143,27 +145,16 @@ abstract public class AbstractExtensionGenerator {
 	
 	
 	
-	def CharSequence generateParameter(EList<Parameter>listParams)'''
+	def CharSequence generateParameter(EList<ExtendedParameter>listParams)'''
 		«FOR param : listParams»
 		 <field
 		 name="«param.name»"
-		 type="«Slug.getTypeName(param.dtype)»"
+		 type="«Slug.getTypeName(param.generatorType)»"
 		 label="«param.label »"
 		 description="«param.descripton»"
 		 />
 		«ENDFOR»
 		'''
 
-	public def EList<ProtectedRegion> getProtectedRegions();
-
-	public def void setProtectedRegions(EList<ProtectedRegion> myprotectedRegions)
-
-	def Slug getSlug()
-
-	def void setSlug(Slug slug);
-
-	def KVPairGeneratorClient getKvPairClient();
-
-	def void setKvPairClient(KVPairGeneratorClient e);
 
 } // AbstractExtensionGenerator

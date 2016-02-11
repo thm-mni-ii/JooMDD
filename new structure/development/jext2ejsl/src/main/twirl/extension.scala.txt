@@ -1,0 +1,15 @@
+@(ext: de.thm.icampus.mdd.model.extensions.Extension)
+@ext match {
+    case c: de.thm.icampus.mdd.model.extensions.ComponentExtension => {
+        @component(c)
+    }
+    case m: de.thm.icampus.mdd.model.extensions.ModuleExtension => {
+        @module(m)
+    }
+    case l: de.thm.icampus.mdd.model.extensions.LibraryExtension => {
+        @library(l)
+    }
+    case p: de.thm.icampus.mdd.model.extensions.PluginExtension => {
+        @plugin(p)
+    }
+}

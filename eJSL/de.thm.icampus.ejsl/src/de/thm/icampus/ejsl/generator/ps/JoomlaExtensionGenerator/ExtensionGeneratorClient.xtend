@@ -11,6 +11,7 @@ import de.thm.icampus.ejsl.eJSL.Plugin
 import de.thm.icampus.ejsl.eJSL.Template
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
 
 public class  ExtensionGeneratorClient  {
 	

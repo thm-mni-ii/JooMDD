@@ -4,45 +4,26 @@ package de.thm.icampus.ejsl.generator.ps.JoomlaExtensionGenerator;
 
 import de.thm.icampus.ejsl.eJSL.BackendSection
 import de.thm.icampus.ejsl.eJSL.Component
-import de.thm.icampus.ejsl.eJSL.DetailsPage
-import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.eJSL.FrontendSection
 import de.thm.icampus.ejsl.eJSL.IndexPage
-import de.thm.icampus.ejsl.eJSL.Language
-import de.thm.icampus.ejsl.eJSL.Page
-import de.thm.icampus.ejsl.eJSL.Parameter
-import de.thm.icampus.ejsl.eJSL.Section
-import java.util.ArrayList
-import java.util.Calendar
-import java.util.HashSet
-import org.eclipse.emf.common.util.EList
-import org.eclipse.xtext.generator.IFileSystemAccess
-import java.util.HashMap
-import de.thm.icampus.ejsl.eJSL.ParameterGroup
-import de.thm.icampus.ejsl.eJSL.Attribute
-import de.thm.icampus.ejsl.eJSL.Reference
-import de.thm.icampus.ejsl.eJSL.DynamicPage
-import de.thm.icampus.ejsl.eJSL.StaticPage
-import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
-import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
-import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
-import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
-import de.thm.icampus.ejsl.generator.entity.EntityGenerator
 import de.thm.icampus.ejsl.eJSL.PageReference
-import java.util.Set
-import java.util.LinkedList
-import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.TableGeneratorTemplate
-import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.FieldsGenerator
+import de.thm.icampus.ejsl.eJSL.Section
 import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.ejsl.generator.ps.EntityGenerator
 import de.thm.icampus.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntityGenerator
+import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
+import java.util.ArrayList
+import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.eJSL.Language
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
+import org.eclipse.emf.common.util.EList
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
 	private String slug
-	private ExtendedComponent component
+	private ExtendedComponent extendeComp
 	private String class_name
-	private EntityGenerator entgen
+	private JoomlaEntityGenerator entgen
 
 	new(ExtendedComponent component, IFileSystemAccess fsa) {
 		this.fsa = fsa;
@@ -50,9 +31,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.noPrefixName = this.slug
 		this.name = "com_" + this.slug
         
-		this.component = component
+		this.extendeComp = component
 		this.class_name = this.noPrefixName.toFirstUpper
-		this.component.formatName
+		this.extendeComp.formatName
 		entgen = new JoomlaEntityGenerator(component.allExtendedEntity, component.name, false)
 	}
 	
@@ -70,7 +51,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 *  find and saved here
 		 */
 		var indexPages = new ArrayList();
-		for (Section s : component.sections) {
+		for (Section s : extendeComp.sections) {
 			switch (s) {
 				BackendSection: {
 					for (PageReference p : s.pageRef) {
@@ -82,27 +63,27 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			}
 		}
 
-		generateFile(name + ".xml", component.xmlContent(indexPages))
+		generateFile(name + ".xml", extendeComp.xmlContent(indexPages))
 
 		var frontend = null as FrontendSection
 		var backend = null as BackendSection
 
-		if (component.sections.length > 0) {
-			switch component.sections.get(0) {
-				BackendSection: backend = component.sections.get(0) as BackendSection
-				FrontendSection: frontend = component.sections.get(0) as FrontendSection
+		if (extendeComp.sections.length > 0) {
+			switch extendeComp.sections.get(0) {
+				BackendSection: backend = extendeComp.sections.get(0) as BackendSection
+				FrontendSection: frontend = extendeComp.sections.get(0) as FrontendSection
 			}
 		}
 
-		if (component.sections.length > 1) {
-			switch component.sections.get(1) {
-				BackendSection: backend = component.sections.get(1) as BackendSection
-				FrontendSection: frontend = component.sections.get(1) as FrontendSection
+		if (extendeComp.sections.length > 1) {
+			switch extendeComp.sections.get(1) {
+				BackendSection: backend = extendeComp.sections.get(1) as BackendSection
+				FrontendSection: frontend = extendeComp.sections.get(1) as FrontendSection
 			}
 		}
 
 		// Generate language files
-		for (lang : component.languages) {
+		for (lang : extendeComp.languages) {
 			val ldir = lang.name
 			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".ini", lang.languageFileContent("FrontendSection"))
 			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".sys.ini", lang.languageFileContent("FrontendSection"))
@@ -122,43 +103,42 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		// Generate sql stuff
 		generateJoomlaDirectory("admin/sql")
-		generateFile("admin/sql/install.mysql.utf8.sql", entgen.sqlAdminSqlInstallContent(component, false))
-		generateFile("admin/sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(component))
+		generateFile("admin/sql/install.mysql.utf8.sql", entgen.dogenerate)
+		generateFile("admin/sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(extendeComp.name))
 		generateJoomlaDirectory("admin/sql/updates")
 		generateJoomlaDirectory("admin/sql/updates/mysql")
-		generateFile("admin/sql/updates/mysql/1.0.1.mysql.utf8.sql", component.sqlAdminSqlUpdateContent(true))
+		generateFile("admin/sql/updates/mysql/1.0.1.mysql.utf8.sql", sqlAdminSqlUpdateContent(extendeComp.name,true))
 
 		return ""
 	}
 
-	def CharSequence sqlAdminSqlUpdateContent(Component component, boolean isupdate) {
-		return entgen.sqlAdminSqlInstallContent(component, isupdate);
+	def CharSequence sqlAdminSqlUpdateContent(String component, boolean isupdate) {
+		entgen.update = isupdate
+		return entgen.dogenerate;
 	}
 
-	def CharSequence languageFileContent(Language lang, String sectionName) '''
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»="«component.name.toFirstUpper»"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME="Home"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID="ID"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT="Checked out"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT_TIME="Checked out Time"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ORDERING="Ordering"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY="Created By"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_STATE="state"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS="state"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_JFIELD_PUBLISHED_DESC="State Description"
+	def CharSequence languageFileContent(Language lang, String sectionName, EList<ExtendedPageReference> pagerefList) '''
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»="«extendeComp.name.toFirstUpper»"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_HOME="Home"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_ID="ID"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT="Checked out"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT_TIME="Checked out Time"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_ORDERING="Ordering"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY="Created By"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_STATE="state"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_JSTATUS="state"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_JFIELD_PUBLISHED_DESC="State Description"
 		JPUBLISHED="published"
 		JUNPUBLISHED="unpublished"
 		JARCHIVED="archived"
 		JTRASHED="trashed"
-		«FOR Section sec : component.sections»
-		«IF sec.eClass.name.equalsIgnoreCase(sectionName)»
-			«FOR PageReference pag: sec.pageRef»
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«Slug.slugify(pag.page.name).toUpperCase»="«pag.page.name.toFirstUpper»"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_TITLE="«pag.page.name.toFirstUpper»"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_DESC="«pag.page.name.toFirstUpper»"
-			«ENDFOR»
-		«ENDIF»
+		
+		«FOR ExtendedPageReference pag: pagerefList»
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_TITLE_«Slug.slugify(pag.page.name).toUpperCase»="«pag.page.name.toFirstUpper»"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_TITLE="«pag.page.name.toFirstUpper»"
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_DESC="«pag.page.name.toFirstUpper»"
 		«ENDFOR»
+
 		«FOR DetailsPage dynp : Slug.getAllAttributeOfAComponente(component)»
 			«IF sectionName.equalsIgnoreCase("FrontendSection")»
 		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(dynp.name).toUpperCase»EDIT_TITLE="«dynp.name.toFirstUpper»edit"
@@ -1006,28 +986,6 @@ function «component.name.toFirstUpper»ParseRoute($segments) {
     
 	'''
     
-	override getProtectedRegions() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
 
-	override setProtectedRegions(EList<ProtectedRegion> myprotectedRegions) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override getSlug() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override setSlug(Slug slug) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override getKvPairClient() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override setKvPairClient(KVPairGeneratorClient e) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
 
 } // ComponentGenerator
