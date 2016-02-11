@@ -7,8 +7,16 @@ import java.util.HashSet
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.ejsl.eJSL.Reference
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.eJSL.Attribute
+import de.thm.icampus.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.ejsl.eJSL.StandardTypes
+import de.thm.icampus.ejsl.eJSL.SimpleHTMLTypeKinds
+import de.thm.icampus.ejsl.eJSL.StandardTypeKinds
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
+import de.thm.icampus.ejsl.generator.pi.util.PlattformIUtil
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
-class JoomlaEntityGenerator extends EntityGenerator{
+class JoomlaEntityGenerator {
 	EList<ExtendedEntity> entities
 	String extendsionN
 	boolean update
@@ -17,17 +25,17 @@ class JoomlaEntityGenerator extends EntityGenerator{
 		extendsionN = extendsionName
 		update = updateScript
 	}
-	override dogenerate(){
+	def dogenerate(){
 		return sqlAdminSqlInstallContent(extendsionN,update)
 	}
 	def setUpdate(boolean updateScript){
 		this.update = updateScript
 	}
 	
-	override dogenerate(String path, IFileSystemAccess fileGen) {
-		fileGen.generateFile(path + "/install.sql",sqlAdminSqlInstallContent(extendsionN,update))
-		fileGen.generateFile(path+ "/uninstal.sql",sqlAdminSqlUninstallContent(extendsionN))
-	}
+//	def dogenerate(String path, IFileSystemAccess fileGen) {
+//		fileGen.generateFile(path + "/install.sql",sqlAdminSqlInstallContent(extendsionN,update))
+//		fileGen.generateFile(path+ "/uninstal.sql",sqlAdminSqlUninstallContent(extendsionN))
+//	}
 	
 	 public def CharSequence sqlAdminSqlInstallContent(String extensionName, boolean isupdate) {
         
@@ -39,7 +47,7 @@ class JoomlaEntityGenerator extends EntityGenerator{
 	        		result.append(generateSQLTable(e, isupdate, extensionName));
 	        		visited.addAll(e);
 	        	}
-	        	if(!visited.contains(e) && !e.references.empty && isAllreferenVisited(e.references, visited) ){
+	        	else if(!visited.contains(e) && !e.references.empty && isAllreferenVisited(e.references, visited) ){
 	        
 	        	   result.append(generateSQLTable(e, isupdate,extensionName))
 	        	   visited.addAll(e);
@@ -65,28 +73,20 @@ class JoomlaEntityGenerator extends EntityGenerator{
     «ENDIF»
 
    CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`#__«componentName.toLowerCase»_«table.name.toLowerCase»` (
-    `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `asset_id` INT(10) UNSIGNED NOT NULL DEFAULT '0',    
-    `ordering` INT(11)  NOT NULL ,
-    `state` TINYINT(1)  NOT NULL ,
-    `checked_out` INT(11)  NOT NULL,
-    `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-	`created_by` INT(11)  NOT NULL ,
+    
 	«FOR a:table.allattribute»
 		`«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
 	«ENDFOR»
-	`published` TINYINT(1),
-	`params` TEXT,
-«FOR attr:table.allattribute»
-«IF attr.hasReference»
-	«attr.genReference(componentName)»,
-«ENDIF»
+«FOR ref:table.references»
+CONSTRAINT  FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ', ')») REFERENCES «Slug.slugify(ref.entity.name.toLowerCase)» («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 «ENDFOR»
 PRIMARY KEY (`id`)
 «FOR a:table.extendedAttributeList»
 «IF a.isunique»
-,  UNIQUE KEY («a.name»)
-«ENDIF»
+,  UNIQUE KEY («a.name»«if(a.withattribute != null)''',«a.withattribute.name»'''»)
+«ENDIF» 
 «ENDFOR»
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 '''
@@ -99,4 +99,111 @@ PRIMARY KEY (`id`)
         	DROP TABLE IF EXISTS `#__«extensionName.toLowerCase»_«e.name.toLowerCase»`;
         «ENDFOR»
     '''
+    
+    public def void completeEntity(){
+    	
+    	for(ExtendedEntity ent: entities){
+    		completeAttributeOfEntity(ent)
+    	}
+    	for(ExtendedEntity ent: entities){
+    		completeReferenceOfEntity(ent)
+    	}
+    	
+    }
+	
+	def completeAttributeOfEntity(ExtendedEntity ent) {
+		if(!ent.haveIdAttribute()){
+			var Attribute id = EJSLFactory.eINSTANCE.createAttribute
+			id.name = "id"
+			var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
+			typeid.type =  StandardTypeKinds.INTEGER
+			typeid.notnull = true
+			typeid.autoincrement = true
+			id.type = typeid
+			ent.putNewAttributeInEntity(id)
+			
+		}
+		var Attribute asset_id = EJSLFactory.eINSTANCE.createAttribute
+			asset_id.name = "asset_id"
+			var StandardTypes type_asset_id = EJSLFactory.eINSTANCE.createStandardTypes
+			type_asset_id.type =  StandardTypeKinds.INTEGER
+			type_asset_id.notnull = true
+			type_asset_id.^default = "0"
+			asset_id.type = type_asset_id
+			ent.putNewAttributeInEntity(asset_id)
+						
+		var Attribute state = EJSLFactory.eINSTANCE.createAttribute
+			state.name = "state"
+			var StandardTypes type_state = EJSLFactory.eINSTANCE.createStandardTypes
+			type_state.type =  StandardTypeKinds.BOOLEAN
+			type_state.notnull = true
+			state.type = type_state
+       ent.putNewAttributeInEntity(state)	
+				
+		var Attribute ordering = EJSLFactory.eINSTANCE.createAttribute
+			ordering.name = "ordering"
+			var StandardTypes type_ordering = EJSLFactory.eINSTANCE.createStandardTypes
+			type_ordering.type =  StandardTypeKinds.INTEGER
+			type_ordering.notnull = true
+			ordering.type = type_ordering
+		ent.putNewAttributeInEntity(ordering)
+			
+		var Attribute checked_out_time = EJSLFactory.eINSTANCE.createAttribute
+			checked_out_time.name = "checked_out_time"
+			var StandardTypes type_checked_out_time= EJSLFactory.eINSTANCE.createStandardTypes
+			type_checked_out_time.type =  StandardTypeKinds.DATETIME
+			type_checked_out_time.notnull = true
+			type_checked_out_time.^default = "0000-00-00 00:00:00"
+			checked_out_time.type = type_checked_out_time
+		ent.putNewAttributeInEntity(checked_out_time)
+			
+		var Attribute checked_out = EJSLFactory.eINSTANCE.createAttribute
+			checked_out.name = "checked_out"
+			var StandardTypes type_checked_out = EJSLFactory.eINSTANCE.createStandardTypes
+			type_checked_out.type =  StandardTypeKinds.INTEGER
+			type_checked_out.notnull = true
+			checked_out.type = type_checked_out
+		ent.putNewAttributeInEntity(checked_out)
+			
+		var Attribute created_by = EJSLFactory.eINSTANCE.createAttribute
+			created_by.name = "checked_out_time"
+			var StandardTypes type_created_by = EJSLFactory.eINSTANCE.createStandardTypes
+			type_created_by.type =  StandardTypeKinds.INTEGER
+			type_created_by.notnull = true
+			created_by.type = type_created_by
+		ent.putNewAttributeInEntity(created_by)
+		
+		var Attribute published = EJSLFactory.eINSTANCE.createAttribute
+			published.name = "published"
+			var StandardTypes type_published = EJSLFactory.eINSTANCE.createStandardTypes
+			type_published.type =  StandardTypeKinds.BOOLEAN
+			published.type = type_published
+		ent.putNewAttributeInEntity(published)
+		
+		var Attribute params = EJSLFactory.eINSTANCE.createAttribute
+			params.name = "params"
+			var StandardTypes type_params = EJSLFactory.eINSTANCE.createStandardTypes
+			type_params.type =  StandardTypeKinds.TEXTAREA
+			params.type = type_params
+		ent.putNewAttributeInEntity(params)
+		
+		for(ExtendedAttribute attr: ent.allattribute){
+			 if(attr.id){
+			 	attr.withattribute = ent.searchIdAttribute
+			 }
+		}
+	}
+	
+	def void  completeReferenceOfEntity(ExtendedEntity ent) {
+		
+		for(Reference ref : ent.references){
+			if(ref.id){
+				if(ent.searchIdAttribute != null){
+				ref.attributerefereced.add(ent.searchIdAttribute)
+				
+				}
+			}
+		}
+	}
+	
 }

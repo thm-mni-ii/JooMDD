@@ -16,6 +16,7 @@ import de.thm.icampus.ejsl.eJSL.DynamicPage
 import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedPage
 
 class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	
@@ -24,6 +25,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	EList<ExtendedPageReference> fronEndpagesReference
 	EList<ExtendedEntity> allextendedEntity
 	EList<ExtendedParameterGroup> extendedParamaterGroups
+	EList<ExtendedPage> allExtendedPage
 	new(Component comp){
 		instance = comp
 		this.name = PlattformIUtil.slugify(comp.name)
@@ -37,6 +39,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	def initListen() {
 		backEndPagesReference = new BasicEList<ExtendedPageReference>
 		fronEndpagesReference = new BasicEList<ExtendedPageReference>
+		allExtendedPage = new BasicEList<ExtendedPage>
 		allextendedEntity = new BasicEList<ExtendedEntity>
 		for( s: this.sections){
 			switch s {
@@ -44,20 +47,31 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					backEndPagesReference.addAll(s.pageRef.map[t|new ExtendedPageReferenceImpl(t)])
 					for(ExtendedPageReference pf: backEndPagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
-						allextendedEntity.addAll(extp.extendedEntityList.filter[t|!allextendedEntity.contains(t)])
+						for(ExtendedEntity entBackend: extp.extendedEntityList){
+							if(!allextendedEntity.contains(entBackend))
+							allextendedEntity.add(entBackend)
+							
+						}
 					}
 				}
 				FrontendSection:{
 					fronEndpagesReference.addAll(s.pageRef.map[t|new ExtendedPageReferenceImpl(t)])
 					for(ExtendedPageReference pf: fronEndpagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
-						allextendedEntity.addAll(extp.extendedEntityList.filter[t|!allextendedEntity.contains(t)])
+						for(ExtendedEntity entFrontend: extp.extendedEntityList){
+							if(!allextendedEntity.contains(entFrontend))
+							allextendedEntity.add(entFrontend)
+							
+						}
 					}	
 					}
 			}
 		}
 		 extendedParamaterGroups = new BasicEList<ExtendedParameterGroup>
 		 extendedParamaterGroups.addAll(this.globalParamter.map[t| new ExtendedParameterGroupImpl(t)])
+		 
+		 allExtendedPage.addAll(backEndPagesReference.map[t| t.extendedPage])
+		 allExtendedPage.addAll(fronEndpagesReference.map[t | if(!allExtendedPage.contains(t)) t.extendedPage])
        	
 	}
 	
@@ -79,6 +93,10 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	
 	override getExtendedParameterGroupList() {
 		return extendedParamaterGroups
+	}
+	
+	override getAllExtendedPage() {
+		return allExtendedPage
 	}
 	
 }

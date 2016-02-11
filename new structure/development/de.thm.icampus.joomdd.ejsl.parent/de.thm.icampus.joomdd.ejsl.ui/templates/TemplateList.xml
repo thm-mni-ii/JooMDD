@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<templateList xmlns="http://www.example.org/TemplateList">
+    <template>
+        <name>Empty</name>
+        <description>Start all new</description>
+        <src>empty.ejsl</src>
+    </template>
+    <template>
+        <name>Conference</name>
+        <src>conference.eJSL</src>
+    </template>
+    <template>
+    	<name>Model</name>
+    	<src>Model.eJSL</src></template>
+    <template>
+    	<name>Weblinks</name>
+    	<src>Weblinks.eJSL</src></template>
+</templateList>

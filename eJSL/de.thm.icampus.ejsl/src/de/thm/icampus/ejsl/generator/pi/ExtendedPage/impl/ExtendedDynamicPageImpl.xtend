@@ -59,9 +59,10 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		 extendedGlobalParameterList = new BasicEList<ExtendedParameter>
 		 extendedGlobalParameterList.addAll(this.globalparameters.map[t| new ExtendedParameterImpl(t)])
 		 extendedLocalParameterList = new BasicEList<ExtendedParameter>
-		 extendedLocalParameterList.addAll(this.globalparameters.map[t| new ExtendedParameterImpl(t)])
+		 extendedLocalParameterList.addAll(this.localparameters.map[t| new ExtendedParameterImpl(t)])
 		 extendedParameterGroupList = new BasicEList<ExtendedParameterGroup>
 		extendedParameterGroupList.addAll(this.parametergroups.map[t | new ExtendedParameterGroupImpl(t)])
+		
 		
 	}
 	
@@ -100,6 +101,10 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 	
 	override getExtendedLocalParametersListe() {
 		return this.extendedLocalParameterList
+	}
+	
+	override getAllattributeOfAllEntities() {
+		
 	}
 	
 }

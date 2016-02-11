@@ -14,18 +14,16 @@ import de.thm.icampus.ejsl.eJSL.Extension
 class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 
 	Entity entity
-	Reference reference
 	String genType
 	Attribute instance
 
-	new(Attribute attr, Reference e) {
+	new(Attribute attr) {
 
 		this.type = attr.type
 		this.name = PlattformIUtil.slugify(attr.name)
 		this.isunique = attr.isIsunique
 		this.withattribute = attr.withattribute
 		entity = attr.eContainer as Entity
-		reference = e
 		genType = generatorType()
 		instance = attr
 
@@ -92,7 +90,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		var String result = value
 		if (eJSlType.notnull)
 			result = result + "NOT NULL "
-		if (!eJSlType.^default.toString.empty)
+		if (eJSlType.^default!= null)
 			result = result + "DEFAULT " + '''"«eJSlType.^default.toString»"'''
 		if (eJSlType.autoincrement)
 			result = result + "AUTO_INCREMENT "
@@ -100,9 +98,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		return result
 	}
 
-	override getReference() {
-		return reference
-	}
+	
 
 	override getEntity() {
 		return entity
@@ -112,17 +108,5 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		return instance
 	}
 
-	override genReference(
-		String extensionName) '''
-		FOREIGN KEY (`«this.name.toLowerCase»`) REFERENCES `#__«extensionName.toLowerCase»_«PlattformIUtil.slugify(reference.entity.name).toLowerCase»` (`«PlattformIUtil.slugify(reference.attributerefereced.name).toLowerCase»`)
-			ON UPDATE CASCADE
-			ON DELETE CASCADE
-	'''
-
-	override hasReference() {
-		if (reference != null)
-			return true
-		return false
-	}
 
 }

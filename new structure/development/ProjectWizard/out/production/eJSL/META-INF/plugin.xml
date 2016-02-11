@@ -5,13 +5,13 @@
   <vendor email="support@yourcompany.com" url="http://www.mni.thm.de">YourCompany</vendor>
 
   <description><![CDATA[
+      <h2>Entwickelt von Leon und Max vom iCampus Team</h2>
       JooMDD Project Wizard.<br>
-      <em>most HTML tags may be used</em>
     ]]></description>
 
   <change-notes><![CDATA[
       Add change notes here.<br>
-      <em>most HTML tags may be used</em>
+      <em>Beta</em>
     ]]>
   </change-notes>
 
@@ -22,13 +22,15 @@
        on how to target different products -->
   <depends>com.intellij.modules.lang</depends>
 
+
   <extensions defaultExtensionNs="com.intellij">
-    <moduleType id="eJSL" implementationClass="eJSLModuleType" />
+    <moduleBuilder builderClass="eJSLModuleBuilder" id="DEMO_STEP" order="first"/>
   </extensions>
 
   <actions>
     <!-- Add your actions here -->
   </actions>
+
 
   <project-components>
     <component>

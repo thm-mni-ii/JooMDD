@@ -19,7 +19,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		this.name = PlattformIUtil.slugify(entity.name)
 		this.supertype = entity.supertype
 		this.attributes = entity.attributes
-		this.references = this.references
+		this.references = entity.references
 		instance = entity
 		initListen()
 		
@@ -44,6 +44,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	
 	def void initListen(){
 		extendedAttributeList = new BasicEList<ExtendedAttribute>
+		allAttribute = new BasicEList<ExtendedAttribute>
 		extendedAttributeList.addAll(this.attributes.map[t| PlattformIUtil.transformAttribute(t)])
 		extendedParentAttributeList = searchAttributeParent()
 		
@@ -63,5 +64,27 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		
 		return result
 	}
+	 override boolean haveIdAttribute(){
+    	for(attr: extendedAttributeList){
+    		if(attr.name.toLowerCase.equalsIgnoreCase("id")){
+    			attr.name = "id"
+    			return true
+    		}
+    	}
+    	return false
+    }
+				
+	override putNewAttributeInEntity(Attribute e) {
+		attributes.add(e)
+		allAttribute.add(PlattformIUtil.transformAttribute(e))	}
+		
+		override searchIdAttribute() {
+			for( attr: extendedAttributeList){
+				if(attr.name.toLowerCase.equalsIgnoreCase("id")){
+					return attr
+				}
+			}
+			return null;
+		}
 	
 }

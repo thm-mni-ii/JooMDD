@@ -10,6 +10,28 @@ will be abstracted and clustered to Plugin.
  
 ![ejsl model with containments](/documentation/images/ejsl_model.jpg "eJSL Model with Containments")
 
+#### Textual Editor ###
+##### Formatter #####
+##### Validator #####
+##### Project Wizard #####
+The project Wizard is available for IntelliJ and soon for PhpStorm.
+You can easy create new eJSL projects with this wizard and you can choose examples
+
+##### Developer information #####
+*	If you want to add an example just copy it into "resources/eJSLexamples/". The Wizard shows all files in this folder.
+*	To add a preview just add it to "resources/previews/ with the same name as the example.
+
+*	If you want to change the description, version ... go to the plugin.xml
+*	If you want to export the plugin go to Path: C:\Users\"user"\ .IdeaIC15\system\plugins-sandbox\plugins\ .
+Compress the ProjectWizard-folder into a zip file. Now you can install the .zip via install plugin from disk...
+
+*   Merge Plugin with eJSL:
+you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip).  ("EJSL2.9.1" is just the project name)
+copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
+copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. Past it between .../depends>  (here)  <xi:include...
+
+
+*	for PhpStorm compatibility the "projectfile".iml is in the folder .idea and not visible in the ide.
 
 	EJSLModel returns EJSLModel:
 	{EJSLModel}
@@ -167,14 +189,58 @@ the *plugin.xml* of the *de.thm.icampus.joomdd.ejsl.ui plugin*:
 *Attention:* The context menu is only available within the ***Java perspective***.
 
 #### IntelliJ ####
+
 ##### Textual Editor #####
 ##### Project Wizard #####
 
+Installation (user):
+you need to install Xtext IDEA Core Plugin via Plugin manager and the eJSL Plugin from ...
+
+##### Developer information #####
+*	To create an Xtext Project you need the 3 Plugins (Xtend Support, Xtext and Xtext IDEA Core).
+
+*	You can create eJSL plugins for IntelliJ (Gradle: Path= *.parent/*.idea/Task/build/ideaZip) 
+The created *.zip is in *.idea/build/distributions/
+*	For PhpStorm you must change the plugin.xml (Add <depends>com.intellij.modules.lang</depends>)
+Infomation:
+in the plugin.xml you can change all Meta-Inf like: description, Plugin version, Plugin name ...
+
 #### PHPStorm ####
+
 ##### Textual Editor #####
 ##### Project Wizard #####
 ##### Generator inclusion#####
 
+##### Prepare PHPStorm (only first time): #####
+*	Copy IntelliJdepencies.jar into path: PHPStorm installation\lib\  .
+*	Now install the two downloaded plugins (Xtext and EJSL) via "Install plugin from disk ..." (Menu: File/Settings/Plugins/).
+
+##### Add the language to your Project: #####
+*	Now you must configure the plugin via the project file (the project file is in the work directory of the project in the folder .idea\"ProjectName".iml).
+
+Example for adding the configuration in the project file:
+
+    <component name="FacetManager">
+      <facet type="de.thm.icampus.ejsl.EJSL" name="EJSL">
+        <configuration>
+          <option name="activated" value="true" />
+          <option name="createDirectory" value="true" />
+          <option name="outputDirectory" value="src-gen" />
+          <option name="overwriteExisting" value="true" />
+          <option name="testOutputDirectory" value="src-gen" />
+        </configuration>
+      </facet>
+    </component>
+
+*    To use the language you must create a folder in the project and mark it as "Sources Root".
+
+##### Developer information #####
+*	IntelliJdepencies.jar contains idea.jar and some files from openapi.jar. (IntelliJ Version 15.0.2)
+Care that cou do not overwrite files that exists in the current openapi.jar. Doubled classes cause a startup error in PHPStorm
+It is possible that an update crash the Xtext plugins.
+
+
+*	The Xtext plugin (Version 2.9.1) has a changed plugin.xml the dependency "JUnit" is changed to "com.intellij.modules.lang"
 
 ### Instances ###
 To ensure a simple usage, we created some example instances, which can be used as templates for own eJSL instances.

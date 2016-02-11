@@ -8,18 +8,19 @@ import de.thm.icampus.ejsl.eJSL.InternalLink
 import javax.swing.text.html.HTMLEditorKit.LinkController
 import de.thm.icampus.ejsl.eJSL.Reference
 import de.thm.icampus.ejsl.eJSL.Entity
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 class FieldsGenerator {
 	
-	Reference ref
+	Reference mainRef
 	Component com
 	String nameField
 	Entity entFrom
-	public new ( Reference reference, Component component, Entity from){
-		ref = reference
+	public new ( Reference attribute, Component component, Entity from){
+		mainRef = attribute
 		com = component
 		entFrom = from
-		nameField = from.name + "To" +reference.entity.name
+		nameField = from.name + "To" +attribute.entity.name
 	}
 	
 	
@@ -36,11 +37,17 @@ class FieldsGenerator {
 	 
 	 class JFormField«nameField.toFirstUpper» extends JFormField
 	 {
-	 	protected $referenceStruct = array("keys" => "«ref.attribute.name.toLowerCase»",
-	                                        "table" => "«Slug.databaseName(com.name, entFrom.name)»",
-	                                       "foreignKeys" => "«ref.attributerefereced.name.toLowerCase»",
-	                                        "foreignTable"=> "«Slug.databaseName(com.name,ref.entity.name)»",
+	 	protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
+	                                        "foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
 	                                        );
+	     protected $keysAndForeignKeys= array(
+	       «FOR attr : mainRef.attribute»
+	       «IF attr != mainRef.attribute.last»
+	        "«attr.name.toLowerCase»" => "«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»",
+	       «ENDIF»
+	       "«attr.name.toLowerCase»" => "«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»"
+	       «ENDFOR»
+	     )
 	        «genGeTInput»
 	        
 	        «genGetAllData»
@@ -48,6 +55,8 @@ class FieldsGenerator {
 	        «genGetAllRestData»
 	        
 	        «genGetReferencedata»
+	        «genGenerateJsonValue»
+	        «gengenerateStringValue»
 	 	
 	 }
 	'''
@@ -68,8 +77,8 @@ class FieldsGenerator {
 	        	$alldata = $this->getAllData();
 	             $html[] = "<select required class='form-control' name='" . $this->name. "'>";
 	        foreach($alldata as $data){
-	            $html[] = "<option  value='".$data->«ref.attributerefereced.name.toLowerCase» ."'>"
-	            . $data->«ref.attributerefereced.name.toLowerCase» ."</option>";
+	            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
+	            . $this->generateStringValue($selected) ."</option>";
 	        }
 	          $html[]="</select>";
 		       return implode($html);
@@ -78,11 +87,11 @@ class FieldsGenerator {
 	        $restData = $this->getAllRestData($id);
 	        $html[] = "<select required class='form-control' name='" . $this->name. "'>";
 	        foreach($selectData as $selected){
-	            $html[] = "<option selected='selected' value='".$selected->«ref.attributerefereced.name.toLowerCase» ."'>"
-	            . $selected->«ref.attributerefereced.name.toLowerCase» ."</option>";
+	            $html[] = "<option selected='selected' value='". $this->generateJsonValue($selected) ."'>"
+	            . $this->generateStringValue($selected) ."</option>";
 	        }
 	        foreach($restData as $rest){
-	            $html[] = "<option >" . $rest->«ref.attributerefereced.name.toLowerCase»."</option>";
+	            $html[] = "<option  value='". $this->generateJsonValue($rest)."'>" . $this->generateStringValue($rest) ."</option>";
 	        }
 	        $html[]="</select>";
 		return implode($html);
@@ -101,10 +110,16 @@ protected function getReferencedata($id)
     $query->select("b.*")
           ->from( $this->referenceStruct["table"] . " as a")
           ->leftJoin($this->referenceStruct["foreignTable"] . " as b on "
-              . " b." . $this->referenceStruct["foreignKeys"] . '=' . " a." . $this->referenceStruct["keys"])
+          «FOR attr : mainRef.attribute»
+          «IF attr != mainRef.attribute.last»
+            . " b.«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»". '=' . " a.«attr» AND". 
+          «ENDIF»
+            . " b.«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»". '=' . " a.«attr»"
+           «ENDFOR»
+           )
          ->where("b.state = 1")
          ->where("a.id =" . $id)
-         ->order($this->referenceStruct["foreignKeys"] . " ASC");
+         ->order("id" . " ASC");
     $db->setQuery($query);
     return $db->loadObjectList();
 }
@@ -121,14 +136,19 @@ protected function getReferencedata($id)
     $query->select("b.id")
         ->from( $this->referenceStruct["table"] . " as a")
         ->leftJoin($this->referenceStruct["foreignTable"]. " as b on "
-            . " b." . $this->referenceStruct["foreignKeys"] . "=  a." . $this->referenceStruct["keys"])
+           «FOR attr : mainRef.attribute»
+           «IF attr != mainRef.attribute.last»
+             . " b.«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»". '=' . " a.«attr» AND". 
+           «ENDIF»
+             . " b.«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»". '=' . " a.«attr»"
+            «ENDFOR»
         ->where("b.state = 1")
         ->where("a.id =" . $id);
     $queryALL->select("*")
         ->from($this->referenceStruct["foreignTable"])
         ->where("state = 1")
         ->where("id not in (" . $query  .")")
-        ->order($this->referenceStruct["foreignKeys"] . " ASC");
+        ->order("id" . " ASC");
     $db->setQuery($queryALL);
     return $db->loadObjectList();
 }
@@ -146,7 +166,25 @@ protected function getReferencedata($id)
     return $db->loadObjectList();
 }
 	'''
-	
+public def CharSequence genGenerateJsonValue()'''
+  public function generateJsonValue($data){
+            $result  = array();
+            foreach($this->$keysAndForeignKeys as $key=>$value){
+                $result["$key"] = $data->$key;
+            }
+            return json_encode($result);
+        }
+'''	
+public def CharSequence gengenerateStringValue()'''
+public function generateStringValue($data){
+        $result = array();
+        foreach($this->$keysAndForeignKeys as $key=>$value){
+            $result[] = $data->$key . " ";
+        }
+        return implode($result);
+    }
+
+'''
 	
 	
 	

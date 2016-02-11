@@ -11,6 +11,7 @@ import de.thm.icampus.ejsl.eJSL.Type
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
 
 /**
  * <!-- begin-user-doc -->
@@ -23,10 +24,10 @@ import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
  * @generated
  */
 public class LibraryGenerator extends AbstractExtensionGenerator {
-	@Property Library library
+	@Property ExtendedLibrary library
 	private String subpackageName;
 
-	new(Library library, IFileSystemAccess access) {
+	new(ExtendedLibrary library, IFileSystemAccess access) {
 		this.library = library
 		this.name = "lib_" + Slug.slugify(library.name)
 		
@@ -36,7 +37,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		library.formatName
 	}
 	
-	def void formatName(Library library){
+	def void formatName(ExtendedLibrary library){
 		library.name = Slug.slugify(library.name)
 	}
 
@@ -78,8 +79,8 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		return ""
 	}
 	
-	def CharSequence entityFile(Library library, String entityName) '''
-		«FOR entity : library.entities»
+	def CharSequence entityFile(ExtendedLibrary library, String entityName) '''
+		«FOR entity : library.extendedEntities»
 			<?php
 				/**
 				 * @package		Joomla.Libraries
@@ -100,9 +101,9 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 				 */
 				class «this.subpackageName»«entityName»
 				{
-					«FOR attribute : entity.attributes»
+					«FOR attribute : entity.extendedAttributeList»
 						/**
-						 * @var		«attribute.dbtype.typeName»	Variable description
+						 * @var		«attribute.generatorType»	Variable description
 						 * @since	3.3
 						 */
 						private $«attribute.name»;
@@ -374,28 +375,6 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		</extension>
 	'''
 
-	override getProtectedRegions() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override setProtectedRegions(EList<ProtectedRegion> myprotectedRegions) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override getSlug() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override setSlug(Slug slug) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override getKvPairClient() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	override setKvPairClient(KVPairGeneratorClient e) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
+	
 
 } // LibraryGenerator

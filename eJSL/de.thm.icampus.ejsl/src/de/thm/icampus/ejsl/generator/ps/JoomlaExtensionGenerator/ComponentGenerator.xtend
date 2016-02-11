@@ -17,6 +17,20 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.eJSL.Language
 import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import java.util.Calendar
+import java.util.List
+import java.util.LinkedList
+import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.FieldsGenerator
+import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.TableGeneratorTemplate
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedPage
+import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
+import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameterGroup
+import java.util.HashSet
+import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameter
+import de.thm.icampus.ejsl.eJSL.Reference
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
@@ -27,7 +41,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 	new(ExtendedComponent component, IFileSystemAccess fsa) {
 		this.fsa = fsa;
-		this.slug = Slug.slugify(component.name)
+		this.slug = component.name
 		this.noPrefixName = this.slug
 		this.name = "com_" + this.slug
         
@@ -35,6 +49,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.class_name = this.noPrefixName.toFirstUpper
 		this.extendeComp.formatName
 		entgen = new JoomlaEntityGenerator(component.allExtendedEntity, component.name, false)
+		entgen.completeEntity()
 	}
 	
 	def void formatName(Component component){
@@ -50,18 +65,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 *  For this reason all index pages of section will be
 		 *  find and saved here
 		 */
-		var indexPages = new ArrayList();
-		for (Section s : extendeComp.sections) {
-			switch (s) {
-				BackendSection: {
-					for (PageReference p : s.pageRef) {
-						if (p.page instanceof IndexPage) {
-							indexPages.add(p.page);
-						}
-					}
-				}
-			}
-		}
+		var indexPages = extendeComp.backEndExtendedPagerefence.map[t| if(t.extendedPage.extendedDynamicPageInstance !=null)t.extendedPage.extendedDynamicPageInstance];
+		
 
 		generateFile(name + ".xml", extendeComp.xmlContent(indexPages))
 
@@ -85,20 +90,20 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		// Generate language files
 		for (lang : extendeComp.languages) {
 			val ldir = lang.name
-			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".ini", lang.languageFileContent("FrontendSection"))
-			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".sys.ini", lang.languageFileContent("FrontendSection"))
-		    generateFile("language/admin/" + ldir + "/" + ldir + "." + name + ".ini", lang.languageFileContent("BackendSection"))
-			generateFile("language/admin/" + ldir + "/" + ldir + "." + name + ".sys.ini", lang.languageFileContent("BackendSection"))
+			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".ini", lang.languageFileContent(extendeComp.frontEndExtendedPagerefence))
+			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".sys.ini", lang.languageFileContent(extendeComp.frontEndExtendedPagerefence))
+		    generateFile("language/admin/" + ldir + "/" + ldir + "." + name + ".ini", lang.languageFileContent(extendeComp.backEndExtendedPagerefence))
+			generateFile("language/admin/" + ldir + "/" + ldir + "." + name + ".sys.ini", lang.languageFileContent(extendeComp.backEndExtendedPagerefence))
 		}
 
 		// Generate backend section 
 		if (backend != null) {
-			backend.generateBackendSection
+			generateBackendSection
 		}
 
 		// Generate frontend section 
 		if (frontend != null) {
-			frontend.generateFrontendSection
+			generateFrontendSection
 		}
 
 		// Generate sql stuff
@@ -117,7 +122,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		return entgen.dogenerate;
 	}
 
-	def CharSequence languageFileContent(Language lang, String sectionName, EList<ExtendedPageReference> pagerefList) '''
+	def CharSequence languageFileContent(Language lang, EList<ExtendedPageReference> pagerefList) '''
 		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»="«extendeComp.name.toFirstUpper»"
 		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_HOME="Home"
 		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_ID="ID"
@@ -139,21 +144,20 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_DESC="«pag.page.name.toFirstUpper»"
 		«ENDFOR»
 
-		«FOR DetailsPage dynp : Slug.getAllAttributeOfAComponente(component)»
-			«IF sectionName.equalsIgnoreCase("FrontendSection")»
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(dynp.name).toUpperCase»EDIT_TITLE="«dynp.name.toFirstUpper»edit"
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«Slug.slugify(dynp.name).toUpperCase»EDIT_DESC="«dynp.name.toFirstUpper»edit"
-					«ENDIF»
-		«FOR Attribute attr: dynp.entities.last.attributes»
-		«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_«Slug.slugify(dynp.entities.last.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»="«Slug.slugify(attr.name).toFirstUpper»"
+		«FOR ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]»
+		
+		«FOR ExtendedEntity ent: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList»
+		«FOR ExtendedAttribute attr: ent.allattribute»
+		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»="«Slug.slugify(attr.name).toFirstUpper»"
+		«ENDFOR»
 		«ENDFOR»
 		«ENDFOR»
 		«FOR e : lang.keyvaluepairs»
-			«Slug.generateKeysName(component,e.name)»="«e.value»"
+			«Slug.generateKeysName(extendeComp,e.name)»="«e.value»"
 		«ENDFOR»
 	'''
 
-	def CharSequence xmlContent(Component component, ArrayList<Page> indexPages) '''
+	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> indexPages) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<extension type="component" version="3.3" method="upgrade">
 		    <name>«component.name»</name>
@@ -257,13 +261,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		</extension>
 	'''
 
-	private def void generateFrontendSection(Section section) {
+	private def void generateFrontendSection() {
 
 		// Generate frontend section
 		generateJoomlaDirectory("/site")
-		generateFile("site/" + noPrefixName + ".php", component.phpSiteContent)
-		generateFile("site/controller.php", component.phpSiteControllerContent)
-		generateFile("site/router.php", component.phpSiteRouterContent)
+		generateFile("site/" + noPrefixName + ".php", extendeComp.phpSiteContent)
+		generateFile("site/controller.php", extendeComp.phpSiteControllerContent)
+		generateFile("site/router.php", extendeComp.phpSiteRouterContent)
 		generateJoomlaDirectory("site/views")
 		generateJoomlaDirectory("site/models")
 		generateJoomlaDirectory("site/models/fields")
@@ -274,27 +278,27 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		generateJoomlaDirectory("site/controllers")
 
-		val pagerefs = section.pageRef
+		val pagerefs = extendeComp.frontEndExtendedPagerefence
 		for (pageref : pagerefs) {
-			pageref.page.generate(path + "site", "site")
+			pageref.extendedPage.generate(path + "site", "site")
 		}
 	}
 
-	private def void generateBackendSection(Section section) {
+	private def void generateBackendSection() {
 		generateJoomlaDirectory("admin")
-		generateFile("admin/" + noPrefixName + ".php", component.phpAdminContent)
-		generateFile("admin/controller.php", component.phpAdminControllerContent)
+		generateFile("admin/" + noPrefixName + ".php", extendeComp.phpAdminContent)
+		generateFile("admin/controller.php", extendeComp.phpAdminControllerContent)
 
-		generateFile("admin/access.xml", component.xmlAccessContent)
-		generateFile("admin/config.xml", component.xmlConfigContent)
+		generateFile("admin/access.xml", extendeComp.xmlAccessContent)
+		generateFile("admin/config.xml", extendeComp.xmlConfigContent)
 
 		generateJoomlaDirectory("admin/views")
 		println(slug)
 		var tempSlug = slug + "s"
 		generateJoomlaDirectory("admin/views/" + tempSlug)
-		generateFile("admin/views/" + tempSlug + "/view.html.php", component.phpAdminViewContent)
+		generateFile("admin/views/" + tempSlug + "/view.html.php", extendeComp.phpAdminViewContent)
 		generateJoomlaDirectory("admin/views/" + tempSlug + "/tmpl")
-		generateFile("admin/views/" + tempSlug + "/tmpl/default.php", component.phpAdminTemplateContent)
+		generateFile("admin/views/" + tempSlug + "/tmpl/default.php", extendeComp.phpAdminTemplateContent)
 
 		generateJoomlaDirectory("admin/models")
 		generateJoomlaDirectory("admin/models/fields")
@@ -306,69 +310,49 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		generateJoomlaDirectory("admin/controllers")
 		generateJoomlaDirectory("admin/helpers/")
-		generateFile("admin/helpers/" + component.name.toLowerCase + ".php", generateHelperComponent)
+		generateFile("admin/helpers/" + extendeComp.name.toLowerCase + ".php", generateHelperComponent)
 
 		generateJoomlaDirectory("admin/assets")
 
 		// commented out old model generation code
-		val pagerefs = section.pageRef
+		val pagerefs = extendeComp.backEndExtendedPagerefence
 		for (pageref : pagerefs) {
-			pageref.page.generate(path + "admin", "admin")
+			pageref.extendedPage.generate(path + "admin", "admin")
 
 		}
 	}
 
 	def generateFields(String fieldspath) {
-				var LinkedList<Entity> visitedEntity = new LinkedList<Entity>
-		for (Section sect : component.sections) {
-			for (PageReference pg : sect.pageRef) {
-				switch pg.page {
-					DynamicPage: {
-						for(Entity ent: (pg.page as DynamicPage).entities){
-							if (!visitedEntity.contains(ent)) {
-								for(Reference ref: ent.references){
-								var FieldsGenerator field = new FieldsGenerator(ref, component,ent)
-								generateFile(fieldspath + "/" + field.getnameField.toLowerCase + ".php", field.genClassField)
-								}
-								visitedEntity.add(ent);
-							}
-						}
-					}
-				}
-			}
+		for(ExtendedEntity ent: extendeComp.allExtendedEntity){
+	
+		for(Reference ref: ent.references){
+		var FieldsGenerator field = new FieldsGenerator(ref, extendeComp,ent)
+		generateFile(fieldspath + "/" + field.getnameField.toLowerCase + ".php", field.genClassField)
 		}
+	}
 	}
 
 	def generateTable(String path) {
-		var LinkedList<Entity> visitedEntity = new LinkedList<Entity>
-		for (Section sect : component.sections) {
-			for (PageReference pg : sect.pageRef) {
-				switch pg.page {
-					DynamicPage: {
-						for (Entity e : (pg.page as DynamicPage).entities) {
-							if (!visitedEntity.contains(e)) {
-								var TableGeneratorTemplate table = new TableGeneratorTemplate(component, e.name, e)
-								generateFile(path + "/" + e.name.toLowerCase + ".php", table.genClassTable)
-								visitedEntity.add(e);
-							}
-						}
-					}
-				}
-			}
-		}
+		
+		for(ExtendedEntity ent : extendeComp.allExtendedEntity){
+			var TableGeneratorTemplate table = new TableGeneratorTemplate(extendeComp, ent)
+			generateFile(path + "/" + ent.name.toLowerCase + ".php", table.genClassTable)
+			
+			}				
+				
 	}
 
-	def generate(Page pageref, String path, String section) {
-		if (pageref instanceof DynamicPage) {
+	def generate(ExtendedPage pageref, String path, String section) {
+		if (pageref.extendedDynamicPageInstance != null) {
 			val name = Slug.slugify(pageref.name)
 
 			var String viewPath = path + "/views";
-			PageGeneratorClient.generateView(pageref, component, section, viewPath, fsa)
+			PageGeneratorClient.generateView(pageref, extendeComp, section, viewPath, fsa)
 			var String controllerpath = path + "/controllers"
-			PageGeneratorClient.generateController(pageref, component, section, controllerpath, fsa)
+			PageGeneratorClient.generateController(pageref, extendeComp, section, controllerpath, fsa)
 			var String modelpath = path + "/models"
-			PageGeneratorClient.generateModel(pageref, component, section, modelpath, fsa)
-		} else if (pageref instanceof StaticPage) {
+			PageGeneratorClient.generateModel(pageref, extendeComp, section, modelpath, fsa)
+		} else if (pageref.staticPageInstance != null) {
 			PageGeneratorClient.generateStaticPage(pageref)
 		}
 	}
@@ -394,7 +378,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    $controller->redirect();
 	'''
 
-	def CharSequence phpSiteControllerContent(Component component) '''
+	def CharSequence phpSiteControllerContent(ExtendedComponent component) '''
 		<?php
 		     «Slug.generateFileDoc(component,true)»
 		    
@@ -423,7 +407,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    }
 	'''
 
-	def CharSequence phpSiteViewContent(Component component) '''
+	def CharSequence phpSiteViewContent(ExtendedComponent component) '''
 		<?php
 		     «Slug.generateFileDoc(component,true)»
 		    
@@ -453,7 +437,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    }
 	'''
 
-	def CharSequence xmlSiteTemplateContent(Component component) '''
+	def CharSequence xmlSiteTemplateContent(ExtendedComponent component) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<metadata>
 		    <layout title="«name.toUpperCase»_VIEW_DEFAULT_TITLE">
@@ -475,7 +459,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		</metadata>
 	'''
 
-	def CharSequence phpSiteTemplateContent(Component component) '''
+	def CharSequence phpSiteTemplateContent(ExtendedComponent component) '''
 		<?php
 		    // No direct access to this file
 		    defined('_JEXEC') or die('Restricted access');
@@ -487,7 +471,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 * generate simple frontendModel file contents,
 	 * which extend from JModelItem in general and access single items (not lists)
 	 */
-	def CharSequence phpSiteModelContent(Component component, Page pageref) '''
+	def CharSequence phpSiteModelContent(ExtendedComponent component, ExtendedPage pageref) '''
 		<?php
 		    «Slug.generateFileDoc(component,true)»
 		     
@@ -550,7 +534,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    }
 	'''
 
-	def CharSequence phpAdminContent(Component component) '''
+	def CharSequence phpAdminContent(ExtendedComponent component) '''
 		<?php
 		 «Slug.generateFileDoc(component,true)»
 		
@@ -569,7 +553,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		$controller->redirect();
 	  '''
 
-	def CharSequence phpAdminControllerContent(Component component) '''
+	def CharSequence phpAdminControllerContent(ExtendedComponent component) '''
 		<?php
 		     «Slug.generateFileDoc(component,true)»
 		    
@@ -603,7 +587,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 * that extends from JModelAdmin and provides methods 
 	 * to handle (load,edit...) one data item
 	 */
-	def CharSequence phpAdminSimpleModelContent(Component component, Page pageref) '''
+	def CharSequence phpAdminSimpleModelContent(ExtendedComponent component, ExtendedPage pageref) '''
 		<?php
 		
 		 «Slug.generateFileDoc(component,true)»
@@ -640,79 +624,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 </div>  
 			
     '''
-
-	def CharSequence phpAdminTemplateHeadContent(Component component) '''
-		<?php
-		     «Slug.generateFileDoc(component,true)»
-		    ?>
-		    <tr>
-		            <th width="5">
-		                    <?php echo JText::_('COM_«name.toUpperCase»_«name.toUpperCase»_HEADING_ID'); ?>
-		            </th>
-		            <th width="20">
-		                    <input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
-		            </th>                   
-		            <th>
-		                    <?php echo JText::_('COM_«name.toUpperCase»_«name.toUpperCase»_HEADING_GREETING'); ?>
-		            </th>
-		    </tr>
-	'''
-
-	def CharSequence phpAdminTemplateBodyContent(Component component) '''
-		<?php
-		    «Slug.generateFileDoc(component,true)»
-		?>
-		<?php foreach($this->items as $i => $item): ?>
-		    <tr class="row<?php echo $i % 2; ?>">
-		        <td>
-		            <?php echo $item->id; ?>
-		        </td>
-		        <td>
-		            <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-		        </td>
-		        <td>
-		            <?php echo $item->greeting; ?>
-		        </td>
-		    </tr>
-		<?php endforeach; ?>    
-	'''
-
-	def CharSequence phpAdminTemplateFootContent(Component component) '''
-		<?php
-		    // No direct access to this file
-		    defined('_JEXEC') or die('Restricted Access');
-		?>
-		<tr>
-		    <td colspan="3"><?php echo $this->pagination->getListFooter(); ?></td>
-		</tr>
-	'''
-
-	def CharSequence phpAdminTableContent(DynamicPage page) '''
-		<?php
-		    «Slug.generateFileDoc(component,true)»
-		     
-		    // import Joomla table library
-		    jimport('joomla.database.table');
-		     
-		    /**
-		     * «page.name.toFirstUpper» Table class
-		     */
-		    class «component.name.toFirstUpper»Table«page.name.toFirstUpper» extends JTable
-		    {
-		        /**
-		         * Constructor
-		         *
-		         * @param object Database connector object
-		         */
-		        function __construct(&$db) 
-		        {
-		                parent::__construct('#__«page.entities.get(0).name.toLowerCase»', 'id', $db);
-		        }
-		    }
-	'''
+	
 
 	def CharSequence phpAdminViewContent(
-		Component component
+		ExtendedComponent component
 	) '''
 <?php
 «Slug.generateFileDoc(component,true)»
@@ -776,18 +691,11 @@ class «class_name»View«class_name»s extends JViewLegacy
     private function addViews()
     {
         $views = array();
-«FOR PageReference pg : Slug::getBackendSectionViews(component).pageRef»
+«FOR ExtendedPageReference pg : component.backEndExtendedPagerefence.filter[t | t.extendedPage.extendedDynamicPageInstance != null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage ]»
 
-     «switch (pg.page) {
-     	
-     	IndexPage :{
-     		'''
-		$views['«pg.page.name.toLowerCase»'] = array();
-		$views['«pg.page.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.page.name.toUpperCase»');
-		$views['«pg.page.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.page.name.toLowerCase»";
-     		'''
-     	}
-     }»
+	$views['«pg.extendedPage.name.toLowerCase»'] = array();
+	$views['«pg.extendedPage.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»');
+	$views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»"
 «ENDFOR»
       
 $this->views = $views;
@@ -795,7 +703,7 @@ $this->views = $views;
 }
     '''
 
-	def CharSequence xmlAccessContent(Component component) '''
+	def CharSequence xmlAccessContent (ExtendedComponent component) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<access component="«name»">
 		<section name="component">
@@ -807,14 +715,14 @@ $this->views = $views;
 			<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
 			<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
 		</section>
-		«xmlAccessContentPage(component.sections)»
+		«xmlAccessContentPage()»
 		</access>
 	  '''
 
-	def xmlAccessContentPage(EList<Section> list) '''
-		«FOR Section s : list»
-			«FOR PageReference dyn: s.pageRef»
-				<section name="«dyn.page.name.toLowerCase»">
+	def CharSequence xmlAccessContentPage() '''
+		
+			«FOR  dyn: extendeComp.allExtendedPage»
+				<section name="«dyn.name.toLowerCase»">
 				<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
 				<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
 				<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
@@ -822,86 +730,58 @@ $this->views = $views;
 				<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
 				</section>
 			«ENDFOR»
-		«ENDFOR»
+	
 	'''
 
-	// Alle untergeordneten (über Referenzen) Entities finden
-	def Iterable<ParameterGroup> getGlobalparameters(Component component) {
-		var params = new HashSet<ParameterGroup>();
+	
 
-		// Section -> Page -> GlobalParameter
-		for (Section s : component.sections) {
-			for (PageReference p : s.pageRef) {
-				for (ParameterGroup para : p.page.parametergroups) {
-					if (!params.contains(para))
-						params.add(para);
-				}
-			}
-		}
-
-		return params;
-	}
-
-	def CharSequence xmlConfigContent(Component component) '''
-		   	«val params=getGlobalparameters(component)»
+	def CharSequence xmlConfigContent(ExtendedComponent component) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<config>
 			<fieldset name="component" label="«name.toUpperCase»_LABEL" description="«name.toUpperCase»_DESC">
-			«FOR g : component.globalParamter»
-				«FOR p:g.parameters»
+			«FOR g : component.extendedParameterGroupList»
+				«FOR p:g.extendedParameterList»
 					«writeParameter(p)»
 				«ENDFOR»
 			«ENDFOR»
 			</fieldset>
-			«FOR page_param : params»
-				<fieldset name="«page_param.name»" label="«page_param.name.toUpperCase»_LABEL" description="«page_param.name.toUpperCase»_DESC">
-				«FOR page_param_item:page_param.globalparameters»
-					«writeParameter(page_param_item)»
-				«ENDFOR»
-				</fieldset>
-			«ENDFOR»
-			
+	
 		</config>
 	  '''
 
-	def CharSequence writeParameter(Parameter param) '''
+	def CharSequence writeParameter(ExtendedParameter param) '''
 		<field
 		name="«param.name»"
-		type="«Slug.getTypeName(param.dtype)»"
+		type="«Slug.getTypeName(param.generatorType)»"
 		default="«param.defaultvalue»"
 		label="«param.label»"
 		description="«param.descripton»"
 		>
 	'''
 
-	def CharSequence generateHelperComponent() '''
+def CharSequence generateHelperComponent() '''
     <?php
-     «Slug.generateFileDoc(component,true)»
+     «Slug.generateFileDoc(extendeComp,true)»
 
 /**
- * «component.name.toUpperCase»  helper.
+ * «extendeComp.name.toUpperCase»  helper.
  */
-class «component.name.toFirstUpper»Helper {
+class «extendeComp.name.toFirstUpper»Helper {
 
     /**
      * Configure the Linkbar.
      */
     public static function addSubmenu($vName = '') {
-    	«FOR PageReference pg : Slug::getBackendSectionViews(component).pageRef»
+    	«FOR ExtendedPageReference pg : extendeComp.backEndExtendedPagerefence.filter[t| t.extendedPage.extendedDynamicPageInstance != null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage]»
     	
-    	     «switch (pg.page) {
-    	     	
-    	     	IndexPage :{
-    	     		'''
-        		JHtmlSidebar::addEntry(
-        		
-        		JText::_('«pg.page.name.toUpperCase»'),
-        		'index.php?option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&view=«pg.page.name.toLowerCase»',
-        		$vName == '«pg.page.name.toLowerCase»'
-        		);
-    	     		'''
-    	     	}
-    	     }»
+    		JHtmlSidebar::addEntry(
+    		
+    		JText::_('«pg.extendedPage.name.toUpperCase»'),
+    		'index.php?option=«Slug.nameExtensionBind("com",extendeComp.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»',
+    		$vName == '«pg.extendedPage.name.toLowerCase»'
+    		);
+    	     		
+    	  
         «ENDFOR»
 
         		}
@@ -916,7 +796,7 @@ class «component.name.toFirstUpper»Helper {
         $user = JFactory::getUser();
         $result = new JObject;
 
-        $assetName = '«Slug::nameExtensionBind('com', component.name)»';
+        $assetName = '«Slug::nameExtensionBind('com', extendeComp.name)»';
 
         $actions = array(
             'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
@@ -933,7 +813,7 @@ class «component.name.toFirstUpper»Helper {
 }
     '''
 
-	def CharSequence phpSiteRouterContent(Component component) '''
+	def CharSequence phpSiteRouterContent(ExtendedComponent component) '''
  <?php
    «Slug.generateFileDoc(component,true)»
   /**

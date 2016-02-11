@@ -79,7 +79,7 @@ Attribute returns Attribute:
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
 	'Attribute' name=MYID '{' 
 		'type' '=' (type=Type)
-		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | 'ID'))?)?
+		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | id?='ID'))?)?
 	'}'
 ;
 
@@ -87,9 +87,9 @@ Reference returns Reference:
 	{Reference}
 	'Reference'  
 	'{'
-		'Attribute' '=' attribute=[Attribute|QualifiedName]
+		'Attribute' '=' attribute+=[Attribute|QualifiedName] (',' attribute+=[Attribute|QualifiedName])*
 		'*Entity' '=' entity=[Entity|QualifiedName]
-		'Reference' '=' attributerefereced=[Attribute|QualifiedName]
+		'Reference' '=' (attributerefereced +=[Attribute|QualifiedName]| id?='ID') (attributerefereced +=[Attribute|QualifiedName])*
 		'lower' '=' lower=NUMBER
 		'upper' '=' upper=NUMBER 
 	'}'
@@ -148,7 +148,7 @@ DetailsPage returns DetailsPage:
 
 DetailPageField returns DetailPageField:
 	{DetailPageField}
-	attribute = [Attribute|QualifiedName] ':' htmltype = HTMLTypes
+	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)?
 ;
 
 HTMLTypes:
@@ -172,7 +172,8 @@ ExternalLink returns ExternalLink:
 	'ExternalLink' 
 	'{'
 		'target' '=' target=STRING
-		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
+		('linked attribute' '=' linkedAttribute=[Attribute|QualifiedName])?
+		('linked Parameter' '=' linkedParameter=[Parameter|QualifiedName])?
 		('label' '=' label=STRING)?
 	'}'
 ;
@@ -182,7 +183,9 @@ InternalLink returns InternalLink:
 	('InternalLink' name=MYID 
 	'{'
 		'target' '=' target=[Page|QualifiedName]
-		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
+		('linked attribute' '=' linkedAttribute=[Attribute|QualifiedName])?
+		('linked Parameter' '=' linkedParameter=[Parameter|QualifiedName])?
+		
 	'}') | ContextLink
 ;
 
@@ -191,14 +194,15 @@ ContextLink returns ContextLink:
 	'InternalcontextLink' name=MYID 
 	'{'
 		'target' '=' target=[Page|QualifiedName]
-		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
+		('linked attribute' '=' linkedAttribute=[Attribute|QualifiedName])?
+		('linked Parameter' '=' linkedParameter=[Parameter|QualifiedName])?
 		'linkparameters' '{' (linkparameters+=LinkParameter)* '}'
 	'}'
 ;
 
 LinkParameter returns LinkParameter:
 	{LinkParameter}
-	'Parameter' name=MYID '=' ('*Attribute 'attvalue=[Attribute|STRING] | value=STRING)
+	'Parameter' name=MYID '=' ('*Attribute '(attvalue=[Attribute|STRING]| id?='ID') | value=STRING)
 ;
 
 // extension model

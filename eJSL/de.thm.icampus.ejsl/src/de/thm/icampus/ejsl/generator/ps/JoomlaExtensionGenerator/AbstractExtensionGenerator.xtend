@@ -8,7 +8,6 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.eJSL.Extension
 import de.thm.icampus.ejsl.eJSL.Type
 import de.thm.icampus.ejsl.eJSL.DatatypeReference
-import de.thm.icampus.ejsl.eJSL.SimpleDatatypes
 import de.thm.icampus.ejsl.eJSL.Parameter
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
@@ -16,7 +15,7 @@ import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
 import de.thm.icampus.ejsl.generator.ps.ExtensionGenerator
 import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameter
 
-abstract public class AbstractExtensionGenerator extends ExtensionGenerator {
+abstract public class AbstractExtensionGenerator  {
 
 	@Property IFileSystemAccess fsa
 	@Property String name

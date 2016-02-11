@@ -87,6 +87,15 @@ ParameterGroup returns ParameterGroup:
 	'}'
 ;
 
+PageAction returns PageAction:
+	{PageAction}
+	'PageAction' name=ID 
+	'{'
+		'type =' ((pageActionType=PageActionKind))
+		'position =' ((pageActionPosition=PageActionPositionKind))
+	'}'
+;
+
 Entitypackage returns Entitypackage:
 	{Entitypackage}
 	'Entitypackage' name=ID
@@ -112,7 +121,7 @@ Attribute returns Attribute:
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
 	'Attribute' name=MYID '{' 
 		'type =' (type=Type)
-		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | 'ID'))?)?
+		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | id?='ID'))?)?
 	'}'
 ;
 
@@ -120,9 +129,9 @@ Reference returns Reference:
 	{Reference}
 	'Reference'  
 	'{'
-		'EntityAttribute =' attribute=[Attribute|QualifiedName]
+		'EntityAttribute =' attribute+=[Attribute|QualifiedName] (',' attribute+=[Attribute|QualifiedName])*
 		'*Entity =' entity=[Entity|QualifiedName]
-		'EntityReference =' attributerefereced=[Attribute|QualifiedName]
+		'*EntityReference =' (attributerefereced +=[Attribute|QualifiedName]| id?='ID') (attributerefereced +=[Attribute|QualifiedName])*
 		'lower =' lower=NUMBER
 		'upper =' upper=NUMBER 
 	'}'
@@ -141,6 +150,7 @@ StaticPage returns StaticPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
 		('links' '{' (links+=Link)* '}')?
 		'HTMLBody' '{' HTMLBody = STRING '}'
 	'}'
@@ -158,6 +168,7 @@ IndexPage returns IndexPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
 		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
 		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
@@ -173,6 +184,7 @@ DetailsPage returns DetailsPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
 		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
 		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
@@ -181,9 +193,8 @@ DetailsPage returns DetailsPage:
 
 DetailPageField returns DetailPageField:
 	{DetailPageField}
-	attribute = [Attribute|QualifiedName] ':' htmltype = HTMLTypes
+	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)?
 ;
-
 
 CustomPage:
 	{StaticPage}
@@ -191,6 +202,7 @@ CustomPage:
 	'{'
 		'Page type:' pageType = PageKinds
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
 	'}'
 ;
 
@@ -215,8 +227,9 @@ ExternalLink returns ExternalLink:
 	'ExternalLink' 
 	'{'
 		'target =' target=STRING
-		'linked attribute =' linkedAttribute=[Attribute|QualifiedName]
-		('label =' label=STRING)?
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
+		('label' '=' label=STRING)?
 	'}'
 ;
 
@@ -225,7 +238,8 @@ InternalLink returns InternalLink:
 	('InternalLink' name=MYID 
 	'{'
 		'target =' target=[Page|QualifiedName]
-		'linked attribute =' linkedAttribute=[Attribute|QualifiedName]
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
 	'}') | ContextLink
 ;
 
@@ -234,14 +248,15 @@ ContextLink returns ContextLink:
 	'InternalcontextLink' name=MYID 
 	'{'
 		'target =' target=[Page|QualifiedName]
-		'linked attribute =' linkedAttribute=[Attribute|QualifiedName]
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
 		'linkparameters' '{' (linkparameters+=LinkParameter)* '}'
 	'}'
 ;
 
 LinkParameter returns LinkParameter:
 	{LinkParameter}
-	'Parameter' name=MYID '=' ('*Attribute 'attvalue=[Attribute|STRING] | value=STRING)
+	'Parameter' name=MYID '=' ('*Attribute '(attvalue=[Attribute|STRING]| id?='ID') | value=STRING)
 ;
 
 // extension model
@@ -468,6 +483,14 @@ enum PluginKinds:
     search | system | user | xml_rpc
 ;
 
+enum PageActionKind:
+	Text | Button
+;
+
+enum PageActionPositionKind:
+	top | center | bottom
+;
+
 enum StandardTypeKinds:
 	Integer | Boolean | Textarea | Textfield | Time | Date | Datetime | Link | Image | File | Label
 ;
@@ -475,7 +498,7 @@ enum SectionKinds:
 	backend='.backend' | frontend='.frontend'
 ;
 enum PageKinds:
-	list='list' | details='details' | custom='custom'
+	list | details | custom
 ;
 enum SimpleHTMLTypeKinds:
 	Integer | Yes_No_Buttons | Textarea | Text_Field |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	

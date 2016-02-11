@@ -895,28 +895,5 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	</extension>
 	'''
 	
-	override getProtectedRegions() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override setProtectedRegions(EList<ProtectedRegion> myprotectedRegions) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override getSlug() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override setSlug(Slug slug) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override getKvPairClient() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override setKvPairClient(KVPairGeneratorClient e) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
 	
 } // PluginGenerator

@@ -5,15 +5,17 @@ import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.eJSL.Reference
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 
 class TableGeneratorTemplate {
 	
 	Component com
 	String tName
 	Entity ent
-	new(Component component, String tableName, Entity entity){
+	new(ExtendedComponent component, ExtendedEntity entity){
 		com = component
-		tName = tableName
+		tName = entity.name
 		ent = entity
 	}
 	
@@ -60,8 +62,8 @@ class TableGeneratorTemplate {
    	$temp_«ent.references.indexOf(ref)» = array(
    	"type" => "«ref.entity.name.toFirstUpper»",
    	"prefix" => "«com.name.toFirstUpper»Table",
-   	"refkey" => "«ref.attribute.name»",
-   	"foreignkey" => "«ref.attributerefereced.name»",
+   	"refkey" => "array(«Slug.transformAttributeListInString(ref.attribute, ', ')»)",
+   	"foreignkey" => "array(«Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)",
    	"name" => "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»"
    	);
    	array_push($this->foreigntableOption, $temp_«ent.references.indexOf(ref)»);

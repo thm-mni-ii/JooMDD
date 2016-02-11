@@ -40,13 +40,7 @@ class PlattformIUtil {
 		str.substring(a, z+1)
 	}
 	static def ExtendedAttribute transformAttribute(Attribute ejslAttribute){
-		var Entity entity = ejslAttribute.eContainer as Entity
-		var Reference ref = null
-		for(Reference e: entity.references){
-			if(e.attribute.name == ejslAttribute.name )
-				ref = e
-		}
 		
-		return new ExtendedAttributeImpl (ejslAttribute, ref)
+		return new ExtendedAttributeImpl (ejslAttribute)
 	}
 }
