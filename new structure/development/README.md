@@ -3,8 +3,12 @@
 ## eJSL ##
 
 ### Language Development ###
-The eJSL Language consists of three main parts: ***entities***, ***pages***, and ***extensions***.
-### Editor Development ###
+The eJSL Language can be used to implement both a CMS ***core*** and CMS ***extensions***. Both consist of two main parts (features): ***entities*** and ***pages***. 
+The core part should also consist of the feature section. Which should be used to model the backend and the frontend of a CMS.
+Extensions, which can be modelled are currently specific for Joomla (Component, Module, Plugin, Template, Library). In further versions Component, Module and Plugin 
+will be abstracted and clustered to Plugin.
+ 
+![ejsl model with containments](/documentation/images/ejsl_model.jpg "eJSL Model with Containments")
 
 #### Textual Editor ###
 ##### Formatter #####
@@ -29,7 +33,46 @@ copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml f
 
 *	for PhpStorm compatibility the "projectfile".iml is in the folder .idea and not visible in the ide.
 
-#### (De-)Serializer Handlers ####
+	EJSLModel returns EJSLModel:
+	{EJSLModel}
+	'eJSLModel'	name=STRING
+	'{'
+		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+		('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+		('entities' '{' (entities+=Entity)* '}')?
+		('datapackages' '{' (datapackages+=Datapackage)* '}')?
+		('pages' '{' (pages+=Page)* '}')?
+		('extensions' '{' (extensions+=Extension)* '}')?
+	'}';
+### Generator Development ###
+#### Monolithic vs dynamic generator structure ####
+The generator structure consists of a platform-independent and a platform-specific part. The platform-independent part 
+extends the generated API for the language by additional domain-specific functionality, whereas the platform-specific part 
+contains the generator template for the platform-specific code generation.
+
+<image of the package structure>
+
+#### Ressource Transformator ####
+The **Ressource Transformator** (RT) extends any eJSL instance by missing implicit options to ensure a full instance model. 
+It uses an ressource (instance model) as input and returns a full instance model as ressource, which can e.g. be used by a
+generator within Xtend generator templates.
+
+The following example illustrates how the RT works:
+
+<image of an RT example>
+
+### Plugin Development (Editor) ###
+Within the structure of the JooMDD project, a set of installable plugins for the following IDEs should always be provided: 
+*Eclipse*, *IntelliJ IDEA*, and *PHPStorm*. 
+#### Eclipse ####
+
+##### Textual Editor #####
+###### Formatter ######
+###### Validator ######
+###### Project Wizard ######
+
+##### (De-)Serializer Handlers #####
 The Eclipse editor provides an extension to (de-)serialize *eJSL-instances* to/from *xmi-files*. This is done by two 
 handler classes (*DeserializationHandler.java* and *SerializationHandler.java*) and the following extension point in
 the *plugin.xml* of the *de.thm.icampus.joomdd.ejsl.ui plugin*:
@@ -144,28 +187,12 @@ the *plugin.xml* of the *de.thm.icampus.joomdd.ejsl.ui plugin*:
 	  </extension>
 	  
 *Attention:* The context menu is only available within the ***Java perspective***.
-### Generator Development ###
-#### Monolithic vs dynamic generator structure ####
-The generator structure consists of a platform-independent and a platform-specific part. The platform-independent part 
-extends the generated API for the language by additional domain-specific functionality, whereas the platform-specific part 
-contains the generator template for the platform-specific code generation.
 
-<image of the package structure>
-
-#### Ressource Transformator ####
-The **Ressource Transformator** (RT) extends any eJSL instance by missing implicit options to ensure a full instance model. 
-It uses an ressource (instance model) as input and returns a full instance model as ressource, which can e.g. be used by a
-generator within Xtend generator templates.
-
-The following example illustrates how the RT works:
-
-<image of an RT example>
-
-### Plugin Development ###
-Within the structure of the JooMDD project, a set of installable plugins for the following IDEs should always be provided: 
-*Eclipse*, *IntelliJ IDEA*, and *PHPStorm*. 
-#### Eclipse ####
 #### IntelliJ ####
+
+##### Textual Editor #####
+##### Project Wizard #####
+
 Installation (user):
 you need to install Xtext IDEA Core Plugin via Plugin manager and the eJSL Plugin from ...
 
@@ -177,7 +204,13 @@ The created *.zip is in *.idea/build/distributions/
 *	For PhpStorm you must change the plugin.xml (Add <depends>com.intellij.modules.lang</depends>)
 Infomation:
 in the plugin.xml you can change all Meta-Inf like: description, Plugin version, Plugin name ...
+
 #### PHPStorm ####
+
+##### Textual Editor #####
+##### Project Wizard #####
+##### Generator inclusion#####
+
 ##### Prepare PHPStorm (only first time): #####
 *	Copy IntelliJdepencies.jar into path: PHPStorm installation\lib\  .
 *	Now install the two downloaded plugins (Xtext and EJSL) via "Install plugin from disk ..." (Menu: File/Settings/Plugins/).
@@ -210,6 +243,7 @@ It is possible that an update crash the Xtext plugins.
 *	The Xtext plugin (Version 2.9.1) has a changed plugin.xml the dependency "JUnit" is changed to "com.intellij.modules.lang"
 
 ### Instances ###
+To ensure a simple usage, we created some example instances, which can be used as templates for own eJSL instances.
 #### Simple Default ####
 #### Complex Default ####
 #### Weblinks ####

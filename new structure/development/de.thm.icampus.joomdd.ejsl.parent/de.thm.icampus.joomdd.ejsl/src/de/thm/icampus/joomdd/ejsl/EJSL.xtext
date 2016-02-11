@@ -6,14 +6,47 @@ EJSLModel returns EJSLModel:
 	{EJSLModel}
 	'eJSLModel'	name=STRING
 	'{'
+		('eJSL part:' ejslPart=EJSLPart)
+	'}';
+
+EJSLPart:
+	CMSCore | CMSExtension
+;
+
+CMSCore:
+	{CMSCore}
+	'CMS Core' '{'
 		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
 		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
 		('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
-		('entities' '{' (entities+=Entity)* '}')?
-		('datapackages' '{' (datapackages+=Datapackage)* '}')?
-		('pages' '{' (pages+=Page)* '}')?
-		('extensions' '{' (extensions+=Extension)* '}')?
-	'}';
+		feature = Feature
+	//	(coreFeature += coreFeature*) // for further implementation of core features
+	'}'
+;
+
+coreFeature:
+	{coreFeature}
+	'coreFeature'
+;
+
+CMSExtension:
+	{CMSExtension}
+		'CMS Extension' '{'
+			('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+			('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+			('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+			features = Feature
+			('extensions' '{' (extensions+=Extension)* '}')?
+	'}'
+;
+
+Feature:
+	{Feature}
+	('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
+	('entities' '{' (entities+=Entity)* '}')?
+	('pages' '{' (pages+=Page)* '}')?
+	('sections' '{' (sections+=Section)+ '}')?
+;
 
 // data model
 Type:
@@ -25,7 +58,7 @@ DatatypeReference:
 ;
 
 StandardTypes:
-	type=StandardTypeKinds (notnull?='Not Null')? ('Default' '=' default=STRING)? (autoincrement?='Auto Increment')?
+	type=StandardTypeKinds (notnull?='Not Null')? ('Default =' default=STRING)? (autoincrement?='Auto Increment')?
 ;
 
 Datatype returns Datatype:
@@ -37,11 +70,11 @@ Parameter returns Parameter:
 	'Parameter' name=ID 
 	'{'
 		//'type' '=' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-		'type' '=' ((dtype=Type))
-		('defaultvalue' '=' defaultvalue=STRING)?
-		('label' '=' label=STRING)?
-		('size' '=' size=INT)?
-		('description' '=' descripton=STRING)?
+		'type =' ((dtype=Type))
+		('defaultvalue =' defaultvalue=STRING)?
+		('label =' label=STRING)?
+		('size =' size=INT)?
+		('description =' descripton=STRING)?
 	'}'
 ;
 
@@ -49,16 +82,25 @@ ParameterGroup returns ParameterGroup:
 	{ParameterGroup}
 	'ParameterGroup' name=ID 
 	'{'
-		('label' '=' label=STRING)?
+		('label =' label=STRING)?
 		('Parameters' '{' ((globalparameters+=[Parameter]) | (parameters+=Parameter))* '}')
 	'}'
 ;
 
-Datapackage returns Datapackage:
-	{Datapackage}
-	'Datapackage' name=ID
+PageAction returns PageAction:
+	{PageAction}
+	'PageAction' name=ID 
 	'{'
-		('datapackages' '{' (datapackages+=Datapackage)* '}')?
+		'type =' ((pageActionType=PageActionKind))
+		'position =' ((pageActionPosition=PageActionPositionKind))
+	'}'
+;
+
+Entitypackage returns Entitypackage:
+	{Entitypackage}
+	'Entitypackage' name=ID
+	'{'
+		('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
 		('entities' '{' (entities+=Entity)* '}')?
 		('datatypes' '{' (datatypes+=Datatype)* '}')?
 	'}'
@@ -78,8 +120,8 @@ Attribute returns Attribute:
 	{Attribute}
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
 	'Attribute' name=MYID '{' 
-		'type' '=' (type=Type)
-		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | 'ID'))?)?
+		'type =' (type=Type)
+		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | id?='ID'))?)?
 	'}'
 ;
 
@@ -87,18 +129,18 @@ Reference returns Reference:
 	{Reference}
 	'Reference'  
 	'{'
-		'Attribute' '=' attribute=[Attribute|QualifiedName]
-		'*Entity' '=' entity=[Entity|QualifiedName]
-		'Reference' '=' attributerefereced=[Attribute|QualifiedName]
-		'lower' '=' lower=NUMBER
-		'upper' '=' upper=NUMBER 
+		'EntityAttribute =' attribute+=[Attribute|QualifiedName] (',' attribute+=[Attribute|QualifiedName])*
+		'*Entity =' entity=[Entity|QualifiedName]
+		'*EntityReference =' (attributerefereced +=[Attribute|QualifiedName]| id?='ID') (attributerefereced +=[Attribute|QualifiedName])*
+		'lower =' lower=NUMBER
+		'upper =' upper=NUMBER 
 	'}'
 ;
 
 // page model
 
 Page:
-	StaticPage | DynamicPage
+	StaticPage | DynamicPage 
 ;
 
 StaticPage returns StaticPage:
@@ -108,13 +150,14 @@ StaticPage returns StaticPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
 		('links' '{' (links+=Link)* '}')?
 		'HTMLBody' '{' HTMLBody = STRING '}'
 	'}'
 ;
 
 DynamicPage:
-	IndexPage | DetailsPage
+	IndexPage | DetailsPage | CustomPage
 ;
 
 IndexPage returns IndexPage:
@@ -125,8 +168,9 @@ IndexPage returns IndexPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
-		('table columns' '=' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
-		('filters' '=' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
+		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
+		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
@@ -136,19 +180,30 @@ DetailsPage returns DetailsPage:
 	'DetailsPage' name=MYID 
 	'{'
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
-		('edit_fields' '{' (editfields+=DetailPageField)* '}')?
+		('editFields' '{' (editfields+=DetailPageField)* '}')?
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
-		('table columns' '=' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
-		('filters' '=' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
+		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
+		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
 
 DetailPageField returns DetailPageField:
 	{DetailPageField}
-	attribute = [Attribute|QualifiedName] ':' htmltype = HTMLTypes
+	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)?
+;
+
+CustomPage:
+	{StaticPage}
+	'CustomPage' name=MYID 
+	'{'
+		'Page type:' pageType = PageKinds
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
+	'}'
 ;
 
 HTMLTypes:
@@ -171,8 +226,9 @@ ExternalLink returns ExternalLink:
 	{ExternalLink}
 	'ExternalLink' 
 	'{'
-		'target' '=' target=STRING
-		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
+		'target =' target=STRING
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
 		('label' '=' label=STRING)?
 	'}'
 ;
@@ -181,8 +237,9 @@ InternalLink returns InternalLink:
 	{InternalLink}
 	('InternalLink' name=MYID 
 	'{'
-		'target' '=' target=[Page|QualifiedName]
-		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
+		'target =' target=[Page|QualifiedName]
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
 	'}') | ContextLink
 ;
 
@@ -190,15 +247,16 @@ ContextLink returns ContextLink:
 	{ContextLink}
 	'InternalcontextLink' name=MYID 
 	'{'
-		'target' '=' target=[Page|QualifiedName]
-		'linked attribute' '=' linkedAttribute=[Attribute|QualifiedName]
+		'target =' target=[Page|QualifiedName]
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
 		'linkparameters' '{' (linkparameters+=LinkParameter)* '}'
 	'}'
 ;
 
 LinkParameter returns LinkParameter:
 	{LinkParameter}
-	'Parameter' name=MYID '=' ('*Attribute 'attvalue=[Attribute|STRING] | value=STRING)
+	'Parameter' name=MYID '=' ('*Attribute '(attvalue=[Attribute|STRING]| id?='ID') | value=STRING)
 ;
 
 // extension model
@@ -243,7 +301,7 @@ Backend returns BackendSection:
 ;
 
 PageReference returns PageReference:
-	'*Page' ':' page=[Page|QualifiedName] ('from' ':' pagescr=[Component|QualifiedName] sect = SectionReference)?
+	'*Page :' page=[Page|QualifiedName] ('from :' pagescr=[Component|QualifiedName] sect = SectionKinds)?
 ;
 
 Frontend returns FrontendSection:
@@ -271,7 +329,7 @@ Plugin returns Plugin:
 	'Plugin' name=MYID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
-		'Plugintype' '=' type=PluginKinds
+		'Plugintype =' type=PluginKinds
 		('languages' '{' (languages+=Language)* '}')?
 		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
 		('parameters' '{' (localparameters+=Parameter)* '}')?
@@ -340,12 +398,12 @@ Template returns Template:
 Manifestation returns Manifestation:
 	{Manifestation}
 	'authors' '{' (authors+=Author)+ '}'
-	('creationdate' '=' creationdate=DATE)?
-	('copyright' '=' copyright=STRING)?
-	('license' '=' license=STRING)?
-	('link' '=' link=STRING)?
-	('version' '=' version=STRING)?
-	('description' '=' description=STRING)?;
+	('creationdate =' creationdate=DATE)?
+	('copyright =' copyright=STRING)?
+	('license =' license=STRING)?
+	('link =' link=STRING)?
+	('version =' version=STRING)?
+	('description =' description=STRING)?;
 
 terminal DATE:
   ((('0'..'2') ('0'..'9') '.' ('02')) |
@@ -359,8 +417,8 @@ Author returns Author:
 	{Author}
 	'Author' name=STRING 
 	'{'
-		('authoremail' '=' authoremail=STRING)?
-		('authorurl' '=' authorurl=STRING)?
+		('authoremail =' authoremail=STRING)?
+		('authorurl =' authorurl=STRING)?
 	'}'
 ;
 
@@ -396,8 +454,8 @@ terminal POSITION_TYPES:
 PositionParameter:
 	'Position Parameter' name = ID
 	'{'
-		('divId' '=' divid = ID)?
-		('Positiontype' '=' type = POSITION_TYPES_NAMES)?
+		('divId =' divid = ID)?
+		('Positiontype =' type = POSITION_TYPES_NAMES)?
 		('CSS keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
 	'}'
 ;
@@ -425,11 +483,22 @@ enum PluginKinds:
     search | system | user | xml_rpc
 ;
 
+enum PageActionKind:
+	Text | Button
+;
+
+enum PageActionPositionKind:
+	top | center | bottom
+;
+
 enum StandardTypeKinds:
 	Integer | Boolean | Textarea | Textfield | Time | Date | Datetime | Link | Image | File | Label
 ;
-enum SectionReference:
+enum SectionKinds:
 	backend='.backend' | frontend='.frontend'
+;
+enum PageKinds:
+	list | details | custom
 ;
 enum SimpleHTMLTypeKinds:
 	Integer | Yes_No_Buttons | Textarea | Text_Field |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	

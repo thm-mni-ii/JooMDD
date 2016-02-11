@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>C:\Users\Dennis\git\joomdd_repo\new structure\development\.README.md.html</title>
+<title>C:\Users\denni_000\git\joomdd_repo\new structure\development\.README.md.html</title>
 
 
 <style type="text/css">
@@ -639,16 +639,40 @@ function setDocumentScrollTop(ypos)
 
 </head>
 <body class="markdown-body">
-<h1> <a id="user-content-joomdd-development-guides" class="anchor" href="#joomdd-development-guides" aria-hidden="true"><span class="octicon octicon-link"></span></a>JooMDD Development Guides</h1> 
-<h2> <a id="user-content-ejsl" class="anchor" href="#ejsl" aria-hidden="true"><span class="octicon octicon-link"></span></a>eJSL</h2> 
-<h3> <a id="user-content-language-development" class="anchor" href="#language-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Language Development</h3> 
-<p>The eJSL Language consists of three main parts: <strong><em>entities</em></strong>, <strong><em>pages</em></strong>, and <strong><em>extensions</em></strong>.</p> 
-<h3> <a id="user-content-editor-development" class="anchor" href="#editor-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Editor Development</h3> 
-<h4> <a id="user-content-textual-editor" class="anchor" href="#textual-editor" aria-hidden="true"><span class="octicon octicon-link"></span></a>Textual Editor</h4> 
-<h5> <a id="user-content-formatter" class="anchor" href="#formatter" aria-hidden="true"><span class="octicon octicon-link"></span></a>Formatter</h5> 
-<h5> <a id="user-content-validator" class="anchor" href="#validator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Validator</h5> 
-<h5> <a id="user-content-project-wizard" class="anchor" href="#project-wizard" aria-hidden="true"><span class="octicon octicon-link"></span></a>Project Wizard</h5> 
-<h4> <a id="user-content-de-serializer-handlers" class="anchor" href="#de-serializer-handlers" aria-hidden="true"><span class="octicon octicon-link"></span></a>(De-)Serializer Handlers</h4> 
+<h1> <a id="user-content-joomdd-development-guides" class="anchor" href="#joomdd-development-guides" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JooMDD Development Guides</h1> 
+<h2> <a id="user-content-ejsl" class="anchor" href="#ejsl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>eJSL</h2> 
+<h3> <a id="user-content-language-development" class="anchor" href="#language-development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Language Development</h3> 
+<p>The eJSL Language can be used to implement both a CMS <strong><em>core</em></strong> and CMS <strong><em>extensions</em></strong>. Both consist of two main parts (features): <strong><em>entities</em></strong> and <strong><em>pages</em></strong>. The core part should also consist of the feature section. Which should be used to model the backend and the frontend of a CMS. Extensions, which can be modelled are currently specific for Joomla (Component, Module, Plugin, Template, Library). In further versions Component, Module and Plugin will be abstracted and clustered to Plugin.</p> 
+<p><a href="documentation/images/ejsl_model.jpg" target="_blank"><img src="documentation/images/ejsl_model.jpg" alt="ejsl model with containments" title="eJSL Model with Containments" style="max-width:100%;" /></a></p> 
+<pre><code>EJSLModel returns EJSLModel:
+{EJSLModel}
+'eJSLModel' name=STRING
+'{'
+    ('datatypes' '{' datatypes+=Datatype ( &quot;,&quot; datatypes+=Datatype)* '}')?
+    ('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+    ('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+    ('entities' '{' (entities+=Entity)* '}')?
+    ('datapackages' '{' (datapackages+=Datapackage)* '}')?
+    ('pages' '{' (pages+=Page)* '}')?
+    ('extensions' '{' (extensions+=Extension)* '}')?
+'}';
+</code></pre> 
+<h3> <a id="user-content-generator-development" class="anchor" href="#generator-development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generator Development</h3> 
+<h4> <a id="user-content-monolithic-vs-dynamic-generator-structure" class="anchor" href="#monolithic-vs-dynamic-generator-structure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Monolithic vs dynamic generator structure</h4> 
+<p>The generator structure consists of a platform-independent and a platform-specific part. The platform-independent part extends the generated API for the language by additional domain-specific functionality, whereas the platform-specific part contains the generator template for the platform-specific code generation.</p> 
+<p></p> 
+<h4> <a id="user-content-ressource-transformator" class="anchor" href="#ressource-transformator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ressource Transformator</h4> 
+<p>The <strong>Ressource Transformator</strong> (RT) extends any eJSL instance by missing implicit options to ensure a full instance model. It uses an ressource (instance model) as input and returns a full instance model as ressource, which can e.g. be used by a generator within Xtend generator templates.</p> 
+<p>The following example illustrates how the RT works:</p> 
+<p></p> 
+<h3> <a id="user-content-plugin-development-editor" class="anchor" href="#plugin-development-editor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Plugin Development (Editor)</h3> 
+<p>Within the structure of the JooMDD project, a set of installable plugins for the following IDEs should always be provided: <em>Eclipse</em>, <em>IntelliJ IDEA</em>, and <em>PHPStorm</em>. </p> 
+<h4> <a id="user-content-eclipse" class="anchor" href="#eclipse" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Eclipse</h4> 
+<h5> <a id="user-content-textual-editor" class="anchor" href="#textual-editor" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Textual Editor</h5> 
+<h6> <a id="user-content-formatter" class="anchor" href="#formatter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Formatter</h6> 
+<h6> <a id="user-content-validator" class="anchor" href="#validator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Validator</h6> 
+<h6> <a id="user-content-project-wizard" class="anchor" href="#project-wizard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard</h6> 
+<h5> <a id="user-content-de-serializer-handlers" class="anchor" href="#de-serializer-handlers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>(De-)Serializer Handlers</h5> 
 <p>The Eclipse editor provides an extension to (de-)serialize <em>eJSL-instances</em> to/from <em>xmi-files</em>. This is done by two handler classes (<em>DeserializationHandler.java</em> and <em>SerializationHandler.java</em>) and the following extension point in the <em>plugin.xml</em> of the <em>de.thm.icampus.joomdd.ejsl.ui plugin</em>:</p> 
 <pre><code>  &lt;!-- XMI Serialization --&gt;  
   &lt;extension
@@ -760,26 +784,21 @@ function setDocumentScrollTop(ypos)
   &lt;/extension&gt;
 </code></pre> 
 <p><em>Attention:</em> The context menu is only available within the <strong><em>Java perspective</em></strong>.</p> 
-<h3> <a id="user-content-generator-development" class="anchor" href="#generator-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Generator Development</h3> 
-<h4> <a id="user-content-monolithic-vs-dynamic-generator-structure" class="anchor" href="#monolithic-vs-dynamic-generator-structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Monolithic vs dynamic generator structure</h4> 
-<p>The generator structure consists of a platform-independent and a platform-specific part. The platform-independent part extends the generated API for the language by additional domain-specific functionality, whereas the platform-specific part contains the generator template for the platform-specific code generation.</p> 
-<p></p> 
-<h4> <a id="user-content-ressource-transformator" class="anchor" href="#ressource-transformator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ressource Transformator</h4> 
-<p>The <strong>Ressource Transformator</strong> (RT) extends any eJSL instance by missing implicit options to ensure a full instance model. It uses an ressource (instance model) as input and returns a full instance model as ressource, which can e.g. be used by a generator within Xtend generator templates.</p> 
-<p>The following example illustrates how the RT works:</p> 
-<p></p> 
-<h3> <a id="user-content-plugin-development" class="anchor" href="#plugin-development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plugin Development</h3> 
-<p>Within the structure of the JooMDD project, a set of installable plugins for the following IDEs should always be provided: <em>Eclipse</em>, <em>IntelliJ IDEA</em>, and <em>PHPStorm</em>. </p> 
-<h4> <a id="user-content-eclipse" class="anchor" href="#eclipse" aria-hidden="true"><span class="octicon octicon-link"></span></a>Eclipse</h4> 
-<h4> <a id="user-content-intellij" class="anchor" href="#intellij" aria-hidden="true"><span class="octicon octicon-link"></span></a>IntelliJ</h4> 
-<h4> <a id="user-content-phpstorm" class="anchor" href="#phpstorm" aria-hidden="true"><span class="octicon octicon-link"></span></a>PHPStorm</h4> 
-<h3> <a id="user-content-instances" class="anchor" href="#instances" aria-hidden="true"><span class="octicon octicon-link"></span></a>Instances</h3> 
-<h4> <a id="user-content-simple-default" class="anchor" href="#simple-default" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple Default</h4> 
-<h4> <a id="user-content-complex-default" class="anchor" href="#complex-default" aria-hidden="true"><span class="octicon octicon-link"></span></a>Complex Default</h4> 
-<h4> <a id="user-content-weblinks" class="anchor" href="#weblinks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Weblinks</h4> 
-<h4> <a id="user-content-conference" class="anchor" href="#conference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conference</h4> 
+<h4> <a id="user-content-intellij" class="anchor" href="#intellij" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>IntelliJ</h4> 
+<h5> <a id="user-content-textual-editor-1" class="anchor" href="#textual-editor-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Textual Editor</h5> 
+<h5> <a id="user-content-project-wizard-1" class="anchor" href="#project-wizard-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard</h5> 
+<h4> <a id="user-content-phpstorm" class="anchor" href="#phpstorm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PHPStorm</h4> 
+<h5> <a id="user-content-textual-editor-2" class="anchor" href="#textual-editor-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Textual Editor</h5> 
+<h5> <a id="user-content-project-wizard-2" class="anchor" href="#project-wizard-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard</h5> 
+<h5> <a id="user-content-generator-inclusion" class="anchor" href="#generator-inclusion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generator inclusion</h5> 
+<h3> <a id="user-content-instances" class="anchor" href="#instances" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Instances</h3> 
+<p>To ensure a simple usage, we created some example instances, which can be used as templates for own eJSL instances.</p> 
+<h4> <a id="user-content-simple-default" class="anchor" href="#simple-default" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Simple Default</h4> 
+<h4> <a id="user-content-complex-default" class="anchor" href="#complex-default" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Complex Default</h4> 
+<h4> <a id="user-content-weblinks" class="anchor" href="#weblinks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Weblinks</h4> 
+<h4> <a id="user-content-conference" class="anchor" href="#conference" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Conference</h4> 
 <hr /> 
-<h2> <a id="user-content-copyright" class="anchor" href="#copyright" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright</h2> 
+<h2> <a id="user-content-copyright" class="anchor" href="#copyright" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copyright</h2> 
 <p>Copyright (C) 2013 - 2016, <a href="http://icampus.thm.de">iCampus</a> - <a href="http://www.thm.de">Technische Hochschule Mittelhessen</a>. All rights reserved. This project is distributed under the GPL (GNU General Public License) version 2. For further information see the <a href="https://git.thm.de/JooMDD/joomdd_repo/blob/master/LICENSE">License details</a>.</p> 
 <hr /> 
 <p>Please feel free to <a href="icampu@lists.thm.de">contact</a> us, if you find some bugs or if you like to contribute to the project.</p>
