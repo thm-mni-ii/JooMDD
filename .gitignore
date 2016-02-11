@@ -1,6 +1,7 @@
 */src-gen/*
 */xtend-gen/*
 */bin/*
+*/target/*
 !*/.gitkeep
 # Don't ignore .gitignore
 !.gitignore
