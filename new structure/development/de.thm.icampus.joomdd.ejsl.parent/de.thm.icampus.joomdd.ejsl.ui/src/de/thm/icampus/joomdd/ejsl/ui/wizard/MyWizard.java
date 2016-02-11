@@ -14,10 +14,15 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkingSet;
@@ -40,6 +45,8 @@ public class MyWizard extends Wizard implements INewWizard {
 	private IProject newProject;
 	
 	private IWorkbench _workbench;
+
+	private String wizardDirectory;
 	
 	public MyWizard(){
 		super();
@@ -53,6 +60,22 @@ public class MyWizard extends Wizard implements INewWizard {
 		
 		 _pageOne = new WizardNewProjectCreationPage(PAGE_NAME_1);
 		 _pageTwo = new TemplateSelectionPage(PAGE_NAME_2);
+		 
+		 wizardDirectory = "\\";
+		 try {//TODO find wizardDirectory when plug-in is installed
+			wizardDirectory = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("src\\de\\thm\\icampus\\joomdd\\ejsl\\ui\\wizard"), null)).getFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		 this.setDefaultPageImageDescriptor(new ImageDescriptor() {
+			
+			@Override
+			public ImageData getImageData() {
+				ImageData id = new ImageData(wizardDirectory + "\\joomdd.PNG");
+				return id.scaledTo(id.width/6, id.height/6);
+			}
+		});
 	}
 	
 	@Override
@@ -60,8 +83,8 @@ public class MyWizard extends Wizard implements INewWizard {
 		 _pageOne.setTitle("EJSL Project");
 		 _pageOne.setDescription("Create a new EJSL project.");
 	
-		 _pageTwo.setTitle("EJSL Example");
-		 _pageTwo.setDescription("Select an EJSL example.");
+		 _pageTwo.setTitle("EJSL Template");
+		 _pageTwo.setDescription("Select an EJSL template.");
 		 
 		 addPage(_pageOne);
 		 addPage(_pageTwo);
@@ -101,7 +124,13 @@ public class MyWizard extends Wizard implements INewWizard {
 
 		IWorkingSet[] workingSets = _pageOne.getSelectedWorkingSets();
 		_workbench.getWorkingSetManager().addToWorkingSets(newProject, workingSets);
-
+		
+		try {
+			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(2, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		
 		return true;
 	}
 
