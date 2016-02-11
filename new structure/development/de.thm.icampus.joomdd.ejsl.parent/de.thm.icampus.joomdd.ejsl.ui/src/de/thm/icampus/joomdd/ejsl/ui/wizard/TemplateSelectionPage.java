@@ -36,7 +36,7 @@ public class TemplateSelectionPage extends WizardPage implements SelectionListen
 	@Override
 	public void createControl(Composite parent) {
 		container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout(2, false));
+		container.setLayout(new GridLayout(2, true));
 		
 		Group g1 = new Group(container, SWT.SHADOW_NONE); 
 		g1.setLayout(new GridLayout(1, false));
