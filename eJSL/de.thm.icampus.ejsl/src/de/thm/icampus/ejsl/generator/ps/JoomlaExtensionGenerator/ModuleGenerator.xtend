@@ -23,6 +23,7 @@ import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
 import de.thm.icampus.ejsl.eJSL.Link
 import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.LinkGeneratorClient
 import de.thm.icampus.ejsl.eJSL.KeyValuePair
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 
 /**
  * <!-- begin-user-doc -->
@@ -52,7 +53,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
 	Module module
 
-	new(Module module, IFileSystemAccess fsa) {
+	new(ExtendedModule module, IFileSystemAccess fsa) {
 		this.fsa = fsa
 		this.name = 'mod_' + Slug.slugify(module.name)
 		this.module = module
@@ -361,28 +362,6 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	'''
 	
 		
-	override getProtectedRegions() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
 	
-	override setProtectedRegions(EList<ProtectedRegion> myprotectedRegions) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override getSlug() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override setSlug(Slug slug) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override getKvPairClient() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override setKvPairClient(KVPairGeneratorClient e) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
 
 } // ModuleGenerator

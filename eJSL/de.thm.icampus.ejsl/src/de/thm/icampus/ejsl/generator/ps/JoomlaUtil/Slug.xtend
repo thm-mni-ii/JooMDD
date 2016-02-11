@@ -29,6 +29,7 @@ import de.thm.icampus.ejsl.eJSL.InternalLink
 import de.thm.icampus.ejsl.eJSL.ContextLink
 import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.LinkGeneratorClient
 import de.thm.icampus.ejsl.eJSL.ExternalLink
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 /**
  * <!-- begin-user-doc -->
@@ -374,7 +375,31 @@ public class Slug  {
  		}	
  	}»«ENDFOR»null);
  '''
+	static def CharSequence transformAttributeListInString(EList<Attribute>attributes, String separeSign){
+		var StringBuffer result = new StringBuffer()
+		for(attr: attributes){
+			if(attr != attributes.last){
+			result.append(attr.name.toLowerCase + separeSign)
+			}else{
+				result.append(attr.name)
+			}
+		}
+		return result.toString
+
+	}
 	
+	static def CharSequence transformAttributeListInString(String postWord, EList<Attribute>attributes, String separeSign){
+		var StringBuffer result = new StringBuffer()
+		for(attr: attributes){
+			if(attr != attributes.last){
+			result.append(postWord + attr.name.toLowerCase + separeSign)
+			}else{
+				result.append(postWord+attr.name)
+			}
+		}
+		return result.toString
+
+	}
  
 	
 } // Slug

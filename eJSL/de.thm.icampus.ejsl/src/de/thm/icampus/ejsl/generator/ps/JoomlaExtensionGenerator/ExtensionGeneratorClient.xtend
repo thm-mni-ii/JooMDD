@@ -12,6 +12,12 @@ import de.thm.icampus.ejsl.eJSL.Template
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.impl.ExtendedModuleImpl
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedModule
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.impl.ExtendedPluginImpl
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.impl.ExtendedLibraryImpl
 
 public class  ExtensionGeneratorClient  {
 	
@@ -20,8 +26,9 @@ public class  ExtensionGeneratorClient  {
 	Extension ext
 	String path
 	
-	new(IFileSystemAccess access) {
+	new(IFileSystemAccess access, Extension extens) {
 		fsa=access
+		ext=extens
 	}
 	
 	public def AbstractExtensionGenerator getExtensiongenerator(){
@@ -48,15 +55,15 @@ public class  ExtensionGeneratorClient  {
 					extensionsgenerator = new ComponentGenerator(tempext,fsa)
 			}
 			Module :{
-				var Module tempext  =  ext as Module
+				var ExtendedModule tempext  =  new ExtendedModuleImpl(ext as Module)
 					extensionsgenerator = new ModuleGenerator(tempext,fsa)
 			}
 			Plugin :{
-				var Plugin tempext  =  ext as Plugin
+				var ExtendedPlugin tempext  =  new ExtendedPluginImpl(ext as Plugin)
 					extensionsgenerator = new PluginGenerator(tempext,fsa)
 			}
 			Library :{
-				var Library tempext  =  ext as Library
+				var ExtendedLibrary tempext  =  new ExtendedLibraryImpl(ext as Library)
 					extensionsgenerator = new LibraryGenerator(tempext,fsa)
 			}
 			Template :{

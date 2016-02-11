@@ -9,6 +9,10 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.ejsl.eJSL.EJSLModel
 import de.thm.icampus.ejsl.eJSL.Extension
 import de.thm.icampus.ejsl.generator.ps.JoomlaExtensionGenerator.ExtensionGeneratorClient
+import de.thm.icampus.ejsl.ressourceTransformator.RessourceTransformer
+import de.thm.icampus.ejsl.generator.ps.ExtensionGenerator
+import de.thm.icampus.ejsl.generator.ps.EntityGenerator
+import de.thm.icampus.ejsl.generator.ps.PageGenerator
 
 /**
  * Generates code from your model files on save.
@@ -19,18 +23,18 @@ class EJSLGenerator implements IGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		
-		var ExtensionGeneratorClient extClient = new ExtensionGeneratorClient(fsa)
 		
 		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
 			
 			var EJSLModel domainModel = e;
-			  
-			for( b : domainModel.getExtensions())
-			{
-				var Extension ext = b
-				extClient.setExtension(ext);
-				extClient.generateExtension
-			}
+			 var RessourceTransformer trans = new RessourceTransformer(e)
+			 trans.dotransformation
+			var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(domainModel.extensions)
+			mainExtensionGen.dogenerate("Extensions", fsa)
+//			var EntityGenerator mainEntitiesGen = new EntityGenerator(domainModel.entities)
+//			mainEntitiesGen.dogenerate("Entities",fsa)
+//			var PageGenerator mainPageGen = new PageGenerator(domainModel.pages)
+//			mainPageGen.dogenerate("Pages",fsa)
 		}
 	}
 }

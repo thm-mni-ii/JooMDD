@@ -107,12 +107,14 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/isunique"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/withattribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/withattribute"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/id"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Reference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/attribute"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/entity"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/attributerefereced"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/lower"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/upper"/>
     </genClasses>
@@ -149,6 +151,7 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Link">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Link/linkedAttribute"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Link/linkedParameter"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//ExternalLink">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//ExternalLink/target"/>
@@ -164,6 +167,7 @@
     <genClasses ecoreClass="EJSL.ecore#//LinkParameter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//LinkParameter/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//LinkParameter/attvalue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//LinkParameter/id"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//LinkParameter/value"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Extension">
