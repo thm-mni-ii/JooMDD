@@ -482,15 +482,12 @@ enum PluginKinds:
     editors | extensions | finder | quick_icons |
     search | system | user | xml_rpc
 ;
-
 enum PageActionKind:
 	Text | Button
 ;
-
 enum PageActionPositionKind:
 	top | center | bottom
 ;
-
 enum StandardTypeKinds:
 	Integer | Boolean | Textarea | Textfield | Time | Date | Datetime | Link | Image | File | Label
 ;
