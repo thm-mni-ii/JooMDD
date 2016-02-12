@@ -1,6 +1,6 @@
-grammar de.thm.icampus.ejsl.EJSL with org.eclipse.xtext.common.Terminals
+grammar de.thm.icampus.joomdd.ejsl.EJSL with org.eclipse.xtext.common.Terminals
 
-generate eJSL "http://www.thm.de/icampus/ejsl/EJSL"
+generate eJSL "http://www.thm.de/icampus/joomdd/ejsl/EJSL"
 
 EJSLModel returns EJSLModel:
 	{EJSLModel}
@@ -35,13 +35,13 @@ CMSExtension:
 			('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
 			('globalparameters' '{' (globalparameters+=Parameter)* '}')?
 			('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
-			features = Feature
+			feature = Feature
 			('extensions' '{' (extensions+=Extension)* '}')?
 	'}'
 ;
 
 Feature:
-	{Feature}
+	{Feature} 
 	('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
 	('entities' '{' (entities+=Entity)* '}')?
 	('pages' '{' (pages+=Page)* '}')?
@@ -140,7 +140,7 @@ Reference returns Reference:
 // page model
 
 Page:
-	StaticPage | DynamicPage 
+	StaticPage | DynamicPage | CustomPage
 ;
 
 StaticPage returns StaticPage:
@@ -157,7 +157,7 @@ StaticPage returns StaticPage:
 ;
 
 DynamicPage:
-	IndexPage | DetailsPage | CustomPage
+	IndexPage | DetailsPage
 ;
 
 IndexPage returns IndexPage:
@@ -196,13 +196,16 @@ DetailPageField returns DetailPageField:
 	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)?
 ;
 
-CustomPage:
-	{StaticPage}
+CustomPage returns CustomPage:
+	{CustomPage}
 	'CustomPage' name=MYID 
 	'{'
 		'Page type:' pageType = PageKinds
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('pageactions' '{' (pageactions+=PageAction)* '}')?
+		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
+		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
+		('localparameters' '{' (localparameters+=Parameter)* '}')?
 	'}'
 ;
 
