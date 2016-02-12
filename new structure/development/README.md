@@ -52,28 +52,6 @@ will be abstracted and clustered to Plugin.
 		('sections' '{' (sections+=Section)+ '}')?
 	;
 
-#### Textual Editor ###
-##### Formatter #####
-##### Validator #####
-##### Project Wizard #####
-The project Wizard is available for IntelliJ and soon for PhpStorm.
-You can easy create new eJSL projects with this wizard and you can choose examples
-
-##### Developer information #####
-*	If you want to add an example just copy it into "resources/eJSLexamples/". The Wizard shows all files in this folder.
-*	To add a preview just add it to "resources/previews/ with the same name as the example.
-
-*	If you want to change the description, version ... go to the plugin.xml
-*	If you want to export the plugin go to Path: C:\Users\"user"\ .IdeaIC15\system\plugins-sandbox\plugins\ .
-Compress the ProjectWizard-folder into a zip file. Now you can install the .zip via install plugin from disk...
-
-*   Merge Plugin with eJSL:
-you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip).  ("EJSL2.9.1" is just the project name)
-copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
-copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. Past it between .../depends>  (here)  <xi:include...
-
-*	for PhpStorm compatibility the "projectfile".iml is in the folder .idea and not visible in the ide.
-	
 ### Generator Development ###
 #### Monolithic vs dynamic generator structure ####
 The generator structure consists of a platform-independent and a platform-specific part. The platform-independent part 
@@ -103,149 +81,66 @@ Within the structure of the JooMDD project, a set of installable plugins for the
 
 ##### (De-)Serializer Handlers #####
 The Eclipse editor provides an extension to (de-)serialize *eJSL-instances* to/from *xmi-files*. This is done by two 
-handler classes (*DeserializationHandler.java* and *SerializationHandler.java*) and the following extension point in
+handler classes (*DeserializationHandler.java* and *SerializationHandler.java*) and the following extension point (under the respective comments) in
 the *plugin.xml* of the *de.thm.icampus.joomdd.ejsl.ui plugin*:
 
 	  <!-- XMI Serialization -->  
-	  <extension
-	        point="org.eclipse.ui.handlers">
-	     <handler
-	           class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.handler.SerializationHandler"
-	           commandId="de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand">
-	     </handler>
-	  </extension>
-	       
-	  <extension
-	        point="org.eclipse.ui.commands">
-	     <command
-	           id="de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand"
-	           name="eJSL --&gt; XMI">
-	     </command>
-	  </extension>
-	  
-	   <!-- XMI Deserialization -->
-	  <extension
-	        point="org.eclipse.ui.handlers">
-	     <handler
-	           class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationHandler"
-	           commandId="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand">
-	     </handler>
-	  </extension>
-	       
-	  <extension
-	        point="org.eclipse.ui.commands">
-	     <command
-	           id="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand"
-	           name="eJSL &lt;-- XMI">
-	     </command>
-	  </extension>   
-	
-	<!-- (De-)Serialization Context Menu -->
-	  <extension
-	        point="org.eclipse.ui.menus">
-	     <menuContribution
-	           locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
-	        <menu
-	              label="eJSL Serialization">
-	           <command
-	                 commandId="de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand"
-	                 style="push">
-	              <visibleWhen
-	                    checkEnabled="false">
-	                 <iterate>
-	                    <adapt
-	                          type="org.eclipse.core.resources.IResource">
-	                       <test
-	                             property="org.eclipse.core.resources.name"
-	                             value="*.xmi">
-	                       </test>
-	                    </adapt>
-	                 </iterate>
-	              </visibleWhen>
-	           </command>
-	           <command
-	                 commandId="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand"
-	                 style="push">
-	              <visibleWhen
-	                    checkEnabled="false">
-	                 <iterate>
-	                    <adapt
-	                          type="org.eclipse.core.resources.IResource">
-	                       <test
-	                             property="org.eclipse.core.resources.name"
-	                             value="*.xmi">
-	                       </test>
-	                    </adapt>
-	                 </iterate>
-	              </visibleWhen>
-	           </command>
-	           <command
-	                 commandId="de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand"
-	                 style="push">
-	              <visibleWhen
-	                    checkEnabled="false">
-	                 <iterate>
-	                    <adapt
-	                          type="org.eclipse.core.resources.IResource">
-	                       <test
-	                             property="org.eclipse.core.resources.name"
-	                             value="*.eJSL">
-	                       </test>
-	                    </adapt>
-	                 </iterate>
-	              </visibleWhen>
-	           </command>
-	           <command
-	                 commandId="de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand"
-	                 style="push">
-	              <visibleWhen
-	                    checkEnabled="false">
-	                 <iterate>
-	                    <adapt
-	                          type="org.eclipse.core.resources.IResource">
-	                       <test
-	                             property="org.eclipse.core.resources.name"
-	                             value="*.eJSL">
-	                       </test>
-	                    </adapt>
-	                 </iterate>
-	              </visibleWhen>
-	           </command>
-	        </menu>
-	     </menuContribution>
-	  </extension>
-	  
+	  ... all the serialization code
+	  <!-- XMI Deserialization -->
+	  ... all the deserialization code
+	  <!-- (De-)Serialization Context Menu -->
+	  ... code for the context menu
 *Attention:* The context menu is only available within the ***Java perspective***.
 
-#### IntelliJ ####
+#### IntelliJ and PHPStorm ####
 
 ##### Textual Editor #####
-##### Project Wizard #####
-
-Installation (user):
-you need to install Xtext IDEA Core Plugin via Plugin manager and the eJSL Plugin from ...
-
-##### Developer information #####
+##### Plugin-Build #####
 *	To create an Xtext Project you need the 3 Plugins (Xtend Support, Xtext and Xtext IDEA Core).
 
 *	You can create eJSL plugins for IntelliJ (Gradle: Path= *.parent/*.idea/Task/build/ideaZip) 
 The created *.zip is in *.idea/build/distributions/
+
+###### PHPStorm only ######
+
+*	for PhpStorm compatibility the "projectfile".iml is in the folder .idea and not visible in the ide.
+
+*	The Xtext plugin (Version 2.9.1) has a changed plugin.xml the dependency "JUnit" is changed to "com.intellij.modules.lang"
+Installation (user):
+you need to install Xtext IDEA Core Plugin via Plugin manager and the eJSL Plugin from ...
+
 *	For PhpStorm you must change the plugin.xml (Add <depends>com.intellij.modules.lang</depends>)
 Infomation:
 in the plugin.xml you can change all Meta-Inf like: description, Plugin version, Plugin name ...
 
-#### PHPStorm ####
+###### Project Wizard ######
 
-##### Textual Editor #####
-##### Project Wizard #####
-##### Generator inclusion#####
+*	If you want to add an example just copy it into "resources/eJSLexamples/". The Wizard shows all files in this folder.
+*	To add a preview just add it to "resources/previews/ with the same name as the example.
 
-##### Prepare PHPStorm (only first time): #####
+*	If you want to change the description, version ... go to the plugin.xml
+*	If you want to export the plugin go to Path: C:\Users\"user"\ .IdeaIC15\system\plugins-sandbox\plugins\ .
+Compress the ProjectWizard-folder into a zip file. Now you can install the .zip via install plugin from disk...
+
+*   Merge Plugin with eJSL:
+you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip).  ("EJSL2.9.1" is just the project name)
+copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
+copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. 
+Past it between .../depends>  (here)  <xi:include...
+
+
+##### Generator inclusion #####
+
+###### Prepare PHPStorm (only first time): ######
 *	Copy IntelliJdepencies.jar into path: PHPStorm installation\lib\  .
+*	IntelliJdepencies.jar contains idea.jar and some files from openapi.jar. (IntelliJ Version 15.0.2)
+Care that cou do not overwrite files that exists in the current openapi.jar. Doubled classes cause a startup error in PHPStorm
+It is possible that an update crash the Xtext plugins.
 *	Now install the two downloaded plugins (Xtext and EJSL) via "Install plugin from disk ..." (Menu: File/Settings/Plugins/).
 
-##### Add the language to your Project: #####
+###### Add the language and the generator to your Project: ######
 *	Now you must configure the plugin via the project file (the project file is in the work directory of the project in the folder .idea\"ProjectName".iml).
+Note: This is automatically done through the Project wizard. If you don't use it, you have to do this by hand.
 
 Example for adding the configuration in the project file:
 
@@ -262,14 +157,6 @@ Example for adding the configuration in the project file:
     </component>
 
 *    To use the language you must create a folder in the project and mark it as "Sources Root".
-
-##### Developer information #####
-*	IntelliJdepencies.jar contains idea.jar and some files from openapi.jar. (IntelliJ Version 15.0.2)
-Care that cou do not overwrite files that exists in the current openapi.jar. Doubled classes cause a startup error in PHPStorm
-It is possible that an update crash the Xtext plugins.
-
-
-*	The Xtext plugin (Version 2.9.1) has a changed plugin.xml the dependency "JUnit" is changed to "com.intellij.modules.lang"
 
 ### Instances ###
 To ensure a simple usage, we created some example instances, which can be used as templates for own eJSL instances.
