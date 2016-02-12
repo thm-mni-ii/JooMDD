@@ -108,11 +108,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		// Generate sql stuff
 		generateJoomlaDirectory("admin/sql")
-		generateFile("admin/sql/install.mysql.utf8.sql", entgen.dogenerate)
-		generateFile("admin/sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(extendeComp.name))
+		//generateFile("admin/sql/install.mysql.utf8.sql", entgen.dogenerate)
+		//generateFile("admin/sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(extendeComp.name))
 		generateJoomlaDirectory("admin/sql/updates")
 		generateJoomlaDirectory("admin/sql/updates/mysql")
-		generateFile("admin/sql/updates/mysql/1.0.1.mysql.utf8.sql", sqlAdminSqlUpdateContent(extendeComp.name,true))
+		//generateFile("admin/sql/updates/mysql/1.0.1.mysql.utf8.sql", sqlAdminSqlUpdateContent(extendeComp.name,true))
 
 		return ""
 	}
@@ -324,11 +324,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 	def generateFields(String fieldspath) {
 		for(ExtendedEntity ent: extendeComp.allExtendedEntity){
-	
-		for(Reference ref: ent.references){
-		var FieldsGenerator field = new FieldsGenerator(ref, extendeComp,ent)
-		generateFile(fieldspath + "/" + field.getnameField.toLowerCase + ".php", field.genClassField)
-		}
+//todo field	
+//		for(Reference ref: ent.references){
+//		var FieldsGenerator field = new FieldsGenerator(ref, extendeComp,ent)
+//		generateFile(fieldspath + "/" + field.getnameField.toLowerCase + ".php", field.genClassField)
+//		}
 	}
 	}
 

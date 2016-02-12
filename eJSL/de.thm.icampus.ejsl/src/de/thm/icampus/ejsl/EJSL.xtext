@@ -206,6 +206,7 @@ CustomPage returns CustomPage:
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('links' '{' (links+=Link)* '}')?
 	'}'
 ;
 
