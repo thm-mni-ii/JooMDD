@@ -6,6 +6,6 @@ package de.thm.icampus.ejsl;
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
-public class EJSLRuntimeModule extends de.thm.icampus.ejsl.AbstractEJSLRuntimeModule {
+public class EJSLRuntimeModule extends AbstractEJSLRuntimeModule {
 
 }

@@ -7,7 +7,7 @@ import de.thm.icampus.ejsl.generator.ps.JoomlaExtensionGenerator.ExtensionGenera
 
 class ExtensionGenerator extends AbstracteGenerator{
 	
-	EList<Extension> extensions
+	EList<de.thm.icampus.ejsl.eJSL.Extension> extensions
 	new(EList<Extension> list) {
 		extensions= list
 	}
