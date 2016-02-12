@@ -1,6 +1,6 @@
-grammar de.thm.icampus.joomdd.ejsl.EJSL with org.eclipse.xtext.common.Terminals
+grammar de.thm.icampus.ejsl.EJSL with org.eclipse.xtext.common.Terminals
 
-generate eJSL "http://www.thm.de/icampus/joomdd/ejsl/EJSL"
+generate eJSL "http://www.thm.de/icampus/ejsl/EJSL"
 
 EJSLModel returns EJSLModel:
 	{EJSLModel}

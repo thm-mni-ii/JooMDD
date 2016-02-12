@@ -1,16 +1,6 @@
 package de.thm.icampus.ejsl.ressourceTransformator
 
 import de.thm.icampus.ejsl.eJSL.EJSLModel
-import de.thm.icampus.ejsl.eJSL.DetailsPage
-import de.thm.icampus.ejsl.eJSL.DetailPageField
-import de.thm.icampus.ejsl.eJSL.Attribute
-import de.thm.icampus.ejsl.eJSL.SimpleHTMLTypes
-import de.thm.icampus.ejsl.eJSL.DatatypeReference
-import de.thm.icampus.ejsl.eJSL.StandardTypes
-import de.thm.icampus.ejsl.eJSL.EJSLFactory
-import de.thm.icampus.ejsl.eJSL.EJSLPackage
-import de.thm.icampus.ejsl.eJSL.SimpleHTMLTypeKinds
-
 
 class RessourceTransformer {
 	EJSLModel modelInstance
