@@ -8,7 +8,49 @@ The core part should also consist of the feature section. Which should be used t
 Extensions, which can be modelled are currently specific for Joomla (Component, Module, Plugin, Template, Library). In further versions Component, Module and Plugin 
 will be abstracted and clustered to Plugin.
  
-![ejsl model with containments](/documentation/images/ejsl_model.jpg "eJSL Model with Containments")
+![ejsl model with containments](documentation/images/ejsl_model.jpg "eJSL Model with Containments")
+
+	EJSLModel returns EJSLModel:
+		{EJSLModel}
+		'eJSLModel'	name=STRING
+		'{'
+			('eJSL part:' ejslPart=EJSLPart)
+		'}';
+		
+	CMSCore:
+		{CMSCore}
+		'CMS Core' '{'
+			('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+			('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+			('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+			feature = Feature
+		//	(coreFeature += coreFeature*) // for further implementation of core features
+		'}'
+	;
+	
+	coreFeature:
+		{coreFeature}
+		'coreFeature'
+	;
+	
+	CMSExtension:
+		{CMSExtension}
+			'CMS Extension' '{'
+				('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+				('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+				('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+				features = Feature
+				('extensions' '{' (extensions+=Extension)* '}')?
+		'}'
+	;
+	
+	Feature:
+		{Feature}
+		('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
+		('entities' '{' (entities+=Entity)* '}')?
+		('pages' '{' (pages+=Page)* '}')?
+		('sections' '{' (sections+=Section)+ '}')?
+	;
 
 #### Textual Editor ###
 ##### Formatter #####
@@ -30,21 +72,8 @@ you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and Projec
 copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
 copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. Past it between .../depends>  (here)  <xi:include...
 
-
 *	for PhpStorm compatibility the "projectfile".iml is in the folder .idea and not visible in the ide.
-
-	EJSLModel returns EJSLModel:
-	{EJSLModel}
-	'eJSLModel'	name=STRING
-	'{'
-		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
-		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
-		('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
-		('entities' '{' (entities+=Entity)* '}')?
-		('datapackages' '{' (datapackages+=Datapackage)* '}')?
-		('pages' '{' (pages+=Page)* '}')?
-		('extensions' '{' (extensions+=Extension)* '}')?
-	'}';
+	
 ### Generator Development ###
 #### Monolithic vs dynamic generator structure ####
 The generator structure consists of a platform-independent and a platform-specific part. The platform-independent part 

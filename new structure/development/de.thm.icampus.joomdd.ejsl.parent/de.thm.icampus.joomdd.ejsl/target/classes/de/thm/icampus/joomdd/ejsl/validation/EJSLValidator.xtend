@@ -14,7 +14,6 @@ import de.thm.icampus.joomdd.ejsl.eJSL.ExtensionPackage
 import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import de.thm.icampus.joomdd.ejsl.eJSL.Library
 import de.thm.icampus.joomdd.ejsl.eJSL.Manifestation
-import de.thm.icampus.joomdd.ejsl.eJSL.Page
 import de.thm.icampus.joomdd.ejsl.eJSL.Section
 import java.util.HashMap
 import java.util.HashSet
@@ -23,7 +22,9 @@ import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.validation.Check
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
-
+import de.thm.icampus.joomdd.ejsl.eJSL.Page
+import de.thm.icampus.joomdd.ejsl.eJSL.CMSExtension
+import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 
 /**
  * This class contains custom validation rules. 
@@ -87,7 +88,7 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	def checkDatatypesAreUnique(EJSLModel model) {
 		var types = new HashSet<String>
 
-		for (type : model.datatypes) {
+		for (type : model.getEjslPart.getDatatypes) {
 			if (!types.add(type.name)) {
 				error(
 					'Datatype must be unique.',
@@ -106,7 +107,7 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	def checkEntitiesAreUnique(EJSLModel model) {
 		var entities = new HashSet<String>
 
-		for (entity : model.entities) {
+		for (entity : model.getEjslPart.getFeature.getEntities) {
 			if (!entities.add(entity.name)) {
 				error(
 					'Entity names must be unique.',
@@ -126,7 +127,7 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 		var attributes = new HashSet<String>
 
 		for (attribute : entity.attributes) {
-			if (!attributes.add(attribute.name)) {
+			if (!attributes.add(attribute.getName)) {
 				error(
 					'Attribute names must be unique.',
 					attribute,
@@ -144,8 +145,8 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	def checkPagesAreUnique(EJSLModel model) {
 		var pages = new HashSet<String>
 
-		for (page : model.pages) {
-			if (!pages.add(page.name)) {
+		for (page : model.ejslPart.feature.pages) {
+			if (!pages.add(page.getName)) {
 				error(
 					'Page names must be unique.',
 					page,
@@ -294,8 +295,8 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	def checkPageGlobalparametersAreUnique(EJSLModel model) {
 		var params = new HashSet<String>
 
-		for (param : model.globalparameters) {
-			if (!params.add(param.name)) {
+		for (param : model.getEjslPart.getGlobalparameters) {
+			if (!params.add(param.getName)) {
 				error(
 					'Globalparameter name must be unique.',
 					param,
@@ -313,7 +314,7 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	def checkPageLocalparametersAreUnique(Page p) {
 		var params = new HashSet<String>
 
-		for (param : p.localparameters) {
+		for (param : p.getLocalparameters) {
 			if (!params.add(param.name)) {
 				error(
 					'Localparameter name must be unique per page.',
@@ -329,10 +330,10 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	 * Check if all extensions of a Model have different/unique names.
 	 */
 	@Check
-	def checkExtensionsAreUniquePerClass(EJSLModel model) {
+	def checkExtensionsAreUniquePerClass(CMSExtension cmsExtension) {
 		var exts = new HashMap<Class<? extends EObject>, Set<String>>
 
-		for (ext : model.extensions) {
+		for (ext : cmsExtension.extensions) {
 			var Class<? extends EObject> type = ext.class
 			var Set<String> specializedExts = exts.get(type)
 			if (null == specializedExts) {
@@ -377,7 +378,7 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 		var entities = new HashSet<String>
 
 		var i = 0
-		for (entity : page.entities) {
+		for (entity : page.getEntities) {
 			if (!entities.add(entity.name)) {
 				warning(
 					'Entity is used multiple times for this page.',
@@ -480,13 +481,15 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	 */	
 	@Check
 	def refToAttributeMustBePrimary(Reference reference){
-		if(!reference.attributerefereced.isunique){
-			error(
-				'The referenced attribute has to be a primary attribute.',
-				reference,
-				EJSLPackage.Literals.REFERENCE__ATTRIBUTEREFERECED,
-				NOT_PRIMARY_REFERENCE
-			)
+		for (attribute : reference.attributerefereced) {
+			if(attribute.isunique){
+				error(
+					'The referenced attribute has to be a primary attribute.',
+					reference,
+					EJSLPackage.Literals.REFERENCE__ATTRIBUTEREFERECED,
+					NOT_PRIMARY_REFERENCE
+				)
+			}
 		}
 	}
 		

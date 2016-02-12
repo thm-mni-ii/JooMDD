@@ -4,12 +4,9 @@
 package de.thm.icampus.joomdd.ejsl.formatting2
 
 import com.google.inject.Inject
-import de.thm.icampus.joomdd.ejsl.eJSL.Datapackage
+import de.thm.icampus.joomdd.ejsl.eJSL.CMSCore
 import de.thm.icampus.joomdd.ejsl.eJSL.Datatype
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLModel
-import de.thm.icampus.joomdd.ejsl.eJSL.Entity
-import de.thm.icampus.joomdd.ejsl.eJSL.Extension
-import de.thm.icampus.joomdd.ejsl.eJSL.Page
 import de.thm.icampus.joomdd.ejsl.eJSL.Parameter
 import de.thm.icampus.joomdd.ejsl.eJSL.ParameterGroup
 import de.thm.icampus.joomdd.ejsl.services.EJSLGrammarAccess
@@ -22,33 +19,22 @@ class EJSLFormatter extends AbstractFormatter2 {
 
 	def dispatch void format(EJSLModel eJSLModel, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		for (Datatype datatypes : eJSLModel.getDatatypes()) {
-			datatypes.format;
-		}
-		for (Parameter globalparameters : eJSLModel.getGlobalparameters()) {
-			globalparameters.format;
-		}
-		for (ParameterGroup parametergroups : eJSLModel.getParametergroups()) {
-			parametergroups.format;
-		}
-		for (Entity entities : eJSLModel.getEntities()) {
-			entities.format;
-		}
-		for (Datapackage datapackages : eJSLModel.getDatapackages()) {
-			datapackages.format;
-		}
-		for (Page pages : eJSLModel.getPages()) {
-			pages.format;
-		}
-		for (Extension extensions : eJSLModel.getExtensions()) {
-			extensions.format;
-		}
+		eJSLModel.getEjslPart.format;
 	}
 
-	def dispatch void format(Parameter parameter, extension IFormattableDocument document) {
+	def dispatch void format(CMSCore cMSCore, extension IFormattableDocument document) {
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		parameter.getDtype.format;
+		for (Datatype datatypes : cMSCore.getDatatypes()) {
+			datatypes.format;
+		}
+		for (Parameter globalparameters : cMSCore.getGlobalparameters()) {
+			globalparameters.format;
+		}
+		for (ParameterGroup parametergroups : cMSCore.getParametergroups()) {
+			parametergroups.format;
+		}
+		cMSCore.getFeature.format;
 	}
 	
-	// TODO: implement for ParameterGroup, Datapackage, Entity, Attribute, StaticPage, IndexPage, DetailsPage, DetailPageField, ComplexHTMLTypes, ContextLink, ExtensionPackage, Component, BackendSection, FrontendSection, Module, Plugin, Library, Package, Class, Method, MethodParameter, Template, Manifestation, Language, Position, PositionParameter, CssBlock
+	// TODO: implement for CMSExtension, Feature, Parameter, ParameterGroup, Entitypackage, Entity, Attribute, StaticPage, IndexPage, DetailsPage, DetailPageField, ComplexHTMLTypes, ContextLink, ExtensionPackage, Component, BackendSection, FrontendSection, Module, Plugin, Library, Package, Class, Method, MethodParameter, Template, Manifestation, Language, Position, PositionParameter, CssBlock
 }

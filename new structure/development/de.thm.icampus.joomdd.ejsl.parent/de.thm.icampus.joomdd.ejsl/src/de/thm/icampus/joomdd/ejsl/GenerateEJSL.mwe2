@@ -1,9 +1,7 @@
 module de.thm.icampus.joomdd.ejsl.GenerateEJSL
 
-import org.eclipse.emf.mwe.utils.*
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
-import org.eclipse.xtext.ui.generator.*
 
 var rootPath = ".."
 
@@ -49,13 +47,6 @@ Workflow {
 			formatter = {
 				generateStub = true
 			}
-			
-			
-			
-//			fragment = projectWizard.SimpleProjectWizardFragment {
-//    			generatorProjectName = "${projectName}.generator"
-//   				fileExtension = fileExtensions
-//			} 
 		}
 	}
 }

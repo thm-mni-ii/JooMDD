@@ -21,6 +21,15 @@
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/user"/>
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PluginKinds/xml_rpc"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//PageActionKind">
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PageActionKind/Text"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PageActionKind/Button"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//PageActionPositionKind">
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PageActionPositionKind/top"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PageActionPositionKind/center"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PageActionPositionKind/bottom"/>
+    </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//StandardTypeKinds">
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Integer"/>
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Boolean"/>
@@ -34,9 +43,14 @@
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/File"/>
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Label"/>
     </genEnums>
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//SectionReference">
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SectionReference/backend"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SectionReference/frontend"/>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//SectionKinds">
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SectionKinds/backend"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SectionKinds/frontend"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//PageKinds">
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PageKinds/list"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PageKinds/details"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//PageKinds/custom"/>
     </genEnums>
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//SimpleHTMLTypeKinds">
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//SimpleHTMLTypeKinds/Integer"/>
@@ -56,13 +70,26 @@
     </genEnums>
     <genClasses ecoreClass="EJSL.ecore#//EJSLModel">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//EJSLModel/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/datatypes"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/globalparameters"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/parametergroups"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/entities"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/datapackages"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/pages"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/extensions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLModel/ejslPart"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//EJSLPart">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLPart/datatypes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLPart/globalparameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//EJSLPart/parametergroups"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//CMSCore">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//CMSCore/feature"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//coreFeature"/>
+    <genClasses ecoreClass="EJSL.ecore#//CMSExtension">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//CMSExtension/features"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//CMSExtension/extensions"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Feature">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Feature/entitypackages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Feature/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Feature/pages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Feature/sections"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Type"/>
     <genClasses ecoreClass="EJSL.ecore#//DatatypeReference">
@@ -91,11 +118,16 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//ParameterGroup/globalparameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//ParameterGroup/parameters"/>
     </genClasses>
-    <genClasses ecoreClass="EJSL.ecore#//Datapackage">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Datapackage/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/datapackages"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/entities"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Datapackage/datatypes"/>
+    <genClasses ecoreClass="EJSL.ecore#//PageAction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//PageAction/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//PageAction/pageActionType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//PageAction/pageActionPosition"/>
+    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Entitypackage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Entitypackage/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entitypackage/entitypackages"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entitypackage/entities"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entitypackage/datatypes"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Entity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Entity/name"/>
@@ -118,29 +150,47 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/lower"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/upper"/>
     </genClasses>
-    <genClasses ecoreClass="EJSL.ecore#//Page">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Page/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/parametergroups"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/globalparameters"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/localparameters"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/links"/>
-    </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//Page"/>
     <genClasses ecoreClass="EJSL.ecore#//StaticPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//StaticPage/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//StaticPage/parametergroups"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//StaticPage/globalparameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//StaticPage/localparameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//StaticPage/pageactions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//StaticPage/links"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//StaticPage/HTMLBody"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//StaticPage/pageType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//StaticPage/entities"/>
     </genClasses>
-    <genClasses ecoreClass="EJSL.ecore#//DynamicPage">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/entities"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/tablecolumns"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/filters"/>
+    <genClasses ecoreClass="EJSL.ecore#//DynamicPage"/>
+    <genClasses ecoreClass="EJSL.ecore#//IndexPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//IndexPage/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//IndexPage/entities"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//IndexPage/parametergroups"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//IndexPage/globalparameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//IndexPage/localparameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//IndexPage/pageactions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//IndexPage/tablecolumns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//IndexPage/filters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//IndexPage/links"/>
     </genClasses>
-    <genClasses ecoreClass="EJSL.ecore#//IndexPage"/>
     <genClasses ecoreClass="EJSL.ecore#//DetailsPage">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//DetailsPage/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/entities"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/editfields"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/parametergroups"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/globalparameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/localparameters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/pageactions"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/tablecolumns"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/filters"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailsPage/links"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//DetailPageField">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailPageField/attribute"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailPageField/htmltype"/>
     </genClasses>
+    <genClasses ecoreClass="EJSL.ecore#//CustomPage"/>
     <genClasses ecoreClass="EJSL.ecore#//HTMLTypes"/>
     <genClasses ecoreClass="EJSL.ecore#//SimpleHTMLTypes">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//SimpleHTMLTypes/htmltype"/>
@@ -151,7 +201,7 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Link">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Link/linkedAttribute"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Link/linkedParameter"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Link/linkedAction"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//ExternalLink">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//ExternalLink/target"/>

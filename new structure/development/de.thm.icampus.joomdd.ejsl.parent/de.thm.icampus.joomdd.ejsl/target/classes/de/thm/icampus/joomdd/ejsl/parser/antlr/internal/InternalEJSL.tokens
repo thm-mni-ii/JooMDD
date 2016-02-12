@@ -1,156 +1,166 @@
-'('=72
-')'=73
-'*Attribute '=81
-'*Class references'=101
-'*Entities'=64
-'*Entity ='=53
-'*Globalparameters'=59
-'*Page :'=89
-'*Pages'=88
-'*ParameterGroups'=58
+'('=75
+')'=76
+'*Attribute '=86
+'*Class references'=106
+'*Entities'=67
+'*Entity ='=55
+'*EntityReference ='=56
+'*Globalparameters'=61
+'*Page :'=94
+'*Pages'=93
+'*ParameterGroups'=60
 ','=21
-'-'=129
-'.'=130
-'.backend'=155
-'.frontend'=156
-':'=69
-'<'=131
-'='=80
-'>'=132
-'Attribute'=47
-'Author'=116
+'-'=134
+'.'=135
+'.backend'=165
+'.frontend'=166
+':'=72
+'<'=136
+'='=82
+'>'=137
+'Attribute'=49
+'Author'=121
 'Auto Increment'=32
-'Backend section'=87
-'Boolean'=145
+'Backend section'=92
+'Boolean'=155
+'Button'=150
 'CMS Core'=19
 'CMS Extension'=24
-'CSS keyvaluepairs'=127
-'Checkbox'=168
-'Class'=100
-'Component'=85
-'CssBlock'=128
-'CustomPage'=70
+'CSS keyvaluepairs'=132
+'Checkbox'=178
+'Class'=105
+'Component'=90
+'CssBlock'=133
+'CustomPage'=73
 'Datatype'=33
-'Date'=149
-'Datepicker'=162
-'Datetime'=150
+'Date'=159
+'Datepicker'=172
+'Datetime'=160
 'Default ='=31
-'DetailsPage'=67
-'Editor'=166
-'Entity'=43
-'EntityAttribute ='=52
-'EntityReference ='=54
-'Entitypackage'=42
-'Extension package'=82
-'ExternalLink'=74
-'File'=153
-'Filepicker'=164
-'Frontend section'=91
-'Global parameter'=86
-'HTMLBody'=62
-'ID'=50
-'Image'=152
-'Imagepicker'=163
-'IndexPage'=63
-'Integer'=144
-'InternalLink'=77
-'InternalcontextLink'=78
-'Key'=121
-'Label'=154
-'Language'=119
-'Library'=96
-'Link'=151
-'Manifestation'=83
-'Method'=103
-'MethodParameter'=106
-'Module'=92
-'Multiselect'=167
+'DetailsPage'=70
+'Editor'=176
+'Entity'=45
+'EntityAttribute ='=54
+'Entitypackage'=44
+'Extension package'=87
+'ExternalLink'=77
+'File'=163
+'Filepicker'=174
+'Frontend section'=96
+'Global parameter'=91
+'HTMLBody'=65
+'ID'=52
+'Image'=162
+'Imagepicker'=173
+'IndexPage'=66
+'Integer'=154
+'InternalLink'=83
+'InternalcontextLink'=84
+'Key'=126
+'Label'=164
+'Language'=124
+'Library'=101
+'Link'=161
+'Manifestation'=88
+'Method'=108
+'MethodParameter'=111
+'Module'=97
+'Multiselect'=177
 'Not Null'=30
-'Package'=99
-'Page type:'=71
+'Package'=104
+'Page type:'=74
+'PageAction'=42
 'Parameter'=34
 'ParameterGroup'=40
 'Parameters'=41
-'Plugin'=93
-'Plugintype ='=94
-'Position Parameter'=124
-'Positiontype ='=126
-'Radiobutto'=169
-'Reference'=51
-'Returnvalue'=104
-'StaticPage'=57
-'Template'=107
-'Templateposition'=122
-'Text_Field'=161
-'Text_Field_NE'=165
-'Textarea'=146
-'Textfield'=147
-'Time'=148
-'Unique attribute'=48
-'Yes_No_Buttons'=160
-'attributes'=45
-'authenticate'=133
-'authoremail ='=117
-'authors'=110
-'authorurl ='=118
-'captcha'=134
-'classes'=97
-'contact'=136
-'content'=135
-'copyright ='=112
-'creationdate ='=111
-'cssblocks'=109
-'custom'=159
+'Plugin'=98
+'Plugintype ='=99
+'Position Parameter'=129
+'Positiontype ='=131
+'Radiobutto'=179
+'Reference'=53
+'Returnvalue'=109
+'StaticPage'=59
+'Template'=112
+'Templateposition'=127
+'Text'=149
+'Text_Field'=171
+'Text_Field_NE'=175
+'Textarea'=156
+'Textfield'=157
+'Time'=158
+'Unique attribute'=50
+'Yes_No_Buttons'=170
+'attributes'=47
+'authenticate'=138
+'authoremail ='=122
+'authors'=115
+'authorurl ='=123
+'bottom'=153
+'captcha'=139
+'center'=152
+'classes'=102
+'contact'=141
+'content'=140
+'copyright ='=117
+'creationdate ='=116
+'cssblocks'=114
+'custom'=169
 'datatypes'=20
 'defaultvalue ='=36
 'description ='=39
-'details'=158
-'divId ='=125
+'details'=168
+'divId ='=130
 'eJSL part:'=17
 'eJSLModel'=15
-'editFields'=68
-'editors'=137
+'editFields'=71
+'editors'=142
 'entities'=27
 'entitypackages'=26
-'extends'=44
+'extends'=46
 'extensions'=25
-'filters ='=66
-'finder'=138
-'from :'=90
+'filters ='=69
+'finder'=143
+'from :'=95
 'globalparameters'=22
-'keyvaluepairs'=120
+'keyvaluepairs'=125
 'label ='=37
-'languages'=84
-'license ='=113
-'link ='=114
-'linked attribute ='=76
-'linkparameters'=79
-'links'=61
-'list'=157
-'localparameters'=60
-'lower ='=55
-'methodparameters'=105
-'methods'=102
-'packages'=98
+'label'=81
+'languages'=89
+'license ='=118
+'link ='=119
+'linked action ='=80
+'linked attribute ='=79
+'linkparameters'=85
+'links'=64
+'list'=167
+'localparameters'=62
+'lower ='=57
+'methodparameters'=110
+'methods'=107
+'packages'=103
+'pageactions'=63
 'pages'=28
 'parametergroups'=23
-'parameters'=95
-'positionparameters'=123
-'positions'=108
-'quick_icons'=139
-'references'=46
-'search'=140
+'parameters'=100
+'position ='=43
+'positionparameters'=128
+'positions'=113
+'quick_icons'=144
+'references'=48
+'search'=145
 'sections'=29
 'size ='=38
-'system'=141
-'table columns ='=65
-'target ='=75
+'system'=146
+'table columns ='=68
+'target ='=78
+'top'=151
 'type ='=35
-'upper ='=56
-'user'=142
-'version ='=115
-'with'=49
-'xml_rpc'=143
+'upper ='=58
+'user'=147
+'version ='=120
+'with'=51
+'xml_rpc'=148
 '{'=16
 '}'=18
 RULE_ANY_OTHER=14
@@ -236,6 +246,16 @@ T__167=167
 T__168=168
 T__169=169
 T__16=16
+T__170=170
+T__171=171
+T__172=172
+T__173=173
+T__174=174
+T__175=175
+T__176=176
+T__177=177
+T__178=178
+T__179=179
 T__17=17
 T__18=18
 T__19=19

@@ -13,15 +13,12 @@
         eType="#//Parameter" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" upperBound="-1"
         eType="#//ParameterGroup" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CMSCore" eSuperTypes="#//EJSLPart">
     <eStructuralFeatures xsi:type="ecore:EReference" name="feature" eType="#//Feature"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CMSCore" eSuperTypes="#//EJSLPart"/>
   <eClassifiers xsi:type="ecore:EClass" name="coreFeature"/>
   <eClassifiers xsi:type="ecore:EClass" name="CMSExtension" eSuperTypes="#//EJSLPart">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="features" eType="#//Feature"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extensions" upperBound="-1"
         eType="#//Extension" containment="true"/>
   </eClassifiers>
@@ -65,6 +62,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1"
         eType="#//Parameter" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PageAction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageActionType" eType="#//PageActionKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageActionPosition" eType="#//PageActionPositionKind"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Entitypackage">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entitypackages" upperBound="-1"
@@ -87,16 +89,19 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Type" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isunique" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="withattribute" eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Reference">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" unique="false"
+        upperBound="-1" eType="#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="entity" eType="#//Entity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="attributerefereced" eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributerefereced" unique="false"
+        upperBound="-1" eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lower" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="upper" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Page"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page #//CustomPage">
+  <eClassifiers xsi:type="ecore:EClass" name="Page">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" unique="false"
         upperBound="-1" eType="#//ParameterGroup"/>
@@ -104,24 +109,17 @@
         upperBound="-1" eType="#//Parameter"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
         eType="#//Parameter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pageactions" upperBound="-1"
+        eType="#//PageAction" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page">
     <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
         eType="#//Link" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="HTMLBody" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageType" eType="#//PageKinds"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
-        upperBound="-1" eType="#//Entity"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
         upperBound="-1" eType="#//Entity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" unique="false"
-        upperBound="-1" eType="#//ParameterGroup"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="globalparameters" unique="false"
-        upperBound="-1" eType="#//Parameter"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
-        eType="#//Parameter" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tablecolumns" unique="false"
         upperBound="-1" eType="#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filters" unique="false"
@@ -129,31 +127,21 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
         eType="#//Link" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
-        upperBound="-1" eType="#//Entity"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="editfields" upperBound="-1"
         eType="#//DetailPageField" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" unique="false"
-        upperBound="-1" eType="#//ParameterGroup"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="globalparameters" unique="false"
-        upperBound="-1" eType="#//Parameter"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
-        eType="#//Parameter" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tablecolumns" unique="false"
-        upperBound="-1" eType="#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="filters" unique="false"
-        upperBound="-1" eType="#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
-        eType="#//Link" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DetailPageField">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="htmltype" eType="#//HTMLTypes"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CustomPage" eSuperTypes="#//DynamicPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CustomPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageType" eType="#//PageKinds"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
+        upperBound="-1" eType="#//Entity"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="HTMLTypes"/>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleHTMLTypes" eSuperTypes="#//HTMLTypes">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="htmltype" eType="#//SimpleHTMLTypeKinds"/>
@@ -165,6 +153,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Link">
     <eStructuralFeatures xsi:type="ecore:EReference" name="linkedAttribute" eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="linkedAction" eType="#//PageAction"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExternalLink" eSuperTypes="#//Link">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -181,6 +170,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="LinkParameter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attvalue" eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Extension">
@@ -320,6 +310,15 @@
     <eLiterals name="system" value="9" literal="system"/>
     <eLiterals name="user" value="10" literal="user"/>
     <eLiterals name="xml_rpc" value="11" literal="xml_rpc"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PageActionKind">
+    <eLiterals name="Text" literal="Text"/>
+    <eLiterals name="Button" value="1" literal="Button"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PageActionPositionKind">
+    <eLiterals name="top" literal="top"/>
+    <eLiterals name="center" value="1" literal="center"/>
+    <eLiterals name="bottom" value="2" literal="bottom"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="StandardTypeKinds">
     <eLiterals name="Integer" literal="Integer"/>
