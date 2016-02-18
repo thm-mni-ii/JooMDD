@@ -639,84 +639,57 @@ function setDocumentScrollTop(ypos)
 
 </head>
 <body class="markdown-body">
-<h1> <a id="user-content-joomdd-" class="anchor" href="#joomdd-" aria-hidden="true"><span class="octicon octicon-link"></span></a>JooMDD <a href="https://camo.githubusercontent.com/5f02bf838a58f5e69bc4d88d774bf86e86b4d1c3/687474703a2f2f6963616d7075732e74686d2e64652f696d616765732f4a6f6f4d44445f4c6f676f5f7472616e73702e706e67" target="_blank"><img src="https://camo.githubusercontent.com/5f02bf838a58f5e69bc4d88d774bf86e86b4d1c3/687474703a2f2f6963616d7075732e74686d2e64652f696d616765732f4a6f6f4d44445f4c6f676f5f7472616e73702e706e67" alt="JooMDDLogo" height="100" data-canonical-src="http://icampus.thm.de/images/JooMDD_Logo_transp.png" style="max-width:100%;" /></a> </h1> 
-<p><strong>JooMDD</strong> provides an MDD infrastructure for the model-driven development of Joomla extension packages and Joomla application packages with concrete data. The current version of the infrastructure can be used as plugins within the <strong><em>Eclipse IDE</em></strong>, <strong><em>IntelliJ IDEA</em></strong>, and <strong><em>PHPStorm</em></strong>.</p> 
+<p><a href="img/Logo_b.png" target="_blank"><img src="img/Logo_b.png" alt="JooMDDLogo" height="300" style="max-width:100%;" /></a></p> 
+<p><strong>JooMDD</strong> provides a set of plugins for a model-driven development of Joomla! extension packages. The current version of JooMDD can be used within <strong><em>Eclipse</em></strong>, <strong><em>IntelliJ IDEA</em></strong>, <strong><em>PHPStorm</em></strong>, and <strong><em>Orion</em></strong>.</p> 
 <hr /> 
-<h2> <a id="user-content-installation-of-joomdd" class="anchor" href="#installation-of-joomdd" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation of JooMDD</h2> 
-<p>Please follow this installation guide to use JooMDD within Eclipse, IntelliJ, and PHPStorm. </p> 
+<h2> <a id="user-content-installation-of-joomdd" class="anchor" href="#installation-of-joomdd" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation of JooMDD</h2> 
+<p>Please follow this installation guide to use JooMDD within Eclipse, IntelliJ, PHPStorm, and Orion. </p> 
 <p><strong>Attention:</strong> The support of PHPStorm is currently experimental. Therefore some effort is needed during the installation</p> 
-<h3> <a id="user-content-installation-in-eclipse" class="anchor" href="#installation-in-eclipse" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation in Eclipse</h3> 
+<h3> <a id="user-content-eclipse" class="anchor" href="#eclipse" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Eclipse</h3> 
 <p>Install the JooMDD tools through the use of the following update site within the Eclipse update manager. Supported versions are: <em>Kepler</em>, <em>Luna</em>, and <em>Mars</em>.</p> 
-<h4> <a id="user-content-joomdd-update-site-eclipse-httpicampusthmdejoomddupdatesite_eclipse" class="anchor" href="#joomdd-update-site-eclipse-httpicampusthmdejoomddupdatesite_eclipse" aria-hidden="true"><span class="octicon octicon-link"></span></a>JooMDD update site (Eclipse): <a href="http://icampus.thm.de/JooMDDUpdateSite_Eclipse">http://icampus.thm.de/JooMDDUpdateSite_Eclipse</a> </h4> 
-<h3> <a id="user-content-installation-in-intellij-idea" class="anchor" href="#installation-in-intellij-idea" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation in IntelliJ IDEA</h3> 
-<ol> 
- <li>Please make sure that you have installed the <strong>Xtext IDEA Core plugin</strong> via the plugin repository. Alternatively you can download the plugin <a href="http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.1/org.eclipse.xtext.idea-2.9.1.zip">here</a> and install it manually.</li> 
- <li>Install the JooMDD tools through the use of the following update site within IntelliJ's plugin manager. The currently supported (tested)version is IntelliJ IDEA 15. Please feel free to try JooMDD within other IntelliJ versions.</li> 
-</ol> 
-<h4> <a id="user-content-joomdd-update-site-intellij-idea-httpicampusthmdejoomddupdatesite_intellij" class="anchor" href="#joomdd-update-site-intellij-idea-httpicampusthmdejoomddupdatesite_intellij" aria-hidden="true"><span class="octicon octicon-link"></span></a>JooMDD update site (IntelliJ IDEA): <a href="http://icampus.thm.de/JooMDDUpdateSite_IntelliJ">http://icampus.thm.de/JooMDDUpdateSite_IntelliJ</a> </h4> 
-<h3> <a id="user-content-installation-in-phpstorm" class="anchor" href="#installation-in-phpstorm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation in PHPStorm</h3> 
-<p>Due to the fact, that the PHPStorm support is in a kind of beta state, you need some more effort for the installation. But don't be scared, it's just copy&amp;paste of some files ;-). Please ensure, that you have the latest version of PHPStorm installed. We tested the following instructions with version 10.0.2.</p> 
-<h4> <a id="user-content-precondition" class="anchor" href="#precondition" aria-hidden="true"><span class="octicon octicon-link"></span></a>Precondition:</h4> 
-<p>IntelliJ IDEA 15, PHPStorm 10, Xtext IDEA Core 2.9 (available here: <a href="http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip">http://download.eclipse.org/modeling/tmf/xtext/idea/2.9.0/org.eclipse.xtext.idea-2.9.0.zip</a>)</p> 
-<h4> <a id="user-content-prepare-phpstorm-only-first-time" class="anchor" href="#prepare-phpstorm-only-first-time" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prepare PHPStorm (only first time):</h4> 
+<h4> <a id="user-content-joomdd-update-site-eclipse-httpicampusthmdejoomddupdatesite_eclipse" class="anchor" href="#joomdd-update-site-eclipse-httpicampusthmdejoomddupdatesite_eclipse" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JooMDD update site (Eclipse): <a href="http://icampus.thm.de/JooMDDUpdateSite_Eclipse">http://icampus.thm.de/JooMDDUpdateSite_Eclipse</a> </h4> 
+<h3> <a id="user-content-intellij-idea" class="anchor" href="#intellij-idea" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>IntelliJ IDEA</h3> 
+<p>Install the JooMDD tools through the use of the following update site within IntelliJ's plugin manager. The currently supported (tested)version is IntelliJ IDEA 15. Please feel free to try JooMDD within other IntelliJ versions.</p> 
+<h4> <a id="user-content-precondition" class="anchor" href="#precondition" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Precondition:</h4> 
+<p>Install Xtext IDEA Core from the repositories of IntelliJ. (In IntelliJ go to: File/Settings/Plugins/Browse Repositories search: &quot;Xtext Idea Core&quot; and install the plugin)</p> 
+<h4> <a id="user-content-joomdd-update-site-intellij-idea-httpicampusthmdejoomddupdatesite_intellij" class="anchor" href="#joomdd-update-site-intellij-idea-httpicampusthmdejoomddupdatesite_intellij" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>JooMDD update site (IntelliJ IDEA): <a href="http://icampus.thm.de/JooMDDUpdateSite_IntelliJ">http://icampus.thm.de/JooMDDUpdateSite_IntelliJ</a> </h4> 
+<h3> <a id="user-content-phpstorm" class="anchor" href="#phpstorm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PHPStorm</h3> 
+<p>Due to the fact, that the PHPStorm support is in a kind of beta state, you need some more effort for the installation. But don't be scared, it's just copy&amp;paste of some files ;-). Please ensure, that you have the latest version of PHPStorm installed. We tested the following instructions with version 10.0.3.</p> 
+<h4> <a id="user-content-precondition-1" class="anchor" href="#precondition-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Precondition:</h4> 
+<p>PHPStorm 10.0.3, Download of some files (includes configurated Xtext and the EJSL language) here: ...</p> 
+<h4> <a id="user-content-prepare-phpstorm-only-first-time" class="anchor" href="#prepare-phpstorm-only-first-time" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prepare PHPStorm (only first time):</h4> 
 <ul> 
- <li> Merge the IntellijIDEA\lib\openpi.jar into the PHPStorm\lib\openapi.jar (copy all missing content to PHPStorm)</li> 
- <li> Copy the IntellijIDEA\lib\idea.jar to PHPStorm\lib.</li> 
- <li> Edit the downloaded Plugin org.eclipse.xtext.idea\META-INF\plugin.xml. 
-  <ul> 
-   <li>Change the &quot;JUnit&quot; dependency to &quot;com.intellij.modules.lang&quot; (Line 9)</li> 
-   <li>Now you add the Plugin in PHPStorm via the Plugin manager (Install plugin from disk…)</li> 
-  </ul> </li> 
+ <li> Copy IntelliJdepencies.jar into path: PHPStorm installation\lib\ .</li> 
+ <li> Now install the two downloaded plugins (Xtext and EJSL) via &quot;Install plugin from disk ...&quot; (Menu: File/Settings/Plugins/).</li> 
 </ul> 
-<h4> <a id="user-content-add-the-language-to-phpstorm" class="anchor" href="#add-the-language-to-phpstorm" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add the language to PHPStorm:</h4> 
-<ul> 
- <li> Add the update site in the Plugin Manager and install the Plugin. 
-  <ul> 
-   <li> Update Site: ...</li> 
-  </ul> </li> 
- <li> Now you must configure the Plugin via the Project file (the Project file is in the work directory of the Project in the folder .idea....iml</li> 
-</ul> 
-<p>Example for adding the configuration in the project file:</p> 
-<pre><code>&lt;component name=&quot;FacetManager&quot;&gt;
-  &lt;facet type=&quot;de.thm.icampus.ejsl.EJSL&quot; name=&quot;EJSL&quot;&gt;
-    &lt;configuration&gt;
-      &lt;option name=&quot;activated&quot; value=&quot;true&quot; /&gt;
-      &lt;option name=&quot;createDirectory&quot; value=&quot;true&quot; /&gt;
-      &lt;option name=&quot;outputDirectory&quot; value=&quot;src-gen&quot; /&gt;
-      &lt;option name=&quot;overwriteExisting&quot; value=&quot;true&quot; /&gt;
-      &lt;option name=&quot;testOutputDirectory&quot; value=&quot;src-gen&quot; /&gt;
-    &lt;/configuration&gt;
-  &lt;/facet&gt;
-&lt;/component&gt;
-</code></pre> 
+<h4> <a id="user-content-add-the-language-to-your-project" class="anchor" href="#add-the-language-to-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Add the language to your Project:</h4> 
+<h3> <a id="user-content-orion" class="anchor" href="#orion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Orion</h3> 
 <hr /> 
-<h2> <a id="user-content-getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started</h2> 
-<h3> <a id="user-content-ejsl-" class="anchor" href="#ejsl-" aria-hidden="true"><span class="octicon octicon-link"></span></a>eJSL <a href="https://camo.githubusercontent.com/89d54feb2a4a5e4a93e26bcd269422ba2175cc5d/687474703a2f2f6963616d7075732e74686d2e64652f696d616765732f654a534c5f4c6f676f5f7472616e732e706e67" target="_blank"><img src="https://camo.githubusercontent.com/89d54feb2a4a5e4a93e26bcd269422ba2175cc5d/687474703a2f2f6963616d7075732e74686d2e64652f696d616765732f654a534c5f4c6f676f5f7472616e732e706e67" alt="eJSLLogo" height="50" data-canonical-src="http://icampus.thm.de/images/eJSL_Logo_trans.png" style="max-width:100%;" /></a> </h3> 
+<h2> <a id="user-content-getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2> 
+<h3> <a id="user-content-the-ejsl-language" class="anchor" href="#the-ejsl-language" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The eJSL language</h3> 
+<p><a href="img/eJSL_Logo_trans.png" target="_blank"><img src="img/eJSL_Logo_trans.png" alt="eJSLLogo" height="200" style="max-width:100%;" /></a></p> 
 <p>The <strong>eJSL</strong> plugin can be used to create extensions for the Joomla CMS in a model-driven way. Through the creation of eJSL-specific models a tremendous amount of code becomes generated automatically. eJSL supports the definition of several Joomla extension types like components, modules, plugins, and libraries. The generated code can be used within web pages, running on <a href="https://www.joomla.org/3">Joomla 3.x</a>. </p> 
 <p>Please make sure, that you've installed the eJSL part of JooMDD to follow the next steps.</p> 
-<h4> <a id="user-content-1-create-a-new-ejsl-project" class="anchor" href="#1-create-a-new-ejsl-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Create a new eJSL project</h4> 
+<h3> <a id="user-content-1-create-a-new-ejsl-project" class="anchor" href="#1-create-a-new-ejsl-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. Create a new eJSL project</h3> 
 <p>There are two ways to create an eJSL project:</p> 
-<h5> <a id="user-content-manual-project-creation" class="anchor" href="#manual-project-creation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Manual project creation:</h5> 
+<h4> <a id="user-content-manual-project-creation" class="anchor" href="#manual-project-creation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Manual project creation:</h4> 
 <ol> 
  <li>Create a new project of any type (e.g. a general, Java, or PHP project)</li> 
  <li>Create a new file of any name with the ending .eJSL (e.g. <em>model.eJSL</em>)</li> 
  <li>Start creating your model containing entities, pages, and extensions</li> 
 </ol> 
-<h5> <a id="user-content-using-the-ejsl-project-wizard-only-for-eclipse" class="anchor" href="#using-the-ejsl-project-wizard-only-for-eclipse" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using the eJSL Project Wizard (only for Eclipse):</h5> 
+<h4> <a id="user-content-using-the-ejsl-project-wizard" class="anchor" href="#using-the-ejsl-project-wizard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using the eJSL Project Wizard:</h4> 
+<h5> <a id="user-content-eclipse-1" class="anchor" href="#eclipse-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Eclipse</h5> 
 <p>Instead of creating an eJSL project manually, you can get started easier, using the eJSL project wizard. For this, create a new project and within the &quot;new Project&quot; dialogue open the folder Xtext. Within this folder you should see <em>&quot;EJSL Project&quot;</em>. Through a double-click on this project type, the required project structure becomes generated containing source folders for your models (<em>src</em>) and for the code generated based on your models (<em>src-gen</em>). In addition, an example model is created within the src folder which can be used for a straightforward introduction.</p> 
-<h4> <a id="user-content-2-create-a-model" class="anchor" href="#2-create-a-model" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Create a model</h4> 
+<h5> <a id="user-content-intellij-and-phpstorm" class="anchor" href="#intellij-and-phpstorm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>IntelliJ and PHPStorm</h5> 
+<h5> <a id="user-content-orion-1" class="anchor" href="#orion-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Orion</h5> 
+<h3> <a id="user-content-2-create-a-model" class="anchor" href="#2-create-a-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. Create a model</h3> 
 <p>eJSL allows you the definition of different parts of a Joomla extension. Starting with the definition of a data structure (<strong><em>entities</em></strong>) on to its presentation (<strong><em>pages</em></strong>) up to the specification of Joomla-specific <strong><em>extensions</em></strong>.</p> 
-<h4> <a id="user-content-3-code-generation" class="anchor" href="#3-code-generation" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Code generation</h4> 
+<h3> <a id="user-content-3-code-generation" class="anchor" href="#3-code-generation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. Code generation</h3> 
 <p>When you save your model, the code generator creates your modelled Joomla extensions within the project's src-gen folder. The extensions are installable within Joomla 3 web sites and don't need any additional line of code. However, if you knwo what you do, you can extend the generated code through individual features. But beware: All the code within the src-gen folder becomes COMPLETELY overwritten, when you change your model and save it. Therefore we recommend to copy generated extensions to another folder within your project, where you can extend them without loosing them after a new code generation. Another and cleaner option is using a versioning tool like git to store your individual added code.</p> 
-<h3> <a id="user-content-cjsl-" class="anchor" href="#cjsl-" aria-hidden="true"><span class="octicon octicon-link"></span></a>cJSL <a href="https://camo.githubusercontent.com/6da70cd6bb4fdb36aaba33d4181ce10723f84831/687474703a2f2f6963616d7075732e74686d2e64652f696d616765732f634a534c5f4c6f676f5f7472616e732e706e67" target="_blank"><img src="https://camo.githubusercontent.com/6da70cd6bb4fdb36aaba33d4181ce10723f84831/687474703a2f2f6963616d7075732e74686d2e64652f696d616765732f634a534c5f4c6f676f5f7472616e732e706e67" alt="cJSLLogo" height="50" data-canonical-src="http://icampus.thm.de/images/cJSL_Logo_trans.png" style="max-width:100%;" /></a> </h3> 
-<p>With cJSL you have the possibility to create Joomla-based websites through the definition of so called cJSL files.</p> 
 <hr /> 
-<h2> <a id="user-content-sources-of-joomdd" class="anchor" href="#sources-of-joomdd" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sources of JooMDD</h2> 
-<p>Get the latest version of the eJSL and cJSL source code directly from our Git repository at the SCM at the THM (Technische Hochschule Mittelhessen). But be prepared, the repository will move to GitHub within the next weeks.</p> 
-<h3> <a id="user-content-url-to-git-repository-httpsgitthmdejoomddjoomdd_repo" class="anchor" href="#url-to-git-repository-httpsgitthmdejoomddjoomdd_repo" aria-hidden="true"><span class="octicon octicon-link"></span></a>URL to git repository: <a href="https://git.thm.de/JooMDD/joomdd_repo">https://git.thm.de/JooMDD/joomdd_repo</a> </h3> 
-<hr /> 
-<h2> <a id="user-content-copyright" class="anchor" href="#copyright" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright</h2> 
-<p>Copyright (C) 2013 - 2015, <a href="http://icampus.thm.de">iCampus</a> - <a href="http://www.thm.de">Technische Hochschule Mittelhessen</a>. All rights reserved. This project is distributed under the GPL (GNU General Public License) version 2. For further information see the <a href="https://git.thm.de/JooMDD/joomdd_repo/blob/master/LICENSE">License details</a>.</p> 
+<h2> <a id="user-content-copyright" class="anchor" href="#copyright" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Copyright</h2> 
+<p>Copyright (C) 2013 - 2016, <a href="http://icampus.thm.de">iCampus</a> - <a href="http://www.thm.de">Technische Hochschule Mittelhessen</a>. All rights reserved. This project is distributed under the GPL (GNU General Public License) version 2. For further information see the <a href="https://git.thm.de/JooMDD/joomdd_repo/blob/master/LICENSE">License details</a>.</p> 
 <hr /> 
 <p>Please feel free to <a href="icampu@lists.thm.de">contact</a> us, if you find some bugs or if you like to contribute to the project.</p>
 </body>

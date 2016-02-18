@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>C:\Users\denni_000\git\joomdd_repo\new structure\development\.README.md.html</title>
+<title>C:\Users\Dennis\git\joomdd_repo\new structure\development\.README.md.html</title>
 
 
 <style type="text/css">
@@ -645,17 +645,46 @@ function setDocumentScrollTop(ypos)
 <p>The eJSL Language can be used to implement both a CMS <strong><em>core</em></strong> and CMS <strong><em>extensions</em></strong>. Both consist of two main parts (features): <strong><em>entities</em></strong> and <strong><em>pages</em></strong>. The core part should also consist of the feature section. Which should be used to model the backend and the frontend of a CMS. Extensions, which can be modelled are currently specific for Joomla (Component, Module, Plugin, Template, Library). In further versions Component, Module and Plugin will be abstracted and clustered to Plugin.</p> 
 <p><a href="documentation/images/ejsl_model.jpg" target="_blank"><img src="documentation/images/ejsl_model.jpg" alt="ejsl model with containments" title="eJSL Model with Containments" style="max-width:100%;" /></a></p> 
 <pre><code>EJSLModel returns EJSLModel:
-{EJSLModel}
-'eJSLModel' name=STRING
-'{'
-    ('datatypes' '{' datatypes+=Datatype ( &quot;,&quot; datatypes+=Datatype)* '}')?
-    ('globalparameters' '{' (globalparameters+=Parameter)* '}')?
-    ('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+    {EJSLModel}
+    'eJSLModel' name=STRING
+    '{'
+        ('eJSL part:' ejslPart=EJSLPart)
+    '}';
+
+CMSCore:
+    {CMSCore}
+    'CMS Core' '{'
+        ('datatypes' '{' datatypes+=Datatype ( &quot;,&quot; datatypes+=Datatype)* '}')?
+        ('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+        ('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+        feature = Feature
+    //  (coreFeature += coreFeature*) // for further implementation of core features
+    '}'
+;
+
+coreFeature:
+    {coreFeature}
+    'coreFeature'
+;
+
+CMSExtension:
+    {CMSExtension}
+        'CMS Extension' '{'
+            ('datatypes' '{' datatypes+=Datatype ( &quot;,&quot; datatypes+=Datatype)* '}')?
+            ('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+            ('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+            features = Feature
+            ('extensions' '{' (extensions+=Extension)* '}')?
+    '}'
+;
+
+Feature:
+    {Feature}
+    ('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
     ('entities' '{' (entities+=Entity)* '}')?
-    ('datapackages' '{' (datapackages+=Datapackage)* '}')?
     ('pages' '{' (pages+=Page)* '}')?
-    ('extensions' '{' (extensions+=Extension)* '}')?
-'}';
+    ('sections' '{' (sections+=Section)+ '}')?
+;
 </code></pre> 
 <h3> <a id="user-content-generator-development" class="anchor" href="#generator-development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generator Development</h3> 
 <h4> <a id="user-content-monolithic-vs-dynamic-generator-structure" class="anchor" href="#monolithic-vs-dynamic-generator-structure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Monolithic vs dynamic generator structure</h4> 
@@ -673,124 +702,63 @@ function setDocumentScrollTop(ypos)
 <h6> <a id="user-content-validator" class="anchor" href="#validator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Validator</h6> 
 <h6> <a id="user-content-project-wizard" class="anchor" href="#project-wizard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard</h6> 
 <h5> <a id="user-content-de-serializer-handlers" class="anchor" href="#de-serializer-handlers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>(De-)Serializer Handlers</h5> 
-<p>The Eclipse editor provides an extension to (de-)serialize <em>eJSL-instances</em> to/from <em>xmi-files</em>. This is done by two handler classes (<em>DeserializationHandler.java</em> and <em>SerializationHandler.java</em>) and the following extension point in the <em>plugin.xml</em> of the <em>de.thm.icampus.joomdd.ejsl.ui plugin</em>:</p> 
+<p>The Eclipse editor provides an extension to (de-)serialize <em>eJSL-instances</em> to/from <em>xmi-files</em>. This is done by two handler classes (<em>DeserializationHandler.java</em> and <em>SerializationHandler.java</em>) and the following extension point (under the respective comments) in the <em>plugin.xml</em> of the <em>de.thm.icampus.joomdd.ejsl.ui plugin</em>:</p> 
 <pre><code>  &lt;!-- XMI Serialization --&gt;  
-  &lt;extension
-        point=&quot;org.eclipse.ui.handlers&quot;&gt;
-     &lt;handler
-           class=&quot;de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.handler.SerializationHandler&quot;
-           commandId=&quot;de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand&quot;&gt;
-     &lt;/handler&gt;
-  &lt;/extension&gt;
-
-  &lt;extension
-        point=&quot;org.eclipse.ui.commands&quot;&gt;
-     &lt;command
-           id=&quot;de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand&quot;
-           name=&quot;eJSL --&amp;gt; XMI&quot;&gt;
-     &lt;/command&gt;
-  &lt;/extension&gt;
-
-   &lt;!-- XMI Deserialization --&gt;
-  &lt;extension
-        point=&quot;org.eclipse.ui.handlers&quot;&gt;
-     &lt;handler
-           class=&quot;de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationHandler&quot;
-           commandId=&quot;de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand&quot;&gt;
-     &lt;/handler&gt;
-  &lt;/extension&gt;
-
-  &lt;extension
-        point=&quot;org.eclipse.ui.commands&quot;&gt;
-     &lt;command
-           id=&quot;de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand&quot;
-           name=&quot;eJSL &amp;lt;-- XMI&quot;&gt;
-     &lt;/command&gt;
-  &lt;/extension&gt;   
-
-&lt;!-- (De-)Serialization Context Menu --&gt;
-  &lt;extension
-        point=&quot;org.eclipse.ui.menus&quot;&gt;
-     &lt;menuContribution
-           locationURI=&quot;popup:org.eclipse.jdt.ui.PackageExplorer&quot;&gt;
-        &lt;menu
-              label=&quot;eJSL Serialization&quot;&gt;
-           &lt;command
-                 commandId=&quot;de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand&quot;
-                 style=&quot;push&quot;&gt;
-              &lt;visibleWhen
-                    checkEnabled=&quot;false&quot;&gt;
-                 &lt;iterate&gt;
-                    &lt;adapt
-                          type=&quot;org.eclipse.core.resources.IResource&quot;&gt;
-                       &lt;test
-                             property=&quot;org.eclipse.core.resources.name&quot;
-                             value=&quot;*.xmi&quot;&gt;
-                       &lt;/test&gt;
-                    &lt;/adapt&gt;
-                 &lt;/iterate&gt;
-              &lt;/visibleWhen&gt;
-           &lt;/command&gt;
-           &lt;command
-                 commandId=&quot;de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand&quot;
-                 style=&quot;push&quot;&gt;
-              &lt;visibleWhen
-                    checkEnabled=&quot;false&quot;&gt;
-                 &lt;iterate&gt;
-                    &lt;adapt
-                          type=&quot;org.eclipse.core.resources.IResource&quot;&gt;
-                       &lt;test
-                             property=&quot;org.eclipse.core.resources.name&quot;
-                             value=&quot;*.xmi&quot;&gt;
-                       &lt;/test&gt;
-                    &lt;/adapt&gt;
-                 &lt;/iterate&gt;
-              &lt;/visibleWhen&gt;
-           &lt;/command&gt;
-           &lt;command
-                 commandId=&quot;de.thm.icampus.joomdd.ejsl.ui.handler.SerializationCommand&quot;
-                 style=&quot;push&quot;&gt;
-              &lt;visibleWhen
-                    checkEnabled=&quot;false&quot;&gt;
-                 &lt;iterate&gt;
-                    &lt;adapt
-                          type=&quot;org.eclipse.core.resources.IResource&quot;&gt;
-                       &lt;test
-                             property=&quot;org.eclipse.core.resources.name&quot;
-                             value=&quot;*.eJSL&quot;&gt;
-                       &lt;/test&gt;
-                    &lt;/adapt&gt;
-                 &lt;/iterate&gt;
-              &lt;/visibleWhen&gt;
-           &lt;/command&gt;
-           &lt;command
-                 commandId=&quot;de.thm.icampus.joomdd.ejsl.ui.handler.DeserializationCommand&quot;
-                 style=&quot;push&quot;&gt;
-              &lt;visibleWhen
-                    checkEnabled=&quot;false&quot;&gt;
-                 &lt;iterate&gt;
-                    &lt;adapt
-                          type=&quot;org.eclipse.core.resources.IResource&quot;&gt;
-                       &lt;test
-                             property=&quot;org.eclipse.core.resources.name&quot;
-                             value=&quot;*.eJSL&quot;&gt;
-                       &lt;/test&gt;
-                    &lt;/adapt&gt;
-                 &lt;/iterate&gt;
-              &lt;/visibleWhen&gt;
-           &lt;/command&gt;
-        &lt;/menu&gt;
-     &lt;/menuContribution&gt;
-  &lt;/extension&gt;
+  ... all the serialization code
+  &lt;!-- XMI Deserialization --&gt;
+  ... all the deserialization code
+  &lt;!-- (De-)Serialization Context Menu --&gt;
+  ... code for the context menu
 </code></pre> 
 <p><em>Attention:</em> The context menu is only available within the <strong><em>Java perspective</em></strong>.</p> 
-<h4> <a id="user-content-intellij" class="anchor" href="#intellij" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>IntelliJ</h4> 
+<h4> <a id="user-content-intellij-and-phpstorm" class="anchor" href="#intellij-and-phpstorm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>IntelliJ and PHPStorm</h4> 
 <h5> <a id="user-content-textual-editor-1" class="anchor" href="#textual-editor-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Textual Editor</h5> 
-<h5> <a id="user-content-project-wizard-1" class="anchor" href="#project-wizard-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard</h5> 
-<h4> <a id="user-content-phpstorm" class="anchor" href="#phpstorm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PHPStorm</h4> 
-<h5> <a id="user-content-textual-editor-2" class="anchor" href="#textual-editor-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Textual Editor</h5> 
-<h5> <a id="user-content-project-wizard-2" class="anchor" href="#project-wizard-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard</h5> 
+<h5> <a id="user-content-plugin-build" class="anchor" href="#plugin-build" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Plugin-Build</h5> 
+<ul> 
+ <li><p>To create an Xtext Project you need the 3 Plugins (Xtend Support, Xtext and Xtext IDEA Core).</p></li> 
+ <li><p>You can create eJSL plugins for IntelliJ (Gradle: Path= <em>.parent/</em>.idea/Task/build/ideaZip) The created *.zip is in *.idea/build/distributions/</p></li> 
+</ul> 
+<h6> <a id="user-content-phpstorm-only" class="anchor" href="#phpstorm-only" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>PHPStorm only</h6> 
+<ul> 
+ <li><p>for PhpStorm compatibility the &quot;projectfile&quot;.iml is in the folder .idea and not visible in the ide.</p></li> 
+ <li><p>The Xtext plugin (Version 2.9.1) has a changed plugin.xml the dependency &quot;JUnit&quot; is changed to &quot;com.intellij.modules.lang&quot; Installation (user): you need to install Xtext IDEA Core Plugin via Plugin manager and the eJSL Plugin from ...</p></li> 
+ <li><p>For PhpStorm you must change the plugin.xml (Add com.intellij.modules.lang) Infomation: in the plugin.xml you can change all Meta-Inf like: description, Plugin version, Plugin name ...</p></li> 
+</ul> 
+<h6> <a id="user-content-project-wizard-1" class="anchor" href="#project-wizard-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard</h6> 
+<ul> 
+ <li> If you want to add an example just copy it into &quot;resources/eJSLexamples/&quot;. The Wizard shows all files in this folder.</li> 
+ <li><p>To add a preview just add it to &quot;resources/previews/ with the same name as the example.</p></li> 
+ <li><p>If you want to change the description, version ... go to the plugin.xml</p></li> 
+ <li><p>If you want to export the plugin go to Path: C:\Users\&quot;user&quot;\ .IdeaIC15\system\plugins-sandbox\plugins\ . Compress the ProjectWizard-folder into a zip file. Now you can install the .zip via install plugin from disk...</p></li> 
+ <li><p>Merge Plugin with eJSL: you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip). (&quot;EJSL2.9.1&quot; is just the project name) copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea copy the part () of the wizard plugin.xml file to the eJSL plugin.xml file. Past it between .../depends&gt; (here) &lt;xi:include...</p></li> 
+</ul> 
 <h5> <a id="user-content-generator-inclusion" class="anchor" href="#generator-inclusion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generator inclusion</h5> 
+<h6> <a id="user-content-prepare-phpstorm-only-first-time" class="anchor" href="#prepare-phpstorm-only-first-time" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prepare PHPStorm (only first time):</h6> 
+<ul> 
+ <li> Copy IntelliJdepencies.jar into path: PHPStorm installation\lib\ .</li> 
+ <li> IntelliJdepencies.jar contains idea.jar and some files from openapi.jar. (IntelliJ Version 15.0.2) Care that cou do not overwrite files that exists in the current openapi.jar. Doubled classes cause a startup error in PHPStorm It is possible that an update crash the Xtext plugins.</li> 
+ <li> Now install the two downloaded plugins (Xtext and EJSL) via &quot;Install plugin from disk ...&quot; (Menu: File/Settings/Plugins/).</li> 
+</ul> 
+<h6> <a id="user-content-add-the-language-and-the-generator-to-your-project" class="anchor" href="#add-the-language-and-the-generator-to-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Add the language and the generator to your Project:</h6> 
+<ul> 
+ <li> Now you must configure the plugin via the project file (the project file is in the work directory of the project in the folder .idea\&quot;ProjectName&quot;.iml). Note: This is automatically done through the Project wizard. If you don't use it, you have to do this by hand.</li> 
+</ul> 
+<p>Example for adding the configuration in the project file:</p> 
+<pre><code>&lt;component name=&quot;FacetManager&quot;&gt;
+  &lt;facet type=&quot;de.thm.icampus.ejsl.EJSL&quot; name=&quot;EJSL&quot;&gt;
+    &lt;configuration&gt;
+      &lt;option name=&quot;activated&quot; value=&quot;true&quot; /&gt;
+      &lt;option name=&quot;createDirectory&quot; value=&quot;true&quot; /&gt;
+      &lt;option name=&quot;outputDirectory&quot; value=&quot;src-gen&quot; /&gt;
+      &lt;option name=&quot;overwriteExisting&quot; value=&quot;true&quot; /&gt;
+      &lt;option name=&quot;testOutputDirectory&quot; value=&quot;src-gen&quot; /&gt;
+    &lt;/configuration&gt;
+  &lt;/facet&gt;
+&lt;/component&gt;
+</code></pre> 
+<ul> 
+ <li> To use the language you must create a folder in the project and mark it as &quot;Sources Root&quot;.</li> 
+</ul> 
 <h3> <a id="user-content-instances" class="anchor" href="#instances" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Instances</h3> 
 <p>To ensure a simple usage, we created some example instances, which can be used as templates for own eJSL instances.</p> 
 <h4> <a id="user-content-simple-default" class="anchor" href="#simple-default" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Simple Default</h4> 
