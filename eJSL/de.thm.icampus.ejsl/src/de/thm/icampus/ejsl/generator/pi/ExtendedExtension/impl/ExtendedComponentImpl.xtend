@@ -48,9 +48,10 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					for(ExtendedPageReference pf: backEndPagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
 						for(ExtendedEntity entBackend: extp.extendedEntityList){
-							if(!allextendedEntity.contains(entBackend))
-							allextendedEntity.add(entBackend)
-							
+							if(allextendedEntity.map[t| t.name == entBackend.name].size ==0){
+								allextendedEntity.add(entBackend)
+								System.out.println("Ich bin im Backend: " + entBackend.name)
+							}
 						}
 					}
 				}
@@ -59,9 +60,10 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					for(ExtendedPageReference pf: fronEndpagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
 						for(ExtendedEntity entFrontend: extp.extendedEntityList){
-							if(!allextendedEntity.contains(entFrontend))
+							if(allextendedEntity.map[t| t.name == entFrontend.name].size ==0 ){
 							allextendedEntity.add(entFrontend)
-							
+							System.out.println("Ich bin im Frontend: " + entFrontend.name)
+							}
 						}
 					}	
 					}
@@ -70,7 +72,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 		 extendedParamaterGroups = new BasicEList<ExtendedParameterGroup>
 		 extendedParamaterGroups.addAll(this.globalParamter.map[t| new ExtendedParameterGroupImpl(t)])
 		 
-		 allExtendedPage.addAll(backEndPagesReference.map[t| t.extendedPage])
+		 allExtendedPage.addAll(backEndPagesReference.map[t| t.extendedPage  ])
 		 allExtendedPage.addAll(fronEndpagesReference.map[t | if(!allExtendedPage.contains(t)) t.extendedPage])
        	
 	}

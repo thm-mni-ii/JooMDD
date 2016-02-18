@@ -24,8 +24,13 @@ public class TemplateList {
 		return list.size();
 	}
 	
-	public Object[] getTemplates(){
-		return list.toArray();
+	public Template[] getTemplates(){
+		Object[] tempArray = list.toArray();
+		Template[] returnArray = new Template[tempArray.length];
+		for (int i = 0; i < returnArray.length; i++) {
+			returnArray[i] = (Template)tempArray[i];
+		}
+		return returnArray;
 	}
 	
 	@Override

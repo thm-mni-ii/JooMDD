@@ -32,27 +32,32 @@ class JoomlaEntityGenerator {
 		this.update = updateScript
 	}
 	
-//	def dogenerate(String path, IFileSystemAccess fileGen) {
-//		fileGen.generateFile(path + "/install.sql",sqlAdminSqlInstallContent(extendsionN,update))
-//		fileGen.generateFile(path+ "/uninstal.sql",sqlAdminSqlUninstallContent(extendsionN))
-//	}
+	def dogenerate(String path, IFileSystemAccess fileGen) {
+		fileGen.generateFile(path + "/install.sql",sqlAdminSqlInstallContent(extendsionN,update))
+		fileGen.generateFile(path+ "/uninstal.sql",sqlAdminSqlUninstallContent(extendsionN))
+	}
 	
 	 public def CharSequence sqlAdminSqlInstallContent(String extensionName, boolean isupdate) {
         
         var HashSet<ExtendedEntity> visited = new HashSet<ExtendedEntity>();
         var StringBuffer result = new StringBuffer;
-        while(visited.size != entities.size){
+        var int count = 0
+        while(visited.size <= entities.size || count < 100){
 	        for (ExtendedEntity e:entities){
 	        	if(e.references.empty && !visited.contains(e)){
 	        		result.append(generateSQLTable(e, isupdate, extensionName));
-	        		visited.addAll(e);
+	        		visited.add(e);
+	        		System.out.println("ich bin im erst " + e.name)
 	        	}
 	        	else if(!visited.contains(e) && !e.references.empty && isAllreferenVisited(e.references, visited) ){
 	        
 	        	   result.append(generateSQLTable(e, isupdate,extensionName))
-	        	   visited.addAll(e);
+	        	   visited.add(e);
+	        		System.out.println("ich bin im zweiten " + e.name)
+	        	   
 	        	}
 	        }
+	        count++
 	       }
          return result.toString
      
@@ -105,10 +110,10 @@ PRIMARY KEY (`id`)
     	for(ExtendedEntity ent: entities){
     		completeAttributeOfEntity(ent)
     	}
-    	for(ExtendedEntity ent: entities){
-    		completeReferenceOfEntity(ent)
-    	}
-    	
+//    	for(ExtendedEntity ent: entities){
+//    		completeReferenceOfEntity(ent)
+//    	}
+//    	
     }
 	
 	def completeAttributeOfEntity(ExtendedEntity ent) {

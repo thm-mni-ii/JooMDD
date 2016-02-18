@@ -46,7 +46,7 @@ public class MyWizard extends Wizard implements INewWizard {
 	
 	private IWorkbench _workbench;
 
-	private String wizardDirectory;
+	private String imgFolder;
 	
 	public MyWizard(){
 		super();
@@ -61,9 +61,9 @@ public class MyWizard extends Wizard implements INewWizard {
 		 _pageOne = new WizardNewProjectCreationPage(PAGE_NAME_1);
 		 _pageTwo = new TemplateSelectionPage(PAGE_NAME_2);
 		 
-		 wizardDirectory = "\\";
+		 imgFolder = "\\";
 		 try {//TODO find wizardDirectory when plug-in is installed
-			wizardDirectory = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("src\\de\\thm\\icampus\\joomdd\\ejsl\\ui\\wizard"), null)).getFile();
+			imgFolder = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("img"), null)).getFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,7 +72,7 @@ public class MyWizard extends Wizard implements INewWizard {
 			
 			@Override
 			public ImageData getImageData() {
-				ImageData id = new ImageData(wizardDirectory + "\\joomdd.PNG");
+				ImageData id = new ImageData(imgFolder + "\\joomdd.PNG");
 				return id.scaledTo(id.width/6, id.height/6);
 			}
 		});

@@ -447,7 +447,7 @@
       <wizard
             category="de.thm.icampus.joomdd.ejsl.ui.MyWizard"
             class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.wizard.MyWizard"
-            icon="src/de/thm/icampus/joomdd/ejsl/ui/wizard/eJSL.PNG"
+            icon="img/eJSL.PNG"
             id="de.thm.icampus.joomdd.ejsl.ui.wizard.EJSLNewProjectWizard"
             name="EJSL Project"
             project="true">

@@ -1,11 +1,26 @@
 package de.thm.icampus.ejsl.ressourceTransformator
 
 import de.thm.icampus.ejsl.eJSL.EJSLModel
+import de.thm.icampus.ejsl.eJSL.CMSExtension
+import de.thm.icampus.ejsl.eJSL.Feature
+import de.thm.icampus.ejsl.eJSL.DetailsPage
+import de.thm.icampus.ejsl.eJSL.DetailPageField
+import de.thm.icampus.ejsl.eJSL.SimpleHTMLTypes
+import de.thm.icampus.ejsl.eJSL.Attribute
+import de.thm.icampus.ejsl.eJSL.DatatypeReference
+import de.thm.icampus.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.ejsl.eJSL.SimpleHTMLTypeKinds
+import de.thm.icampus.ejsl.eJSL.StandardTypes
 
 class RessourceTransformer {
 	EJSLModel modelInstance
+	CMSExtension cmsextension
+	Feature featurs
 	new (EJSLModel model){
 		modelInstance = model
+		
+		cmsextension = model.ejslPart as CMSExtension
+		featurs = cmsextension.feature
 		
 	}
 	def dotransformation(){
@@ -14,7 +29,7 @@ class RessourceTransformer {
 	}
 	def transformEmptyHtmlAttribute(){
 		
-		for(DetailsPage dp: modelInstance.pages.filter(DetailsPage)){
+		for(DetailsPage dp: featurs.pages.filter(DetailsPage)){
 			for(DetailPageField field: dp.editfields){
 				if(field.htmltype == null){
 				   field.htmltype = parseAttributeType(field.attribute)

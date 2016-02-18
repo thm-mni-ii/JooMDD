@@ -37,10 +37,10 @@ class EJSLGenerator implements IGenerator {
 			 		trans.dotransformation
 					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions)
 					mainExtensionGen.dogenerate("Extensions", fsa)
-					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities)
-					mainEntitiesGen.dogenerate("Entities",fsa)
-					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages)
-					mainPageGen.dogenerate("Pages",fsa)
+//					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities)
+//					mainEntitiesGen.dogenerate("Entities",fsa)
+//					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages)
+//					mainPageGen.dogenerate("Pages",fsa)
 				}
 			}
 			
