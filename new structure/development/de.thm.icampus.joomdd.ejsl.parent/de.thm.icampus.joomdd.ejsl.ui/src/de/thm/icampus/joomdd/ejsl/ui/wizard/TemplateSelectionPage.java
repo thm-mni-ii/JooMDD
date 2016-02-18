@@ -51,11 +51,9 @@ public class TemplateSelectionPage extends WizardPage implements SelectionListen
 			
 			templateDirectory = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("templates"), null)).getFile();
 			TemplateList list = TemplateXMLLoader.loadTemplates(templateDirectory+"\\TemplateList.xml", templateDirectory+"\\TemplateList.xsd");
-			Object[] temp_templates = list.getTemplates();
-			templates = new Template[temp_templates.length];
-			buttons = new Button[temp_templates.length];
+			templates = list.getTemplates();
+			buttons = new Button[templates.length];
 			for (int i = 0; i < buttons.length; i++) {
-				templates[i] = ((Template)temp_templates[i]);
 				buttons[i] = new Button(g1, SWT.RADIO);
 				buttons[i].setText(templates[i].getName());
 				buttons[i].addSelectionListener(this);
