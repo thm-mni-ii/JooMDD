@@ -5,8 +5,11 @@ package de.thm.icampus.joomdd.ejsl.ui.wizard;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
@@ -31,6 +34,7 @@ import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 
 import com.google.common.io.Files;
+import com.google.common.io.InputSupplier;
 
 public class MyWizard extends Wizard implements INewWizard {
 
@@ -46,7 +50,7 @@ public class MyWizard extends Wizard implements INewWizard {
 	
 	private IWorkbench _workbench;
 
-	private String imgFolder;
+	private URL imgFolder;
 	
 	public MyWizard(){
 		super();
@@ -61,9 +65,8 @@ public class MyWizard extends Wizard implements INewWizard {
 		 _pageOne = new WizardNewProjectCreationPage(PAGE_NAME_1);
 		 _pageTwo = new TemplateSelectionPage(PAGE_NAME_2);
 		 
-		 imgFolder = "\\";
-		 try {//TODO find wizardDirectory when plug-in is installed
-			imgFolder = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("img"), null)).getFile();
+		 try {
+			imgFolder = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("img"), null));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,8 +75,18 @@ public class MyWizard extends Wizard implements INewWizard {
 			
 			@Override
 			public ImageData getImageData() {
-				ImageData id = new ImageData(imgFolder + "\\joomdd.PNG");
-				return id.scaledTo(id.width/6, id.height/6);
+				try {
+					URL u = new URL(imgFolder, "joomdd.PNG");
+					ImageData id = new ImageData(u.openStream());
+					return id.scaledTo(id.width/6, id.height/6);
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
 			}
 		});
 	}
@@ -99,13 +112,19 @@ public class MyWizard extends Wizard implements INewWizard {
 		try {	
 			new File(project, "src").mkdir();
 			new File(project, "src-gen").mkdir();
-			File templateFile = _pageTwo.getSelectedTemplate();
-			Files.copy(templateFile, new File(project, "src/" + templateFile.getName()));		
 			FileWriter fw = new FileWriter(new File(project, ".classpath"));
 			fw.write(epi.classpathFile());
 			fw.close();
+			Files.copy(new InputSupplier<InputStream>() {
+				@Override
+				public InputStream getInput() throws IOException {
+					return _pageTwo.getSelectedTemplate();
+				}
+			}, new File(project, "src/Model.eJSL"));		
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (NullPointerException e){
+			//Handling empty file on Files.copy()
 		}
 		
 		if (newProject == null) {

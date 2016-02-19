@@ -3,8 +3,12 @@ package de.thm.icampus.joomdd.ejsl.ui.wizard;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.JarURLConnection;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -27,7 +31,7 @@ public class TemplateSelectionPage extends WizardPage implements SelectionListen
 	private Template[] templates;
 	private Label template_description;
 	private Label template_content;
-	private String templateDirectory;
+	private URL templateDirectory;
 	
 	protected TemplateSelectionPage(String pageName) {
 		super(pageName);
@@ -49,8 +53,8 @@ public class TemplateSelectionPage extends WizardPage implements SelectionListen
 		g2.setText("Selected");
 		try {
 			
-			templateDirectory = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("templates"), null)).getFile();
-			TemplateList list = TemplateXMLLoader.loadTemplates(templateDirectory+"\\TemplateList.xml", templateDirectory+"\\TemplateList.xsd");
+			templateDirectory = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("templates"), null));
+			TemplateList list = TemplateXMLLoader.loadTemplates(new URL(templateDirectory, "TemplateList.xml"), new URL(templateDirectory, "TemplateList.xsd"));
 			templates = list.getTemplates();
 			buttons = new Button[templates.length];
 			for (int i = 0; i < buttons.length; i++) {
@@ -69,18 +73,25 @@ public class TemplateSelectionPage extends WizardPage implements SelectionListen
 		}
 		setControl(container);
 		
-		if(buttons.length > 0){
-			buttons[0].setSelection(true);
-			template_description.setText(templates[0].getDescription());
-			setContentLabel(0);
-		}
+		if(buttons != null)
+			if (buttons.length > 0){
+				buttons[0].setSelection(true);
+				template_description.setText(templates[0].getDescription());
+				setContentLabel(0);
+			}
 		setPageComplete(true);
 	}
 
-	public File getSelectedTemplate(){
-		for (int i = 0; i < buttons.length; i++) {
-			if(buttons[i].getSelection()){
-				return new File(templateDirectory + "\\" + templates[i].getSrc().toString());
+	public InputStream getSelectedTemplate(){
+		if(buttons != null){
+			for (int i = 0; i < buttons.length; i++) {
+				if(buttons[i].getSelection()){
+					try {
+						return new URL(templateDirectory, templates[i].getSrc().toString()).openStream();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		return null;
@@ -90,11 +101,11 @@ public class TemplateSelectionPage extends WizardPage implements SelectionListen
 		try {
 			int c;
 			String s = "";
-			FileReader fr = new FileReader(new File(templateDirectory + "\\" + templates[index].getSrc()));
-			while((c=fr.read())!=-1){
+			InputStreamReader isr = new InputStreamReader(new URL(templateDirectory, templates[index].getSrc().getName()).openStream());
+			while((c=isr.read())!=-1){
 				s += (char)c;
 			}
-			fr.close();
+			isr.close();
 			template_content.setText(s);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
