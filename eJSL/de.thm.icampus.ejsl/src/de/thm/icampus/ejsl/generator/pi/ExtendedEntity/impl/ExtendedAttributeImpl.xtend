@@ -49,8 +49,6 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		switch (eJSlType.type.getName()) {
 			case "Integer": {
 				value = "int(11) "
-				if (eJSlType.^default == null)
-					eJSlType.^default = "0"
 			}
 			case "Boolean": {
 				value = "tinyint(1) "
@@ -93,7 +91,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		if (eJSlType.^default!= null)
 			result = result + "DEFAULT " + '''"«eJSlType.^default.toString»"'''
 		if (eJSlType.autoincrement)
-			result = result + "AUTO_INCREMENT "
+			result = result + " AUTO_INCREMENT "
 
 		return result
 	}

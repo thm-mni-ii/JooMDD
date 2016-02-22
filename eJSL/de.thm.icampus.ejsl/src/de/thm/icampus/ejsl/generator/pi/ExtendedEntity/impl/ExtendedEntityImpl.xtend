@@ -8,6 +8,7 @@ import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.generator.pi.util.PlattformIUtil
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	
@@ -15,6 +16,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	 EList<ExtendedAttribute> extendedAttributeList
 	 EList<ExtendedAttribute> extendedParentAttributeList
 	 EList<ExtendedAttribute> allAttribute
+	 EList<ExtendedReference> extendedReference
 	new(Entity entity){
 		this.name = PlattformIUtil.slugify(entity.name)
 		this.supertype = entity.supertype
@@ -45,11 +47,17 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	def void initListen(){
 		extendedAttributeList = new BasicEList<ExtendedAttribute>
 		allAttribute = new BasicEList<ExtendedAttribute>
+		extendedReference = new BasicEList<ExtendedReference>
 		extendedAttributeList.addAll(this.attributes.map[t| PlattformIUtil.transformAttribute(t)])
 		extendedParentAttributeList = searchAttributeParent()
 		
 		allAttribute.addAll(extendedAttributeList)
 		allAttribute.addAll(extendedParentAttributeList)
+		extendedReference.addAll(references.map[t | new ExtendedReferenceImpl(t)])
+		
+		
+		
+		
 	}
 	
 	def  EList<ExtendedAttribute> searchAttributeParent() {
@@ -86,5 +94,10 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 			}
 			return null;
 		}
+		
+		override getExtendedReference() {
+			return extendedReference
+		}
+		
 	
 }

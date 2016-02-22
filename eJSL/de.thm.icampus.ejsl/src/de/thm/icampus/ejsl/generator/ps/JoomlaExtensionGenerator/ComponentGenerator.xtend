@@ -49,7 +49,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.class_name = this.noPrefixName.toFirstUpper
 		this.extendeComp.formatName
 		entgen = new JoomlaEntityGenerator(component.allExtendedEntity, component.name, false)
-		entgen.completeEntity()
 	}
 	
 	def void formatName(Component component){
@@ -108,11 +107,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		// Generate sql stuff
 		generateJoomlaDirectory("admin/sql")
-		//generateFile("admin/sql/install.mysql.utf8.sql", entgen.dogenerate)
-		//generateFile("admin/sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(extendeComp.name))
+		generateFile("admin/sql/install.mysql.utf8.sql", entgen.dogenerate)
+		generateFile("admin/sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(extendeComp.name))
 		generateJoomlaDirectory("admin/sql/updates")
 		generateJoomlaDirectory("admin/sql/updates/mysql")
-		//generateFile("admin/sql/updates/mysql/1.0.1.mysql.utf8.sql", sqlAdminSqlUpdateContent(extendeComp.name,true))
+		generateFile("admin/sql/updates/mysql/1.0.1.mysql.utf8.sql", sqlAdminSqlUpdateContent(extendeComp.name,true))
 
 		return ""
 	}

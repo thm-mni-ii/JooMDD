@@ -25,6 +25,8 @@ class RessourceTransformer {
 	}
 	def dotransformation(){
 		transformEmptyHtmlAttribute();
+		var JoomlaTranformator jt = new JoomlaTranformator(modelInstance)
+		jt.completeCMSExtension
 		
 	}
 	def transformEmptyHtmlAttribute(){

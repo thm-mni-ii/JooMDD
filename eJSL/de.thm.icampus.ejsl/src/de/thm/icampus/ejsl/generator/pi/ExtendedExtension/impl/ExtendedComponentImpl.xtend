@@ -48,9 +48,8 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					for(ExtendedPageReference pf: backEndPagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
 						for(ExtendedEntity entBackend: extp.extendedEntityList){
-							if(allextendedEntity.map[t| t.name == entBackend.name].size ==0){
+							if(allextendedEntity.filter[t | t.name == entBackend.name].size == 0){
 								allextendedEntity.add(entBackend)
-								System.out.println("Ich bin im Backend: " + entBackend.name)
 							}
 						}
 					}
@@ -60,9 +59,8 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					for(ExtendedPageReference pf: fronEndpagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
 						for(ExtendedEntity entFrontend: extp.extendedEntityList){
-							if(allextendedEntity.map[t| t.name == entFrontend.name].size ==0 ){
+							if(allextendedEntity.filter[t | t.name == entFrontend.name].size == 0){
 							allextendedEntity.add(entFrontend)
-							System.out.println("Ich bin im Frontend: " + entFrontend.name)
 							}
 						}
 					}	
