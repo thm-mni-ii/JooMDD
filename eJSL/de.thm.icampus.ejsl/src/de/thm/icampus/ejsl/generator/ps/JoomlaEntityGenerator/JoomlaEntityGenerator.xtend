@@ -84,21 +84,24 @@ class JoomlaEntityGenerator {
     «ENDIF»
 
    CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`#__«componentName.toLowerCase»_«table.name.toLowerCase»` (
-    
 	«FOR a:table.allattribute»
 		`«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
 	«ENDFOR»
-«FOR ref:table.references»
-CONSTRAINT  FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ', ')») REFERENCES «Slug.slugify(ref.entity.name.toLowerCase)» («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-«ENDFOR»
-PRIMARY KEY (`id`)
-«FOR a:table.extendedAttributeList»
-«IF a.isunique»
-,  UNIQUE KEY («a.name»«if(a.withattribute != null)''',«a.withattribute.name»'''»)
-«ENDIF» 
-«ENDFOR»
+	PRIMARY KEY (`id`)
+	«FOR a:table.extendedAttributeList»
+	«IF a.isunique»
+	,UNIQUE KEY («a.name»«if(a.withattribute != null)''',«a.withattribute.name»'''»)
+	«ENDIF» 
+	«ENDFOR»
+	«FOR ref:table.references»
+	,INDEX(«Slug.transformAttributeListInString(ref.attribute,  ', ')»)
+	«ENDFOR»
+	«FOR ref:table.references»
+	,CONSTRAINT  FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `#__«componentName.toLowerCase»_«Slug.slugify(ref.entity.name.toLowerCase)»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
+	    ON UPDATE CASCADE
+	    ON DELETE CASCADE
+	«ENDFOR»
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 '''
 	

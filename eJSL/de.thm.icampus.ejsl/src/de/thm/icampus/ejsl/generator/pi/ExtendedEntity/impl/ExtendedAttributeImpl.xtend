@@ -84,6 +84,9 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 			case "Label": {
 				value = "varchar(255) "
 			}
+			default:{
+				value = "int(11)"
+			}
 		}
 		var String result = value
 		if (eJSlType.notnull)

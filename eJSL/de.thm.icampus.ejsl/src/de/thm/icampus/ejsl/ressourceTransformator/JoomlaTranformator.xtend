@@ -9,6 +9,9 @@ import de.thm.icampus.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.ejsl.eJSL.StandardTypes
 import de.thm.icampus.ejsl.eJSL.StandardTypeKinds
 import de.thm.icampus.ejsl.eJSL.Reference
+import org.eclipse.emf.common.util.BasicEList
+import de.thm.icampus.ejsl.eJSL.Type
+import de.thm.icampus.ejsl.eJSL.DatatypeReference
 
 class JoomlaTranformator {
 	
@@ -50,6 +53,7 @@ class JoomlaTranformator {
 	
 	private def completeAttributeOfEntity(Entity ent) {
 		if(!ent.haveIdAttribute()){
+			
 			var Attribute id = EJSLFactory.eINSTANCE.createAttribute
 			id.name = "id"
 			var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
@@ -150,9 +154,15 @@ class JoomlaTranformator {
 		
 		for(Reference ref : ent.references){
 			if(ref.id){
-				if(ent.searchIdAttribute != null){
-				ref.attributerefereced.add(ref.entity.searchIdAttribute)
+				var Attribute id = ref.entity.searchIdAttribute
+				if( id != null){
+				ref.attributerefereced.add(id)
 				ref.id=false
+				if(	ref.attributerefereced.size > 1){
+					if(getAttributeReference(ent, ref.entity, id ) == null){
+						ref.attribute.add(putNewGenAttribute(ent,ref, id))
+					}
+				}
 				
 				}
 			}
@@ -162,34 +172,58 @@ class JoomlaTranformator {
 	def void putTheReferenceAttribute( Entity ent){
 		for(Reference ref:ent.references ){
 			var Entity referenceEntity = ref.entity
+			var EList<Attribute> newArttibute = new BasicEList<Attribute>
 			for(Attribute attrRef: ref.attributerefereced){
 				var Attribute uniqWith = attrRef.withattribute
-				if(uniqWith != null && getAttributeReferenceForId(ent, referenceEntity,uniqWith) == null){
-					var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
-					newAttribute.name = referenceEntity.toString.toLowerCase + "_" + uniqWith.name
-					newAttribute.type = uniqWith.type
-					ent.attributes.add(newAttribute)
-					ref.attribute.add(newAttribute)
-					ref.attributerefereced.add(uniqWith)
+				if(uniqWith != null && getAttributeReference(ent, referenceEntity,uniqWith) == null){
+					putNewGenAttribute(ent, ref, uniqWith)
+					newArttibute.add(uniqWith)
 				}
+			}
+			ref.attributerefereced.addAll(newArttibute)
+		}
+	}
+	def Attribute putNewGenAttribute(Entity ent, Reference ref, Attribute attrRef){
+		var Entity referenceEntity = ref.entity
+		var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
+					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name
+					newAttribute.type = copyType(attrRef.type)
+					ent.attributes.add(newAttribute)
+					ref.attribute.add(newAttribute)					
+					return newAttribute
+	}
+	
+	def Type copyType(Type type) {
+		
+		switch type{
+			DatatypeReference:{
+				var DatatypeReference old_type = type as DatatypeReference
+				var DatatypeReference new_type = EJSLFactory.eINSTANCE.createDatatypeReference
+				new_type.type = old_type.type
+				return new_type
+			}
+			StandardTypes:{
+				var StandardTypes old_type = type as StandardTypes
+				var StandardTypes new_type = EJSLFactory.eINSTANCE.createStandardTypes
+					new_type.type =  old_type.type
+					new_type.notnull = old_type.notnull
+					new_type.^default = old_type.^default
+					return new_type
+					
+					
 			}
 		}
 	}
 	
-	def Attribute getAttributeReferenceForId(Entity ent, Entity referencedEntity, Attribute referenced){
+	def Attribute getAttributeReference(Entity ent, Entity referencedEntity, Attribute referenced){
 		for(Attribute a:ent.attributes ){
-			System.out.println("Hallo " + a.name)
-			System.out.println("Hallo " + ent.name)
-			System.out.println("Hallo2 " + referencedEntity.name)
-			System.out.println("Hallo3 " + referenced.name)
-			
 			if(a.name.equalsIgnoreCase(referencedEntity.toString.toLowerCase +  "_"+ referenced.name))
 			return a;
 		}
 		for(Reference ref:ent.references ){
 			
-			if(ref.entity.name == ent.name && ref.attributerefereced.contains(referenced)){
-				var int index = ref.attributerefereced.indexOf(referenced)
+			if(ref.entity.name == referencedEntity.name && ref.attributerefereced.contains(referenced)){
+				var int index = ref.attributerefereced.indexOf(referenced)	
 				return ref.attribute.get(index)
 			}
 		}
