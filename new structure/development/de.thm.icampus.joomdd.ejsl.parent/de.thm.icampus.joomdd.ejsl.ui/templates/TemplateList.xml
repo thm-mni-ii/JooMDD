@@ -11,8 +11,15 @@
     </template>
     <template>
     	<name>Model</name>
-    	<src>Model.eJSL</src></template>
+    	<src>Model.eJSL</src>
+    </template>
     <template>
     	<name>Weblinks</name>
-    	<src>Weblinks.eJSL</src></template>
+    	<src>Weblinks.eJSL</src>
+    </template>
+    <template>
+    	<name>New Model</name>
+    	<description>A new Model Template by Dieudonne Timma Meyatchie</description>
+    	<src>newModel.eJSL</src>
+    </template>
 </templateList>

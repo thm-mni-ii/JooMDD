@@ -31,6 +31,7 @@ public class EJSLProjectInfo extends org.eclipse.xtext.ui.wizard.DefaultProjectI
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 				+ "<classpath>\n"
 				+ "	<classpathentry kind=\"src\" path=\"src\"/>\n"
+				+ "	<classpathentry kind=\"src\" path=\"src-gen\"/>\n"
 				+ "	<classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8\"/>\n"
 				+ "	<classpathentry kind=\"output\" path=\"bin\"/>\n"
 				+ "</classpath>";
