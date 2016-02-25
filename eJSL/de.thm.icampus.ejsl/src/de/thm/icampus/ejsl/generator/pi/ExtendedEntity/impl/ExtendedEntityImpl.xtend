@@ -9,6 +9,8 @@ import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.ejsl.eJSL.Feature
+import de.thm.icampus.ejsl.eJSL.Reference
 
 class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	
@@ -17,8 +19,10 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	 EList<ExtendedAttribute> extendedParentAttributeList
 	 EList<ExtendedAttribute> allAttribute
 	 EList<ExtendedReference> extendedReference
+	 EList<ExtendedReference> allReferenceToEntity
 	new(Entity entity){
-		this.name = PlattformIUtil.slugify(entity.name)
+		entity.name = PlattformIUtil.slugify(entity.name)
+		this.name = entity.name
 		this.supertype = entity.supertype
 		this.attributes = entity.attributes
 		this.references = entity.references
@@ -47,13 +51,23 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	def void initListen(){
 		extendedAttributeList = new BasicEList<ExtendedAttribute>
 		allAttribute = new BasicEList<ExtendedAttribute>
+		allReferenceToEntity = new BasicEList<ExtendedReference>
 		extendedReference = new BasicEList<ExtendedReference>
 		extendedAttributeList.addAll(this.attributes.map[t| PlattformIUtil.transformAttribute(t)])
 		extendedParentAttributeList = searchAttributeParent()
 		
 		allAttribute.addAll(extendedAttributeList)
 		allAttribute.addAll(extendedParentAttributeList)
-		extendedReference.addAll(references.map[t | new ExtendedReferenceImpl(t)])
+		extendedReference.addAll(references.map[t | new ExtendedReferenceImpl(t, this.instance)])
+		var EList<Entity> allEntity = (instance.eContainer as Feature).entities
+		for(Entity ent: allEntity){
+			if(ent.references != null){
+			var Iterable<Reference> listRef = ent.references.filter[t | t.entity.name == instance.name]
+			for(Reference ref: listRef)
+			allReferenceToEntity.add( new ExtendedReferenceImpl(ref, ent))
+			
+			}
+		}
 		
 		
 		
@@ -97,6 +111,10 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		
 		override getExtendedReference() {
 			return extendedReference
+		}
+		
+		override getallReferenceToEntity() {
+			return allReferenceToEntity
 		}
 		
 	

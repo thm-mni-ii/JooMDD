@@ -7,17 +7,21 @@ import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import org.eclipse.emf.common.util.BasicEList
+import de.thm.icampus.ejsl.eJSL.Entity
 
 class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 	
 	 EList <ExtendedAttribute> extendedAttribute
 	  EList <ExtendedAttribute> extendedAttributerefereced
-	  ExtendedEntity extendedEntity
-	new(Reference e){
+	   Entity toEntity
+	  Entity fromEntity
+	
+	new(Reference e, Entity from){
 		this.attribute = e.attribute
 		this.attributerefereced = e.attributerefereced
 		entity = e.entity
-		extendedEntity = new ExtendedEntityImpl(e.entity)
+		toEntity = e.entity
+		fromEntity = from
 		initList()
 		
 	}
@@ -37,9 +41,13 @@ class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 		return this.extendedAttributerefereced
 	}
 	
-	override getExtendedEntity() {
-		return this.extendedEntity
+	override getExtendedToEntity() {
+		return this.toEntity
 	}
+	override getExtendedFromEntity() {
+		return this.fromEntity
+	}
+	
 	
 	
 	

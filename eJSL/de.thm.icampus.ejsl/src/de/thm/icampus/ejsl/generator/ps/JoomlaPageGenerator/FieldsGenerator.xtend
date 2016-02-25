@@ -9,14 +9,15 @@ import javax.swing.text.html.HTMLEditorKit.LinkController
 import de.thm.icampus.ejsl.eJSL.Reference
 import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 class FieldsGenerator {
 	
-	Reference mainRef
+	ExtendedReference mainRef
 	Component com
 	String nameField
 	Entity entFrom
-	public new ( Reference attribute, Component component, Entity from){
+	public new ( ExtendedReference attribute, Component component, Entity from){
 		mainRef = attribute
 		com = component
 		entFrom = from
@@ -41,13 +42,14 @@ class FieldsGenerator {
 	                                        "foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
 	                                        );
 	     protected $keysAndForeignKeys= array(
-	       «FOR attr : mainRef.attribute»
-	       «IF attr != mainRef.attribute.last»
-	        "«attr.name.toLowerCase»" => "«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»",
+	       «FOR attr : mainRef.extendedAttribute»
+	       «IF attr != mainRef.extendedAttribute.last»
+	        "«attr.name.toLowerCase»" => "«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»",
+	        «ELSE»
+	       "«attr.name.toLowerCase»" => "«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»"
 	       «ENDIF»
-	       "«attr.name.toLowerCase»" => "«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»"
 	       «ENDFOR»
-	     )
+	     );
 	        «genGeTInput»
 	        
 	        «genGetAllData»
@@ -109,13 +111,14 @@ protected function getReferencedata($id)
     $query = $db->getQuery(true);
     $query->select("b.*")
           ->from( $this->referenceStruct["table"] . " as a")
-          ->leftJoin($this->referenceStruct["foreignTable"] . " as b on "
-          «FOR attr : mainRef.attribute»
-          «IF attr != mainRef.attribute.last»
-            . " b.«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»". '=' . " a.«attr» AND". 
+          ->leftJoin($this->referenceStruct["foreignTable"] . " as b on 
+          «FOR attr : mainRef.extendedAttribute»
+          «IF attr != mainRef.extendedAttribute.last»
+             b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= a.«attr.name.toLowerCase» AND 
+  		  «ELSE»
+  		     b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= a.«attr.name.toLowerCase»"	       
           «ENDIF»
-            . " b.«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»". '=' . " a.«attr»"
-           «ENDFOR»
+          «ENDFOR»
            )
          ->where("b.state = 1")
          ->where("a.id =" . $id)
@@ -135,13 +138,15 @@ protected function getReferencedata($id)
     $query = $db->getQuery(true);
     $query->select("b.id")
         ->from( $this->referenceStruct["table"] . " as a")
-        ->leftJoin($this->referenceStruct["foreignTable"]. " as b on "
-           «FOR attr : mainRef.attribute»
-           «IF attr != mainRef.attribute.last»
-             . " b.«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»". '=' . " a.«attr» AND". 
+        ->leftJoin($this->referenceStruct["foreignTable"]. " as b on 
+           «FOR attr : mainRef.extendedAttribute»
+           «IF attr != mainRef.extendedAttribute.last»
+              b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name»= a.«attr.name.toLowerCase» AND 
+           «ELSE»
+              b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name»= a.«attr.name.toLowerCase»"
            «ENDIF»
-             . " b.«mainRef.attributerefereced.get(mainRef.attribute.indexOf(attr))»". '=' . " a.«attr»"
             «ENDFOR»
+            ) 
         ->where("b.state = 1")
         ->where("a.id =" . $id);
     $queryALL->select("*")

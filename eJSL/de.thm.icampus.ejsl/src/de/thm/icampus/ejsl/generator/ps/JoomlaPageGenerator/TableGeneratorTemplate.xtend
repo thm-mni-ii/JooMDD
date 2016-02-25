@@ -7,12 +7,13 @@ import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.eJSL.Reference
 import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 class TableGeneratorTemplate {
 	
-	Component com
+	ExtendedComponent com
 	String tName
-	Entity ent
+	ExtendedEntity ent
 	new(ExtendedComponent component, ExtendedEntity entity){
 		com = component
 		tName = entity.name
@@ -41,6 +42,9 @@ class TableGeneratorTemplate {
 		«genInitTheForeignTableOption»
 		«genLoadAllPrimaryKeys»
 		«genPublish»
+		«IF ent.getallReferenceToEntity.size > 0»
+		«genDelete»
+		«ENDIF»
 	}
 	'''
 	
@@ -58,15 +62,15 @@ class TableGeneratorTemplate {
  		'''
  public def CharSequence genInitTheForeignTableOption() '''
    public function  initTheForeignTableOption(){
-   	«FOR Reference ref : ent.references»
-   	$temp_«ent.references.indexOf(ref)» = array(
-   	"type" => "«ref.entity.name.toFirstUpper»",
+   	«FOR ExtendedReference ref : ent.getallReferenceToEntity»
+   	$temp_«ent.getallReferenceToEntity.indexOf(ref)» = array(
+   	"type" => "«ref.extendedFromEntity.name.toString.toFirstUpper»",
    	"prefix" => "«com.name.toFirstUpper»Table",
-   	"refkey" => "array(«Slug.transformAttributeListInString(ref.attribute, ', ')»)",
-   	"foreignkey" => "array(«Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)",
-   	"name" => "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»"
+   	"foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
+   	"refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
+   	"name" => "#__«com.name.toLowerCase»_«ref.extendedFromEntity.name.toLowerCase»"
    	);
-   	array_push($this->foreigntableOption, $temp_«ent.references.indexOf(ref)»);
+   	array_push($this->foreigntableOption, $temp_«ent.getallReferenceToEntity.indexOf(ref)»);
         «ENDFOR»
   }
  '''
@@ -205,14 +209,13 @@ class TableGeneratorTemplate {
  public def CharSequence genLoadAllPrimaryKeys()'''
    public function loadAllPrimaryKeyofRef($pk, $key, $foreigntable, $foreignkeys){
         $this->load($pk);
-
-        $fieldvalue =  $this->$key;
-
         $query = $this->_db->getQuery(true);
-        $query->select('id')
-            ->from("#__" . $foreigntable)
-            ->where($this->_db->quoteName($foreignkeys) . "=" .
-                $this->_db->quoteName($fieldvalue));
+       	$query->select('id')
+      	         ->from("#__" . $foreigntable);
+      	     foreach($keylist as $index=>$value){
+      	     	$query->where($this->_db->quoteName($foreignkeys[$index]) . "=" .
+      	     			$this->_db->quoteName($this->$value));
+      	     }
         $this->_db->setQuery($query);
         $result = $this->_db->loadObjectList();
         return $result;

@@ -370,7 +370,7 @@ public class Slug  {
  		InternalLink :{
  			if(isLinkedAttributeReference(linkItem.linkedAttribute, page)){
  				var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
- 				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => "«ref.attributerefereced.name»"),'''	
+ 				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced,",")»)"),'''	
  			}				
  		}	
  	}»«ENDFOR»null);
@@ -395,6 +395,18 @@ public class Slug  {
 			result.append(postWord + attr.name.toLowerCase + separeSign)
 			}else{
 				result.append(postWord+attr.name)
+			}
+		}
+		return result.toString
+
+	}
+	static def CharSequence transformAttributeListInString(String quotationMark, String postWord, EList<Attribute>attributes, String separeSign){
+		var StringBuffer result = new StringBuffer()
+		for(attr: attributes){
+			if(attr != attributes.last){
+			result.append(quotationMark+postWord + attr.name.toLowerCase+quotationMark + separeSign)
+			}else{
+				result.append(quotationMark+postWord+attr.name+quotationMark)
 			}
 		}
 		return result.toString

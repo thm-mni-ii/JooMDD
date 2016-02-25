@@ -14,6 +14,7 @@ interface ExtendedEntity extends Entity {
 	def boolean haveIdAttribute()
 	def void putNewAttributeInEntity(Attribute e)
 	def ExtendedAttribute searchIdAttribute()
+	def EList<ExtendedReference>getallReferenceToEntity()
 	
 	
 }

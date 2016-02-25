@@ -1,24 +1,12 @@
 package de.thm.icampus.ejsl.generator.ps.JoomlaEntityGenerator
 
-import de.thm.icampus.ejsl.generator.ps.EntityGenerator
-import org.eclipse.emf.common.util.EList
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import java.util.HashSet
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
-import de.thm.icampus.ejsl.eJSL.Reference
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.ejsl.eJSL.Attribute
-import de.thm.icampus.ejsl.eJSL.EJSLFactory
-import de.thm.icampus.ejsl.eJSL.StandardTypes
-import de.thm.icampus.ejsl.eJSL.SimpleHTMLTypeKinds
-import de.thm.icampus.ejsl.eJSL.StandardTypeKinds
-import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
-import de.thm.icampus.ejsl.generator.pi.util.PlattformIUtil
-import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import java.util.LinkedList
 import java.util.List
-import de.thm.icampus.ejsl.eJSL.Entity
-import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import org.eclipse.emf.common.util.EList
+import org.eclipse.xtext.generator.IFileSystemAccess
 
 class JoomlaEntityGenerator {
 	EList<ExtendedEntity> entities
@@ -45,7 +33,6 @@ class JoomlaEntityGenerator {
         
         var LinkedList<String> visited = new LinkedList<String>();
         var StringBuffer result = new StringBuffer;
-        var int count = 0
         while(visited.size < entities.size ){
 	        for (ExtendedEntity e:entities){
 	        	if(e.extendedReference.empty && !visited.contains(e.name)){
@@ -68,7 +55,7 @@ class JoomlaEntityGenerator {
 	def boolean isAllreferenVisited(EList<ExtendedReference> list, List<String> visited) {
 		
 		for(ExtendedReference r: list){
-			if(!visited.contains(r.extendedEntity.name)){
+			if(!visited.contains(r.extendedToEntity.name)){
 			return false
 			
 			}
@@ -80,10 +67,10 @@ class JoomlaEntityGenerator {
     
     def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName)'''
     «IF !isupdate»
-    DROP TABLE IF EXISTS `#__«componentName.toLowerCase»_«table.name.toLowerCase»`;
+    DROP TABLE IF EXISTS `«componentName.toLowerCase»_«table.name.toLowerCase»`;
     «ENDIF»
 
-   CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`#__«componentName.toLowerCase»_«table.name.toLowerCase»` (
+   CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`«componentName.toLowerCase»_«table.name.toLowerCase»` (
 	«FOR a:table.allattribute»
 		`«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
 	«ENDFOR»
@@ -97,7 +84,7 @@ class JoomlaEntityGenerator {
 	,INDEX(«Slug.transformAttributeListInString(ref.attribute,  ', ')»)
 	«ENDFOR»
 	«FOR ref:table.references»
-	,CONSTRAINT  FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `#__«componentName.toLowerCase»_«Slug.slugify(ref.entity.name.toLowerCase)»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
+	,CONSTRAINT `«componentName.toLowerCase»_«table.name.toLowerCase»_ibfk_«table.references.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«componentName.toLowerCase»_«Slug.slugify(ref.entity.name.toLowerCase)»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
 	    ON UPDATE CASCADE
 	    ON DELETE CASCADE
 	«ENDFOR»
@@ -110,7 +97,7 @@ class JoomlaEntityGenerator {
         SET foreign_key_checks = 0;
         
         «FOR e:entities»
-        	DROP TABLE IF EXISTS `#__«extensionName.toLowerCase»_«e.name.toLowerCase»`;
+        	DROP TABLE IF EXISTS `«extensionName.toLowerCase»_«e.name.toLowerCase»`;
         «ENDFOR»
     '''
     

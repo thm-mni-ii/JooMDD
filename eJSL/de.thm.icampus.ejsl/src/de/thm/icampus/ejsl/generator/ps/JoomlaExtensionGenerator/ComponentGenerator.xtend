@@ -31,6 +31,7 @@ import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameterGroup
 import java.util.HashSet
 import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.ejsl.eJSL.Reference
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
@@ -48,7 +49,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.extendeComp = component
 		this.class_name = this.noPrefixName.toFirstUpper
 		this.extendeComp.formatName
-		entgen = new JoomlaEntityGenerator(component.allExtendedEntity, component.name, false)
+		entgen = new JoomlaEntityGenerator(component.allExtendedEntity, "#__"+component.name, false)
 	}
 	
 	def void formatName(Component component){
@@ -323,11 +324,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 	def generateFields(String fieldspath) {
 		for(ExtendedEntity ent: extendeComp.allExtendedEntity){
-//todo field	
-//		for(Reference ref: ent.references){
-//		var FieldsGenerator field = new FieldsGenerator(ref, extendeComp,ent)
-//		generateFile(fieldspath + "/" + field.getnameField.toLowerCase + ".php", field.genClassField)
-//		}
+		for(ExtendedReference ref: ent.extendedReference){
+		var FieldsGenerator field = new FieldsGenerator(ref, extendeComp,ent)
+		generateFile(fieldspath + "/" + field.getnameField.toLowerCase + "_" + ent.extendedReference.indexOf(ref) + ".php", field.genClassField)
+		}
 	}
 	}
 
