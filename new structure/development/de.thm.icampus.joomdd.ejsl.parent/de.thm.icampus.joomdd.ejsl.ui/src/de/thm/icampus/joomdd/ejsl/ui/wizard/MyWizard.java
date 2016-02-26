@@ -18,6 +18,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -32,11 +34,12 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 
-public class MyWizard extends Wizard implements INewWizard {
+public class MyWizard extends Wizard implements INewWizard, IExecutableExtension {
 
 	private static final String PAGE_NAME_1 = "Custom Plug-in Project Wizard 1"; //$NON-NLS-1$
 	private static final String PAGE_NAME_2 = "Custom Plug-in Project Wizard 2"; //$NON-NLS-1$
@@ -51,6 +54,7 @@ public class MyWizard extends Wizard implements INewWizard {
 	private IWorkbench _workbench;
 
 	private URL imgFolder;
+	private IConfigurationElement cfge;
 	
 	public MyWizard(){
 		super();
@@ -61,7 +65,6 @@ public class MyWizard extends Wizard implements INewWizard {
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this._workbench = workbench;
-		
 		 _pageOne = new WizardNewProjectCreationPage(PAGE_NAME_1);
 		 _pageTwo = new TemplateSelectionPage(PAGE_NAME_2);
 		 
@@ -150,6 +153,9 @@ public class MyWizard extends Wizard implements INewWizard {
 			e.printStackTrace();
 		}
 		
+		BasicNewProjectResourceWizard.updatePerspective(cfge);
+		BasicNewProjectResourceWizard.selectAndReveal(newProject, _workbench.getActiveWorkbenchWindow());
+		
 		return true;
 	}
 
@@ -205,6 +211,12 @@ public class MyWizard extends Wizard implements INewWizard {
 		newProject = newProjectHandle;
 
 		return newProject;
+	}
+
+	@Override
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data)
+			throws CoreException {
+		cfge = config;
 	}
 	
 }

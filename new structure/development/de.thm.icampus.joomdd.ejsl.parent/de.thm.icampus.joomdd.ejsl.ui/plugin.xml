@@ -447,10 +447,22 @@
       <wizard
             category="de.thm.icampus.joomdd.ejsl.ui.MyWizard"
             class="de.thm.icampus.joomdd.ejsl.ui.EJSLExecutableExtensionFactory:de.thm.icampus.joomdd.ejsl.ui.wizard.MyWizard"
+            finalPerspective="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
             icon="img/eJSL.PNG"
             id="de.thm.icampus.joomdd.ejsl.ui.wizard.EJSLNewProjectWizard"
             name="EJSL Project"
+            preferredPerspectives="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
             project="true">
+      </wizard>
+      <wizard
+            category="de.thm.icampus.joomdd.ejsl.ui.MyWizard"
+            class="de.thm.icampus.joomdd.ejsl.ui.wizard.FileWizard"
+            finalPerspective="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
+            icon="img/eJSL.PNG"
+            id="de.thm.icampus.joomdd.ejsl.ui.wizard.newEJSLFile"
+            name="EJSL File"
+            preferredPerspectives="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
+            project="false">
       </wizard>
    </extension>
 
@@ -560,6 +572,68 @@
               </visibleWhen>
            </command>
         </menu>
+     </menuContribution>
+  </extension>
+  <extension
+        point="org.eclipse.ui.perspectives">
+     <perspective
+           class="de.thm.icampus.joomdd.ejsl.ui.eJSLPerspectiveFactory"
+           icon="img/eJSL.PNG"
+           id="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
+           name="eJSL">
+        <description>
+           description body text
+        </description>
+     </perspective>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           allPopups="false"
+           locationURI="toolbar:org.eclipse.ui.main.toolbar">
+        <toolbar
+              id="de.thm.icampus.joomdd.ejsl.ui.toolbar">
+           <command
+                 commandId="org.eclipse.ui.newWizard"
+                 icon="img/eJSL.PNG"
+                 label="New eJSL Project"
+                 style="push"
+                 tooltip="New eJSL Project">
+              <parameter
+                    name="newWizardId"
+                    value="de.thm.icampus.joomdd.ejsl.ui.wizard.EJSLNewProjectWizard">
+              </parameter>
+              <visibleWhen
+                    checkEnabled="false">
+                 <with
+                       variable="activeWorkbenchWindow.activePerspective">
+                    <equals
+                          value="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective">
+                    </equals>
+                 </with>
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.eclipse.ui.newWizard"
+                 icon="img/eJSL.PNG"
+                 label="New eJSL File"
+                 style="push"
+                 tooltip="New eJSL File">
+              <parameter
+                    name="newWizardId"
+                    value="de.thm.icampus.joomdd.ejsl.ui.wizard.newEJSLFile">
+              </parameter>
+              <visibleWhen
+                    checkEnabled="false">
+                 <with
+                       variable="activeWorkbenchWindow.activePerspective">
+                    <equals
+                          value="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective">
+                    </equals>
+                 </with>
+              </visibleWhen>
+           </command>
+        </toolbar>
      </menuContribution>
   </extension>
 </plugin>
