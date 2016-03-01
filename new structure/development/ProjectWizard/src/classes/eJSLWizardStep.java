@@ -26,6 +26,74 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
     @Override
     public JComponent getComponent() {
+        TemplateList tempList = new TemplateList();
+
+        try {
+            tempList = TemplateXMLLoader.loadTemplates(PathUtil.getJarPathForClass(getClass()) + "/templates/TemplateList.xml", PathUtil.getJarPathForClass(getClass()) + "/templates/TemplateList.xsd");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Object[] t = tempList.getTemplates();
+        Template[] temps = new Template[t.length];
+
+        for (int i = 0; i < t.length; i++){
+            temps[i] = (Template) t[i];
+        }
+
+        JPanel panel = new JPanel(new BorderLayout());
+        JPanel logoPanel = new JPanel(new BorderLayout());
+        JPanel selectPanel = new JPanel(new GridLayout(temps.length+1, 1));
+        JPanel previewPanel = new JPanel(new BorderLayout());
+
+        JLabel selectLabel = new JLabel("Load example:");
+        JLabel previewLabel = new JLabel("Preview:");
+        JLabel previewText  = new JLabel();
+
+        panel.add(logoPanel, BorderLayout.NORTH);
+        panel.add(selectPanel, BorderLayout.WEST);
+        panel.add(previewPanel, BorderLayout.CENTER);
+
+        JRadioButton[] radio = new JRadioButton[temps.length];
+
+        selectPanel.add(selectLabel);
+        previewPanel.add(previewLabel, BorderLayout.NORTH);
+        previewPanel.add(previewText, BorderLayout.CENTER);
+
+
+        for (int i = 0; i < radio.length; i++){
+            radio[i] = new JRadioButton(temps[i].getName());
+            selectPanel.add(radio[i]);
+
+            final int j = i;
+            radio[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(radio[j].isSelected()){
+                        for(int k = 0; k < radio.length; k++){
+                            if(k != j) radio[k].setSelected(false);
+                        }
+                        setOption(radio[j].getName());
+                        if(temps[j].getPreview() == null){
+                            previewText.setText("Für diese Auswahl ist leider keine Preview verfügbar.");
+                        }else {
+                            previewText.setText(temps[j].getPreview().toString());
+                        }
+                    }
+                }
+            });
+        }
+        radio[0].setSelected(true);
+        if(temps[0].getPreview() == null){
+            previewText.setText("Für diese Auswahl ist leider keine Preview verfügbar.");
+        }else {
+            previewText.setText(temps[0].getPreview().toString());
+        }
+
+
+
+
+        /*
         File resource_dir = new File(PathUtil.getJarPathForClass(getClass()) + "/resources/eJSLexamples/");
         File files[] = resource_dir.listFiles();
 
@@ -46,15 +114,22 @@ public class eJSLWizardStep extends ModuleWizardStep {
         int i;
         for (i=0;files.length>i;i++) {
 
-
-
             try {
-                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/previews/"+files[i].getName());
+                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/eJSLexamples/"+files[i].getName());
                 BufferedReader br = new BufferedReader(fr);
                 String buffer = "";
+                String text = "";
+                int maxLines = 10;
+                int lines = 0;
+                int length = -1;
                 while ((buffer = br.readLine()) != null) {
-                    preview.append((buffer + "\n"));
+                    text += buffer + "\n";
+                    if ((lines ++) <= maxLines) length += buffer.length();
                 }
+                if (text.isEmpty()){
+                    text = "Dieses Beispiel läd ein leeres Projoekt.";
+                } else if (text.length() > length) text = text.substring(0, length) + "\n...";
+                preview.append(text);
 
                 br.close();
                 fr.close();
@@ -109,7 +184,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         for (i=0;files.length>i;i++) {
             panel.add(lblpreview[i],c);
         }
-
+        */
         return panel ;
     }
 
