@@ -7,15 +7,18 @@ import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.eJSL.Entity
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 class IndexPageTemplateSiteHelper {
 	
-	 IndexPage indexpage
-	private Component  com
+	 ExtendedDynamicPage indexpage
+	private ExtendedComponent  com
 	private String sec
 	private DetailsPage details
 	
-	new(IndexPage dp, Component cp, String section){
+	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		
 		indexpage = dp
 		com = cp
@@ -204,7 +207,7 @@ class IndexPageTemplateSiteHelper {
                 </td>
             <?php endif; ?>
          
-           «genSiteModelAttributeReference(indexpage.tablecolumns, indexpage,com)»
+           «genSiteModelAttributeReference(indexpage.extendedTableColumnList, indexpage,com)»
 
             <?php if (isset($this->items[0]->id)): ?>
                 <td class="center hidden-phone">
@@ -228,8 +231,8 @@ class IndexPageTemplateSiteHelper {
    
 		
 	'''
-	public   def CharSequence genSiteModelAttributeReference(EList<Attribute>column, IndexPage indexpage, Component com )'''
- 	« FOR Attribute attr : column»
+	public   def CharSequence genSiteModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, Component com )'''
+ 	« FOR ExtendedAttribute attr : column»
 	«IF Slug.isAttributeLinked(attr, indexpage)»
 	
 	<td>

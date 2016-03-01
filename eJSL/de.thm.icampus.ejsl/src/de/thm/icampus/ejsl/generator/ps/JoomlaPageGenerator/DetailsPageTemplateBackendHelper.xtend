@@ -1,16 +1,15 @@
 package de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator
 
-import de.thm.icampus.ejsl.eJSL.DetailsPage
-import de.thm.icampus.ejsl.eJSL.Component
-import de.thm.icampus.ejsl.eJSL.Section
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 
 class DetailsPageTemplateBackendHelper {
-	private DetailsPage dpage
-	private Component  com
+	private ExtendedDynamicPage dpage
+	private ExtendedComponent  com
 	private String sec
 	
-	new(DetailsPage dp, Component cp, String section){
+	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		
 		dpage = dp
 		com = cp

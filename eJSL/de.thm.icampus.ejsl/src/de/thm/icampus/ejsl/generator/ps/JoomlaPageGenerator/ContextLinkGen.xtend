@@ -34,7 +34,7 @@ public class ContextLinkGen extends AbstractLinkGenerator {
 	
 	def CharSequence genLinkOption(EList<LinkParameter> params)'''
 	«FOR LinkParameter lp : params»
-	. '&«lp.name»=' . «valueF»«lp.attvalue.name.toLowerCase»
+	. '&«lp.name»=' . «if(lp.attvalue != null) valueF + lp.attvalue.name.toLowerCase else lp.value»
 	«ENDFOR»
 	'''
 	

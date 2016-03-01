@@ -2,73 +2,89 @@
     */
 package de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator
 
-import de.thm.icampus.ejsl.eJSL.BackendSection
-import de.thm.icampus.ejsl.eJSL.Component
-import de.thm.icampus.ejsl.eJSL.DynamicPage
-import de.thm.icampus.ejsl.eJSL.Page
-import de.thm.icampus.ejsl.eJSL.DetailsPage
-import de.thm.icampus.ejsl.eJSL.IndexPage
-import de.thm.icampus.ejsl.eJSL.StaticPage
-import de.thm.icampus.ejsl.eJSL.Section
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedPage
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.eJSL.StaticPage
 
 public class PageGeneratorClient {
-	def static CharSequence generateStaticPage(Page sp) '''
+	
+	ExtendedPage extPage
+	ExtendedComponent com
+	String pathExt
+	IFileSystemAccess fsa
+	String sectionExt
+	
+	
+	new(ExtendedPage page, ExtendedComponent component, String path, String section,IFileSystemAccess access) {
+		extPage = page
+		com = component
+		pathExt = path
+		fsa = access
+		sectionExt = section
+	}
+	
+	def  CharSequence generateStaticPage(StaticPage sp) '''
 	
 	'''
 
-	def static void generateView(Page page, Component component, String sec, String path,IFileSystemAccess fsa) {
-		switch page{
-			DetailsPage : {
+	def  void generateView(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess fsa) {
+		if(page.detailsPage) {
+			
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path, fsa)
-				dp.generateView()
+				//dp.generateView()
 			}
-			IndexPage : {
+			else{
 				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
 				dp.generateView()
 			}
-			StaticPage :{
-				
-			}
+			
 		}
 		
 		
-	}
 
-	def static void generateController(Page page, Component component, String sec, String path,IFileSystemAccess fsa) {
-		switch page{
-			DetailsPage : {
+
+	 def void generateController(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess fsa) {
+			if(page.detailsPage) {
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path,fsa)
-				dp.generateController()
+				//dp.generateController()
 			}
-			IndexPage : {
+			else{
 				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
 				dp.generateController()
 			}
-			StaticPage :{
-				
-			}
+			
 		}
 		
-	}
-	def static generateModel(Page page, Component component, String sec, String path,IFileSystemAccess fsa) {
-		switch page{
-			DetailsPage : {
+	def  generateModel(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess fsa) {
+			if(page.detailsPage) {
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path,fsa)
-				dp.generateModel()
+				//dp.generateModel()
 			}
-			IndexPage : {
+			else {
 				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
 				dp.generateModel()
 			}
-			StaticPage :{
-				
-			}
+			
 		}
 		
-	}
-
 	
+
+
+	def void generate(){
+		if (extPage.extendedDynamicPageInstance != null) {
+			var String viewPath = pathExt + "/views";
+			var ExtendedDynamicPage dynPage = extPage.extendedDynamicPageInstance as ExtendedDynamicPage
+			generateView(dynPage, com, sectionExt, viewPath, fsa)
+			var String controllerpath = pathExt + "/controllers"
+			generateController(dynPage, com, sectionExt, controllerpath, fsa)
+			var String modelpath = pathExt + "/models"
+			generateModel(dynPage, com, sectionExt, modelpath, fsa)
+		} else if (extPage.staticPageInstance != null) {
+			generateStaticPage(extPage.staticPageInstance)
+		}
+	}
 	
 	
 	

@@ -12,6 +12,14 @@ import de.thm.icampus.ejsl.eJSL.Reference
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.ejsl.eJSL.Type
 import de.thm.icampus.ejsl.eJSL.DatatypeReference
+import de.thm.icampus.ejsl.eJSL.Page
+import de.thm.icampus.ejsl.eJSL.DetailsPage
+import de.thm.icampus.ejsl.eJSL.IndexPage
+import de.thm.icampus.ejsl.eJSL.Link
+import de.thm.icampus.ejsl.eJSL.ContextLink
+import de.thm.icampus.ejsl.eJSL.LinkParameter
+import de.thm.icampus.ejsl.eJSL.StaticPage
+import de.thm.icampus.ejsl.eJSL.DynamicPage
 
 class JoomlaTranformator {
 	
@@ -46,7 +54,7 @@ class JoomlaTranformator {
     	}
     	for(Entity ent: entityList){
     		completeReferenceOfEntity(ent)
-    		putTheReferenceAttribute(ent)
+    		setReferenceAttribute(ent)
     	}
     	
     }
@@ -160,7 +168,7 @@ class JoomlaTranformator {
 				ref.id=false
 				if(	ref.attributerefereced.size > 1){
 					if(getAttributeReference(ent, ref.entity, id ) == null){
-						ref.attribute.add(putNewGenAttribute(ent,ref, id))
+						ref.attribute.add(setNewGenAttribute(ent,ref, id))
 					}
 				}
 				
@@ -169,21 +177,21 @@ class JoomlaTranformator {
 		}
 	}
 	
-	def void putTheReferenceAttribute( Entity ent){
+	def void setReferenceAttribute( Entity ent){
 		for(Reference ref:ent.references ){
 			var Entity referenceEntity = ref.entity
 			var EList<Attribute> newArttibute = new BasicEList<Attribute>
 			for(Attribute attrRef: ref.attributerefereced){
 				var Attribute uniqWith = attrRef.withattribute
 				if(uniqWith != null && getAttributeReference(ent, referenceEntity,uniqWith) == null){
-					putNewGenAttribute(ent, ref, uniqWith)
+					setNewGenAttribute(ent, ref, uniqWith)
 					newArttibute.add(uniqWith)
 				}
 			}
 			ref.attributerefereced.addAll(newArttibute)
 		}
 	}
-	def Attribute putNewGenAttribute(Entity ent, Reference ref, Attribute attrRef){
+	def Attribute setNewGenAttribute(Entity ent, Reference ref, Attribute attrRef){
 		var Entity referenceEntity = ref.entity
 		var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
 					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name
@@ -229,5 +237,53 @@ class JoomlaTranformator {
 		}
 		return null
 	}
+def void completePage(EList<Page> pageList){
+	for(Page pg: pageList.filter[t | !(t instanceof StaticPage)]){
+		var Entity fromEnt = null
+		switch pg{
+			DynamicPage:{
+				var DynamicPage fromDynPage = pg as DynamicPage
+				fromEnt = fromDynPage.entities.get(0)
+			for(Link lk : pg.links.filter[t | t instanceof ContextLink]){
+			var ContextLink ctLink = lk as ContextLink
+			if(ctLink.target instanceof DynamicPage){
+				var DynamicPage toDynPage =  ctLink.target as DynamicPage
+				var Entity toEnt = toDynPage.entities.get(0) 
+				if(ctLink.linkparameters.size != 0)
+				completeContextLink(ctLink, fromEnt, toEnt )
+			}
+			}
+		}
+			
+	  }
+	
+	}
+}
+	
+	def void completeContextLink(ContextLink link, Entity fromEntity, Entity toEntity) {
+		
+		for(LinkParameter lkParam: link.linkparameters){
+			if(lkParam.id){
+				if(fromEntity.name != toEntity.name){
+					lkParam.attvalue = searchReferenceOfID(fromEntity, toEntity)
+				}else{
+					lkParam.attvalue = searchIdAttribute(fromEntity)
+				}
+				lkParam.id = false
+			}
+			
+		}
+	}
+	
+	def Attribute searchReferenceOfID(Entity fromEntity,Entity toEntity) {
+		var Attribute id = searchIdAttribute(toEntity)
+		for(Reference ref: fromEntity.references){
+			var Attribute result = getAttributeReference(fromEntity, toEntity,id)
+			if(result != null)
+			return result
+		}
+		return null
+	}
+	
 	
 }

@@ -70,22 +70,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		generateFile(name + ".xml", extendeComp.xmlContent(indexPages))
 
-		var frontend = null as FrontendSection
-		var backend = null as BackendSection
-
-		if (extendeComp.sections.length > 0) {
-			switch extendeComp.sections.get(0) {
-				BackendSection: backend = extendeComp.sections.get(0) as BackendSection
-				FrontendSection: frontend = extendeComp.sections.get(0) as FrontendSection
-			}
-		}
-
-		if (extendeComp.sections.length > 1) {
-			switch extendeComp.sections.get(1) {
-				BackendSection: backend = extendeComp.sections.get(1) as BackendSection
-				FrontendSection: frontend = extendeComp.sections.get(1) as FrontendSection
-			}
-		}
+		
 
 		// Generate language files
 		for (lang : extendeComp.languages) {
@@ -97,12 +82,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		}
 
 		// Generate backend section 
-		if (backend != null) {
+		if (extendeComp.backEndExtendedPagerefence != null) {
 			generateBackendSection
 		}
 
 		// Generate frontend section 
-		if (frontend != null) {
+		if (extendeComp.frontEndExtendedPagerefence != null) {
 			generateFrontendSection
 		}
 
@@ -280,7 +265,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		val pagerefs = extendeComp.frontEndExtendedPagerefence
 		for (pageref : pagerefs) {
-			pageref.extendedPage.generate(path + "site", "site")
+			pageref.extendedPage.generatePage(path + "site", "site")
 		}
 	}
 
@@ -317,7 +302,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		// commented out old model generation code
 		val pagerefs = extendeComp.backEndExtendedPagerefence
 		for (pageref : pagerefs) {
-			pageref.extendedPage.generate(path + "admin", "admin")
+			pageref.extendedPage.generatePage(path + "admin", "admin")
 
 		}
 	}
@@ -341,19 +326,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				
 	}
 
-	def generate(ExtendedPage pageref, String path, String section) {
-		if (pageref.extendedDynamicPageInstance != null) {
-			val name = Slug.slugify(pageref.name)
-
-			var String viewPath = path + "/views";
-			PageGeneratorClient.generateView(pageref, extendeComp, section, viewPath, fsa)
-			var String controllerpath = path + "/controllers"
-			PageGeneratorClient.generateController(pageref, extendeComp, section, controllerpath, fsa)
-			var String modelpath = path + "/models"
-			PageGeneratorClient.generateModel(pageref, extendeComp, section, modelpath, fsa)
-		} else if (pageref.staticPageInstance != null) {
-			PageGeneratorClient.generateStaticPage(pageref)
-		}
+	def generatePage(ExtendedPage pageref, String path, String section) {
+		var PageGeneratorClient pageGen = new PageGeneratorClient (pageref, extendeComp,path , section, fsa)
+		pageGen.generate
 	}
 
 	def CharSequence phpSiteContent(Component component) '''

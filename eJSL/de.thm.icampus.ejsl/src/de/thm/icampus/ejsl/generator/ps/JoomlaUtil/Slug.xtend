@@ -2,33 +2,32 @@
  */
 package de.thm.icampus.ejsl.generator.ps.JoomlaUtil
 
+import de.thm.icampus.ejsl.eJSL.Attribute
 import de.thm.icampus.ejsl.eJSL.BackendSection
 import de.thm.icampus.ejsl.eJSL.Component
-import org.eclipse.emf.common.util.EList
-import de.thm.icampus.ejsl.eJSL.Section
-import de.thm.icampus.ejsl.eJSL.Entity
-import de.thm.icampus.ejsl.eJSL.Attribute
-import de.thm.icampus.ejsl.eJSL.Type
+import de.thm.icampus.ejsl.eJSL.ContextLink
 import de.thm.icampus.ejsl.eJSL.DatatypeReference
-import de.thm.icampus.ejsl.eJSL.SimpleDatatypes
+import de.thm.icampus.ejsl.eJSL.DetailsPage
+import de.thm.icampus.ejsl.eJSL.DynamicPage
+import de.thm.icampus.ejsl.eJSL.Entity
+import de.thm.icampus.ejsl.eJSL.ExternalLink
+import de.thm.icampus.ejsl.eJSL.IndexPage
+import de.thm.icampus.ejsl.eJSL.InternalLink
+import de.thm.icampus.ejsl.eJSL.Link
+import de.thm.icampus.ejsl.eJSL.Module
+import de.thm.icampus.ejsl.eJSL.Page
+import de.thm.icampus.ejsl.eJSL.PageReference
 import de.thm.icampus.ejsl.eJSL.Reference
+import de.thm.icampus.ejsl.eJSL.Section
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.LinkGeneratorClient
+import java.util.Calendar
+import java.util.GregorianCalendar
 import java.util.HashSet
 import java.util.LinkedList
 import java.util.List
-import de.thm.icampus.ejsl.eJSL.DynamicPage
-import de.thm.icampus.ejsl.eJSL.Page
-import de.thm.icampus.ejsl.eJSL.DetailsPage
-import de.thm.icampus.ejsl.eJSL.IndexPage
-import de.thm.icampus.ejsl.eJSL.PageReference
-import java.util.Calendar
-import de.thm.icampus.ejsl.eJSL.Module
-import java.util.GregorianCalendar
-import de.thm.icampus.ejsl.eJSL.SectionReference
-import de.thm.icampus.ejsl.eJSL.Link
-import de.thm.icampus.ejsl.eJSL.InternalLink
-import de.thm.icampus.ejsl.eJSL.ContextLink
-import de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator.LinkGeneratorClient
-import de.thm.icampus.ejsl.eJSL.ExternalLink
+import org.eclipse.emf.common.util.EList
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 /**
@@ -90,7 +89,7 @@ public class Slug  {
 		
 		return res.toString
 	}
-	def static String getTypeName(String typ){
+	def static String getTypeName(ExtendedAttribute typ){
 		var String result = "";
 		switch typ{
 			DatatypeReference :{
@@ -241,7 +240,7 @@ public class Slug  {
 		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(page.name).toUpperCase + "_" + Slug.slugify(name).toUpperCase
 	}
 	
-	def static DetailsPage getPageForDetails(IndexPage inpage, Component com) {
+	def static DetailsPage getPageForDetails(ExtendedDynamicPage inpage, ExtendedComponent com) {
 		
 		for(Link lk: inpage.links){
 			switch lk {
@@ -260,7 +259,7 @@ public class Slug  {
 		return null
 	}
 	
-	def static IndexPage  getPageForAll(DetailsPage inpage, Component com) {
+	def static IndexPage  getPageForAll(ExtendedDynamicPage inpage, ExtendedComponent com) {
 		for(Link lk: inpage.links){
 			switch lk{
 				 ContextLink:{
@@ -296,8 +295,8 @@ public class Slug  {
 	 */
 	'''
 	
-	def static String getSectioName(SectionReference  reference) {
-		if(reference.getName().equals('backend'))
+	def static String getSectioName(Section  reference) {
+		if(reference instanceof BackendSection)
 		return 'admin'
 		
 		return ''
@@ -308,17 +307,22 @@ public class Slug  {
 		return "#__" + componentName.toLowerCase + "_" + entityName.toLowerCase
 	}
 	
-	def static Boolean isAttributeLinked(Attribute attr, DynamicPage page) {
+	def static Boolean isAttributeLinked(ExtendedAttribute attr, DynamicPage page) {
 		for(Link ref: page.links){
-			if(ref.linkedAttribute.equals(attr))
+			if(ref.linkedAttribute != null){
+			if(ref.linkedAttribute.name.equalsIgnoreCase(attr.name))
 			return true
+			
+			}
 		}
 		return false
 	}
 	
-	def static CharSequence linkOfAttribut(Attribute attribute, DynamicPage  page, String compname, String valuefeatures) '''
+	def static CharSequence linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures) '''
 	«FOR Link lk: page.links»
-	«IF lk.linkedAttribute.equals(attribute)»
+	«IF lk.linkedAttribute != null»
+	«IF lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)»
+	«ENDIF»
 	«switch lk{
 		ExternalLink :{
 			'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»'''

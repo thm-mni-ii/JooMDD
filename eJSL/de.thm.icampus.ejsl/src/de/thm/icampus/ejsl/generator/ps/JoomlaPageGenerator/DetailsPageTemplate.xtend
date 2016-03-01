@@ -1,24 +1,21 @@
 package de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator
 
-import de.thm.icampus.ejsl.eJSL.DetailsPage
-import de.thm.icampus.ejsl.eJSL.Component
-import de.thm.icampus.ejsl.eJSL.Section
-import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
-import de.thm.icampus.ejsl.eJSL.Entity
-import de.thm.icampus.ejsl.eJSL.Attribute
+import org.eclipse.xtext.generator.IFileSystemAccess
 
 class DetailsPageTemplate extends   DynamicPageTemplate {
 	
-	private DetailsPage dpage
-	private Component  com
+	private ExtendedDynamicPage dpage
+	private ExtendedComponent  com
 	private String sec
 	private   DetailsPageTemplateBackendHelper backHelp
 	private   DetailsPageTemplateFrontEndHelper frontHelp
 	private String path
 	private String pagename
 	
-	new(DetailsPage dp, Component cp, String section, String path,IFileSystemAccess fsa){
+	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess fsa){
 		
 		dpage = dp
 		com = cp
@@ -28,17 +25,9 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		this.path = path
 		pagename = dpage.name.toLowerCase
 		this.fsa = fsa
-		dpage.formatName
 	}
 	
-	def void formatName(DetailsPage page){
-		page.name= Slug.slugify(page.name)
-		for(Entity e: page.entities){
-			for(Attribute attr : e.attributes){
-				attr.name = Slug.slugify(attr.name)
-			}
-		}
-	}
+	
 	
 	def void generateView(){
 		

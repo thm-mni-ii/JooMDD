@@ -1,26 +1,21 @@
 package de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator
 
-import de.thm.icampus.ejsl.eJSL.IndexPage
-import de.thm.icampus.ejsl.eJSL.Component
-import de.thm.icampus.ejsl.eJSL.Section
-import de.thm.icampus.ejsl.eJSL.BackendSection
-import de.thm.icampus.ejsl.eJSL.Entity
-import java.util.List
-import de.thm.icampus.ejsl.eJSL.Attribute
-import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
+import org.eclipse.xtext.generator.IFileSystemAccess
 
 class IndexPageTemplate extends DynamicPageTemplate {
 
-	private IndexPage ipage
-	private Component com
+	private ExtendedDynamicPage ipage
+	private ExtendedComponent com
 	private String sec
 	private IndexPageTemplateAdminHelper helperAdmin
 	private IndexPageTemplateSiteHelper frontHelp
 	private String path
 	private String pagename
 
-	new(IndexPage dp, Component cp, String section, String path,IFileSystemAccess fsa) {
+	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess fsa) {
 
 		ipage = dp
 		com = cp
@@ -30,17 +25,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		this.path = path
 		pagename = dp.name.toLowerCase
 		this.fsa = fsa
-		ipage.formatName
 	}
 	
-	def void formatName(IndexPage page){
-		page.name = Slug.slugify(page.name)
-		for(Entity e: page.entities){
-			for(Attribute attr : e.attributes){
-				attr.name = Slug.slugify(attr.name)
-			}
-		}
-		}
+
 	
 	def void generateView(){
 	
@@ -214,7 +201,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	}
 	 '''
  def CharSequence generateSiteView()'''
-	«generateFileDoc(ipage,com,true)»
+	«generateFileDoc(ipage.instance,com,true)»
 	
 	jimport('joomla.application.component.view');
 

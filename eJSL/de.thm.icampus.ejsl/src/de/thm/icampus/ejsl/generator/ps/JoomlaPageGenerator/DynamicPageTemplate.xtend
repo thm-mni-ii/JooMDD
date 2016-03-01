@@ -14,6 +14,13 @@ import de.thm.icampus.ejsl.eJSL.ParameterGroup
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.ejsl.eJSL.Reference
 import de.thm.icampus.ejsl.eJSL.IndexPage
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedPage
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameter
+import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameterGroup
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 
 /**
  * <!-- begin-user-doc -->
@@ -30,7 +37,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 	
 	
 	
-	def CharSequence generateFileDoc(Page page, Component component, boolean denied)'''
+	def CharSequence generateFileDoc(DynamicPage page, ExtendedComponent component, boolean denied)'''
 	<?php
 		/**
 		* @version v0.0.1
@@ -51,7 +58,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 
 
     
-    def CharSequence xmlSiteTemplateContent(String pagename, Page page,Component component) '''
+    def CharSequence xmlSiteTemplateContent(String pagename, ExtendedDynamicPage page, ExtendedComponent component) '''
         <?xml version="1.0" encoding="utf-8"?>
         <metadata>
             <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
@@ -75,21 +82,21 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 				</field> 
 				</fieldset>
 			«ENDIF»
-            	«generateParameter(page.globalparameters, component)»
-                «generateParameter(page.localparameters, component)»
-                «FOR ParameterGroup e : page.parametergroups »
+            	«generateParameter(page.extendedGlobalParametersListe, component)»
+                «generateParameter(page.extendedLocalParametersListe, component)»
+                «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe »
                 <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_«page.name.toUpperCase»_«e.name.toUpperCase»" 
-                «generateParameter(e.globalparameters, component)»
-                «generateParameter(e.parameters,component)»
+                «generateParameter(e.extendedParameterList, component)»
+                «generateParameter(e.extendedParameterList,component)»
                 </fieldset>
                 «ENDFOR»
                
             </fields>
         </metadata>
     '''
-		def  CharSequence generateTemplate(Page page, Component component) '''
+		def  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedComponent component) '''
 		'''
-		def CharSequence generateParameter(EList<Parameter>listParams, Component component)'''
+		def CharSequence generateParameter(EList<ExtendedParameter>listParams, ExtendedComponent component)'''
 		«FOR param : listParams»
 		 <field
 		 name="«param.name»"
@@ -99,7 +106,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 		 />
 		«ENDFOR»
 		'''
-		def CharSequence xmlAdminFields(DynamicPage page,Component component, String name) '''
+		def CharSequence xmlAdminFields(ExtendedDynamicPage page, ExtendedComponent component, String name) '''
 				<?xml version="1.0" encoding="utf-8"?>
 				<form>
 					<fieldset>
@@ -111,8 +118,8 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 				label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"
 				description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
 					
-					«FOR Entity e : page.entities»
-					«FOR Attribute attr : e.attributes»
+					«FOR ExtendedEntity e : page.extendedEntityList»
+					«FOR ExtendedAttribute attr : e.extendedAttributeList»
 					 <field name="«attr.name.toLowerCase»" 
 					 type="«getHtmlTypeOfAttribute(attr,e,component).toLowerCase»" 
 					 label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»"
@@ -152,7 +159,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 				</form>
    		 '''
    		 
-   	def String getHtmlTypeOfAttribute(Attribute attr, Entity en,Component com){
+   	def String getHtmlTypeOfAttribute(ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com){
    		
    		for(Reference ref: en.references){
    			if(ref.attribute.equals(attr)){
@@ -160,7 +167,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
    			}
    		}
    		
-   		return Slug.getTypeName(attr.htmltype);
+   		return Slug.getTypeName(attr);
    	}
 	
 	override getLinkClient() {

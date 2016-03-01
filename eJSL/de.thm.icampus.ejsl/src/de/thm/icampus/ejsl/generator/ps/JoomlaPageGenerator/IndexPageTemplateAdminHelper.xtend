@@ -1,28 +1,24 @@
 package de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator
 
-import de.thm.icampus.ejsl.eJSL.DetailsPage
-import de.thm.icampus.ejsl.eJSL.Component
 import de.thm.icampus.ejsl.eJSL.Attribute
-import de.thm.icampus.ejsl.eJSL.IndexPage
-import org.eclipse.emf.common.util.EList
-import java.util.HashSet
-import java.util.Set
-import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
+import de.thm.icampus.ejsl.eJSL.Component
+import de.thm.icampus.ejsl.eJSL.DetailsPage
 import de.thm.icampus.ejsl.eJSL.Entity
-import org.w3c.dom.stylesheets.LinkStyle
-import de.thm.icampus.ejsl.eJSL.Link
-import de.thm.icampus.ejsl.eJSL.InternalLink
-import de.thm.icampus.ejsl.eJSL.DynamicPage
-import de.thm.icampus.ejsl.eJSL.Reference
+import de.thm.icampus.ejsl.eJSL.IndexPage
+import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
+import org.eclipse.emf.common.util.EList
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 class IndexPageTemplateAdminHelper {
 	
-	 IndexPage indexpage
-	private Component  com
+	 ExtendedDynamicPage indexpage
+	private ExtendedComponent  com
 	private String sec
 	private DetailsPage details
 	
-	new(IndexPage dp, Component cp, String section){
+	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		
 		indexpage = dp
 		com = cp
@@ -381,7 +377,7 @@ class IndexPageTemplateAdminHelper {
 		</div>        
 	
 	 '''
-	 def private CharSequence genAdminViewLayoutData(EList<Attribute>column)'''
+	 def private CharSequence genAdminViewLayoutData(EList<ExtendedAttribute>column)'''
  <table class="table table-striped" id="«indexpage.name.toFirstUpper»List">
 		<thead>
 			<tr>
@@ -398,9 +394,9 @@ class IndexPageTemplateAdminHelper {
 					<?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 				</th>
             <?php endif; ?>
-       «FOR Attribute attr : column»
+       «FOR ExtendedAttribute attr : column»
 	<th class='left'>
-	<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.eContainer as Entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+	<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 	</th>
      «ENDFOR»
      
@@ -486,7 +482,7 @@ def  CharSequence genAdminViewLayoutForm()'''
 	<div id="j-main-container">
 <?php endif;?>
 «genAdminViewLayoutFilters»
-«genAdminViewLayoutData(indexpage.tablecolumns)»
+«genAdminViewLayoutData(indexpage.extendedTableColumnList)»
 <input type="hidden" name="task" value="" />
 		<input type="hidden" name="boxchecked" value="0" />
 		<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
@@ -586,8 +582,8 @@ if (!empty($this->extra_sidebar)) {
       return intval($result->id);
     }
   '''
-  public  def CharSequence genAdminModelAttributeReference(EList<Attribute>column, IndexPage indexpage, Component com )'''
- 	« FOR Attribute attr : column»
+  public  def CharSequence genAdminModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, ExtendedComponent com )'''
+ 	« FOR ExtendedAttribute attr : column»
 	«IF Slug.isAttributeLinked(attr, indexpage)»
 	<?php if ($canEdit) : ?>
 	<td>
