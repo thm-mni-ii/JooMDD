@@ -3,11 +3,13 @@
 **JooMDD** provides a set of plugins for a model-driven development of Joomla! extension 
 packages. 
 The current version of JooMDD can be used within ***Eclipse***, 
-***IntelliJ IDEA***, ***PHPStorm***, and ***Orion***.
+***IntelliJ IDEA***, and ***PHPStorm***.
+
+In addition, we provide **jext2eJSL** to create eJSL-based models based on existing Joomla 3.x extension packages.
 
 ***
 ## Installation of JooMDD ##
-Please follow this installation guide to use JooMDD within Eclipse, IntelliJ, PHPStorm, and Orion. 
+Please follow this installation guide to use JooMDD within Eclipse, IntelliJ, and PHPStorm. 
 
 **Attention:** The support of PHPStorm is currently experimental. Therefore some effort is needed during the installation
 ### Eclipse ###
@@ -22,6 +24,8 @@ Install the JooMDD tools through the use of the following update site within Int
 Install Xtext IDEA Core from the repositories of IntelliJ. (In IntelliJ go to: File/Settings/Plugins/Browse Repositories search: "Xtext Idea Core" and install the plugin)
 
 #### JooMDD update site (IntelliJ IDEA): <http://icampus.thm.de/JooMDDUpdateSite_IntelliJ> ####
+
+Alternatively you can download the plugins from this repository and install them manually into your IDE.
 
 ### PHPStorm ###
 Due to the fact, that the PHPStorm support is in a kind of beta state, you need some more effort for the installation. But don't 
@@ -68,21 +72,26 @@ based on your models (*src-gen*). In addition, an example model is created withi
 can be used for a straightforward introduction.
 
 ##### IntelliJ and PHPStorm #####
-##### Orion #####
 
 ### 2. Create a model ###
 eJSL allows you the definition of different parts of a Joomla extension. Starting with the definition 
 of a data structure (***entities***) on to its presentation (***pages***) up to the specification of 
 Joomla-specific ***extensions***.
 
+While using the text-based editor you get support by the code completion typing *Ctrl + Space*.
+
+For an easier start we recommend the use of the example instances, provided by the project wizards.  
+
 ### 3. Code generation ###
 When you save your model, the code generator creates your modelled Joomla extensions within the project's 
-src-gen folder. The extensions are installable within Joomla 3 web sites and don't need any additional 
-line of code. However, if you knwo what you do, you can extend the generated code through individual features. 
+src-gen folder. The extensions are installable within Joomla 3.x web sites and don't need any additional 
+line of code. However, if you know what you do, you can extend the generated code through individual features. 
 But beware: All the code within the src-gen folder becomes COMPLETELY overwritten, when you change your model 
 and save it. Therefore we recommend to copy generated extensions to another folder within your project, where 
 you can extend them without loosing them after a new code generation. Another and cleaner option is using a 
 versioning tool like git to store your individual added code.
+
+Note: Our tools are completly prototypical and we are currently working on the generator structure.
 
 ***
 ## Copyright ##
