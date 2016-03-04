@@ -20,7 +20,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	new(Attribute attr) {
 
 		this.type = attr.type
-		this.name = PlattformIUtil.slugify(attr.name)
+		this.name = PlattformIUtil.slugify(attr.name).toLowerCase
 		this.isunique = attr.isIsunique
 		this.withattribute = attr.withattribute
 		entity = attr.eContainer as Entity

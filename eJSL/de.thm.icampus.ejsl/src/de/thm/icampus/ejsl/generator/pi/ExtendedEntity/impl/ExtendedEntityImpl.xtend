@@ -117,5 +117,13 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 			return allReferenceToEntity
 		}
 		
+		override getAttributeByName(String name) {
+			for(ExtendedAttribute attr: extendedAttributeList){
+				if(attr.name.equalsIgnoreCase(name))
+				   return attr;
+			}
+			return null
+		}
+		
 	
 }

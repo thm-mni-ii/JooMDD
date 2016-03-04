@@ -91,7 +91,7 @@ class IndexPageTemplateAdminHelper {
 	                'state', 'a.state',
 	                'created_by', 'a.created_by'
 	                , 'published', 'a.published'
-	                «FOR Attribute attr: indexpage.filters»
+	                «FOR ExtendedAttribute attr: indexpage.extendFiltersList»
 	                ,'«attr.name.toLowerCase»', 'a.«attr.name.toLowerCase»'
 	                «ENDFOR»
 	                );}
@@ -115,7 +115,7 @@ class IndexPageTemplateAdminHelper {
 	        // Select the required fields from the table.
 	        $query->select(
 	                $this->getState(
-	                        'list.select', 'DISTINCT a.*'
+	                        'list.select', 'a.*'
 	                )
 	        );
 	        $query->from('`#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»` AS a');
@@ -138,29 +138,37 @@ class IndexPageTemplateAdminHelper {
 		} else if ($published === '') {
 			$query->where('(a.state IN (0, 1))');
 		}
+		// Filter by User 
+		$created_by = $this->getState('filter.created_by');
+		if (!empty($created_by)) {
+            $query->where("a.created_by = '$created_by'");
+            }
+        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
+        // Filter by «attr.name» 
+		$«attr.name» = $this->getState('filter.«attr.name»');
+		if (!empty($«attr.name»)) {
+            $query->where("a.«attr.name» = '$«attr.name»'");
+            }
+        «ENDFOR»
 		
-			// Filter by search in title
-	        $search = $this->getState('filter.search');
-	        if (!empty($search)) {
-	            if (stripos($search, 'id:') === 0) {
-	                $query->where('a.id = ' . (int) substr($search, 3));
-	            } else {
-	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
-	                «IF !filters.empty»
-	                $query->where('( a.«filters.get(0).name.toLowerCase» LIKE '.$search. 
-	                «FOR Attribute attr : indexpage.filters»
-	                «IF filters.indexOf(attr) > 0»
-	                 'OR  a.«attr.name.toLowerCase» LIKE '.$search.
-	                 «ENDIF»
-	                 «ENDFOR»
-	                 
-	                 ')');   
-	                 «ENDIF»
-	            }}
-	            //Filtering user
-		
-
-	
+		// Filter by search in attribute
+        $search = $this->getState('filter.search');
+        if (!empty($search)) {
+            if (stripos($search, 'id:') === 0) {
+                $query->where('a.id = ' . (int) substr($search, 3));
+            } else {
+                $search = $db->Quote('%' . $db->escape($search, true) . '%');
+                «IF !filters.empty»
+                $query->where('( a.«filters.get(0).name.toLowerCase» LIKE '.$search. 
+                «FOR Attribute attr : indexpage.filters»
+                «IF filters.indexOf(attr) > 0»
+                 'OR  a.«attr.name.toLowerCase» LIKE '.$search.
+                 «ENDIF»
+                 «ENDFOR»
+                 
+                 ')');   
+                 «ENDIF»
+            }}
 	        // Add the list ordering clause.
 	        $orderCol = $this->state->get('list.ordering');
 	        $orderDirn = $this->state->get('list.direction');
@@ -311,25 +319,10 @@ class IndexPageTemplateAdminHelper {
 		            JToolBarHelper::preferences('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		        }
 		 
-		        //Set sidebar action - New in 3.0
 		        JHtmlSidebar::setAction('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»');
 		 
-		        $this->extra_sidebar = '';
-		        
-		 JHtmlSidebar::addFilter(
+		
 		 
-		 JText::_('JOPTION_SELECT_PUBLISHED'),
-		 
-		 'filter_published',
-		 
-		 JHtml::_('select.options', JHtml::_('jgrid.publishedOptions'), "value", "text", $this->state->get('filter.state'), true)
-		 
-		 );
-		 
-		 //Filter for the field user
-		 $this->extra_sidebar .= '<small><label for="filter_user">User</label></small>';
-		 $this->extra_sidebar .= JHtmlList::users('filter_user', $this->state->get('filter.user'), 1, 'onchange="this.form.submit();"');
-		    }
 	'''
 	def CharSequence genAdminViewSortFields()'''
 	protected function getSortFields()
@@ -347,18 +340,6 @@ class IndexPageTemplateAdminHelper {
 	'''
 	def private CharSequence genAdminViewLayoutFilters()'''
 	<div id="filter-bar" class="btn-toolbar">
-			<div class="filter-search btn-group pull-left">
-				<label for="filter_search" class="element-invisible"><?php echo JText::_('JSEARCH_FILTER');?></label>
-				<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('JSEARCH_FILTER'); ?>" />
-			</div>
-			<div class="btn-group pull-left">
-				<button class="btn hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
-				<button class="btn hasTooltip" type="button" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.id('filter_search').value='';this.form.submit();"><i class="icon-remove"></i></button>
-			</div>
-			<div class="btn-group pull-right hidden-phone">
-				<label for="limit" class="element-invisible"><?php echo JText::_('JFIELD_PLG_SEARCH_SEARCHLIMIT_DESC');?></label>
-				<?php echo $this->pagination->getLimitBox(); ?>
-			</div>
 			<div class="btn-group pull-right hidden-phone">
 				<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
 				<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
@@ -522,10 +503,7 @@ $sortFields = $this->getSortFields();
 </script>
 
 <?php
-//Joomla Component Creator code to allow adding non select list filters
-if (!empty($this->extra_sidebar)) {
-    $this->sidebar .= $this->extra_sidebar;
-}
+
 ?>
 
  '''
@@ -541,14 +519,17 @@ if (!empty($this->extra_sidebar)) {
         $app = JFactory::getApplication('administrator');
 
         // Load the filter state.
-        $search = $app->getUserStateFromRequest($this->context . '.filter.search', 'filter_search');
-        $this->setState('filter.search', $search);
-
-        $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published', '', 'string');
-        $this->setState('filter.published', $published);
-
+         $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published');
+        	      $this->setState('filter.published', $published);
         
-
+  		$state = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
+                  $this->setState('filter.state', $state);
+        $created_by = $app->getUserStateFromRequest($this->context . '.filter.created_by', 'filter_created_by');
+                          $this->setState('filter.created_by', $created_by);
+         «FOR ExtendedAttribute attr: indexpage.extendFiltersList»
+         $«attr.name» = $app->getUserStateFromRequest($this->context . '.filter.«attr.name»', 'filter_«attr.name»');
+                      $this->setState('filter.«attr.name»', $«attr.name»);
+         «ENDFOR»
         // Load the parameters.
         $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');
         $this->setState('params', $params);
@@ -568,17 +549,19 @@ if (!empty($this->extra_sidebar)) {
      * @return the ID of a Row
      *
      */
-    public function getIdOfReferenceItem($linkName, $attrvalue){
+   public function getIdOfReferenceItem($linkName, $attrvalue){
       $dbtable = $this->entitiesRef["$linkName"]["db"];
       $attribute = $this->entitiesRef["$linkName"]["refattr"];
       $db = JFactory::getDbo();
       $query = $db->getQuery(true);
       $query->select("id")
-          ->from($dbtable)
-          ->where($attribute . " like '$attrvalue'");
+          ->from($dbtable);
+       foreach ($attribute as $index=>$attributItem){ 
+          $query->where($attributItem . " like '$attrvalue[$index]'");
+       }
       $db->setQuery($query);
       $result = $db->loadObject();
-
+  
       return intval($result->id);
     }
   '''

@@ -31,6 +31,8 @@ public class  ExtensionGeneratorClient  {
 		ext=extens
 	}
 	
+	
+	
 	public def AbstractExtensionGenerator getExtensiongenerator(){
 		return this.extensionsgenerator
 	}

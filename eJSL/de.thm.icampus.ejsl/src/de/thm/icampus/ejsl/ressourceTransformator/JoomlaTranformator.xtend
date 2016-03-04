@@ -42,6 +42,7 @@ class JoomlaTranformator {
 				cmsExtension = instance.ejslPart as CMSExtension
 				entityList = cmsExtension.feature.entities
 				completeEntity()
+				completePage(cmsExtension.feature.pages)
 			}
 		}
 	}

@@ -173,13 +173,17 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	 */
 	class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends JModelList {
 		
+		«IF !ipage.entities.get(0).references.empty»
 		«Slug.genLinkedInfo(ipage,com)»
+		«ENDIF»
 		«helperAdmin.genAdminModelConstruct»
 		«helperAdmin.genAdminModelGetItem»
 		«helperAdmin.genAdminModelGetListQuery(ipage.filters)»
 		«helperAdmin.genAdminModelSaveOrder»
 		«helperAdmin.genAdminModelPopulateState»
+	 «IF !ipage.entities.get(0).references.empty»
 		«helperAdmin.genGetIdOfReferenceItem»
+	«ENDIF»
 	}
 	
 	'''
