@@ -7,19 +7,27 @@
     </template>
     <template>
         <name>Conference</name>
+        <description>Conference Model consisting of participants, talks, rooms, and agendaitems.</description>
         <src>conference.eJSL</src>
     </template>
     <template>
     	<name>Model</name>
+    	<description>Abstract model for simple start.</description>
     	<src>Model.eJSL</src>
     </template>
     <template>
+    	<name>Complex Model</name>
+    	<description>Abstract complex model for simple start.</description>
+    	<src>Complex Model.eJSL</src>
+    </template>
+    <template>
     	<name>Weblinks</name>
+    	<description>Model of Joomla's Weblinks extensions</description>
     	<src>Weblinks.eJSL</src>
     </template>
     <template>
-    	<name>New Model</name>
-    	<description>A new Model Template by Dieudonne Timma Meyatchie</description>
+    	<name>New example model</name>
+    	<description>A new example model template </description>
     	<src>newModel.eJSL</src>
     </template>
 </templateList>

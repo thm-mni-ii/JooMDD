@@ -145,6 +145,79 @@ eJSLModel "name of the model" {
 				}
 				*Page : IndexPage1 
 			}
+			Extension package Test{
+				Manifestation {
+					authors {
+						Author "Klaus Merller"
+						{
+							authoremail = "Klaus.Maaa@mni.thm.de"
+							authorurl = "www.clox-fitness.de"
+						}
+						Author "Max Mustermann"
+						{
+							authoremail = "Max.Mustermann@mni.thm.de"
+							authorurl = "www.joomla.de"
+						}
+					}
+				}
+				extensions {
+					Module mod1 {
+						Manifestation {
+							authors {
+								Author "Klaus Muller"
+								{
+									authoremail = "Klaus.Mullerr@mni.thm.de"
+									authorurl = "www.clox-fitness.de"
+								}
+								Author "Max Mustermann"
+								{
+									authoremail = "Max.Mustermann@mni.thm.de"
+									authorurl = "www.joomla.de"
+								}
+							}
+							creationdate = 23.06.1337
+							copyright = "MDD SS15"
+							description = "Master"
+						}
+						*Page : IndexPage2 from : Component1 .backend
+					}
+					Component Component1 {
+						Manifestation {
+							authors {
+								Author "forename surname" {
+									authoremail = "name@provider.domaiss"
+									authorurl = "www.anyurl.com"
+								}
+							}
+							creationdate =20.04.1222
+							copyright = "Copyright"
+							license = "License"
+						}
+						languages {
+							Language de-DE {
+							}
+							Language en-GB {
+							}
+						}
+						sections {
+							Frontend section {
+								*Pages { 
+							   		*Page : IndexPage1
+									*Page :  DetailsPage1
+								}
+							}
+							Backend section {
+								*Pages {
+									*Page : IndexPage1
+									*Page :  DetailsPage1
+									*Page :  IndexPage2
+									*Page : DetailsPage2
+								}
+							}
+						}
+					}
+				}
+			}
 		 }
 	}
 }

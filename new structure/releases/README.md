@@ -45,7 +45,7 @@ PHPStorm 10.0.3, Download of some files (includes configurated Xtext and the EJS
 ***
 ## Getting Started ##
 ### The eJSL language###
- <img src="img/eJSL_Logo_trans.png" alt="eJSLLogo" height="200" style="max-width:100%;float:right;">
+ <img src="img/eJSL_Logo_trans.png" alt="eJSLLogo" height="100" style="max-width:100%;float:right;">
  
 The **eJSL** plugin can be used to create extensions for the Joomla CMS in a model-driven way. 
 Through the creation of eJSL-specific models a tremendous amount of code becomes generated automatically. 
@@ -56,29 +56,50 @@ Please make sure, that you've installed the eJSL part of JooMDD to follow the ne
 ### 1. Create a new eJSL project ###
 There are two ways to create an eJSL project:
 
-#### Manual project creation: ####
+#### Manual project creation (works for Eclipse, IntelliJ IDEA, and PHPStorm): ####
 1. Create a new project of any type (e.g. a general, Java, or PHP project)
 2. Create a new file of any name with the ending .eJSL (e.g. *model.eJSL*)
 3. Start creating your model containing entities, pages, and extensions
 
 #### Using the eJSL Project Wizard: ####
+Instead of creating an eJSL project manually, you can get started easier, using the eJSL project wizard. 
 
 ##### Eclipse #####
-Instead of creating an eJSL project manually, you can get started easier, using the eJSL project wizard. 
-For this, create a new project and within the "new Project" dialogue open the folder Xtext. Within this 
-folder you should see *"EJSL Project"*. Through a double-click on this project type, the required project 
-structure becomes generated containing source folders for your models (*src*) and for the code generated 
-based on your models (*src-gen*). In addition, an example model is created within the src folder which 
-can be used for a straightforward introduction.
+Create a new project and within the "new Project" dialogue open the folder eJSL Wizard. 
 
-##### IntelliJ and PHPStorm #####
+<img src="img/eclipse_pw_1.png" alt="Eclipse Project Wizard" height="300" style="max-width:100%;float:right;">
+<img src="img/eclipse_pw_2.png" alt="Eclipse Project Wizard 2" height="300" style="max-width:100%;float:right;">
+<img src="img/eclipse_pw_3.png" alt="Eclipse Project Wizard 3" height="300" style="max-width:100%;float:right;">
+
+Within this folder you should see *"EJSL Project"*. Give your project a name and select a model example template.
+Through a click on the Finish-Button the required project structure becomes generated containing source folders 
+for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
+is created within the src folder which can be used for a straightforward introduction.
+
+<img src="img/eclipse_pw_4.png" alt="Eclipse Project Wizard 4" height="300" style="max-width:100%;float:right;">
+
+##### IntelliJ #####
+Create a new project and within the "new Project" dialogue click on the *eJSL* section. 
+
+<img src="img/ij_pw_1.png" alt="IntelliJ IDEA Project Wizard" height="300" style="max-width:100%;float:right;">
+<img src="img/ij_pw_2.png" alt="IntelliJ IDEA Project Wizard 2" height="300" style="max-width:100%;float:right;">
+
+Select a model example template and subsequently give you project a name.
+Through a click on the Finish-Button the required project structure becomes generated containing source folders 
+for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
+is created within the src folder which can be used for a straightforward introduction.
+
+<img src="img/ij_pw_3.png" alt="IntelliJ IDEA Wizard 3" height="300" style="max-width:100%;float:right;">
+
+##### PHPStorm #####
+We are currently working on the project wizard for PHPStorm
 
 ### 2. Create a model ###
 eJSL allows you the definition of different parts of a Joomla extension. Starting with the definition 
 of a data structure (***entities***) on to its presentation (***pages***) up to the specification of 
 Joomla-specific ***extensions***.
 
-While using the text-based editor you get support by the code completion typing *Ctrl + Space*.
+While using the text-based editor you get support by the code completion typing ***Ctrl + Space***.
 
 For an easier start we recommend the use of the example instances, provided by the project wizards.  
 
@@ -91,7 +112,7 @@ and save it. Therefore we recommend to copy generated extensions to another fold
 you can extend them without loosing them after a new code generation. Another and cleaner option is using a 
 versioning tool like git to store your individual added code.
 
-Note: Our tools are completly prototypical and we are currently working on the generator structure.
+**Note:** Our tools are completly prototypical and we are currently working on the generator structure.
 
 ***
 ## Copyright ##
