@@ -14,7 +14,10 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -24,27 +27,58 @@ import org.eclipse.swt.widgets.Button;
 public class TemplateSelectionPage extends WizardPage implements SelectionListener {
 
 	private Composite container;
+	private Text filename;
 	private Button[] buttons;
 	private Template[] templates;
 	private Label template_description;
 	private Label template_content;
 	private URL templateDirectory;
+	private boolean newProject;
 	
-	protected TemplateSelectionPage(String pageName) {
+	protected TemplateSelectionPage(String pageName, boolean newProject) {
 		super(pageName);
+		this.newProject = newProject;
 	}
 
 	@Override
 	public void createControl(Composite parent) {
 		container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout(2, true));
+		container.setLayout(new GridLayout(1, false));
 		
-		Group g1 = new Group(container, SWT.SHADOW_NONE); 
+		if(newProject){
+			Composite filenameGroup = new Composite(container, SWT.NONE);
+			filenameGroup.setLayout(new GridLayout(2, false));
+			filenameGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			
+			Label text = new Label(filenameGroup, SWT.NONE);
+			text.setText("File Name:");
+			
+			filename = new Text(filenameGroup, SWT.BORDER);
+			filename.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			filename.setText("Model");
+			filename.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					if(filename.getText().equals("")){
+						setPageComplete(false);
+					}else{
+						setPageComplete(true);
+					}
+				}
+			});
+		}
+		
+		Composite selectionGroup = new Composite(container, SWT.NONE);
+		selectionGroup.setLayout(new GridLayout(2, true));
+		selectionGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		Group g1 = new Group(selectionGroup, SWT.SHADOW_NONE); 
 		g1.setLayout(new GridLayout(1, false));
 		g1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		g1.setText("Templates");
 		
-		Group g2 = new Group(container, SWT.SHADOW_NONE); 
+		Group g2 = new Group(selectionGroup, SWT.SHADOW_NONE); 
 		g2.setLayout(new GridLayout(1, false));
 		g2.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		g2.setText("Selected");
@@ -79,6 +113,15 @@ public class TemplateSelectionPage extends WizardPage implements SelectionListen
 		setPageComplete(true);
 	}
 
+	public String getFileName(){
+		String returnString = filename.getText();
+		
+		if(returnString.toLowerCase().endsWith(".ejsl"))
+			return returnString;
+		else
+			return returnString + ".eJSL";
+	}
+	
 	public InputStream getSelectedTemplate(){
 		if(buttons != null){
 			for (int i = 0; i < buttons.length; i++) {

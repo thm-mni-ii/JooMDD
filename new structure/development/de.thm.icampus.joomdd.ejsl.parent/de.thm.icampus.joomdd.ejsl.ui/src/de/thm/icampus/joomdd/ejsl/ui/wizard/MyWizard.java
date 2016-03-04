@@ -66,7 +66,7 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this._workbench = workbench;
 		 _pageOne = new WizardNewProjectCreationPage(PAGE_NAME_1);
-		 _pageTwo = new TemplateSelectionPage(PAGE_NAME_2);
+		 _pageTwo = new TemplateSelectionPage(PAGE_NAME_2, true);
 		 
 		 try {
 			imgFolder = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("img"), null));
@@ -123,7 +123,7 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 				public InputStream getInput() throws IOException {
 					return _pageTwo.getSelectedTemplate();
 				}
-			}, new File(project, "src/Model.eJSL"));		
+			}, new File(project, "src/" + _pageTwo.getFileName()));		
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e){

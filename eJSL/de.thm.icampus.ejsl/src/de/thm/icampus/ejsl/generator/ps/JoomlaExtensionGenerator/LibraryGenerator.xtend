@@ -12,6 +12,7 @@ import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
 import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 /**
  * <!-- begin-user-doc -->
@@ -315,7 +316,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		?>
 	'''
 	
-	def CharSequence getTypeName(Type type){
+	def CharSequence getTypeName(ExtendedAttribute type){
 		return Slug.getTypeName(type)
 	}
 

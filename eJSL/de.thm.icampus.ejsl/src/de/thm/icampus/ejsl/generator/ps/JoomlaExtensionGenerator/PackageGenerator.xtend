@@ -24,7 +24,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 		this.pkg = pkg
 		this.fsa = access
 		this.name = "pkg_" + Slug.slugify(pkg.name)
-		this.extClient = new ExtensionGeneratorClient(access)
+		//this.extClient = new ExtensionGeneratorClient(access, pkg.extensions)
 	}
 	
 	override generate() {

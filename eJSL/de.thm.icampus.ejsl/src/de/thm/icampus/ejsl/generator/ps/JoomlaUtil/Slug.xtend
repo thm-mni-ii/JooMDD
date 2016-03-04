@@ -29,6 +29,9 @@ import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameter
+import de.thm.icampus.ejsl.eJSL.SectionKinds
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 /**
  * <!-- begin-user-doc -->
@@ -90,6 +93,20 @@ public class Slug  {
 		return res.toString
 	}
 	def static String getTypeName(ExtendedAttribute typ){
+		var String result = "";
+		switch typ{
+			DatatypeReference :{
+				var DatatypeReference temptyp = typ as DatatypeReference
+				result = temptyp.type.name
+			}
+			SimpleDatatypes:{
+				var SimpleDatatypes temptyp = typ as SimpleDatatypes
+				result = temptyp.type.toString
+			}
+		}
+		return result
+	}
+	def static String getTypeName(ExtendedParameter typ){
 		var String result = "";
 		switch typ{
 			DatatypeReference :{
@@ -294,9 +311,16 @@ public class Slug  {
 	 * @link        www.link.com
 	 */
 	'''
-	
+	 
 	def static String getSectioName(Section  reference) {
 		if(reference instanceof BackendSection)
+		return 'admin'
+		
+		return ''
+		
+	}
+	def static String getSectioName(SectionKinds  reference) {
+		if(reference.getName.equalsIgnoreCase("backend"))
 		return 'admin'
 		
 		return ''
@@ -322,36 +346,58 @@ public class Slug  {
 	«FOR Link lk: page.links»
 	«IF lk.linkedAttribute != null»
 	«IF lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)»
-	«ENDIF»
+	
 	«switch lk{
 		ExternalLink :{
 			'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»'''
 			}
 		 InternalLink:{
 		 if((lk as InternalLink).target instanceof DetailsPage){
-		   if((page as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)){
-		   	
-		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->id'''
+		   if((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)){
+		   	if(!(lk instanceof ContextLink)){
+		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->id '''
+		    
+		    }else{
+		    	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»'''
+		    	}
 		    
 		   	}		   	   
 		    else{
-		 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item->«attribute.name.toLowerCase»)'''
-		 	  }
+		    	
+		    		var idRef = Slug.getAttributeForForeignID(attribute, page)
+		    
+				   if(idRef != null){
+				   '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->«idRef.name»'''
+				   	
+				   }
+				   else	
+				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item->«attribute.name.toLowerCase»)'''
+		 	 }
 		 	}else{
 		 		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
 		 		}
 		 	}
 		}»
-	
+	«ENDIF»
 	«ENDIF»
 	«ENDFOR»
 	'''
-	
+	def static ExtendedAttribute getAttributeForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage){
+		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).extendedReference){
+			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
+				for(ExtendedAttribute refAttr: ref.extendedAttributeReferenced){
+					if(refAttr.name.equalsIgnoreCase("id"))
+					return ref.extendedAttribute.get(ref.extendedAttributeReferenced.indexOf(refAttr))
+				}
+			}
+		}
+		return null
+	}
 	def static Boolean isLinkedAttributeReference(Attribute attribute, DynamicPage page) {
 		
 		for(Entity e: page.entities){
 			for(Reference ref: e.references){
-				if(ref.attribute.equals(attribute))
+				if(ref.attribute.get(0).equals(attribute))
 				return true
 			}
 		}
@@ -361,7 +407,7 @@ public class Slug  {
 	def static Reference searchLinkedAttributeReference(Attribute attribute, DynamicPage page) {
 		for(Entity e: page.entities){
 			for(Reference ref: e.references){
-				if(ref.attribute.equals(attribute))
+				if(ref.attribute.get(0).name.equalsIgnoreCase(attribute.name))
 				return ref
 			}
 		}
@@ -374,7 +420,7 @@ public class Slug  {
  		InternalLink :{
  			if(isLinkedAttributeReference(linkItem.linkedAttribute, page)){
  				var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
- 				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced,",")»)"),'''	
+ 				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced,",")»)),'''	
  			}				
  		}	
  	}»«ENDFOR»null);
