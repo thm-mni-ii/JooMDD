@@ -13,11 +13,11 @@ class FieldsGenerator {
 	String nameField
 	ExtendedEntity entFrom
 
-	public new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
+	public new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from, int index) {
 		mainRef = ref
 		com = component
 		entFrom = from
-		nameField = from.name + "To" + ref.entity.name
+		nameField = from.name + "To" + ref.entity.name+index
 	}
 
 	public new(ExtendedComponent component, ExtendedEntity from) {
@@ -258,17 +258,17 @@ class FieldsGenerator {
 	<?php
 	«Slug.generateFileDoc(component, true)»
 	JFormHelper::loadFieldClass('list');
-	class JFormFieldUser extends JFormFieldList{
+	class JFormField«component.name.toFirstUpper»user extends JFormFieldList{
 	    
 	      protected function getOptions(){
 	           $entity = $this->getAttribute('entity');
-	           $table = "#__joomladays_" . $entity;
+	           $table = "#__«component.name.toLowerCase»_" . $entity;
 	           $dbo = JFactory::getDbo();
 	           $query = $dbo->getQuery(true);
-	           $query->select("created_by AS value, name AS text")
+	           $query->select("a.created_by AS value, b.name AS text")
 	                 ->from("$table AS a ")
-	                ->leftJoin("#__user AS b ON a.created_by = a.id")
-	                ->order("name ASC");
+	                ->leftJoin("#__users AS b ON a.created_by = b.id")
+	                ->order("b.name ASC");
 	           $dbo->setQuery($query);
 	           $dataList = $dbo->loadObjectList();
 	           return  array_merge(parent::getOptions(),$dataList);

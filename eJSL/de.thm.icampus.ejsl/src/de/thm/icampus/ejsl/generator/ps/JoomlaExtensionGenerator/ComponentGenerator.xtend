@@ -213,7 +213,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <!-- Administration Menu Section -->
 		        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
 		        <submenu>
-				«FOR page : indexPages»
+				«FOR page : indexPages.filter[t | !t.detailsPage]»
 					
 					<menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
 					alias="«page.name.toFirstUpper»"
@@ -322,13 +322,14 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(extendeComp, ent)
 			generateFile( fieldspath + "/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
 			for (ExtendedReference ref : ent.extendedReference) {
-				var FieldsGenerator fieldReference = new FieldsGenerator(ref, extendeComp, ent)
+				var index = ent.extendedReference.indexOf(ref)
+				var FieldsGenerator fieldReference = new FieldsGenerator(ref, extendeComp, ent,index)
 				generateFile(
-					fieldspath + "/" + fieldReference.getnameField.toLowerCase + "_" + ent.extendedReference.indexOf(ref) +
+					fieldspath + "/" + fieldReference.getnameField.toLowerCase  +
 						".php", fieldReference.genRefrenceField)
 			}
 		}
-		generateFile(fieldspath + "/" + "user.php", FieldsGenerator.genFieldsForUserView(extendeComp) )
+		generateFile(fieldspath + "/" + extendeComp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(extendeComp) )
 	}
 
 	def generateTable(String path) {

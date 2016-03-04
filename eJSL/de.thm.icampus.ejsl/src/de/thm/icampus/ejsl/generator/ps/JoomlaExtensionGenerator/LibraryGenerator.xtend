@@ -317,6 +317,9 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 	'''
 	
 	def CharSequence getTypeName(ExtendedAttribute type){
+		return Slug.getTypeName(type.htmlType)
+	}
+	def CharSequence getTypeName(Type type){
 		return Slug.getTypeName(type)
 	}
 

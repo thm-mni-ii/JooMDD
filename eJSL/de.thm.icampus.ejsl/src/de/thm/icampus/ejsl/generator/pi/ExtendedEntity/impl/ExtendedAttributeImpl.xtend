@@ -16,6 +16,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	Entity entity
 	String genType
 	Attribute instance
+	String htmlType
 
 	new(Attribute attr) {
 
@@ -25,9 +26,25 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		this.withattribute = attr.withattribute
 		entity = attr.eContainer as Entity
 		genType = generatorType()
+		htmlType = generatorTypeHtmlType()
 		instance = attr
 
 	}
+	
+	def String generatorTypeHtmlType() {
+		switch type {
+			DatatypeReference: {
+				var DatatypeReference temptyp = type as DatatypeReference
+				return temptyp.type.name
+			}
+			StandardTypes: {
+				var StandardTypes temptyp = type as StandardTypes
+				return temptyp.type.getName
+			}
+		}
+	}
+	
+	
 
 	override generatorType() {
 		switch type {
@@ -107,6 +124,10 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 
 	override getInstance() {
 		return instance
+	}
+	
+	override htmlType() {
+		return htmlType
 	}
 
 

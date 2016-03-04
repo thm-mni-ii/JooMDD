@@ -578,14 +578,12 @@ class DetailsPageTemplateFrontEndHelper {
 				 echo $this->item->checked_out;}else{ echo JFactory::getUser()->id;} ?>" />
 				<input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)){
 				 echo $this->item->checked_out_time;}else{ echo date("Y-m-d H:i:s") ;} ?>" />
-	«Slug.generateEntytiesHiddenAttribute(dpage.entities.get(0),dpage.entities)»
-
 	<?php if(empty($this->item->created_by)): ?>
 		<input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>" />
 	<?php else: ?>
 		<input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
 	<?php endif; ?>
-	«Slug.generateEntytiesInputAttribute(dpage.entities.get(0), dpage.entities)»
+	«Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
 	<div class="fltlft" <?php if (!JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')): ?> style="display:none;" <?php endif; ?> >
 	                <?php echo JHtml::_('sliders.start', 'permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
 	                <?php echo JHtml::_('sliders.panel', JText::_('ACL Configuration'), 'access-rules'); ?>
