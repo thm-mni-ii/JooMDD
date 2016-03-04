@@ -42,13 +42,20 @@ public class eJSLWizardStep extends ModuleWizardStep {
         }
 
         JPanel panel = new JPanel(new BorderLayout());
-        JPanel logoPanel = new JPanel(new BorderLayout());
-        JPanel selectPanel = new JPanel(new GridLayout(temps.length+1, 1));
+        ImagePanel logoPanel = new ImagePanel("/resources/icons/Logo_b.png");
+        JPanel selectPanel = new JPanel(new BorderLayout());
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
         JPanel previewPanel = new JPanel(new BorderLayout());
 
         JLabel selectLabel = new JLabel("Load example:");
         JLabel previewLabel = new JLabel("Preview:");
         JLabel previewText  = new JLabel();
+
+        JScrollPane selectScroll = new JScrollPane(buttonPanel);
+        selectScroll.setPreferredSize(new Dimension(150,250));
+        JScrollPane previewScroll = new JScrollPane(previewText);
+        previewScroll.setPreferredSize(new Dimension(400,250));
 
         panel.add(logoPanel, BorderLayout.NORTH);
         panel.add(selectPanel, BorderLayout.WEST);
@@ -56,14 +63,20 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
         JRadioButton[] radio = new JRadioButton[temps.length];
 
-        selectPanel.add(selectLabel);
+        selectPanel.add(selectLabel, BorderLayout.NORTH);
+        selectPanel.add(selectScroll, BorderLayout.CENTER);
         previewPanel.add(previewLabel, BorderLayout.NORTH);
-        previewPanel.add(previewText, BorderLayout.CENTER);
+        previewPanel.add(previewScroll, BorderLayout.CENTER);
+
+        selectLabel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        selectScroll.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        previewLabel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        previewScroll.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 
         for (int i = 0; i < radio.length; i++){
             radio[i] = new JRadioButton(temps[i].getName());
-            selectPanel.add(radio[i]);
+            buttonPanel.add(radio[i]);
 
             final int j = i;
             radio[i].addActionListener(new ActionListener() {
@@ -75,7 +88,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
                         }
                         setOption(radio[j].getName());
                         if(temps[j].getPreview() == null){
-                            previewText.setText("Für diese Auswahl ist leider keine Preview verfügbar.");
+                            previewText.setText("This template has no preview.");
                         }else {
                             previewText.setText(temps[j].getPreview().toString());
                         }
@@ -85,7 +98,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         }
         radio[0].setSelected(true);
         if(temps[0].getPreview() == null){
-            previewText.setText("Für diese Auswahl ist leider keine Preview verfügbar.");
+            previewText.setText("This template has no preview.");
         }else {
             previewText.setText(temps[0].getPreview().toString());
         }

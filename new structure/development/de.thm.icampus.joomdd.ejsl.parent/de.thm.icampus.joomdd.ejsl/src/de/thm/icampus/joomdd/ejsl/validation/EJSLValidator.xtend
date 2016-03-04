@@ -482,7 +482,7 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	@Check
 	def refToAttributeMustBePrimary(Reference reference){
 		for (attribute : reference.attributerefereced) {
-			if(attribute.isunique){
+			if(!attribute.isunique){
 				error(
 					'The referenced attribute has to be a primary attribute.',
 					reference,
