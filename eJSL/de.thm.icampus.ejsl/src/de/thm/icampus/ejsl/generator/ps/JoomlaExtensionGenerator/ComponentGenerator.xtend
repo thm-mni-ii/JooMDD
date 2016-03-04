@@ -283,6 +283,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		generateFile("admin/access.xml", extendeComp.xmlAccessContent)
 		generateFile("admin/config.xml", extendeComp.xmlConfigContent)
+		generateJoomlaDirectory("admin/assets")
+		generateFile("admin/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
+		
 
 		generateJoomlaDirectory("admin/views")
 		println(slug)
@@ -304,9 +307,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateJoomlaDirectory("admin/helpers/")
 		generateFile("admin/helpers/" + extendeComp.name.toLowerCase + ".php", generateHelperComponent)
 
-		generateJoomlaDirectory("admin/assets")
-		generateFile("site/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
-
+		
 		// commented out old model generation code
 		val pagerefs = extendeComp.backEndExtendedPagerefence
 		for (pageref : pagerefs) {
@@ -851,7 +852,7 @@ function «component.name.toFirstUpper»ParseRoute($segments) {
 } 
 	'''
 	def CharSequence genScriptForForeignKeys()'''
-	 «Slug.generateFileDoc(extendeComp,true)»
+	 «Slug.generateFileDoc(extendeComp,false)»
 	 
 	function setValueForeignKeys(element) {
 	
