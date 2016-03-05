@@ -79,7 +79,7 @@ class FieldsGenerator {
 				      if(empty($id)){
 				      	$alldata = $this->getAllData();
 				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' name='" . $this->name. "'>";
-				      $html[] = "<option>JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»</option>";
+				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($alldata as $data){
 				          $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 				          . $this->generateStringValue($data) ."</option>";
@@ -91,7 +91,7 @@ class FieldsGenerator {
 				      $selectData = $this->getReferencedata($id);
 				      $restData = $this->getAllRestData($id);
 				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select' class='form-control' name='" . $this->name. "select'>";
-				      $html[] = "<option>JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»</option>";
+				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($selectData as $selected){
 				          $html[] = "<option selected='selected' value='". $this->generateJsonValue($selected) ."'>"
 				          . $this->generateStringValue($selected) ."</option>";
@@ -269,7 +269,7 @@ class FieldsGenerator {
 	           $table = "#__«component.name.toLowerCase»_" . $entity;
 	           $dbo = JFactory::getDbo();
 	           $query = $dbo->getQuery(true);
-	           $query->select("a.created_by AS value, b.name AS text")
+	           $query->select("DISTINCT a.created_by AS value, b.name AS text")
 	                 ->from("$table AS a ")
 	                ->leftJoin("#__users AS b ON a.created_by = b.id")
 	                ->order("b.name ASC");

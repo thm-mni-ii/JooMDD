@@ -239,7 +239,7 @@ class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLega
                hint="JSEARCH_FILTER"
                />
        <field
-               name="status"
+               name="state"
                type="status"
                label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED"
                description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED_DESC"

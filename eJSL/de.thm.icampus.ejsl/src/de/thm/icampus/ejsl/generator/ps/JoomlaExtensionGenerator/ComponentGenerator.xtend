@@ -32,6 +32,7 @@ import java.util.HashSet
 import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.ejsl.eJSL.Reference
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.LanguageGenerator
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
@@ -72,17 +73,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile(name + ".xml", extendeComp.xmlContent(indexPages))
 
 		// Generate language files
-		for (lang : extendeComp.languages) {
-			val ldir = lang.name
-			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".ini",
-				lang.languageFileContent(extendeComp.frontEndExtendedPagerefence))
-			generateFile("language/site/" + ldir + "/" + ldir + "." + name + ".sys.ini",
-				lang.languageFileContent(extendeComp.frontEndExtendedPagerefence))
-			generateFile("language/admin/" + ldir + "/" + ldir + "." + name + ".ini",
-				lang.languageFileContent(extendeComp.backEndExtendedPagerefence))
-			generateFile("language/admin/" + ldir + "/" + ldir + "." + name + ".sys.ini",
-				lang.languageFileContent(extendeComp.backEndExtendedPagerefence))
-		}
+		var LanguageGenerator langgen = new LanguageGenerator(fsa)
+		langgen.genComponentLanguage(extendeComp,this.name)
 
 			// Generate sql stuff
 		generateJoomlaDirectory("admin/sql")
@@ -111,42 +103,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		return entgen.dogenerate;
 	}
 
-	def CharSequence languageFileContent(Language lang,
-		EList<ExtendedPageReference> pagerefList) '''
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»="«extendeComp.name.toFirstUpper»"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_HOME="Home"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_ID="ID"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT="Checked out"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_CHECKED_OUT_TIME="Checked out Time"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_ORDERING="Ordering"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY="Created By"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_NONE_STATE="state"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_JSTATUS="state"
-		«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_JFIELD_PUBLISHED_DESC="State Description"
-		JPUBLISHED="published"
-		JUNPUBLISHED="unpublished"
-		JARCHIVED="archived"
-		JTRASHED="trashed"
-		
-		«FOR ExtendedPageReference pag : pagerefList»
-			«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_TITLE_«Slug.slugify(pag.page.name).toUpperCase»="«pag.page.name.toFirstUpper»"
-			«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_TITLE="«pag.page.name.toFirstUpper»"
-			«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_DESC="«pag.page.name.toFirstUpper»"
-		«ENDFOR»
-		
-		«FOR ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]»
-			
-			«FOR ExtendedEntity ent: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList»
-				«FOR ExtendedAttribute attr: ent.allattribute»
-					«Slug.nameExtensionBind("com", extendeComp.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»="«Slug.slugify(attr.name).toFirstUpper»"
-				«ENDFOR»
-			«ENDFOR»
-		«ENDFOR»
-		«FOR e : lang.keyvaluepairs»
-			«Slug.generateKeysName(extendeComp,e.name)»="«e.value»"
-		«ENDFOR»
-	'''
-
+	
 	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> indexPages) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<extension type="component" version="3.3" method="upgrade">
