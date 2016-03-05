@@ -73,22 +73,24 @@ class FieldsGenerator {
 		{
 				$html = array();
 				$document = JFactory::getDocument();
-				$document->addScript( JPATH_COMPONENT . 'assets/setForeignKeys.js');
+				$document->addScript( JURI::root() . '/administrator/components/«Slug.nameExtensionBind("com",com.name).toLowerCase»/assets/setForeignKeys.js');
 				$input = JFactory::getApplication()->input;
 				      $id = intval($input->get('id'));
 				      if(empty($id)){
 				      	$alldata = $this->getAllData();
-				      	    $html[] = "<select required onchange='setValueForeignKeys()' id='" . $this->id . "'class='form-control' name='" . $this->name. "'>";
+				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "'class='form-control' name='" . $this->name. "'>";
+				      $html[] = "<option>JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»</option>";
 				      foreach($alldata as $data){
 				          $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
-				          . $this->generateStringValue($selected) ."</option>";
+				          . $this->generateStringValue($data) ."</option>";
 				      }
 				        $html[]="</select>";
 				      return implode($html);
 				      }
 				      $selectData = $this->getReferencedata($id);
 				      $restData = $this->getAllRestData($id);
-				      $html[] = "<select required onchange='setValueForeignKeys()' id='" . $this->id . "' class='form-control' name='" . $this->name. "'>";
+				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "' class='form-control' name='" . $this->name. "'>";
+				      $html[] = "<option>JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»</option>";
 				      foreach($selectData as $selected){
 				          $html[] = "<option selected='selected' value='". $this->generateJsonValue($selected) ."'>"
 				          . $this->generateStringValue($selected) ."</option>";
@@ -123,7 +125,7 @@ class FieldsGenerator {
            )
 		         ->where("b.state = 1")
 		         ->where("a.id =" . $id)
-		         ->order("id" . " ASC");
+		         ->order("a.id" . " ASC");
 		    $db->setQuery($query);
 		    return $db->loadObjectList();
 		}
@@ -152,8 +154,8 @@ class FieldsGenerator {
 		    $queryALL->select("*")
 		        ->from($this->referenceStruct["foreignTable"])
 		        ->where("state = 1")
-		        ->where("id not in (" . $query  .")")
-		        ->order("id" . " ASC");
+		        ->where("b.id not in (" . $query  .")")
+		        ->order("b.id" . " ASC");
 		    $db->setQuery($queryALL);
 		    return $db->loadObjectList();
 		}
@@ -166,7 +168,7 @@ class FieldsGenerator {
 	    $queryALL->select("*")
 	        ->from($this->referenceStruct["foreignTable"])
 	        ->where("state = 1")
-	        ->order($this->referenceStruct["foreignKeys"] . " ASC");
+	        ->order(array_values($this->keysAndForeignKeys)[0] . " ASC");
 	    $db->setQuery($queryALL);
 	    return $db->loadObjectList();
 	}
@@ -175,8 +177,8 @@ class FieldsGenerator {
 	public def CharSequence genGenerateJsonValue() '''
 		public function generateJsonValue($data){
 		          $result  = array();
-		          foreach($this->$keysAndForeignKeys as $key=>$value){
-		              $result["$key"] = $data->$key;
+		          foreach($this->keysAndForeignKeys as $key=>$value){
+		              $result["$key"] = $data->{$value};
 		          }
 		          return json_encode($result);
 		      }
@@ -185,9 +187,9 @@ class FieldsGenerator {
 	public def CharSequence gengenerateStringValue() '''
 	public function generateStringValue($data){
 	        $result = array();
-	        foreach($this->$keysAndForeignKeys as $key=>$value){
-	            $result[] = $data->$key . " ";
-	        }
+	        
+	            $result[] = $data->{array_values($this->keysAndForeignKeys)[0]} . " ";
+	        
 	        return implode($result);
 	    }
 	'''

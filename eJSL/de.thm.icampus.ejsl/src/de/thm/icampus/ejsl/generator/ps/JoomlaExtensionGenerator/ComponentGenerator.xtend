@@ -685,7 +685,7 @@ class «class_name»View«class_name»s extends JViewLegacy
 
 	$views['«pg.extendedPage.name.toLowerCase»'] = array();
 	$views['«pg.extendedPage.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»');
-	$views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»"
+	$views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»";
 «ENDFOR»
       
 $this->views = $views;
@@ -860,7 +860,7 @@ function «component.name.toFirstUpper»ParseRoute($segments) {
 	    var data = JSON.parse(element.value);
 	    var item;
 	    for(item in data){
-	        jQuery.("." + item).val(data[item]);
+	        jQuery(".jform_" + item).val(data[item]);
 	    }
 	
 	}

@@ -133,8 +133,11 @@ public class Slug  {
 			 case "Checkbox":{
 			 	result='''type="text" '''
 			 }
-			 case "Radiobutto":{
+			 case "Radiobutton":{
 			 	result='''type="text" '''
+			 }
+			 case "hidden":{
+			 	result='''type="hidden" '''
 			 }
 		}
 		return result
@@ -214,8 +217,7 @@ public class Slug  {
 	
 	
 	def static CharSequence inputHiddenFeldTemplate(ExtendedAttribute attr) '''
-	<input type="hidden" name="jform[«Slug.slugify(attr.name).toLowerCase»]" 
-	value="<?php echo $this->item->«Slug.slugify(attr.name).toLowerCase»; ?>" />
+	<div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
 	'''
 	
 	

@@ -163,6 +163,13 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
    		 
    	def CharSequence getHtmlTypeOfAttribute(ExtendedDynamicPage dynP,ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com){
    		var StringBuffer buff = new StringBuffer
+   		
+   			for(ExtendedReference ref: en.extendedReference){
+   			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
+   				buff.append('''type ="«en.name + "to" +ref.entity.name»«en.extendedReference.indexOf(ref)»"''')
+   				return buff.toString
+   			}
+   		}
    		if(!dynP.extendedEditedFieldsList.empty){
    			for(ExtendedDetailPageField field:dynP.extendedEditedFieldsList ){
    				if(field.extendedAttribute.name.equalsIgnoreCase(attr.name)){
@@ -172,12 +179,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
    				}
    			}
    		}
-   		for(ExtendedReference ref: en.extendedReference){
-   			if(ref.attribute.equals(attr)){
-   				buff.append('''type =«en.name + "To" +ref.entity.name»''')
-   				return buff.toString
-   			}
-   		}
+   	
    		
    		return Slug.getTypeName(attr.htmlType, attr);
    	}

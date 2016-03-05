@@ -256,7 +256,7 @@ class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLega
                entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
               onchange="this.form.submit();"
               >
-          <option value="">JOPTION_SELECT_ATTRIBUTE</option>
+          <option value="">JOPTION_SELECT_CREATED_BY</option>
       </field>
           «FOR ExtendedAttribute attr : ipage.extendFiltersList»
            <field
@@ -268,7 +268,7 @@ class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLega
                  textColumn="«attr.name.toLowerCase»"
                 onchange="this.form.submit();"
                 >
-            <option value="">JOPTION_SELECT_ATTRIBUTE</option>
+            <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
         </field>
           «ENDFOR»
             </fields>
