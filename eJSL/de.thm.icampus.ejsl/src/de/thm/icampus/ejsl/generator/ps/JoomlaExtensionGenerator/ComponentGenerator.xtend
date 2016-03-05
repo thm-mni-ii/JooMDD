@@ -859,11 +859,11 @@ function «component.name.toFirstUpper»ParseRoute($segments) {
 	
 	    var data = JSON.parse(element.value);
 	    var item;
-	    for(item in data){
-	        jQuery(".jform_" + item).val(data[item]);
-	    }
 	
-	}
+	    for(item in data){
+	        jQuery("#"+item).attr("value",data[item]);
+	    }
+	   }
 	'''
 
 } // ComponentGenerator

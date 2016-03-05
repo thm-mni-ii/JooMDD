@@ -78,18 +78,19 @@ class FieldsGenerator {
 				      $id = intval($input->get('id'));
 				      if(empty($id)){
 				      	$alldata = $this->getAllData();
-				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "'class='form-control' name='" . $this->name. "'>";
+				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' name='" . $this->name. "'>";
 				      $html[] = "<option>JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»</option>";
 				      foreach($alldata as $data){
 				          $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 				          . $this->generateStringValue($data) ."</option>";
 				      }
 				        $html[]="</select>";
+				      $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id. "'/>";
 				      return implode($html);
 				      }
 				      $selectData = $this->getReferencedata($id);
 				      $restData = $this->getAllRestData($id);
-				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "' class='form-control' name='" . $this->name. "'>";
+				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select' class='form-control' name='" . $this->name. "select'>";
 				      $html[] = "<option>JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»</option>";
 				      foreach($selectData as $selected){
 				          $html[] = "<option selected='selected' value='". $this->generateJsonValue($selected) ."'>"
@@ -99,6 +100,7 @@ class FieldsGenerator {
 				          $html[] = "<option  value='". $this->generateJsonValue($rest)."'>" . $this->generateStringValue($rest) ."</option>";
 				      }
 				      $html[]="</select>";
+				  $html[]="<input type='hidden' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->id. "'/>";
 			return implode($html);
 		}
 	'''
@@ -154,8 +156,8 @@ class FieldsGenerator {
 		    $queryALL->select("*")
 		        ->from($this->referenceStruct["foreignTable"])
 		        ->where("state = 1")
-		        ->where("b.id not in (" . $query  .")")
-		        ->order("b.id" . " ASC");
+		        ->where("id not in (" . $query  .")")
+		        ->order("id" . " ASC");
 		    $db->setQuery($queryALL);
 		    return $db->loadObjectList();
 		}
@@ -178,7 +180,7 @@ class FieldsGenerator {
 		public function generateJsonValue($data){
 		          $result  = array();
 		          foreach($this->keysAndForeignKeys as $key=>$value){
-		              $result["$key"] = $data->{$value};
+		              $result["jform_$key"] = $data->{$value};
 		          }
 		          return json_encode($result);
 		      }
