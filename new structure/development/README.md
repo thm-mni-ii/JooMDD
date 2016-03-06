@@ -78,6 +78,7 @@ Within the structure of the JooMDD project, a set of installable plugins for the
 ###### Formatter ######
 ###### Validator ######
 ###### Project Wizard ######
+###### Project Wizard under PHPStorm ######
 
 ##### (De-)Serializer Handlers #####
 The Eclipse editor provides an extension to (de-)serialize *eJSL-instances* to/from *xmi-files*. This is done by two 
@@ -127,6 +128,16 @@ you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and Projec
 copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
 copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. 
 Past it between .../depends>  (here)  <xi:include...
+
+###### Project Wizard under PHPStorm ######
+
+*	If you want to release the plugin for PHPStorm you have to make following ajustments to your IntelliJ installation
+*   Under File|Project Structure|Libaries use the Add-Button to add php-openapi.jar and php.jar located under <your_installation_of_PHPStorm/plugins/php/lib>
+*   Change under Modules|Dependencies Scope to Provided
+*   Add the following dependencies to you plugin.xml
+<depends>com.jetbrains.php</depends>
+<depends>com.intellij.modules.platform</depends>
+In this repo they are already added. Please Note that the first dependency has to be deleted if you want the same plugin on IntelliJ
 
 
 ##### Generator inclusion #####
