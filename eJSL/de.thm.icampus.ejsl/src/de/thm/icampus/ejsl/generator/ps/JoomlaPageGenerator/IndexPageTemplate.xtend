@@ -96,7 +96,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		generateFile(path+"/forms/"+ "filter_" + pagename + ".xml",  generateAdminModelForms())
 		}else{
 		 generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
-		  generateFile(path + "/forms"+"/" + pagename + ".xml", xmlAdminFields(ipage,com,com.name))
+		  generateFile(path + "/forms"+"/" +"filter_" + pagename + ".xml", xmlAdminFields(ipage,com,com.name))
 			
 		}
 		 
