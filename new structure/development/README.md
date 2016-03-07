@@ -106,7 +106,7 @@ The created *.zip is in *.idea/build/distributions/
 
 *	for PhpStorm compatibility the "projectfile".iml is in the folder .idea and not visible in the ide.
 
-*	The Xtext plugin (Version 2.9.1) has a changed plugin.xml the dependency "JUnit" is changed to "com.intellij.modules.lang"
+*	The Xtext plugin (Version 2.9.2) has a changed plugin.xml the dependency "JUnit" is changed to "com.intellij.modules.lang"
 Installation (user):
 you need to install Xtext IDEA Core Plugin via Plugin manager and the eJSL Plugin from ...
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/de.thm.icampus.joomdd.ejsl.sdk_1.0.0.201602241558.jar" id="de.thm.icampus.joomdd.ejsl.sdk" version="1.0.0.201602241558">
+   <feature url="features/de.thm.icampus.joomdd.ejsl.sdk_1.0.0.201603071215.jar" id="de.thm.icampus.joomdd.ejsl.sdk" version="1.0.0.201603071215">
       <category name="JooMDD"/>
    </feature>
-   <category-def name="JooMDD" label="JooMDD: Joomla extension and concrete data modeling">
+   <category-def name="JooMDD" label="Model Driven Development of Joomla Extensions">
       <description>
-         eJSL - Extension modeling for the Joomla CMS
+         Extension modeling and code generation for the Joomla CMS
       </description>
    </category-def>
 </site>
