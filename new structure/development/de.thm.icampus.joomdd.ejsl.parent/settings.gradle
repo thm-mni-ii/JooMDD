@@ -1,5 +1,0 @@
-include 'de.thm.icampus.joomdd.ejsl'
-include 'de.thm.icampus.joomdd.ejsl.ide'
-include 'de.thm.icampus.joomdd.ejsl.idea'
-include 'de.thm.icampus.joomdd.ejsl.web'
-include 'de.thm.icampus.joomdd.ejsl.tests'
