@@ -22,7 +22,7 @@ subprojects {
 	apply plugin: 'idea'
 	
 	group = 'de.thm.icampus.joomdd.ejsl'
-	version = '1.0.0-SNAPSHOT'
+	version = '0.2.1'
 	
 	sourceCompatibility = '1.8'
 	targetCompatibility = '1.8'
