@@ -34,7 +34,7 @@ import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
  * @model
  * @generated
  */
-public class DynamicPageTemplate extends AbstractPageGenerator {
+public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	
 	
 	
@@ -71,7 +71,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
                 addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
             >
            
-            «IF page instanceof IndexPage»
+            «IF page.instance instanceof IndexPage»
              <fieldset name="request">
                 <field name="template_layout" type="list"
                 label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_TEMPLATE_LAYOUT"
@@ -79,15 +79,15 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 		        class="inputbox"
 		        size="1"
 		        default="1">
-		        <option value="1">JTEMPLATE_LAYOUT_LIST</option>
 		        <option value="2">JTEMPLATE_LAYOUT_TABLE</option>
+		        <option value="1">JTEMPLATE_LAYOUT_LIST</option>
 				</field> 
 				</fieldset>
 			«ENDIF»
             	«generateParameter(page.extendedGlobalParametersListe, component)»
                 «generateParameter(page.extendedLocalParametersListe, component)»
                 «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe »
-                <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_«page.name.toUpperCase»_«e.name.toUpperCase»" 
+                <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
                 «generateParameter(e.extendedParameterList, component)»
                 «generateParameter(e.extendedParameterList,component)»
                 </fieldset>
@@ -184,16 +184,6 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
    		return buff.toString;
    	}
 	
-	override getLinkClient() {
-	}
-
-
-
-	override generatePage() {
-	}
 	
-	override setLinkClient(LinkGeneratorClient value) {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
 
 } // DynamicPage

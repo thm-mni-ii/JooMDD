@@ -25,6 +25,7 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 	EList<ExtendedParameterGroup> extendedParameterGroupList
 	EList<ExtendedParameter> extendedGlobalParameterList
 	EList<ExtendedParameter> extendedLocalParameterList
+	EList<ExtendedAttribute>allAttributeOfFilterAndColum
 	
 	
 	EList<ExtendedEntity> extendedEntity
@@ -46,6 +47,7 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		extendedTableColumnList = new BasicEList<ExtendedAttribute> 
 		extendedFiltersList = new BasicEList<ExtendedAttribute>
 		extendedEditFieldsList = new BasicEList<ExtendedDetailPageField>
+		allAttributeOfFilterAndColum = new BasicEList<ExtendedAttribute>
 		extendedEntity = new BasicEList<ExtendedEntity>
 		extendedTableColumnList.addAll(this.tablecolumns.map[t| PlattformIUtil.transformAttribute(t)])
 		extendedFiltersList.addAll(this.filters.map[t|PlattformIUtil.transformAttribute(t)])
@@ -62,7 +64,17 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		 extendedLocalParameterList.addAll(this.localparameters.map[t| new ExtendedParameterImpl(t)])
 		 extendedParameterGroupList = new BasicEList<ExtendedParameterGroup>
 		extendedParameterGroupList.addAll(this.parametergroups.map[t | new ExtendedParameterGroupImpl(t)])
-		
+		for(ExtendedAttribute colum:  extendedTableColumnList){
+			var boolean isInList=false
+		 for(ExtendedAttribute filter: extendedFiltersList){
+		 	if(colum.name.equalsIgnoreCase(filter.name)){
+		 		isInList =  true
+		 	}
+		 }
+		 if(!isInList)
+		 	allAttributeOfFilterAndColum.add(colum)
+		}
+		allAttributeOfFilterAndColum.addAll(extendedFiltersList)
 		
 	}
 	
@@ -103,8 +115,8 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		return this.extendedLocalParameterList
 	}
 	
-	override getAllattributeOfAllEntities() {
-		
+	override getAllAttributeOfFilterAndColum() {
+		return allAttributeOfFilterAndColum
 	}
 	
 }

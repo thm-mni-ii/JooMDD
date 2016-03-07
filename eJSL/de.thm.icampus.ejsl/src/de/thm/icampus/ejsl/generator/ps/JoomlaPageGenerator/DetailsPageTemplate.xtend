@@ -134,21 +134,18 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 
         if ($pk > 0)
         {
-            // Attempt to load the row.
-            $return = $table->load($pk);
-
-            // Check for a table object error.
-            if ($return === false && $table->getError())
-            {
-                $this->setError($table->getError());
-
-                return false;
-            }
+            try{
+               // Attempt to load the row.
+               $return = $table->load($pk);
+           }catch (Exception $e){
+               // Check for a table object error.
+               throw new Exception('Database Failur:  no element Found'. $e . $return);
+           }
         }
 
-        // Convert to the JObject before adding other data.
+       // Convert to the JObject before adding other data.
         $properties = $table->getProperties(1);
-        $item = JArrayHelper::toObject($properties, 'JObject');
+        $item =  ArrayHelper::toObject($properties);
 
         if (property_exists($item, 'params'))
         {
@@ -156,8 +153,6 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
             $registry->loadString($item->params);
             $item->params = $registry->toArray();
         }
-
-        return $item;
 
 		return $item;
 	}
@@ -406,4 +401,6 @@ class «com.name.toFirstUpper»View« if(isedit)dpage.name.toFirstUpper + "Edit"
 	?>
 	«frontHelp.generateSiteViewLayoutShow»
 	 '''
+		
+		
 }

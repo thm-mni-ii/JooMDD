@@ -286,12 +286,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			 */
 			?>
 			<ul class="«extMod.name»<?php echo $moduleclass_sfx; ?>">
-			<?php// if ($headerText) : ?>
-				<?php// echo $headerText; ?>
-			<?php// endif; ?>
-			
+		
 			<?php foreach ($items as $item) : ?>
-			<div class="«extMod.pageRef.page.name»item">
+			<li><div class="«extMod.pageRef.page.name»item">
 			<?php if (empty($item)) : ?>
 				«IF dynpage.entities.isEmpty»
 					<?php// itemlist is empty ;?>
@@ -299,15 +296,19 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 				«ELSE»
 					<?php echo "itemlist is empty" ?>
 					<!DOCTYPE html><titel></titel>
-				<?php else : ?>					
+				<?php else : ?>
+										
 					«FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
 					<?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
 					<?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
-					«ENDFOR»	
+					«ENDFOR»
+						
 				«ENDIF»
 				<?php endif; ?>
-		</div>
+		</div></li>
+		
 		<?php endforeach; ?>
+		</ul>
 		'''
 	}
 	

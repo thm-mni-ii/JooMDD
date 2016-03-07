@@ -37,15 +37,6 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 		)
 	'''
 	
-	override getLinkClient() {
-	}
-	
-	override setLinkClient(LinkGeneratorClient value) {
-	}
-	
-	override generatePage() {
-		return generateStaticPage
-	}
 	
 	
 } // StaticPage

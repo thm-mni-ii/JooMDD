@@ -16,7 +16,7 @@ interface ExtendedDynamicPage extends DynamicPage {
 	def EList<ExtendedParameterGroup> getExtendedParametersGroupsListe()
 	def EList<ExtendedParameter> getExtendedGlobalParametersListe()
 	def EList<ExtendedParameter> getExtendedLocalParametersListe()
-	def EList<ExtendedAttribute> getAllattributeOfAllEntities()
+	def EList<ExtendedAttribute> getAllAttributeOfFilterAndColum()
 	
 	def Boolean isDetailsPage()
 	def DynamicPage getInstance()

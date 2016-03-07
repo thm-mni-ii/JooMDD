@@ -33,6 +33,8 @@ class LanguageGenerator extends AbstractExtensionGenerator  {
 	}
 	
 	private def CharSequence languageFileContent(ExtendedComponent com,Language language, EList<ExtendedPageReference> pagerefList)'''
+	«Slug.nameExtensionBind("com", com.name).toUpperCase»_LABEL="«com.name.toFirstUpper»"
+	«Slug.nameExtensionBind("com", com.name).toUpperCase»_DESC="« com.name.toFirstUpper » «com.manifest.description»"
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»="«com.name.toFirstUpper»"
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_HOME="Home"
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ID="ID"
@@ -46,20 +48,27 @@ class LanguageGenerator extends AbstractExtensionGenerator  {
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM="Edit"
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM="Delete"
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD_ITEM="Add"
-	«Slug.nameExtensionBind("com", com.name).toUpperCase»_ITEM_SAVED_SUCCESSFULLY="The Data are saved sucessfully"
-	«Slug.nameExtensionBind("com", com.name).toUpperCase»_ITEM_DELETED_SUCCESSFULLY="The Data are deleted sucessfully"
+	«Slug.nameExtensionBind("com", com.name).toUpperCase»_ITEM_SAVED_SUCCESSFULLY="The data are saved sucessfully"
+	«Slug.nameExtensionBind("com", com.name).toUpperCase»_ITEM_DELETED_SUCCESSFULLY="The data are deleted sucessfully"
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_MESSAGE="Do you want to delete the Data?"
+	«Slug.nameExtensionBind("com", com.name).toUpperCase»_N_ITEMS_PUBLISHED="The data are published sucessfully"
+	«Slug.nameExtensionBind("com", com.name).toUpperCase»_TEMPLATE_LAYOUT="Template Layout"
+	«Slug.nameExtensionBind("com", com.name).toUpperCase»_TEMPLATE_LAYOUT_DESC="Choice a Layout for the Indexpage"
+	JTEMPLATE_LAYOUT_LIST="List Layout"
+	JTEMPLATE_LAYOUT_TABLE="Table layout"
+	
 	JPUBLISHED="published"
 	JUNPUBLISHED="unpublished"
 	JARCHIVED="archived"
 	JTRASHED="trashed"
-	JOPTION_SELECT_CREATED_BY = "select a user"
+	JOPTION_SELECT_CREATED_BY = "Select a user"
 	JFIELD_RULES_LABEL= "Rules"
 			
 		«FOR ExtendedPageReference pag : pagerefList»
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«Slug.slugify(pag.page.name).toUpperCase»="«pag.page.name.toFirstUpper»"
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_TITLE="«pag.page.name.toFirstUpper»"
 	«Slug.nameExtensionBind("com", com.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_DESC="«pag.page.name.toFirstUpper»"
+	«Slug.nameExtensionBind("com", com.name).toUpperCase»_ALIAS_«pag.page.name.toUpperCase»="«pag.page.name.toFirstUpper»"
 		«ENDFOR»
 		
 		«FOR ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]»
@@ -72,7 +81,7 @@ class LanguageGenerator extends AbstractExtensionGenerator  {
 		«ENDFOR»
 		«FOR ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]»
 			«FOR ExtendedAttribute attr: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendFiltersList»
-	JOPTION_SELECT_«Slug.slugify(attr.name).toUpperCase»="select a «Slug.slugify(attr.name).toFirstUpper»"
+	JOPTION_SELECT_«Slug.slugify(attr.name).toUpperCase»="Select a «Slug.slugify(attr.name).toFirstUpper»"
 			«ENDFOR»
    «Slug.nameExtensionBind("com", com.name).toUpperCase»_«dynamicPagereference.extendedPage.name.toUpperCase»_ACTIONS="Actions"
 		«ENDFOR»
@@ -96,15 +105,18 @@ class LanguageGenerator extends AbstractExtensionGenerator  {
 	}
 	
 	def CharSequence languageModuleFileGen(ExtendedModule extmod, EList<KeyValuePair> list) '''
-	COM_MODULES_FILTER_FIELDSET_LABEL = "filter"
+	«Slug.nameExtensionBind("mod", extmod.name).toUpperCase»_LABEL="«extmod.name.toFirstUpper»"
+	«Slug.nameExtensionBind("mod", extmod.name).toUpperCase»_DESC="«extmod.name.toFirstUpper » «extmod.manifest.description»"
+	
+	COM_MODULES_FILTER_FIELDSET_LABEL = "Filter"
 	MOD_«extmod.name.toUpperCase»_ORDERING = "Ordering"
 	MOD_«extmod.name.toUpperCase»_JFIELD_ORDERING_DESC = "Ordering description"
 	MOD_«extmod.name.toUpperCase»_DIRECTION = "Direction"
-	MOD_«extmod.name.toUpperCase»_JFIELD_DIRECTION_DESC = "sort the result in a Direction"
+	MOD_«extmod.name.toUpperCase»_JFIELD_DIRECTION_DESC = "Sort the result in a Direction"
 	MOD_«extmod.name.toUpperCase»_ASC="ASC"
 	MOD_«extmod.name.toUpperCase»_DESC="DESC"
 	MOD_«extmod.name.toUpperCase»_START_LABEL="Start Index"
-	MOD_«extmod.name.toUpperCase»_START_DESC="the index of First data Item"
+	MOD_«extmod.name.toUpperCase»_START_DESC="The index of First data Item"
 	MOD_«extmod.name.toUpperCase»_LIMIT_LABEL="Limit"
 	MOD_«extmod.name.toUpperCase»_LIMIT_DESC="Limit the number of Data in view"
 	MOD_«extmod.name.toUpperCase»_SEARCH_LABEL="Search"
@@ -115,9 +127,9 @@ class LanguageGenerator extends AbstractExtensionGenerator  {
 	MOD_«extmod.name.toUpperCase»_FILTER_CREATED_BY="Created by"
 	JOPTION_SELECT_CREATED_BY="select a user"
 	«FOR ExtendedAttribute attr: extmod.extendedPageReference.extendedPage.extendedDynamicPageInstance.extendFiltersList»
-	MOD_«extmod.name.toUpperCase»_FORM_LBL_«attr.name.toUpperCase» = "«attr.name»"
-	MOD_«extmod.name.toUpperCase»_FILTER_«attr.name.toUpperCase» = "«attr.name»"
-	MOD_«extmod.name.toUpperCase»_FILTER_«attr.name.toUpperCase»_DESC = "«attr.name»"
+	MOD_«extmod.name.toUpperCase»_FORM_LBL_«attr.name.toUpperCase» = "«attr.name.toFirstUpper»"
+	MOD_«extmod.name.toUpperCase»_FILTER_«attr.name.toUpperCase» = "«attr.name.toFirstUpper»"
+	MOD_«extmod.name.toUpperCase»_FILTER_«attr.name.toUpperCase»_DESC = "«attr.name.toFirstUpper»"
 	JOPTION_SELECT_«attr.name.toUpperCase»="select a «attr.name»"
 	«ENDFOR»
 	

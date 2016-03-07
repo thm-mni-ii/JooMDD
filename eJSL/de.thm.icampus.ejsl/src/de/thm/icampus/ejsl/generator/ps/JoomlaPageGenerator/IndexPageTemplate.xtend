@@ -274,6 +274,8 @@ class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLega
             </fields>
           </form>
    '''
+			
+		
 	
 		
 

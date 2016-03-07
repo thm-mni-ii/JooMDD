@@ -173,7 +173,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				«FOR page : indexPages.filter[t | !t.detailsPage]»
 					
 					<menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
-					alias="«page.name.toFirstUpper»"
+					alias="«Slug.nameExtensionBind("com", component.name).toUpperCase»_ALIAS_«page.name.toUpperCase»"
 					view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«page.name.toUpperCase»</menu>
 				«ENDFOR»
 				</submenu>
@@ -722,7 +722,7 @@ class «extendeComp.name.toFirstUpper»Helper {
     	
     		JHtmlSidebar::addEntry(
     		
-    		JText::_('«pg.extendedPage.name.toUpperCase»'),
+    		JText::_('«Slug.nameExtensionBind("com",extendeComp.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»'),
     		'index.php?option=«Slug.nameExtensionBind("com",extendeComp.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»',
     		$vName == '«pg.extendedPage.name.toLowerCase»'
     		);

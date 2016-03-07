@@ -250,7 +250,7 @@ public class Slug  {
 	
 	def static String generateKeysName(Component com, String name){
 		if(name!=null)
-		return "COM_" + com.name.toUpperCase + "_" + Slug.slugify(name).toUpperCase
+		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(name).toUpperCase
 	}
 	
 	def static String generateKeysNamePage(Component com, Page page ,String name){

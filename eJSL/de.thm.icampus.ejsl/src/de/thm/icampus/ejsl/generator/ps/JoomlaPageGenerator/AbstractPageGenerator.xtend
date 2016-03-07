@@ -11,12 +11,6 @@ abstract public class AbstractPageGenerator {
 	@Property IFileSystemAccess fsa
 	@Property String name
 	@Property String path = ""
-	
-	public def  LinkGeneratorClient getLinkClient();
-
-	 def void setLinkClient( LinkGeneratorClient value);
-	 
-	 public def CharSequence generatePage();
 	 
 	 
 	/**

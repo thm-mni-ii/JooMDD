@@ -91,7 +91,7 @@ class IndexPageTemplateAdminHelper {
 	                'state', 'a.state',
 	                'created_by', 'a.created_by'
 	                , 'published', 'a.published'
-	                «FOR ExtendedAttribute attr: indexpage.extendFiltersList»
+	                «FOR ExtendedAttribute attr: indexpage.allAttributeOfFilterAndColum»
 	                ,'«attr.name.toLowerCase»', 'a.«attr.name.toLowerCase»'
 	                «ENDFOR»
 	                );}
@@ -332,8 +332,8 @@ class IndexPageTemplateAdminHelper {
 		'a.id' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ID'),
 		'a.ordering' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ORDERING'),
 		'a.state' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_STATE')
-        «FOR Attribute attr : indexpage.filters»
-		  , 'a.«attr.name.toLowerCase»' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«(attr.eContainer as Entity).name.toUpperCase»_«attr.name.toUpperCase»')
+        «FOR ExtendedAttribute attr : indexpage.allAttributeOfFilterAndColum»
+		  , 'a.«attr.name.toLowerCase»' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«(attr.entity).name.toUpperCase»_«attr.name.toUpperCase»')
          «ENDFOR»
 		
 		);
