@@ -188,6 +188,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	«generateFileDoc(dpage,com,true)»
 	
 	jimport('joomla.application.component.modeladmin');
+	use Joomla\Utilities\ArrayHelper;
 	use Joomla\Registry\Registry;
 
 	/**
@@ -292,6 +293,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	jimport('joomla.application.component.modelitem');
 	jimport('joomla.event.dispatcher');
+	use Joomla\Utilities\ArrayHelper;
 	use Joomla\Registry\Registry;
 	
 	/**
@@ -313,6 +315,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	jimport('joomla.application.component.modelform');
 	jimport('joomla.event.dispatcher');
+	use Joomla\Utilities\ArrayHelper;
 	use Joomla\Registry\Registry;
 	
 	/**
