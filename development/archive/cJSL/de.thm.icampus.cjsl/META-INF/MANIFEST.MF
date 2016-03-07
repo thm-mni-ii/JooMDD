@@ -1,0 +1,37 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: de.thm.icampus.cjsl
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: de.thm.icampus.cjsl; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext;visibility:=reexport,
+ org.eclipse.xtext.xbase;resolution:=optional;visibility:=reexport,
+ org.eclipse.xtext.generator;resolution:=optional,
+ org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
+ org.eclipse.emf.codegen.ecore;resolution:=optional,
+ org.eclipse.emf.mwe.utils;resolution:=optional,
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
+ org.eclipse.xtext.util,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common,
+ org.antlr.runtime,
+ org.eclipse.xtext.common.types,
+ org.objectweb.asm;bundle-version="[5.0.1,6.0.0)";resolution:=optional,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.equinox.common;bundle-version="3.7.0"
+Import-Package: org.apache.log4j,
+ org.eclipse.xtext.xbase.lib
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: de.thm.icampus.cjsl,
+ de.thm.icampus.cjsl.services,
+ de.thm.icampus.cjsl.cjsl,
+ de.thm.icampus.cjsl.cjsl.impl,
+ de.thm.icampus.cjsl.cjsl.util,
+ de.thm.icampus.cjsl.serializer,
+ de.thm.icampus.cjsl.parser.antlr,
+ de.thm.icampus.cjsl.parser.antlr.internal,
+ de.thm.icampus.cjsl.validation,
+ de.thm.icampus.cjsl.scoping,
+ de.thm.icampus.cjsl.generator,
+ de.thm.icampus.cjsl.formatting

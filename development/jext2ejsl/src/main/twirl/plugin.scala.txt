@@ -1,0 +1,12 @@
+@(plugin: de.thm.icampus.mdd.model.extensions.PluginExtension)
+Plugin @{plugin.name} {
+    @manifest(plugin.manifest)
+    languages {@for(lang <- plugin.languages) {
+        @language(lang)}
+    }
+    Plugintype = @{plugin.pluginType}
+    @if(plugin.entities.nonEmpty) {
+        *Entities @plugin.entities.mkString(",")
+    }
+    @if(plugin.parameters.nonEmpty) {}
+}

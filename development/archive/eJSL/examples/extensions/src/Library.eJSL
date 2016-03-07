@@ -1,0 +1,86 @@
+eJSLModel "LibraryModel"{
+	datatypes {
+		Datatype "String",
+		Datatype "Int"
+	}
+	entities {
+		Entity Person {
+			attributes {
+				Attribute firstName : "String"
+				Attribute secondName : "String"
+			}
+		}
+	}
+	extensions {
+		Library TestLibrary {
+			Manifestation {
+				authors {
+					Author "Ilja Michajlow" {
+						authoremail = "ilja.michajlow@mni.thm.de"
+						authorurl = "www.google.com"
+					}
+				}
+				copyright = "TH Mittelhessen 2014"
+				license = "MIT Licenc"
+				link = "www.mni.thm.de"
+				version = "0.0.2"
+				description = "Test library"
+			}
+			languages {
+				Language en-GB {
+					keyvaluepairs {
+						Key LIB_TEST_HELLO = "Hello from Test library"
+					}
+				}
+				Language de-DE {
+					keyvaluepairs {
+						Key LIB_TEST_HELLO = "Hallo aus der Testbibliothek!!"
+					}
+				}
+			}
+			*Entities "Person"
+			classes {
+				Class Class1 {
+					methods {
+						Method Method1 {
+							Returnvalue value1 : string
+						}
+						Method Method2 {
+							Returnvalue value2 : bool
+						}
+						Method Method3 {
+							Returnvalue value3 : int
+						}
+						Method Method4 {
+							Returnvalue value4 : float
+						}
+						Method Method5 {
+							Returnvalue value5 : array
+						}
+						Method Method6 {
+							Returnvalue value6 : "String"
+						}
+					}
+				}
+				Class Class2 {
+					methods {
+						Method Method3 {
+							Returnvalue value3 : float
+							methodparameters {
+								MethodParameter param1 : int
+								MethodParameter param2 : array
+							}
+						}
+						Method Method4 {
+							Returnvalue value4 : int
+							methodparameters {
+								MethodParameter param3 : bool
+								MethodParameter param4 : float
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,6 @@
+@(pg: de.thm.icampus.mdd.model.extensions.JParamGroup)
+ParameterGroup @{pg.name} {
+    Parameters {
+         @{pg.params.map(p => p.name).mkString(" ")}
+    }
+}

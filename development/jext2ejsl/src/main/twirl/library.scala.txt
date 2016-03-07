@@ -1,0 +1,24 @@
+@(lib: de.thm.icampus.mdd.model.extensions.LibraryExtension)
+Library @{lib.name} {
+    @manifest(lib.manifest)
+    @if(lib.folder.structs.nonEmpty) {
+        classes {
+            @for(struct <- lib.folder.structs) {
+                @struct match {
+                    case c: de.thm.icampus.mdd.model.oo.Clazz => {
+                        @clazz(c)
+                    }
+                    case e: de.thm.icampus.mdd.model.oo.Interface => {}
+                }
+            }
+        }
+    }
+    @if(lib.folder.folders.nonEmpty) {
+        packages {
+            @for(folder <- lib.folder.folders) {
+                @txt.folder(folder)
+            }
+        }
+    }
+
+}

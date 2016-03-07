@@ -1,0 +1,509 @@
+grammar de.thm.icampus.joomdd.ejsl.EJSL with org.eclipse.xtext.common.Terminals
+
+generate eJSL "http://www.thm.de/icampus/joomdd/ejsl/EJSL"
+
+EJSLModel returns EJSLModel:
+	{EJSLModel}
+	'eJSLModel'	name=STRING
+	'{'
+		('eJSL part:' ejslPart=EJSLPart)
+	'}';
+
+EJSLPart:
+	CMSCore | CMSExtension
+;
+
+CMSCore:
+	{CMSCore}
+	'CMS Core' '{'
+		('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+		('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+		feature = Feature
+	//	(coreFeature += coreFeature*) // for further implementation of core features
+	'}'
+;
+
+coreFeature:
+	{coreFeature}
+	'coreFeature'
+;
+
+CMSExtension:
+	{CMSExtension}
+		'CMS Extension' '{'
+			('datatypes' '{' datatypes+=Datatype ( "," datatypes+=Datatype)* '}')?
+			('globalparameters' '{' (globalparameters+=Parameter)* '}')?
+			('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
+			feature = Feature
+			('extensions' '{' (extensions+=Extension)* '}')?
+	'}'
+;
+
+Feature:
+	{Feature} 
+	('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
+	('entities' '{' (entities+=Entity)* '}')?
+	('pages' '{' (pages+=Page)* '}')?
+	('sections' '{' (sections+=Section)+ '}')?
+;
+
+// data model
+Type:
+	DatatypeReference | StandardTypes
+;
+
+DatatypeReference:
+	type=[Datatype|STRING]
+;
+
+StandardTypes:
+	type=StandardTypeKinds (notnull?='Not Null')? ('Default =' default=STRING)? (autoincrement?='Auto Increment')?
+;
+
+Datatype returns Datatype:
+	{Datatype}
+	'Datatype' name=STRING;
+	
+Parameter returns Parameter:
+	{Parameter}
+	'Parameter' name=ID 
+	'{'
+		//'type' '=' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
+		'type =' ((dtype=Type))
+		('defaultvalue =' defaultvalue=STRING)?
+		('label =' label=STRING)?
+		('size =' size=INT)?
+		('description =' descripton=STRING)?
+	'}'
+;
+
+ParameterGroup returns ParameterGroup:
+	{ParameterGroup}
+	'ParameterGroup' name=ID 
+	'{'
+		('label =' label=STRING)?
+		('Parameters' '{' ((globalparameters+=[Parameter]) | (parameters+=Parameter))* '}')
+	'}'
+;
+
+PageAction returns PageAction:
+	{PageAction}
+	'PageAction' name=ID 
+	'{'
+		'type =' ((pageActionType=PageActionKind))
+		'position =' ((pageActionPosition=PageActionPositionKind))
+	'}'
+;
+
+Entitypackage returns Entitypackage:
+	{Entitypackage}
+	'Entitypackage' name=ID
+	'{'
+		('entitypackages' '{' (entitypackages+=Entitypackage)* '}')?
+		('entities' '{' (entities+=Entity)* '}')?
+		('datatypes' '{' (datatypes+=Datatype)* '}')?
+	'}'
+;
+
+Entity returns Entity:
+	{Entity}
+	'Entity' name=MYID ('extends' supertype=[Entity|QualifiedName])?
+	'{'
+		('attributes' '{' (attributes+=Attribute)* '}')?
+		// Kardinalität
+		('references' '{' (references+=Reference)* '}')?
+	'}'
+;
+
+Attribute returns Attribute:
+	{Attribute}
+	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
+	'Attribute' name=MYID '{' 
+		'type =' (type=Type)
+		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | id?='ID'))?)?
+	'}'
+;
+
+Reference returns Reference:
+	{Reference}
+	'Reference'  
+	'{'
+		'EntityAttribute =' attribute+=[Attribute|QualifiedName] (',' attribute+=[Attribute|QualifiedName])*
+		'*Entity =' entity=[Entity|QualifiedName]
+		'*EntityReference =' (attributerefereced +=[Attribute|QualifiedName]| id?='ID') (attributerefereced +=[Attribute|QualifiedName])*
+		'lower =' lower=NUMBER
+		'upper =' upper=NUMBER 
+	'}'
+;
+
+// page model
+
+Page:
+	StaticPage | DynamicPage | CustomPage
+;
+
+StaticPage returns StaticPage:
+	{StaticPage}
+	'StaticPage' name=MYID 
+	'{'
+		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
+		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
+		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
+		('links' '{' (links+=Link)* '}')?
+		'HTMLBody' '{' HTMLBody = STRING '}'
+	'}'
+;
+
+DynamicPage:
+	IndexPage | DetailsPage
+;
+
+IndexPage returns IndexPage:
+	{IndexPage}
+	'IndexPage' name=MYID 
+	'{'
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
+		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
+		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
+		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
+		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
+		('links' '{' (links+=Link)* '}')?
+	'}'
+;
+
+DetailsPage returns DetailsPage:
+	{DetailsPage}
+	'DetailsPage' name=MYID 
+	'{'
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('editFields' '{' (editfields+=DetailPageField)* '}')?
+		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
+		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
+		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
+		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
+		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
+		('links' '{' (links+=Link)* '}')?
+	'}'
+;
+
+DetailPageField returns DetailPageField:
+	{DetailPageField}
+	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)?
+;
+
+CustomPage returns CustomPage:
+	{CustomPage}
+	'CustomPage' name=MYID 
+	'{'
+		'Page type:' pageType = PageKinds
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
+		('pageactions' '{' (pageactions+=PageAction)* '}')?
+		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
+		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
+		('localparameters' '{' (localparameters+=Parameter)* '}')?
+		('links' '{' (links+=Link)* '}')?
+	'}'
+;
+
+HTMLTypes:
+	SimpleHTMLTypes | ComplexHTMLTypes
+;
+
+SimpleHTMLTypes:
+	htmltype = SimpleHTMLTypeKinds
+;
+
+ComplexHTMLTypes:
+	htmltype = ComplexHTMLTypeKinds "(" keyvaluepairs+=KeyValuePair (',' keyvaluepairs+=KeyValuePair)* ")"
+;
+
+Link:
+	ExternalLink | InternalLink 
+;
+
+ExternalLink returns ExternalLink:
+	{ExternalLink}
+	'ExternalLink' 
+	'{'
+		'target =' target=STRING
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
+		('label' '=' label=STRING)?
+	'}'
+;
+
+InternalLink returns InternalLink:
+	{InternalLink}
+	('InternalLink' name=MYID 
+	'{'
+		'target =' target=[Page|QualifiedName]
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
+	'}') | ContextLink
+;
+
+ContextLink returns ContextLink:
+	{ContextLink}
+	'InternalcontextLink' name=MYID 
+	'{'
+		'target =' target=[Page|QualifiedName]
+		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
+		('linked action =' linkedAction=[PageAction|QualifiedName])?
+		'linkparameters' '{' (linkparameters+=LinkParameter)* '}'
+	'}'
+;
+
+LinkParameter returns LinkParameter:
+	{LinkParameter}
+	'Parameter' name=MYID '=' ('*Attribute '(attvalue=[Attribute|STRING]| id?='ID') | value=STRING)
+;
+
+// extension model
+
+Extension:
+	ExtensionPackage | Component | Module | Plugin | Library | Template	
+;
+
+ExtensionPackage returns ExtensionPackage:
+	{ExtensionPackage}
+	'Extension package' name=MYID 
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		'extensions' '{' (extensions+=Extension)+ '}'
+	'}'
+;
+
+Component returns Component:
+	{Component}
+	'Component' name=MYID 
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('Global parameter' '{' (globalParamter+=ParameterGroup)* '}')?
+		('languages' '{' (languages+=Language)* '}')?
+		'sections' '{' (sections+=Section)+ '}'
+	'}'
+;
+
+Section:
+	Backend | Frontend
+;
+
+Backend returns BackendSection:
+	{BackendSection}
+	'Backend section' 
+	'{'
+		'*Pages' '{'
+			pageRef += PageReference*
+		'}'
+	'}'
+;
+
+PageReference returns PageReference:
+	'*Page :' page=[Page|QualifiedName] ('from :' pagescr=[Component|QualifiedName] sect = SectionKinds)?
+;
+
+Frontend returns FrontendSection:
+	{FrontendSection}
+	'Frontend section' 
+	'{'
+		'*Pages' '{'
+			pageRef += PageReference*
+		'}'
+	'}'
+;
+
+Module returns Module:
+	{Module}
+	'Module' name=MYID 
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		(pageRef=PageReference)?
+	'}'	
+;
+
+Plugin returns Plugin:
+	{Plugin}
+	'Plugin' name=MYID 
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		'Plugintype =' type=PluginKinds
+		('languages' '{' (languages+=Language)* '}')?
+		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('parameters' '{' (localparameters+=Parameter)* '}')?
+	'}'	
+;
+
+Library returns Library:
+	{Library}
+	'Library' name=MYID
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('classes' '{' (classes+=Class)* '}')?
+		('packages' '{' (packages+=Package)* '}')?
+	'}'
+;
+
+Package returns Package:
+	{Package}
+	'Package' name=MYID
+	'{'
+		('packages' '{' (packages+=Package)* '}')?
+		('classes' '{' (classes+=Class)* '}')?
+	'}'
+;
+
+Class returns Class:
+	{Class}
+    'Class' name=MYID ('extends' supertype=[Class|QualifiedName])?
+    '{'
+    	('*Class references' references+=[Class|QualifiedName] (',' references+=[Class|QualifiedName])*)?
+    	('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+        ('methods' '{' (methods+=Method)* '}')?
+    '}'
+;
+
+Method returns Method:
+	{Method}
+    'Method' name=MYID
+    '{'
+        //'Returnvalue' returnvalue=ID ':' type=[jvmTypes::JvmType|QualifiedName]
+        ('Returnvalue' returnvalue=ID ':' type=Type)?
+        ('methodparameters' '{' (methodparameters+=MethodParameter)* '}')?
+    '}'
+;
+
+MethodParameter returns MethodParameter:
+	{MethodParameter}
+    //'MethodParameter' name=ID ':' type=[jvmTypes::JvmType|QualifiedName]
+    'MethodParameter' name=ID ':' type=Type
+;
+
+Template returns Template:
+	{Template}
+	'Template' name=MYID
+	'{'
+		'Manifestation' '{' (manifest=Manifestation) '}'
+		('languages' '{' (languages+=Language)* '}')?
+		('parameters' '{' (localparameters+=Parameter)* '}')?
+		('positions' '{' (positions+=Position)* '}')?
+		('cssblocks' '{' (cssblocks+=CssBlock)* '}')?
+	'}'
+;
+
+Manifestation returns Manifestation:
+	{Manifestation}
+	'authors' '{' (authors+=Author)+ '}'
+	('creationdate =' creationdate=DATE)?
+	('copyright =' copyright=STRING)?
+	('license =' license=STRING)?
+	('link =' link=STRING)?
+	('version =' version=STRING)?
+	('description =' description=STRING)?;
+
+terminal DATE:
+  ((('0'..'2') ('0'..'9') '.' ('02')) |
+  (('0'..'2') ('0'..'9') '.' ((('0') (('1') | ('3'..'9'))) | ('1') ('0'..'2')) | (('1') ('0'..'2'))) |
+  (('30') '.' ((('0') (('1') | ('3'..'9'))) | ('1') ('0'..'2'))) |
+  (('31') '.' ((('0') (('1') | ('3') | ('5') | ('7') | ('8'))) | (('1') (('0')| ('2'))))))
+  '.' ('0'..'2') ('0'..'9') ('0'..'9') ('0'..'9')
+;
+
+Author returns Author:
+	{Author}
+	'Author' name=STRING 
+	'{'
+		('authoremail =' authoremail=STRING)?
+		('authorurl =' authorurl=STRING)?
+	'}'
+;
+
+Language returns Language:
+	{Language}
+	'Language' name=LANGUAGE_CODE 
+	'{'
+    	('keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
+    '}'
+;
+
+terminal LANGUAGE_CODE:
+    'a'..'z' 'a'..'z' '-' 'A'..'Z' 'A'..'Z'
+;
+
+KeyValuePair returns KeyValuePair:
+	{KeyValuePair}
+	'Key' name=ID '=' value=STRING
+;
+
+Position returns Position:
+	{Position}
+	'Templateposition' (name=POSITION_TYPES | name=ID)
+	'{'
+		('positionparameters' '{' (positionparameters+=PositionParameter)* '}')?
+	'}'
+;
+
+terminal POSITION_TYPES:
+	'head' | 'contents' | 'footer' | 'left' | 'right'
+;
+
+PositionParameter:
+	'Position Parameter' name = ID
+	'{'
+		('divId =' divid = ID)?
+		('Positiontype =' type = POSITION_TYPES_NAMES)?
+		('CSS keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
+	'}'
+;
+
+terminal POSITION_TYPES_NAMES:
+	'modules' | 'component'
+;
+
+CssBlock:
+	'CssBlock' selector=STRING
+	'('
+		('keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
+	')'
+;
+
+NUMBER : ('-')?INT;
+	
+QualifiedName: MYID ('.' MYID)*;
+
+MYID : ('<')? ID ('>')?;
+
+enum PluginKinds:
+    authenticate | captcha | content | contact |
+    editors | extensions | finder | quick_icons |
+    search | system | user | xml_rpc
+;
+enum PageActionKind:
+	Text | Button
+;
+enum PageActionPositionKind:
+	top | center | bottom
+;
+enum StandardTypeKinds:
+	Integer | Boolean | Textarea | Textfield | Time | Date | Datetime | Link | Image | File | Label
+;
+enum SectionKinds:
+	backend='.backend' | frontend='.frontend'
+;
+enum PageKinds:
+	list | details | custom
+;
+enum SimpleHTMLTypeKinds:
+	Integer | Yes_No_Buttons | Textarea | Text_Field |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	
+;
+enum ComplexHTMLTypeKinds:
+	Multiselect | Checkbox | Radiobutto
+;

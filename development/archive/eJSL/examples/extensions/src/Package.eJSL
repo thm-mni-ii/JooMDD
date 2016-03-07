@@ -1,0 +1,84 @@
+eJSLModel "LibraryModel"{
+	datatypes {
+		Datatype "String",
+		Datatype "Int",
+		Datatype "Date"
+	}
+	entities {
+		Entity Person {
+			attributes {
+				Attribute Name: "String"
+				Attribute BirthDate: "Date"
+			}
+		}
+	}
+	extensions {
+		Extension package TestPackage {
+			Manifestation {
+				authors {
+					Author "Ilja Michajlow" {
+						authoremail = "ilja.michajlow@mni.thm.de"
+						authorurl = "www.google.com"
+					}
+				}
+				copyright = "TH Mittelhessen 2014"
+				license = "MIT Licence"
+				link = "www.mni.thm.de"
+				version = "0.0.2"
+				description = "Test Package"
+			}
+			extensions {
+				Library TestLibrary {
+					Manifestation {
+						authors {
+							Author "Ilja Michajlow" {
+								authoremail = "ilja.michajlow@mni.thm.de"
+								authorurl = "www.google.com"
+							}
+						}
+						copyright = "TH Mittelhessen 2014"
+						license = "MIT Licence"
+						link = "www.mni.thm.de"
+						version = "0.0.2"
+						description = "Test library"
+					}
+					languages {
+						Language en-GB {
+							keyvaluepairs {
+								Key LIB_TEST_HELLO = "Hello from Test library"
+							}
+						}
+						Language de-DE {
+							keyvaluepairs {
+								Key LIB_TEST_HELLO = "Hallo aus der Testbibliothek!!"
+							}
+						}
+					}
+					*Entities "Person"
+					classes {
+						Class Class1 {
+							methods {
+								Method Method1 {
+									Returnvalue value1 : "String"
+								}
+								Method Method2 {
+									Returnvalue value2 : "String"
+								}
+							}
+						}
+						Class Class2 {
+							methods {
+								Method Method3 {
+									Returnvalue value3 : "String"
+								}
+								Method Method4 {
+									Returnvalue value4 : "String"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
