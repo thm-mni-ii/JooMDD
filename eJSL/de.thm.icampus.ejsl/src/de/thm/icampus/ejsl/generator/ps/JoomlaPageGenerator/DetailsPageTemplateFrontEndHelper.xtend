@@ -5,6 +5,7 @@ import de.thm.icampus.ejsl.eJSL.Entity
 import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 class DetailsPageTemplateFrontEndHelper {
 	private ExtendedDynamicPage dpage
@@ -637,17 +638,17 @@ class DetailsPageTemplateFrontEndHelper {
 			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY'); ?></th>
 			<td><?php echo $this->item->created_by; ?></td>
 	</tr>
-	«FOR Attribute a: dpage.entities.get(0).attributes»
+	«FOR ExtendedAttribute a: dpage.extendedTableColumnList»
 	«attributShowTemplate(a, dpage.entities.get(0) )»
 	«ENDFOR»
 	</table>
 	</div>
 	<?php if($canEdit && $this->item->checked_out == 0): ?>
-		<a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.edit&id='.$this->item->id); ?>">
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.edit&id='.$this->item->id); ?>">
 		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
 	<?php endif; ?>
 	<?php if(JFactory::getUser()->authorise('core.delete','«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$this->item->id)):?>
-		<a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.remove&id=' . $this->item->id, false, 2); ?>">
+		<a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.remove&id=' . $this->item->id, false, 2); ?>">
 		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
 	<?php endif; ?>
 	<?php

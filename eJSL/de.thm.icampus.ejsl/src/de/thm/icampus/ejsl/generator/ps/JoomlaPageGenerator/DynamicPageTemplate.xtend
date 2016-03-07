@@ -180,8 +180,8 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
    			}
    		}
    	
-   		
-   		return Slug.getTypeName(attr.htmlType, attr);
+   		buff.append('''type ="hidden"''')
+   		return buff.toString;
    	}
 	
 	override getLinkClient() {

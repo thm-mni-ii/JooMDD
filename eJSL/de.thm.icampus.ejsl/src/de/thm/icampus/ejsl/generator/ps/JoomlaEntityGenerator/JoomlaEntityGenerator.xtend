@@ -92,15 +92,30 @@ class JoomlaEntityGenerator {
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 '''
 	
-   public def CharSequence sqlAdminSqlUninstallContent(String extensionName) '''
-        «/*val entities=component.eAllContents.toIterable.filter(typeof(Entity))*/»
-        SET foreign_key_checks = 0;
+   public def CharSequence sqlAdminSqlUninstallContent(String extensionName) {
         
-        «FOR e:entities»
-        	DROP TABLE IF EXISTS `«extensionName.toLowerCase»_«e.name.toLowerCase»`;
-        «ENDFOR»
-    '''
-    
+        var LinkedList<String> visited = new LinkedList<String>();
+        var StringBuffer result = new StringBuffer;
+        result.append("SET foreign_key_checks = 0;")
+         result.append("\n\r")
+        while(visited.size < entities.size ){
+	        for (ExtendedEntity e:entities){
+	        	if(e.extendedReference.empty && !visited.contains(e.name)){	        		
+	        		visited.add(e.name);
+	        	}
+	         if(!visited.contains(e.name) && !e.references.empty && isAllreferenVisited(e.extendedReference, visited) ){
+	        	   visited.add(e.name);
+	        	   
+	        	}
+	        }
+	        
+	       }
+	       while(!visited.empty){
+	       	 result.append('''DROP TABLE IF EXISTS `#__«extensionName.toLowerCase»_«(visited.removeLast).toLowerCase»`;''');
+	         result.append("\n\r")
+	       }
+         return result.toString
+    }
    
 	
 }

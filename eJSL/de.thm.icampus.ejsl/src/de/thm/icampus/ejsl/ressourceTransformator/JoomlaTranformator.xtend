@@ -199,11 +199,7 @@ class JoomlaTranformator {
 		var Entity referenceEntity = ref.entity
 		var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
 					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name
-					
-					var DatatypeReference hiddenReference = EJSLFactory.eINSTANCE.createDatatypeReference
-					hiddenReference.type = EJSLFactory.eINSTANCE.createDatatype
-					hiddenReference.type.name="hidden"
-					newAttribute.type =  hiddenReference
+					newAttribute.type =  copyType(attrRef.type)
 					ent.attributes.add(newAttribute)
 					ref.attribute.add(newAttribute)					
 					return newAttribute

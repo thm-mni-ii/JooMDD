@@ -62,7 +62,7 @@ class FieldsGenerator {
 		}
 	'''
 
-	public def CharSequence genGeTInput() '''
+	private def CharSequence genGeTInput() '''
 		/**
 		 * Method to get the field input markup.
 		 *
@@ -105,7 +105,7 @@ class FieldsGenerator {
 		}
 	'''
 
-	public def CharSequence genGetReferencedata() '''
+	private def CharSequence genGetReferencedata() '''
 	 /**
 	 *Read Selected  Items
 	 *
@@ -134,7 +134,7 @@ class FieldsGenerator {
 
 	'''
 
-	public def CharSequence genGetAllRestData() '''
+	private def CharSequence genGetAllRestData() '''
 	protected function getAllRestData($id)
 	{
     $db = JFactory::getDbo();
@@ -163,7 +163,7 @@ class FieldsGenerator {
 		}
 			'''
 
-	public def CharSequence genGetAllData() '''
+	private def CharSequence genGetAllData() '''
 	 protected function getAllData(){
 	    $db = JFactory::getDbo();
 	    $queryALL = $db->getQuery(true);
@@ -176,7 +176,7 @@ class FieldsGenerator {
 	}
 	'''
 
-	public def CharSequence genGenerateJsonValue() '''
+	private def CharSequence genGenerateJsonValue() '''
 		public function generateJsonValue($data){
 		          $result  = array();
 		          foreach($this->keysAndForeignKeys as $key=>$value){
@@ -186,7 +186,7 @@ class FieldsGenerator {
 		      }
 	'''
 
-	public def CharSequence gengenerateStringValue() '''
+	private def CharSequence gengenerateStringValue() '''
 	public function generateStringValue($data){
 	        $result = array();
 	        
@@ -207,11 +207,10 @@ class FieldsGenerator {
 	    
 	    «genGetOptionsForEntity»
 	    «genGetAllDataForEntity»
-	    «genGetAllSelectedDataForEntity»
 	 }
 	'''
 	
-	def getGenGetAllSelectedDataForEntity() '''
+	private def genGetOptionsForEntity() '''
 	 protected function getOptions()
 	    {
 	
@@ -220,19 +219,12 @@ class FieldsGenerator {
 	        $valueColumn = $this->getAttribute('valueColumn');
 	        $textColumn = $this->getAttribute('textColumn');
 	
-	        if(empty($id)){
-	           return  array_merge(parent::getOptions(),$this->getAllData($valueColumn, $textColumn));
-	
-	        }
-	        else{
-	            return  array_merge(parent::getOptions(),$this->getAllSelectedData($id, $valueColumn, $textColumn));
-	        }
-	
-	
+	       
+	       return  array_merge(parent::getOptions(),$this->getAllData($valueColumn, $textColumn));
 	    }
 	'''
 	
-	def genGetAllDataForEntity() '''
+	private def genGetAllDataForEntity() '''
 	protected function getAllData($valueColumn, $textColumn){
 	        $dbo = JFactory::getDbo();
 	        $query = $dbo->getQuery(true);
@@ -245,7 +237,7 @@ class FieldsGenerator {
 	    }
 	'''
 	
-	def CharSequence genGetOptionsForEntity() '''
+	private def CharSequence genAllSelectedDataForEntity() '''
 	 protected function getAllSelectedData($id, $valueColumn, $textColumn){
 	        $dbo = JFactory::getDbo();
 	        $query = $dbo->getQuery(true);

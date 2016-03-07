@@ -569,7 +569,7 @@ $sortFields = $this->getSortFields();
 	«IF Slug.isAttributeLinked(attr, indexpage)»
 	<?php if ($canEdit) : ?>
 	<td>
-		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage, Slug.nameExtensionBind("com", com.name).toLowerCase, "$item->")»); ?>">
+		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->")»); ?>">
 			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?></a>
 		<?php else : ?>
 			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?>

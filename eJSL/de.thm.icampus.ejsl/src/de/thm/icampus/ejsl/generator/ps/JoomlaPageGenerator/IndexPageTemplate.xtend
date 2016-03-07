@@ -32,7 +32,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def void generateView(){
 	
-	 if(sec.compareTo("admin")==0){
+	 if(sec.equalsIgnoreCase("admin")){
 	  generateJoomlaDirectory(path +"/" + pagename)
 	  generateFile(path+"/" + pagename +"/"+ "view.html.php", generateViewBackend())
 	  generateJoomlaDirectory(path +"/" + pagename +"/" + "tmpl" )
@@ -57,7 +57,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 		 
 	def void generateController(){
-		if(sec.compareTo("admin")==0){
+		if(sec.equalsIgnoreCase("admin")){
 		 generateFile(path+"/" + pagename + ".php", generateAdminController())
 		 }else{
 		 	generateFile(path+"/" + pagename + ".php", generateSiteController())

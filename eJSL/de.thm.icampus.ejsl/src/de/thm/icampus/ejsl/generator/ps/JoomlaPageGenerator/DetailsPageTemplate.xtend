@@ -4,6 +4,7 @@ import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
+import java.io.File
 
 class DetailsPageTemplate extends   DynamicPageTemplate {
 	
@@ -31,7 +32,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	def void generateView(){
 		
-		if(sec.compareTo("admin")==0){
+		if(sec.equalsIgnoreCase("admin")){
 		  generateJoomlaDirectory(path +"/" + pagename)
 		  generateFile(path+"/" + pagename +"/"+ "view.html.php", generateAdminViewClass())
 		  generateJoomlaDirectory(path +"/" + pagename +"/" + "tmpl" )
@@ -54,7 +55,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		
 	}
 	def void generateController(){
-		if(sec.compareTo("admin")==0){
+		if(sec.equalsIgnoreCase("admin")){
 		  generateFile(path+"/" + pagename + ".php", generateAdminController())
 		 }else{
 		  generateFile(path+"/" + pagename +"edit" +".php", generateSiteController(true))
@@ -65,13 +66,14 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		if(sec.equalsIgnoreCase("admin")){
 		
 		  generateFile(path+"/" + pagename + ".php", generateAdminModel())
-		   generateFile(path + "/forms"+"/" + pagename + ".xml", xmlAdminFields(dpage,com,com.name))
+		  
+		   generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 		 }else{
 		
 		  generateFile(path+"/" + pagename+"edit"+ ".php", generateSiteModelEdit())
 		   
 		  generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
-		  generateFile(path + "/forms"+"/" + pagename + ".xml", xmlAdminFields(dpage,com,com.name))
+		  generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 		}
 	}
 	
@@ -106,7 +108,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('«Slug.nameExtensionBind("com",com.name.toLowerCase)».edit.«dpage.name.toLowerCase».data', array());
+		$data = JFactory::getApplication()->getUserState('«Slug.nameExtensionBind("com",com.name.toLowerCase)».edit.«dpage.extendedEntityList.get(0).name.toLowerCase».data', array());
 
 		if (empty($data)) {
 			$data = $this->getItem();
@@ -178,7 +180,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		$app	= JFactory::getApplication();
 
 		// Get the form.
-		$form = $this->loadForm('«Slug.nameExtensionBind("com",com.name.toLowerCase)».«dpage.name.toLowerCase»', '«dpage.name.toLowerCase»', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('«Slug.nameExtensionBind("com",com.name.toLowerCase)».«dpage.name.toLowerCase»', '«dpage.extendedEntityList.get(0).name.toLowerCase»', array('control' => 'jform', 'load_data' => $loadData));
 
 		if (empty($form)) {
 			return false;
@@ -284,6 +286,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«IF isedit»
 		«frontHelp.generateSiteControllerSave»
 		«frontHelp.generateSiteControllerCancel»
+		«frontHelp.generateSiteControllerRemove»
 		«ELSE»
 		«frontHelp.generateSiteControllerRemove»
 		«ENDIF»
