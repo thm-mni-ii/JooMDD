@@ -111,10 +111,10 @@
         eType="#//Parameter" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="pageactions" upperBound="-1"
         eType="#//PageAction" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page">
     <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
         eType="#//Link" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="HTMLBody" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page">
@@ -124,8 +124,6 @@
         upperBound="-1" eType="#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filters" unique="false"
         upperBound="-1" eType="#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
-        eType="#//Link" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage">

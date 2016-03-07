@@ -13,15 +13,12 @@
         eType="#//Parameter" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" upperBound="-1"
         eType="#//ParameterGroup" containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CMSCore" eSuperTypes="#//EJSLPart">
     <eStructuralFeatures xsi:type="ecore:EReference" name="feature" eType="#//Feature"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CMSCore" eSuperTypes="#//EJSLPart"/>
   <eClassifiers xsi:type="ecore:EClass" name="coreFeature"/>
   <eClassifiers xsi:type="ecore:EClass" name="CMSExtension" eSuperTypes="#//EJSLPart">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="features" eType="#//Feature"
-        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extensions" upperBound="-1"
         eType="#//Extension" containment="true"/>
   </eClassifiers>
@@ -104,8 +101,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lower" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="upper" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Page"/>
-  <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page #//CustomPage">
+  <eClassifiers xsi:type="ecore:EClass" name="Page">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" unique="false"
         upperBound="-1" eType="#//ParameterGroup"/>
@@ -117,58 +113,33 @@
         eType="#//PageAction" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
         eType="#//Link" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="HTMLBody" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageType" eType="#//PageKinds"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
-        upperBound="-1" eType="#//Entity"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page"/>
-  <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StaticPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="HTMLBody" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DynamicPage" eSuperTypes="#//Page">
     <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
         upperBound="-1" eType="#//Entity"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" unique="false"
-        upperBound="-1" eType="#//ParameterGroup"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="globalparameters" unique="false"
-        upperBound="-1" eType="#//Parameter"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
-        eType="#//Parameter" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="pageactions" upperBound="-1"
-        eType="#//PageAction" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tablecolumns" unique="false"
         upperBound="-1" eType="#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="filters" unique="false"
         upperBound="-1" eType="#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
-        eType="#//Link" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IndexPage" eSuperTypes="#//DynamicPage"/>
   <eClassifiers xsi:type="ecore:EClass" name="DetailsPage" eSuperTypes="#//DynamicPage">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
-        upperBound="-1" eType="#//Entity"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="editfields" upperBound="-1"
         eType="#//DetailPageField" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parametergroups" unique="false"
-        upperBound="-1" eType="#//ParameterGroup"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="globalparameters" unique="false"
-        upperBound="-1" eType="#//Parameter"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="localparameters" upperBound="-1"
-        eType="#//Parameter" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="pageactions" upperBound="-1"
-        eType="#//PageAction" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tablecolumns" unique="false"
-        upperBound="-1" eType="#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="filters" unique="false"
-        upperBound="-1" eType="#//Attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="links" upperBound="-1"
-        eType="#//Link" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DetailPageField">
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" eType="#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="htmltype" eType="#//HTMLTypes"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CustomPage" eSuperTypes="#//DynamicPage"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CustomPage" eSuperTypes="#//Page">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pageType" eType="#//PageKinds"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="entities" unique="false"
+        upperBound="-1" eType="#//Entity"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="HTMLTypes"/>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleHTMLTypes" eSuperTypes="#//HTMLTypes">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="htmltype" eType="#//SimpleHTMLTypeKinds"/>

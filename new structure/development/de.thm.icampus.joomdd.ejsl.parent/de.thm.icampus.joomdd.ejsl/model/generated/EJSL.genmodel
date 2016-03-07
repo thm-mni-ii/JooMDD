@@ -153,16 +153,15 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/globalparameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/localparameters"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/pageactions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/links"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//StaticPage">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//StaticPage/links"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//StaticPage/HTMLBody"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//DynamicPage">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/entities"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/tablecolumns"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/filters"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/links"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//IndexPage"/>
     <genClasses ecoreClass="EJSL.ecore#//DetailsPage">
