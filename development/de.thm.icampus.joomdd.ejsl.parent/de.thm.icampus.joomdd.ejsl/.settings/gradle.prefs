@@ -1,8 +1,8 @@
 {
   "1.0": {
     "project_path": ":de.thm.icampus.joomdd.ejsl",
-    "project_dir": "C:\\Users\\Dennis\\git\\joomdd_repo\\new structure\\development\\de.thm.icampus.joomdd.ejsl.parent\\de.thm.icampus.joomdd.ejsl",
-    "connection_project_dir": "C:\\Users\\Dennis\\git\\joomdd_repo\\new structure\\development\\de.thm.icampus.joomdd.ejsl.parent",
+    "project_dir": "C:\\Users\\Dennis\\git\\joomdd_repo\\development\\de.thm.icampus.joomdd.ejsl.parent\\de.thm.icampus.joomdd.ejsl",
+    "connection_project_dir": "C:\\Users\\Dennis\\git\\joomdd_repo\\development\\de.thm.icampus.joomdd.ejsl.parent",
     "connection_gradle_user_home": null,
     "connection_gradle_distribution": "GRADLE_DISTRIBUTION(WRAPPER)",
     "connection_java_home": null,
