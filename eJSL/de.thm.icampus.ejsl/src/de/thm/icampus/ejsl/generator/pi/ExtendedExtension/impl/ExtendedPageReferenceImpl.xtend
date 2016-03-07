@@ -24,4 +24,5 @@ class ExtendedPageReferenceImpl extends PageReferenceImpl implements ExtendedPag
 		return extendedPage
 	}
 	
+	
 }

@@ -4,6 +4,7 @@ import de.thm.icampus.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 class IndexPageTemplate extends DynamicPageTemplate {
 
@@ -31,11 +32,12 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def void generateView(){
 	
-	 if(sec.compareTo("admin")==0){
+	 if(sec.equalsIgnoreCase("admin")){
 	  generateJoomlaDirectory(path +"/" + pagename)
 	  generateFile(path+"/" + pagename +"/"+ "view.html.php", generateViewBackend())
 	  generateJoomlaDirectory(path +"/" + pagename +"/" + "tmpl" )
 	  generateFile(path+"/" + pagename+"/" + "tmpl"+"/" + "default.php" , generateAdminViewLayoutBackend())
+	  
 	}else{
 		  generateJoomlaDirectory(path+"/" + pagename)
 		  generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView())
@@ -55,7 +57,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 		 
 	def void generateController(){
-		if(sec.compareTo("admin")==0){
+		if(sec.equalsIgnoreCase("admin")){
 		 generateFile(path+"/" + pagename + ".php", generateAdminController())
 		 }else{
 		 	generateFile(path+"/" + pagename + ".php", generateSiteController())
@@ -91,13 +93,15 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def void generateModel(){
 		if(sec.compareTo("admin")==0){
 		generateFile(path+"/" + pagename + ".php", generateAdminModel())
+		generateFile(path+"/forms/"+ "filter_" + pagename + ".xml",  generateAdminModelForms())
 		}else{
 		 generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
-		  generateFile(path + "/forms"+"/" + pagename + ".xml", xmlAdminFields(ipage,com,com.name))
+		  generateFile(path + "/forms"+"/" +"filter_" + pagename + ".xml", xmlAdminFields(ipage,com,com.name))
 			
 		}
 		 
 	}
+	
 	
 	def CharSequence generateSiteModelShow() '''
 	«generateFileDoc(ipage, com, true)»
@@ -223,7 +227,54 @@ class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLega
     } 
 	'''
 	
-
+   def CharSequence generateAdminModelForms() '''
+   <?xml version="1.0" encoding="utf-8"?>
+   <form>
+       <fields name="filter">
+           <field
+                   name="search"
+                   type="text"
+                   label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_DESC"
+               description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_DESC"
+               hint="JSEARCH_FILTER"
+               />
+       <field
+               name="state"
+               type="status"
+               label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED"
+               description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED_DESC"
+   
+                   onchange="this.form.submit();"
+                   >
+               <option value="">JOPTION_SELECT_PUBLISHED</option>
+           </field>
+        <field
+              name="created_by"
+              type="«com.name.toLowerCase»user"
+              label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
+              description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
+               entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
+              onchange="this.form.submit();"
+              >
+          <option value="">JOPTION_SELECT_CREATED_BY</option>
+      </field>
+          «FOR ExtendedAttribute attr : ipage.extendFiltersList»
+           <field
+                name="«attr.name»"
+                type="«ipage.extendedEntityList.get(0).name.toLowerCase»"
+                label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+                description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+                 valueColumn="«attr.name.toLowerCase»"
+                 textColumn="«attr.name.toLowerCase»"
+                onchange="this.form.submit();"
+                >
+            <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
+        </field>
+          «ENDFOR»
+            </fields>
+          </form>
+   '''
+	
 		
 
 }

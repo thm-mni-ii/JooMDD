@@ -13,11 +13,11 @@ class FieldsGenerator {
 	String nameField
 	ExtendedEntity entFrom
 
-	public new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
+	public new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from, int index) {
 		mainRef = ref
 		com = component
 		entFrom = from
-		nameField = from.name + "To" + ref.entity.name
+		nameField = from.name + "To" + ref.entity.name+index
 	}
 
 	public new(ExtendedComponent component, ExtendedEntity from) {
@@ -62,7 +62,7 @@ class FieldsGenerator {
 		}
 	'''
 
-	public def CharSequence genGeTInput() '''
+	private def CharSequence genGeTInput() '''
 		/**
 		 * Method to get the field input markup.
 		 *
@@ -73,22 +73,25 @@ class FieldsGenerator {
 		{
 				$html = array();
 				$document = JFactory::getDocument();
-				$document->addScript( JPATH_COMPONENT . 'assets/setForeignKeys.js');
+				$document->addScript( JURI::root() . '/administrator/components/«Slug.nameExtensionBind("com",com.name).toLowerCase»/assets/setForeignKeys.js');
 				$input = JFactory::getApplication()->input;
 				      $id = intval($input->get('id'));
 				      if(empty($id)){
 				      	$alldata = $this->getAllData();
-				      	    $html[] = "<select required onchange='setValueForeignKeys()' id='" . $this->id . "'class='form-control' name='" . $this->name. "'>";
+				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' name='" . $this->name. "'>";
+				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($alldata as $data){
 				          $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
-				          . $this->generateStringValue($selected) ."</option>";
+				          . $this->generateStringValue($data) ."</option>";
 				      }
 				        $html[]="</select>";
+				      $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id. "'/>";
 				      return implode($html);
 				      }
 				      $selectData = $this->getReferencedata($id);
 				      $restData = $this->getAllRestData($id);
-				      $html[] = "<select required onchange='setValueForeignKeys()' id='" . $this->id . "' class='form-control' name='" . $this->name. "'>";
+				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select' class='form-control' name='" . $this->name. "select'>";
+				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($selectData as $selected){
 				          $html[] = "<option selected='selected' value='". $this->generateJsonValue($selected) ."'>"
 				          . $this->generateStringValue($selected) ."</option>";
@@ -97,11 +100,12 @@ class FieldsGenerator {
 				          $html[] = "<option  value='". $this->generateJsonValue($rest)."'>" . $this->generateStringValue($rest) ."</option>";
 				      }
 				      $html[]="</select>";
+				  $html[]="<input type='hidden' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->id. "'/>";
 			return implode($html);
 		}
 	'''
 
-	public def CharSequence genGetReferencedata() '''
+	private def CharSequence genGetReferencedata() '''
 	 /**
 	 *Read Selected  Items
 	 *
@@ -123,14 +127,14 @@ class FieldsGenerator {
            )
 		         ->where("b.state = 1")
 		         ->where("a.id =" . $id)
-		         ->order("id" . " ASC");
+		         ->order("a.id" . " ASC");
 		    $db->setQuery($query);
 		    return $db->loadObjectList();
 		}
 
 	'''
 
-	public def CharSequence genGetAllRestData() '''
+	private def CharSequence genGetAllRestData() '''
 	protected function getAllRestData($id)
 	{
     $db = JFactory::getDbo();
@@ -159,35 +163,35 @@ class FieldsGenerator {
 		}
 			'''
 
-	public def CharSequence genGetAllData() '''
+	private def CharSequence genGetAllData() '''
 	 protected function getAllData(){
 	    $db = JFactory::getDbo();
 	    $queryALL = $db->getQuery(true);
 	    $queryALL->select("*")
 	        ->from($this->referenceStruct["foreignTable"])
 	        ->where("state = 1")
-	        ->order($this->referenceStruct["foreignKeys"] . " ASC");
+	        ->order(array_values($this->keysAndForeignKeys)[0] . " ASC");
 	    $db->setQuery($queryALL);
 	    return $db->loadObjectList();
 	}
 	'''
 
-	public def CharSequence genGenerateJsonValue() '''
+	private def CharSequence genGenerateJsonValue() '''
 		public function generateJsonValue($data){
 		          $result  = array();
-		          foreach($this->$keysAndForeignKeys as $key=>$value){
-		              $result["$key"] = $data->$key;
+		          foreach($this->keysAndForeignKeys as $key=>$value){
+		              $result["jform_$key"] = $data->{$value};
 		          }
 		          return json_encode($result);
 		      }
 	'''
 
-	public def CharSequence gengenerateStringValue() '''
+	private def CharSequence gengenerateStringValue() '''
 	public function generateStringValue($data){
 	        $result = array();
-	        foreach($this->$keysAndForeignKeys as $key=>$value){
-	            $result[] = $data->$key . " ";
-	        }
+	        
+	            $result[] = $data->{array_values($this->keysAndForeignKeys)[0]} . " ";
+	        
 	        return implode($result);
 	    }
 	'''
@@ -203,11 +207,10 @@ class FieldsGenerator {
 	    
 	    «genGetOptionsForEntity»
 	    «genGetAllDataForEntity»
-	    «genGetAllSelectedDataForEntity»
 	 }
 	'''
 	
-	def getGenGetAllSelectedDataForEntity() '''
+	private def genGetOptionsForEntity() '''
 	 protected function getOptions()
 	    {
 	
@@ -216,19 +219,12 @@ class FieldsGenerator {
 	        $valueColumn = $this->getAttribute('valueColumn');
 	        $textColumn = $this->getAttribute('textColumn');
 	
-	        if(empty($id)){
-	           return  array_merge(parent::getOptions(),$this->getAllData($valueColumn, $textColumn));
-	
-	        }
-	        else{
-	            return  array_merge(parent::getOptions(),$this->getAllSelectedData($id, $valueColumn, $textColumn));
-	        }
-	
-	
+	       
+	       return  array_merge(parent::getOptions(),$this->getAllData($valueColumn, $textColumn));
 	    }
 	'''
 	
-	def genGetAllDataForEntity() '''
+	private def genGetAllDataForEntity() '''
 	protected function getAllData($valueColumn, $textColumn){
 	        $dbo = JFactory::getDbo();
 	        $query = $dbo->getQuery(true);
@@ -241,7 +237,7 @@ class FieldsGenerator {
 	    }
 	'''
 	
-	def CharSequence genGetOptionsForEntity() '''
+	private def CharSequence genAllSelectedDataForEntity() '''
 	 protected function getAllSelectedData($id, $valueColumn, $textColumn){
 	        $dbo = JFactory::getDbo();
 	        $query = $dbo->getQuery(true);
@@ -258,17 +254,17 @@ class FieldsGenerator {
 	<?php
 	«Slug.generateFileDoc(component, true)»
 	JFormHelper::loadFieldClass('list');
-	class JFormFieldUser extends JFormFieldList{
+	class JFormField«component.name.toFirstUpper»user extends JFormFieldList{
 	    
 	      protected function getOptions(){
 	           $entity = $this->getAttribute('entity');
-	           $table = "#__joomladays_" . $entity;
+	           $table = "#__«component.name.toLowerCase»_" . $entity;
 	           $dbo = JFactory::getDbo();
 	           $query = $dbo->getQuery(true);
-	           $query->select("created_by AS value, name AS text")
+	           $query->select("DISTINCT a.created_by AS value, b.name AS text")
 	                 ->from("$table AS a ")
-	                ->leftJoin("#__user AS b ON a.created_by = a.id")
-	                ->order("name ASC");
+	                ->leftJoin("#__users AS b ON a.created_by = b.id")
+	                ->order("b.name ASC");
 	           $dbo->setQuery($query);
 	           $dataList = $dbo->loadObjectList();
 	           return  array_merge(parent::getOptions(),$dataList);

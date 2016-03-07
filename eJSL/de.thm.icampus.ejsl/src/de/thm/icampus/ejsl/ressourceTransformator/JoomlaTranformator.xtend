@@ -20,12 +20,15 @@ import de.thm.icampus.ejsl.eJSL.ContextLink
 import de.thm.icampus.ejsl.eJSL.LinkParameter
 import de.thm.icampus.ejsl.eJSL.StaticPage
 import de.thm.icampus.ejsl.eJSL.DynamicPage
+import de.thm.icampus.ejsl.eJSL.Datatype
 
 class JoomlaTranformator {
 	
 	EJSLModel instance
 	CMSExtension cmsExtension
 	EList<Entity> entityList
+	
+	
 	
 	new(EJSLModel model){
 		this.instance = model
@@ -196,7 +199,7 @@ class JoomlaTranformator {
 		var Entity referenceEntity = ref.entity
 		var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
 					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name
-					newAttribute.type = copyType(attrRef.type)
+					newAttribute.type =  copyType(attrRef.type)
 					ent.attributes.add(newAttribute)
 					ref.attribute.add(newAttribute)					
 					return newAttribute

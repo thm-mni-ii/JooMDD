@@ -6,5 +6,7 @@ interface ExtendedModule extends Module {
 	
 	
 	def ExtendedPageReference getExtendedPageReference()
+	def ExtendedComponent getExtendedComponent()
+	
 	
 }

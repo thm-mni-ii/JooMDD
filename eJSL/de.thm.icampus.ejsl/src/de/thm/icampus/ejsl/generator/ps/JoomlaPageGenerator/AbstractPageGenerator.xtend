@@ -5,7 +5,6 @@ package de.thm.icampus.ejsl.generator.ps.JoomlaPageGenerator;
 import org.eclipse.emf.ecore.EObject;
 import de.thm.icampus.ejsl.eJSL.Type
 import de.thm.icampus.ejsl.eJSL.DatatypeReference
-import de.thm.icampus.ejsl.eJSL.SimpleDatatypes
 import org.eclipse.xtext.generator.IFileSystemAccess
 
 abstract public class AbstractPageGenerator {
@@ -19,20 +18,7 @@ abstract public class AbstractPageGenerator {
 	 
 	 public def CharSequence generatePage();
 	 
-	 def String getTypeName(Type typ){
-		var String result = "";
-		switch typ{
-			DatatypeReference :{
-				var DatatypeReference temptyp = typ as DatatypeReference
-				result = temptyp.type.name
-			}
-			SimpleDatatypes:{
-				var SimpleDatatypes temptyp = typ as SimpleDatatypes
-				result = temptyp.type.toString
-			}
-		}
-		return result
-	}
+	 
 	/**
      * Generate directory containing default joomla index.html.
      * Directory name will be prefixed by path

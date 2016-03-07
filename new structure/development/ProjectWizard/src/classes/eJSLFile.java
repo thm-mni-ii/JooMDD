@@ -10,6 +10,7 @@ import com.intellij.util.PathUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -46,8 +47,13 @@ public class eJSLFile extends AnAction{
         String txt = Messages.showInputDialog(project, "Name:", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"));
         String temp = Messages.showEditableChooseDialog("On which template you want your class based?", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"), str, str[0], null);
         File file = new File(project.getBasePath() + "/src/" + txt + ".eJSL");
+        int k = 0;
         try {
             file.createNewFile();
+            FileWriter fw = new FileWriter(file);
+            for (int i = 0; i < temps.length; i++){if (temps[i].getName().equalsIgnoreCase(temp))k = i;}
+            fw.write(temps[k].getSrc().toString());
+
         }catch (IOException e){
             e.printStackTrace();
         }

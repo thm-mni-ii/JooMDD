@@ -40,6 +40,7 @@ class IndexPageTemplateSiteHelper {
         	 $this->state = $this->get('State');
        		 $this->items = $this->get('Items');
         	 $this->pagination = $this->get('Pagination');
+        	 $this->filterForm    = $this->get('FilterForm');
         
 	        $this->params = $app->getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 	        
@@ -118,7 +119,7 @@ class IndexPageTemplateSiteHelper {
 	
 	public def CharSequence genViewTemplateHead()'''
 	<form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
-
+	<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));?>
     <table class="table table-striped" id = "sliderList" >
         <thead >
             <tr >
@@ -221,8 +222,8 @@ class IndexPageTemplateSiteHelper {
 							<a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.edit&id=' . $item->id, false, 2); ?>" class="btn btn-mini" type="button"><i class="icon-edit" ></i></a>
 						<?php endif; ?>
 						<?php if ($canDelete): ?>
-							<button data-item-id="<?php echo $item->id; ?>" class="btn btn-mini delete-button" type="button"><i class="icon-trash" ></i></button>
-						<?php endif; ?>
+                            <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&id=' . $item->id, false, 2); ?>" class="btn btn-mini delete-button" type="button"><i class="icon-trash" ></i></a>
+                            <?php endif; ?>
 					</td>
 				<?php endif; ?>
 

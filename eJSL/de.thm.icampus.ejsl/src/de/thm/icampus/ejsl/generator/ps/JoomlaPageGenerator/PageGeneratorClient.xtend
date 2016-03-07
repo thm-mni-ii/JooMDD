@@ -33,7 +33,7 @@ public class PageGeneratorClient {
 		if(page.detailsPage) {
 			
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path, fsa)
-				//dp.generateView()
+				dp.generateView()
 			}
 			else{
 				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
@@ -48,7 +48,7 @@ public class PageGeneratorClient {
 	 def void generateController(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess fsa) {
 			if(page.detailsPage) {
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path,fsa)
-				//dp.generateController()
+				dp.generateController()
 			}
 			else{
 				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
@@ -60,7 +60,7 @@ public class PageGeneratorClient {
 	def  generateModel(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess fsa) {
 			if(page.detailsPage) {
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path,fsa)
-				//dp.generateModel()
+				dp.generateModel()
 			}
 			else {
 				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)

@@ -242,6 +242,7 @@ class IndexPageTemplateAdminHelper {
 	        $this->state = $this->get('State');
 	        $this->items = $this->get('Items');
 	        $this->pagination = $this->get('Pagination');
+	        $this->filterForm    = $this->get('FilterForm');
 	
 	        // Check for errors.
 	        if (count($errors = $this->get('Errors'))) {
@@ -321,7 +322,7 @@ class IndexPageTemplateAdminHelper {
 		 
 		        JHtmlSidebar::setAction('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»');
 		 
-		
+		}
 		 
 	'''
 	def CharSequence genAdminViewSortFields()'''
@@ -339,6 +340,9 @@ class IndexPageTemplateAdminHelper {
 	}
 	'''
 	def private CharSequence genAdminViewLayoutFilters()'''
+	  <?php
+	        echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	        ?>
 	<div id="filter-bar" class="btn-toolbar">
 			<div class="btn-group pull-right hidden-phone">
 				<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
@@ -501,11 +505,6 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-
-<?php
-
-?>
-
  '''
  
  public def CharSequence genAdminModelPopulateState()'''
@@ -570,7 +569,7 @@ $sortFields = $this->getSortFields();
 	«IF Slug.isAttributeLinked(attr, indexpage)»
 	<?php if ($canEdit) : ?>
 	<td>
-		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")»); ?>">
+		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->")»); ?>">
 			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?></a>
 		<?php else : ?>
 			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?>

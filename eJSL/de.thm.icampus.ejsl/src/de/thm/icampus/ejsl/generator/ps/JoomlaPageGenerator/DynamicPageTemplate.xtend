@@ -21,6 +21,8 @@ import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 /**
  * <!-- begin-user-doc -->
@@ -100,7 +102,7 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 		«FOR param : listParams»
 		 <field
 		 name="«param.name»"
-		 type="«getTypeName(param.dtype)»"
+		 type="«Slug.getTypeName(param.dtype)»"
 		 label="«Slug.generateKeysName(component, param.label) »"
 		 description="«Slug.generateKeysName(component,param.descripton)»"
 		 />
@@ -114,14 +116,14 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 				readonly="true" class="readonly"
 				description="JGLOBAL_FIELD_ID_DESC" /> 
 
-				<field name="created_by" type="createdby" default="" 
+				<field name="created_by" type="hidden" default="" 
 				label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"
 				description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
 					
 					«FOR ExtendedEntity e : page.extendedEntityList»
 					«FOR ExtendedAttribute attr : e.extendedAttributeList»
-					 <field name="«attr.name.toLowerCase»" 
-					 type="«getHtmlTypeOfAttribute(attr,e,component).toLowerCase»" 
+					 <field name="«attr.name.toLowerCase»" id="«attr.name.toLowerCase»"
+					«getHtmlTypeOfAttribute(page,attr,e,component)»
 					 label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»"
 					 /> 
 					«ENDFOR»
@@ -137,11 +139,11 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 					        <option value="2">JARCHIVED</option>
 					        <option value="-2">JTRASHED</option>
 					    </field> 
-         <field name="published" type="hidden" filter="unset" />
-		<field name="checked_out" type="hidden" filter="unset" />
-        <field name="checked_out_time" type="hidden" filter="unset" /> 
+			         <field name="published" type="hidden" filter="unset" />
+					<field name="checked_out" type="hidden" filter="unset" />
+			        <field name="checked_out_time" type="hidden" filter="unset" /> 
 					</fieldset> 
-
+			
 					 <fieldset name="accesscontrol">
 					<field name="asset_id" type="hidden" filter="unset" />
 					<field name="rules"
@@ -154,20 +156,32 @@ public class DynamicPageTemplate extends AbstractPageGenerator {
 					component="«Slug.nameExtensionBind("com",component.name).toLowerCase»"
 					section="«page.name.toLowerCase»"
 					/>
-
+			
 				</fieldset>
 				</form>
    		 '''
    		 
-   	def String getHtmlTypeOfAttribute(ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com){
+   	def CharSequence getHtmlTypeOfAttribute(ExtendedDynamicPage dynP,ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com){
+   		var StringBuffer buff = new StringBuffer
    		
-   		for(Reference ref: en.references){
-   			if(ref.attribute.equals(attr)){
-   				return en.name + "To" +ref.entity.name
+   			for(ExtendedReference ref: en.extendedReference){
+   			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
+   				buff.append('''type ="«en.name + "to" +ref.entity.name»«en.extendedReference.indexOf(ref)»"''')
+   				return buff.toString
    			}
    		}
-   		
-   		return Slug.getTypeName(attr);
+   		if(!dynP.extendedEditedFieldsList.empty){
+   			for(ExtendedDetailPageField field:dynP.extendedEditedFieldsList ){
+   				if(field.extendedAttribute.name.equalsIgnoreCase(attr.name)){
+   					
+   					
+   					return Slug.getTypeName(field.type, field.extendedAttribute)
+   				}
+   			}
+   		}
+   	
+   		buff.append('''type ="hidden"''')
+   		return buff.toString;
    	}
 	
 	override getLinkClient() {

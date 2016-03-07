@@ -31,7 +31,7 @@ class DetailsPageTemplateBackendHelper {
 			// Set ordering to the last item if not set
 			if (@$table->ordering === '') {
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__«dpage.entities.get(0).name.toLowerCase»');
+				$db->setQuery('SELECT MAX(ordering) FROM #__«com.name.toLowerCase»_«dpage.entities.get(0).name.toLowerCase»');
 				$max = $db->loadResult();
 				$table->ordering = $max+1;
 			}
@@ -139,7 +139,6 @@ class DetailsPageTemplateBackendHelper {
 				<input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)){
 				 echo $this->item->checked_out_time;}else{ echo date("Y-m-d H:i:s") ;} ?>" />
 				
-			«Slug.generateEntytiesHiddenAttribute(dpage.entities.get(0),dpage.entities)»
 			<?php if(empty($this->item->created_by)){ ?>
 					<input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>" />
 
@@ -148,7 +147,7 @@ class DetailsPageTemplateBackendHelper {
 					<input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
 
 				<?php } ?>
-				«Slug.generateEntytiesInputAttribute(dpage.entities.get(0), dpage.entities)»
+				«Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
 				   </fieldset>
 			</div>
 			</div>

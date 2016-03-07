@@ -701,6 +701,7 @@ Feature:
 <h6> <a id="user-content-formatter" class="anchor" href="#formatter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Formatter</h6> 
 <h6> <a id="user-content-validator" class="anchor" href="#validator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Validator</h6> 
 <h6> <a id="user-content-project-wizard" class="anchor" href="#project-wizard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard</h6> 
+<h6> <a id="user-content-project-wizard-under-phpstorm" class="anchor" href="#project-wizard-under-phpstorm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard under PHPStorm</h6> 
 <h5> <a id="user-content-de-serializer-handlers" class="anchor" href="#de-serializer-handlers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>(De-)Serializer Handlers</h5> 
 <p>The Eclipse editor provides an extension to (de-)serialize <em>eJSL-instances</em> to/from <em>xmi-files</em>. This is done by two handler classes (<em>DeserializationHandler.java</em> and <em>SerializationHandler.java</em>) and the following extension point (under the respective comments) in the <em>plugin.xml</em> of the <em>de.thm.icampus.joomdd.ejsl.ui plugin</em>:</p> 
 <pre><code>  &lt;!-- XMI Serialization --&gt;  
@@ -731,6 +732,13 @@ Feature:
  <li><p>If you want to change the description, version ... go to the plugin.xml</p></li> 
  <li><p>If you want to export the plugin go to Path: C:\Users\&quot;user&quot;\ .IdeaIC15\system\plugins-sandbox\plugins\ . Compress the ProjectWizard-folder into a zip file. Now you can install the .zip via install plugin from disk...</p></li> 
  <li><p>Merge Plugin with eJSL: you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip). (&quot;EJSL2.9.1&quot; is just the project name) copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea copy the part () of the wizard plugin.xml file to the eJSL plugin.xml file. Past it between .../depends&gt; (here) &lt;xi:include...</p></li> 
+</ul> 
+<h6> <a id="user-content-project-wizard-under-phpstorm-1" class="anchor" href="#project-wizard-under-phpstorm-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Wizard under PHPStorm</h6> 
+<ul> 
+ <li> If you want to release the plugin for PHPStorm you have to make following ajustments to your IntelliJ installation</li> 
+ <li> Under File|Project Structure|Libaries use the Add-Button to add php-openapi.jar and php.jar located under </li> 
+ <li> Change under Modules|Dependencies Scope to Provided</li> 
+ <li> Add the following dependencies to you plugin.xml com.jetbrains.php com.intellij.modules.platform In this repo they are already added. Please Note that the first dependency has to be deleted if you want the same plugin on IntelliJ</li> 
 </ul> 
 <h5> <a id="user-content-generator-inclusion" class="anchor" href="#generator-inclusion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generator inclusion</h5> 
 <h6> <a id="user-content-prepare-phpstorm-only-first-time" class="anchor" href="#prepare-phpstorm-only-first-time" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prepare PHPStorm (only first time):</h6> 

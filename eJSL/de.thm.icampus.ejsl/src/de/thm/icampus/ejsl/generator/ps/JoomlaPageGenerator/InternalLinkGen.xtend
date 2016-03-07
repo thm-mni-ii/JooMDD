@@ -24,6 +24,6 @@ public class InternalLinkGen extends AbstractLinkGenerator {
 	}
 	
 	override generateLink(String sect, String compname) '''
-		 «if (sect.isEmpty) '' else sect + "/"»"index.php?option=«compname.toLowerCase»&view=«link.target.name.toLowerCase»"'''
+		 «if (sect.isEmpty) '' else sect + "/"»"index.php?option=«Slug.nameExtensionBind("com",compname).toLowerCase»&view=«link.target.name.toLowerCase»"'''
 	
 } // InternalLink

@@ -32,6 +32,11 @@ import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.ejsl.eJSL.SectionKinds
 import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.ejsl.eJSL.MethodParameter
+import de.thm.icampus.ejsl.eJSL.StandardTypes
+import de.thm.icampus.ejsl.eJSL.Type
+import de.thm.icampus.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 
 /**
  * <!-- begin-user-doc -->
@@ -92,33 +97,73 @@ public class Slug  {
 		
 		return res.toString
 	}
-	def static String getTypeName(ExtendedAttribute typ){
+	def static String getTypeName(String type){
+		var String result =""
+		switch type{
+			case "Integer":{
+				result='''type="number" min="0"  '''
+			} 
+			case "Yes_No_Buttons":{
+				result=''' type="number" min="0" max="1" '''
+			}
+			 case "Textarea":{
+			 	result='''type="textarea" rows="10" cols="5" '''
+			 }
+			 case "Text_Field":{
+			 	result='''type="text" '''
+			 	}
+			 case "Datepicker":{
+			 	result='''type="datetime" '''
+			 } 
+			 case "Imagepicker":{
+			 	result='''type="imagelist" '''
+			 } 
+			 case "Filepicker":{
+			 	result='''type="filelist" directory="administrator" '''
+			 } 
+			 case "Text_Field_NE":{
+			 	result='''type="text" '''
+			 } 
+			 case "Editor":{
+			 	result='''type="editor" '''
+			 }
+			 case "Multiselect":{
+			 	result='''type="text" '''
+			 }
+			 case "Checkbox":{
+			 	result='''type="text" '''
+			 }
+			 case "Radiobutton":{
+			 	result='''type="text" '''
+			 }
+			 case "hidden":{
+			 	result='''type="hidden" '''
+			 }
+		}
+		return result
+	}
+	def static String getTypeName(String type, ExtendedAttribute attr){
+		var String myType = Slug.getTypeName(type)
+		
+		return myType
+	}
+	def static String getTypeName(Type typ){
 		var String result = "";
 		switch typ{
 			DatatypeReference :{
 				var DatatypeReference temptyp = typ as DatatypeReference
 				result = temptyp.type.name
 			}
-			SimpleDatatypes:{
-				var SimpleDatatypes temptyp = typ as SimpleDatatypes
-				result = temptyp.type.toString
+			StandardTypes:{
+				var StandardTypes temptyp = typ as StandardTypes
+				result = getTypeName(temptyp.type.getName())
 			}
 		}
 		return result
 	}
 	def static String getTypeName(ExtendedParameter typ){
-		var String result = "";
-		switch typ{
-			DatatypeReference :{
-				var DatatypeReference temptyp = typ as DatatypeReference
-				result = temptyp.type.name
-			}
-			SimpleDatatypes:{
-				var SimpleDatatypes temptyp = typ as SimpleDatatypes
-				result = temptyp.type.toString
-			}
-		}
-		return result
+			
+		return getTypeName(typ.generatorType)
 	}
 	/*
 	 * Takes the name of an Extension and Prefix like (com ,name)and return com_name  .
@@ -143,94 +188,48 @@ public class Slug  {
 		return null ;
 	}
 	
-	def static CharSequence generateEntytiesHiddenAttribute(Entity entity, List<Entity> toSchowEntities) {
+	def static CharSequence generateEntytiesInputAttribute(EList<ExtendedDetailPageField> fields, ExtendedEntity entity) {
 		var StringBuffer buff = new StringBuffer()
+		var notShow = newArrayList("id","state","created_by","asset_id","ordering","checked_out_time","checked_out", "published", "params")
 		
-		for(Attribute e : entity.attributes){
+		
+		
+		
+		for(ExtendedDetailPageField fielditem: fields){
 			
-			if(getTypeName(e.htmltype).toLowerCase.compareTo("hidden") == 0){
-				buff.append(inputHiddenFeldTemplate(e) + "\n");
+			if(!notShow.contains(fielditem.extendedAttribute.name)){
+				buff.append(inputFeldTemplate(fielditem.extendedAttribute))
+				notShow.add(fielditem.extendedAttribute.name)
+			}
+			
+		}
+		for(ExtendedAttribute attr: entity.extendedAttributeList){
+			if(!notShow.contains(attr.name)){
+				buff.append(inputHiddenFeldTemplate(attr))
 			}
 		}
 		
-		for(Attribute e : getAllAttributeOfreference(entity, toSchowEntities)){
-			
-			if(getTypeName(e.htmltype).toLowerCase.compareTo("hidden") == 0){
-				buff.append(inputHiddenFeldTemplate(e) + "\n");
-			}
-		}
+		
 		
 		return buff.toString
 	}
 	
-	def static HashSet<Attribute> getAllAttributeOfreference(Entity ent, List<Entity> toSchowEntities) {
-		var HashSet<Attribute> result  = new HashSet<Attribute>
-		var LinkedList<Entity> tovisitEntity = new LinkedList <Entity>() 
-		tovisitEntity.add(ent)
-		for(Entity en: tovisitEntity){
-			for(Reference re: en.references){
-			if( toSchowEntities.contains(re.entity)){
-				var Attribute refered = re.attributerefereced
-				for(Attribute attr: re.entity.attributes){
-					if(attr.name.equals(refered.name) && !result.contains(attr) && attr.name.equalsIgnoreCase("id")){
-						
-						result.add(attr)
-					}
-				}
-				if(!tovisitEntity.contains(re.entity)){
-					tovisitEntity.add(re.entity)
-				}
-			}
-			
-			}
-		}
-		return result
-	}
 	
-	def static CharSequence inputHiddenFeldTemplate(Attribute attr) '''
-	<input type="hidden" name="jform[«Slug.slugify(attr.name).toLowerCase»]" value="<?php echo $this->item->«Slug.slugify(attr.name).toLowerCase»; ?>" />
+	
+	def static CharSequence inputHiddenFeldTemplate(ExtendedAttribute attr) '''
+	<div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
 	'''
 	
-	def static CharSequence generateEntytiesInputAttribute(Entity entity, List<Entity> toSchowEntities) {
-		var StringBuffer buff = new StringBuffer()
-		
-		for(Attribute e : entity.attributes){
-			
-			if(getTypeName(e.htmltype).toLowerCase.compareTo("hidden") != 0){
-				buff.append(inputFeldTemplate(e) + "\n");
-			}
-		}
-		
-		for(Attribute e : getAllAttributeOfreference(entity, toSchowEntities)){
-			
-			if(getTypeName(e.htmltype).toLowerCase.compareTo("hidden") != 0){
-				buff.append(inputFeldTemplate(e) + "\n");
-			}
-		}
-		
-		return buff.toString
-	}
 	
-	def static CharSequence inputFeldTemplate(Attribute attr) '''
+	
+	def static CharSequence inputFeldTemplate(ExtendedAttribute attr) '''
 	<div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('«attr.name.toLowerCase»'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
 	</div>
+	
 	'''
-	def static HashSet<DetailsPage>  getAllAttributeOfAComponente(Component c){
-		var HashSet<DetailsPage> result = new HashSet<DetailsPage> ()
-		for(Section sec : c.sections){
-			for(PageReference dyn: sec.pageRef){
-				switch dyn.page{
-					DetailsPage :{
-						var DetailsPage pg = dyn.page as DetailsPage
-					result.add(pg);
-					}
-				}
-			}
-		}
-		return result
-	}
+
 	def static CharSequence generateFileDoc( Component component, boolean denied)'''
 	
 		/**
@@ -250,6 +249,7 @@ public class Slug  {
 	'''
 	
 	def static String generateKeysName(Component com, String name){
+		if(name!=null)
 		return "COM_" + com.name.toUpperCase + "_" + Slug.slugify(name).toUpperCase
 	}
 	
@@ -461,6 +461,10 @@ public class Slug  {
 		}
 		return result.toString
 
+	}
+	
+	def static CharSequence getParamterType(MethodParameter parameter) {
+		return ""
 	}
  
 	
