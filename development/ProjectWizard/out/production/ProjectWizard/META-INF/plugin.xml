@@ -1,0 +1,44 @@
+<idea-plugin version="2">
+  <id>com.your.company.unique.plugin.joomdd</id>
+  <name>Joo MDD Project Wizard</name>
+  <version>1.1</version>
+  <vendor email="support@yourcompany.com" url="http://www.mni.thm.de">YourCompany</vendor>
+
+  <description><![CDATA[
+      <h2>Entwickelt von Leon und Max vom iCampus Team</h2>
+      JooMDD Project Wizard.<br>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Hallo<br>
+      <em>Beta</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="141.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.lang</depends>
+  <!--<depends>com.jetbrains.php</depends>  --> <!--Necesarry for PHPStorm take out for IntelliJ -->
+
+
+  <extensions defaultExtensionNs="com.intellij">
+    <moduleBuilder builderClass="classes.eJSLModuleBuilder" id="DEMO_STEP" order="first"/>
+  </extensions>
+
+  <actions>
+    <action id="eJSLFile" class="classes.eJSLFile" text= "eJSLFile">
+      <add-to-group group-id="NewGroup" anchor="first"/>
+    </action>
+  </actions>
+
+
+  <project-components>
+    <component>
+      <implementation-class>classes.InitalSettings</implementation-class>
+    </component>
+  </project-components>
+
+</idea-plugin>

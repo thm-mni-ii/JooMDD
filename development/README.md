@@ -94,7 +94,8 @@ the *plugin.xml* of the *de.thm.icampus.joomdd.ejsl.ui plugin*:
 *Attention:* The context menu is only available within the ***Java perspective***.
 
 #### IntelliJ and PHPStorm ####
-
+##### Versioning #####
+Change the versions within *<Path to Git Repository>\joomdd_repo\development\de.thm.icampus.joomdd.ejsl.parent\de.thm.icampus.joomdd.ejsl.idea\build.gradle*.
 ##### Textual Editor #####
 ##### Plugin-Build #####
 *	To create an Xtext Project you need the 3 Plugins (Xtend Support, Xtext and Xtext IDEA Core).
@@ -127,7 +128,7 @@ Compress the ProjectWizard-folder into a zip file. Now you can install the .zip 
 you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip).  ("EJSL2.9.1" is just the project name)
 copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
 copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. 
-Past it between .../depends>  (here)  <xi:include...
+Paste it between .../depends>  (here)  <xi:include...
 
 ###### Project Wizard under PHPStorm ######
 

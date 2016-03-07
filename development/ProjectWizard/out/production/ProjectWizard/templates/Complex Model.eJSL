@@ -1,0 +1,223 @@
+/*
+ * This is an example model with the needed model elements entities, pages, and extensions
+ * '..' are just placeholders for names and should be replaced in concrete models!
+ */
+eJSLModel "name of the model" {
+	eJSL part: CMS Extension {
+		 datatypes {
+			Datatype "varchar(255) NOT NULL",
+			Datatype "text NOT NULL",
+			Datatype "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
+			Datatype "date",
+			Datatype "textarea",
+			Datatype "text",
+			Datatype "editor"		
+		}
+		entities { 
+			Entity Person {
+				attributes {
+					Attribute Vorname {
+						type = "varchar(255) NOT NULL"
+						
+					}
+					Attribute Name {
+						type = "varchar(255) NOT NULL"
+						Unique attribute with Vorname
+					}	
+				}
+			}
+			Entity entity2 {
+				attributes { 
+					Attribute attribute1 {
+						type = "varchar(255) NOT NULL"
+						Unique attribute
+					}
+					Attribute attribute2 {
+						type = "varchar(255) NOT NULL"
+					}
+				}
+				references {
+					Reference {
+						EntityAttribute = attribute2
+						*Entity = Person
+						*EntityReference = Person.Name
+						lower = 1
+						upper = 1
+					}
+				}
+			}
+		}
+	
+		pages {
+			IndexPage IndexPage1 {
+				*Entities Person
+				table columns = Person.Vorname, 
+					Person.Name
+			filters = Person.Name ,Person.Vorname
+			links {
+				InternalLink Test {
+					target = DetailsPage1
+					linked attribute = Person.Name
+				}
+			}
+			}
+			DetailsPage DetailsPage1 {
+				*Entities Person
+				links {
+					InternalLink forall {
+						target = IndexPage1
+						linked attribute = Person.Name
+					}
+				}
+			}
+			IndexPage IndexPage2 {
+				*Entities Person
+				table columns =  Person.Name, Person.Vorname
+			filters = Person.Name , Person.Vorname
+					links {
+						InternalLink ^Link {
+							target = DetailsPage1
+							linked attribute = Person.Name
+						}
+					}
+					
+			}
+			DetailsPage DetailsPage2 {
+				*Entities entity2
+				links {
+					InternalLink forall {
+						target = IndexPage2
+						linked attribute = entity2.attribute1
+					}
+				} 
+			}
+		}
+		extensions {
+			Component Component1 {
+				Manifestation {
+					authors {
+						Author "forename surname" {
+							authoremail = "name@provider.domains"
+							authorurl = "www.anyurl.com"
+						}
+					} 
+					creationdate = 20.04.1222			
+					copyright = "Copyright"
+					license = "License"
+				}
+				languages {
+					Language de-DE {
+		   			}
+					Language en-GB {
+					}
+				}
+				sections {
+					Frontend section{ 
+					   *Pages {
+						    *Page : DetailsPage1 from : Component1.backend
+						    *Page : IndexPage1
+					   }
+					}
+					Backend section  {
+						*Pages {
+							*Page : IndexPage1
+						   	*Page :  DetailsPage1 
+						   	*Page :  IndexPage2
+						   	*Page :  DetailsPage2
+						}
+					}
+				}
+			}
+			Module mod1 {
+				Manifestation {
+					authors {
+						Author "Tim H�user"
+						{
+							authoremail = "tim.haeuser@mni.thm.des"
+							authorurl = "www.clox-fitnesss.de"
+						}
+						Author "Basti Felsing"
+						{
+							authoremail = "sebastian.felsing@mni.thm.de"
+							authorurl = "www.google.de"
+						}
+					}
+				}
+				*Page : IndexPage1 
+			}
+			Extension package Test{
+				Manifestation {
+					authors {
+						Author "Klaus Merller"
+						{
+							authoremail = "Klaus.Maaa@mni.thm.de"
+							authorurl = "www.clox-fitness.de"
+						}
+						Author "Max Mustermann"
+						{
+							authoremail = "Max.Mustermann@mni.thm.de"
+							authorurl = "www.joomla.de"
+						}
+					}
+				}
+				extensions {
+					Module mod1 {
+						Manifestation {
+							authors {
+								Author "Klaus Muller"
+								{
+									authoremail = "Klaus.Mullerr@mni.thm.de"
+									authorurl = "www.clox-fitness.de"
+								}
+								Author "Max Mustermann"
+								{
+									authoremail = "Max.Mustermann@mni.thm.de"
+									authorurl = "www.joomla.de"
+								}
+							}
+							creationdate = 23.06.1337
+							copyright = "MDD SS15"
+							description = "Master"
+						}
+						*Page : IndexPage2 from : Component1 .backend
+					}
+					Component Component1 {
+						Manifestation {
+							authors {
+								Author "forename surname" {
+									authoremail = "name@provider.domaiss"
+									authorurl = "www.anyurl.com"
+								}
+							}
+							creationdate =20.04.1222
+							copyright = "Copyright"
+							license = "License"
+						}
+						languages {
+							Language de-DE {
+							}
+							Language en-GB {
+							}
+						}
+						sections {
+							Frontend section {
+								*Pages { 
+							   		*Page : IndexPage1
+									*Page :  DetailsPage1
+								}
+							}
+							Backend section {
+								*Pages {
+									*Page : IndexPage1
+									*Page :  DetailsPage1
+									*Page :  IndexPage2
+									*Page : DetailsPage2
+								}
+							}
+						}
+					}
+				}
+			}
+		 }
+	}
+}
