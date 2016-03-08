@@ -1,6 +1,7 @@
 package classes;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.PathUtil;
 
 import javax.swing.*;
@@ -24,6 +25,36 @@ public class eJSLWizardStep extends ModuleWizardStep {
     public static void setOption(String newoption) {option = newoption;}
     public static boolean getwizardactive() {return  wizardstatus;}
 
+    public String getPreviewFromFile(String filename){
+
+        StringBuilder preview = new StringBuilder();
+
+        try{
+            FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/"+filename);
+            BufferedReader br = new BufferedReader(fr);
+
+            String buffer = "";
+            String text = "";
+            int maxLines = 20;
+            int lines = 0;
+
+            while ((buffer = br.readLine()) != null) {
+
+                text += buffer + "\n";
+                lines+=1;
+                if(lines>maxLines){
+                    break;
+                }
+            }
+            preview.append(text);
+            br.close();
+            fr.close();
+        }  catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return preview.toString();
+    }
+
     @Override
     public JComponent getComponent() {
         TemplateList tempList = new TemplateList();
@@ -42,31 +73,47 @@ public class eJSLWizardStep extends ModuleWizardStep {
         }
 
         JPanel panel = new JPanel(new BorderLayout());
-        ImagePanel logoPanel = new ImagePanel("/resources/icons/Logo_b.png");
+        //ImagePanel logoPanel = new ImagePanel("/resources/icons/Logo_b.png");
         JPanel selectPanel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
-        JPanel previewPanel = new JPanel(new BorderLayout());
+        JPanel secondPanel = new JPanel(new BorderLayout());
+        JPanel descriptionPanel = new JPanel(new BorderLayout());
+        JPanel previewPanel = new JPanel((new BorderLayout()));
 
+        JLabel joomddlogo = new JLabel(IconLoader.getIcon("/resources/icons/Logo_b_small.png"));
         JLabel selectLabel = new JLabel("Load example:");
+        JLabel descriptionLabel = new JLabel("<html><br>Description:<html>");
+        JLabel descriptionText = new JLabel();
         JLabel previewLabel = new JLabel("Preview:");
-        JLabel previewText  = new JLabel();
+        //JLabel previewText  = new JLabel("Preview Text");
+        JTextArea previewText  = new JTextArea("");
+        previewText.setEnabled(false);
 
         JScrollPane selectScroll = new JScrollPane(buttonPanel);
         selectScroll.setPreferredSize(new Dimension(150,250));
-        JScrollPane previewScroll = new JScrollPane(previewText);
+        JScrollPane previewScroll = new JScrollPane(previewLabel);
         previewScroll.setPreferredSize(new Dimension(400,250));
 
-        panel.add(logoPanel, BorderLayout.NORTH);
+        panel.add(joomddlogo, BorderLayout.NORTH);
         panel.add(selectPanel, BorderLayout.WEST);
-        panel.add(previewPanel, BorderLayout.CENTER);
+        panel.add(secondPanel, BorderLayout.CENTER);
 
         JRadioButton[] radio = new JRadioButton[temps.length];
 
         selectPanel.add(selectLabel, BorderLayout.NORTH);
         selectPanel.add(selectScroll, BorderLayout.CENTER);
+
+        secondPanel.add(descriptionPanel,BorderLayout.NORTH);
+        secondPanel.add(previewPanel,BorderLayout.CENTER);
+
+        descriptionPanel.add(descriptionLabel, BorderLayout.NORTH);
+        descriptionPanel.add(previewScroll, BorderLayout.CENTER);
+        descriptionPanel.add(descriptionText, BorderLayout.CENTER);
+        //descriptionPanel.add(previewPanel, BorderLayout.SOUTH);
+
         previewPanel.add(previewLabel, BorderLayout.NORTH);
-        previewPanel.add(previewScroll, BorderLayout.CENTER);
+        previewPanel.add(previewText,BorderLayout.CENTER);
 
         selectLabel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         selectScroll.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -83,28 +130,32 @@ public class eJSLWizardStep extends ModuleWizardStep {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(radio[j].isSelected()){
+                        setOption(temps[j].getSrc().toString());
+
                         for(int k = 0; k < radio.length; k++){
                             if(k != j) radio[k].setSelected(false);
                         }
-                        setOption(radio[j].getName());
-                        if(temps[j].getPreview() == null){
-                            previewText.setText("This template has no preview.");
+                        //setOption(radio[j].getName());
+                        if(temps[j].getDescription() == null){
+                            descriptionText.setText("This template has no description.");
                         }else {
-                            previewText.setText(temps[j].getPreview().toString());
+                            descriptionText.setText(temps[j].getDescription().toString());
                         }
+
+                        previewText.setText(getPreviewFromFile(temps[j].getSrc().toString()));
+
                     }
                 }
             });
         }
         radio[0].setSelected(true);
-        if(temps[0].getPreview() == null){
-            previewText.setText("This template has no preview.");
+        setOption(temps[0].getSrc().toString());
+        previewText.setText(getPreviewFromFile(temps[0].getSrc().toString()));
+        if(temps[0].getDescription() == null){
+            descriptionText.setText("This template has no description.");
         }else {
-            previewText.setText(temps[0].getPreview().toString());
+            descriptionText.setText(temps[0].getDescription().toString());
         }
-
-
-
 
         /*
         File resource_dir = new File(PathUtil.getJarPathForClass(getClass()) + "/resources/eJSLexamples/");

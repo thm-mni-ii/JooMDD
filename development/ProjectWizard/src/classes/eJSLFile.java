@@ -8,10 +8,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.PathUtil;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by Leon on 27.01.16.
@@ -46,13 +43,34 @@ public class eJSLFile extends AnAction{
 
         String txt = Messages.showInputDialog(project, "Name:", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"));
         String temp = Messages.showEditableChooseDialog("On which template you want your class based?", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"), str, str[0], null);
-        File file = new File(project.getBasePath() + "/src/" + txt + ".eJSL");
+        //File file = new File(project.getBasePath() + "/src/" + txt + ".eJSL");
+
+        StringBuilder example = new StringBuilder();
+
         int k = 0;
         try {
-            file.createNewFile();
-            FileWriter fw = new FileWriter(file);
+            //file.createNewFile();
+           // FileWriter fw = new FileWriter(file);
             for (int i = 0; i < temps.length; i++){if (temps[i].getName().equalsIgnoreCase(temp))k = i;}
-            fw.write(temps[k].getSrc().toString());
+
+
+           // fw.write(temps[k].getSrc().toString());
+
+            FileWriter fw = new FileWriter(project.getBasePath() + "/src/"+txt+".eJSL");
+            FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + temps[k].getSrc().toString());
+            //FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/eJSLexamples/" + eJSLWizardStep.getOption());
+            BufferedReader br = new BufferedReader(fr);
+            String buffer = "";
+            while ((buffer = br.readLine()) != null) {
+                example.append((buffer + "\n"));
+            }
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(example.toString());
+
+            br.close();
+            bw.close();
+            fr.close();
+            fw.close();
 
         }catch (IOException e){
             e.printStackTrace();
