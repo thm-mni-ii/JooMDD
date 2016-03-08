@@ -2,6 +2,7 @@ package classes;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.PathUtil;
 
 import javax.swing.*;
@@ -86,13 +87,12 @@ public class eJSLWizardStep extends ModuleWizardStep {
         JLabel descriptionLabel = new JLabel("<html><br>Description:<html>");
         JLabel descriptionText = new JLabel();
         JLabel previewLabel = new JLabel("Preview:");
-        //JLabel previewText  = new JLabel("Preview Text");
         JTextArea previewText  = new JTextArea("");
         previewText.setEnabled(false);
 
-        JScrollPane selectScroll = new JScrollPane(buttonPanel);
+        JBScrollPane selectScroll = new JBScrollPane(buttonPanel);
         selectScroll.setPreferredSize(new Dimension(150,250));
-        JScrollPane previewScroll = new JScrollPane(previewLabel);
+        JBScrollPane previewScroll = new JBScrollPane(previewLabel);
         previewScroll.setPreferredSize(new Dimension(400,250));
 
         panel.add(joomddlogo, BorderLayout.NORTH);

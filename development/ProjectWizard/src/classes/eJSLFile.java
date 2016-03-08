@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.PathUtil;
+import jdk.nashorn.internal.scripts.JO;
 
 import java.io.*;
 
@@ -35,45 +36,75 @@ public class eJSLFile extends AnAction{
         Object[] t = tempList.getTemplates();
         Template[] temps = new Template[t.length];
         String[] str = new String[t.length];
+        str[0] = "test";
 
         for (int i = 0; i < t.length; i++){
             temps[i] = (Template) t[i];
             str[i] = temps[i].getName();
         }
 
-        String txt = Messages.showInputDialog(project, "Name:", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"));
-        String temp = Messages.showEditableChooseDialog("On which template you want your class based?", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"), str, str[0], null);
-        //File file = new File(project.getBasePath() + "/src/" + txt + ".eJSL");
+        String[] result = JOptionPaneMultiInput.showMultiInputDialog(str, "Name:", "Template", "Create new eJSL-File", IconLoader.getIcon("/resources/icons/eJSL.PNG"));
+        if (result != null){
+            StringBuilder example = new StringBuilder();
 
-        StringBuilder example = new StringBuilder();
+            int k = 0;
+            try {
+                File src = new File(project.getBasePath() + "/src");
+                src.mkdir();
+                for (int i = 0; i < temps.length; i++){if (temps[i].getName().equalsIgnoreCase(result[1]))k = i;}
+                FileWriter fw = new FileWriter(src.getPath() + "/" + result[0] +".eJSL");
+                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + temps[k].getSrc().toString());
+                BufferedReader br = new BufferedReader(fr);
+                String buffer = "";
+                while ((buffer = br.readLine()) != null) {
+                    example.append((buffer + "\n"));
+                }
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(example.toString());
 
-        int k = 0;
-        try {
-            //file.createNewFile();
-           // FileWriter fw = new FileWriter(file);
-            for (int i = 0; i < temps.length; i++){if (temps[i].getName().equalsIgnoreCase(temp))k = i;}
+                br.close();
+                bw.close();
+                fr.close();
+                fw.close();
 
-
-           // fw.write(temps[k].getSrc().toString());
-
-            FileWriter fw = new FileWriter(project.getBasePath() + "/src/"+txt+".eJSL");
-            FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + temps[k].getSrc().toString());
-            //FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/eJSLexamples/" + eJSLWizardStep.getOption());
-            BufferedReader br = new BufferedReader(fr);
-            String buffer = "";
-            while ((buffer = br.readLine()) != null) {
-                example.append((buffer + "\n"));
+                }catch (IOException e){
+                    e.printStackTrace();
             }
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(example.toString());
-
-            br.close();
-            bw.close();
-            fr.close();
-            fw.close();
-
-        }catch (IOException e){
-            e.printStackTrace();
         }
+
+        /*
+        String txt = Messages.showInputDialog(project, "Name:", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"));
+        if (txt != null){
+            String temp = Messages.showEditableChooseDialog("On which template you want your class based?", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"), str, str[0], null);
+            if (temp != null){
+                StringBuilder example = new StringBuilder();
+
+                int k = 0;
+                try {
+                    File src = new File(project.getBasePath() + "/src");
+                    src.mkdir();
+                    for (int i = 0; i < temps.length; i++){if (temps[i].getName().equalsIgnoreCase(temp))k = i;}
+                    FileWriter fw = new FileWriter(src.getPath() + "/" + txt+".eJSL");
+                    FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + temps[k].getSrc().toString());
+                    BufferedReader br = new BufferedReader(fr);
+                    String buffer = "";
+                    while ((buffer = br.readLine()) != null) {
+                        example.append((buffer + "\n"));
+                    }
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(example.toString());
+
+                    br.close();
+                    bw.close();
+                    fr.close();
+                    fw.close();
+
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        */
+
     }
 }
