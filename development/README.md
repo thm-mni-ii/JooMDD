@@ -133,7 +133,7 @@ Paste it between .../depends>  (here)  <xi:include...
 ###### Project Wizard under PHPStorm ######
 
 *	If you want to release the plugin for PHPStorm you have to make following ajustments to your IntelliJ installation
-*   Under File|Project Structure|Libaries use the Add-Button to add php-openapi.jar and php.jar located under <your_installation_of_PHPStorm/plugins/php/lib>
+*   Under File|Project Structure|Libaries use the Add-Button to add php-openapi.jar and php.jar located under your_installation_of_PHPStorm/plugins/php/lib
 *   Change under Modules|Dependencies Scope to Provided
 *   Add the following dependencies to you plugin.xml
 <depends>com.jetbrains.php</depends>
