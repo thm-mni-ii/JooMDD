@@ -1,30 +1,32 @@
 package classes;
 
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.SettingsStep;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.platform.WebProjectGenerator;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.util.PathUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 /**
- * Created by Max on 28.01.2016.
+ * Created by Max on 09.03.2016.
  */
-public class eJSLWizardStep extends ModuleWizardStep {
-
+public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
     private static String option = "";
-    private static boolean wizardstatus = false;
 
-    public static void setwizardstatus(boolean status) {wizardstatus = status;}
     public static String getOption(){
         return option;
     }
     public static void setOption(String newoption) {option = newoption;}
-    public static boolean getwizardactive() {return  wizardstatus;}
 
     public String getPreviewFromFile(String filename){
 
@@ -36,7 +38,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
             String buffer = "";
             String text = "";
-            int maxLines = 20;
+            int maxLines = 12;
             int lines = 0;
 
             while ((buffer = br.readLine()) != null) {
@@ -56,6 +58,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         return preview.toString();
     }
 
+    @NotNull
     @Override
     public JComponent getComponent() {
         TemplateList tempList = new TemplateList();
@@ -81,7 +84,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         JPanel descriptionPanel = new JPanel(new BorderLayout());
         JPanel previewPanel = new JPanel((new BorderLayout()));
 
-        JLabel joomddlogo = new JLabel(IconLoader.getIcon("/resources/icons/Logo_b_small.png"));
+        JLabel joomddlogo = new JLabel(IconLoader.getIcon("/resources/icons/Logo_b_php_small.png"));
         JLabel selectLabel = new JLabel("Load example:");
         JLabel descriptionLabel = new JLabel("<html><br>Description:<html>");
         JLabel descriptionText = new JLabel();
@@ -151,11 +154,33 @@ public class eJSLWizardStep extends ModuleWizardStep {
         }else {
             descriptionText.setText(temps[0].getDescription().toString());
         }
-        return panel ;
+        return panel;
     }
 
     @Override
-    public void updateDataModel() {
-        wizardstatus = true ;
+    public void buildUI(@NotNull SettingsStep settingsStep) {
+
+    }
+
+    @NotNull
+    @Override
+    public Object getSettings() {
+        return "";
+    }
+
+    @Nullable
+    @Override
+    public ValidationInfo validate() {
+        return null;
+    }
+
+    @Override
+    public boolean isBackgroundJobRunning() {
+        return false;
+    }
+
+    @Override
+    public void addSettingsStateListener(@NotNull WebProjectGenerator.SettingsStateListener settingsStateListener) {
+
     }
 }

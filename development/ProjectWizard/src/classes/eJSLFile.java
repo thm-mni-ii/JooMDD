@@ -4,10 +4,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.util.PathUtil;
-import jdk.nashorn.internal.scripts.JO;
 
 import java.io.*;
 
@@ -71,40 +69,5 @@ public class eJSLFile extends AnAction{
                     e.printStackTrace();
             }
         }
-
-        /*
-        String txt = Messages.showInputDialog(project, "Name:", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"));
-        if (txt != null){
-            String temp = Messages.showEditableChooseDialog("On which template you want your class based?", "Create new Class", IconLoader.getIcon("/resources/icons/eJSL.PNG"), str, str[0], null);
-            if (temp != null){
-                StringBuilder example = new StringBuilder();
-
-                int k = 0;
-                try {
-                    File src = new File(project.getBasePath() + "/src");
-                    src.mkdir();
-                    for (int i = 0; i < temps.length; i++){if (temps[i].getName().equalsIgnoreCase(temp))k = i;}
-                    FileWriter fw = new FileWriter(src.getPath() + "/" + txt+".eJSL");
-                    FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + temps[k].getSrc().toString());
-                    BufferedReader br = new BufferedReader(fr);
-                    String buffer = "";
-                    while ((buffer = br.readLine()) != null) {
-                        example.append((buffer + "\n"));
-                    }
-                    BufferedWriter bw = new BufferedWriter(fw);
-                    bw.write(example.toString());
-
-                    br.close();
-                    bw.close();
-                    fr.close();
-                    fw.close();
-
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        */
-
     }
 }

@@ -74,7 +74,6 @@ public class InitalSettings implements ProjectComponent {
                 src_gen.mkdir();
                 FileWriter fw = new FileWriter(project.getBasePath() + "/src/model.eJSL");
                 FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + eJSLWizardStep.getOption());
-                //FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/resources/eJSLexamples/" + eJSLWizardStep.getOption());
                 BufferedReader br = new BufferedReader(fr);
                 String buffer = "";
                 while ((buffer = br.readLine()) != null) {
