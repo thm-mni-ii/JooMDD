@@ -35,7 +35,7 @@ public class eJSLFile extends AnAction{
         Object[] t = tempList.getTemplates();
         Template[] temps = new Template[t.length];
         String[] str = new String[t.length];
-        str[0] = "test";
+        str[0] = "";
 
         for (int i = 0; i < t.length; i++){
             temps[i] = (Template) t[i];
@@ -46,29 +46,32 @@ public class eJSLFile extends AnAction{
         if (result != null){
             StringBuilder example = new StringBuilder();
 
-            int k = 0;
-            try {
-                File src = new File(project.getBasePath() + "/src");
-                src.mkdir();
-                for (int i = 0; i < temps.length; i++){if (temps[i].getName().equalsIgnoreCase(result[1]))k = i;}
-                FileWriter fw = new FileWriter(src.getPath() + "/" + result[0] +".eJSL");
-                FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + temps[k].getSrc().toString());
-                BufferedReader br = new BufferedReader(fr);
-                String buffer = "";
-                while ((buffer = br.readLine()) != null) {
-                    example.append((buffer + "\n"));
-                }
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(example.toString());
+                int k = 0;
+                try {
+                    File src = new File(project.getBasePath() + "/src");
+                    src.mkdir();
+                    for (int i = 0; i < temps.length; i++){if (temps[i].getName().equalsIgnoreCase(result[1]))k = i;}
+                    FileWriter fw = new FileWriter(src.getPath() + "/" + result[0] +".eJSL");
+                    FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + temps[k].getSrc().toString());
+                    BufferedReader br = new BufferedReader(fr);
+                    String buffer = "";
+                    while ((buffer = br.readLine()) != null) {
+                        example.append((buffer + "\n"));
+                    }
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(example.toString());
 
-                br.close();
-                bw.close();
-                fr.close();
-                fw.close();
+
+
+                    br.close();
+                    bw.close();
+                    fr.close();
+                    fw.close();
 
                 }catch (IOException e){
                     e.printStackTrace();
             }
         }
+        project.getBaseDir().refresh(false,true);
     }
 }

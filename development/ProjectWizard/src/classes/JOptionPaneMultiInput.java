@@ -1,7 +1,5 @@
 package classes;
 
-import com.intellij.openapi.project.Project;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -22,7 +20,6 @@ public class JOptionPaneMultiInput{
         multiInputPanel.add(new JLabel(tagTextbox));
         multiInputPanel.add(className);
         multiInputPanel.add(new JLabel(" "+fileExtension));
-        //multiInputPanel.add(Box.createHorizontalStrut(15));
         multiInputPanel.add(new JLabel(tagDropdown));
         multiInputPanel.add(template);
 
