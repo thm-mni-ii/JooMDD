@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="classes.eJSLModuleType" version="4">
   <component name="FacetManager">
-    <facet type="de.thm.icampus.joomdd.ejsl.EJSL" name="EJSL">
+    <facet type="de.thm.icampus.ejsl.EJSL" name="EJSL">
       <configuration>
         <option name="activated" value="true" />
         <option name="createDirectory" value="true" />

@@ -1,18 +1,16 @@
 <idea-plugin version="2">
   <id>com.your.company.unique.plugin.joomdd</id>
   <name>Joo MDD Project Wizard</name>
-  <version>1.1</version>
-  <vendor email="support@yourcompany.com" url="http://www.mni.thm.de">YourCompany</vendor>
+  <version>1.2</version>
+  <vendor url="http://www.mni.thm.de">iCampus - Technische Hochschule Mittelhessen</vendor>
 
-  <description><![CDATA[
-      <h2>Entwickelt von Leon und Max vom iCampus Team</h2>
-      JooMDD Project Wizard.<br>
-    ]]></description>
+  <description>
+    This plugin allows the creation of eJSL models with an own project wizard
+    Developed by Leon and Max
+  </description>
 
-  <change-notes><![CDATA[
-      Hallo<br>
-      <em>Beta</em>
-    ]]>
+  <change-notes>
+    add PhpStorm Wizard
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
@@ -26,6 +24,8 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <moduleBuilder builderClass="classes.eJSLModuleBuilder" id="DEMO_STEP" order="first"/>
+    <directoryProjectGenerator implementation="classes.eJSL_PHP_ProjectGenerator"/>
+    <projectTemplatesFactory implementation="classes.eJSL_PHP_ProjectTemplatesFactory"/>
   </extensions>
 
   <actions>
