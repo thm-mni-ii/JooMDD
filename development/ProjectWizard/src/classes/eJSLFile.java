@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 
 import java.io.*;
@@ -41,7 +42,7 @@ public class eJSLFile extends AnAction{
             str[i] = temps[i].getName();
         }
 
-        String[] result = JOptionPaneMultiInput.showMultiInputDialog(str, "Name:", "Template", "Create new eJSL-File", IconLoader.getIcon("/resources/icons/eJSL.PNG"));
+        String[] result = JOptionPaneMultiInput.showMultiInputDialog(str, "Name:", ".eJSL", "Template:", "Create new eJSL-File", IconLoader.getIcon("/resources/icons/eJSL.PNG"));
         if (result != null){
             StringBuilder example = new StringBuilder();
 
