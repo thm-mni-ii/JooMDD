@@ -137,8 +137,10 @@ Compress the ProjectWizard-folder into a zip file. Now you can install the .zip 
 *   Merge Plugin with eJSL:
 you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip).  ("EJSL2.9.1" is just the project name)
 copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
-copy the part (<extensions ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. 
+copy the part (<depends ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. 
 Paste it between .../depends>  (here)  <xi:include...
+
+* **Imprtant:** Change url in updatePlugins.xml to github url!
 
 ###### Project Wizard under PHPStorm ######
 
