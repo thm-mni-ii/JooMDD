@@ -1,9 +1,11 @@
 package classes;
 
 import com.intellij.ide.util.projectWizard.WebProjectTemplate;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.Nls;
@@ -69,14 +71,14 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
 
         File src = new File(project.getBasePath() + "/src");
         File src_gen = new File(project.getBasePath() + "/src-gen");
-        File model = new File(project.getBasePath() + "/src/"+eJSL_PHP_Wizard_Step.getOption());
+        File model = new File(project.getBasePath() + "/src/Model.eJSL");
 
         StringBuilder example = new StringBuilder();
 
         try {
             src.mkdir();
             src_gen.mkdir();
-            FileWriter fw = new FileWriter(project.getBasePath() + "/src/"+eJSL_PHP_Wizard_Step.getOption());
+            FileWriter fw = new FileWriter(project.getBasePath() + "/src/Model.eJSL");
             FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/"+eJSL_PHP_Wizard_Step.getOption() );
             BufferedReader br = new BufferedReader(fr);
             String buffer = "";
@@ -92,6 +94,13 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
             bw.close();
             fr.close();
             fw.close();
+
+            project.getBaseDir().refresh(false,true);
+
+            FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+            VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(project.getBasePath()+"/src/Model.eJSL");
+            fileEditorManager.openFile(vf, true, true);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,7 +1,12 @@
+
+
 package classes;
 
 import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,14 +70,14 @@ public class InitalSettings implements ProjectComponent {
 
             File src = new File(project.getBasePath() + "/src");
             File src_gen = new File(project.getBasePath() + "/src-gen");
-            File model = new File(project.getBasePath() + "/src/model.eJSL");
+            File model = new File(project.getBasePath() + "/src/Model.eJSL");
 
             StringBuilder example = new StringBuilder();
 
             try {
                 src.mkdir();
                 src_gen.mkdir();
-                FileWriter fw = new FileWriter(project.getBasePath() + "/src/model.eJSL");
+                FileWriter fw = new FileWriter(project.getBasePath() + "/src/Model.eJSL");
                 FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + eJSLWizardStep.getOption());
                 BufferedReader br = new BufferedReader(fr);
                 String buffer = "";
@@ -88,6 +93,8 @@ public class InitalSettings implements ProjectComponent {
                 bw.close();
                 fr.close();
                 fw.close();
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -105,3 +112,4 @@ public class InitalSettings implements ProjectComponent {
         return "classes.InitalSettings";
     }
 }
+

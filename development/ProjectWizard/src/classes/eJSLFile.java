@@ -3,8 +3,10 @@ package classes;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 
@@ -68,10 +70,15 @@ public class eJSLFile extends AnAction{
                     fr.close();
                     fw.close();
 
+                    project.getBaseDir().refresh(false,true);
+
+                    FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+                    VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(project.getBasePath()+"/src/"+result[0] +".eJSL");
+                    fileEditorManager.openFile(vf, true, true);
+
                 }catch (IOException e){
                     e.printStackTrace();
             }
         }
-        project.getBaseDir().refresh(false,true);
     }
 }
