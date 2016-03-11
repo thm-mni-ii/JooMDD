@@ -77,7 +77,17 @@ Within the structure of the JooMDD project, a set of installable plugins for the
 ##### Textual Editor #####
 ###### Formatter ######
 ###### Validator ######
-###### Project Wizard ######
+##### Project Wizard #####
+###### Wizard ######
+The plugin contains a wizard to create a new eJSL project. It's launched by the extension *org.eclipse.ui.newWizards* where it is configured to create a new project, so it shows up when *New > Project...* is clicked in Eclipse.
+The configured wizard class should extend *org.eclipse.jface.wizard.Wizard* and implement *org.eclipse.ui.INewWizard*. Abstract method performFinish() and empty method addPages() are overrided, while addPages() initializes and adds the wizard's pages. The method performFinish() is called, when a user clicks Finish in the wizard. The behaviour of this method is basically copied from *org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard* with added ability to copy content from a selected Template to a file in the newly created project. It doen't extend *BasicNewProjectResourceWizard* because it is initialized with two pages to create a new project which is not needed in this case.
+###### TemplateSelectionPage ######
+This page lists available example instances which are loaded and provided by the static method *loadTemplates()* inside *de.thm.icampus.joomdd.ejsl.ui.wizard.TemplateXMLLoader*.
+##### File Wizard #####
+The plugin contains a wizard to create a new eJSL file. It's launched by the extension *org.eclipse.ui.newWizards* where it is configured not to create a new project, so it doesn't show up when *New > Project...* is clicked in Eclipse.
+In this case the wizard class extends *org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard* and implements *org.eclipse.ui.INewWizard*. Method *addPages()* is overrided to add a *TemplateSelectionPage* (see above). Filename textfield is disabled by a flag, since filename is managed by the first page. Method *performFinish()* is overrided to additionally copy a template file's content to the new file.
+##### eJSL Perspective #####
+The plugin contains a perspective with toolbar shortcuts for the Project Wizard and File Wizard. It's registered in the extension *org.eclipse.ui.perspectives* and built by the class *de.thm.icampus.joomdd.ejsl.ui.eJSLPerspectiveFactory*.
 ###### Project Wizard under PHPStorm ######
 
 ##### (De-)Serializer Handlers #####
