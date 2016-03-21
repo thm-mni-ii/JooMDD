@@ -24,8 +24,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	private String slug
 	private ExtendedComponent extendeComp
 	private String class_name
+	private String updatePath
     
-	new(ExtendedComponent component, IFileSystemAccess fsa, String path) {
+	new(ExtendedComponent component, IFileSystemAccess fsa, String path, String updatePath) {
 		this.fsa = fsa;
 		this.slug = component.name
 		this.noPrefixName = this.slug
@@ -35,6 +36,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.class_name = this.noPrefixName.toFirstUpper
 		this.extendeComp.formatName
 		this.path = path
+		this.updatePath = updatePath
 	}
 
 	def void formatName(Component component) {
@@ -75,7 +77,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		if (extendeComp.frontEndExtendedPagerefence != null) {
 			generateFrontendSection
 		}
-	
+	   
+	  
+	   
 	
 		return ""
 	}
@@ -213,8 +217,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		for (pageref : extendeComp.frontEndExtendedPagerefence) {
            tempPageList.add(pageref.extendedPage)
 		}
-		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,path,"site")
+		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,path,"site",false)
 		pgGen.dogenerate
+		generateUpdatePages(tempPageList,"site")
+		
 	}
 
 	private def void generateBackendSection() {
@@ -257,10 +263,18 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		for (pageref : extendeComp.backEndExtendedPagerefence) {
            tempPageList.add(pageref.extendedPage)
 		}
-		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,path,"admin")
+		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,path,"admin",false)
 		pgGen.dogenerate
+		generateUpdatePages(tempPageList,"admin")
+		
 	}
 
+    public def void generateUpdatePages(EList<ExtendedPage> pageRefList, String section){
+    	
+    	var PageGenerator pgGenUpdate= new PageGenerator(extendeComp, pageRefList,fsa, updatePath,section,true)
+		pgGenUpdate.dogenerate
+	
+    }
 	def CharSequence phpSiteContent(Component component) '''
 		<?php
 		     «Slug.generateFileDoc(component,true)»

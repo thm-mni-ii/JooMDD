@@ -19,50 +19,62 @@ class PageGenerator extends AbstracteGenerator {
 	IFileSystemAccess fsa
 	EList<ExtendedPage> pageList = new BasicEList<ExtendedPage>
 	String path
-	ExtendedComponent comp
+	ExtendedComponent comp 
 	String section = "site"
+	boolean extUpdate
 
 	new(EList<Page> pages, IFileSystemAccess access, String path) {
 		fsa = access
 		pageList.addAll(pages.map[t|new ExtendedPageImpl(t)])
 		this.path = path
+		comp= null
+		
 	}
 
-	new(ExtendedComponent component, EList<ExtendedPage> pages, IFileSystemAccess access, String path, String section) {
+	new(ExtendedComponent component, EList<ExtendedPage> pages, IFileSystemAccess access, String path, String section, boolean extensionsUpdate) {
 		fsa = access
 		pageList.addAll(pages)
 		this.path = path
 		comp = component
 		this.section = section
+		extUpdate = extensionsUpdate
 	}
 
 	override dogenerate() {
 
-		if (comp != null) {
+		if (!extUpdate && comp != null) {
 			for (ExtendedPage pg : pageList) {
 				var PageGeneratorClient client = new PageGeneratorClient(pg, comp, path, section, fsa)
 				client.generateExtension
 			}
 		} else {
+			if(comp == null){
 			var Component tempComp = EJSLFactory.eINSTANCE.createComponent
 			tempComp.name = "ExtensionsName"
-			comp = new ExtendedComponentImpl(tempComp)
-			for (ExtendedPage pg : pageList) {
+			var ExtendedComponent compTemp = new ExtendedComponentImpl(tempComp)
+			upDatePageGenerator(compTemp)
+			}else{
+				upDatePageGenerator(comp)
+			}
+			
+		}
+	}
+	private def void upDatePageGenerator(ExtendedComponent comp){
+		var boolean isBAckend = true
+		if(section.equalsIgnoreCase("site"))
+		isBAckend = false
+		for (ExtendedPage pg : pageList) {
 				
-				var PageGeneratorClient client = new PageGeneratorClient(pg, comp, path, "site", fsa)
+				var PageGeneratorClient client = new PageGeneratorClient(pg, comp, path+ section +"/", section, fsa)
 				client.generatePages
 				if (pg.extendedDynamicPageInstance != null) {
-					var String pathent = path + pg.name +"/"
+					var String pathent = path+ section +"/" + pg.name +"/"
 					var ExtendedDynamicPage dynPage = pg.extendedDynamicPageInstance
-					var EList<ExtendedEntity> entities = dynPage.extendedEntityList.get(0).getallEntityFromReferences
-					entities.add(dynPage.extendedEntityList.get(0))
-					var EntityGenerator ent = new EntityGenerator(dynPage, pathent, fsa)
+					var EntityGenerator ent = new EntityGenerator(dynPage,comp, pathent, fsa, isBAckend)
 					ent.dogenerate
 
 				}
 			}
-
-		}
 	}
 
 }

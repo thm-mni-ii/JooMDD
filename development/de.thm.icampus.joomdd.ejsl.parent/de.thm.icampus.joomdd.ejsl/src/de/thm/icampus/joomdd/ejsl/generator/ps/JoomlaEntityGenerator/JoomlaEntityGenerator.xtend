@@ -66,7 +66,7 @@ class JoomlaEntityGenerator {
 	
     
     def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName)'''
-    «IF !isupdate»
+    «IF isupdate»
     DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
     «ENDIF»
 

@@ -40,7 +40,7 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 				var FieldsGenerator fieldReference = new FieldsGenerator(ref, comp,ent)
 				generateFile(
 					path + "models/fields/" + fieldReference.getnameField.toLowerCase  +
-						".php", fieldReference.genRefrenceField) 
+						".php", fieldReference.genReferenceField) 
 			}
 		}
 		generateFile(path + "models/fields/" + comp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(comp) )

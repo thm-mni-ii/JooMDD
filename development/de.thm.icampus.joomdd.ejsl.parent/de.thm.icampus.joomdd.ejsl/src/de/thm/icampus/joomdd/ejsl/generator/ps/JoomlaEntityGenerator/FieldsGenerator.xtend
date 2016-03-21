@@ -6,6 +6,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IFileSystemAccess2
+import java.io.File
 
 class FieldsGenerator {
 
@@ -31,7 +33,7 @@ class FieldsGenerator {
 		return nameField
 	}
 
-	public def CharSequence genRefrenceField() '''
+	public def CharSequence genReferenceField() '''
 		<?php
 		«Slug.generateFileDoc(com, true)»
 		
@@ -278,9 +280,16 @@ class FieldsGenerator {
 	'''
 	
 	def dogenerate(String path, IFileSystemAccess access) {
-		access.generateFile(path+ "/"+getnameField +".php", genRefrenceField)
+		access.generateFile(path+ "/"+getnameField +".php", genReferenceField)
+		var File fieldEntity = new File (path+ "/"+entFrom.name +".php")
+		if(!fieldEntity.exists){
 		access.generateFile(path+ "/"+entFrom.name +".php", genFieldsForEntity)
+		}
+		var File fieldUser = new File (path+ "/"+com.name +"user" +".php")
+		if(!fieldUser.exists){
 		access.generateFile(path+ "/"+com.name +"user" +".php", FieldsGenerator.genFieldsForUserView(com))
+		
+		}
 	}
 
 }

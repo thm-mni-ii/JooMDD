@@ -56,7 +56,9 @@ public class  ExtensionGeneratorClient  {
 				}
 			Component :{
 				var ExtendedComponent tempext  = new ExtendedComponentImpl(ext as Component)
-					extensionsgenerator = new ComponentGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("com", tempext.name).toLowerCase +"/")
+					extensionsgenerator = new ComponentGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("com", tempext.name).toLowerCase +
+					"/new/"+ Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/", "Extensions/" + Slug.nameExtensionBind("com", tempext.name).toLowerCase +
+					"/update/") 
 			}
 			Module :{
 				var ExtendedModule tempext  =  new ExtendedModuleImpl(ext as Module)

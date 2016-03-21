@@ -34,12 +34,34 @@ class RessourceTransformer {
 		
 		for(Page page: featurs.pages.filter[t | t instanceof DetailsPage]){
 			var DetailsPage dp = page as DetailsPage
+			completeTableColumnAndEditedFields(dp)
 			for(DetailPageField field: dp.editfields){
 				if(field.htmltype == null){
 				   field.htmltype = parseAttributeType(field.attribute)
 				}
 			}
 		}
+	}
+	
+	def completeTableColumnAndEditedFields(DetailsPage page) {
+		if(page.editfields.empty && !page.tablecolumns.empty){
+			for(Attribute attr: page.tablecolumns){
+				page.editfields.add(generateDetailPageField(attr))
+			}
+		}
+		if(!page.editfields.empty && page.tablecolumns.empty){
+			
+			for( DetailPageField editedAttr: page.editfields){
+				page.tablecolumns.add(editedAttr.attribute)
+			}
+		}
+	}
+	
+	def DetailPageField generateDetailPageField(Attribute attribute) {
+		var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
+		editField.attribute = attribute
+        println("Edited Fields Attribute " + editField.attribute.name)	
+		return editField
 	}
 	
 	def SimpleHTMLTypes parseAttributeType(Attribute attribute) {

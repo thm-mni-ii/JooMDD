@@ -40,34 +40,36 @@ class EntityGenerator extends AbstracteGenerator {
 		this.fsa = fsa
 		this.isBackendSection = isBackenSection
 	}
-	new(ExtendedDynamicPage page, String path , IFileSystemAccess fsa){
+	new(ExtendedDynamicPage page, ExtendedComponent extensions,String path , IFileSystemAccess fsa,boolean isBackend){
 		this.entities = new BasicEList<ExtendedEntity>
 		this.entities =page.extendedEntityList
 		this.page = page
 		this.path = path
 		this.fsa = fsa
+		this.extensions = extensions
+		this.isBackendSection = isBackend
+		
 	}
 	
 	override dogenerate() {
-		if(extensions != null){
+		if(extensions != null && page == null){
 			var JoomlaEntityClient client = new JoomlaEntityClient(fsa)
 			client.generateJoomlaComponenteElements(extensions, path, isBackendSection)
 		}
 		else if(page != null){
-				var Component comp = EJSLFactory.eINSTANCE.createComponent
-			comp.name = "ExtensionsName"
-			var ExtendedComponent extComp = new ExtendedComponentImpl(comp)
+				
 			var EList<ExtendedEntity> pageEntities = page.extendedEntityList.get(0).getallEntityFromReferences
-			var JoomlaEntityGenerator joomExt = new JoomlaEntityGenerator(pageEntities,"<Extensions_name>",false)
+			pageEntities.add(page.extendedEntityList.get(0))
+			var JoomlaEntityGenerator joomExt = new JoomlaEntityGenerator(pageEntities,extensions.name,true)
 			joomExt.dogenerate(path+"sql", fsa)
 			for(ExtendedEntity ent: pageEntities){
-				var TableGeneratorTemplate table = new TableGeneratorTemplate(extComp, ent)
+				var TableGeneratorTemplate table = new TableGeneratorTemplate(extensions, ent)
 				table.dogenerate(path+"tables", fsa)
 			}
 			for(ExtendedEntity ent: pageEntities){
 				for(ExtendedReference ref: ent.extendedReference){
-				var FieldsGenerator fields = new FieldsGenerator(ref,extComp, ent)
-				fields.dogenerate(path + "model/fields" , fsa)
+				var FieldsGenerator fields = new FieldsGenerator(ref,extensions, ent)
+				fields.dogenerate(path + "models/fields" , fsa)
 				}
 			}
 		}
