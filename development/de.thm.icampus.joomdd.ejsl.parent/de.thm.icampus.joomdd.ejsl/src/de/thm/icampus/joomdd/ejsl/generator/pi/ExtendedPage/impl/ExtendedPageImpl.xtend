@@ -13,6 +13,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
 
 class ExtendedPageImpl extends PageImpl implements ExtendedPage {
 	
@@ -42,7 +43,7 @@ class ExtendedPageImpl extends PageImpl implements ExtendedPage {
 	
 	override getStaticPageInstance() {
 		if(instance instanceof StaticPage)
-		return instance as StaticPage
+		return new ExtendedStaticPageImpl(instance)
 		
 		return null
 	}

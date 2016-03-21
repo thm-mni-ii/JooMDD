@@ -8,7 +8,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 
 interface ExtendedPage extends Page {
 	
-	def StaticPage getStaticPageInstance()
+	def ExtendedStaticPage getStaticPageInstance()
 	def ExtendedDynamicPage getExtendedDynamicPageInstance()
 	def EList<ExtendedParameter>getExtendedGlobalParamater()
 	def EList<ExtendedParameter>getExtendedLocalParameter()

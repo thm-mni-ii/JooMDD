@@ -12,6 +12,8 @@ import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 
 /**
  * Generates code from your model files on save.
@@ -32,12 +34,12 @@ class EJSLGenerator extends AbstractGenerator {
 					var CMSExtension extensionPart = domainModel.ejslPart as CMSExtension
 					var RessourceTransformer trans = new RessourceTransformer(e)
 			 		trans.dotransformation
-					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions)
-					mainExtensionGen.dogenerate("Extensions", fsa)
-//					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities)
-//					mainEntitiesGen.dogenerate("Entities",fsa)
-//					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages)
-//					mainPageGen.dogenerate("Pages",fsa)
+					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions,"Extensions", fsa)
+					mainExtensionGen.dogenerate()
+					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities, fsa)
+					mainEntitiesGen.dogenerate()
+					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages,fsa,"Pages/")
+				     mainPageGen.dogenerate()
 				}
 			}
 			

@@ -48,7 +48,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	ExtendedDynamicPage dynpage
 	ExtendedComponent com
 
-	new(ExtendedModule module, IFileSystemAccess fsa) {
+	new(ExtendedModule module, IFileSystemAccess fsa, String path) {
 		this.fsa = fsa
 		this.name = 'mod_' + Slug.slugify(module.name)
 		this.extMod = module
@@ -56,6 +56,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		com = module.extendedComponent
 		this.ComponentInformation(module)
 		this.extMod.formatName
+		this.path = path
 	}
 	
 	def void formatName(Module module){

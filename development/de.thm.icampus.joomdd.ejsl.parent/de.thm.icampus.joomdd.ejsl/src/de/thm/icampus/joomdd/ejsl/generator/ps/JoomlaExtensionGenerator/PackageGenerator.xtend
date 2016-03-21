@@ -20,11 +20,11 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 	private ExtensionGeneratorClient extClient
 	@Property ExtensionPackage pkg
 	
-	new(ExtensionPackage pkg, IFileSystemAccess access) {
+	new(ExtensionPackage pkg, IFileSystemAccess access, String path) {
 		this.pkg = pkg
 		this.fsa = access
 		this.name = "pkg_" + Slug.slugify(pkg.name)
-		//this.extClient = new ExtensionGeneratorClient(access, pkg.extensions)
+		this.path = path
 	}
 	
 	override generate() {
@@ -37,7 +37,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 		
         // Generate extensions
         for (ext : this.pkg.extensions) {
-        	this.extClient.setExtension(ext)
+        	this.extClient = new ExtensionGeneratorClient(fsa, ext)
         	this.extClient.setPath(this.name + "/packages/")
 			this.extClient.generateExtension
         }

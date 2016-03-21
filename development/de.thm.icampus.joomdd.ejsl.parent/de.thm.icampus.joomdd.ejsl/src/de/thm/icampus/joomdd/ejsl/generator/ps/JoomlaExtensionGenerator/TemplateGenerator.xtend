@@ -24,10 +24,11 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 	
 	Template template
 	
-	new(Template template, IFileSystemAccess fsa) {
+	new(Template template, IFileSystemAccess fsa, String path) {
 		this.fsa = fsa;
 		this.name = "tpl_" + Slug.slugify(template.name)
 		this.template = template
+		this.path = path
 	}
 
 	override generate() {
@@ -61,8 +62,8 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		return ''
 	}
 
-	def static TemplateGenerator getGenerator(Template template, IFileSystemAccess fsa) {
-		return new TemplateGenerator(template, fsa)
+	def static TemplateGenerator getGenerator(Template template, IFileSystemAccess fsa, String path) {
+		return new TemplateGenerator(template, fsa, path)
 	}
 
 	def CharSequence xmlTemplateDetails(Template template) {

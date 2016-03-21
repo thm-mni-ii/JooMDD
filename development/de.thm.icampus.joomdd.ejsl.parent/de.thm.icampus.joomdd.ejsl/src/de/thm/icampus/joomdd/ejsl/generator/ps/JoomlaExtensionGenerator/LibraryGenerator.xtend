@@ -28,7 +28,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 	@Property ExtendedLibrary library
 	private String subpackageName;
 
-	new(ExtendedLibrary library, IFileSystemAccess access) {
+	new(ExtendedLibrary library, IFileSystemAccess access, String path) {
 		this.library = library
 		this.name = "lib_" + Slug.slugify(library.name)
 		
@@ -36,6 +36,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		this.subpackageName = library.name
 		this.fsa = access
 		library.formatName
+		this.path = path
 	}
 	
 	def void formatName(ExtendedLibrary library){

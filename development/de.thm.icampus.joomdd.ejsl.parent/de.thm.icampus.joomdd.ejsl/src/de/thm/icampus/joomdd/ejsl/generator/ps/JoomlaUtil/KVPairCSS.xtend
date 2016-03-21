@@ -13,7 +13,7 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil
  * @model
  * @generated
  */
-public class KVPairCSS extends de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.KVPairInterface {
+public class KVPairCSS extends KVPairInterface {
 	
 	override generateKVPair() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")

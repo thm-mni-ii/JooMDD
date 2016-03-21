@@ -104,7 +104,7 @@ public class Slug  {
 				result='''type="number" min="0"  '''
 			} 
 			case "Yes_No_Buttons":{
-				result=''' type="number" min="0" max="1" '''
+				result='''Yes_No_Buttons'''
 			}
 			 case "Textarea":{
 			 	result='''type="textarea" rows="10" cols="5" '''
@@ -113,7 +113,7 @@ public class Slug  {
 			 	result='''type="text" '''
 			 	}
 			 case "Datepicker":{
-			 	result='''type="datetime" '''
+			 	result='''type="calendar" format="%d-%m-%Y %H:%M:%S"'''
 			 } 
 			 case "Imagepicker":{
 			 	result='''type="imagelist" '''
@@ -127,17 +127,20 @@ public class Slug  {
 			 case "Editor":{
 			 	result='''type="editor" '''
 			 }
+			 case "Select":{
+			 	result='''select'''
+			 }
 			 case "Multiselect":{
-			 	result='''type="text" '''
+			 	result='''multiselect'''
 			 }
 			 case "Checkbox":{
-			 	result='''type="text" '''
+			 	result='''checkbox'''
 			 }
 			 case "Radiobutton":{
-			 	result='''type="text" '''
+			 	result='''radiobutton'''
 			 }
 			 case "hidden":{
-			 	result='''type="hidden" '''
+			 	result='''hidden '''
 			 }
 		}
 		return result
@@ -171,7 +174,9 @@ public class Slug  {
 	 */
 	def static String nameExtensionBind(String prefix, String name) {
 		
-		return prefix + "_" + name
+		
+		
+		return prefix + "_" + slugify(name)
 	}
 	
 	def static BackendSection getBackendSectionViews(Component com)
@@ -236,12 +241,14 @@ public class Slug  {
 		* @version v0.0.1
 		* @category Joomla component
 		* @name «component.name»View
+		«IF component.manifest != null»
 		«FOR author : component.manifest.authors»
 			* @author «author.name», <«author.authoremail»>
 		«ENDFOR»
 		* @copyright «component.manifest.copyright»
 		* @license «component.manifest.license»
 		*/
+		«ENDIF»
 		«IF denied»
 		defined('_JEXEC') or die('Restricted access');
 		«ENDIF»
@@ -466,6 +473,26 @@ public class Slug  {
 	def static CharSequence getParamterType(MethodParameter parameter) {
 		return ""
 	}
- 
+
+		
+		static def CharSequence writeParameter(
+		ExtendedParameter param) '''
+		<field
+		name="«param.name»"
+		type="«Slug.getTypeName(param)»"
+		default="«param.defaultvalue»"
+		label="«param.label»"
+		description="«param.descripton»"
+		>
+	'''
+ static def ExtendedDetailPageField getEditedFieldsForattribute(ExtendedDynamicPage dynPage, ExtendedAttribute attr){
+		for(ExtendedDetailPageField field:dynPage.extendedEditedFieldsList ){
+   				if(field.extendedAttribute.name.equalsIgnoreCase(attr.name)){
+   				     return field
+   				}
+   			}
+   			return null
+	}
+	
 	
 } // Slug

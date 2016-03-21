@@ -26,17 +26,18 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	private String slug;
 	private Plugin plugin;
 	
-	new(Plugin plugin, IFileSystemAccess fsa)
+	new(Plugin plugin, IFileSystemAccess fsa, String path)
 	{
 		this.fsa = fsa;
 		this.slug = Slug.slugify(plugin.name);
 		this.name = "plg_" + this.slug
 		//this.name = plugin.name;
 		this.plugin = plugin;
+		this.path = path
 	}
 	
-	def static PluginGenerator getGenerator(Plugin plugin, IFileSystemAccess fsa) {
-		return new PluginGenerator(plugin, fsa)
+	def static PluginGenerator getGenerator(Plugin plugin, IFileSystemAccess fsa, String path) {
+		return new PluginGenerator(plugin, fsa,path)
 	}
 	
 	

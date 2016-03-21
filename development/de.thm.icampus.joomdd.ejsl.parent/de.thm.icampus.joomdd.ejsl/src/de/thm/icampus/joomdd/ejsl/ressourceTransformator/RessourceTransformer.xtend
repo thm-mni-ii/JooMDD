@@ -11,6 +11,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.joomdd.ejsl.eJSL.SimpleHTMLTypeKinds
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
+import de.thm.icampus.joomdd.ejsl.eJSL.Page
 
 class RessourceTransformer {
 	EJSLModel modelInstance
@@ -31,7 +32,8 @@ class RessourceTransformer {
 	}
 	def transformEmptyHtmlAttribute(){
 		
-		for(DetailsPage dp: featurs.pages.filter(DetailsPage)){
+		for(Page page: featurs.pages.filter[t | t instanceof DetailsPage]){
+			var DetailsPage dp = page as DetailsPage
 			for(DetailPageField field: dp.editfields){
 				if(field.htmltype == null){
 				   field.htmltype = parseAttributeType(field.attribute)

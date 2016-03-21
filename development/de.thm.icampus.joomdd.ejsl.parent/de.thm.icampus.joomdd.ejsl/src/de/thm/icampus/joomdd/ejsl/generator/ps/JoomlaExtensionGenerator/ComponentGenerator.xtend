@@ -2,46 +2,30 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator;
 
-import de.thm.icampus.joomdd.ejsl.eJSL.BackendSection
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
-import de.thm.icampus.joomdd.ejsl.eJSL.FrontendSection
-import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
-import de.thm.icampus.joomdd.ejsl.eJSL.PageReference
-import de.thm.icampus.joomdd.ejsl.eJSL.Section
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntityGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import java.util.ArrayList
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
-import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.LanguageGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import java.util.Calendar
 import java.util.List
-import java.util.LinkedList
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.FieldsGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.TableGeneratorTemplate
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
-import java.util.HashSet
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
-import de.thm.icampus.joomdd.ejsl.eJSL.Reference
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.LanguageGenerator
+import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.common.util.EList
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
 	private String slug
 	private ExtendedComponent extendeComp
 	private String class_name
-	private JoomlaEntityGenerator entgen
-
-	new(ExtendedComponent component, IFileSystemAccess fsa) {
+    
+	new(ExtendedComponent component, IFileSystemAccess fsa, String path) {
 		this.fsa = fsa;
 		this.slug = component.name
 		this.noPrefixName = this.slug
@@ -50,7 +34,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.extendeComp = component
 		this.class_name = this.noPrefixName.toFirstUpper
 		this.extendeComp.formatName
-		entgen = new JoomlaEntityGenerator(component.allExtendedEntity, "#__" + component.name, false)
+		this.path = path
 	}
 
 	def void formatName(Component component) {
@@ -58,7 +42,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	}
 
 	override generate() {
-		generateJoomlaDirectory("")
+		println(path);
+		generateJoomlaDirectory(path+"")
 
 		/*
 		 *  indexPage variable will be used for manifest <submenu> tag
@@ -70,19 +55,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			if(t.extendedPage.extendedDynamicPageInstance != null) t.extendedPage.extendedDynamicPageInstance
 		];
 
-		generateFile(name + ".xml", extendeComp.xmlContent(indexPages))
+		generateFile(path+ name + ".xml", extendeComp.xmlContent(indexPages))
 
 		// Generate language files
 		var LanguageGenerator langgen = new LanguageGenerator(fsa)
-		langgen.genComponentLanguage(extendeComp,this.name)
+		langgen.genComponentLanguage(extendeComp,path)
 
 			// Generate sql stuff
-		generateJoomlaDirectory("admin/sql")
-		generateFile("admin/sql/install.mysql.utf8.sql", entgen.dogenerate)
-		generateFile("admin/sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(extendeComp.name))
-		generateJoomlaDirectory("admin/sql/updates")
-		generateJoomlaDirectory("admin/sql/updates/mysql")
-		generateFile("admin/sql/updates/mysql/1.0.1.mysql.utf8.sql", sqlAdminSqlUpdateContent(extendeComp.name, true))
+		generateJoomlaDirectory(path+"admin/sql")
+		generateJoomlaDirectory(path+"admin/sql/updates")
+		generateJoomlaDirectory(path+"admin/sql/updates/mysql")
 		
 		// Generate backend section 
 		if (extendeComp.backEndExtendedPagerefence != null) {
@@ -93,16 +75,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		if (extendeComp.frontEndExtendedPagerefence != null) {
 			generateFrontendSection
 		}
-
+	
 	
 		return ""
 	}
 
-	def CharSequence sqlAdminSqlUpdateContent(String component, boolean isupdate) {
-		entgen.update = isupdate
-		return entgen.dogenerate;
-	}
-
+	
 	
 	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> indexPages) '''
 		<?xml version="1.0" encoding="utf-8"?>
@@ -211,97 +189,76 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	private def void generateFrontendSection() {
 
 		// Generate frontend section
-		generateJoomlaDirectory("/site")
-		generateFile("site/" + noPrefixName + ".php", extendeComp.phpSiteContent)
-		generateFile("site/controller.php", extendeComp.phpSiteControllerContent)
-		generateFile("site/router.php", extendeComp.phpSiteRouterContent)
-		generateJoomlaDirectory("site/views")
-		generateJoomlaDirectory("site/models")
-		generateJoomlaDirectory("site/models/fields")
-		generateFields("site/models/fields")
-		generateJoomlaDirectory("site/models/forms")
+		generateJoomlaDirectory(path+"/site")
+		generateFile( path +"site/" + noPrefixName + ".php", extendeComp.phpSiteContent)
+		generateFile( path +"site/controller.php", extendeComp.phpSiteControllerContent)
+		generateFile( path +"site/router.php", extendeComp.phpSiteRouterContent)
+		generateJoomlaDirectory(path+"site/views")
+		generateJoomlaDirectory(path+"site/models")
+		generateJoomlaDirectory(path+"site/models/fields")
+		generateJoomlaDirectory(path+"site/models/forms")
 
-		generateJoomlaDirectory("site/views")
-		generateJoomlaDirectory("site/assets")
-		generateFile("site/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
+		generateJoomlaDirectory(path+"site/views")
+		generateJoomlaDirectory(path+"site/assets")
+		generateFile( path +"site/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
 
-		generateJoomlaDirectory("site/controllers")
-
-		val pagerefs = extendeComp.frontEndExtendedPagerefence
-		for (pageref : pagerefs) {
-			pageref.extendedPage.generatePage(path + "site", "site")
+		generateJoomlaDirectory(path+"site/controllers")
+        var EntityGenerator entitygen = new EntityGenerator(extendeComp,path + "site/",fsa,false)
+		
+		entitygen.dogenerate()
+        
+		
+		var EList<ExtendedPage> tempPageList = new BasicEList()
+		
+		for (pageref : extendeComp.frontEndExtendedPagerefence) {
+           tempPageList.add(pageref.extendedPage)
 		}
+		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,path,"site")
+		pgGen.dogenerate
 	}
 
 	private def void generateBackendSection() {
-		generateJoomlaDirectory("admin")
-		generateFile("admin/" + noPrefixName + ".php", extendeComp.phpAdminContent)
-		generateFile("admin/controller.php", extendeComp.phpAdminControllerContent)
+		generateJoomlaDirectory(path+"admin")
+		generateFile( path +"admin/" + noPrefixName + ".php", extendeComp.phpAdminContent)
+		generateFile( path +"admin/controller.php", extendeComp.phpAdminControllerContent)
 
-		generateFile("admin/access.xml", extendeComp.xmlAccessContent)
-		generateFile("admin/config.xml", extendeComp.xmlConfigContent)
-		generateJoomlaDirectory("admin/assets")
-		generateFile("admin/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
+		generateFile( path +"admin/access.xml", extendeComp.xmlAccessContent)
+		generateFile( path +"admin/config.xml", extendeComp.xmlConfigContent)
+		generateJoomlaDirectory(path+"admin/assets")
+		generateFile( path +"admin/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
 		
 
-		generateJoomlaDirectory("admin/views")
+		generateJoomlaDirectory(path+"admin/views")
 		println(slug)
 		var tempSlug = slug + "s"
-		generateJoomlaDirectory("admin/views/" + tempSlug)
-		generateFile("admin/views/" + tempSlug + "/view.html.php", extendeComp.phpAdminViewContent)
-		generateJoomlaDirectory("admin/views/" + tempSlug + "/tmpl")
-		generateFile("admin/views/" + tempSlug + "/tmpl/default.php", extendeComp.phpAdminTemplateContent)
+		generateJoomlaDirectory(path+"admin/views/" + tempSlug)
+		generateFile( path +"admin/views/" + tempSlug + "/view.html.php", extendeComp.phpAdminViewContent)
+		generateJoomlaDirectory(path+"admin/views/" + tempSlug + "/tmpl")
+		generateFile( path +"admin/views/" + tempSlug + "/tmpl/default.php", extendeComp.phpAdminTemplateContent)
 
-		generateJoomlaDirectory("admin/models")
-		generateJoomlaDirectory("admin/models/fields")
-		generateFields("admin/models/fields")
-		generateJoomlaDirectory("admin/tables")
-		generateTable("admin/tables/")
+		generateJoomlaDirectory(path+"admin/models")
+		generateJoomlaDirectory(path+"admin/models/fields")
+		generateJoomlaDirectory(path+"admin/tables")
 
-		generateJoomlaDirectory("admin/views")
+		generateJoomlaDirectory(path+"admin/views")
 
-		generateJoomlaDirectory("admin/controllers")
-		generateJoomlaDirectory("admin/helpers/")
-		generateFile("admin/helpers/" + extendeComp.name.toLowerCase + ".php", generateHelperComponent)
+		generateJoomlaDirectory(path+"admin/controllers")
+		generateJoomlaDirectory(path+"admin/helpers/")
+		generateFile( path +"admin/helpers/" + extendeComp.name.toLowerCase + ".php", generateHelperComponent)
 
+		var EntityGenerator entitygen  = new EntityGenerator(extendeComp,path + "admin/",fsa,true)
+		
+		entitygen.dogenerate()
 		
 		// commented out old model generation code
-		val pagerefs = extendeComp.backEndExtendedPagerefence
-		for (pageref : pagerefs) {
-			pageref.extendedPage.generatePage(path + "admin", "admin")
-
-		}
-	}
-
-	def generateFields(String fieldspath) {
 		
-		for (ExtendedEntity ent : extendeComp.allExtendedEntity) {
-			var FieldsGenerator fieldEntity = new FieldsGenerator(extendeComp, ent)
-			generateFile( fieldspath + "/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
-			for (ExtendedReference ref : ent.extendedReference) {
-				var index = ent.extendedReference.indexOf(ref)
-				var FieldsGenerator fieldReference = new FieldsGenerator(ref, extendeComp, ent,index)
-				generateFile(
-					fieldspath + "/" + fieldReference.getnameField.toLowerCase  +
-						".php", fieldReference.genRefrenceField)
-			}
+		var EList<ExtendedPage> tempPageList = new BasicEList()
+		
+		for (pageref : extendeComp.backEndExtendedPagerefence) {
+           tempPageList.add(pageref.extendedPage)
 		}
-		generateFile(fieldspath + "/" + extendeComp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(extendeComp) )
-	}
-
-	def generateTable(String path) {
-
-		for (ExtendedEntity ent : extendeComp.allExtendedEntity) {
-			var TableGeneratorTemplate table = new TableGeneratorTemplate(extendeComp, ent)
-			generateFile(path + "/" + ent.name.toLowerCase + ".php", table.genClassTable)
-
-		}
-
-	}
-
-	def generatePage(ExtendedPage pageref, String path, String section) {
-		var PageGeneratorClient pageGen = new PageGeneratorClient(pageref, extendeComp, path, section, fsa)
-		pageGen.generate
+		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,path,"admin")
+		pgGen.dogenerate
 	}
 
 	def CharSequence phpSiteContent(Component component) '''
@@ -684,26 +641,35 @@ $this->views = $views;
 		<?xml version="1.0" encoding="utf-8"?>
 		<config>
 			<fieldset name="component" label="«name.toUpperCase»_LABEL" description="«name.toUpperCase»_DESC">
-			«FOR g : component.extendedParameterGroupList»
-				«FOR p:g.extendedParameterList»
-					«writeParameter(p)»
-				«ENDFOR»
-			«ENDFOR»
+			
 			</fieldset>
+			«FOR g : component.extendedParameterGroupList»
+	<fieldset name="«g.name.toLowerCase»" label="«g.name.toUpperCase»_LABEL" description="«g.name.toUpperCase»_DESC">
+				«FOR p:g.extendedParameterList»
+					«Slug.writeParameter(p)»
+				«ENDFOR»
+		</fieldset>
+			«ENDFOR»
+			<fieldset
+					name="permissions"
+					label="JCONFIG_PERMISSIONS_LABEL"
+					description="JCONFIG_PERMISSIONS_DESC"
+					>
+			
+					<field
+						name="rules"
+						type="rules"
+						label="JCONFIG_PERMISSIONS_LABEL"
+						filter="rules"
+						validate="rules"
+						component="«Slug.nameExtensionBind("com",extendeComp.name)»"
+						section="component" />
+				</fieldset>
 		
 			</config>
 		 '''
 
-	def CharSequence writeParameter(
-		ExtendedParameter param) '''
-		<field
-		name="«param.name»"
-		type="«Slug.getTypeName(param)»"
-		default="«param.defaultvalue»"
-		label="«param.label»"
-		description="«param.descripton»"
-		>
-	'''
+	
 
 	def CharSequence generateHelperComponent() '''
     <?php

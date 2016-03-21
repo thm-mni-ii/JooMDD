@@ -7,22 +7,26 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator.Extensio
 
 class ExtensionGenerator extends AbstracteGenerator{
 	
-	EList<de.thm.icampus.joomdd.ejsl.eJSL.Extension> extensions
-	new(EList<Extension> list) {
+	EList<Extension> extensions
+	String path
+	IFileSystemAccess fileGen
+	
+	new(EList<Extension> list, String pathToGenerate,  IFileSystemAccess fsa) {
 		extensions= list
+		fileGen = fsa
+		path = pathToGenerate
+		
 	}
 	
 	override dogenerate() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-	
-	override dogenerate(String path, IFileSystemAccess fileGen) {
-		
-		for(ext: extensions){
+
+	for(ext: extensions){
 			
 		var ExtensionGeneratorClient extClient = new ExtensionGeneratorClient(fileGen,ext)
 		extClient.generateExtension
 		}
 	}
+	
+	
 	
 }

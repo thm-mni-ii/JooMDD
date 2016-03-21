@@ -39,12 +39,12 @@ abstract public class AbstractExtensionGenerator  {
 			_path = _path.concat("/")
 		}
 	}
-
+ 
 	/**
      * Get name extended path
      */
 	def String getPath() {
-		return _path.concat(name + "/")
+		return _path
 	}
 
 	/**
@@ -101,7 +101,7 @@ abstract public class AbstractExtensionGenerator  {
      * @param content   the to-be-written contents
      */
 	def protected void generateFile(String fileName, CharSequence content) {
-		fsa.generateFile(path + fileName, content)
+		fsa.generateFile(fileName, content)
 	}
 
 	/* Abstract Methods */
@@ -144,16 +144,6 @@ abstract public class AbstractExtensionGenerator  {
 	
 	
 	
-	def CharSequence generateParameter(EList<ExtendedParameter>listParams)'''
-		«FOR param : listParams»
-		 <field
-		 name="«param.name»"
-		 type="«Slug.getTypeName(param.generatorType)»"
-		 label="«param.label »"
-		 description="«param.descripton»"
-		 />
-		«ENDFOR»
-		'''
-
+	
 
 } // AbstractExtensionGenerator

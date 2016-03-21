@@ -219,7 +219,7 @@ SimpleHTMLTypes:
 ;
 
 ComplexHTMLTypes:
-	htmltype = ComplexHTMLTypeKinds "(" keyvaluepairs+=KeyValuePair (',' keyvaluepairs+=KeyValuePair)* ")"
+	htmltype = ComplexHTMLTypeKinds " Options (" keyvaluepairs+=KeyValuePair (',' keyvaluepairs+=KeyValuePair)* ")"
 ;
 
 Link:
@@ -505,5 +505,5 @@ enum SimpleHTMLTypeKinds:
 	Integer | Yes_No_Buttons | Textarea | Text_Field |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	
 ;
 enum ComplexHTMLTypeKinds:
-	Multiselect | Checkbox | Radiobutto
+	Select| Multiselect | Checkbox | Radiobutton
 ;

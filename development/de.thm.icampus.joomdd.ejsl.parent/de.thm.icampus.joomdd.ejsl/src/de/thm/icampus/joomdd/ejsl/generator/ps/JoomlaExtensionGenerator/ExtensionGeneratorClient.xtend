@@ -18,6 +18,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedPl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedLibraryImpl
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 
 public class  ExtensionGeneratorClient  {
 	
@@ -30,6 +31,7 @@ public class  ExtensionGeneratorClient  {
 		fsa=access
 		ext=extens
 	}
+
 	
 	
 	
@@ -50,27 +52,27 @@ public class  ExtensionGeneratorClient  {
 		switch ext {
 			ExtensionPackage : {
 					var ExtensionPackage tempext  =  ext as ExtensionPackage
-					extensionsgenerator = new PackageGenerator(tempext,fsa)
+					extensionsgenerator = new PackageGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase +"/")
 				}
 			Component :{
 				var ExtendedComponent tempext  = new ExtendedComponentImpl(ext as Component)
-					extensionsgenerator = new ComponentGenerator(tempext,fsa)
+					extensionsgenerator = new ComponentGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("com", tempext.name).toLowerCase +"/")
 			}
 			Module :{
 				var ExtendedModule tempext  =  new ExtendedModuleImpl(ext as Module)
-					extensionsgenerator = new ModuleGenerator(tempext,fsa)
+					extensionsgenerator = new ModuleGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("mod", tempext.name).toLowerCase +"/")
 			}
 			Plugin :{
 				var ExtendedPlugin tempext  =  new ExtendedPluginImpl(ext as Plugin)
-					extensionsgenerator = new PluginGenerator(tempext,fsa)
+					extensionsgenerator = new PluginGenerator(tempext,fsa, "Extensions/" + Slug.nameExtensionBind("plg", tempext.name).toLowerCase +"/")
 			}
 			Library :{
 				var ExtendedLibrary tempext  =  new ExtendedLibraryImpl(ext as Library)
-					extensionsgenerator = new LibraryGenerator(tempext,fsa)
+					extensionsgenerator = new LibraryGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("lib", tempext.name).toLowerCase +"/")
 			}
 			Template :{
 				var Template tempext  =  ext as Template
-					extensionsgenerator = new TemplateGenerator(tempext,fsa)
+					extensionsgenerator = new TemplateGenerator(tempext,fsa,"Extensions/" + tempext.name.toLowerCase +"/")
 			}
 			default : {
 				System.out.println("ExtensionGeneratorClient default")

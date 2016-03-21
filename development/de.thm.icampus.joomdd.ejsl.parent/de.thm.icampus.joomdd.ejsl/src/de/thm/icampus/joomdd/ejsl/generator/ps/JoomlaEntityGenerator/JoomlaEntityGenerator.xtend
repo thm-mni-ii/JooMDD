@@ -67,10 +67,10 @@ class JoomlaEntityGenerator {
     
     def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName)'''
     «IF !isupdate»
-    DROP TABLE IF EXISTS `«componentName.toLowerCase»_«table.name.toLowerCase»`;
+    DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
     «ENDIF»
 
-   CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`«componentName.toLowerCase»_«table.name.toLowerCase»` (
+   CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`«Slug.databaseName( componentName, table.name.toLowerCase)»` (
 	«FOR a:table.allattribute»
 		`«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
 	«ENDFOR»
@@ -84,7 +84,7 @@ class JoomlaEntityGenerator {
 	,INDEX(«Slug.transformAttributeListInString(ref.attribute,  ', ')»)
 	«ENDFOR»
 	«FOR ref:table.references»
-	,CONSTRAINT `«componentName.toLowerCase»_«table.name.toLowerCase»_ibfk_«table.references.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«componentName.toLowerCase»_«Slug.slugify(ref.entity.name.toLowerCase)»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
+	,CONSTRAINT `«componentName.toLowerCase»_«table.name.toLowerCase»_ibfk_«table.references.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(componentName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
 	    ON UPDATE CASCADE
 	    ON DELETE CASCADE
 	«ENDFOR»
@@ -111,7 +111,7 @@ class JoomlaEntityGenerator {
 	        
 	       }
 	       while(!visited.empty){
-	       	 result.append('''DROP TABLE IF EXISTS `#__«extensionName.toLowerCase»_«(visited.removeLast).toLowerCase»`;''');
+	       	 result.append('''DROP TABLE IF EXISTS `«Slug.databaseName(extensionName.toLowerCase, (visited.removeLast))»`;''');
 	         result.append("\n\r")
 	       }
          return result.toString
