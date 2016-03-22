@@ -113,7 +113,7 @@ public class Slug  {
 			 	result='''type="text" '''
 			 	}
 			 case "Datepicker":{
-			 	result='''type="calendar" format="%d-%m-%Y %H:%M:%S"'''
+			 	result='''type="calendar" format="%y-%m-%d %H:%M:%S"'''
 			 } 
 			 case "Imagepicker":{
 			 	result='''type="imagelist" '''

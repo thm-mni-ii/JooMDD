@@ -27,9 +27,10 @@ public class  ExtensionGeneratorClient  {
 	Extension ext
 	String path
 	
-	new(IFileSystemAccess access, Extension extens) {
+	new(IFileSystemAccess access, Extension extens, String path) {
 		fsa=access
 		ext=extens
+		this.path = path
 	}
 
 	
@@ -52,37 +53,35 @@ public class  ExtensionGeneratorClient  {
 		switch ext {
 			ExtensionPackage : {
 					var ExtensionPackage tempext  =  ext as ExtensionPackage
-					extensionsgenerator = new PackageGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase +"/")
+					extensionsgenerator = new PackageGenerator(tempext,fsa,path + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase +"/")
 				}
 			Component :{
 				var ExtendedComponent tempext  = new ExtendedComponentImpl(ext as Component)
-					extensionsgenerator = new ComponentGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("com", tempext.name).toLowerCase +
-					"/new/"+ Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/", "Extensions/" + Slug.nameExtensionBind("com", tempext.name).toLowerCase +
+					extensionsgenerator = new ComponentGenerator(tempext,fsa,path + Slug.nameExtensionBind("com", tempext.name).toLowerCase +
+					"/new/"+ Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/", path + Slug.nameExtensionBind("com", tempext.name).toLowerCase +
 					"/update/") 
 			}
 			Module :{
 				var ExtendedModule tempext  =  new ExtendedModuleImpl(ext as Module)
-					extensionsgenerator = new ModuleGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("mod", tempext.name).toLowerCase +"/")
+					extensionsgenerator = new ModuleGenerator(tempext,fsa,path + Slug.nameExtensionBind("mod", tempext.name).toLowerCase +"/")
 			}
 			Plugin :{
 				var ExtendedPlugin tempext  =  new ExtendedPluginImpl(ext as Plugin)
-					extensionsgenerator = new PluginGenerator(tempext,fsa, "Extensions/" + Slug.nameExtensionBind("plg", tempext.name).toLowerCase +"/")
+					extensionsgenerator = new PluginGenerator(tempext,fsa, path + Slug.nameExtensionBind("plg", tempext.name).toLowerCase +"/")
 			}
 			Library :{
 				var ExtendedLibrary tempext  =  new ExtendedLibraryImpl(ext as Library)
-					extensionsgenerator = new LibraryGenerator(tempext,fsa,"Extensions/" + Slug.nameExtensionBind("lib", tempext.name).toLowerCase +"/")
+					extensionsgenerator = new LibraryGenerator(tempext,fsa,path + Slug.nameExtensionBind("lib", tempext.name).toLowerCase +"/")
 			}
 			Template :{
 				var Template tempext  =  ext as Template
-					extensionsgenerator = new TemplateGenerator(tempext,fsa,"Extensions/" + tempext.name.toLowerCase +"/")
+					extensionsgenerator = new TemplateGenerator(tempext,fsa,path + tempext.name.toLowerCase +"/")
 			}
 			default : {
 				System.out.println("ExtensionGeneratorClient default")
 			}	
 		}
-		if(path != null) {
-			extensionsgenerator.setPath(this.path)
-		}
+		
 		return extensionsgenerator.generate
 	}
 	

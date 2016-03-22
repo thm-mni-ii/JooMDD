@@ -72,19 +72,20 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	}
 
 	override generate() {
-		generateJoomlaDirectory("")
-		generateFile("index" + ".html", this.extMod.IndexContent)
-		generateFile(name + ".xml", this.extMod.xmlContent)
-		generateFile(name + ".php", this.extMod.phpContent)
-		generateFile("helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage	))
+		generateJoomlaDirectory(path+"")
+		println("module path " + path)
+		generateFile(path + "index" + ".html", this.extMod.IndexContent)
+		generateFile(path + name + ".xml", this.extMod.xmlContent)
+		generateFile(path+name + ".php", this.extMod.phpContent)
+		generateFile(path+"helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage	))
 		
 		
-		generateJoomlaDirectory("tmpl")
-		generateFile("tmpl/default.php", defaultTemplate())
-		generateFile("tmpl/index.html", this.extMod.IndexContent)
+		generateJoomlaDirectory(path+"tmpl")
+		generateFile(path+ "tmpl/default.php", defaultTemplate())
+		generateFile(path+"tmpl/index.html", this.extMod.IndexContent)
 		
 		var LanguageGenerator lang = new LanguageGenerator(fsa)
-		lang.genModuletLanguage(extMod, "mod_"+extMod.name.toLowerCase)
+		lang.genModuletLanguage(extMod, path)
          
 		return ''
 	}

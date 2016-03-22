@@ -10,19 +10,20 @@ class ExtensionGenerator extends AbstracteGenerator{
 	EList<Extension> extensions
 	String path
 	IFileSystemAccess fileGen
+	String modelName
 	
-	new(EList<Extension> list, String pathToGenerate,  IFileSystemAccess fsa) {
+	new(EList<Extension> list, String pathToGenerate,  IFileSystemAccess fsa, String modelName) {
 		extensions= list
 		fileGen = fsa
-		path = pathToGenerate
-		
+		path = pathToGenerate + modelName +"/"
+		this.modelName= modelName
 	}
 	
 	override dogenerate() {
 
 	for(ext: extensions){
 			
-		var ExtensionGeneratorClient extClient = new ExtensionGeneratorClient(fileGen,ext)
+		var ExtensionGeneratorClient extClient = new ExtensionGeneratorClient(fileGen,ext,path)
 		extClient.generateExtension
 		}
 	}

@@ -37,8 +37,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 		
         // Generate extensions
         for (ext : this.pkg.extensions) {
-        	this.extClient = new ExtensionGeneratorClient(fsa, ext)
-        	this.extClient.setPath(this.name + "/packages/")
+        	this.extClient = new ExtensionGeneratorClient(fsa, ext,this.name + "/packages/")
 			this.extClient.generateExtension
         }
         return ''

@@ -26,10 +26,10 @@ class EntityGenerator extends AbstracteGenerator {
 	IFileSystemAccess fsa
 	boolean isBackendSection
 	
-	new(EList<Entity> entitiesList, IFileSystemAccess fsa) {
+	new(EList<Entity> entitiesList, String path ,IFileSystemAccess fsa, String domainName) {
 		this.entities = new BasicEList<ExtendedEntity>
 		entities.addAll(entitiesList.map[t | new ExtendedEntityImpl(t)])
-		path ="Entity"
+		this.path = path + domainName +"/"
 		this.fsa = fsa
 	}
 	new(ExtendedComponent extensions,String path,IFileSystemAccess fsa, boolean isBackenSection ){
@@ -79,15 +79,15 @@ class EntityGenerator extends AbstracteGenerator {
 			var ExtendedComponent extComp = new ExtendedComponentImpl(comp)
 			
 			var JoomlaEntityGenerator joomExt = new JoomlaEntityGenerator(entities,"<Extensions_name>",false)
-			joomExt.dogenerate("Entities/sql", fsa)
+			joomExt.dogenerate(path+"sql", fsa)
 			for(ExtendedEntity ent: entities){
 				var TableGeneratorTemplate table = new TableGeneratorTemplate(extComp, ent)
-				table.dogenerate("Entities/tables", fsa)
+				table.dogenerate(path+"tables", fsa)
 			}
 			for(ExtendedEntity ent: entities){
 				for(ExtendedReference ref: ent.extendedReference){
 				var FieldsGenerator fields = new FieldsGenerator(ref,extComp, ent)
-				fields.dogenerate("Entities/fields/" , fsa)
+				fields.dogenerate(path+"fields/" , fsa)
 				}
 			}
 		}

@@ -44,7 +44,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	}
 
 	override generate() {
-		println(path);
+		println("component path " +path);
 		generateJoomlaDirectory(path+"")
 
 		/*

@@ -23,10 +23,10 @@ class PageGenerator extends AbstracteGenerator {
 	String section = "site"
 	boolean extUpdate
 
-	new(EList<Page> pages, IFileSystemAccess access, String path) {
+	new(EList<Page> pages, IFileSystemAccess access, String path, String domainName) {
 		fsa = access
 		pageList.addAll(pages.map[t|new ExtendedPageImpl(t)])
-		this.path = path
+		this.path = path + domainName +"/"
 		comp= null
 		
 	}
