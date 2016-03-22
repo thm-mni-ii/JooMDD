@@ -35,7 +35,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		switch type {
 			DatatypeReference: {
 				var DatatypeReference temptyp = type as DatatypeReference
-				return temptyp.type.name
+				return "text"
 			}
 			StandardTypes: {
 				var StandardTypes temptyp = type as StandardTypes

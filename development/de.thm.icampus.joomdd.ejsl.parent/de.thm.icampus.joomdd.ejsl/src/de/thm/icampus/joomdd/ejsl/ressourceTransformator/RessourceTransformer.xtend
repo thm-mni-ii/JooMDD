@@ -37,16 +37,20 @@ class RessourceTransformer {
 			completeTableColumnAndEditedFields(dp)
 			for(DetailPageField field: dp.editfields){
 				if(field.htmltype == null){
-				   field.htmltype = parseAttributeType(field.attribute)
+				   var int index = dp.editfields.indexOf(field)
+				   dp.editfields.remove(field)
+				     dp.editfields.add(index,parseAttributeType(field.attribute))
+				    
+				   println(field.attribute+ "  "+field.htmltype + " -> " + parseAttributeType(field.attribute))
 				}
 			}
 		}
 	}
 	
-	def completeTableColumnAndEditedFields(DetailsPage page) {
+	private def completeTableColumnAndEditedFields(DetailsPage page) {
 		if(page.editfields.empty && !page.tablecolumns.empty){
 			for(Attribute attr: page.tablecolumns){
-				page.editfields.add(generateDetailPageField(attr))
+				page.editfields.add(parseAttributeType(attr))
 			}
 		}
 		if(!page.editfields.empty && page.tablecolumns.empty){
@@ -55,27 +59,33 @@ class RessourceTransformer {
 				page.tablecolumns.add(editedAttr.attribute)
 			}
 		}
+		if(page.editfields.empty && page.tablecolumns.empty){
+			for(Attribute attr: page.entities.get(0).attributes){
+				page.tablecolumns.add(attr)
+				page.editfields.add(parseAttributeType(attr))
+			}
+		}
 	}
 	
-	def DetailPageField generateDetailPageField(Attribute attribute) {
+
+	
+	def DetailPageField parseAttributeType(Attribute attribute) {
 		var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
-		editField.attribute = attribute
-        println("Edited Fields Attribute " + editField.attribute.name)	
-		return editField
-	}
-	
-	def SimpleHTMLTypes parseAttributeType(Attribute attribute) {
-		switch attribute{
+		switch attribute.type{
 			DatatypeReference :{
 				var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
 				result.htmltype = SimpleHTMLTypeKinds.get("Text_Field")
-				return result
+				editField.attribute = attribute
+				editField.htmltype = result
+				return editField
 			}
 			StandardTypes:{
-				var StandardTypes temptyp = attribute as StandardTypes
+				var StandardTypes temptyp = attribute.type as StandardTypes
 				var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
 				result.htmltype = SimpleHTMLTypeKinds.get(parsingType(temptyp))
-				return result
+				editField.attribute = attribute
+				editField.htmltype = result
+				return editField
 			}
 		}
 	}
