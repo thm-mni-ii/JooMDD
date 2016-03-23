@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <fieldset name="component"
+        label="GENERISCH_COMPONENT_LABEL"
+        description="GENERISCH_COMPONENT_DESC"
+    >
+	.........
+	
+	 <field
+            name="GENERISCH_PARAMETER_NAME"
+            type="GENERISCH_PARAMETER_TYPE"
+            default="GENERISCH_DEFAULTVALUE"
+            label="GENERISCH_LABEL"
+            description="GENERISCH_PARAMETER_DESCRIPTION"
+            >
+			
+	.........
+		
+	   </fieldset>
+</config>
