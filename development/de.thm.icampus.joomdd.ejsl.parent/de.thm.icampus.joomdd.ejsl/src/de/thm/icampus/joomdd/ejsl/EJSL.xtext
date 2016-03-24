@@ -108,7 +108,7 @@ Entitypackage returns Entitypackage:
 
 Entity returns Entity:
 	{Entity}
-	'Entity' name=MYID ('extends' supertype=[Entity|QualifiedName])?
+	'Entity' name=MYID ('extends' supertype=[Entity|QualifiedName])? (legacy='@legacy')?
 	'{'
 		('attributes' '{' (attributes+=Attribute)* '}')?
 		// Kardinalität
@@ -119,7 +119,7 @@ Entity returns Entity:
 Attribute returns Attribute:
 	{Attribute}
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-	'Attribute' name=MYID '{' 
+	'Attribute' name=MYID (legacy='@legacy')? '{' 
 		'type =' (type=Type)
 		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | id?='ID'))?)?
 	'}'
@@ -127,7 +127,7 @@ Attribute returns Attribute:
 
 Reference returns Reference:
 	{Reference}
-	'Reference'  
+	'Reference' (legacy='@legacy')? 
 	'{'
 		'EntityAttribute =' attribute+=[Attribute|QualifiedName] (',' attribute+=[Attribute|QualifiedName])*
 		'*Entity =' entity=[Entity|QualifiedName]
@@ -145,7 +145,7 @@ Page:
 
 StaticPage returns StaticPage:
 	{StaticPage}
-	'StaticPage' name=MYID 
+	'StaticPage' name=MYID (legacy='@legacy')?
 	'{'
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
@@ -162,7 +162,7 @@ DynamicPage:
 
 IndexPage returns IndexPage:
 	{IndexPage}
-	'IndexPage' name=MYID 
+	'IndexPage' name=MYID (legacy='@legacy')?
 	'{'
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
@@ -177,7 +177,7 @@ IndexPage returns IndexPage:
 
 DetailsPage returns DetailsPage:
 	{DetailsPage}
-	'DetailsPage' name=MYID 
+	'DetailsPage' name=MYID (legacy='@legacy')?
 	'{'
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('editFields' '{' (editfields+=DetailPageField)* '}')?
@@ -198,7 +198,7 @@ DetailPageField returns DetailPageField:
 
 CustomPage returns CustomPage:
 	{CustomPage}
-	'CustomPage' name=MYID 
+	'CustomPage' name=MYID (legacy='@legacy')?
 	'{'
 		'Page type:' pageType = PageKinds
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
@@ -428,7 +428,7 @@ Author returns Author:
 
 Language returns Language:
 	{Language}
-	'Language' name=LANGUAGE_CODE 
+	'Language' (sys='system')? name=LANGUAGE_CODE 
 	'{'
     	('keyvaluepairs' '{' (keyvaluepairs+=KeyValuePair)* '}')?
     '}'
@@ -487,7 +487,7 @@ enum PluginKinds:
     search | system | user | xml_rpc
 ;
 enum PageActionKind:
-	Text | Button
+	SAVE | NEW | SAVE_CLOSE | SAVE_COPY | CANCEL | CLOSE | ARCHIVE | EDIT | PUBLISH | UNPUBLISH | HIDE | CHECKIN | TRASH |INDIVIDUAL
 ;
 enum PageActionPositionKind:
 	top | center | bottom
