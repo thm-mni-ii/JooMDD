@@ -22,6 +22,8 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	EList<ExtendedReference> extendedReference
 	EList<ExtendedReference> allReferenceToEntity
 	EList<ExtendedEntity> allEntityFromReference
+	EList<ExtendedAttribute> allRefactoryAttribute
+	EList<ExtendedReference> allRefactoryReference
 
 	new(Entity entity) {
 		entity.name = PlattformIUtil.slugify(entity.name)
@@ -30,6 +32,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		this.attributes = entity.attributes
 		this.references = entity.references
 		instance = entity
+		this.legacy = entity.legacy
 		initListen()
 
 	}
@@ -104,6 +107,11 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		allEntityFromReference.add(new ExtendedEntityImpl(ent))
 		
 		}
+		allRefactoryAttribute = new BasicEList<ExtendedAttribute>
+		allRefactoryReference = new BasicEList<ExtendedReference>
+		allRefactoryAttribute.addAll(extendedAttributeList.filter[t | !t.legacy])
+		allRefactoryReference.addAll(extendedReference.filter[t | !t.legacy])
+	  
 
 	}
 
@@ -162,6 +170,14 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	
 	override getallEntityFromReferences() {
 		return allEntityFromReference
+	}
+	
+	override getRefactoryAttribute() {
+		return allRefactoryAttribute
+	}
+	
+	override getRefactoryReference() {
+		return allRefactoryReference
 	}
 
 }

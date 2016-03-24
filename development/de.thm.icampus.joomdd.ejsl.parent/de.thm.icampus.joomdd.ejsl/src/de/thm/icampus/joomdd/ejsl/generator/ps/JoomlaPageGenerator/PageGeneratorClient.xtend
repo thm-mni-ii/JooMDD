@@ -97,7 +97,7 @@ public class PageGeneratorClient {
 		}
 	}
 	def void generatePages(){
-		if (extPage.extendedDynamicPageInstance != null) {
+		if (extPage.extendedDynamicPageInstance != null && !extPage.extendedDynamicPageInstance.legacy ) {
 			var String viewPath = pathExt + extPage.name+ "/views";
 			var ExtendedDynamicPage dynPage = extPage.extendedDynamicPageInstance as ExtendedDynamicPage
 			generateView(dynPage, com, sectionExt, viewPath, fsa)
@@ -106,7 +106,7 @@ public class PageGeneratorClient {
 			var String modelpath = pathExt + extPage.name  + "/models"
 			generateModel(dynPage, com, sectionExt, modelpath, fsa)
 		
-		} else if (extPage.staticPageInstance != null) {
+		} else if (extPage.staticPageInstance != null && !extPage.staticPageInstance.legacy ) {
 			generateStaticPage(extPage.staticPageInstance)
 		}
 	}

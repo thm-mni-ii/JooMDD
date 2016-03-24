@@ -33,6 +33,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 		this.manifest = comp.manifest
 		this.globalParamter = comp.globalParamter
 		this.sections = comp.sections
+		
 		initListen()
 	}
 	

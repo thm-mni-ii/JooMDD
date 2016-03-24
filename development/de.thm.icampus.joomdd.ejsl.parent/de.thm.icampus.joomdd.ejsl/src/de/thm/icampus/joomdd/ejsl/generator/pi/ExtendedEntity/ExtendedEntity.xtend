@@ -17,6 +17,8 @@ interface ExtendedEntity extends Entity {
 	def EList<ExtendedReference>getallReferenceToEntity()
 	def ExtendedAttribute getAttributeByName(String name)
 	def EList<ExtendedEntity> getallEntityFromReferences()
+	def EList<ExtendedAttribute> getRefactoryAttribute()
+	def EList<ExtendedReference>getRefactoryReference()
 	
 	
 }

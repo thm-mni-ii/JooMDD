@@ -29,7 +29,7 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 		generateFile(path + "sql/install.mysql.utf8.sql", entgen.dogenerate)
 		generateFile(path +"sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(comp.name))
 		entgen.update = true
-		generateFile(path + "sql/updates/mysql/1.0.1.mysql.utf8.sql",entgen.dogenerate)
+		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''',entgen.generateUpdateScript(comp.name))
 	}
 	
 	private def generateFields(ExtendedComponent comp, String path){
