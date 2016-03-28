@@ -2,7 +2,7 @@
 <feature
       id="de.thm.icampus.joomdd.ejsl.sdk"
       label="eJSL"
-      version="1.0.0.qualifier">
+      version="0.2.3">
 
    <description url="http://icampus.thm.de/JooMDD/eJSL">
       Modeling language for Joomla extensions. 
@@ -23,7 +23,7 @@ v1.0
 *    Dennis Priefer - initial API and implementation and/or initial
 documentation
 *******************************************************************************/
-	</copyright>
+   </copyright>
 
    <license url="">
       Eclipse Public License - v 1.0
@@ -101,7 +101,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
    <url>
       <discovery label="JooMDD Home Page" url="http://icampus.thm.de/joomdd"/>
    </url>
-   
+
    <plugin
          id="de.thm.icampus.joomdd.ejsl"
          download-size="0"
