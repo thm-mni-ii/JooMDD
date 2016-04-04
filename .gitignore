@@ -10,5 +10,3 @@
 */plugin.xml_gen
 .metadata/*
 */.settings/*
-*.iml
-*.prefs
