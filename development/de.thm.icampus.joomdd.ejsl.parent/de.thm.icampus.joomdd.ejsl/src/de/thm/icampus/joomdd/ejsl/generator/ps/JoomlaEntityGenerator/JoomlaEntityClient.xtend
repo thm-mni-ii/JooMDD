@@ -29,7 +29,6 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 		generateFile(path + "sql/install.mysql.utf8.sql", entgen.dogenerate)
 		generateFile(path +"sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(comp.name))
 		entgen.update = true
-		println("Hallo test " +path)
 		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''',entgen.generateUpdateScript(comp.name))
 	}
 	
