@@ -105,11 +105,15 @@ class JoomlaEntityGenerator {
 	       }
          return result.toString
     }
-    private def EList<ExtendedEntity> orderEntity(EList<ExtendedEntity> entities){
+    private def EList<ExtendedEntity> orderEntity(EList<ExtendedEntity> entitiesList){
     	var EList<ExtendedEntity> result = new BasicEList<ExtendedEntity>()
     	 var LinkedList<String> visited = new LinkedList<String>();
-    	 while(visited.size < entities.size ){
-	        for (ExtendedEntity e:entities){
+    	 if(entitiesList.size == 1){
+    	 	result.add(entitiesList.last)
+    	 	return result
+    	 }
+    	 while(visited.size < entitiesList.size ){
+	        for (ExtendedEntity e:entitiesList){
 	        	if(e.extendedReference.empty && !visited.contains(e.name)){	        		
 	        		visited.add(e.name);
 	        		result.add(e)

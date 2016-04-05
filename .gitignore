@@ -10,3 +10,7 @@
 */plugin.xml_gen
 .metadata/*
 */.settings/*
+*.iml
+*.prefs
+*.class
+*.xtendbin

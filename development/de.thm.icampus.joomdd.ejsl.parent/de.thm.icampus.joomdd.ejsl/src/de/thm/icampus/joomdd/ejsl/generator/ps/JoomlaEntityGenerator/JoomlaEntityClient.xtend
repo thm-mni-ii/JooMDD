@@ -17,7 +17,7 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 		
 		generateFields( comp,  path)
 		if(isBackendSection){
-		//generateTable( comp,  path)
+		generateTable( comp,  path)
 		generateSQL( comp,  path)
 		
 		}
