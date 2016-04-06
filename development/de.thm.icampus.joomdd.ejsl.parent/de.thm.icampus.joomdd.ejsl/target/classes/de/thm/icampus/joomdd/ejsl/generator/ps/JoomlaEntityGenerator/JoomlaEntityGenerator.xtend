@@ -51,10 +51,11 @@ class JoomlaEntityGenerator {
      
    }
 	
-	def boolean isAllreferenVisited(EList<ExtendedReference> list, List<String> visited) {
+	def boolean isAllreferenVisited(EList<ExtendedReference> list, List<String> visited, EList<ExtendedEntity> entityLsit) {
 		
 		for(ExtendedReference r: list){
 			if(!visited.contains(r.extendedToEntity.name)){
+			  if((entityLsit.filter[t | t.name.equalsIgnoreCase(r.extendedToEntity.name)]).size > 0)
 			return false
 			
 			}
@@ -105,16 +106,17 @@ class JoomlaEntityGenerator {
 	       }
          return result.toString
     }
-    private def EList<ExtendedEntity> orderEntity(EList<ExtendedEntity> entities){
+    private def EList<ExtendedEntity> orderEntity(EList<ExtendedEntity> entitiesList){
     	var EList<ExtendedEntity> result = new BasicEList<ExtendedEntity>()
     	 var LinkedList<String> visited = new LinkedList<String>();
-    	 while(visited.size < entities.size ){
-	        for (ExtendedEntity e:entities){
+
+    	 while(visited.size < entitiesList.size ){
+	        for (ExtendedEntity e:entitiesList){
 	        	if(e.extendedReference.empty && !visited.contains(e.name)){	        		
 	        		visited.add(e.name);
 	        		result.add(e)
 	        	}
-	         if(!visited.contains(e.name) && !e.references.empty && isAllreferenVisited(e.extendedReference, visited) ){
+	         if(!visited.contains(e.name) && !e.references.empty && isAllreferenVisited(e.extendedReference, visited, entitiesList) ){
 	        	   visited.add(e.name);
 	        	   result.add(e)
 	        	   

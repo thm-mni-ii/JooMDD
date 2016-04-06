@@ -61,23 +61,23 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		// Generate language files
 		var LanguageGenerator langgen = new LanguageGenerator(fsa)
-		//langgen.genComponentLanguage(extendeComp,path)
+		langgen.genComponentLanguage(extendeComp,path)
 
 			// Generate sql stuff
 		generateJoomlaDirectory(path+"admin/sql")
 		generateJoomlaDirectory(path+"admin/sql/updates")
 		generateJoomlaDirectory(path+"admin/sql/updates/mysql")
 		
-		// Generate backend section 
-		if (extendeComp.backEndExtendedPagerefence != null) {
-			generateBackendSection
-		}
+		
 
 		// Generate frontend section 
 		if (extendeComp.frontEndExtendedPagerefence != null) {
-			//generateFrontendSection
+			generateFrontendSection
 		}
-	   
+	   // Generate backend section 
+		if (extendeComp.backEndExtendedPagerefence != null) {
+			generateBackendSection
+		}
 	  
 	   
 	
