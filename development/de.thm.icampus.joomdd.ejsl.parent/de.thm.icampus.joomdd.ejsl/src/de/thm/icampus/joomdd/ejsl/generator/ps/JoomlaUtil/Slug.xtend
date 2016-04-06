@@ -438,7 +438,7 @@ public class Slug  {
 			if(attr != attributes.last){
 			result.append(attr.name.toLowerCase + separeSign)
 			}else{
-				result.append(attr.name)
+				result.append(Slug.slugify(attr.name))
 			}
 		}
 		return result.toString
@@ -449,9 +449,9 @@ public class Slug  {
 		var StringBuffer result = new StringBuffer()
 		for(attr: attributes){
 			if(attr != attributes.last){
-			result.append(postWord + attr.name.toLowerCase + separeSign)
+			result.append(postWord + Slug.slugify(attr.name).toLowerCase + separeSign)
 			}else{
-				result.append(postWord+attr.name)
+				result.append(postWord+ Slug.slugify(attr.name))
 			}
 		}
 		return result.toString
@@ -461,9 +461,9 @@ public class Slug  {
 		var StringBuffer result = new StringBuffer()
 		for(attr: attributes){
 			if(attr != attributes.last){
-			result.append(quotationMark+postWord + attr.name.toLowerCase+quotationMark + separeSign)
+			result.append(quotationMark+postWord + Slug.slugify(attr.name).toLowerCase+quotationMark + separeSign)
 			}else{
-				result.append(quotationMark+postWord+attr.name+quotationMark)
+				result.append(quotationMark+postWord+ Slug.slugify(attr.name) +quotationMark)
 			}
 		}
 		return result.toString
