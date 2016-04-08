@@ -40,7 +40,7 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		this.tablecolumns = page.tablecolumns
 		this.filters = page.filters
 		this.links = page.links
-		this.legacy = page.legacy
+		this.preserve = page.preserve
 		initList()
 	}
 	

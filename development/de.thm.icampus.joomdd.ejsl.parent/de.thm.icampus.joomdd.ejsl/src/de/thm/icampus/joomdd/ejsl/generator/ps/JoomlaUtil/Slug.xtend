@@ -37,6 +37,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
+import org.eclipse.emf.common.util.BasicEList
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
 
 /**
  * <!-- begin-user-doc -->

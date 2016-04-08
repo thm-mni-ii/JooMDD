@@ -28,7 +28,6 @@ class ExtendedPageImpl extends PageImpl implements ExtendedPage {
 		this.globalparameters = page.globalparameters
 		this.localparameters = page.localparameters
 		this.parametergroups = page.parametergroups
-		
 		initList()
 		}
 	

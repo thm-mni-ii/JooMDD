@@ -27,7 +27,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		entity = attr.eContainer as Entity
 		genType = generatorType()
 		htmlType = generatorTypeHtmlType()
-		this.legacy = attr.legacy
+		this.preserve = attr.preserve
 		instance = attr
 
 	}
@@ -51,7 +51,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		switch type {
 			DatatypeReference: {
 				var DatatypeReference temptyp = type as DatatypeReference
-				return temptyp.type.name
+				return temptyp.type.type
 			}
 			StandardTypes: {
 				var StandardTypes temptyp = type as StandardTypes
@@ -73,10 +73,10 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 				if (eJSlType.^default == null)
 					eJSlType.^default = "0"
 			}
-			case "Textarea": {
+			case "Text": {
 				value = "text "
 			}
-			case "Textfield": {
+			case "Short_Text": {
 				value = "varchar(255) "
 			}
 			case "Time": {

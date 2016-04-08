@@ -25,7 +25,7 @@ class ExtendedStaticPageImpl extends StaticPageImpl implements ExtendedStaticPag
 		this.globalparameters = page.globalparameters
 		this.localparameters = page.localparameters
 		this.parametergroups = page.parametergroups
-		this.legacy = page.legacy
+		this.preserve = page.preserve
 		initList()
 		}
 	
