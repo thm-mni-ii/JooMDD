@@ -54,7 +54,7 @@ Type:
 ;
 
 DatatypeReference:
-	type=[Datatype|STRING]
+	type=[Datatype]
 ;
 
 StandardTypes:
@@ -63,7 +63,7 @@ StandardTypes:
 
 Datatype returns Datatype:
 	{Datatype}
-	'Datatype' name=STRING;
+	'Datatype' name=ID '=' type=STRING;
 	
 Parameter returns Parameter:
 	{Parameter}
@@ -493,7 +493,7 @@ enum PageActionPositionKind:
 	top | center | bottom
 ;
 enum StandardTypeKinds:
-	Integer | Boolean | Textarea | Textfield | Time | Date | Datetime | Link | Image | File | Label
+	Integer | Boolean | Text | Short_Text | Time | Date | Datetime | Link | Image | File | Label
 ;
 enum SectionKinds:
 	backend='.backend' | frontend='.frontend'

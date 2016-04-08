@@ -789,7 +789,7 @@ ruleDatatypeReference returns [EObject current=null]
 					$current = createModelElement(grammarAccess.getDatatypeReferenceRule());
 				}
 			}
-			otherlv_0=RULE_STRING
+			otherlv_0=RULE_ID
 			{
 				newLeafNode(otherlv_0, grammarAccess.getDatatypeReferenceAccess().getTypeDatatypeCrossReference_0());
 			}
@@ -916,9 +916,9 @@ ruleDatatype returns [EObject current=null]
 		}
 		(
 			(
-				lv_name_2_0=RULE_STRING
+				lv_name_2_0=RULE_ID
 				{
-					newLeafNode(lv_name_2_0, grammarAccess.getDatatypeAccess().getNameSTRINGTerminalRuleCall_2_0());
+					newLeafNode(lv_name_2_0, grammarAccess.getDatatypeAccess().getNameIDTerminalRuleCall_2_0());
 				}
 				{
 					if ($current==null) {
@@ -928,6 +928,28 @@ ruleDatatype returns [EObject current=null]
 						$current,
 						"name",
 						lv_name_2_0,
+						"org.eclipse.xtext.common.Terminals.ID");
+				}
+			)
+		)
+		otherlv_3='='
+		{
+			newLeafNode(otherlv_3, grammarAccess.getDatatypeAccess().getEqualsSignKeyword_3());
+		}
+		(
+			(
+				lv_type_4_0=RULE_STRING
+				{
+					newLeafNode(lv_type_4_0, grammarAccess.getDatatypeAccess().getTypeSTRINGTerminalRuleCall_4_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getDatatypeRule());
+					}
+					setWithLastConsumed(
+						$current,
+						"type",
+						lv_type_4_0,
 						"org.eclipse.xtext.common.Terminals.STRING");
 				}
 			)
@@ -7467,18 +7489,18 @@ ruleStandardTypeKinds returns [Enumerator current=null]
 		)
 		    |
 		(
-			enumLiteral_2='Textarea'
+			enumLiteral_2='Text'
 			{
-				$current = grammarAccess.getStandardTypeKindsAccess().getTextareaEnumLiteralDeclaration_2().getEnumLiteral().getInstance();
-				newLeafNode(enumLiteral_2, grammarAccess.getStandardTypeKindsAccess().getTextareaEnumLiteralDeclaration_2());
+				$current = grammarAccess.getStandardTypeKindsAccess().getTextEnumLiteralDeclaration_2().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_2, grammarAccess.getStandardTypeKindsAccess().getTextEnumLiteralDeclaration_2());
 			}
 		)
 		    |
 		(
-			enumLiteral_3='Textfield'
+			enumLiteral_3='Short_Text'
 			{
-				$current = grammarAccess.getStandardTypeKindsAccess().getTextfieldEnumLiteralDeclaration_3().getEnumLiteral().getInstance();
-				newLeafNode(enumLiteral_3, grammarAccess.getStandardTypeKindsAccess().getTextfieldEnumLiteralDeclaration_3());
+				$current = grammarAccess.getStandardTypeKindsAccess().getShort_TextEnumLiteralDeclaration_3().getEnumLiteral().getInstance();
+				newLeafNode(enumLiteral_3, grammarAccess.getStandardTypeKindsAccess().getShort_TextEnumLiteralDeclaration_3());
 			}
 		)
 		    |

@@ -44,8 +44,8 @@
     <genEnums typeSafeEnumCompatible="false" ecoreEnum="EJSL.ecore#//StandardTypeKinds">
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Integer"/>
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Boolean"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Textarea"/>
-      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Textfield"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Text"/>
+      <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Short_Text"/>
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Time"/>
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Date"/>
       <genEnumLiterals ecoreEnumLiteral="EJSL.ecore#//StandardTypeKinds/Datetime"/>
@@ -113,6 +113,7 @@
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Datatype">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Datatype/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Datatype/type"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Parameter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Parameter/name"/>

@@ -44,6 +44,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Datatype">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Parameter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -340,8 +341,8 @@
   <eClassifiers xsi:type="ecore:EEnum" name="StandardTypeKinds">
     <eLiterals name="Integer" literal="Integer"/>
     <eLiterals name="Boolean" value="1" literal="Boolean"/>
-    <eLiterals name="Textarea" value="2" literal="Textarea"/>
-    <eLiterals name="Textfield" value="3" literal="Textfield"/>
+    <eLiterals name="Text" value="2" literal="Text"/>
+    <eLiterals name="Short_Text" value="3" literal="Short_Text"/>
     <eLiterals name="Time" value="4" literal="Time"/>
     <eLiterals name="Date" value="5" literal="Date"/>
     <eLiterals name="Datetime" value="6" literal="Datetime"/>
