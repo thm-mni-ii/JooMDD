@@ -108,7 +108,7 @@ Entitypackage returns Entitypackage:
 
 Entity returns Entity:
 	{Entity}
-	'Entity' name=MYID ('extends' supertype=[Entity|QualifiedName])? (legacy?='@legacy')?
+	'Entity' name=MYID ('extends' supertype=[Entity|QualifiedName])? (preserve?='@preserve')?
 	'{'
 		('attributes' '{' (attributes+=Attribute)* '}')?
 		// Kardinalität
@@ -119,7 +119,7 @@ Entity returns Entity:
 Attribute returns Attribute:
 	{Attribute}
 	//'Attribute' name=ID ':' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-	'Attribute' name=MYID (legacy?='@legacy')? '{' 
+	'Attribute' name=MYID (preserve?='@preserve')? '{' 
 		'type =' (type=Type)
 		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | id?='ID'))?)?
 	'}'
@@ -127,7 +127,7 @@ Attribute returns Attribute:
 
 Reference returns Reference:
 	{Reference}
-	'Reference' (legacy?='@legacy')? 
+	'Reference' (preserve?='@preserve')? 
 	'{'
 		'EntityAttribute =' attribute+=[Attribute|QualifiedName] (',' attribute+=[Attribute|QualifiedName])*
 		'*Entity =' entity=[Entity|QualifiedName]
@@ -145,7 +145,7 @@ Page:
 
 StaticPage returns StaticPage:
 	{StaticPage}
-	'StaticPage' name=MYID (legacy?='@legacy')?
+	'StaticPage' name=MYID (preserve?='@preserve')?
 	'{'
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
@@ -162,7 +162,7 @@ DynamicPage:
 
 IndexPage returns IndexPage:
 	{IndexPage}
-	'IndexPage' name=MYID (legacy?='@legacy')?
+	'IndexPage' name=MYID (preserve?='@preserve')?
 	'{'
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
@@ -177,7 +177,7 @@ IndexPage returns IndexPage:
 
 DetailsPage returns DetailsPage:
 	{DetailsPage}
-	'DetailsPage' name=MYID (legacy?='@legacy')?
+	'DetailsPage' name=MYID (preserve?='@preserve')?
 	'{'
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('editFields' '{' (editfields+=DetailPageField)* '}')?
@@ -198,7 +198,7 @@ DetailPageField returns DetailPageField:
 
 CustomPage returns CustomPage:
 	{CustomPage}
-	'CustomPage' name=MYID (legacy='@legacy')?
+	'CustomPage' name=MYID (preserve='@preserve')?
 	'{'
 		'Page type:' pageType = PageKinds
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
