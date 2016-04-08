@@ -39,7 +39,7 @@ class EJSLGenerator extends AbstractGenerator {
 					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities, "Entities/", fsa, domainModel.name)
 					mainEntitiesGen.dogenerate()
 					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages,fsa,"Pages/",domainModel.name)
-				    mainPageGen.dogenerate()
+				     mainPageGen.dogenerate()
 				}
 			}
 			
