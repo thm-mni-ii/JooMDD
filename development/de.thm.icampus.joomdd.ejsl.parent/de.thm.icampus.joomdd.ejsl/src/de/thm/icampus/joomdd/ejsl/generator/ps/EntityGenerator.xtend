@@ -92,7 +92,7 @@ class EntityGenerator extends AbstracteGenerator {
 			for(ExtendedEntity ent: entities){
 				var FieldsGenerator fieldsEntity = new FieldsGenerator(extComp, ent)
 				fieldsEntity.dogenerate(path+"fields/" , fsa)
-				for(ExtendedReference ref: ent.extendedReference){
+				for(ExtendedReference ref: ent.extendedReference.filter[t | t.upper.equalsIgnoreCase("1")]){
 				var FieldsGenerator fields = new FieldsGenerator(ref,extComp, ent)
 				fields.dogenerate(path+"fields/" , fsa)
 				}

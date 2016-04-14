@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
 import java.util.Iterator
+import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 
 class RessourceTransformer {
 	EJSLModel modelInstance
@@ -122,6 +123,11 @@ class RessourceTransformer {
 				 		deleteReferenceToEntity(ref.entity, ent,mappingEntity)
 				 		toDeleteReference.add(ref)
 				 		toAddReference.add(createNewReverseReference(mappingEntity, ent,ref))
+				 		var IndexPage pageList = createNewExtendedIndexPageForExtensions(mappingEntity)
+				 		var DetailsPage pageDetails = createNewExtendedDetailsPageForExtensions(mappingEntity)
+				 		createLinktoPage(pageList,pageDetails)
+				 		featurs.pages.add(pageList)
+				 		featurs.pages.add(pageDetails)
 				 	}
 				 }
 			}
@@ -285,5 +291,40 @@ class RessourceTransformer {
 
 		return value
 	}
+	private def DetailsPage createNewExtendedDetailsPageForExtensions(Entity entity) {
+		var DetailsPage detailsPage = EJSLFactory.eINSTANCE.createDetailsPage
+		detailsPage.name = entity.name + "_Details"
+		detailsPage.entities.add(entity)
+		detailsPage.tablecolumns.addAll(entity.attributes)		
+		return detailsPage
+	}
+	
+	
+	
+	private def IndexPage createNewExtendedIndexPageForExtensions(Entity entity) {
+		var IndexPage dynPage = EJSLFactory.eINSTANCE.createIndexPage
+		dynPage.name = entity.name + "_List"
+		dynPage.entities.add(entity)
+		dynPage.tablecolumns.addAll(entity.attributes)	
+		dynPage.filters.addAll(entity.attributes)	
+		return dynPage
+	}
+	
+	private def void createLinktoPage(IndexPage indexPage, DetailsPage detailsPage) {
+		var InternalLink linktoDetailsPage = EJSLFactory.eINSTANCE.createInternalLink
+		linktoDetailsPage.name = "Details"
+		linktoDetailsPage.target = detailsPage
+		linktoDetailsPage.linkedAttribute = indexPage.tablecolumns.get(0)
+		indexPage.links.add(linktoDetailsPage)
+		var InternalLink linktoIndexPage = EJSLFactory.eINSTANCE.createInternalLink
+		linktoIndexPage.name = "Liste"
+		linktoIndexPage.target = detailsPage
+		linktoIndexPage.linkedAttribute = detailsPage.tablecolumns.get(0)
+		
+		
+
+	}
+	
+	
 	
 }

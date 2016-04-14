@@ -193,7 +193,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 				description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
 					
 					«FOR ExtendedEntity e : page.extendedEntityList»
-					«FOR ExtendedAttribute attr : e.extendedAttributeList»
+					«FOR ExtendedAttribute attr : e.extendedAttributeList.filter[t | !t.isreferenced]»
 					«writeAttribute(e,attr,component,page)»
 					«ENDFOR»
 					«ENDFOR»

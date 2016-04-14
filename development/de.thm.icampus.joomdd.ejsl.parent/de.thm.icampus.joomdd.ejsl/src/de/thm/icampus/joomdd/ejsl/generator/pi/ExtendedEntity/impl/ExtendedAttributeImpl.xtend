@@ -17,6 +17,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	String genType
 	Attribute instance
 	String htmlType
+	boolean isreferenced = false
 
 	new(Attribute attr) {
 
@@ -29,7 +30,30 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		htmlType = generatorTypeHtmlType()
 		this.preserve = attr.preserve
 		instance = attr
+		initAttributeProperties
 
+	}
+	
+	new(Attribute attr, Entity ent) {
+		this.type = attr.type
+		this.name = PlattformIUtil.slugify(attr.name).toLowerCase
+		this.isunique = attr.isIsunique
+		this.withattribute = attr.withattribute
+		entity = ent
+		genType = generatorType()
+		htmlType = generatorTypeHtmlType()
+		this.preserve = attr.preserve
+		instance = attr
+		initAttributeProperties
+	}
+	def initAttributeProperties() {
+		
+			for(Reference ref: entity.references.filter[t | !t.upper.equalsIgnoreCase("1")]){
+				for(Attribute refAttr: ref.attribute)
+				if(this.name.equalsIgnoreCase(refAttr.name))
+				    this.isreferenced = true
+			}
+		
 	}
 	
 	def String generatorTypeHtmlType() {
@@ -129,6 +153,14 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	
 	override htmlType() {
 		return htmlType
+	}
+	
+	override isreferenced() {
+		return isreferenced
+	}
+	
+	override setIsreferenced(boolean value) {
+		this.isreferenced = value
 	}
 
 

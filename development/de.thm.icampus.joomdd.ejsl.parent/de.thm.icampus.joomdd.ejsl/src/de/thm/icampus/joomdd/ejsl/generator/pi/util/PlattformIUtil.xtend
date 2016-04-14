@@ -44,10 +44,7 @@ class PlattformIUtil {
 		
 		str.substring(a, z+1)
 	}
-	static def ExtendedAttribute transformAttribute(Attribute ejslAttribute){
-		
-		return new ExtendedAttributeImpl (ejslAttribute)
-	}
+	
 	static def EList<ExtendedEntity> getAllReferenceOfEntity(ExtendedEntity entity){
 			val LinkedList<Entity> visited = new LinkedList<Entity> ();
 		visited.add(entity.instance)

@@ -66,4 +66,8 @@ class ExtendedPageImpl extends PageImpl implements ExtendedPage {
 		return extendedParamterGroup
 	}
 	
+	override getIntance() {
+		return instance
+	}
+	
 }

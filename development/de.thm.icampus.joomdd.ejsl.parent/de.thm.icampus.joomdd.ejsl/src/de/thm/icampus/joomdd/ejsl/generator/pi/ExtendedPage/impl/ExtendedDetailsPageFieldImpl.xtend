@@ -1,12 +1,12 @@
 package de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl
 
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
-import de.thm.icampus.joomdd.ejsl.eJSL.impl.DetailPageFieldImpl
-import de.thm.icampus.joomdd.ejsl.eJSL.DetailPageField
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
-import de.thm.icampus.joomdd.ejsl.eJSL.SimpleHTMLTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.ComplexHTMLTypes
+import de.thm.icampus.joomdd.ejsl.eJSL.DetailPageField
+import de.thm.icampus.joomdd.ejsl.eJSL.SimpleHTMLTypes
+import de.thm.icampus.joomdd.ejsl.eJSL.impl.DetailPageFieldImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 
 class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements ExtendedDetailPageField {
 	
@@ -17,7 +17,7 @@ class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements Extend
 		instance = field
 		this.attribute = field.attribute
 		this.htmltype = field.htmltype
-		extendedAttribute = PlattformIUtil.transformAttribute(this.attribute)
+		extendedAttribute = new ExtendedAttributeImpl(this.attribute)
 		type = parseType()
 	}
 	

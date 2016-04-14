@@ -14,6 +14,9 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
+import de.thm.icampus.joomdd.ejsl.gui.JooMDDGUI
+import java.io.File
+import de.thm.icampus.joomdd.ejsl.gui.JooMDDPropertiesHandler
 
 /**
  * Generates code from your model files on save.
@@ -23,7 +26,13 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 class EJSLGenerator extends AbstractGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		
+		var JooMDDPropertiesHandler config = new JooMDDPropertiesHandler
+		  var JooMDDGUI gui = new JooMDDGUI(config) 
+
+            while(gui.enabled){
+            	println("Wait of GUI")
+            }
+            config.relaodsConfiguration
 		
 		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
 			
@@ -35,11 +44,17 @@ class EJSLGenerator extends AbstractGenerator {
 					var RessourceTransformer trans = new RessourceTransformer(e)
 			 		trans.dotransformation
 					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions,"Extensions/", fsa, domainModel.name)
-					mainExtensionGen.dogenerate()
+					mainExtensionGen.dogenerate() 
+					if(config.getKey("entities").equalsIgnoreCase("true")){
 					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities, "Entities/", fsa, domainModel.name)
 					mainEntitiesGen.dogenerate()
+		
+					}
+					if(config.getKey("page").equalsIgnoreCase("true")){
 					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages,fsa,"Pages/",domainModel.name)
 				     mainPageGen.dogenerate()
+				     
+				     }
 				}
 			}
 			
