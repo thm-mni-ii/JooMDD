@@ -12,6 +12,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
+import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 
 class LanguageGenerator extends AbstractExtensionGenerator {
 
@@ -78,12 +80,25 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			«FOR ExtendedPageReference pag : pagerefList»
 			«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«Slug.slugify(pag.page.name).toUpperCase»="«pag.page.name.toFirstUpper»"
 			«Slug.nameExtensionBind("com", com.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_TITLE="«pag.page.name.toFirstUpper»"
-			«Slug.nameExtensionBind("com", com.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_DESC="«pag.page.name.toFirstUpper»"
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»_DESC="«pag.page.name.toFirstUpper» description"
 			«Slug.nameExtensionBind("com", com.name).toUpperCase»_ALIAS_«pag.page.name.toUpperCase»="«pag.page.name.toFirstUpper»"
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_«pag.page.name.toUpperCase»_PARAMS_LOCAL__LABEL = "Local Parameter"
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_«pag.page.name.toUpperCase»_PARAMS_GLOBAL__LABEL= "Global Parameter"
+			
+			«IF pag.extendedPage.intance instanceof DetailsPage»
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«Slug.slugify(pag.page.name).toUpperCase»EDIT = "«pag.page.name.toFirstUpper»edit"
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»EDIT_TITLE=  "«pag.page.name.toFirstUpper»edit"
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_VIEW_«Slug.slugify(pag.page.name).toUpperCase»EDIT_DESC= "«pag.page.name.toFirstUpper»edit description"
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_ALIAS_«pag.page.name.toUpperCase»EDIT="«pag.page.name.toFirstUpper»edit"
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_«pag.page.name.toUpperCase»EDIT_PARAMS_LOCAL__LABEL = "Local Parameter"
+			«Slug.nameExtensionBind("com", com.name).toUpperCase»_«pag.page.name.toUpperCase»EDIT_PARAMS_GLOBAL__LABEL= "Global Parameter"
+			«ENDIF»
+			
 			«ENDFOR»
 			
 			«FOR ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]»
 				«var ExtendedDynamicPage dtPage = dynamicPagereference.extendedPage.extendedDynamicPageInstance as ExtendedDynamicPage »
+				
 				«FOR ExtendedEntity ent: dtPage.extendedEntityList»
 					«FOR ExtendedAttribute attr: ent.allattribute»
 						« var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) »
@@ -98,8 +113,13 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				«ENDFOR»
 			«ENDFOR»
 			«FOR ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]»
+			    «IF dynamicPagereference.extendedPage.extendedDynamicPageInstance.instance instanceof IndexPage»
+			    «Slug.nameExtensionBind("com", com.name).toUpperCase»_«dynamicPagereference.extendedPage.name.toUpperCase»_ORDERING_LABEL = "Ordering"
+			     «Slug.nameExtensionBind("com", com.name).toUpperCase»_«dynamicPagereference.extendedPage.name.toUpperCase»_FILTER_LABEL = "Filter"
+			    «ENDIF»
 				«FOR ExtendedAttribute attr: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendFiltersList»
 					JOPTION_SELECT_«Slug.slugify(attr.name).toUpperCase»="Select a «Slug.slugify(attr.name).toFirstUpper»"
+					«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«dynamicPagereference.extendedPage.name.toUpperCase»_«Slug.slugify(attr.name).toUpperCase»= "«Slug.slugify(attr.name).toFirstUpper»"
 					«ENDFOR»
 					«Slug.nameExtensionBind("com", com.name).toUpperCase»_«dynamicPagereference.extendedPage.name.toUpperCase»_ACTIONS="Actions"
 				«ENDFOR»

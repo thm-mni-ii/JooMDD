@@ -160,8 +160,8 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
         addfieldpath="administrator/components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
           name="«attr.name»"
           type="«page.extendedEntityList.get(0).name.toLowerCase»"
-          label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-          description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+          label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.name.toUpperCase»_«attr.name.toUpperCase»"
+          description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.name.toUpperCase»_«attr.name.toUpperCase»"
            valueColumn="«attr.name.toLowerCase»"
            textColumn="«attr.name.toLowerCase»"
           >

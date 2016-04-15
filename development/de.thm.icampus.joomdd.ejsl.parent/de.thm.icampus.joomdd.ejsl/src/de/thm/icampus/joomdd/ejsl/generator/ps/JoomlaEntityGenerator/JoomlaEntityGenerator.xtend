@@ -128,7 +128,7 @@ class JoomlaEntityGenerator {
     }
     public def CharSequence generateUpdateScript(String extensionName)'''
     «FOR ExtendedEntity en: entities.filter[t | !t.preserve] »
-       CREATE TABLE  IF NOT EXISTS `«Slug.databaseName( extensionName, en.name.toLowerCase)»` ;
+       
     ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  
     «FOR ExtendedAttribute attr: en.refactoryAttribute»
     «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
