@@ -70,7 +70,7 @@ class JoomlaEntityGenerator {
     DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
     «ENDIF»
 
-   CREATE TABLE «IF isupdate» IF NOT EXISTS «ENDIF»`«Slug.databaseName( componentName, table.name.toLowerCase)»` (
+   CREATE TABLE  IF NOT EXISTS `«Slug.databaseName( componentName, table.name.toLowerCase)»` (
 	«FOR a:table.allattribute»
 		`«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
 	«ENDFOR»
