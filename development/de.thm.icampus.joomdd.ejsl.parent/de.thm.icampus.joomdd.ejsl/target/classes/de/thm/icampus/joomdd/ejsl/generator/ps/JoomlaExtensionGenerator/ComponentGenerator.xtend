@@ -100,7 +100,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    	<copyright>«component.manifest.copyright»</copyright>
 		    «ENDIF»
 		    «IF (component.manifest.license != null)»
-		    	<license>GPL 2.0</license>
+		    	<license>«component.manifest.license»</license>
 		    «ENDIF»
 		    «IF (component.manifest.version != null)»
 		    	<version>«component.manifest.version»</version>
