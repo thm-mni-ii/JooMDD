@@ -21,7 +21,6 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	EList<ExtendedAttribute> allAttribute
 	EList<ExtendedReference> extendedReference
 	EList<ExtendedReference> allReferenceToEntity
-	EList<ExtendedEntity> allEntityFromReference
 	EList<ExtendedAttribute> allRefactoryAttribute
 	EList<ExtendedReference> allRefactoryReference
 
@@ -60,8 +59,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		allAttribute = new BasicEList<ExtendedAttribute>
 		allReferenceToEntity = new BasicEList<ExtendedReference>
 		extendedReference = new BasicEList<ExtendedReference>
-		allEntityFromReference = new  BasicEList<ExtendedEntity>
-		extendedAttributeList.addAll(this.attributes.map[t|PlattformIUtil.transformAttribute(t)])
+		extendedAttributeList.addAll(this.attributes.map[t|new ExtendedAttributeImpl(t)])
 		extendedParentAttributeList = searchAttributeParent()
 
 		allAttribute.addAll(extendedAttributeList)
@@ -72,55 +70,29 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 			if (ent.references != null) {
 				var Iterable<Reference> listRef = ent.references.filter[t|t.entity.name == instance.name]
 				for (Reference ref : listRef)
+				    if(ref.upper.equals("1"))
 					allReferenceToEntity.add(new ExtendedReferenceImpl(ref, ent))
 
 			}
 		}
-		var LinkedList<Entity> visited = new LinkedList<Entity> ();
-		visited.add(this.instance)
-		var LinkedList<Entity> tovisited = new LinkedList<Entity> ();
-		for(Reference ref: this.references){
-			if(!visited.contains(ref.entity))
-			tovisited.add(ref.entity)
-		}
-		var int sizeOfToVisited = tovisited.size
-		while(!tovisited.isEmpty){
-			var LinkedList<Entity> childs = new LinkedList<Entity> ();
-			for(Entity ent : tovisited){
-				if(!visited.contains(ent)){
-					for(Reference ref: ent.references){
-						if(!visited.contains(ref.entity))
-						 childs.add(ref.entity)
-					}
-					visited.add(ent);
-					tovisited.remove(ent)
-				}else{
-					tovisited.remove(ent)
-				}
-			}
-			tovisited.addAll(childs)
-			sizeOfToVisited = tovisited.size
-			
-		}
-		visited.removeFirst
-		for(Entity ent : visited){
-		allEntityFromReference.add(new ExtendedEntityImpl(ent))
-		
-		}
+	
 		allRefactoryAttribute = new BasicEList<ExtendedAttribute>
 		allRefactoryReference = new BasicEList<ExtendedReference>
 		allRefactoryAttribute.addAll(extendedAttributeList.filter[t | !t.preserve])
 		allRefactoryReference.addAll(extendedReference.filter[t | !t.preserve])
-	  
+		
+	    
 
 	}
+	
+	
 
 	def EList<ExtendedAttribute> searchAttributeParent() {
 		var EList<ExtendedAttribute> result = new BasicEList<ExtendedAttribute>
 		var Entity parent = this.supertype
 
 		while (parent != null) {
-			result.addAll(parent.attributes.map[t|PlattformIUtil.transformAttribute(t)])
+			result.addAll(parent.attributes.map[t|new ExtendedAttributeImpl(t)])
 			parent = parent.supertype
 
 		}
@@ -140,7 +112,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 
 	override putNewAttributeInEntity(Attribute e) {
 		attributes.add(e)
-		allAttribute.add(PlattformIUtil.transformAttribute(e))
+		allAttribute.add(new ExtendedAttributeImpl(e))
 	}
 
 	override searchIdAttribute() {
@@ -168,9 +140,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		return null
 	}
 	
-	override getallEntityFromReferences() {
-		return allEntityFromReference
-	}
+	
 	
 	override getRefactoryAttribute() {
 		return allRefactoryAttribute

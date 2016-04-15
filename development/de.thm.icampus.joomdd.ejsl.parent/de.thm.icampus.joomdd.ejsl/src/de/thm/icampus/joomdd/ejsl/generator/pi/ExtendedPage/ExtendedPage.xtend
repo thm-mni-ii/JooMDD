@@ -13,4 +13,5 @@ interface ExtendedPage extends Page {
 	def EList<ExtendedParameter>getExtendedGlobalParamater()
 	def EList<ExtendedParameter>getExtendedLocalParameter()
 	def EList<ExtendedParameterGroup>getExtendedParameterGroup()
+	def Page getIntance()
 }

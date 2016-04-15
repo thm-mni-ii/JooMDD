@@ -330,7 +330,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    public def String getHtmlTypeOfAttribute(ExtendedDynamicPage dynP,ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com){
    		var StringBuffer buff = new StringBuffer
    		
-   			for(ExtendedReference ref: en.extendedReference){
+   			for(ExtendedReference ref: en.extendedReference.filter[t | t.upper.equalsIgnoreCase("1")]){
    			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
    				buff.append('''type ="«en.name + "to" +ref.entity.name»«en.extendedReference.indexOf(ref)»"''')
    				return buff.toString

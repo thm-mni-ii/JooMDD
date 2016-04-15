@@ -143,20 +143,20 @@
     <genClasses ecoreClass="EJSL.ecore#//Entity">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Entity/name"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entity/supertype"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Entity/preserve"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Entity/legacy"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entity/attributes"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Entity/references"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Attribute">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/preserve"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/legacy"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/isunique"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Attribute/withattribute"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Attribute/id"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//Reference">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/preserve"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//Reference/legacy"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/attribute"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/entity"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//Reference/attributerefereced"/>
@@ -173,11 +173,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//Page/links"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//StaticPage">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//StaticPage/preserve"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//StaticPage/legacy"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//StaticPage/HTMLBody"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//DynamicPage">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//DynamicPage/preserve"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//DynamicPage/legacy"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/entities"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/tablecolumns"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//DynamicPage/filters"/>
@@ -191,7 +191,7 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference EJSL.ecore#//DetailPageField/htmltype"/>
     </genClasses>
     <genClasses ecoreClass="EJSL.ecore#//CustomPage">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//CustomPage/preserve"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//CustomPage/legacy"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute EJSL.ecore#//CustomPage/pageType"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference EJSL.ecore#//CustomPage/entities"/>
     </genClasses>

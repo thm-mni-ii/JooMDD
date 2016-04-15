@@ -182,7 +182,7 @@ class JoomlaTranformator {
 	}
 	
 	def void setReferenceAttribute( Entity ent){
-		for(Reference ref:ent.references ){
+		for(Reference ref:ent.references.filter[t | t.upper.equalsIgnoreCase("1")] ){
 			var Entity referenceEntity = ref.entity
 			var EList<Attribute> newArttibute = new BasicEList<Attribute>
 			for(Attribute attrRef: ref.attributerefereced){
@@ -199,33 +199,13 @@ class JoomlaTranformator {
 		var Entity referenceEntity = ref.entity
 		var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
 					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name
-					newAttribute.type =  copyType(attrRef.type)
+					newAttribute.type =  Util.copyType(attrRef.type)
 					ent.attributes.add(newAttribute)
 					ref.attribute.add(newAttribute)					
 					return newAttribute
 	}
 	
-	def Type copyType(Type type) {
-		
-		switch type{
-			DatatypeReference:{
-				var DatatypeReference old_type = type as DatatypeReference
-				var DatatypeReference new_type = EJSLFactory.eINSTANCE.createDatatypeReference
-				new_type.type = old_type.type
-				return new_type
-			}
-			StandardTypes:{
-				var StandardTypes old_type = type as StandardTypes
-				var StandardTypes new_type = EJSLFactory.eINSTANCE.createStandardTypes
-					new_type.type =  old_type.type
-					new_type.notnull = old_type.notnull
-					new_type.^default = old_type.^default
-					return new_type
-					
-					
-			}
-		}
-	}
+	
 	
 	def Attribute getAttributeReference(Entity ent, Entity referencedEntity, Attribute referenced){
 		for(Attribute a:ent.attributes ){

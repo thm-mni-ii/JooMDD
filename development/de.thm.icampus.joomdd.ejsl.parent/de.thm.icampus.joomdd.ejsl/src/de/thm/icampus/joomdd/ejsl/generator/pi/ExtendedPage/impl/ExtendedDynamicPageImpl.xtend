@@ -15,6 +15,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
 
 class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamicPage {
 	
@@ -50,8 +51,9 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		extendedEditFieldsList = new BasicEList<ExtendedDetailPageField>
 		allAttributeOfFilterAndColum = new BasicEList<ExtendedAttribute>
 		extendedEntity = new BasicEList<ExtendedEntity>
-		extendedTableColumnList.addAll(this.tablecolumns.map[t| PlattformIUtil.transformAttribute(t)])
-		extendedFiltersList.addAll(this.filters.map[t|PlattformIUtil.transformAttribute(t)])
+		
+		extendedTableColumnList.addAll((this.tablecolumns.map[t| new ExtendedAttributeImpl(t, this.entities.get(0))]))
+		extendedFiltersList.addAll((this.filters.map[t|new ExtendedAttributeImpl(t,this.entities.get(0))]))
 		extendedEntity.addAll(this.entities.map[t | new ExtendedEntityImpl(t)])
 		
 		if(instance instanceof DetailsPage){

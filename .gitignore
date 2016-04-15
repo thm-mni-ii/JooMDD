@@ -14,3 +14,4 @@
 *.prefs
 *.class
 *.xtendbin
+*._trace

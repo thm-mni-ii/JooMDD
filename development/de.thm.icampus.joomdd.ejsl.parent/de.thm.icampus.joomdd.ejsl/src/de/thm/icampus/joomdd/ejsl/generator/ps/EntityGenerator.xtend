@@ -16,6 +16,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntit
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.TableGeneratorTemplate
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsGenerator
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 
 class EntityGenerator extends AbstracteGenerator {
 	
@@ -59,7 +60,7 @@ class EntityGenerator extends AbstracteGenerator {
 		}
 		else if(page != null){
 				
-			var EList<ExtendedEntity> pageEntities = page.extendedEntityList.get(0).getallEntityFromReferences
+			var EList<ExtendedEntity> pageEntities =PlattformIUtil.getAllReferenceOfEntity(page.extendedEntityList.get(0))
 			pageEntities.add(page.extendedEntityList.get(0))
 			var JoomlaEntityGenerator joomExt = new JoomlaEntityGenerator(pageEntities,extensions.name,true)
 			joomExt.dogenerate(path+"sql", fsa)
@@ -91,7 +92,7 @@ class EntityGenerator extends AbstracteGenerator {
 			for(ExtendedEntity ent: entities){
 				var FieldsGenerator fieldsEntity = new FieldsGenerator(extComp, ent)
 				fieldsEntity.dogenerate(path+"fields/" , fsa)
-				for(ExtendedReference ref: ent.extendedReference){
+				for(ExtendedReference ref: ent.extendedReference.filter[t | t.upper.equalsIgnoreCase("1")]){
 				var FieldsGenerator fields = new FieldsGenerator(ref,extComp, ent)
 				fields.dogenerate(path+"fields/" , fsa)
 				}

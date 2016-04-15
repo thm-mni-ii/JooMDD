@@ -8,6 +8,11 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
+import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
+import org.eclipse.emf.common.util.BasicEList
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import java.util.LinkedList
 
 class PlattformIUtil {
 	
@@ -39,8 +44,41 @@ class PlattformIUtil {
 		
 		str.substring(a, z+1)
 	}
-	static def ExtendedAttribute transformAttribute(Attribute ejslAttribute){
+	
+	static def EList<ExtendedEntity> getAllReferenceOfEntity(ExtendedEntity entity){
+			val LinkedList<Entity> visited = new LinkedList<Entity> ();
+		visited.add(entity.instance)
+		var LinkedList<Entity> tovisited = new LinkedList<Entity> ();
+		for(Reference ref: entity.references){
+			if(!visited.contains(ref.entity))
+			tovisited.add(ref.entity)
+		}
+		var int sizeOfToVisited = tovisited.size
+		while(!tovisited.isEmpty){
+			var LinkedList<Entity> childs = new LinkedList<Entity> ();
+			for(Entity ent : tovisited){
+				if(!visited.contains(ent)){
+					for(Reference ref: ent.references){
+						if(!visited.contains(ref.entity))
+						 childs.add(ref.entity)
+					}
+					if(!visited.contains(ent))
+					  visited.add(ent);
+					tovisited.remove(ent)
+				}else{
+					tovisited.remove(ent)
+				}
+			}
+			tovisited.addAll(childs.filter[t | !visited.contains(t)])
+			sizeOfToVisited = tovisited.size
+			
+		}
+		visited.removeFirst
+		var EList<ExtendedEntity> allEntityFromReference= new BasicEList<ExtendedEntity>()
+		for(Entity ent : visited){
+		allEntityFromReference.add(new ExtendedEntityImpl(ent))
 		
-		return new ExtendedAttributeImpl (ejslAttribute)
+		}
+		return allEntityFromReference
 	}
 }

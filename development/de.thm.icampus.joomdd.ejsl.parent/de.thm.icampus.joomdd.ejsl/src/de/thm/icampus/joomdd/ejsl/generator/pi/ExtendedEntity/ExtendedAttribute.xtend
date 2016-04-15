@@ -12,7 +12,8 @@ interface ExtendedAttribute extends Attribute {
 	def String generatorType()
 	def Entity getEntity()
 	def Attribute getInstance()
-	
+	def boolean isreferenced()
+	def void setIsreferenced(boolean value)
 	def String htmlType()
 	
 	

@@ -23,6 +23,8 @@ class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 		toEntity = e.entity
 		this.preserve = e.preserve
 		fromEntity = from
+		this.upper = e.upper
+		this.lower = e.lower
 		initList()
 		
 	}
