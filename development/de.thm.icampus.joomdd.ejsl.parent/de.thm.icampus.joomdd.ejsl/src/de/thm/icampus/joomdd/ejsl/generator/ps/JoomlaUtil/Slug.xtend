@@ -367,11 +367,14 @@ public class Slug  {
 		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->id '''
 		    
 		    }else{
-		    	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»'''
-		    	}
+		    	
+		         if((lk as ContextLink).linkparameters.filter[t | t.id].size == 0){
+		    	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»  . '&id='.(int) $item->id '''
+		    	}else{
+		    		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»  . '&id='.(int) $item->id '''
 		    
-		   	}		   	   
-		    else{
+		   			}		   	   
+		    }}else{
 		    	
 		    		var idRef = Slug.getAttributeForForeignID(attribute, page)
 		    
@@ -381,12 +384,12 @@ public class Slug  {
 				   }
 				   else	
 				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item->«attribute.name.toLowerCase»)'''
-		 	 }
-		 	}else{
+		 	 
+		 	}}else{
 		 		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
 		 		}
-		 	}
-		}»
+		 	
+		}}»
 	«ENDIF»
 	«ENDIF»
 	«ENDFOR»

@@ -193,7 +193,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 				description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
 					
 					«FOR ExtendedEntity e : page.extendedEntityList»
-					«FOR ExtendedAttribute attr : e.extendedAttributeList.filter[t | !t.isreferenced]»
+					«FOR ExtendedAttribute attr : e.extendedAttributeList»
 					«writeAttribute(e,attr,component,page)»
 					«ENDFOR»
 					«ENDFOR»
@@ -330,7 +330,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    public def String getHtmlTypeOfAttribute(ExtendedDynamicPage dynP,ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com){
    		var StringBuffer buff = new StringBuffer
    		
-   			for(ExtendedReference ref: en.extendedReference){
+   			for(ExtendedReference ref: en.extendedReference.filter[t | t.upper.equalsIgnoreCase("1")]){
    			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
    				buff.append('''type ="«en.name + "to" +ref.entity.name»«en.extendedReference.indexOf(ref)»"''')
    				return buff.toString

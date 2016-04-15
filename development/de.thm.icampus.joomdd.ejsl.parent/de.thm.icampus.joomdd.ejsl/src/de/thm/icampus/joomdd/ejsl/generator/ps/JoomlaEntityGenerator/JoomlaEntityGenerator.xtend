@@ -75,7 +75,7 @@ class JoomlaEntityGenerator {
 		`«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
 	«ENDFOR»
 	
-	«FOR ExtendedAttribute a:table.extendedAttributeList.filter[t | !t.isreferenced]»
+	«FOR ExtendedAttribute a:table.extendedAttributeList»
 	«IF a.isunique &&  !a.name.equalsIgnoreCase('id')»
 	UNIQUE KEY («a.name»«if(a.withattribute != null)''',«a.withattribute.name»'''»),
 	«ENDIF» 
@@ -130,7 +130,7 @@ class JoomlaEntityGenerator {
     «FOR ExtendedEntity en: entities.filter[t | !t.preserve] »
        CREATE TABLE  IF NOT EXISTS `«Slug.databaseName( extensionName, en.name.toLowerCase)»` ;
     ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  
-    «FOR ExtendedAttribute attr: en.refactoryAttribute.filter[t | !t.isreferenced]»
+    «FOR ExtendedAttribute attr: en.refactoryAttribute»
     «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
     ADD COLUMN `«attr.name»`  «attr.generatorType»
     «var ExtendedAttribute after = getAfterAttribute(attr,en)»

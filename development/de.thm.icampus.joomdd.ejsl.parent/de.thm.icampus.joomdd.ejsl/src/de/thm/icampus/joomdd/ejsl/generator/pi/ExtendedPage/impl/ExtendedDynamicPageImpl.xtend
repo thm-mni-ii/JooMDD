@@ -52,8 +52,8 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		allAttributeOfFilterAndColum = new BasicEList<ExtendedAttribute>
 		extendedEntity = new BasicEList<ExtendedEntity>
 		
-		extendedTableColumnList.addAll((this.tablecolumns.map[t| new ExtendedAttributeImpl(t, this.entities.get(0))]).filter[t | !t.isreferenced])
-		extendedFiltersList.addAll((this.filters.map[t|new ExtendedAttributeImpl(t,this.entities.get(0))]).filter[t | !t.isreferenced])
+		extendedTableColumnList.addAll((this.tablecolumns.map[t| new ExtendedAttributeImpl(t, this.entities.get(0))]))
+		extendedFiltersList.addAll((this.filters.map[t|new ExtendedAttributeImpl(t,this.entities.get(0))]))
 		extendedEntity.addAll(this.entities.map[t | new ExtendedEntityImpl(t)])
 		
 		if(instance instanceof DetailsPage){

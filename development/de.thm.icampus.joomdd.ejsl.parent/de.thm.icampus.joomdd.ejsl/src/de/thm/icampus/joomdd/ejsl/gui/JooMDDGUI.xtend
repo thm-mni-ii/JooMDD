@@ -23,7 +23,7 @@ class JooMDDGUI   extends JFrame implements ActionListener{
 	private  JTextField file = new JTextField(20)
 	private JButton browse = new JButton("Browse")
 	private JButton save = new JButton("Save")
-	private JButton cancel = new JButton("Cancel")
+	private JButton cancel = new JButton("Close")
 	public JooMDDPropertiesHandler genProperties
 	
 	new(JooMDDPropertiesHandler properties){

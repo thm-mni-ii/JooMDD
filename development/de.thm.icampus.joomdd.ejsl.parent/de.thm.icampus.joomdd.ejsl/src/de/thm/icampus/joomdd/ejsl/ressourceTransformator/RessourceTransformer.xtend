@@ -112,7 +112,7 @@ class RessourceTransformer {
 			for(Reference ref: ent.references){
 				 if(ref.entity.haveReferenTo(ent,ref.upper)){
 				 	if(!ref.entity.existingReferenceBetweenEntity(ent,newEntity)){
-				 		var String mappingEntityName = "mapping_" + ent.name + "_" + ref.entity.name
+				 		var String mappingEntityName = "mapping" + ent.name + "" + ref.entity.name
 				 		var Entity mappingEntity = EJSLFactory.eINSTANCE.createEntity
 				 		mappingEntity.name = mappingEntityName
 				 		mappingEntity.attributes.addAll(ref.attribute.map[t | copyAttribute(t, ent)])
@@ -184,8 +184,8 @@ class RessourceTransformer {
 	
 	
 	private def boolean existingReferenceBetweenEntity(Entity to, Entity from,EList<Entity> newEntityList){
-		var String mappingNameForward = "mapping_" + to.name + "_" + from.name
-		var String mappingNameReverse= "mapping_" +from.name + "_" +  to.name
+		var String mappingNameForward = "mapping" + to.name + "" + from.name
+		var String mappingNameReverse= "mapping" +from.name + "" +  to.name
 		if(newEntityList.size ==0 )
 		return false
 		for(Entity ent: newEntityList){
@@ -293,7 +293,7 @@ class RessourceTransformer {
 	}
 	private def DetailsPage createNewExtendedDetailsPageForExtensions(Entity entity) {
 		var DetailsPage detailsPage = EJSLFactory.eINSTANCE.createDetailsPage
-		detailsPage.name = entity.name + "_Details"
+		detailsPage.name = entity.name + "Details"
 		detailsPage.entities.add(entity)
 		detailsPage.tablecolumns.addAll(entity.attributes)		
 		return detailsPage
@@ -303,7 +303,7 @@ class RessourceTransformer {
 	
 	private def IndexPage createNewExtendedIndexPageForExtensions(Entity entity) {
 		var IndexPage dynPage = EJSLFactory.eINSTANCE.createIndexPage
-		dynPage.name = entity.name + "_List"
+		dynPage.name = entity.name + "List"
 		dynPage.entities.add(entity)
 		dynPage.tablecolumns.addAll(entity.attributes)	
 		dynPage.filters.addAll(entity.attributes)	
@@ -318,10 +318,9 @@ class RessourceTransformer {
 		indexPage.links.add(linktoDetailsPage)
 		var InternalLink linktoIndexPage = EJSLFactory.eINSTANCE.createInternalLink
 		linktoIndexPage.name = "Liste"
-		linktoIndexPage.target = detailsPage
+		linktoIndexPage.target = indexPage
 		linktoIndexPage.linkedAttribute = detailsPage.tablecolumns.get(0)
-		
-		
+		detailsPage.links.add(linktoIndexPage)
 
 	}
 	
