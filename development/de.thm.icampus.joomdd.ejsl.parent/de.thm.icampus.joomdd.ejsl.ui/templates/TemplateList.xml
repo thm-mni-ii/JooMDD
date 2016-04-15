@@ -20,7 +20,7 @@
     	<description>Abstract complex model for simple start.</description>
     	<src>Complex Model.eJSL</src>
     </template>
-    <template>
+    <!-- <template>
     	<name>Weblinks</name>
     	<description>Model of Joomla's Weblinks extensions</description>
     	<src>Weblinks.eJSL</src>
@@ -29,5 +29,5 @@
     	<name>New example model</name>
     	<description>A new example model template </description>
     	<src>newModel.eJSL</src>
-    </template>
+    </template>  -->
 </templateList>

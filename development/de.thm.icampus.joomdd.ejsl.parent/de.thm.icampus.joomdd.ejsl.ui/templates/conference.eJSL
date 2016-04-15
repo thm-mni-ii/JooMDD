@@ -4,7 +4,7 @@ eJSLModel "Conference" {
 			Entity Participant {
 				attributes {
 					Attribute name {
-						type = Text
+						type = Short_Text
 						Unique attribute with ID
 					}
 					Attribute affiliation {
@@ -21,14 +21,14 @@ eJSLModel "Conference" {
 			Entity Talk {
 				attributes {
 					Attribute title {
-						type = Text
+						type = Short_Text
 						Unique attribute
 					}
 					Attribute ^description {
 						type = Text
 					}
 					Attribute speaker {
-						type = Text
+						type = Short_Text
 					}
 				}
 				references {
@@ -39,12 +39,12 @@ eJSLModel "Conference" {
 						lower = 1
 						upper = 1
 					}
-				}
+				} 
 			}
 			Entity Room {
 				attributes {
 					Attribute roomname {
-						type = Text
+						type = Short_Text
 						Unique attribute
 					}
 					Attribute ^position {
@@ -55,17 +55,17 @@ eJSLModel "Conference" {
 			Entity AgendaItem {
 				attributes {
 					Attribute title {
-						type = Text
+						type = Short_Text
 						Unique attribute
 					}
 					Attribute time {
 						type = Datetime
 					}
 					Attribute talk {
-						type = Text
+						type = Short_Text
 					}
 					Attribute room {
-						type = Text
+						type = Short_Text
 					}
 				}
 				references {
@@ -165,16 +165,16 @@ eJSLModel "Conference" {
 			}
 		}
 		extensions {
-			Component JoomlaDays {
+			Component Simple_Conference {
 				Manifestation {
 					authors {
-						Author "Dennis Priefer" {
-							authoremail = "dennis.priefer@mni.thm.de"
-							authorurl = "https://www.priefer.net"
+						Author "John Doe" {
+							authoremail = "john.doe@example.org"
 						}
 					}
-					copyright = "Copyright (C) 20053 - 2014 Open Source Matters, Inc. All right reserved."
-					license = "GNU General x Public License version 22 orz later; see LICENSE.txt"
+					copyright = "Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved."
+					license = "GNU General Public License version 2 or later; see LICENSE.txt"
+					version = "1.0.1"
 				}
 				languages {
 					Language de-DE {

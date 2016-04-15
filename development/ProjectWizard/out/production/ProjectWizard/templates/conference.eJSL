@@ -1,43 +1,34 @@
 eJSLModel "Conference" {
 	eJSL part: CMS Extension {
-		datatypes {
-			Datatype "varchar(255) NOT NULL",
-			Datatype "text NOT NULL",
-			Datatype "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
-			Datatype "date",
-			Datatype "textarea",
-			Datatype "text",
-			Datatype "editor"
-		}
 		entities {
 			Entity Participant {
 				attributes {
 					Attribute name {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 						Unique attribute with ID
 					}
 					Attribute affiliation {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 					Attribute nationality {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 					Attribute address {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 				}
 			}
 			Entity Talk {
 				attributes {
 					Attribute title {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 						Unique attribute
 					}
 					Attribute ^description {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 					Attribute speaker {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 					}
 				}
 				references {
@@ -53,28 +44,28 @@ eJSLModel "Conference" {
 			Entity Room {
 				attributes {
 					Attribute roomname {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 						Unique attribute
 					}
 					Attribute ^position {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 				}
 			}
 			Entity AgendaItem {
 				attributes {
 					Attribute title {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 						Unique attribute
 					}
 					Attribute time {
-						type = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+						type = Datetime
 					}
 					Attribute talk {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 					}
 					Attribute room {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 					}
 				}
 				references {
@@ -174,16 +165,16 @@ eJSLModel "Conference" {
 			}
 		}
 		extensions {
-			Component JoomlaDays {
+			Component Simple_Conference {
 				Manifestation {
 					authors {
-						Author "Dennis Priefer" {
-							authoremail = "dennis.priefer@mni.thm.de"
-							authorurl = "https://www.priefer.net"
+						Author "John Doe" {
+							authoremail = "john.doe@example.org"
 						}
 					}
-					copyright = "Copyright (C) 20053 - 2014 Open Source Matters, Inc. All right reserved."
-					license = "GNU General x Public License version 22 orz later; see LICENSE.txt"
+					copyright = "Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved."
+					license = "GNU General Public License version 2 or later; see LICENSE.txt"
+					version = "1.0.1"
 				}
 				languages {
 					Language de-DE {
@@ -212,6 +203,6 @@ eJSLModel "Conference" {
 					}
 				}
 			}
-		}	
+		}
 	}
 }

@@ -104,11 +104,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    «ENDIF»
 		    «IF (component.manifest.version != null)»
 		    	<version>«component.manifest.version»</version>
+		    	«ELSE»
+		    	<version>1.0.1</version>
 		    «ENDIF»
 		    «IF (component.manifest.description != null)»
 		    	<description>«component.manifest.description»</description>
 		    «ENDIF»
-		    <version>1.0.1</version>
+		    
 		    <!-- Install Section -->
 		    <install>
 		        <sql>

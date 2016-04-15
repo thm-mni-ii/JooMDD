@@ -5,23 +5,17 @@
 eJSLModel "name of the model" {
 	eJSL part: CMS Extension {
 		 datatypes {
-			Datatype "varchar(255) NOT NULL",
-			Datatype "text NOT NULL",
-			Datatype "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
-			Datatype "date",
-			Datatype "textarea",
-			Datatype "text",
-			Datatype "editor"		
+			Datatype varchar = "varchar(255) NOT NULL"
 		}
 		entities { 
 			Entity Person {
 				attributes {
 					Attribute Vorname {
-						type = "varchar(255) NOT NULL"
+						type = varchar
 						
 					}
 					Attribute Name {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 						Unique attribute with Vorname
 					}	
 				}
@@ -29,11 +23,11 @@ eJSLModel "name of the model" {
 			Entity entity2 {
 				attributes { 
 					Attribute attribute1 {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 						Unique attribute
 					}
 					Attribute attribute2 {
-						type = "varchar(255) NOT NULL"
+						type = Short_Text
 					}
 				}
 				references {
@@ -131,15 +125,9 @@ eJSLModel "name of the model" {
 			Module mod1 {
 				Manifestation {
 					authors {
-						Author "Tim H�user"
+						Author "Tim Timmson"
 						{
-							authoremail = "tim.haeuser@mni.thm.des"
-							authorurl = "www.clox-fitnesss.de"
-						}
-						Author "Basti Felsing"
-						{
-							authoremail = "sebastian.felsing@mni.thm.de"
-							authorurl = "www.google.de"
+							authoremail = "tim@joomdd.org"
 						}
 					}
 				}
