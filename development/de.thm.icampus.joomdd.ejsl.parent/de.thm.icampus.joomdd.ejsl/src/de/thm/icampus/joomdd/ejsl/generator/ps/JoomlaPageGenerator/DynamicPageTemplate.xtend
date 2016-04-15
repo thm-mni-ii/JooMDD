@@ -34,12 +34,13 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
         <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_DESC]]></message>
     </layout>
+    <fields name="params">
     «IF page.instance instanceof IndexPage»
      «genSettingForIndexPage(pagename,page,component)»
      «ELSE»
      «genSettingForDetailsPage(pagename,page,component)»
 	«ENDIF»
- <fields name="params">
+
   <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL__LABEL">
 	 «generateParameter(page.extendedLocalParametersListe, component)»
 	</fieldset>
@@ -58,26 +59,26 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     '''
     //todo Put the Settings for Details Page here
     def CharSequence genSettingForDetailsPage(String pagename, ExtendedDynamicPage page, ExtendedComponent component)'''
-<fields name="request">
+
 	<fieldset name="request"
 		addfieldpath="/administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields">
 
 		<field name="id" type="«page.extendedEntityList.get(0).name.toLowerCase»"
-			label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»"
+			label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»"
 			required="true"
 			edit="true"
 			clear="false"
-		description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»_DESC"
+		description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»_DESC"
        valueColumn="id"
        textColumn="«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toLowerCase»"
       >
   <option value="">JOPTION_SELECT_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»</option>
   </field>
 		</fieldset>
-	</fields>
+	
 '''
 def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage page, ExtendedComponent component)'''
-   <fields name="basic">
+ 
    <fieldset name="basic" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_ORDERING_LABEL">
    <field name="template_layout" type="list"
            label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_TEMPLATE_LAYOUT"
@@ -90,13 +91,13 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 	</field> 
 	   «IF page != null»
 	   <field name="ordering" type="list"
-   	        label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_«pagename.toUpperCase»_ORDERING"
-   	        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_«pagename.toUpperCase»_JFIELD_ORDERING_DESC"
+   	        label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_ORDERING"
+   	        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_JFIELD_ORDERING_DESC"
    	        class="inputbox"
    	        default="id">
    	      <option value="id">ID</option>  
    	   «FOR ExtendedAttribute attr: page.extendFiltersList»
-	     <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«attr.name.toUpperCase»</option>
+	     <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«Slug.slugify(page.extendedEntityList.get(0).name).toUpperCase»_«attr.name.toUpperCase»</option>
         «ENDFOR»
 	    </field>
 	    «ENDIF»
@@ -107,7 +108,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    	        size="1"
    	        default="ASC">
    	        <option value="ASC">«Slug.nameExtensionBind("com",component.name).toUpperCase»_DIRECTION_ASC</option>
-   	        <option value="DESC">«Slug.nameExtensionBind("com",component.name).toUpperCase»__DIRECTION_DESC</option>
+   	        <option value="DESC">«Slug.nameExtensionBind("com",component.name).toUpperCase»_DIRECTION_DESC</option>
    	     </field>
 	    		   	        
 	   <field
@@ -140,9 +141,9 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 	   	        <option value="-2">JTRASHED</option>
 	   	    </field>
 	</fieldset>
-	</fields>
+
 	«IF component != null && page !=null»
-	<fields name="filter">
+	
 	<fieldset name="filter"
 				label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_FILTER_LABEL">
 	 <field
@@ -169,7 +170,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
   </field>
  «ENDFOR»
   </fieldset>
-</fields>
+
 	«ENDIF»
 		
     '''

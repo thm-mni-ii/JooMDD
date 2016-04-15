@@ -67,6 +67,21 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 		«Slug.nameExtensionBind("com", com.name).toUpperCase»_N_ITEMS_PUBLISHED="The data are published sucessfully"
 		«Slug.nameExtensionBind("com", com.name).toUpperCase»_TEMPLATE_LAYOUT="Template Layout"
 		«Slug.nameExtensionBind("com", com.name).toUpperCase»_TEMPLATE_LAYOUT_DESC="Choice a Layout for the Indexpage"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_DIRECTION = "Direction"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_DIRECTION_ASC = "ASC"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_DIRECTION_DESC ="DESC"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_JFIELD_DIRECTION_DESC ="Direction"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_START_LABEL = "Start"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_START_LABEL_DESC ="Begin index for Data"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_LIMIT_LABEL ="Limit"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_LIMIT_LABEL_DESC ="The number of Dataitem in the View"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_SEARCH_LABEL ="Search"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_SEARCH_LABEL_DESC ="Search Data"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY="Created By"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_ORDERING = "Ordering"
+		«Slug.nameExtensionBind("com", com.name).toUpperCase»_ORDERING_DESC ="Ordering description"
+			
+		
 		JTEMPLATE_LAYOUT_LIST="List Layout"
 		JTEMPLATE_LAYOUT_TABLE="Table layout"
 		
@@ -120,6 +135,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				«FOR ExtendedAttribute attr: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendFiltersList»
 					JOPTION_SELECT_«Slug.slugify(attr.name).toUpperCase»="Select a «Slug.slugify(attr.name).toFirstUpper»"
 					«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«dynamicPagereference.extendedPage.name.toUpperCase»_«Slug.slugify(attr.name).toUpperCase»= "«Slug.slugify(attr.name).toFirstUpper»"
+					«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase»_«Slug.slugify(attr.name).toUpperCase»= "«Slug.slugify(attr.name).toFirstUpper»"
 					«ENDFOR»
 					«Slug.nameExtensionBind("com", com.name).toUpperCase»_«dynamicPagereference.extendedPage.name.toUpperCase»_ACTIONS="Actions"
 				«ENDFOR»

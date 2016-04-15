@@ -36,8 +36,42 @@ class IndexPageTemplateSiteHelper {
 	        $user = JFactory::getUser();
 	
 	         $app = JFactory::getApplication();
+	         $this->params = $app->getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+	                     $state = $this->params->get('state');
+	                     if(!empty($state))
+	                         $this->getModel()->setState('filter.state', $state);
+	         
+	                     $search = $this->params->get('search');
+	                     if(!empty($search))
+	                         $this->getModel()->setState('filter.search', $search);
+	         
+	                     $created_by = $this->params->get('created_by');
+	                     if(!empty($created_by))
+	                         $this->getModel()->setState('filter.search',$created_by);
+	         
+	                     $ordering = $this->params->get('ordering');
+	                     if(!empty($ordering))
+	                         $this->getModel()->setState('list.ordering',$ordering);
+	         
+	                     $direction = $this->params->get('direction');
+	                     if(!empty($direction))
+	                         $this->getModel()->setState('list.direction', $direction);
+	         
+	                     $start = $this->params->get('start');
+	                     if(!empty($start))
+	                         $this->getModel()->setState('list.start', $start);
+	         
+	                     $limit = $this->params->get('limit');
+	                     if(!empty($limit))
+	                         $this->getModel()->setState('list.limit', $limit);
+	                   «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
+	                   $«attr.name» = $this->params->get('«attr.name»');
+   	                     if(!empty($«attr.name»))
+   	                         $this->getModel()->setState('filter.«attr.name»', $«attr.name»);
+	                   «ENDFOR»
 
         	 $this->state = $this->get('State');
+        	 
        		 $this->items = $this->get('Items');
         	 $this->pagination = $this->get('Pagination');
         	 $this->filterForm    = $this->get('FilterForm');
@@ -119,8 +153,7 @@ class IndexPageTemplateSiteHelper {
 	
 	public def CharSequence genViewTemplateHead()'''
 	<form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
-	<?php echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));?>
-    <table class="table table-striped" id = "sliderList" >
+    <table class="table table-striped">
         <thead >
             <tr >
                 <?php if (isset($this->items[0]->state)): ?>
