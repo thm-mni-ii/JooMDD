@@ -27,13 +27,14 @@ class EJSLGenerator extends AbstractGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		var JooMDDPropertiesHandler config = new JooMDDPropertiesHandler
-		  var JooMDDGUI gui = new JooMDDGUI(config) 
-
+		  
+		  if(!config.existsConfiguration){
+		  	var JooMDDGUI gui = new JooMDDGUI(config) 
             while(gui.enabled){
             	println("Wait of GUI")
             }
             config.relaodsConfiguration
-		
+		}
 		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
 			
 			var EJSLModel domainModel = e as EJSLModel ;

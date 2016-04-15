@@ -259,10 +259,10 @@ class RessourceTransformer {
 			value = "Yes_No_Buttons"
 				
 			}
-			case "Textarea" :{
+			case "Text" :{
 				value = "Textarea"
 			}
-			case "Textfield" :{
+			case "Short_Text" :{
 				value = "Text_Field"
 			} 
 			case "Time":{
