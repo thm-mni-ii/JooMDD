@@ -32,7 +32,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		this.attributes = entity.attributes
 		this.references = entity.references
 		instance = entity
-		this.legacy = entity.legacy
+		this.preserve = entity.preserve
 		initListen()
 
 	}
@@ -109,8 +109,8 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		}
 		allRefactoryAttribute = new BasicEList<ExtendedAttribute>
 		allRefactoryReference = new BasicEList<ExtendedReference>
-		allRefactoryAttribute.addAll(extendedAttributeList.filter[t | !t.legacy])
-		allRefactoryReference.addAll(extendedReference.filter[t | !t.legacy])
+		allRefactoryAttribute.addAll(extendedAttributeList.filter[t | !t.preserve])
+		allRefactoryReference.addAll(extendedReference.filter[t | !t.preserve])
 	  
 
 	}

@@ -1588,15 +1588,15 @@ ruleEntity returns [EObject current=null]
 		)?
 		(
 			(
-				lv_legacy_5_0='@legacy'
+				lv_preserve_5_0='@preserve'
 				{
-					newLeafNode(lv_legacy_5_0, grammarAccess.getEntityAccess().getLegacyLegacyKeyword_4_0());
+					newLeafNode(lv_preserve_5_0, grammarAccess.getEntityAccess().getPreservePreserveKeyword_4_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getEntityRule());
 					}
-					setWithLastConsumed($current, "legacy", true, "@legacy");
+					setWithLastConsumed($current, "preserve", true, "@preserve");
 				}
 			)
 		)?
@@ -1725,15 +1725,15 @@ ruleAttribute returns [EObject current=null]
 		)
 		(
 			(
-				lv_legacy_3_0='@legacy'
+				lv_preserve_3_0='@preserve'
 				{
-					newLeafNode(lv_legacy_3_0, grammarAccess.getAttributeAccess().getLegacyLegacyKeyword_3_0());
+					newLeafNode(lv_preserve_3_0, grammarAccess.getAttributeAccess().getPreservePreserveKeyword_3_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getAttributeRule());
 					}
-					setWithLastConsumed($current, "legacy", true, "@legacy");
+					setWithLastConsumed($current, "preserve", true, "@preserve");
 				}
 			)
 		)?
@@ -1855,15 +1855,15 @@ ruleReference returns [EObject current=null]
 		}
 		(
 			(
-				lv_legacy_2_0='@legacy'
+				lv_preserve_2_0='@preserve'
 				{
-					newLeafNode(lv_legacy_2_0, grammarAccess.getReferenceAccess().getLegacyLegacyKeyword_2_0());
+					newLeafNode(lv_preserve_2_0, grammarAccess.getReferenceAccess().getPreservePreserveKeyword_2_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getReferenceRule());
 					}
-					setWithLastConsumed($current, "legacy", true, "@legacy");
+					setWithLastConsumed($current, "preserve", true, "@preserve");
 				}
 			)
 		)?
@@ -2132,15 +2132,15 @@ ruleStaticPage returns [EObject current=null]
 		)
 		(
 			(
-				lv_legacy_3_0='@legacy'
+				lv_preserve_3_0='@preserve'
 				{
-					newLeafNode(lv_legacy_3_0, grammarAccess.getStaticPageAccess().getLegacyLegacyKeyword_3_0());
+					newLeafNode(lv_preserve_3_0, grammarAccess.getStaticPageAccess().getPreservePreserveKeyword_3_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getStaticPageRule());
 					}
-					setWithLastConsumed($current, "legacy", true, "@legacy");
+					setWithLastConsumed($current, "preserve", true, "@preserve");
 				}
 			)
 		)?
@@ -2444,15 +2444,15 @@ ruleIndexPage returns [EObject current=null]
 		)
 		(
 			(
-				lv_legacy_3_0='@legacy'
+				lv_preserve_3_0='@preserve'
 				{
-					newLeafNode(lv_legacy_3_0, grammarAccess.getIndexPageAccess().getLegacyLegacyKeyword_3_0());
+					newLeafNode(lv_preserve_3_0, grammarAccess.getIndexPageAccess().getPreservePreserveKeyword_3_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getIndexPageRule());
 					}
-					setWithLastConsumed($current, "legacy", true, "@legacy");
+					setWithLastConsumed($current, "preserve", true, "@preserve");
 				}
 			)
 		)?
@@ -2822,15 +2822,15 @@ ruleDetailsPage returns [EObject current=null]
 		)
 		(
 			(
-				lv_legacy_3_0='@legacy'
+				lv_preserve_3_0='@preserve'
 				{
-					newLeafNode(lv_legacy_3_0, grammarAccess.getDetailsPageAccess().getLegacyLegacyKeyword_3_0());
+					newLeafNode(lv_preserve_3_0, grammarAccess.getDetailsPageAccess().getPreservePreserveKeyword_3_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getDetailsPageRule());
 					}
-					setWithLastConsumed($current, "legacy", true, "@legacy");
+					setWithLastConsumed($current, "preserve", true, "@preserve");
 				}
 			)
 		)?
@@ -3300,15 +3300,15 @@ ruleCustomPage returns [EObject current=null]
 		)
 		(
 			(
-				lv_legacy_3_0='@legacy'
+				lv_preserve_3_0='@preserve'
 				{
-					newLeafNode(lv_legacy_3_0, grammarAccess.getCustomPageAccess().getLegacyLegacyKeyword_3_0());
+					newLeafNode(lv_preserve_3_0, grammarAccess.getCustomPageAccess().getPreservePreserveKeyword_3_0());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getCustomPageRule());
 					}
-					setWithLastConsumed($current, "legacy", lv_legacy_3_0, "@legacy");
+					setWithLastConsumed($current, "preserve", lv_preserve_3_0, "@preserve");
 				}
 			)
 		)?

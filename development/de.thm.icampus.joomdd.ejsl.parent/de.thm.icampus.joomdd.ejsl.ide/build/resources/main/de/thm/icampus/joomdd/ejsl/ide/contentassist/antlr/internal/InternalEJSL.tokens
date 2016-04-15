@@ -1,183 +1,184 @@
-' Options ('=126
-'('=185
-')'=127
-'*Attribute '=137
-'*Class references'=157
-'*Entities'=118
-'*Entity ='=106
-'*EntityReference ='=107
-'*Globalparameters'=113
-'*Page :'=145
-'*Pages'=144
-'*ParameterGroups'=112
-','=77
-'-'=186
-'.'=187
+' Options ('=128
+'('=186
+')'=129
+'*Attribute '=138
+'*Class references'=158
+'*Entities'=120
+'*Entity ='=108
+'*EntityReference ='=109
+'*Globalparameters'=115
+'*Page :'=146
+'*Pages'=145
+'*ParameterGroups'=114
+','=78
+'-'=187
+'.'=188
 '.backend'=55
 '.frontend'=56
-':'=123
-'<'=188
-'='=133
-'>'=189
-'@legacy'=192
+':'=125
+'<'=189
+'='=88
+'>'=190
+'@preserve'=193
 'ARCHIVE'=33
-'Attribute'=102
-'Author'=172
-'Auto Increment'=191
-'Backend section'=143
+'Attribute'=104
+'Author'=173
+'Auto Increment'=192
+'Backend section'=144
 'Boolean'=45
 'CANCEL'=31
 'CHECKIN'=38
 'CLOSE'=32
-'CMS Core'=75
-'CMS Extension'=80
-'CSS keyvaluepairs'=183
-'Checkbox'=69
-'Class'=156
-'Component'=141
-'CssBlock'=184
-'CustomPage'=124
-'Datatype'=86
+'CMS Core'=76
+'CMS Extension'=81
+'CSS keyvaluepairs'=184
+'Checkbox'=70
+'Class'=157
+'Component'=142
+'CssBlock'=185
+'CustomPage'=126
+'Datatype'=87
 'Date'=49
-'Datepicker'=62
+'Datepicker'=63
 'Datetime'=50
-'Default ='=85
-'DetailsPage'=121
+'Default ='=86
+'DetailsPage'=123
 'EDIT'=34
-'Editor'=66
-'Entity'=98
-'EntityAttribute ='=105
-'Entitypackage'=97
-'Extension package'=138
-'ExternalLink'=128
+'Editor'=67
+'Entity'=100
+'EntityAttribute ='=107
+'Entitypackage'=99
+'Extension package'=139
+'ExternalLink'=130
 'File'=53
-'Filepicker'=64
-'Frontend section'=147
-'Global parameter'=142
+'Filepicker'=65
+'Frontend section'=148
+'Global parameter'=143
 'HIDE'=37
-'HTMLBody'=111
-'ID'=194
+'HTMLBody'=113
+'ID'=195
 'INDIVIDUAL'=40
 'Image'=52
-'Imagepicker'=63
-'IndexPage'=117
+'Imagepicker'=64
+'IndexPage'=119
 'Integer'=44
-'InternalLink'=134
-'InternalcontextLink'=135
-'Key'=177
+'InternalLink'=135
+'InternalcontextLink'=136
+'Key'=178
 'Label'=54
-'Language'=175
-'Library'=152
+'Language'=176
+'Library'=153
 'Link'=51
-'Manifestation'=139
-'Method'=159
-'MethodParameter'=162
-'Module'=148
-'Multiselect'=68
+'Manifestation'=140
+'Method'=160
+'MethodParameter'=163
+'Module'=149
+'Multiselect'=69
 'NEW'=28
-'Not Null'=190
+'Not Null'=191
 'PUBLISH'=35
-'Package'=155
-'Page type:'=125
-'PageAction'=95
-'Parameter'=87
-'ParameterGroup'=93
-'Parameters'=94
-'Plugin'=149
-'Plugintype ='=150
-'Position Parameter'=180
-'Positiontype ='=182
-'Radiobutton'=70
-'Reference'=104
-'Returnvalue'=160
+'Package'=156
+'Page type:'=127
+'PageAction'=97
+'Parameter'=89
+'ParameterGroup'=95
+'Parameters'=96
+'Plugin'=150
+'Plugintype ='=151
+'Position Parameter'=181
+'Positiontype ='=183
+'Radiobutton'=71
+'Reference'=106
+'Returnvalue'=161
 'SAVE'=27
 'SAVE_CLOSE'=29
 'SAVE_COPY'=30
-'Select'=67
-'StaticPage'=110
+'Select'=68
+'Short_Text'=47
+'StaticPage'=112
 'TRASH'=39
-'Template'=163
-'Templateposition'=178
-'Text_Field'=61
-'Text_Field_NE'=65
-'Textarea'=46
-'Textfield'=47
+'Template'=164
+'Templateposition'=179
+'Text'=46
+'Text_Field'=62
+'Text_Field_NE'=66
+'Textarea'=61
 'Time'=48
 'UNPUBLISH'=36
-'Unique attribute'=193
+'Unique attribute'=194
 'Yes_No_Buttons'=60
-'attributes'=100
+'attributes'=102
 'authenticate'=15
-'authoremail ='=173
-'authors'=166
-'authorurl ='=174
+'authoremail ='=174
+'authors'=167
+'authorurl ='=175
 'bottom'=43
 'captcha'=16
 'center'=42
-'classes'=153
+'classes'=154
 'contact'=18
 'content'=17
-'copyright ='=168
-'creationdate ='=167
-'cssblocks'=165
+'copyright ='=169
+'creationdate ='=168
+'cssblocks'=166
 'custom'=59
-'datatypes'=76
-'defaultvalue ='=89
-'description ='=92
+'datatypes'=77
+'defaultvalue ='=91
+'description ='=94
 'details'=58
-'divId ='=181
-'eJSL part:'=74
-'eJSLModel'=71
-'editFields'=122
+'divId ='=182
+'eJSL part:'=75
+'eJSLModel'=72
+'editFields'=124
 'editors'=19
-'entities'=82
-'entitypackages'=81
-'extends'=99
+'entities'=83
+'entitypackages'=82
+'extends'=101
 'extensions'=20
-'filters ='=120
+'filters ='=122
 'finder'=21
-'from :'=146
-'globalparameters'=78
-'keyvaluepairs'=176
-'label ='=90
-'label'=132
-'languages'=140
-'license ='=169
-'link ='=170
-'linked action ='=131
-'linked attribute ='=130
-'linkparameters'=136
-'links'=116
+'from :'=147
+'globalparameters'=79
+'keyvaluepairs'=177
+'label ='=92
+'label'=134
+'languages'=141
+'license ='=170
+'link ='=171
+'linked action ='=133
+'linked attribute ='=132
+'linkparameters'=137
+'links'=118
 'list'=57
-'localparameters'=114
-'lower ='=108
-'methodparameters'=161
-'methods'=158
-'packages'=154
-'pageactions'=115
-'pages'=83
-'parametergroups'=79
-'parameters'=151
-'position ='=96
-'positionparameters'=179
-'positions'=164
+'localparameters'=116
+'lower ='=110
+'methodparameters'=162
+'methods'=159
+'packages'=155
+'pageactions'=117
+'pages'=84
+'parametergroups'=80
+'parameters'=152
+'position ='=98
+'positionparameters'=180
+'positions'=165
 'quick_icons'=22
-'references'=101
+'references'=103
 'search'=23
-'sections'=84
-'size ='=91
+'sections'=85
+'size ='=93
 'system'=24
-'table columns ='=119
-'target ='=129
+'table columns ='=121
+'target ='=131
 'top'=41
-'type ='=88
-'upper ='=109
+'type ='=90
+'upper ='=111
 'user'=25
-'version ='=171
-'with'=103
+'version ='=172
+'with'=105
 'xml_rpc'=26
-'{'=72
-'}'=73
+'{'=73
+'}'=74
 RULE_ANY_OTHER=14
 RULE_DATE=7
 RULE_ID=5
@@ -288,6 +289,7 @@ T__191=191
 T__192=192
 T__193=193
 T__194=194
+T__195=195
 T__19=19
 T__20=20
 T__21=21

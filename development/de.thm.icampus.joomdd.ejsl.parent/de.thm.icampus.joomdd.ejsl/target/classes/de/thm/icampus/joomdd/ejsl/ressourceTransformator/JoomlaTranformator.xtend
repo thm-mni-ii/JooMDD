@@ -136,7 +136,7 @@ class JoomlaTranformator {
 		var Attribute params = EJSLFactory.eINSTANCE.createAttribute
 			params.name = "params"
 			var StandardTypes type_params = EJSLFactory.eINSTANCE.createStandardTypes
-			type_params.type =  StandardTypeKinds.TEXTAREA
+			type_params.type =  StandardTypeKinds.TEXT
 			params.type = type_params
 			ent.attributes.add(params)
 		

@@ -192,3 +192,19 @@ Caused by: org.gradle.api.InvalidUserDataException: Project directory 'C:\Users\
 !ENTRY org.apache.log4j 2 0 2016-01-06 11:16:29.102
 !MESSAGE org.eclipse.aether.internal.impl.DefaultRepositoryEventDispatcher  - Failed to dispatch repository event to org.eclipse.m2e.core.internal.embedder.EclipseRepositoryListener: null
 
+!SESSION 2016-04-08 18:29:50.294 -----------------------------------------------
+eclipse.buildId=4.5.2.M20160212-1500
+java.version=1.8.0_66
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_DE
+Framework arguments:  -product org.eclipse.epp.package.dsl.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.dsl.product
+
+!ENTRY org.eclipse.php.debug.core 4 4 2016-04-08 18:30:31.494
+!MESSAGE The debug port 9000 is in use. Please select a different port for the debugger.
+
+!ENTRY org.eclipse.php.debug.core 4 4 2016-04-08 18:30:31.500
+!MESSAGE Could not open a broadcast port on: 20080 (port might be in use). Please select a different port number
+
+!ENTRY org.eclipse.php.debug.core 4 4 2016-04-08 18:30:31.502
+!MESSAGE The debug port 10137 is in use. Please select a different port for the debugger.

@@ -127,7 +127,7 @@ class JoomlaEntityGenerator {
 	       return result
     }
     public def CharSequence generateUpdateScript(String extensionName)'''
-    «FOR ExtendedEntity en: entities.filter[t | !t.legacy] »
+    «FOR ExtendedEntity en: entities.filter[t | !t.preserve] »
     ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  
     «FOR ExtendedAttribute attr: en.refactoryAttribute»
     «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
@@ -149,8 +149,8 @@ class JoomlaEntityGenerator {
     ;
     
      ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  
-     «FOR ExtendedAttribute attr: en.refactoryAttribute.filter[t | t.isunique && !t.legacy]»
-      «IF attr.name != (en.refactoryAttribute.filter[t | t.isunique && !t.legacy]).getMylastAttribute.name»
+     «FOR ExtendedAttribute attr: en.refactoryAttribute.filter[t | t.isunique && !t.preserve]»
+      «IF attr.name != (en.refactoryAttribute.filter[t | t.isunique && !t.preserve]).getMylastAttribute.name»
      ADD INDEX KEY (`«attr.name»` «if(attr.withattribute != null)''',`«attr.withattribute.name»`'''»),
       «ELSE»
        ADD INDEX KEY (`«attr.name»` «if(attr.withattribute != null)''',`«attr.withattribute.name»` '''»)
@@ -158,8 +158,8 @@ class JoomlaEntityGenerator {
      «ENDFOR»
      ;
      ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  
-      «FOR Reference ref: en.refactoryReference.filter[t | !t.legacy]»
-       «IF ref !=  (en.refactoryReference.filter[t | !t.legacy]).getMylastReference»
+      «FOR Reference ref: en.refactoryReference.filter[t | !t.preserve]»
+       «IF ref !=  (en.refactoryReference.filter[t | !t.preserve]).getMylastReference»
       ADD CONSTRAINT `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibfk_«en.references.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
       	   	    ON UPDATE CASCADE
       	   	    ON DELETE CASCADE,

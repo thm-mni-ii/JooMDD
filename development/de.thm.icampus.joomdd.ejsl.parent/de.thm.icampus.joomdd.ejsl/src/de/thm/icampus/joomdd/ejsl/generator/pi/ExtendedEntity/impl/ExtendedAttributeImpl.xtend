@@ -27,7 +27,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		entity = attr.eContainer as Entity
 		genType = generatorType()
 		htmlType = generatorTypeHtmlType()
-		this.legacy = attr.legacy
+		this.preserve = attr.preserve
 		instance = attr
 
 	}

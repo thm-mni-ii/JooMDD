@@ -1,27 +1,27 @@
-' Options ('=76
+' Options ('=77
 '('=136
-')'=77
+')'=78
 '*Attribute '=87
 '*Class references'=107
-'*Entities'=68
-'*Entity ='=56
-'*EntityReference ='=57
-'*Globalparameters'=62
+'*Entities'=69
+'*Entity ='=57
+'*EntityReference ='=58
+'*Globalparameters'=63
 '*Page :'=95
 '*Pages'=94
-'*ParameterGroups'=61
+'*ParameterGroups'=62
 ','=21
 '-'=137
 '.'=138
 '.backend'=179
 '.frontend'=180
-':'=73
+':'=74
 '<'=139
-'='=83
+'='=34
 '>'=140
-'@legacy'=47
+'@preserve'=48
 'ARCHIVE'=157
-'Attribute'=50
+'Attribute'=51
 'Author'=122
 'Auto Increment'=32
 'Backend section'=93
@@ -32,35 +32,35 @@
 'CMS Core'=19
 'CMS Extension'=24
 'CSS keyvaluepairs'=134
-'Checkbox'=193
+'Checkbox'=194
 'Class'=106
 'Component'=91
 'CssBlock'=135
-'CustomPage'=74
+'CustomPage'=75
 'Datatype'=33
 'Date'=173
-'Datepicker'=186
+'Datepicker'=187
 'Datetime'=174
 'Default ='=31
-'DetailsPage'=71
+'DetailsPage'=72
 'EDIT'=158
-'Editor'=190
-'Entity'=45
-'EntityAttribute ='=55
-'Entitypackage'=44
+'Editor'=191
+'Entity'=46
+'EntityAttribute ='=56
+'Entitypackage'=45
 'Extension package'=88
-'ExternalLink'=78
+'ExternalLink'=79
 'File'=177
-'Filepicker'=188
+'Filepicker'=189
 'Frontend section'=97
 'Global parameter'=92
 'HIDE'=161
-'HTMLBody'=66
-'ID'=53
+'HTMLBody'=67
+'ID'=54
 'INDIVIDUAL'=164
 'Image'=176
-'Imagepicker'=187
-'IndexPage'=67
+'Imagepicker'=188
+'IndexPage'=68
 'Integer'=168
 'InternalLink'=84
 'InternalcontextLink'=85
@@ -73,40 +73,41 @@
 'Method'=109
 'MethodParameter'=112
 'Module'=98
-'Multiselect'=192
+'Multiselect'=193
 'NEW'=152
 'Not Null'=30
 'PUBLISH'=159
 'Package'=105
-'Page type:'=75
-'PageAction'=42
-'Parameter'=34
-'ParameterGroup'=40
-'Parameters'=41
+'Page type:'=76
+'PageAction'=43
+'Parameter'=35
+'ParameterGroup'=41
+'Parameters'=42
 'Plugin'=99
 'Plugintype ='=100
 'Position Parameter'=131
 'Positiontype ='=133
-'Radiobutton'=194
-'Reference'=54
+'Radiobutton'=195
+'Reference'=55
 'Returnvalue'=110
 'SAVE'=151
 'SAVE_CLOSE'=153
 'SAVE_COPY'=154
-'Select'=191
-'StaticPage'=60
+'Select'=192
+'Short_Text'=171
+'StaticPage'=61
 'TRASH'=163
 'Template'=113
 'Templateposition'=129
-'Text_Field'=185
-'Text_Field_NE'=189
-'Textarea'=170
-'Textfield'=171
+'Text'=170
+'Text_Field'=186
+'Text_Field_NE'=190
+'Textarea'=185
 'Time'=172
 'UNPUBLISH'=160
-'Unique attribute'=51
+'Unique attribute'=52
 'Yes_No_Buttons'=184
-'attributes'=48
+'attributes'=49
 'authenticate'=141
 'authoremail ='=123
 'authors'=116
@@ -122,59 +123,59 @@
 'cssblocks'=115
 'custom'=183
 'datatypes'=20
-'defaultvalue ='=36
-'description ='=39
+'defaultvalue ='=37
+'description ='=40
 'details'=182
 'divId ='=132
 'eJSL part:'=17
 'eJSLModel'=15
-'editFields'=72
+'editFields'=73
 'editors'=145
 'entities'=27
 'entitypackages'=26
-'extends'=46
+'extends'=47
 'extensions'=25
-'filters ='=70
+'filters ='=71
 'finder'=146
 'from :'=96
 'globalparameters'=22
 'keyvaluepairs'=127
-'label ='=37
-'label'=82
+'label ='=38
+'label'=83
 'languages'=90
 'license ='=119
 'link ='=120
-'linked action ='=81
-'linked attribute ='=80
+'linked action ='=82
+'linked attribute ='=81
 'linkparameters'=86
-'links'=65
+'links'=66
 'list'=181
-'localparameters'=63
-'lower ='=58
+'localparameters'=64
+'lower ='=59
 'methodparameters'=111
 'methods'=108
 'packages'=104
-'pageactions'=64
+'pageactions'=65
 'pages'=28
 'parametergroups'=23
 'parameters'=101
-'position ='=43
+'position ='=44
 'positionparameters'=130
 'positions'=114
 'quick_icons'=147
-'references'=49
+'references'=50
 'search'=148
 'sections'=29
-'size ='=38
+'size ='=39
 'system'=126
-'table columns ='=69
-'target ='=79
+'table columns ='=70
+'target ='=80
 'top'=165
-'type ='=35
-'upper ='=59
+'type ='=36
+'upper ='=60
 'user'=149
 'version ='=121
-'with'=52
+'with'=53
 'xml_rpc'=150
 '{'=16
 '}'=18
@@ -288,6 +289,7 @@ T__191=191
 T__192=192
 T__193=193
 T__194=194
+T__195=195
 T__19=19
 T__20=20
 T__21=21

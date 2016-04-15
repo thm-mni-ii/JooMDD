@@ -21,7 +21,7 @@ class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 		this.attributerefereced = e.attributerefereced
 		entity = e.entity
 		toEntity = e.entity
-		this.legacy = e.legacy
+		this.preserve = e.preserve
 		fromEntity = from
 		initList()
 		
