@@ -8,7 +8,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.eJSL.LinkParameter
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-
+ 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Context Link</b></em>'.
@@ -20,7 +20,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
  * @generated
  */
 public class ContextLinkGen extends AbstractLinkGenerator {
-	
+
 	
 	ContextLink lk
 	String valueF

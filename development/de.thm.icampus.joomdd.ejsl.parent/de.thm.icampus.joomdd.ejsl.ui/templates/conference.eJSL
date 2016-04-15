@@ -1,43 +1,34 @@
 eJSLModel "Conference" {
 	eJSL part: CMS Extension {
-		datatypes {
-			Datatype "varchar(255) NOT NULL",
-			Datatype "text NOT NULL",
-			Datatype "datetime NOT NULL DEFAULT '0000-00-00 00:00:00'",
-			Datatype "date",
-			Datatype "textarea",
-			Datatype "text",
-			Datatype "editor"
-		}
 		entities {
 			Entity Participant {
 				attributes {
 					Attribute name {
-						type = "varchar(255) NOT NULL"
+						type = Text
 						Unique attribute with ID
 					}
 					Attribute affiliation {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 					Attribute nationality {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 					Attribute address {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 				}
 			}
 			Entity Talk {
 				attributes {
 					Attribute title {
-						type = "varchar(255) NOT NULL"
+						type = Text
 						Unique attribute
 					}
 					Attribute ^description {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 					Attribute speaker {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 				}
 				references {
@@ -53,28 +44,28 @@ eJSLModel "Conference" {
 			Entity Room {
 				attributes {
 					Attribute roomname {
-						type = "varchar(255) NOT NULL"
+						type = Text
 						Unique attribute
 					}
 					Attribute ^position {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 				}
 			}
 			Entity AgendaItem {
 				attributes {
 					Attribute title {
-						type = "varchar(255) NOT NULL"
+						type = Text
 						Unique attribute
 					}
 					Attribute time {
-						type = "datetime NOT NULL DEFAULT \'0000-00-00 00:00:00\'"
+						type = Datetime
 					}
 					Attribute talk {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 					Attribute room {
-						type = "varchar(255) NOT NULL"
+						type = Text
 					}
 				}
 				references {

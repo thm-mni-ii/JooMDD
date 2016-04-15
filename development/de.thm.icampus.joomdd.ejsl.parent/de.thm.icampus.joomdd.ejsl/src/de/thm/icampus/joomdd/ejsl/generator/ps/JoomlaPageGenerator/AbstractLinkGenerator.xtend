@@ -17,5 +17,5 @@ import org.eclipse.emf.ecore.EObject;
 abstract public class AbstractLinkGenerator  {
 	
 	public def CharSequence generateLink(String sect, String compname);
-	
+	 
 } // AbstractLinkGenerator
