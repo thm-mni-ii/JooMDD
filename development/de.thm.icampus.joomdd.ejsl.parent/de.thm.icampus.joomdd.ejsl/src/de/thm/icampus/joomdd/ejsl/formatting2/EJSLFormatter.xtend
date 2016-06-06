@@ -12,14 +12,96 @@ import de.thm.icampus.joomdd.ejsl.eJSL.ParameterGroup
 import de.thm.icampus.joomdd.ejsl.services.EJSLGrammarAccess
 import org.eclipse.xtext.formatting2.AbstractFormatter2
 import org.eclipse.xtext.formatting2.IFormattableDocument
+import org.eclipse.xtext.Keyword
+import java.util.List
+import java.util.ArrayList
 
 class EJSLFormatter extends AbstractFormatter2 {
-	
+
 	@Inject extension EJSLGrammarAccess
 
 	def dispatch void format(EJSLModel eJSLModel, extension IFormattableDocument document) {
+
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		eJSLModel.getEjslPart.format;
+		val List<String> stringlist = new ArrayList<String>(); // list of all keywords
+		stringlist.add("{");
+		stringlist.add("}");
+		stringlist.add(",");
+		stringlist.add("eJSL part:");
+
+		stringlist.add("datatypes");
+		stringlist.add("globalparameters");
+		stringlist.add("parametergroups");
+
+		stringlist.add("references");
+		stringlist.add("Reference");
+		stringlist.add("EntityAttribute =");
+		stringlist.add("*Entity =");
+		stringlist.add("*EntityReference =");
+		stringlist.add("lower =");
+		stringlist.add("upper =");
+
+		stringlist.add("pages");
+		stringlist.add("DetailsPage");
+		stringlist.add("IndexPage");
+		stringlist.add("*Entities");
+		stringlist.add("table columns =");
+		stringlist.add("entities");
+		stringlist.add("Entity");
+		stringlist.add("attributes");
+		stringlist.add("Attribute");
+		stringlist.add("type =");
+		stringlist.add("filters =");
+		stringlist.add("links");
+		stringlist.add("InternalLink");
+		stringlist.add("InternalcontextLink");
+		stringlist.add("target =");
+		stringlist.add("Parameter");
+		stringlist.add("editFields");
+		stringlist.add("pageactions");
+		stringlist.add("PageAction");
+
+		stringlist.add("extensions");
+		stringlist.add("Component");
+		stringlist.add("Manifestation");
+		stringlist.add("authors");
+		stringlist.add("Author");
+		stringlist.add("authoremail =");
+		stringlist.add("authorurl =");
+		stringlist.add("Language");
+		stringlist.add("keyvaluepairs");
+		stringlist.add("Key");
+		stringlist.add("sections");
+		stringlist.add("Frontend section");
+		stringlist.add("Backend section");
+		stringlist.add("*Pages");
+		stringlist.add("*Page :");
+
+		var tabcounter = 0
+
+		for (k : eJSLModel.allRegionsFor.keywords(stringlist)) {
+			if (k.text.equals("{")) {
+				tabcounter++
+				k.prepend[noSpace]
+			} else if (k.text.equals("}")) {
+				tabcounter--
+				var StringBuilder sb = new StringBuilder("\n")
+				for (var i = 0; i < tabcounter; i++) {
+					sb.append("\t")
+				}
+				val str = sb.toString
+				k.prepend[space = str]
+			} else if (k.text.equals(",")) {
+				k.prepend[noSpace]
+			} else {
+				var StringBuilder sb = new StringBuilder("\n")
+				for (var i = 0; i < tabcounter; i++) {
+					sb.append("\t")
+				}
+				val str = sb.toString
+				k.prepend[space = str]
+			}
+		}
 	}
 
 	def dispatch void format(CMSCore cMSCore, extension IFormattableDocument document) {
@@ -35,6 +117,5 @@ class EJSLFormatter extends AbstractFormatter2 {
 		}
 		cMSCore.getFeature.format;
 	}
-	
-	// TODO: implement for CMSExtension, Feature, Parameter, ParameterGroup, Entitypackage, Entity, Attribute, StaticPage, IndexPage, DetailsPage, DetailPageField, ComplexHTMLTypes, ContextLink, ExtensionPackage, Component, BackendSection, FrontendSection, Module, Plugin, Library, Package, Class, Method, MethodParameter, Template, Manifestation, Language, Position, PositionParameter, CssBlock
+// TODO: implement for CMSExtension, Feature, Parameter, ParameterGroup, Entitypackage, Entity, Attribute, StaticPage, IndexPage, DetailsPage, DetailPageField, ComplexHTMLTypes, ContextLink, ExtensionPackage, Component, BackendSection, FrontendSection, Module, Plugin, Library, Package, Class, Method, MethodParameter, Template, Manifestation, Language, Position, PositionParameter, CssBlock
 }
