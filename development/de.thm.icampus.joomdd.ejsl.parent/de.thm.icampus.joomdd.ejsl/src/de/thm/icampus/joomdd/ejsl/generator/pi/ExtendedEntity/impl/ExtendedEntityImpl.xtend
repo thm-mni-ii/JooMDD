@@ -23,6 +23,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	EList<ExtendedReference> allReferenceToEntity
 	EList<ExtendedAttribute> allRefactoryAttribute
 	EList<ExtendedReference> allRefactoryReference
+	
 
 	new(Entity entity) {
 		entity.name = PlattformIUtil.slugify(entity.name)
@@ -148,6 +149,13 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	
 	override getRefactoryReference() {
 		return allRefactoryReference
+	}
+	
+	override isAutomatedGenerated() {
+		if(name.startsWith("mappingMDD") && references.size == 2){
+			return true
+		}
+		return false
 	}
 
 }

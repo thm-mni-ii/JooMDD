@@ -112,7 +112,7 @@ class RessourceTransformer {
 			for(Reference ref: ent.references){
 				 if(ref.entity.haveReferenTo(ent,ref.upper)){
 				 	if(!ref.entity.existingReferenceBetweenEntity(ent,newEntity)){
-				 		var String mappingEntityName = "mapping" + ent.name + "" + ref.entity.name
+				 		var String mappingEntityName = "mappingMDD" + ent.name + "" + ref.entity.name
 				 		var Entity mappingEntity = EJSLFactory.eINSTANCE.createEntity
 				 		mappingEntity.name = mappingEntityName
 				 		mappingEntity.attributes.addAll(ref.attribute.map[t | copyAttribute(t, ent)])

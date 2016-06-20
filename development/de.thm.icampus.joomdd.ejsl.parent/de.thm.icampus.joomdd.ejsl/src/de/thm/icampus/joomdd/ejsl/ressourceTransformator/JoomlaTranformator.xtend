@@ -76,6 +76,7 @@ class JoomlaTranformator {
 			ent.attributes.add(id)
 			
 		}
+		if(!haveAttribute(ent,"asset_id" )){
 		var Attribute asset_id = EJSLFactory.eINSTANCE.createAttribute
 			asset_id.name = "asset_id"
 			var StandardTypes type_asset_id = EJSLFactory.eINSTANCE.createStandardTypes
@@ -84,7 +85,8 @@ class JoomlaTranformator {
 			type_asset_id.^default = "0"
 			asset_id.type = type_asset_id
 			ent.attributes.add(asset_id)
-						
+		}
+		if(!haveAttribute(ent,"state")){				
 		var Attribute state = EJSLFactory.eINSTANCE.createAttribute
 			state.name = "state"
 			var StandardTypes type_state = EJSLFactory.eINSTANCE.createStandardTypes
@@ -92,7 +94,8 @@ class JoomlaTranformator {
 			type_state.notnull = true
 			state.type = type_state
       		ent.attributes.add(state)	
-				
+		}
+		if(!haveAttribute(ent,"ordering")){		
 		var Attribute ordering = EJSLFactory.eINSTANCE.createAttribute
 			ordering.name = "ordering"
 			var StandardTypes type_ordering = EJSLFactory.eINSTANCE.createStandardTypes
@@ -100,7 +103,8 @@ class JoomlaTranformator {
 			type_ordering.notnull = true
 			ordering.type = type_ordering
 			ent.attributes.add(ordering)
-			
+		}
+		if(!haveAttribute(ent,"checked_out_time")){	
 		var Attribute checked_out_time = EJSLFactory.eINSTANCE.createAttribute
 			checked_out_time.name = "checked_out_time"
 			var StandardTypes type_checked_out_time= EJSLFactory.eINSTANCE.createStandardTypes
@@ -109,7 +113,8 @@ class JoomlaTranformator {
 			type_checked_out_time.^default = "0000-00-00 00:00:00"
 			checked_out_time.type = type_checked_out_time
 			ent.attributes.add(checked_out_time)
-			
+		}
+		if(!haveAttribute(ent,"checked_out")){	
 		var Attribute checked_out = EJSLFactory.eINSTANCE.createAttribute
 			checked_out.name = "checked_out"
 			var StandardTypes type_checked_out = EJSLFactory.eINSTANCE.createStandardTypes
@@ -117,7 +122,8 @@ class JoomlaTranformator {
 			type_checked_out.notnull = true
 			checked_out.type = type_checked_out
 			ent.attributes.add(checked_out)
-			
+		}	
+		if(!haveAttribute(ent,"created_by")){	
 		var Attribute created_by = EJSLFactory.eINSTANCE.createAttribute
 			created_by.name = "created_by"
 			var StandardTypes type_created_by = EJSLFactory.eINSTANCE.createStandardTypes
@@ -125,20 +131,22 @@ class JoomlaTranformator {
 			type_created_by.notnull = true
 			created_by.type = type_created_by
 			ent.attributes.add(created_by)
-		
+		}
+		if(!haveAttribute(ent,"published")){	
 		var Attribute published = EJSLFactory.eINSTANCE.createAttribute
 			published.name = "published"
 			var StandardTypes type_published = EJSLFactory.eINSTANCE.createStandardTypes
 			type_published.type =  StandardTypeKinds.BOOLEAN
 			published.type = type_published
 			ent.attributes.add(published)
-		
+		}
+		if(!haveAttribute(ent,"params")){	
 		var Attribute params = EJSLFactory.eINSTANCE.createAttribute
 			params.name = "params"
 			var StandardTypes type_params = EJSLFactory.eINSTANCE.createStandardTypes
 			type_params.type =  StandardTypeKinds.TEXT
 			params.type = type_params
-			ent.attributes.add(params)
+			ent.attributes.add(params)}
 		
 		for(Attribute attr: ent.attributes){
 			 if(attr.id){
@@ -157,6 +165,13 @@ class JoomlaTranformator {
 	private def boolean haveIdAttribute(Entity entity){
 		for(Attribute e: entity.attributes){
 			if(e.name.equalsIgnoreCase("id") || e.name.equalsIgnoreCase("^id"))
+			return true
+		}
+		return false
+	}
+	private def boolean haveAttribute(Entity entity, String attrinuteName){
+		for(Attribute e: entity.attributes){
+			if(e.name.equals(attrinuteName))
 			return true
 		}
 		return false

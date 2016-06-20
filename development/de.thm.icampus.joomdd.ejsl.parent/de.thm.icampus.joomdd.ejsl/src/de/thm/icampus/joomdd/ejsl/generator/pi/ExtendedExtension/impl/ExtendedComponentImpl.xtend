@@ -106,7 +106,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 		var Feature container = (instance.eContainer as CMSExtension).feature
 		var EList<Page> page = container.pages
 		for(ExtendedEntity ent : allextendedEntity){
-			if(allDynamicPage.filter[t | t.extendedEntityList.get(0).name.equalsIgnoreCase(ent.name)].empty){
+			if(allDynamicPage.filter[t | t.extendedEntityList.get(0).name.equalsIgnoreCase(ent.name)].empty && ent.isAutomatedGenerated){
 			   var IndexPage inPage = (page.filter[t | t.name.equalsIgnoreCase(ent.name+"List")]).get(0) as IndexPage
 			   var DetailsPage detailsPage = (page.filter[t | t.name.equalsIgnoreCase(ent.name+"Details")]).get(0) as DetailsPage
 			   var ExtendedPage pageList = new ExtendedPageImpl(inPage)

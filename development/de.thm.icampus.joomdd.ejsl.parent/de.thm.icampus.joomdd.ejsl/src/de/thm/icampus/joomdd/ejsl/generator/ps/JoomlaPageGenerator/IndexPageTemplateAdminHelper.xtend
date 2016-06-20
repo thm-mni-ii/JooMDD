@@ -16,14 +16,15 @@ class IndexPageTemplateAdminHelper {
 	 ExtendedDynamicPage indexpage
 	private ExtendedComponent  com
 	private String sec
-	private DetailsPage details
+	private String details
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		
 		indexpage = dp
 		com = cp
 		sec = section
-		details = Slug.getPageForDetails(indexpage,com)
+		var DetailsPage dt = Slug.getPageForDetails(indexpage,com)
+		details =  if( dt == null)"<Put the name Of DetailsPage>" else dt.name
 		
 	}
 	
@@ -49,7 +50,7 @@ class IndexPageTemplateAdminHelper {
 	 * Overwrite the  getModel.
 	 * @since	1.6
 	 */
-	public function getModel($name = '«details.name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
+	public function getModel($name = '«details.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
 	{
 		$model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		return $model;
@@ -243,6 +244,7 @@ class IndexPageTemplateAdminHelper {
 	        $this->items = $this->get('Items');
 	        $this->pagination = $this->get('Pagination');
 	        $this->filterForm    = $this->get('FilterForm');
+	        $this->activeFilters = $this->get('ActiveFilters');
 	
 	        // Check for errors.
 	        if (count($errors = $this->get('Errors'))) {
@@ -273,15 +275,15 @@ class IndexPageTemplateAdminHelper {
 		        JToolBarHelper::title(JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«indexpage.name.toUpperCase»'));
 		 
 		        //Check if the form exists before showing the add/edit buttons
-		        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«details.name.toLowerCase»';
+		        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«  details.toLowerCase»';
 		        if (file_exists($formPath)) {
 		 
 		            if ($canDo->get('core.create')) {
-		                JToolBarHelper::addNew('«details.name.toLowerCase».add', 'JTOOLBAR_NEW');
+		                JToolBarHelper::addNew('«details.toLowerCase».add', 'JTOOLBAR_NEW');
 		            }
 		 
 		            if ($canDo->get('core.edit') && isset($this->items[0])) {
-		                JToolBarHelper::editList('«details.name.toLowerCase».edit', 'JTOOLBAR_EDIT');
+		                JToolBarHelper::editList('«details.toLowerCase».edit', 'JTOOLBAR_EDIT');
 		            }
 		        }
 		 
