@@ -23,7 +23,8 @@ class EJSLFormatter extends AbstractFormatter2 {
 	def dispatch void format(EJSLModel eJSLModel, extension IFormattableDocument document) {
 
 		// TODO: format HiddenRegions around keywords, attributes, cross references, etc. 
-		val List<String> stringlist = new ArrayList<String>(); // list of all keywords
+		// list of all keywords
+		val List<String> stringlist = new ArrayList<String>();
 		stringlist.add("{");
 		stringlist.add("}");
 		stringlist.add(",");
@@ -55,6 +56,7 @@ class EJSLFormatter extends AbstractFormatter2 {
 		stringlist.add("links");
 		stringlist.add("InternalLink");
 		stringlist.add("InternalcontextLink");
+		stringlist.add("linkparameters");
 		stringlist.add("target =");
 		stringlist.add("Parameter");
 		stringlist.add("editFields");
@@ -68,6 +70,7 @@ class EJSLFormatter extends AbstractFormatter2 {
 		stringlist.add("Author");
 		stringlist.add("authoremail =");
 		stringlist.add("authorurl =");
+		stringlist.add("languages");
 		stringlist.add("Language");
 		stringlist.add("keyvaluepairs");
 		stringlist.add("Key");
