@@ -5,13 +5,16 @@ package classes;
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.channels.FileLock;
+import java.util.ArrayList;
 
 /**
  * Created by Leon on 21.01.16.
@@ -20,13 +23,85 @@ public class InitalSettings implements ProjectComponent {
 
     private Project project;
 
+
     public InitalSettings(Project project) {
         this.project = project;
     }
 
     @Override
     public void projectOpened() {
+        File settings = new File(project.getBasePath() + "/.idea/settings.txt");
 
+        if(settings.exists()){
+            try {
+                FileReader fr = new FileReader(project.getBasePath() + "/.idea/settings.txt");
+                BufferedReader br = new BufferedReader(fr);
+                StringBuilder setBuilder = new StringBuilder();
+                String buffer = "";
+                while ((buffer = br.readLine()) != null) {
+                    if (buffer.equals("ignore = false")) {
+                        int n = this.showWarning();
+                        if (n == 1) {
+                            setBuilder.append("ignore = true\n");
+                        } else {
+                            setBuilder.append((buffer + "\n"));
+                        }
+                    }else{
+                        setBuilder.append((buffer + "\n"));
+                    }
+                }
+                FileWriter fw = new FileWriter(project.getBasePath() + "/.idea/settings.txt");
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(setBuilder.toString());
+
+                bw.close();
+                fw.close();
+                fr.close();
+                br.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }else{
+            int n = this.showWarning();
+            StringBuilder setBuilder = new StringBuilder();
+
+            try {
+                FileWriter fw = new FileWriter(project.getBasePath() + "/.idea/settings.txt");
+                if(n == 1){
+                    setBuilder.append(("ignore = true"));
+                }else{
+                    setBuilder.append(("ignore = false"));
+                }
+
+                settings.createNewFile();
+                BufferedWriter bw = new BufferedWriter(fw);
+                bw.write(setBuilder.toString());
+
+                bw.close();
+                fw.close();
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+    private int showWarning(){
+        //TODO: Add instruction here
+        Object[] options = {"OK", "Dont show again"};
+        int n = JOptionPane.showOptionDialog(null, "We suggest you disable the Autosave-Function.\n\n" +
+                "Under Settings/Apperance & Behavior/System Settings:\n" +
+                "Check \"Confirm application exit\"\n" +
+                "Uncheck \"Save files on frame deactivation\"\n" +
+                "Uncheck \"Save files automatically\"\n\n" +
+                "Under Editor/General/Editor Tabs:\n" +
+                "Set \"Mark modified tabs with asterisk\""
+                , "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, IconLoader.getIcon("/resources/icons/warning.png"), options, options[0]);
+        return n;
     }
 
 
