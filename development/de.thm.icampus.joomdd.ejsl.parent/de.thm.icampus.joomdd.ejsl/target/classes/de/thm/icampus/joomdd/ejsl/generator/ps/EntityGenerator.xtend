@@ -17,6 +17,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.TableGenera
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsCardinalityGenerator
 
 class EntityGenerator extends AbstracteGenerator {
 	
@@ -73,8 +74,16 @@ class EntityGenerator extends AbstracteGenerator {
 				var FieldsGenerator fieldsEntity = new FieldsGenerator(extensions, ent)
 				fieldsEntity.dogenerate(path + "models/fields" , fsa)
 				for(ExtendedReference ref: ent.extendedReference){
-				var FieldsGenerator fields = new FieldsGenerator(ref,extensions, ent)
-				fields.dogenerate(path + "models/fields" , fsa)
+				switch ref.upper{
+						case "1":{
+							var FieldsGenerator fields = new FieldsGenerator(ref,extensions, ent)
+							fields.dogenerate(path+"fields/" , fsa)
+						}
+						case "*" , case "-1":{
+							var FieldsCardinalityGenerator fields = new FieldsCardinalityGenerator(ref,extensions, ent)
+							fields.dogenerate(path+"fields/" , fsa)
+						}
+					}
 				}
 			}
 		}
@@ -92,9 +101,19 @@ class EntityGenerator extends AbstracteGenerator {
 			for(ExtendedEntity ent: entities){
 				var FieldsGenerator fieldsEntity = new FieldsGenerator(extComp, ent)
 				fieldsEntity.dogenerate(path+"fields/" , fsa)
-				for(ExtendedReference ref: ent.extendedReference.filter[t | t.upper.equalsIgnoreCase("1")]){
-				var FieldsGenerator fields = new FieldsGenerator(ref,extComp, ent)
-				fields.dogenerate(path+"fields/" , fsa)
+				for(ExtendedReference ref: ent.extendedReference){
+					switch ref.upper{
+						case "1":{
+							var FieldsGenerator fields = new FieldsGenerator(ref,extComp, ent)
+							fields.dogenerate(path+"fields/" , fsa)
+						}
+						case "*" , case "-1":{
+							var FieldsCardinalityGenerator fields = new FieldsCardinalityGenerator(ref,extComp, ent)
+							fields.dogenerate(path+"fields/" , fsa)
+						}
+					}
+				
+				
 				}
 			}
 		}

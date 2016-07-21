@@ -6,6 +6,10 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
 import java.io.File
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 
 class DetailsPageTemplate extends   DynamicPageTemplate {
 	
@@ -211,9 +215,67 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«generateModelGetFormFunction()»
 		«generateModelLoadFormDataFunction()»
 		«generateModelGetItemFunction()»
+		«generateModelAdminSaveData()»
+		«generateModelReferenceSave()»
 		«backHelp.generateAdminModelprepareTableFunction()»
 	}
 		'''
+	
+	def CharSequence generateModelAdminSaveData() '''
+	public function save($data){
+	$inputs =& JFactory::getApplication()->input->get("jform", array(), 'array');
+	
+	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference»
+	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
+	 $this->set«ref.entity.name»($inputs);
+	«ENDIF»
+	«ENDFOR»
+	
+	return parent::save($data);
+	}
+	'''
+	
+	def CharSequence generateModelReferenceSave()'''
+	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference»
+	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
+	 public function set«ref.entity.name»($inputs){
+	 	«var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
+	 	«FOR Attribute attr : referenceAttr»
+	 		$«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
+	 	«ENDFOR»
+	 		$«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
+	 		«FOR ExtendedAttribute toAttr: ref.extendedAttribute»
+	 		$«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
+	 		«ENDFOR»
+
+	 		if(«Slug.transformAttributeListInString("!empty(", referenceAttr ,"&&", ")")»){
+	 			foreach( $«ref.entity.name.toLowerCase»_id as $item){
+	 				if(intval($item) != 0){
+	 					$mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
+	 					$mappingTableDelete->delete($item);
+	 				}
+	 			}
+	            for($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++){
+	         
+	 				$mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
+	 				$dataToSave = array();
+	 				«FOR Attribute attr: referenceAttr»
+	 				$dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$count];
+	 				«ENDFOR»
+	 				«FOR ExtendedAttribute toattr: ref.extendedAttribute»
+	 				$dataToSave["«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
+	 				«ENDFOR»
+	 				$dataToSave["state"]=1;
+	 				$mappingTable->save($dataToSave);
+	 			
+	            }
+	 			
+	 
+	 		}
+	 	}
+	«ENDIF»
+	«ENDFOR»
+	'''
 
 	
 	
@@ -338,6 +400,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«generateModelGetItemFunction()»
 		«generateModelLoadFormDataFunction()»
 		«frontHelp.generateSiteModelSave()»
+		«generateModelReferenceSave()»
 		«frontHelp.generateSiteModelDelete()»
 		
 	}
@@ -376,7 +439,6 @@ class «com.name.toFirstUpper»View« if(isedit)dpage.name.toFirstUpper + "Edit"
 	
 	
 	?>
-	</style>
 	<script type="text/javascript">
 	    getScript('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', function() {
 	        jQuery(document).ready(function() {

@@ -39,6 +39,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
 
 /**
  * <!-- begin-user-doc -->
@@ -462,6 +463,18 @@ public class Slug  {
 		return result.toString
 
 	}
+	static def CharSequence transformAttributeListInString(String postWord, EList<Attribute>attributes, String separeSign,String afterWord){
+		var StringBuffer result = new StringBuffer()
+		for(attr: attributes){
+			if(attr != attributes.last){
+			result.append(postWord + Slug.slugify(attr.name).toLowerCase + afterWord + separeSign)
+			}else{
+				result.append(postWord+ Slug.slugify(attr.name)+afterWord)
+			}
+		}
+		return result.toString
+
+	}
 	static def CharSequence transformAttributeListInString(String quotationMark, String postWord, EList<Attribute>attributes, String separeSign){
 		var StringBuffer result = new StringBuffer()
 		for(attr: attributes){
@@ -498,6 +511,49 @@ public class Slug  {
    			}
    			return null
 	}
+//get all other referenced in the referenced Entity	
+	def static EList<Attribute> getOtherAttribute(ExtendedReference reference) {
+	var Entity toEntity = reference.extendedToEntity
+	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase( reference.extendedFromEntity.name)]).get(0)
+	
+	return ref.attribute
+	
+	}
+	
+	def static Entity getOtherEntityToMapping(ExtendedReference reference) {
+		var Entity toEntity = reference.extendedToEntity
+	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.extendedFromEntity.name)]).get(0)
+	
+	return ref.entity
+	}
+	
+	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference) '''
+	<?php if (JFactory::getUser()->authorise('core.admin','conference')) : ?>
+				<?php echo JHtml::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', JText::_('JGLOBAL_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
+	 <div class="control-group">
+		<div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
+		<div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
+	</div>
+	«FOR attribute: Slug.getOtherAttribute(reference)»
+	<div class="control-group">
+		<div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
+	</div>
+	«ENDFOR»
+	<?php echo JHtml::_('bootstrap.endTab'); ?>
+			<?php endif; ?>
+	'''
+	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference) '''
+		 <div class="control-group">
+		<div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
+		<div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
+	</div>
+	«FOR attribute: Slug.getOtherAttribute(reference)»
+	<div class="control-group">
+		<div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
+	</div>
+	«ENDFOR»
+	
+	'''
 	
 	
 } // Slug

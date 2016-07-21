@@ -207,6 +207,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateJoomlaDirectory(path+"site/views")
 		generateJoomlaDirectory(path+"site/assets")
 		generateFile( path +"site/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
+		generateFile( path +"site/assets/" + "setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
 
 		generateJoomlaDirectory(path+"site/controllers")
         var EntityGenerator entitygen = new EntityGenerator(extendeComp,path + "site/",fsa,false)
@@ -234,6 +235,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile( path +"admin/config.xml", extendeComp.xmlConfigContent)
 		generateJoomlaDirectory(path+"admin/assets")
 		generateFile( path +"admin/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
+		generateFile( path +"admin/assets/" + "setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
 		
 
 		generateJoomlaDirectory(path+"admin/views")
@@ -802,6 +804,48 @@ function «component.name.toFirstUpper»ParseRoute($segments) {
 	    for(item in data){
 	        jQuery("#"+item).attr("value",data[item]);
 	    }
+	   }
+	'''
+	def CharSequence genScriptForMultipleForeignKeys()'''
+	 «Slug.generateFileDoc(extendeComp,false)»
+	 
+	jQuery(document).ready(function() {
+			jQuery("select[generated='true']").each(function(){
+				jQuery(this).trigger('onchange');
+			})
+		});
+	function setMultipleValueForeignKeys(element) {
+	
+	    var data = [];
+			var id = "#" + element.id + " option:selected";
+			jQuery(id).each(function (){
+				data.push(JSON.parse(jQuery(this).prop("value")));
+			});
+			if(data.length == 0)
+				return;
+	
+	    var allkeys = Object.keys(data[0])
+			var all_item = [];
+	
+			for(var a = 0; a< allkeys.length; a++){
+				all_item[allkeys[a]] = [];
+			}
+	
+	    for(var i =0; i<data.length; i++){
+			var attr_obj = data[i];
+			var attr_obj_keys = Object.keys(attr_obj);
+			for(var j =0; j< attr_obj_keys.length; j++){
+				var attr_key_value = attr_obj_keys[j];
+				var attr_value = attr_obj[attr_key_value][0];
+				all_item[attr_key_value].push(attr_value);
+	
+			}
+	    }
+			for(var c =0; c < allkeys.length; c++){
+				var value = all_item[allkeys[c]];
+				jQuery("#"+ allkeys[c]).attr("value",JSON.stringify(value));
+	
+			}
 	   }
 	'''
 

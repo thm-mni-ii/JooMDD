@@ -197,23 +197,41 @@ class JoomlaTranformator {
 	}
 	
 	def void setReferenceAttribute( Entity ent){
-		for(Reference ref:ent.references.filter[t | t.upper.equalsIgnoreCase("1")] ){
+		for(Reference ref:ent.references){
 			var Entity referenceEntity = ref.entity
-			var EList<Attribute> newArttibute = new BasicEList<Attribute>
-			for(Attribute attrRef: ref.attributerefereced){
-				var Attribute uniqWith = attrRef.withattribute
-				if(uniqWith != null && getAttributeReference(ent, referenceEntity,uniqWith) == null){
-					setNewGenAttribute(ent, ref, uniqWith)
-					newArttibute.add(uniqWith)
+			var EList<Attribute> newAttribute = new BasicEList<Attribute>
+			for(Attribute attr: ref.attribute){
+				var Attribute uniqWith = attr.withattribute
+				if(uniqWith != null && !ref.attribute.contains(uniqWith)){
+					newAttribute.add(uniqWith)
 				}
 			}
-			ref.attributerefereced.addAll(newArttibute)
+			ref.attribute.addAll(newAttribute)
+			
+			if(ref.upper.equalsIgnoreCase("1")){
+			
+			var EList<Attribute> newReferenceArttibute = new BasicEList<Attribute>
+			for(Attribute attrRef: ref.attributerefereced){
+				var Attribute uniqWith = attrRef.withattribute
+				if(uniqWith != null ){
+					var Attribute attr = getAttributeReference(ent, referenceEntity,uniqWith)
+					if(attr==null){
+					setNewGenAttribute(ent, ref, uniqWith)
+					newReferenceArttibute.add(uniqWith)
+					}else{
+						newReferenceArttibute.add(uniqWith)
+					}
+				}
+			}
+			ref.attributerefereced.addAll(newReferenceArttibute)
+			
+			}
 		}
 	}
 	def Attribute setNewGenAttribute(Entity ent, Reference ref, Attribute attrRef){
 		var Entity referenceEntity = ref.entity
 		var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
-					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name
+					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name.toLowerCase
 					newAttribute.type =  Util.copyType(attrRef.type)
 					ent.attributes.add(newAttribute)
 					ref.attribute.add(newAttribute)					
@@ -224,12 +242,12 @@ class JoomlaTranformator {
 	
 	def Attribute getAttributeReference(Entity ent, Entity referencedEntity, Attribute referenced){
 		for(Attribute a:ent.attributes ){
-			if(a.name.equalsIgnoreCase(referencedEntity.toString.toLowerCase +  "_"+ referenced.name))
+			if(a.name.equalsIgnoreCase(referencedEntity.name.toString.toLowerCase +  "_"+ referenced.name))
 			return a;
 		}
 		for(Reference ref:ent.references ){
 			
-			if(ref.entity.name == referencedEntity.name && ref.attributerefereced.contains(referenced)){
+			if(ref.entity.name == referencedEntity.name && ref.attributerefereced.filter[t | t.name.equalsIgnoreCase(referenced.name)].size>0 ){
 				var int index = ref.attributerefereced.indexOf(referenced)	
 				return ref.attribute.get(index)
 			}

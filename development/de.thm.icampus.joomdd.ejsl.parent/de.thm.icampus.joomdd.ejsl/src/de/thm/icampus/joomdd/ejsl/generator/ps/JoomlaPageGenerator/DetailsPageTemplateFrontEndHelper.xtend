@@ -6,6 +6,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 class DetailsPageTemplateFrontEndHelper {
 	private ExtendedDynamicPage dpage
@@ -420,7 +421,13 @@ class DetailsPageTemplateFrontEndHelper {
 	            JError::raiseError(403, JText::_('JERROR_ALERTNOAUTHOR'));
 	            return false;
 	        }
-	        
+	        $inputs =& JFactory::getApplication()->input->get("jform", array(), 'array');
+	        	
+	        	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference»
+	        	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
+	        	 $this->set«ref.entity.name»($inputs);
+	        	«ENDIF»
+	        	«ENDFOR»
 	        $table = $this->getTable();
 	        if ($table->save($data) === true) {
 	            return $table->id;
@@ -575,6 +582,9 @@ class DetailsPageTemplateFrontEndHelper {
 				<input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
 				<input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
 				<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
+				«IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
+				<input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
+				«ENDIF»
 				<input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)){
 				 echo $this->item->checked_out;}else{ echo JFactory::getUser()->id;} ?>" />
 				<input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)){
@@ -585,6 +595,9 @@ class DetailsPageTemplateFrontEndHelper {
 		<input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
 	<?php endif; ?>
 	«Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
+	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
+	  «Slug.generateEntytiesSiteInputRefrence(ref)»
+	«ENDFOR»  
 	<div class="fltlft" <?php if (!JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')): ?> style="display:none;" <?php endif; ?> >
 	                <?php echo JHtml::_('sliders.start', 'permissions-sliders-'.$this->item->id, array('useCookie'=>1)); ?>
 	                <?php echo JHtml::_('sliders.panel', JText::_('ACL Configuration'), 'access-rules'); ?>

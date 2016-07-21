@@ -20,6 +20,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
 import java.util.Iterator
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
+import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypeKinds
 
 class RessourceTransformer {
 	EJSLModel modelInstance
@@ -78,6 +79,7 @@ class RessourceTransformer {
 		if(page.editfields.empty && page.tablecolumns.empty){
 			for(Attribute attr: page.entities.get(0).attributes){
 				page.tablecolumns.add(attr)
+				
 				page.editfields.add(parseAttributeType(attr))
 			}
 		}
@@ -112,11 +114,17 @@ class RessourceTransformer {
 			for(Reference ref: ent.references){
 				 if(ref.entity.haveReferenTo(ent,ref.upper)){
 				 	if(!ref.entity.existingReferenceBetweenEntity(ent,newEntity)){
-				 		var String mappingEntityName = "mappingMDD" + ent.name + "" + ref.entity.name
+				 		var String mappingEntityName =  ent.name + "" + ref.entity.name
+				 	
 				 		var Entity mappingEntity = EJSLFactory.eINSTANCE.createEntity
 				 		mappingEntity.name = mappingEntityName
-				 		mappingEntity.attributes.addAll(ref.attribute.map[t | copyAttribute(t, ent)])
-				 		mappingEntity.attributes.addAll(ref.attributerefereced.map[t | copyAttribute(t, ref.entity)])
+				 		var EList<Attribute> attributeFromEntity = new BasicEList<Attribute>
+				 		var EList<Attribute> attributeToEntity = new BasicEList<Attribute>
+				 		attributeFromEntity.addAll(ref.entity.references.filter[t | t.entity.name == ent.name].get(0).attributerefereced)
+				 		attributeToEntity.addAll(ref.attributerefereced)
+				 		mappingEntity.attributes.addAll(copyAttribute( ent,attributeFromEntity))
+				 		mappingEntity.attributes.addAll(copyAttribute( ref.entity,attributeToEntity))
+				 		
 				 		mappingEntity.references.addAll(solveReference(ref,mappingEntity,ent,ref.entity))
 				 		newEntity.add(mappingEntity)
 				 		println("generateMappingsTable " + mappingEntityName)
@@ -148,14 +156,14 @@ class RessourceTransformer {
 		var Reference nRef =  EJSLFactory.eINSTANCE.createReference
 		nRef.attribute.addAll(mappingEntity.attributes.filter[t | isAttributeOfEntity(t,fromEntity.name)])
 		nRef.entity = fromEntity
-		nRef.attributerefereced.addAll(reference.attribute)
-		nRef.lower = "0"
+		nRef.attributerefereced.addAll(toEntity.references.filter[t | t.entity.name == fromEntity.name].get(0).attributerefereced)
+		nRef.lower = "1"
 		nRef.upper = "1"
 		var Reference mRef =  EJSLFactory.eINSTANCE.createReference
 		mRef.attribute.addAll(mappingEntity.attributes.filter[t | isAttributeOfEntity(t,toEntity.name)])
 		mRef.entity = toEntity
 		mRef.attributerefereced.addAll(reference.attributerefereced)
-		mRef.lower = "0"
+		mRef.lower = "1"
 		mRef.upper = "1"
 		var EList<Reference> result = new BasicEList<Reference>()
 		result.add(nRef)
@@ -165,7 +173,7 @@ class RessourceTransformer {
 	}
 	
 	private def isAttributeOfEntity(Attribute attribute, String entityName) {
-		if(attribute.name.startsWith(entityName + "_"))
+		if(attribute.name.startsWith(entityName.toLowerCase + "_"))
 		return true
 		
 		return false
@@ -173,19 +181,46 @@ class RessourceTransformer {
 	
 	
 	
-	private def Attribute copyAttribute(Attribute attribute, Entity entity) {
+	private def EList<Attribute> copyAttribute( Entity fromEntity, EList<Attribute> attributeOldList) {
+		var EList<Attribute> result = new BasicEList<Attribute>
+		for(Attribute attribute: attributeOldList){
 		var Attribute newAttr = EJSLFactory.eINSTANCE.createAttribute
-		newAttr.name = entity.name + "_" + attribute.name
+		newAttr.name = fromEntity.name.toLowerCase + "_" + attribute.name
 		newAttr.type = Util.copyType(attribute.type)
-
-		return newAttr
+		result.add(newAttr)
+		if(attribute.isIsunique){
+			newAttr.isunique=true
+		}
+			if(attribute.id){
+				var Attribute newID = EJSLFactory.eINSTANCE.createAttribute
+				newID.name = fromEntity.name.toLowerCase + "_" + "id"
+				var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
+				typeid.type =  StandardTypeKinds.INTEGER
+				typeid.notnull = true
+				newID.type = typeid
+				newAttr.withattribute = newID
+				result.add(newID)
+				
+			}
+			if(attribute.withattribute != null){
+				var Attribute newUniq = EJSLFactory.eINSTANCE.createAttribute
+				newUniq.name = fromEntity.name.toLowerCase + "_" + attribute.withattribute.name
+				newUniq.type = Util.copyType(attribute.withattribute.type)
+				newAttr.withattribute = newUniq
+				result.add(newUniq)
+			}
+			
+		
+        }
+        
+		return result
 	}
 
 	
 	
 	private def boolean existingReferenceBetweenEntity(Entity to, Entity from,EList<Entity> newEntityList){
-		var String mappingNameForward = "mapping" + to.name + "" + from.name
-		var String mappingNameReverse= "mapping" +from.name + "" +  to.name
+		var String mappingNameForward =  to.name + "" + from.name
+		var String mappingNameReverse= from.name + "" +  to.name
 		if(newEntityList.size ==0 )
 		return false
 		for(Entity ent: newEntityList){
@@ -198,11 +233,11 @@ class RessourceTransformer {
 	private def boolean deleteReferenceToEntity(Entity to, Entity from, Entity newEntity){
 		var Reference newref = EJSLFactory.eINSTANCE.createReference
 		var Reference oldRef = to.references.filter[t | t.entity.name == from.name].get(0)
-		newref.attribute.addAll(oldRef.attribute)
+		newref.attribute.addAll(from.references.filter[t | t.entity.name == to.name].get(0).attributerefereced)
 		newref.attributerefereced.addAll(newEntity.attributes.filter[t | isAttributeOfEntity(t,to.name)])
 		newref.entity = newEntity
-		newref.lower = "0"
-		newref.upper = "*"
+		newref.lower = "1"
+		newref.upper = "-1"
 		to.references.remove(oldRef)
 		to.references.add(newref)
 		return false
@@ -210,12 +245,19 @@ class RessourceTransformer {
 	}
 	private def Reference createNewReverseReference(Entity from, Entity to, Reference oldref){
 		var Reference newref = EJSLFactory.eINSTANCE.createReference
-		newref.attribute.addAll(oldref.attribute)
+		newref.attribute.addAll(to.attributes.filter[t | isContainInMappingEntity(t.name,to.name,from)])
 		newref.entity= from
 		newref.attributerefereced.addAll(from.attributes.filter[t | isAttributeOfEntity(t, to.name)])
 		newref.lower = "1"
 		newref.upper = "-1"
 		return newref
+	}
+	
+	def boolean isContainInMappingEntity(String attributeName, String toEntityname, Entity mappingEntity) {
+		
+		if(mappingEntity.attributes.filter[t | t.name.toLowerCase.equalsIgnoreCase(toEntityname.toLowerCase() + "_"+attributeName)].size >0)
+		   return true
+		return false
 	}
 	
 	private def boolean haveReferenTo(Entity to, Entity from, String upperValue){

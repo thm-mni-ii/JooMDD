@@ -1,37 +1,37 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator
 
+import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import java.io.File
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import org.eclipse.xtext.generator.IFileSystemAccess
+import java.io.File
 
 class FieldsGenerator {
 
-	ExtendedReference mainRef
-	ExtendedComponent com
-	String nameField
-	ExtendedEntity entFrom
+	public ExtendedReference mainRef
+	public ExtendedComponent com
+	public String nameField
+	public ExtendedEntity entFrom
 
 	public new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
 		mainRef = ref
 		com = component
 		entFrom = from
-		nameField = from.name + "To" + ref.entity.name+ from.extendedReference.indexOf(ref)
+		nameField = from.name + "To" + ref.entity.name
 	}
 
 	public new(ExtendedComponent component, ExtendedEntity from) {
 		com = component
 		entFrom = from
 	}
-    
-    
+
 	public def String getnameField() {
 		return nameField
 	}
 
-	public def CharSequence genReferenceField() '''
+	public def CharSequence genRefrenceField() '''
 		<?php
 		«Slug.generateFileDoc(com, true)»
 		
@@ -51,12 +51,10 @@ class FieldsGenerator {
 			     	«ENDIF»
 			     «ENDFOR»
 			   );
-			      «genGeTInput»
+			      «genGetInput»
 			      
 			      «genGetAllData»
-			      
-			      «genGetAllRestData»
-			      
+						      
 			      «genGetReferencedata»
 			      «genGenerateJsonValue»
 			      «gengenerateStringValue»
@@ -64,7 +62,7 @@ class FieldsGenerator {
 		}
 	'''
 
-	private def CharSequence genGeTInput() '''
+	private def CharSequence genGetInput() '''
 		/**
 		 * Method to get the field input markup.
 		 *
@@ -80,7 +78,7 @@ class FieldsGenerator {
 				      $id = intval($input->get('id'));
 				      if(empty($id)){
 				      	$alldata = $this->getAllData();
-				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' name='" . $this->name. "'>";
+				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' >";
 				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($alldata as $data){
 				          $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
@@ -91,16 +89,13 @@ class FieldsGenerator {
 				      return implode($html);
 				      }
 				      $selectData = $this->getReferencedata($id);
-				      $restData = $this->getAllRestData($id);
 				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select' class='form-control' name='" . $this->name. "select'>";
 				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($selectData as $selected){
-				          $html[] = "<option selected='selected' value='". $this->generateJsonValue($selected) ."'>"
+				          $html[] = "<option $item->selected value='". $this->generateJsonValue($selected) ."'>"
 				          . $this->generateStringValue($selected) ."</option>";
 				      }
-				      foreach($restData as $rest){
-				          $html[] = "<option  value='". $this->generateJsonValue($rest)."'>" . $this->generateStringValue($rest) ."</option>";
-				      }
+				      
 				      $html[]="</select>";
 				  $html[]="<input type='hidden' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->id. "'/>";
 			return implode($html);
@@ -114,66 +109,44 @@ class FieldsGenerator {
 	 */
 	protected function getReferencedata($id)
 	{
-	    $db = JFactory::getDbo();
-	    $query = $db->getQuery(true);
-	    $query->select("b.*")
-	          ->from( $this->referenceStruct["table"] . " as a")
-	          ->leftJoin($this->referenceStruct["foreignTable"] . " as b on 
-	          «FOR attr : mainRef.extendedAttribute»
+		  $db = JFactory::getDbo();
+          $query = $db->getQuery(true);
+		  $query->select("distinct (case a.id when '$id' then 'selected'
+          						else ' ' end) as selected");
+		  foreach($this->keysAndForeignKeys as $key =>$value){
+			  $query->select(" b.$value");
+		  }
+
+		  $query->from( $this->referenceStruct["foreignTable"] . " as b ")
+                ->leftJoin($this->referenceStruct["table"] . " as a on 
+                «FOR attr : mainRef.extendedAttribute»
           	«IF attr != mainRef.extendedAttribute.last»
              b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= a.«attr.name.toLowerCase» AND 
   		  «ELSE»
-  		     b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= a.«attr.name.toLowerCase»"	       
+  		     b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= a.«attr.name.toLowerCase»	       
           «ENDIF»
-          «ENDFOR»
-           )
-		         ->where("b.state = 1")
-		         ->where("a.id =" . $id)
-		         ->order("a.id" . " ASC");
-		    $db->setQuery($query);
-		    return $db->loadObjectList();
+          «ENDFOR»")
+      	         ->where("b.state = 1")
+      	         ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC")
+		         ->group('b.«mainRef.attributerefereced.get(0).name.toLowerCase»');
+      	    $db->setQuery($query);
+      	    return $db->loadObjectList();
+	   
 		}
 
 	'''
 
-	private def CharSequence genGetAllRestData() '''
-	protected function getAllRestData($id)
-	{
-    $db = JFactory::getDbo();
-    $queryALL = $db->getQuery(true);
-    $query = $db->getQuery(true);
-    $query->select("b.id")
-        ->from( $this->referenceStruct["table"] . " as a")
-        ->leftJoin($this->referenceStruct["foreignTable"]. " as b on 
-           «FOR attr : mainRef.extendedAttribute»
-           «IF attr != mainRef.extendedAttribute.last»
-              b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name»= a.«attr.name.toLowerCase» AND 
-           «ELSE»
-              b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name»= a.«attr.name.toLowerCase»"
-           «ENDIF»
-            «ENDFOR»
-            ) 
-		        ->where("b.state = 1")
-		        ->where("a.id =" . $id);
-		    $queryALL->select("*")
-		        ->from($this->referenceStruct["foreignTable"])
-		        ->where("state = 1")
-		        ->where("id not in (" . $query  .")")
-		        ->order("id" . " ASC");
-		    $db->setQuery($queryALL);
-		    return $db->loadObjectList();
-		}
-			'''
+	
 
 	private def CharSequence genGetAllData() '''
 	 protected function getAllData(){
 	    $db = JFactory::getDbo();
-	    $queryALL = $db->getQuery(true);
-	    $queryALL->select("*")
-	        ->from($this->referenceStruct["foreignTable"])
-	        ->where("state = 1")
-	        ->order(array_values($this->keysAndForeignKeys)[0] . " ASC");
-	    $db->setQuery($queryALL);
+	   	    $query = $db->getQuery(true);
+	   	    $query->select("«Slug.transformAttributeListInString("b.",mainRef.attributerefereced,',')»")
+	   	          ->from($this->referenceStruct["foreignTable"] )
+	   		         ->where("b.state = 1")
+	   		         ->order("a.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
+	    $db->setQuery($query);
 	    return $db->loadObjectList();
 	}
 	'''
@@ -276,10 +249,9 @@ class FieldsGenerator {
 	   
 	 }
 	'''
-	
-	def dogenerate(String path, IFileSystemAccess access) {
+	def public dogenerate(String path, IFileSystemAccess access) {
 		if(this.mainRef != null)
-		access.generateFile(path+ "/"+getnameField +".php", genReferenceField)
+		access.generateFile(path+ "/"+getnameField +".php", genRefrenceField)
 		var File fieldEntity = new File (path+ "/"+entFrom.name +".php")
 		if(!fieldEntity.exists){
 		access.generateFile(path+ "/"+entFrom.name +".php", genFieldsForEntity)

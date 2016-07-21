@@ -14,6 +14,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.eJSL.Entity
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 
 /**
  * <!-- begin-user-doc -->
@@ -197,6 +199,21 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 					«FOR ExtendedAttribute attr : e.extendedAttributeList»
 					«writeAttribute(e,attr,component,page)»
 					«ENDFOR»
+					«FOR ExtendedReference ref : e.extendedReference.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
+					«var Entity foreign = Slug.getOtherEntityToMapping(ref)»
+					<field name="«ref.entity.name.toLowerCase»_id"
+							   type ="«e.name.toLowerCase»To«foreign.name.toLowerCase»"
+							   id="«ref.entity.name.toLowerCase»_id"
+							   label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»"
+							   description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"
+						/>
+					«FOR Attribute attr: Slug.getOtherAttribute(ref)»
+					<field name="«attr.name.toLowerCase»"
+					   type ="hidden"
+					   id="«attr.name.toLowerCase»"
+						/>
+					«ENDFOR»
+					«ENDFOR»
 					«ENDFOR»
 				   <field name="state" type="list"
 				        label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS"
@@ -333,7 +350,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    		
    			for(ExtendedReference ref: en.extendedReference.filter[t | t.upper.equalsIgnoreCase("1")]){
    			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
-   				buff.append('''type ="«en.name + "to" +ref.entity.name»«en.extendedReference.indexOf(ref)»"''')
+   				buff.append('''type ="«en.name + "to" +ref.entity.name»"''')
    				return buff.toString
    			}
    		}

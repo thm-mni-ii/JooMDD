@@ -3,6 +3,7 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 class DetailsPageTemplateBackendHelper {
 	private ExtendedDynamicPage dpage
@@ -134,7 +135,7 @@ class DetailsPageTemplateBackendHelper {
 				<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
 				<input type="hidden" name="jform[published]" value="<?php if($this->item->id != 0) echo $this->item->state; else echo 1;?>"/>
 				«IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
-				<input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0)»; ?>" />
+				<input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
 				«ENDIF»
 				<input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)){
 				 echo $this->item->checked_out;}else{ echo JFactory::getUser()->id;} ?>" />
@@ -150,10 +151,15 @@ class DetailsPageTemplateBackendHelper {
 
 				<?php } ?>
 				«Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
-				   </fieldset>
+				  
+				 
+				</fieldset>
 			</div>
 			</div>
 	        <?php echo JHtml::_('bootstrap.endTab'); ?>
+	        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
+			  «Slug.generateEntytiesBackendInputRefrence(ref)»
+			«ENDFOR» 
 	        
 		    <?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
 				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>

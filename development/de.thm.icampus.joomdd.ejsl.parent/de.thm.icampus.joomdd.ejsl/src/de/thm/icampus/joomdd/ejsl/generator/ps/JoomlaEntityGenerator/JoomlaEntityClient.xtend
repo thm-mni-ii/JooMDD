@@ -36,12 +36,18 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t!=null]) {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(comp, ent)
 			generateFile( path + "models/fields/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
-			for (ExtendedReference ref : ent.extendedReference.filter[t | t.upper.equalsIgnoreCase("1")]) {
-				var FieldsGenerator fieldReference = new FieldsGenerator(ref, comp,ent)
-				generateFile(
-					path + "models/fields/" + fieldReference.getnameField.toLowerCase  +
-						".php", fieldReference.genReferenceField) 
-			}
+				for(ExtendedReference ref: ent.extendedReference){
+				switch ref.upper{
+						case "1":{
+							var FieldsGenerator fields = new FieldsGenerator(ref,comp, ent)
+							fields.dogenerate(path+ "models/fields/" , fsa)
+						}
+						case "*" , case "-1":{
+							var FieldsCardinalityGenerator fields = new FieldsCardinalityGenerator(ref,comp, ent)
+							fields.dogenerate(path+ "models/fields/" , fsa)
+						}
+					}
+				}
 		}
 		generateFile(path + "models/fields/" + comp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(comp) )
 	
