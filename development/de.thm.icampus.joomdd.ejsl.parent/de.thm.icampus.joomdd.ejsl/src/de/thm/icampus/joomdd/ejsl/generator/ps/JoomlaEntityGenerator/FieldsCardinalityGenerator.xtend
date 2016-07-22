@@ -110,7 +110,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 			  		     b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase»	       
 			          «ENDIF»
 			          «ENDFOR» 	")
-              ->from($this->referenceStruct["foreignTable"])
+              ->from($this->referenceStruct["foreignTable"] . ' as b')
               ->where("state = 1")
               ->order(" «foreignReference.attributerefereced.get(0).name.toLowerCase»  ASC");
           $db->setQuery($queryALL);
@@ -135,31 +135,27 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		          $db = JFactory::getDbo();
 		          $query = $db->getQuery(true);
 	
-		          $query->select("«FOR foreignAttr : foreignReference.attribute»
-      					           b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» , 
-      					          «ENDFOR» 	
-		          					(case when   «FOR attr : mainRef.extendedAttribute»
-		          					          	«IF attr != mainRef.extendedAttribute.last»
-		          					     a.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
-		          					  		  «ELSE»
-		          						a.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
-		          					          «ENDIF»
-		          					          «ENDFOR» then 'selected'
-		          						else ' ' end) as selected , (case a.id when null then 0 else a.id end) as id ")
-		              ->from($this->referenceStruct["mappingTable"] . " as a")
-		              ->rightJoin($this->referenceStruct["foreignTable"] . " as b on 
-		                 «FOR foreignAttr : foreignReference.attribute»
-				          	«IF foreignAttr != foreignReference.attribute.last»
-				             b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = a.«foreignAttr.name.toLowerCase» AND 
-				  		  «ELSE»
-				  		     b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = a.«foreignAttr.name.toLowerCase»	       
-				          «ENDIF»
-				          «ENDFOR» 	
-		                 
-		                 "
-		                  ) 
-		      	        ->where("b.state = 1")
-				  		->group("b.«foreignReference.attributerefereced.get(0).name.toLowerCase»");
+		          $query->select("B.id,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
+		          (case when B.id <> 0   then 'selected' else ' ' end) as selected ")
+		              ->from($this->referenceStruct["foreignTable"] . " as A")
+		              ->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
+		              «FOR attr : mainRef.extendedAttribute»
+			          	«IF attr != mainRef.extendedAttribute.last»
+			     C.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
+			  		  «ELSE»
+				C.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
+		          «ENDIF»
+		          «ENDFOR»
+		               ) as B on 
+	                 «FOR foreignAttr : foreignReference.attribute»
+			          	«IF foreignAttr != foreignReference.attribute.last»
+			             A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase» AND 
+			  		  «ELSE»
+			  		     A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase»") 	       
+			          «ENDIF»
+			          «ENDFOR»
+		      	        ->where("A.state = 1")
+				  		->order("A.«foreignReference.attributerefereced.get(0).name.toLowerCase»");
 		      	    $db->setQuery($query);
 		      	    return $db->loadObjectList();
 		      	}

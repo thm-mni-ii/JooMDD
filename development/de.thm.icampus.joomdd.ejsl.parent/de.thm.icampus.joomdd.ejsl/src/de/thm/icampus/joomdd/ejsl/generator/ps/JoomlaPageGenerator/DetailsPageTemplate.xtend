@@ -225,13 +225,18 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	public function save($data){
 	$inputs =& JFactory::getApplication()->input->get("jform", array(), 'array');
 	
+	if(parent::save($data)){
+		if(empty($inputs["id"]) || $inputs["id"] == 0)
+					$inputs["id"]= $this->getItem()->id;
 	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference»
 	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
 	 $this->set«ref.entity.name»($inputs);
 	«ENDIF»
 	«ENDFOR»
-	
-	return parent::save($data);
+	}else{
+				return false;
+			}
+		return true;
 	}
 	'''
 	
@@ -248,19 +253,21 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 		$«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
 	 		«ENDFOR»
 
-	 		if(«Slug.transformAttributeListInString("!empty(", referenceAttr ,"&&", ")")»){
+	 		if(«Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")»){
+	 			if(!empty($«ref.entity.name.toLowerCase»_id)){
 	 			foreach( $«ref.entity.name.toLowerCase»_id as $item){
 	 				if(intval($item) != 0){
 	 					$mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
 	 					$mappingTableDelete->delete($item);
 	 				}
 	 			}
+	 			}
 	            for($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++){
 	         
 	 				$mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
 	 				$dataToSave = array();
 	 				«FOR Attribute attr: referenceAttr»
-	 				$dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$count];
+	 				$dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
 	 				«ENDFOR»
 	 				«FOR ExtendedAttribute toattr: ref.extendedAttribute»
 	 				$dataToSave["«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;

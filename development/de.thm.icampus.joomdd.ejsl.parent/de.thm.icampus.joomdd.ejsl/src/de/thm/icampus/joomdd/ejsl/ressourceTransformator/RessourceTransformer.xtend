@@ -188,9 +188,9 @@ class RessourceTransformer {
 		newAttr.name = fromEntity.name.toLowerCase + "_" + attribute.name
 		newAttr.type = Util.copyType(attribute.type)
 		result.add(newAttr)
-		if(attribute.isIsunique){
-			newAttr.isunique=true
-		}
+//		if(attribute.isIsunique){
+//			newAttr.isunique=true
+//		}
 			if(attribute.id){
 				var Attribute newID = EJSLFactory.eINSTANCE.createAttribute
 				newID.name = fromEntity.name.toLowerCase + "_" + "id"
@@ -198,7 +198,6 @@ class RessourceTransformer {
 				typeid.type =  StandardTypeKinds.INTEGER
 				typeid.notnull = true
 				newID.type = typeid
-				newAttr.withattribute = newID
 				result.add(newID)
 				
 			}
@@ -206,7 +205,7 @@ class RessourceTransformer {
 				var Attribute newUniq = EJSLFactory.eINSTANCE.createAttribute
 				newUniq.name = fromEntity.name.toLowerCase + "_" + attribute.withattribute.name
 				newUniq.type = Util.copyType(attribute.withattribute.type)
-				newAttr.withattribute = newUniq
+			//	newAttr.withattribute = newUniq
 				result.add(newUniq)
 			}
 			

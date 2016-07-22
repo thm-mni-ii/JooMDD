@@ -92,7 +92,7 @@ class FieldsGenerator {
 				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select' class='form-control' name='" . $this->name. "select'>";
 				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($selectData as $selected){
-				          $html[] = "<option $item->selected value='". $this->generateJsonValue($selected) ."'>"
+				          $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
 				          . $this->generateStringValue($selected) ."</option>";
 				      }
 				      
@@ -143,9 +143,9 @@ class FieldsGenerator {
 	    $db = JFactory::getDbo();
 	   	    $query = $db->getQuery(true);
 	   	    $query->select("«Slug.transformAttributeListInString("b.",mainRef.attributerefereced,',')»")
-	   	          ->from($this->referenceStruct["foreignTable"] )
+	   	          ->from($this->referenceStruct["foreignTable"] . " as b")
 	   		         ->where("b.state = 1")
-	   		         ->order("a.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
+	   		         ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
 	    $db->setQuery($query);
 	    return $db->loadObjectList();
 	}

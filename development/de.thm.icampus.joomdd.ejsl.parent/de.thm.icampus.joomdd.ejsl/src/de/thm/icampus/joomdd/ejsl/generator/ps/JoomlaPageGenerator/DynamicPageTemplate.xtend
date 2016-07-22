@@ -202,7 +202,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 					«FOR ExtendedReference ref : e.extendedReference.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
 					«var Entity foreign = Slug.getOtherEntityToMapping(ref)»
 					<field name="«ref.entity.name.toLowerCase»_id"
-							   type ="«e.name.toLowerCase»To«foreign.name.toLowerCase»"
+							   type ="«e.name.toLowerCase»To«ref.entity.name.toLowerCase»"
 							   id="«ref.entity.name.toLowerCase»_id"
 							   label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»"
 							   description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"
