@@ -384,7 +384,7 @@ public class Slug  {
 				   	
 				   }
 				   else	
-				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item->«attribute.name.toLowerCase»)'''
+				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
 		 	 
 		 	}}else{
 		 		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
@@ -433,11 +433,30 @@ public class Slug  {
  		InternalLink :{
  			if(isLinkedAttributeReference(linkItem.linkedAttribute, page)){
  				var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
- 				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced,",")»)),'''	
+ 				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.generateAttributeAndRefernce(ref)»
+ 				)),'''	
  			}				
  		}	
  	}»«ENDFOR»null);
  '''
+	
+	def static CharSequence generateAttributeAndRefernce(Reference reference) {
+		var StringBuffer result = new StringBuffer
+		
+		for(Attribute attr: reference.attribute){
+			var int index = reference.attribute.indexOf(attr)
+			var Attribute referenced = reference.attributerefereced.get(index)
+			if(attr != reference.attribute.last)
+			result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»",''')
+			else{
+				result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»"''')
+			}
+			
+		}
+		
+		return result.toString
+	}
+	
 	static def CharSequence transformAttributeListInString(EList<Attribute>attributes, String separeSign){
 		var StringBuffer result = new StringBuffer()
 		for(attr: attributes){

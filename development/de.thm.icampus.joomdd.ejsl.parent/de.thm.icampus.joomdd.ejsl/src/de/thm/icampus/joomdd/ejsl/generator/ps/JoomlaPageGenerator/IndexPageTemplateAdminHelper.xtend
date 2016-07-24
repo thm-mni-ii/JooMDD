@@ -558,7 +558,7 @@ $sortFields = $this->getSortFields();
       $query->select("id")
           ->from($dbtable);
        foreach ($attribute as $index=>$attributItem){ 
-          $query->where($attributItem . " like '$attrvalue[$index]'");
+          $query->where($attributItem . " like '".$attrvalue->$index."'");
        }
       $db->setQuery($query);
       $result = $db->loadObject();
