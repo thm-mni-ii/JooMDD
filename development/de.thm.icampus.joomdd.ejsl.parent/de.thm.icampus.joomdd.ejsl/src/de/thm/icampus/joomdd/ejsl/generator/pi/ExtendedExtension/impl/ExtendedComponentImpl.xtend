@@ -97,8 +97,8 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 		 allExtendedPage.addAll(backEndPagesReference.map[t| t.extendedPage  ])
 		 allExtendedPage.addAll(fronEndpagesReference.map[t | if(!allExtendedPage.contains(t)) t.extendedPage])
 		 allDynamicPage.addAll((allExtendedPage.filter[t | t.extendedDynamicPageInstance != null]).map[ t | new ExtendedDynamicPageImpl(t.intance as DynamicPage)])
-		 if(instance.eContainer != null)
-		 initPagesForMappingsEntity()
+//		 if(instance.eContainer != null)
+//		 initPagesForMappingsEntity()
        	
 	}
 	

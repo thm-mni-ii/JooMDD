@@ -395,16 +395,9 @@ class IndexPageTemplateAdminHelper {
 	</tr>
 </thead>
 <tfoot>
-    <?php 
-    if(isset($this->items[0])){
-        $colspan = count(get_object_vars($this->items[0]));
-    }
-    else{
-        $colspan = 10;
-    }
-?>
+   
 <tr>
-	<td colspan="<?php echo $colspan ?>">
+	 <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
 		<?php echo $this->pagination->getListFooter(); ?>
 	</td>
 </tr>
@@ -519,10 +512,7 @@ $sortFields = $this->getSortFields();
         // Initialise variables.
         $app = JFactory::getApplication('administrator');
 
-        // Load the filter state.
-         $published = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_published');
-        	      $this->setState('filter.published', $published);
-        
+        // Load the filter state. 
   		$state = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
                   $this->setState('filter.state', $state);
         $created_by = $app->getUserStateFromRequest($this->context . '.filter.created_by', 'filter_created_by');

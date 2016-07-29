@@ -661,6 +661,7 @@ $this->views = $views;
 			<fieldset name="component" label="«name.toUpperCase»_LABEL" description="«name.toUpperCase»_DESC">
 			
 			</fieldset>
+			
 			«FOR g : component.extendedParameterGroupList»
 	<fieldset name="«g.name.toLowerCase»" label="«g.name.toUpperCase»_LABEL" description="«g.name.toUpperCase»_DESC">
 				«FOR p:g.extendedParameterList»
@@ -668,6 +669,14 @@ $this->views = $views;
 				«ENDFOR»
 		</fieldset>
 			«ENDFOR»
+		«FOR ExtendedPage page : extendeComp.allExtendedPage»
+		<fieldset name="«page.name.toLowerCase»" label="«Slug.nameExtensionBind("com",extendeComp.name).toUpperCase»_CONFIG_«page.name.toUpperCase»_LABEL">
+				
+				«IF page.extendedDynamicPageInstance != null && !page.extendedDynamicPageInstance.detailsPage»
+				<field name="«page.name.toLowerCase »_limit" type="number" label="JCONFIG_ITEMS_LIMIT" default="10" />
+				«ENDIF»
+			</fieldset>
+		«ENDFOR»
 			<fieldset
 					name="permissions"
 					label="JCONFIG_PERMISSIONS_LABEL"

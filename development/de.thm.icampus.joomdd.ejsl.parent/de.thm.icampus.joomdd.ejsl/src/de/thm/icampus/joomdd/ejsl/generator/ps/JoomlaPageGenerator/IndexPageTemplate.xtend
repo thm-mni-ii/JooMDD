@@ -119,6 +119,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		«helperAdmin.genAdminModelGetItem»
 		«helperAdmin.genAdminModelGetListQuery(ipage.filters)»
 		«helperAdmin.genGetIdOfReferenceItem»
+		«generateInitStart()»
 	}
 	
 	'''
@@ -188,6 +189,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	 «IF !ipage.entities.get(0).references.empty»
 		«helperAdmin.genGetIdOfReferenceItem»
 	«ENDIF»
+	«generateInitStart()»
 	}
 	
 	'''
@@ -276,7 +278,43 @@ class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLega
    '''
 			
 		
+	public def CharSequence generateInitStart()'''
+	public function getStart()
+		{
+			$store = $this->getStoreId('getstart');
+			$app = JFactory::getApplication();
+			$input = $app->input;
+			$componentName =  $input->get('option');
+			$params = JComponentHelper::getParams($componentName);
 	
+			// Try to load the data from internal storage.
+			if (isset($this->cache[$store]))
+			{
+				return $this->cache[$store];
+			}
+			$limit= (int)$app->getUserStateFromRequest($this->context . '.list.limit', 'limit');
+			if(empty($limit)){
+				$limit = (int) $params->get("«ipage.name.toLowerCase»_limit");
+			}
+			$this->setState('list.limit', $limit);
+			$start= (int)$app->getUserStateFromRequest($this->context . '.list.start', 'limitstart');
+			if ($start > 0)
+			{
+				$total = $this->getTotal();
+				if ($start > $total)
+				{
+					$start = max(0, ($start-$limit) + 1);
+				}
+			}
+			$this->setState('list.start', $start);
+	
+	
+			// Add the total to the internal cache.
+			$this->cache[$store] = $start;
+	
+			return $this->cache[$store];
+		}
+	''' 
 		
 
 }

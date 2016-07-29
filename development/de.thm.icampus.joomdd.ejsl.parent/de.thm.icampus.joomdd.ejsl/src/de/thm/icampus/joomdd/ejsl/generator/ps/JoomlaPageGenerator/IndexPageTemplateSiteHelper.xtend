@@ -183,7 +183,7 @@ class IndexPageTemplateSiteHelper {
     </thead>
      <tfoot>
     <tr>
-        <td colspan="<?php echo isset($this->items[0]) ? count(get_object_vars($this->items[0])) : 10; ?>">
+         <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
             <?php echo $this->pagination->getListFooter(); ?>
         </td>
     </tr>
