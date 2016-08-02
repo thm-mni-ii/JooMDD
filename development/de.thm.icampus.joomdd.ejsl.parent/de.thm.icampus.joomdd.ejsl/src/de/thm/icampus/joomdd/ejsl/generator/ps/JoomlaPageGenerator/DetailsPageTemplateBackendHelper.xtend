@@ -158,7 +158,7 @@ class DetailsPageTemplateBackendHelper {
 			</div>
 	        <?php echo JHtml::_('bootstrap.endTab'); ?>
 	        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
-			  «Slug.generateEntytiesBackendInputRefrence(ref)»
+			  «Slug.generateEntytiesBackendInputRefrence(ref,com)»
 			«ENDFOR» 
 	        
 		    <?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>

@@ -89,7 +89,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 
       		      $referenceData = $this->getAllReferenceData($data_item);
       		      $html[] = "<select  multiple='true' onchange='setMultipleValueForeignKeys(this)' generated='true'  id='" . $this->id . "select' class='form-control' >";
-      		      $html[] = "<option>". JText::_("JOPTION_SELECT_PARTICIPANT_NAME"). "</option>";
+      		      $html[] = "<option>". JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
 
       		      foreach($referenceData as $reference){
       		          $html[] = "<option  $reference->selected  value='". $this->generateJsonValue($reference)."'>" . $this->generateStringValue($reference) ."</option>";

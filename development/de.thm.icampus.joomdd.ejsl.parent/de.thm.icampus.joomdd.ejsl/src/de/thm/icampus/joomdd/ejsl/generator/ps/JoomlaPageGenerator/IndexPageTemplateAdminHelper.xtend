@@ -327,41 +327,11 @@ class IndexPageTemplateAdminHelper {
 		}
 		 
 	'''
-	def CharSequence genAdminViewSortFields()'''
-	protected function getSortFields()
-	{
-		return array(
-		'a.id' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ID'),
-		'a.ordering' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_ORDERING'),
-		'a.state' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_STATE')
-        «FOR ExtendedAttribute attr : indexpage.allAttributeOfFilterAndColum»
-		  , 'a.«attr.name.toLowerCase»' => JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«(attr.entity).name.toUpperCase»_«attr.name.toUpperCase»')
-         «ENDFOR»
-		
-		);
-	}
-	'''
+
 	def private CharSequence genAdminViewLayoutFilters()'''
 	  <?php
 	        echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-	        ?>
-	<div id="filter-bar" class="btn-toolbar">
-			<div class="btn-group pull-right hidden-phone">
-				<label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
-				<select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
-					<option value=""><?php echo JText::_('JFIELD_ORDERING_DESC');?></option>
-					<option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
-					<option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
-				</select>
-			</div>
-			<div class="btn-group pull-right">
-				<label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
-				<select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-					<option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-					<?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
-				</select>
-			</div>
-		</div>        
+	        ?>      
 	
 	 '''
 	 def private CharSequence genAdminViewLayoutData(EList<ExtendedAttribute>column)'''
@@ -394,14 +364,7 @@ class IndexPageTemplateAdminHelper {
     <?php endif; ?>
 	</tr>
 </thead>
-<tfoot>
-   
-<tr>
-	 <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
-		<?php echo $this->pagination->getListFooter(); ?>
-	</td>
-</tr>
-</tfoot>
+
 <tbody>
 <?php foreach ($this->items as $i => $item) :
 	$ordering   = ($listOrder == 'a.ordering');
@@ -449,6 +412,14 @@ class IndexPageTemplateAdminHelper {
 		</tr>
 		<?php endforeach; ?>
 	</tbody>
+	<tfoot>
+	   
+	<tr>
+		 <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
+			<?php echo $this->pagination->getListFooter(); ?>
+		</td>
+	</tr>
+	</tfoot>
 </table>
 '''
 def  CharSequence genAdminViewLayoutForm()''' 
@@ -485,7 +456,7 @@ if ($saveOrder)
 	$saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
 	JHtml::_('sortablelist.sortable', '«indexpage.name.toFirstUpper»List', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
-$sortFields = $this->getSortFields();
+
 ?>
 <script type="text/javascript">
 	Joomla.orderTable = function() {
@@ -508,25 +479,14 @@ $sortFields = $this->getSortFields();
      *
      * Note. Calling getState in this method will result in recursion.
      */
-    protected function populateState($ordering = null, $direction = null) {
-        // Initialise variables.
-        $app = JFactory::getApplication('administrator');
-
-        // Load the filter state. 
-  		$state = $app->getUserStateFromRequest($this->context . '.filter.state', 'filter_state');
-                  $this->setState('filter.state', $state);
-        $created_by = $app->getUserStateFromRequest($this->context . '.filter.created_by', 'filter_created_by');
-                          $this->setState('filter.created_by', $created_by);
-         «FOR ExtendedAttribute attr: indexpage.extendFiltersList»
-         $«attr.name» = $app->getUserStateFromRequest($this->context . '.filter.«attr.name»', 'filter_«attr.name»');
-                      $this->setState('filter.«attr.name»', $«attr.name»);
-         «ENDFOR»
+    protected function populateState($ordering = 'a.id', $direction = 'asc') {
+        
         // Load the parameters.
         $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');
         $this->setState('params', $params);
 
         // List state information.
-        parent::populateState('a.id', 'asc');
+        parent::populateState($ordering, $direction);
     }
  '''
  

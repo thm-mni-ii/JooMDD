@@ -58,6 +58,8 @@ class EJSLGenerator extends AbstractGenerator {
 				     }
 				}
 			}
+			println("The Generation are successfull! \n Thank you for use this Tools!")
+			
 			
 		}
 	}

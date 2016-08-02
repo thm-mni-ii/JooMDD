@@ -546,9 +546,9 @@ public class Slug  {
 	return ref.entity
 	}
 	
-	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference) '''
+	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference, ExtendedComponent com) '''
 	<?php if (JFactory::getUser()->authorise('core.admin','conference')) : ?>
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', JText::_('JGLOBAL_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
+				<?php echo JHtml::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
 	 <div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>

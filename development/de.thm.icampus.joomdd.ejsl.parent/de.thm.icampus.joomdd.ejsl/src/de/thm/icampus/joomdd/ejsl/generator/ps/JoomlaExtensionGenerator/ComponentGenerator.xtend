@@ -669,14 +669,6 @@ $this->views = $views;
 				«ENDFOR»
 		</fieldset>
 			«ENDFOR»
-		«FOR ExtendedPage page : extendeComp.allExtendedPage»
-		<fieldset name="«page.name.toLowerCase»" label="«Slug.nameExtensionBind("com",extendeComp.name).toUpperCase»_CONFIG_«page.name.toUpperCase»_LABEL">
-				
-				«IF page.extendedDynamicPageInstance != null && !page.extendedDynamicPageInstance.detailsPage»
-				<field name="«page.name.toLowerCase »_limit" type="number" label="JCONFIG_ITEMS_LIMIT" default="10" />
-				«ENDIF»
-			</fieldset>
-		«ENDFOR»
 			<fieldset
 					name="permissions"
 					label="JCONFIG_PERMISSIONS_LABEL"

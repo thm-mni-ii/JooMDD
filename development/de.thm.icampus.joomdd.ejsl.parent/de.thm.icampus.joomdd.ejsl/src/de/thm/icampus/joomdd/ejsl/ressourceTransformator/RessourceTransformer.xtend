@@ -124,7 +124,8 @@ class RessourceTransformer {
 				 		attributeToEntity.addAll(ref.attributerefereced)
 				 		mappingEntity.attributes.addAll(copyAttribute( ent,attributeFromEntity))
 				 		mappingEntity.attributes.addAll(copyAttribute( ref.entity,attributeToEntity))
-				 		
+				 		ent.attributes.removeAll(ref.attribute)
+				 		ref.entity.attributes.removeAll(ref.entity.references.filter[t | t.entity.name == ent.name].get(0).attribute)
 				 		mappingEntity.references.addAll(solveReference(ref,mappingEntity,ent,ref.entity))
 				 		newEntity.add(mappingEntity)
 				 		println("generateMappingsTable " + mappingEntityName)

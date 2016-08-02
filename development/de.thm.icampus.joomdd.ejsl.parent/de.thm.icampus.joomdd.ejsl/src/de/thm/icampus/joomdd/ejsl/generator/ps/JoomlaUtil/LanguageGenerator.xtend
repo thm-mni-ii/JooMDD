@@ -14,6 +14,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageFi
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 
 class LanguageGenerator extends AbstractExtensionGenerator {
 
@@ -84,7 +86,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 		
 		JTEMPLATE_LAYOUT_LIST="List Layout"
 		JTEMPLATE_LAYOUT_TABLE="Table layout"
-		
+		JOPTION_SELECT_LIMIT = "limit"
 		JPUBLISHED="published"
 		JUNPUBLISHED="unpublished"
 		JARCHIVED="archived"
@@ -113,8 +115,9 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			
 			«FOR ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]»
 				«var ExtendedDynamicPage dtPage = dynamicPagereference.extendedPage.extendedDynamicPageInstance as ExtendedDynamicPage »
-				
 				«FOR ExtendedEntity ent: dtPage.extendedEntityList»
+					«Slug.nameExtensionBind("com", com.name).toUpperCase»_«ent.name.toUpperCase» = "«ent.name.toFirstUpper»"
+					«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«ent.name.toUpperCase» = "Select a «ent.name.toFirstUpper»"
 					«FOR ExtendedAttribute attr: ent.allattribute»
 						« var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) »
 						«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»="«Slug.slugify(attr.name).toFirstUpper»"
@@ -125,6 +128,10 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 							«ENDFOR»
 						«ENDIF»	
 					«ENDFOR»
+				 «FOR ExtendedReference ref: ent.extendedReference.filter[t | t.upper.equalsIgnoreCase("-1")]»
+				 «var Entity refEntity = Slug.getOtherEntityToMapping(ref)»
+				  «Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«refEntity.name.toUpperCase» = "«refEntity.name.toFirstUpper»"
+				 «ENDFOR»
 				«ENDFOR»
 			«ENDFOR»
 			«FOR ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]»

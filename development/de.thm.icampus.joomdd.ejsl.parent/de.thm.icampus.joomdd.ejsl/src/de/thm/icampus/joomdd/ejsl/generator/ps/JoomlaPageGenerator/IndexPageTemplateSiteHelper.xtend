@@ -181,15 +181,16 @@ class IndexPageTemplateSiteHelper {
 
     </tr>
     </thead>
-     <tfoot>
-    <tr>
-         <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
-            <?php echo $this->pagination->getListFooter(); ?>
-        </td>
-    </tr>
-    </tfoot>
+     
 	«genViewTemplateBody()»
 	 </tbody>
+	 <tfoot>
+	     <tr>
+	          <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
+	             <?php echo $this->pagination->getListFooter(); ?>
+	         </td>
+	     </tr>
+	     </tfoot>
     </table>
 
     <?php if ($canCreate): ?>
