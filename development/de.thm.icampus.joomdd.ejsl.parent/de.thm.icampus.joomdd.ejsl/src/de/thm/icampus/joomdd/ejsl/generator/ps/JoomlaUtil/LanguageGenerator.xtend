@@ -89,6 +89,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 		JOPTION_SELECT_LIMIT = "limit"
 		JPUBLISHED="published"
 		JUNPUBLISHED="unpublished"
+		JGLOBAL_ACTION_PERMISSIONS_LABEL = "Permission"
 		JARCHIVED="archived"
 		JTRASHED="trashed"
 		JOPTION_SELECT_CREATED_BY = "Select a user"
@@ -117,6 +118,8 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				«var ExtendedDynamicPage dtPage = dynamicPagereference.extendedPage.extendedDynamicPageInstance as ExtendedDynamicPage »
 				«FOR ExtendedEntity ent: dtPage.extendedEntityList»
 					«Slug.nameExtensionBind("com", com.name).toUpperCase»_«ent.name.toUpperCase» = "«ent.name.toFirstUpper»"
+					JGRID_HEADING_«ent.primaryKey.name.toUpperCase» = "«ent.primaryKey.name»"
+					
 					«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«ent.name.toUpperCase» = "Select a «ent.name.toFirstUpper»"
 					«FOR ExtendedAttribute attr: ent.allattribute»
 						« var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) »

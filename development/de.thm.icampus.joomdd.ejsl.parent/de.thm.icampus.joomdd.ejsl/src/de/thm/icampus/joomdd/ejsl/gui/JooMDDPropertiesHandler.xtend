@@ -4,11 +4,14 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileWriter
 import java.util.Properties
+import org.eclipse.xtext.generator.IFileSystemAccess2
+import java.io.StringReader
 
 class JooMDDPropertiesHandler   {
 	
 	public Properties listKonfig
 	public boolean defaultSettings = false
+	IFileSystemAccess2 writer
 	
 	new(){
 		listKonfig = new Properties
@@ -16,34 +19,37 @@ class JooMDDPropertiesHandler   {
 		
 	}
 	
+	new(IFileSystemAccess2 access2) {
+		writer = access2
+		listKonfig = new Properties
+		loadConfig()
+	}
+	
 	public def void loadConfig(){
-		var File source = new File("generatorProperties.properties")
-		if(source.exists){
-			var FileInputStream input = new FileInputStream("generatorProperties.properties")
-			listKonfig.load(input)
-			input.close();
+		if(writer.isFile("generatorProperties.properties")){
+			var StringBuffer buff = new StringBuffer()
+			buff.append(writer.readTextFile("generatorProperties.properties"))
+			var StringReader reader = new StringReader(buff.toString)
+			
+			listKonfig.load(reader)
+			
 		}else{
 			setDefaultValue()
 			defaultSettings = true
-			var FileWriter output = new FileWriter("generatorProperties.properties")
-			output.write("#---Write the Configuration for the Generator here.")
-			output.flush
-			output.close()
+			writer.generateFile("generatorProperties.properties", "#---Write the Configuration for the Generator here.")
 			save()
 		}
 	}
 	
 	def save() {
-		var FileWriter input = new FileWriter("generatorProperties.properties")
-		listKonfig.store(input,"---JooMDD---")
-		input.flush
-		input.close()
+		writer.generateFile("generatorProperties.properties",listKonfig.toString)
+
 	}
 	
 	def setDefaultValue() {
-		listKonfig.setProperty("page","true")
+		listKonfig.setProperty("page","false")
 		listKonfig.setProperty("entities","true")
-		listKonfig.setProperty("updateFolder","true")
+		listKonfig.setProperty("updateFolder","false")
 		listKonfig.setProperty("joomla","true")
 		listKonfig.setProperty("wordpress","false")
 		listKonfig.setProperty("outputFolder","src-gen")
@@ -51,18 +57,18 @@ class JooMDDPropertiesHandler   {
 	}
 	
 	public def boolean existsConfiguration() {
-		var File source = new File("generatorProperties.properties")
-		println(source.absolutePath)
-		if(source.exists){
+	if(writer.isFile("generatorProperties.properties")){
 			return true
 		}
 		return false
 	}
 	public def relaodsConfiguration(){
-		var FileInputStream input = new FileInputStream("generatorProperties.properties")
-		listKonfig = listKonfig = new Properties
-			listKonfig.load(input)
-			input.close();
+var StringBuffer buff = new StringBuffer()
+			buff.append(writer.readTextFile("generatorProperties.properties"))
+			var StringReader reader = new StringReader(buff.toString)	       
+			listKonfig = new Properties
+			listKonfig.load(reader)
+			
 	}
 	
 	def String getKey(String key) {

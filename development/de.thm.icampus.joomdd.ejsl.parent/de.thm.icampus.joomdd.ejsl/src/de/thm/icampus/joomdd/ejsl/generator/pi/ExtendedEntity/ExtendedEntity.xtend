@@ -19,6 +19,7 @@ interface ExtendedEntity extends Entity {
 	def EList<ExtendedAttribute> getRefactoryAttribute()
 	def EList<ExtendedReference>getRefactoryReference()
 	def boolean isAutomatedGenerated()
+	def ExtendedAttribute getPrimaryKey()
 	
 	
 }

@@ -29,6 +29,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		genType = generatorType()
 		htmlType = generatorTypeHtmlType()
 		this.preserve = attr.preserve
+		this.isprimary = attr.isprimary
 		instance = attr
 		initAttributeProperties
 
@@ -104,10 +105,10 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 				value = "varchar(255) "
 			}
 			case "Time": {
-				value = "time "
+				value = "varchar(255) "
 			}
 			case "Date": {
-				value = "date "
+				value = "varchar(255) "
 			}
 			case "Datetime": {
 				value = "datetime "

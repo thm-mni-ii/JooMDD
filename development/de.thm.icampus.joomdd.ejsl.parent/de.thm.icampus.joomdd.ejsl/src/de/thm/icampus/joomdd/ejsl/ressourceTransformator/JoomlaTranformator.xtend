@@ -64,7 +64,7 @@ class JoomlaTranformator {
     }
 	
 	private def completeAttributeOfEntity(Entity ent) {
-		if(!ent.haveIdAttribute()){
+		if(!ent.havePrimaryAttribute()){
 			
 			var Attribute id = EJSLFactory.eINSTANCE.createAttribute
 			id.name = "id"
@@ -74,6 +74,7 @@ class JoomlaTranformator {
 			typeid.autoincrement = true
 			id.type = typeid
 			ent.attributes.add(id)
+			id.isprimary = true
 			
 		}
 		if(!haveAttribute(ent,"asset_id" )){
@@ -157,14 +158,14 @@ class JoomlaTranformator {
 	
 	private def Attribute searchIdAttribute(Entity entity){
 		for(Attribute e: entity.attributes){
-			if(e.name.equalsIgnoreCase("id") || e.name.equalsIgnoreCase("^id"))
+			if(e.name.equalsIgnoreCase("id") || e.name.equalsIgnoreCase("^id") || e.isIsprimary)
 			return e
 		}
 	}
 	
-	private def boolean haveIdAttribute(Entity entity){
+	private def boolean havePrimaryAttribute(Entity entity){
 		for(Attribute e: entity.attributes){
-			if(e.name.equalsIgnoreCase("id") || e.name.equalsIgnoreCase("^id"))
+			if(e.isIsprimary)
 			return true
 		}
 		return false
@@ -208,7 +209,6 @@ class JoomlaTranformator {
 			}
 			ref.attribute.addAll(newAttribute)
 			
-			if(ref.upper.equalsIgnoreCase("1")){
 			
 			var EList<Attribute> newReferenceArttibute = new BasicEList<Attribute>
 			for(Attribute attrRef: ref.attributerefereced){
@@ -226,7 +226,7 @@ class JoomlaTranformator {
 			ref.attributerefereced.addAll(newReferenceArttibute)
 			
 			}
-		}
+		
 	}
 	def Attribute setNewGenAttribute(Entity ent, Reference ref, Attribute attrRef){
 		var Entity referenceEntity = ref.entity

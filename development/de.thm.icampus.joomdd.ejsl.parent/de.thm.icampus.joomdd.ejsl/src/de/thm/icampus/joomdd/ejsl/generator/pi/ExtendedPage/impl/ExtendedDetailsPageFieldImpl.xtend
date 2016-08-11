@@ -18,6 +18,7 @@ class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements Extend
 		this.attribute = field.attribute
 		this.htmltype = field.htmltype
 		extendedAttribute = new ExtendedAttributeImpl(this.attribute)
+		this.options = field.options
 		type = parseType()
 	}
 	

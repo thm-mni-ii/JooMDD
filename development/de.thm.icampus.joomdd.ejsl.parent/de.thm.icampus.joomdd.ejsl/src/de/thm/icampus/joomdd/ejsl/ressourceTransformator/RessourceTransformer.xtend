@@ -21,6 +21,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Type
 import java.util.Iterator
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypeKinds
+import de.thm.icampus.joomdd.ejsl.eJSL.HTMLTypes
+import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 
 class RessourceTransformer {
 	EJSLModel modelInstance
@@ -35,11 +37,19 @@ class RessourceTransformer {
 	}
 	def dotransformation(){
 		createMappingsTable(featurs.entities)
+		formatEntitiesAttribute(featurs.entities)
 		completeDetailsPage();
 		completeIndexPage();
 		var JoomlaTranformator jt = new JoomlaTranformator(modelInstance)
 		jt.completeCMSExtension
 		
+	}
+	
+	def formatEntitiesAttribute(EList<Entity> list) {
+		for(Entity ent: list){
+			for(Attribute attr: ent.attributes)
+			   attr.name = attr.name.toLowerCase
+		}
 	}
 	
 	def completeIndexPage() {
@@ -277,58 +287,74 @@ class RessourceTransformer {
 				return editField
 			}
 			StandardTypes:{
-				var StandardTypes temptyp = attribute.type as StandardTypes
-				var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
-				result.htmltype = SimpleHTMLTypeKinds.get(parsingType(temptyp))
-				editField.attribute = attribute
-				editField.htmltype = result
-				return editField
+				
+				
+				 
+				return parsingType(attribute)
 			}
 		}
 	}
 	
-	private def String parsingType(StandardTypes eJSlType) {
-		
-		    var String value = "";
-		switch (eJSlType.type.getName()){
+	private def DetailPageField  parsingType(Attribute attribute) {
+		var StandardTypes temptyp = attribute.type as StandardTypes
+		var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
+		var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
+		editField.attribute = attribute
+			//	result.htmltype = SimpleHTMLTypeKinds.get(parsingType(temptyp))
+		 
+		switch (temptyp.type.getName()){
 			case "Integer" :{
-				value = "Integer"
+				result.htmltype = SimpleHTMLTypeKinds.get("Integer")
 			}
 			case "Boolean" :{
-			value = "Yes_No_Buttons"
+			result.htmltype = SimpleHTMLTypeKinds.get("Yes_No_Buttons")
 				
 			}
 			case "Text" :{
-				value = "Textarea"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Textarea")
 			}
 			case "Short_Text" :{
-				value = "Text_Field"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Text_Field")
 			} 
 			case "Time":{
-				value = "Datepicker"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Datepicker")
+			    var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
+			    format.name = "format"
+			    format.value = "%H:%M:%S"
+			  editField.options.add(format);
+			    
+				
 			}
 			case "Date":{
-				value = "Datepicker"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Datepicker")
+				 var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
+			    format.name = "format"
+			    format.value = "%d-%m-%Y"
+			    editField.options.add(format);
 			}
 			case "Datetime" :{
-				value = "Datepicker"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Datepicker")
+					 var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
+			    format.name = "format"
+			    format.value = "%y-%m-%d %H:%M:%S"
+			    editField.options.add(format);
 				}
 			case "Link" :{
-				value = "Text_Field"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Link")
 			}
 			case "Image":{
-				value = "Imagepicker"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Imagepicker")
 			}
 			case "File" :{
-				value = "Filepicker"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Filepicker")
 			}
 			case "Label":{
-				value = "Text_Field_NE"
+				result.htmltype = SimpleHTMLTypeKinds.get( "Text_Field_NE")
 			}
 			
 		}
-
-		return value
+         editField.htmltype = result
+		return editField
 	}
 	private def DetailsPage createNewExtendedDetailsPageForExtensions(Entity entity) {
 		var DetailsPage detailsPage = EJSLFactory.eINSTANCE.createDetailsPage

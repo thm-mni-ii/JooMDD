@@ -7,6 +7,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import org.eclipse.xtext.generator.IFileSystemAccess
 import java.io.File
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 
 class FieldsGenerator {
 
@@ -56,12 +57,23 @@ class FieldsGenerator {
 			      «genGetAllData»
 						      
 			      «genGetReferencedata»
+			      «genGetData_item»
 			      «genGenerateJsonValue»
 			      «gengenerateStringValue»
 			
 		}
 	'''
-
+    def private genGetData_item()'''
+	protected function getData_item($«entFrom.primaryKey.name»){
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+         $query->select("*")->from($this->referenceStruct["table"])
+			 ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
+		$db->setQuery($query);
+		return $db->loadObject();
+	}
+	
+	'''
 	private def CharSequence genGetInput() '''
 		/**
 		 * Method to get the field input markup.
@@ -75,21 +87,22 @@ class FieldsGenerator {
 				$document = JFactory::getDocument();
 				$document->addScript( JURI::root() . '/administrator/components/«Slug.nameExtensionBind("com",com.name).toLowerCase»/assets/setForeignKeys.js');
 				$input = JFactory::getApplication()->input;
-				      $id = intval($input->get('id'));
-				      if(empty($id)){
+				      $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
+				      if(empty($«entFrom.primaryKey.name»)){
 				      	$alldata = $this->getAllData();
-				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' >";
+				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select'  class='form-control' >";
 				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($alldata as $data){
 				          $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 				          . $this->generateStringValue($data) ."</option>";
 				      }
 				        $html[]="</select>";
-				      $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id. "'/>";
+				      $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id . "'/>";
 				      return implode($html);
 				      }
-				      $selectData = $this->getReferencedata($id);
-				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select' class='form-control' name='" . $this->name. "select'>";
+				       $data = $this->getData_item($«entFrom.primaryKey.name»);
+				      $selectData = $this->getReferencedata($data);
+				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select' class='form-control' name='" . $this->name. "select'>";
 				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
 				      foreach($selectData as $selected){
 				          $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
@@ -107,28 +120,25 @@ class FieldsGenerator {
 	 *Read Selected  Items
 	 *
 	 */
-	protected function getReferencedata($id)
+	protected function getReferencedata($data)
 	{
 		  $db = JFactory::getDbo();
           $query = $db->getQuery(true);
-		  $query->select("distinct (case a.id when '$id' then 'selected'
+		  $query->select("distinct (case  when «FOR ExtendedAttribute attr: mainRef.extendedAttributeReferenced»«IF attr != mainRef.extendedAttributeReferenced.last»
+		  								b.«attr.name» = '$data->«mainRef.extendedAttribute.get(mainRef.extendedAttributeReferenced.indexOf(attr)).name»' and «ELSE»
+		  								b.«attr.name» = '$data->«mainRef.extendedAttribute.get(mainRef.extendedAttributeReferenced.indexOf(attr)).name»'
+		  								 «ENDIF»
+		  								«ENDFOR»
+		  							 then 'selected'
           						else ' ' end) as selected");
 		  foreach($this->keysAndForeignKeys as $key =>$value){
 			  $query->select(" b.$value");
 		  }
 
 		  $query->from( $this->referenceStruct["foreignTable"] . " as b ")
-                ->leftJoin($this->referenceStruct["table"] . " as a on 
-                «FOR attr : mainRef.extendedAttribute»
-          	«IF attr != mainRef.extendedAttribute.last»
-             b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= a.«attr.name.toLowerCase» AND 
-  		  «ELSE»
-  		     b.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= a.«attr.name.toLowerCase»	       
-          «ENDIF»
-          «ENDFOR»")
+               
       	         ->where("b.state = 1")
-      	         ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC")
-		         ->group('b.«mainRef.attributerefereced.get(0).name.toLowerCase»');
+      	         ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
       	    $db->setQuery($query);
       	    return $db->loadObjectList();
 	   
@@ -190,7 +200,6 @@ class FieldsGenerator {
 	    {
 	
 	        $input = JFactory::getApplication()->input;
-	        $id = intval($input->get('id'));
 	        $valueColumn = $this->getAttribute('valueColumn');
 	        $textColumn = $this->getAttribute('textColumn');
 	
@@ -213,11 +222,11 @@ class FieldsGenerator {
 	'''
 	
 	private def CharSequence genAllSelectedDataForEntity() '''
-	 protected function getAllSelectedData($id, $valueColumn, $textColumn){
+	 protected function getAllSelectedData($«entFrom.primaryKey.name», $valueColumn, $textColumn){
 	        $dbo = JFactory::getDbo();
 	        $query = $dbo->getQuery(true);
 	        $query->select(" $valueColumn AS value, $textColumn AS text,
-	                        CASE WHEN id = $id THEN 1
+	                        CASE WHEN «entFrom.primaryKey.name» = $«entFrom.primaryKey.name» THEN 1
 	                        ELSE 0 AS checked
 	                       ")->from("$this->table")->order("text AS ASC");
 	        $dbo->setQuery($query);

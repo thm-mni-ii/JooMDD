@@ -10,6 +10,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 
 class IndexPageTemplateAdminHelper {
 	
@@ -17,6 +18,7 @@ class IndexPageTemplateAdminHelper {
 	private ExtendedComponent  com
 	private String sec
 	private String details
+	private ExtendedEntity mainEntity
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		
@@ -25,6 +27,7 @@ class IndexPageTemplateAdminHelper {
 		sec = section
 		var DetailsPage dt = Slug.getPageForDetails(indexpage,com)
 		details =  if( dt == null)"<Put the name Of DetailsPage>" else dt.name
+		mainEntity = dp.extendedEntityList.get(0)
 		
 	}
 	
@@ -87,7 +90,7 @@ class IndexPageTemplateAdminHelper {
 	    public function __construct($config = array()) {
 	        if (empty($config['filter_fields'])) {
 	            $config['filter_fields'] = array(
-	                                'id', 'a.id',
+	                                '«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»',
 	                'ordering', 'a.ordering',
 	                'state', 'a.state',
 	                'created_by', 'a.created_by'
@@ -155,13 +158,13 @@ class IndexPageTemplateAdminHelper {
 		// Filter by search in attribute
         $search = $this->getState('filter.search');
         if (!empty($search)) {
-            if (stripos($search, 'id:') === 0) {
-                $query->where('a.id = ' . (int) substr($search, 3));
+            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
+                $query->where('a.«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
             } else {
                 $search = $db->Quote('%' . $db->escape($search, true) . '%');
                 «IF !filters.empty»
                 $query->where('( a.«filters.get(0).name.toLowerCase» LIKE '.$search. 
-                «FOR Attribute attr : indexpage.filters»
+                «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
                 «IF filters.indexOf(attr) > 0»
                  'OR  a.«attr.name.toLowerCase» LIKE '.$search.
                  «ENDIF»
@@ -214,16 +217,16 @@ class IndexPageTemplateAdminHelper {
 	        $statement = 'Update #__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase» Set `ordering` = CASE';
 	        foreach ($datas_ID  as $order => $profileID)
 	        {
-	            $statement .= ' WHEN id = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
+	            $statement .= ' WHEN «mainEntity.primaryKey.name» = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
 	        }
-	        $statement .= ' ELSE ' . 0 . ' END Where id IN(' . implode(',', $datas_ID) . ')';
+	        $statement .= ' ELSE ' . 0 . ' END Where «mainEntity.primaryKey.name» IN(' . implode(',', $datas_ID) . ')';
 	        $db->setQuery($statement);
 	        $response = $db->execute();
 	
 	        if ($response)
 	        {
 	            $query = $db->getQuery(true);
-	            $query->select('`id`, `ordering`')->from('#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»');
+	            $query->select('`«mainEntity.primaryKey.name»`, `ordering`')->from('#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»');
 	            $db->setQuery($query);
 	            return $db->loadObjectList();
 	        }
@@ -357,9 +360,9 @@ class IndexPageTemplateAdminHelper {
 	</th>
      «ENDFOR»
      
-    <?php if (isset($this->items[0]->id)): ?>
+    <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
 		<th width="1%" class="nowrap center hidden-phone">
-			<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+			<?php echo JHtml::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
 		</th>
     <?php endif; ?>
 	</tr>
@@ -396,7 +399,7 @@ class IndexPageTemplateAdminHelper {
 		</td>
     <?php endif; ?>
 		<td class="center hidden-phone">
-			<?php echo JHtml::_('grid.id', $i, $item->id); ?>
+			<?php echo JHtml::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
 		</td>
     <?php if (isset($this->items[0]->state)): ?>
 		<td class="center">
@@ -404,9 +407,9 @@ class IndexPageTemplateAdminHelper {
 		</td>
     <?php endif; ?>
 		«genAdminModelAttributeReference(column, indexpage, com)»
-        <?php if (isset($this->items[0]->id)): ?>
+        <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
 			<td class="center hidden-phone">
-				<?php echo (int) $item->id; ?>
+				<?php echo (int) $item->«mainEntity.primaryKey.name»; ?>
 			</td>
         <?php endif; ?>
 		</tr>
@@ -479,7 +482,7 @@ if ($saveOrder)
      *
      * Note. Calling getState in this method will result in recursion.
      */
-    protected function populateState($ordering = 'a.id', $direction = 'asc') {
+    protected function populateState($ordering = 'a.«mainEntity.primaryKey.name»', $direction = 'asc') {
         
         // Load the parameters.
         $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');
@@ -505,7 +508,8 @@ if ($saveOrder)
       $attribute = $this->entitiesRef["$linkName"]["refattr"];
       $db = JFactory::getDbo();
       $query = $db->getQuery(true);
-      $query->select("id")
+       $key = $this->entitiesRef["$linkName"]["foreignPk"];
+          $query->select($key)
           ->from($dbtable);
        foreach ($attribute as $index=>$attributItem){ 
           $query->where($attributItem . " like '".$attrvalue->$index."'");
@@ -513,7 +517,7 @@ if ($saveOrder)
       $db->setQuery($query);
       $result = $db->loadObject();
   
-      return intval($result->id);
+      return intval($result->$key);
     }
   '''
   public  def CharSequence genAdminModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, ExtendedComponent com )'''

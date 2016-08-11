@@ -16,6 +16,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import org.eclipse.emf.common.util.BasicEList
 
 /**
  * <!-- begin-user-doc -->
@@ -65,13 +66,13 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	<fieldset name="request"
 		addfieldpath="/administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields">
 
-		<field name="id" type="«page.extendedEntityList.get(0).name.toLowerCase»"
+		<field name="«page.extendedEntityList.get(0).primaryKey.name»" type="«page.extendedEntityList.get(0).name.toLowerCase»"
 			label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»"
 			required="true"
 			edit="true"
 			clear="false"
 		description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»_DESC"
-       valueColumn="id"
+       valueColumn="«page.extendedEntityList.get(0).primaryKey.name»"
        textColumn="«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toLowerCase»"
       >
   <option value="">JOPTION_SELECT_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»</option>
@@ -82,22 +83,14 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage page, ExtendedComponent component)'''
  
    <fieldset name="basic" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_ORDERING_LABEL">
-   <field name="template_layout" type="list"
-           label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_TEMPLATE_LAYOUT"
-       description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_TEMPLATE_LAYOUT_DESC"
-       class="inputbox"
-       size="1"
-       default="1">
-       <option value="2">JTEMPLATE_LAYOUT_TABLE</option>
-       <option value="1">JTEMPLATE_LAYOUT_LIST</option>
-	</field> 
+   
 	   «IF page != null»
 	   <field name="ordering" type="list"
    	        label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_ORDERING"
    	        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_JFIELD_ORDERING_DESC"
    	        class="inputbox"
-   	        default="id">
-   	      <option value="id">ID</option>  
+   	        default="«page.extendedEntityList.get(0).primaryKey.name»">
+   	      <option value="«page.extendedEntityList.get(0).primaryKey.name»">«page.extendedEntityList.get(0).primaryKey.name»</option>  
    	   «FOR ExtendedAttribute attr: page.extendFiltersList»
 	     <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«Slug.slugify(page.extendedEntityList.get(0).name).toUpperCase»_«attr.name.toUpperCase»</option>
         «ENDFOR»
@@ -187,7 +180,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 		def CharSequence xmlAdminFields(ExtendedDynamicPage page, ExtendedComponent component, String name) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<form>
-			<field name="id" type="hidden" default="0" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID"
+			<field name="«page.extendedEntityList.get(0).primaryKey.name»" type="hidden" default="0" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID"
 				readonly="true" class="readonly"
 				description="JGLOBAL_FIELD_ID_DESC" /> 
 
@@ -196,7 +189,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 				description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
 					
 					«FOR ExtendedEntity e : page.extendedEntityList»
-					«FOR ExtendedAttribute attr : e.extendedAttributeList»
+					«FOR ExtendedAttribute attr : e.extendedAttributeList.filter[t | !t.isIsprimary]»
 					«writeAttribute(e,attr,component,page)»
 					«ENDFOR»
 					«FOR ExtendedReference ref : e.extendedReference.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
@@ -263,10 +256,15 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 		</form>
    		 '''
    	def CharSequence writeAttribute(ExtendedEntity entity,ExtendedAttribute attr, ExtendedComponent component, ExtendedDynamicPage page){
+   	
+   	 var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(page, attr)
    	 
+   	 var EList<KeyValuePair> options = new BasicEList<KeyValuePair>
+   	 if(field != null)
+   	 options =field.options 
    	 var String type = getHtmlTypeOfAttribute(page,attr,entity,component)
    	 var StringBuffer result = new StringBuffer
-   	  var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(page, attr)
+   	  
    	 switch(type){
    	 	case "multiselect" , case "select":{
    	 		result.append(''' 
@@ -278,6 +276,9 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
  		  	 id="«attr.name.toLowerCase»"
  		     label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
  		  	 description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+ 		  	«FOR KeyValuePair kvpair : options»
+   	 		«kvpair.name» = "«kvpair.value»"
+   	 		«ENDFOR»
  		  	>
  		  	«FOR KeyValuePair kv: field.extrasKeyValue»
  		  	<option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
@@ -286,6 +287,36 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    	 		''')
    	 		
    	 	}
+   	 	case "Imagepicker":{
+   	 		 result.append(''' 
+   	 		  <field name="«attr.name.toLowerCase»"
+   	 		  type ="file"
+   	 		  accept="image/*"
+   	 		  size="900"
+   	 		  id="«attr.name.toLowerCase»"
+   		     label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   		  	 description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		  	«FOR KeyValuePair kvpair : options»
+     	 		«kvpair.name» = "«kvpair.value»"
+     	 		«ENDFOR»
+   		  	/>
+   	 		 ''')
+   	 	}
+   	 	case "Filepicker":{
+   	 		 result.append(''' 
+   	 		  <field name="«attr.name.toLowerCase»"
+   	 		  type ="file"
+   	 		  accept=".doc,.pdf,.csv,.txt,.xls,.xlsx"
+   	 		  size="900"
+   	 		  id="«attr.name.toLowerCase»"
+   		     label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   		  	 description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		  	«FOR KeyValuePair kvpair : options»
+     	 		«kvpair.name» = "«kvpair.value»"
+     	 		«ENDFOR»
+   		  	/>
+   	 		 ''')
+   	 	}
    	 	case "checkbox":{
    	 		  result.append(''' 
  		  	 <field name="«attr.name.toLowerCase»"
@@ -293,6 +324,9 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
  		  	 id="«attr.name.toLowerCase»"
  		     label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
  		  	 description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+ 		  	«FOR KeyValuePair kvpair : options»
+   	 		«kvpair.name» = "«kvpair.value»"
+   	 		«ENDFOR»
  		  	>
  		  	«FOR KeyValuePair kv: field.extrasKeyValue»
  		  	<option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
@@ -307,6 +341,9 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    	 		  	 id="«attr.name.toLowerCase»"
    	 		     label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
    	 		  	 description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   	 		  	«FOR KeyValuePair kvpair : options»
+  	   	 		«kvpair.name» = "«kvpair.value»"
+  	   	 		«ENDFOR»
    	 		  	>
    	 		  	«FOR KeyValuePair kv: field.extrasKeyValue»
    	 		  	<option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
@@ -323,6 +360,9 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    	 		     label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
    	 		  	 description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
    	 		  	 default="0"
+   	 		  	 «FOR KeyValuePair kvpair : options»
+    	 		«kvpair.name» = "«kvpair.value»"
+    	 		«ENDFOR»
    	 		  	>
    	 		  	<option value="1">JYES</option>
  				<option value="0">JNO</option>
@@ -336,7 +376,12 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    	 		  id="«attr.name.toLowerCase»"
    	 		  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
    	 		  description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   	 		«FOR KeyValuePair kvpair : options»
+   	 		«kvpair.name» = "«kvpair.value»"
+   	 		«ENDFOR»
    	 		/> 
+   	 		
+   	 		
    	 		''');
    	 	}
    	 }

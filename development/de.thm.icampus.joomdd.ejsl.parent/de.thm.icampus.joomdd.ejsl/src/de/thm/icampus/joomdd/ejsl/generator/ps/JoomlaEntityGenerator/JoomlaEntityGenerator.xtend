@@ -76,7 +76,7 @@ class JoomlaEntityGenerator {
 	«ENDFOR»
 	
 	«FOR ExtendedAttribute a:table.extendedAttributeList»
-	«IF a.isunique &&  !a.name.equalsIgnoreCase('id')»
+	«IF a.isunique»
 	UNIQUE KEY («a.name»«if(a.withattribute != null)''',«a.withattribute.name»'''»),
 	«ENDIF» 
 	«ENDFOR»
@@ -88,7 +88,7 @@ class JoomlaEntityGenerator {
 	    ON UPDATE CASCADE
 	    ON DELETE CASCADE,
 	«ENDFOR»
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`«table.primaryKey.name»`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 '''
 	

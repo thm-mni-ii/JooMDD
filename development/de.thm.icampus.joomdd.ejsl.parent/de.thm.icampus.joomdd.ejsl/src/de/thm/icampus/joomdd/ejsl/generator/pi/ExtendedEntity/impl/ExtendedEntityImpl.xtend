@@ -23,16 +23,18 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	EList<ExtendedReference> allReferenceToEntity
 	EList<ExtendedAttribute> allRefactoryAttribute
 	EList<ExtendedReference> allRefactoryReference
+	ExtendedAttribute primariyAttribute
 	
 
 	new(Entity entity) {
 		entity.name = PlattformIUtil.slugify(entity.name)
-		this.name = entity.name
+		this.name = entity.name.toLowerCase
 		this.supertype = entity.supertype
 		this.attributes = entity.attributes
 		this.references = entity.references
 		instance = entity
 		this.preserve = entity.preserve
+		
 		initListen()
 
 	}
@@ -82,7 +84,10 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		allRefactoryAttribute.addAll(extendedAttributeList.filter[t | !t.preserve])
 		allRefactoryReference.addAll(extendedReference.filter[t | !t.preserve])
 		
-	    
+	    for(ExtendedAttribute attr: extendedAttributeList){
+	    	if(attr.isIsprimary)
+	    	   primariyAttribute = attr;
+	    }
 
 	}
 	
@@ -156,6 +161,10 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 			return true
 		}
 		return false
+	}
+	
+	override getPrimaryKey() {
+		return primariyAttribute
 	}
 
 }

@@ -10,6 +10,7 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 
 class IndexPageTemplateSiteHelper {
 	
@@ -17,6 +18,7 @@ class IndexPageTemplateSiteHelper {
 	private ExtendedComponent  com
 	private String sec
 	private DetailsPage details
+	private ExtendedEntity mainEntity
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		
@@ -24,6 +26,7 @@ class IndexPageTemplateSiteHelper {
 		com = cp
 		sec = section
 		details = Slug.getPageForDetails(indexpage,com)
+		mainEntity = dp.extendedEntityList.get(0)
 		
 	}
 	
@@ -70,12 +73,13 @@ class IndexPageTemplateSiteHelper {
    	                         $this->getModel()->setState('filter.«attr.name»', $«attr.name»);
 	                   «ENDFOR»
 
-        	 $this->state = $this->get('State');
         	 
        		 $this->items = $this->get('Items');
         	 $this->pagination = $this->get('Pagination');
+        	 $this->state = $this->get('State');
         	 $this->filterForm    = $this->get('FilterForm');
         	 $this->activeFilters = $this->get('ActiveFilters');
+        	 
         
 	        $this->params = $app->getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 	        
@@ -110,11 +114,11 @@ class IndexPageTemplateSiteHelper {
 	        }
 	        $title = $this->params->get('page_title', '');
 	        if (empty($title)) {
-	            $title = $app->getCfg('sitename');
-	        } elseif ($app->getCfg('sitename_pagetitles', 0) == 1) {
-	            $title = JText::sprintf('JPAGETITLE', $app->getCfg('sitename'), $title);
-	        } elseif ($app->getCfg('sitename_pagetitles', 0) == 2) {
-	            $title = JText::sprintf('JPAGETITLE', $title, $app->getCfg('sitename'));
+	            $title = $app->get('sitename');
+	        } elseif ($app->get('sitename_pagetitles', 0) == 1) {
+	            $title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+	        } elseif ($app->get('sitename_pagetitles', 0) == 2) {
+	            $title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 	        }
 	        $this->document->setTitle($title);
 	 
@@ -154,10 +158,13 @@ class IndexPageTemplateSiteHelper {
 	
 	public def CharSequence genViewTemplateHead()'''
 	<form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
+     <?php
+        echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+        ?>
     <table class="table table-striped">
         <thead >
             <tr >
-                <?php if (isset($this->items[0]->state)): ?>
+                <?php if (isset($this->items[0]->state) && $canEdit ): ?>
         <th width="1%" class="nowrap center">
             <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
         </th>
@@ -167,9 +174,9 @@ class IndexPageTemplateSiteHelper {
 			<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.eContainer as Entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 		</th>
     «ENDFOR»
-    <?php if (isset($this->items[0]->id)): ?>
+    <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit ): ?>
         <th width="1%" class="nowrap center hidden-phone">
-            <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_ID', 'a.id', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
         </th>
     <?php endif; ?>
 
@@ -194,7 +201,7 @@ class IndexPageTemplateSiteHelper {
     </table>
 
     <?php if ($canCreate): ?>
-        <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.edit&id=0', false, 2); ?>"
+        <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>"
            class="btn btn-success btn-small"><i
                 class="icon-plus"></i> <?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD_ITEM'); ?></a>
     <?php endif; ?>
@@ -214,7 +221,7 @@ class IndexPageTemplateSiteHelper {
     function deleteItem() {
         var item_id = jQuery(this).attr('data-item-id');
         if (confirm("<?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_MESSAGE'); ?>")) {
-            window.location.href = '<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&id=', false, 2) ?>' + item_id;
+            window.location.href = '<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=') ?>' + item_id;
         }
     }
 </script>    
@@ -229,11 +236,11 @@ class IndexPageTemplateSiteHelper {
 		<?php endif; ?>
 		 <tr class="row<?php echo $i % 2; ?>">
 
-            <?php if (isset($this->items[0]->state)): ?>
+            <?php if (isset($this->items[0]->state)&& $canEdit): ?>
                 <?php $class = ($canEdit || $canChange) ? 'active' : 'disabled'; ?>
                 <td class="center">
                     <a class="btn btn-micro <?php echo $class; ?>"
-                       href="<?php echo ($canEdit || $canChange) ? JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&id=' . $item->id . '&state=' . (($item->state + 1) % 2), false, 2) : '#'; ?>">
+                       href="<?php echo ($canEdit || $canChange) ? JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state ) : '#'; ?>">
                         <?php if ($item->state == 1): ?>
                             <i class="icon-publish"></i>
                         <?php else: ?>
@@ -245,19 +252,19 @@ class IndexPageTemplateSiteHelper {
          
            «genSiteModelAttributeReference(indexpage.extendedTableColumnList, indexpage,com)»
 
-            <?php if (isset($this->items[0]->id)): ?>
+            <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)&& $canEdit): ?>
                 <td class="center hidden-phone">
-                    <?php echo (int)$item->id; ?>
+                    <?php echo (int)$item->«mainEntity.primaryKey.name»; ?>
                 </td>
             <?php endif; ?>
 
             				<?php if ($canEdit || $canDelete): ?>
 					<td class="center">
 						<?php if ($canEdit): ?>
-							<a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.edit&id=' . $item->id, false, 2); ?>" class="btn btn-mini" type="button"><i class="icon-edit" ></i></a>
+							<a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name»); ?>" class="btn btn-mini" type="button"><i class="icon-edit" ></i></a>
 						<?php endif; ?>
 						<?php if ($canDelete): ?>
-                            <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&id=' . $item->id, false, 2); ?>" class="btn btn-mini delete-button" type="button"><i class="icon-trash" ></i></a>
+                            <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name»); ?>" class="btn btn-mini delete-button" type="button"><i class="icon-trash" ></i></a>
                             <?php endif; ?>
 					</td>
 				<?php endif; ?>

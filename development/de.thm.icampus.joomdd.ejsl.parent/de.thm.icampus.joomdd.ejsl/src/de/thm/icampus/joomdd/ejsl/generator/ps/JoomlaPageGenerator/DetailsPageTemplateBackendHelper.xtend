@@ -4,17 +4,19 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 
 class DetailsPageTemplateBackendHelper {
 	private ExtendedDynamicPage dpage
 	private ExtendedComponent  com
 	private String sec
-	
+	private ExtendedEntity mainEntity
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		
 		dpage = dp
 		com = cp
 		sec = section
+		mainEntity = dp.extendedEntityList.get(0)
 	}
 		
 	def CharSequence generateAdminModelprepareTableFunction() '''
@@ -27,7 +29,7 @@ class DetailsPageTemplateBackendHelper {
 	{
 		jimport('joomla.filter.output');
 
-		if (empty($table->id)) {
+		if (empty($table->«mainEntity.primaryKey.name»)) {
 
 			// Set ordering to the last item if not set
 			if (@$table->ordering === '') {
@@ -67,7 +69,7 @@ class DetailsPageTemplateBackendHelper {
 	        JFactory::getApplication()->input->set('hidemainmenu', true);
 	
 	        $user = JFactory::getUser();
-	        $isNew = ($this->item->id == 0);
+	        $isNew = ($this->item->«mainEntity.primaryKey.name» == 0);
 	        if (isset($this->item->checked_out)) {
 	            $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
 	        } else {
@@ -121,7 +123,7 @@ class DetailsPageTemplateBackendHelper {
 	'''
 	
 	def generateAdminViewLayoutFormular() '''
-	<form action="<?php echo JRoute::_('index.php?option=com_«com.name.toLowerCase»&layout=edit&id=' . (int) $this->item->id); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="«dpage.name.toLowerCase»-form" class="form-validate">
+	<form action="<?php echo JRoute::_('index.php?option=com_«com.name.toLowerCase»&layout=edit&«mainEntity.primaryKey.name»=' . (int) $this->item->«mainEntity.primaryKey.name»); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="«dpage.name.toLowerCase»-form" class="form-validate">
 
 	    <div class="form-horizontal">
 	        <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
@@ -130,10 +132,10 @@ class DetailsPageTemplateBackendHelper {
 	        <div class="row-fluid">
 	            <div class="span10 form-horizontal">
 	                <fieldset class="adminform">
-	                <input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>" />
+	                <input type="hidden" name="jform[«mainEntity.primaryKey.name»]" value="<?php echo $this->item->«mainEntity.primaryKey.name»; ?>" />
 				<input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
 				<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
-				<input type="hidden" name="jform[published]" value="<?php if($this->item->id != 0) echo $this->item->state; else echo 1;?>"/>
+				<input type="hidden" name="jform[published]" value="<?php if($this->item->«mainEntity.primaryKey.name» != 0) echo $this->item->state; else echo 1;?>"/>
 				«IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
 				<input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
 				«ENDIF»

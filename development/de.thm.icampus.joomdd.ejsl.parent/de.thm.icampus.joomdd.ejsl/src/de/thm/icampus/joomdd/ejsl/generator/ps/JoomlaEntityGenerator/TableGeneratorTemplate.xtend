@@ -34,6 +34,7 @@ class TableGeneratorTemplate {
 		«genContructor»	
 		«genBind»
 		«genCheck»
+		«genReset»
 		«genGetAssetName»
 		«genGetAssetParentID»
 		«genInitTheForeignTableOption»
@@ -53,7 +54,7 @@ class TableGeneratorTemplate {
 			*/
 			function __construct(&$db) 
 			{
-				parent::__construct('#__«com.name.toLowerCase»_«ent.name.toLowerCase»', 'id', $db);
+				parent::__construct('#__«com.name.toLowerCase»_«ent.name.toLowerCase»', '«ent.primaryKey.name»', $db);
 				$this->initTheForeignTableOption();
 			}
  		'''
@@ -65,7 +66,8 @@ class TableGeneratorTemplate {
    	"prefix" => "«com.name.toFirstUpper»Table",
    	"foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
    	"refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
-   	"name" => "#__«com.name.toLowerCase»_«ref.extendedFromEntity.name.toLowerCase»"
+   	"name" => "#__«com.name.toLowerCase»_«ref.extendedFromEntity.name.toLowerCase»",
+   	"foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.extendedToEntity).name.toLowerCase»'
    	);
    	array_push($this->foreigntableOption, $temp_«ent.getallReferenceToEntity.indexOf(ref)»);
         «ENDFOR»
@@ -90,7 +92,7 @@ class TableGeneratorTemplate {
         if(($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state','«Slug.nameExtensionBind("com", com.name).toLowerCase».«tName.toLowerCase».'.$array['id']) && $array['state'] == 1)){
             $array['state'] = 0;
         }
-        if($array['id'] == 0){
+        if($array['«ent.primaryKey.name»'] == 0){
             $array['created_by'] = JFactory::getUser()->id;
         }
 
@@ -128,7 +130,7 @@ class TableGeneratorTemplate {
      */
     public function check()
     {
-        if (property_exists($this, 'ordering') && $this->id == 0)
+        if (property_exists($this, 'ordering') && $this->«ent.primaryKey.name» == 0)
         {
             $this->ordering = self::getNextOrder();
         }
@@ -186,9 +188,8 @@ class TableGeneratorTemplate {
         if(isset($this->foreigntableOption)){
             foreach($this->foreigntableOptio as $key => $dbtable){
                 $instance_table = JTable::getInstance($dbtable['type'], $dbtable['prefix']);
-                $field = $this->$dbtable['refkey'];
                 $allForeignKeys = $this->loadAllPrimaryKeyofRef($pk, $dbtable['refkey']
-                    , $dbtable['name'], $dbtable['foreignkey']);
+                    , $dbtable['name'], $dbtable['foreignkey'],$dbtable["foreignId"]);
                 foreach($allForeignKeys as $keyOf){
                     $result = $instance_table->delete($keyOf);
                 }
@@ -201,12 +202,20 @@ class TableGeneratorTemplate {
         return $result;
     }
  '''
- 
+ public def CharSequence genReset()'''
+   public function reset()
+	{
+		$this->«ent.primaryKey.name» = 0;
+		parent::reset();
+		
+	} 
+'''
  public def CharSequence genLoadAllPrimaryKeys()'''
-   public function loadAllPrimaryKeyofRef($pk, $key, $foreigntable, $foreignkeys){
+   public function loadAllPrimaryKeyofRef($pk, $keylist, $foreigntable, $foreignkeys,$foreignId){
+   	
         $this->load($pk);
         $query = $this->_db->getQuery(true);
-       	$query->select('id')
+       	$query->select($foreignId)
       	         ->from("#__" . $foreigntable);
       	     foreach($keylist as $index=>$value){
       	     	$query->where($this->_db->quoteName($foreignkeys[$index]) . "=" .

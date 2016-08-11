@@ -72,8 +72,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
       		$document = JFactory::getDocument();
       		$document->addScript( JURI::root() . '/administrator/components/«Slug.nameExtensionBind("com",com.name).toLowerCase»/assets/setMultipleForeignKeys.js');
       		$input = JFactory::getApplication()->input;
-      		      $id = intval($input->get('id'));
-      		      if(empty($id)){
+      		      $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
+      		      if(empty($«entFrom.primaryKey.name»)){
       		      	$alldata = $this->getAllData();
       		      	    $html[] = "<select  onchange='setMultipleValueForeignKeys(this)' generated='true' multiple id='" . $this->id . "select'  class='form-control' >";
       		      $html[] = "<option>". JText::_("JOPTION_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
@@ -85,7 +85,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
       		      $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id. "'/>";
       		      return implode($html);
       		      }
-		          $data_item = $this->getData_item($id);
+		          $data_item = $this->getData_item($«entFrom.primaryKey.name»);
 
       		      $referenceData = $this->getAllReferenceData($data_item);
       		      $html[] = "<select  multiple='true' onchange='setMultipleValueForeignKeys(this)' generated='true'  id='" . $this->id . "select' class='form-control' >";
@@ -135,8 +135,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		          $db = JFactory::getDbo();
 		          $query = $db->getQuery(true);
 	
-		          $query->select("B.id,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
-		          (case when B.id <> 0   then 'selected' else ' ' end) as selected ")
+		          $query->select("B.«Slug.getPrimaryKeys(mainRef.extendedToEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
+		          (case when B.«Slug.getPrimaryKeys(mainRef.extendedToEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
 		              ->from($this->referenceStruct["foreignTable"] . " as A")
 		              ->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
 		              «FOR attr : mainRef.extendedAttribute»
@@ -162,11 +162,11 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	
 	'''
 	def private genGetData_item()'''
-	protected function getData_item($id){
+	protected function getData_item($«entFrom.primaryKey.name»){
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
          $query->select("*")->from($this->referenceStruct["table"])
-			 ->where("id = " . $id);
+			 ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
 		$db->setQuery($query);
 		return $db->loadObject();
 	}

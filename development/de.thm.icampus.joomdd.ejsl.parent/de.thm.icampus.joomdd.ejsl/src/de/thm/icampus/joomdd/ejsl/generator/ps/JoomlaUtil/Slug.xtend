@@ -116,13 +116,13 @@ public class Slug  {
 			 	result='''type="text" '''
 			 	}
 			 case "Datepicker":{
-			 	result='''type="calendar" format="%y-%m-%d %H:%M:%S"'''
+			 	result='''type="calendar" '''
 			 } 
 			 case "Imagepicker":{
-			 	result='''type="imagelist" '''
+			 	result='''Imagepicker '''
 			 } 
 			 case "Filepicker":{
-			 	result='''type="filelist" directory="administrator" '''
+			 	result='''Filepicker'''
 			 } 
 			 case "Text_Field_NE":{
 			 	result='''type="text" '''
@@ -198,8 +198,8 @@ public class Slug  {
 	
 	def static CharSequence generateEntytiesInputAttribute(EList<ExtendedDetailPageField> fields, ExtendedEntity entity) {
 		var StringBuffer buff = new StringBuffer()
-		var notShow = newArrayList("id","state","created_by","asset_id","ordering","checked_out_time","checked_out", "published", "params")
-		
+		var notShow = newArrayList("state","created_by","asset_id","ordering","checked_out_time","checked_out", "published", "params")
+		notShow.add(entity.primaryKey.name)
 		
 		
 		
@@ -365,26 +365,28 @@ public class Slug  {
 		 if((lk as InternalLink).target instanceof DetailsPage){
 		   if((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)){
 		   	if(!(lk instanceof ContextLink)){
-		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->id '''
+		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
 		    
 		    }else{
 		    	
 		         if((lk as ContextLink).linkparameters.filter[t | t.id].size == 0){
-		    	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»  . '&id='.(int) $item->id '''
+		    	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
 		    	}else{
-		    		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»  . '&id='.(int) $item->id '''
+		    		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
 		    
 		   			}		   	   
 		    }}else{
 		    	
-		    		var idRef = Slug.getAttributeForForeignID(attribute, page)
+		    		var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
+		    		var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
+		    		
 		    
 				   if(idRef != null){
-				   '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $item->«idRef.name»'''
+				   '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''
 				   	
 				   }
 				   else	
-				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&id='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
+				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
 		 	 
 		 	}}else{
 		 		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
@@ -395,6 +397,15 @@ public class Slug  {
 	«ENDIF»
 	«ENDFOR»
 	'''
+	
+	def static Entity getEntityForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage) {
+		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).extendedReference){
+			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
+				
+					return ref.extendedToEntity
+			}
+	}
+	}
 	def static ExtendedAttribute getAttributeForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage){
 		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).extendedReference){
 			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
@@ -434,7 +445,7 @@ public class Slug  {
  			if(isLinkedAttributeReference(linkItem.linkedAttribute, page)){
  				var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
  				'''"«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.generateAttributeAndRefernce(ref)»
- 				)),'''	
+ 				), "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name.toLowerCase»"),'''	
  			}				
  		}	
  	}»«ENDFOR»null);
@@ -547,7 +558,7 @@ public class Slug  {
 	}
 	
 	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference, ExtendedComponent com) '''
-	<?php if (JFactory::getUser()->authorise('core.admin','conference')) : ?>
+	<?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
 				<?php echo JHtml::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
 	 <div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
@@ -561,7 +572,9 @@ public class Slug  {
 	<?php echo JHtml::_('bootstrap.endTab'); ?>
 			<?php endif; ?>
 	'''
-	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference) '''
+	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
+		 <?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
+		 				<?php echo JHtml::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
 		 <div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
@@ -571,8 +584,17 @@ public class Slug  {
 		<div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
 	</div>
 	«ENDFOR»
-	
+	<?php echo JHtml::_('bootstrap.endTab'); ?>
+				<?php endif; ?>
 	'''
+	
+	def static Attribute getPrimaryKeys(Entity entity) {
+		for(Attribute attr: entity.attributes){
+			if(attr.isIsprimary)
+			return attr
+		}
+		
+	}
 	
 	
 } // Slug

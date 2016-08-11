@@ -26,15 +26,9 @@ import de.thm.icampus.joomdd.ejsl.gui.JooMDDPropertiesHandler
 class EJSLGenerator extends AbstractGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		var JooMDDPropertiesHandler config = new JooMDDPropertiesHandler
-		  
-		  if(!config.existsConfiguration){
-		  	var JooMDDGUI gui = new JooMDDGUI(config) 
-            while(gui.enabled){
-            	println("Wait of GUI")
-            }
-            config.relaodsConfiguration
-		}
+//		var JooMDDPropertiesHandler config = new JooMDDPropertiesHandler(fsa)
+//		  config.loadConfig()
+//		  
 		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
 			
 			var EJSLModel domainModel = e as EJSLModel ;
@@ -46,16 +40,16 @@ class EJSLGenerator extends AbstractGenerator {
 			 		trans.dotransformation
 					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions,"Extensions/", fsa, domainModel.name)
 					mainExtensionGen.dogenerate() 
-					if(config.getKey("entities").equalsIgnoreCase("true")){
+					//if(config.getKey("entities").equalsIgnoreCase("true")){
 					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities, "Entities/", fsa, domainModel.name)
 					mainEntitiesGen.dogenerate()
 		
-					}
-					if(config.getKey("page").equalsIgnoreCase("true")){
+				//	}
+				//	if(config.getKey("page").equalsIgnoreCase("true")){
 					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages,fsa,"Pages/",domainModel.name)
 				     mainPageGen.dogenerate()
 				     
-				     }
+				 //    }
 				}
 			}
 			println("The Generation are successfull! \n Thank you for use this Tools!")

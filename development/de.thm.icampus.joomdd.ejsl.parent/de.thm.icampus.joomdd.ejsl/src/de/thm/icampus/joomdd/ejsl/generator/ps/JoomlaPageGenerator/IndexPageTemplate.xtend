@@ -96,7 +96,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		generateFile(path+"/forms/"+ "filter_" + pagename + ".xml",  generateAdminModelForms())
 		}else{
 		 generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
-		  generateFile(path + "/forms"+"/" +"filter_" + pagename + ".xml", xmlAdminFields(ipage,com,com.name))
+		  generateFile(path + "/forms"+"/" +"filter_" + pagename + ".xml", generateAdminModelForms)
 			
 		}
 		 
@@ -117,6 +117,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		«Slug.genLinkedInfo(ipage,com)»
 		«helperAdmin.genAdminModelConstruct»
 		«helperAdmin.genAdminModelGetItem»
+		«helperAdmin.genAdminModelPopulateState»
 		«helperAdmin.genAdminModelGetListQuery(ipage.filters)»
 		«helperAdmin.genGetIdOfReferenceItem»
 	}

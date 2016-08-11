@@ -10,6 +10,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 
 class DetailsPageTemplate extends   DynamicPageTemplate {
 	
@@ -20,6 +21,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	private   DetailsPageTemplateFrontEndHelper frontHelp
 	private String path
 	private String pagename
+	private ExtendedEntity mainEntity
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess fsa){
 		
@@ -31,6 +33,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		this.path = path
 		pagename = dpage.name.toLowerCase
 		this.fsa = fsa
+		mainEntity = dp.extendedEntityList.get(0)
 	}
 	
 	
@@ -139,7 +142,8 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	public function getItem($pk = null)
 	{
-		    $pk = (!empty($pk)) ? $pk : (int) $this->getState('«dpage.name.toLowerCase».id');
+		$app	= JFactory::getApplication();
+		$pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
         $table = $this->getTable();
 
         if ($pk > 0)
@@ -181,8 +185,8 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		// Initialise variables.
-		$app	= JFactory::getApplication();
+		
+		
 
 		// Get the form.
 		$form = $this->loadForm('«Slug.nameExtensionBind("com",com.name.toLowerCase)».«dpage.name.toLowerCase»', '«dpage.extendedEntityList.get(0).name.toLowerCase»', array('control' => 'jform', 'load_data' => $loadData));
@@ -215,7 +219,9 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«generateModelGetFormFunction()»
 		«generateModelLoadFormDataFunction()»
 		«generateModelGetItemFunction()»
+		«IF mainEntity.extendedReference.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
 		«generateModelAdminSaveData()»
+		«ENDIF»
 		«generateModelReferenceSave()»
 		«backHelp.generateAdminModelprepareTableFunction()»
 	}
@@ -226,8 +232,8 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	$inputs =& JFactory::getApplication()->input->get("jform", array(), 'array');
 	
 	if(parent::save($data)){
-		if(empty($inputs["id"]) || $inputs["id"] == 0)
-					$inputs["id"]= $this->getItem()->id;
+		if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
+					$inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
 	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference»
 	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
 	 $this->set«ref.entity.name»($inputs);
@@ -262,9 +268,10 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 				}
 	 			}
 	 			}
+	 			$mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
 	            for($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++){
 	         
-	 				$mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
+	 				
 	 				$dataToSave = array();
 	 				«FOR Attribute attr: referenceAttr»
 	 				$dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
@@ -274,7 +281,8 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 				«ENDFOR»
 	 				$dataToSave["state"]=1;
 	 				$mappingTable->save($dataToSave);
-	 			
+	 				$mappingTable->reset();
+	 					 			
 	            }
 	 			
 	 
@@ -353,7 +361,6 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 * «dpage.name.toFirstUpper» controller class to «if(isedit)  "Edit" else "Show"» a Item .
 	 */
 	class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»Controller {
-		«frontHelp.generateSiteControllerEdit(isedit)»
 		«IF isedit»
 		«frontHelp.generateSiteControllerSave»
 		«frontHelp.generateSiteControllerCancel»
@@ -399,7 +406,6 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper»Edit extends JModelForm {
 		var $_item = null;
 		«frontHelp.generateSiteModelPopulatestate()»
-		«frontHelp.generateSiteModelgetData(true)»
 		«frontHelp.generateSiteModelCheckin()»
 		«frontHelp.generateSiteModelCheckout()»
 		«frontHelp.generateSiteModelgetTable()»
@@ -441,27 +447,13 @@ class «com.name.toFirstUpper»View« if(isedit)dpage.name.toFirstUpper + "Edit"
 	//Load admin language file
 	$lang = JFactory::getLanguage();
 	$lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
-	$doc = JFactory::getDocument();
-	$doc->addScript(JUri::base() . '/components/«Slug.nameExtensionBind("com", com.name).toLowerCase»/assets/js/form.js');
-	
+	$doc = JFactory::getDocument();	
 	
 	?>
-	<script type="text/javascript">
-	    getScript('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', function() {
-	        jQuery(document).ready(function() {
-	            jQuery('#form-«dpage.name.toLowerCase»').submit(function(event) {
-	                
-	            });
-	
-	            
-	        });
-	    });
-	
-	</script>
 	
 	<div class="«dpage.name.toLowerCase»-edit front-end-edit">
-	    <?php if (!empty($this->item->id)): ?>
-	        <h1>Edit <?php echo $this->item->id; ?></h1>
+	    <?php if (!empty($this->item->«mainEntity.primaryKey.name»)): ?>
+	        <h1>Edit <?php echo $this->item->«mainEntity.primaryKey.name»; ?></h1>
 	    <?php else: ?>
 	        <h1>Add</h1>
 	    <?php endif; ?>
@@ -472,8 +464,8 @@ class «com.name.toFirstUpper»View« if(isedit)dpage.name.toFirstUpper + "Edit"
 	//Load admin language file
 	$lang = JFactory::getLanguage();
 	$lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
-	$canEdit = JFactory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->id);
-	if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->id)) {
+	$canEdit = JFactory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->«mainEntity.primaryKey.name»);
+	if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->«mainEntity.primaryKey.name»)) {
 		$canEdit = JFactory::getUser()->id == $this->item->created_by;
 	}
 	?>
