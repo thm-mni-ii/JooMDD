@@ -122,6 +122,7 @@ Attribute returns Attribute:
 	'Attribute' name=MYID (preserve?='@preserve')? '{' 
 		'type =' (type=Type)
 		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | id?='ID'))?)?
+		(isprimary ?= 'Primary attribute')?
 	'}'
 ;
 
@@ -193,7 +194,8 @@ DetailsPage returns DetailsPage:
 
 DetailPageField returns DetailPageField:
 	{DetailPageField}
-	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)?
+	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)? 
+	('Options {' (options+=KeyValuePair)* '}')?
 ;
 
 CustomPage returns CustomPage:
@@ -502,7 +504,7 @@ enum PageKinds:
 	list | details | custom
 ;
 enum SimpleHTMLTypeKinds:
-	Integer | Yes_No_Buttons | Textarea | Text_Field |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	
+	Integer | Yes_No_Buttons | Textarea | Text_Field | Link |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	
 ;
 enum ComplexHTMLTypeKinds:
 	Select| Multiselect | Checkbox | Radiobutton
