@@ -30,7 +30,7 @@ public class InitalSettings implements ProjectComponent {
 
     @Override
     public void projectOpened() {
-        File settings = new File(project.getBasePath() + "/.idea/settings.txt");
+    /*    File settings = new File(project.getBasePath() + "/.idea/settings.txt");
 
         if(settings.exists()){
             try {
@@ -102,6 +102,7 @@ public class InitalSettings implements ProjectComponent {
                 "Set \"Mark modified tabs with asterisk\""
                 , "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, IconLoader.getIcon("/resources/icons/warning.png"), options, options[0]);
         return n;
+        */
     }
 
 

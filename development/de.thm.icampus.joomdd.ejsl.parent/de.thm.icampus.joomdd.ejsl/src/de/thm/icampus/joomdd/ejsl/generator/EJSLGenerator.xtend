@@ -52,7 +52,7 @@ class EJSLGenerator extends AbstractGenerator {
 				 //    }
 				}
 			}
-			println("The Generation are successfull! \n Thank you for use this Tools!")
+			println("The code generation was successfull! \n Thank you for using this tool!")
 			
 			
 		}

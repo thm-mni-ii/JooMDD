@@ -2,7 +2,7 @@
 <feature
       id="de.thm.icampus.joomdd.ejsl.sdk"
       label="eJSL"
-      version="0.2.4">
+      version="0.3.0">
 
    <description url="http://icampus.thm.de/JooMDD/eJSL">
       Modeling language for Joomla extensions. 

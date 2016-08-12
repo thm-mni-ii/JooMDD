@@ -135,12 +135,13 @@ in the plugin.xml you can change all Meta-Inf like: description, Plugin version,
 Compress the ProjectWizard-folder into a zip file. Now you can install the .zip via install plugin from disk...
 
 *   Merge Plugin with eJSL:
-you need both plugins as zip files (EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip and ProjectWizard.zip).  ("EJSL2.9.1" is just the project name)
-copy ProjectWizard.zip\ProjectWizard\classes to EJSL2.9.1.idea-1.0.0-SNAPSHOT.zip\EJSL2.9.1.idea
-copy the part (<depends ... until < /idea-plugin>) of the wizard plugin.xml file to the eJSL plugin.xml file. 
-Paste it between .../depends>  (here)  <xi:include...
+you need both plugins as zip files (...eJSL.idea.zip and ProjectWizard.zip).
+copy ProjectWizard.zip\ProjectWizard\classes to eJSL.idea. The dependencies in the plugin.xml file are automatically 
+generated.
 
 * **Imprtant:** Change url in updatePlugins.xml to github url!
+
+* For PhpStorm, just copy this IntelliJ plugin and remove the comment around *\<depends\>com.jetbrains.php\</depends\>*.
 
 ###### Project Wizard under PHPStorm ######
 

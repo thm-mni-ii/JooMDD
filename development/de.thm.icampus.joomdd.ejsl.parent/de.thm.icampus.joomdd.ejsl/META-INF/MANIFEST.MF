@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: de.thm.icampus.joomdd.ejsl
-Bundle-Vendor: My Company
-Bundle-Version: 0.2.4
+Bundle-Name: JooMDD
+Bundle-Vendor: Institut für Informationswissenschaften, Technische Hochschule Mittelhessen
+Bundle-Version: 0.3.0
 Bundle-SymbolicName: de.thm.icampus.joomdd.ejsl; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.xtext,
@@ -25,5 +25,6 @@ Export-Package: de.thm.icampus.joomdd.ejsl.eJSL.util,
  de.thm.icampus.joomdd.ejsl.scoping,
  de.thm.icampus.joomdd.ejsl.services,
  de.thm.icampus.joomdd.ejsl.eJSL.impl,
- de.thm.icampus.joomdd.ejsl.validation
+ de.thm.icampus.joomdd.ejsl.validation,
+ de.thm.icampus.joomdd.ejsl.formatting2
 Import-Package: org.apache.log4j

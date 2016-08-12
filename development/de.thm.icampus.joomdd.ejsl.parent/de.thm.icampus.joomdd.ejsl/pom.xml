@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.thm.icampus.joomdd.ejsl</groupId>
 		<artifactId>de.thm.icampus.joomdd.ejsl.parent</artifactId>
-		<version>0.2.1</version>
+		<version>0.3.0</version>
 	</parent>
 	<artifactId>de.thm.icampus.joomdd.ejsl</artifactId>
 	<packaging>eclipse-plugin</packaging>

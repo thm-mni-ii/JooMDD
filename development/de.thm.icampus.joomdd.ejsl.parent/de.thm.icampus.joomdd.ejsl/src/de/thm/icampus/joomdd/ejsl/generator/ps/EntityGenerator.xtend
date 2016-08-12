@@ -57,7 +57,7 @@ class EntityGenerator extends AbstracteGenerator {
 		if(extensions != null && page == null){
 			var JoomlaEntityClient client = new JoomlaEntityClient(fsa)
 			client.generateJoomlaComponenteElements(extensions, path, isBackendSection)
-			println( "ENtity for compoenent " + extensions.name + " path ist " + path)
+			//println( "Entity for component " + extensions.name + " path ist " + path)
 		}
 		else if(page != null){
 				
@@ -65,7 +65,7 @@ class EntityGenerator extends AbstracteGenerator {
 			pageEntities.add(page.extendedEntityList.get(0))
 			var JoomlaEntityGenerator joomExt = new JoomlaEntityGenerator(pageEntities,extensions.name,true)
 			joomExt.dogenerate(path+"sql", fsa)
-			println( "Page for compoenent " + extensions.name + " path ist " + path)
+			//println( "Page for component " + extensions.name + " path ist " + path)
 			for(ExtendedEntity ent: pageEntities){
 				var TableGeneratorTemplate table = new TableGeneratorTemplate(extensions, ent)
 				table.dogenerate(path+"tables", fsa)
