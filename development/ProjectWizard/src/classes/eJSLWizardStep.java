@@ -82,6 +82,16 @@ public class eJSLWizardStep extends ModuleWizardStep {
         JPanel previewPanel = new JPanel((new BorderLayout()));
 
         JLabel joomddlogo = new JLabel(IconLoader.getIcon("/resources/icons/Logo_b_small.png"));
+
+        JLabel autosaveWarning = new JLabel(IconLoader.getIcon("/resources/icons/Infomation.png"));
+        autosaveWarning.setText(
+                "<html><br> We suggest you to disable the Autosave-Function.<br>" +
+                        "Under Settings/Apperance & Behavior/System Settings:<br>" +
+                        "Check Confirm application exit, " +"Uncheck Save files on frame deactivation, " + "Uncheck Save files automatically<br>" +
+                        "Under Editor/General/Editor Tabs:<br>" +
+                        "Set Mark modified tabs with asterisk<html>"
+        );
+
         JLabel selectLabel = new JLabel("Load example:");
         JLabel descriptionLabel = new JLabel("<html><br>Description:<html>");
         JLabel descriptionText = new JLabel();
@@ -97,6 +107,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         panel.add(joomddlogo, BorderLayout.NORTH);
         panel.add(selectPanel, BorderLayout.WEST);
         panel.add(secondPanel, BorderLayout.CENTER);
+        panel.add(autosaveWarning, BorderLayout.SOUTH);
 
         JRadioButton[] radio = new JRadioButton[temps.length];
 

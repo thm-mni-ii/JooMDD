@@ -1,5 +1,6 @@
 package classes;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.IconLoader;
@@ -85,12 +86,23 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         JPanel previewPanel = new JPanel((new BorderLayout()));
 
         JLabel joomddlogo = new JLabel(IconLoader.getIcon("/resources/icons/Logo_b_php_small.png"));
+
+        JLabel autosaveWarning = new JLabel(IconLoader.getIcon("/resources/icons/Infomation.png"));
+        autosaveWarning.setText(
+                "<html><br> We suggest you to disable the Autosave-Function.<br>" +
+                "Under Settings/Apperance & Behavior/System Settings:<br>" +
+                "Check Confirm application exit, " +"Uncheck Save files on frame deactivation, " + "Uncheck Save files automatically<br>" +
+                "Under Editor/General/Editor Tabs:<br>" +
+                "Set Mark modified tabs with asterisk<html>"
+        );
+
         JLabel selectLabel = new JLabel("Load example:");
         JLabel descriptionLabel = new JLabel("<html><br>Description:<html>");
         JLabel descriptionText = new JLabel();
         JLabel previewLabel = new JLabel("Preview:");
         JTextArea previewText  = new JTextArea("");
         previewText.setEnabled(false);
+
 
         JBScrollPane selectScroll = new JBScrollPane(buttonPanel);
         selectScroll.setPreferredSize(new Dimension(150,250));
@@ -100,6 +112,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         panel.add(joomddlogo, BorderLayout.NORTH);
         panel.add(selectPanel, BorderLayout.WEST);
         panel.add(secondPanel, BorderLayout.CENTER);
+        panel.add(autosaveWarning, BorderLayout.SOUTH);
 
         JRadioButton[] radio = new JRadioButton[temps.length];
 
@@ -108,6 +121,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
 
         secondPanel.add(descriptionPanel,BorderLayout.NORTH);
         secondPanel.add(previewPanel,BorderLayout.CENTER);
+
 
         descriptionPanel.add(descriptionLabel, BorderLayout.NORTH);
         descriptionPanel.add(previewScroll, BorderLayout.CENTER);
