@@ -208,17 +208,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 					«ENDFOR»
 					«ENDFOR»
 					«ENDFOR»
-				   <field name="state" type="list"
-				        label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS"
-				        description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JFIELD_PUBLISHED_DESC"
-				        class="inputbox"
-				        size="1"
-				        default="1">
-				        <option value="1">JPUBLISHED</option>
-				        <option value="0">JUNPUBLISHED</option>
-				        <option value="2">JARCHIVED</option>
-				        <option value="-2">JTRASHED</option>
-				    </field> 
+				  
 		         <field name="published" type="hidden" filter="unset" />
 				<field name="checked_out" type="hidden" filter="unset" />
 		        <field name="checked_out_time" type="hidden" filter="unset" /> 
@@ -264,6 +254,21 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    	 options =field.options 
    	 var String type = getHtmlTypeOfAttribute(page,attr,entity,component)
    	 var StringBuffer result = new StringBuffer
+   	 if(attr.name.equalsIgnoreCase("state")){
+   	 	return '''
+   	 	 <field name="state" type="list"
+        label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS"
+        description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JFIELD_PUBLISHED_DESC"
+        class="inputbox"
+        size="1"
+        default="1">
+        <option value="1">JPUBLISHED</option>
+        <option value="0">JUNPUBLISHED</option>
+        <option value="2">JARCHIVED</option>
+        <option value="-2">JTRASHED</option>
+		</field> 
+   	 			'''
+   	 }
    	  
    	 switch(type){
    	 	case "multiselect" , case "select":{

@@ -6,26 +6,36 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.eJSL.ComponentReference
+import de.thm.icampus.joomdd.ejsl.eJSL.Component
+import de.thm.icampus.joomdd.ejsl.eJSL.CoreComponent
 
 class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 	
 	ExtendedPageReference extendedReference
-	ExtendedComponent com
+	String comName
 	new(Module mod){
 		this.name = PlattformIUtil.slugify(mod.name)
 		this.manifest = mod.manifest
 		this.languages = mod.languages
 		this.pageRef = mod.pageRef
 		extendedReference = new ExtendedPageReferenceImpl(pageRef)
-		com = new ExtendedComponentImpl(mod.pageRef.pagescr)
+		comName = init(mod.pageRef.pagescr)
+	}
+	
+	def init(ComponentReference reference) {
+	  if(reference.core != null)
+	  return reference.core.getName()
+	  if(reference.ref != null)
+	    return reference.ref.name
 	}
 	
 	override getExtendedPageReference() {
 		return extendedReference
 	}
 	
-	override getExtendedComponent() {
-		return com
+	override getExtendedComponentName() {
+		return comName
 	}
 	
 }

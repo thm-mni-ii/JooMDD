@@ -46,14 +46,14 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
 	ExtendedModule extMod
 	ExtendedDynamicPage dynpage
-	ExtendedComponent com
+	String com
 
 	new(ExtendedModule module, IFileSystemAccess fsa, String path) {
 		this.fsa = fsa
 		this.name = 'mod_' + Slug.slugify(module.name)
 		this.extMod = module
 		dynpage = module.extendedPageReference.extendedPage.extendedDynamicPageInstance
-		com = module.extendedComponent
+		com = module.extendedComponentName
 		this.ComponentInformation(module)
 		this.extMod.formatName
 		this.path = path
@@ -208,8 +208,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			<fieldset name="filter">
 			 <field
               name="created_by"
-               addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com.name).toLowerCase»/models/fields"
-              type="«com.name.toLowerCase»user"
+               addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
+              type="«com.toLowerCase»user"
               label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
               description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
                entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»"
@@ -218,7 +218,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
               </field>
             «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
              <field
-                addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com.name).toLowerCase»/models/fields"
+                addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
                   name="«attr.name»"
                   type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
                   label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
@@ -237,10 +237,10 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 	}
 
-	def CharSequence phpContent(Module modul) {
+	def CharSequence phpContent(ExtendedModule modul) {
 		'''
 		«IF modul.pageRef.pagescr != null»
-			«var c = modul.pageRef.pagescr»
+			«var c = modul.extendedComponentName»
 		<?php
 		«Slug.generateFileDoc(extMod, true)»
 		
@@ -251,7 +251,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 				// Include the «extMod.name» functions only once
 				require_once __DIR__ . '/helper.php';
-				require_once JPATH_ADMINISTRATOR . '/components/com_«c.name.toLowerCase»/helpers/«c.name.toLowerCase».php';
+				require_once JPATH_ADMINISTRATOR . '/components/com_«c.toLowerCase»/helpers/«c.toLowerCase».php';
 
 				
 			«ELSE»
@@ -321,7 +321,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		for(Link lk: listLink){
 			if(lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){
-			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, Slug.getSectioName(extMod.pageRef.sect),  extMod.pageRef.pagescr.name.toLowerCase,"$item->") 
+			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, Slug.getSectioName(extMod.pageRef.sect),  extMod.extendedComponentName.toLowerCase,"$item->") 
 				
 			   return '''JHtml::_('link',«lkClient.generateLink», $item->«attribute.name.toLowerCase»)'''
 			   
@@ -353,17 +353,17 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 	}
 	
-		def ComponentInformation (Module modul) {
+		def ComponentInformation (ExtendedModule modul) {
 			if( modul.pageRef.pagescr != null){
 			var String section =  modul.pageRef.sect.getName()
-            var Component c =  modul.pageRef.pagescr
+            var String compName =  modul.extendedComponentName
     						if(section.equalsIgnoreCase('backend')){
-			    				modelPath = "'/administrator/components/com_" + c.name.toLowerCase + "/models'"    		   					
+			    				modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"    		   					
     		   				} else{
-			    				modelPath = "'/components/com_" + c.name.toLowerCase + "/models'"    		   					
+			    				modelPath = "'/components/com_" + compName.toLowerCase + "/models'"    		   					
     		   				}
-			    			modelOfComponent = ("\"" + c.name.toFirstUpper + "\"")
-			    			modelOfComponent2 = ("\"" + c.name.toFirstUpper + "Model\"")
+			    			modelOfComponent = ("\"" + compName.toFirstUpper + "\"")
+			    			modelOfComponent2 = ("\"" +compName.toFirstUpper + "Model\"")
 			    		
 			    	}		
     		}	

@@ -2,10 +2,6 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil
 
-
-import org.eclipse.emf.ecore.EObject;
-
-
 public class KVPairGeneratorClient  {
 	
 	KVPairInterface kvPair
