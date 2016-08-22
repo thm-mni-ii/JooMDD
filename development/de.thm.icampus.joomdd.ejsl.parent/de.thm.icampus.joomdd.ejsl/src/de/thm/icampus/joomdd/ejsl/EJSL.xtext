@@ -20,13 +20,13 @@ CMSCore:
 		('globalparameters' '{' (globalparameters+=Parameter)* '}')?
 		('parametergroups' '{' (parametergroups+=ParameterGroup)* '}')?
 		feature = Feature
-	//	(coreFeature += coreFeature*) // for further implementation of core features
+		//(coreFeature += coreFeature*) // for further implementation of core features
 	'}'
 ;
 
 coreFeature:
 	{coreFeature}
-	'coreFeature'
+	'core features'
 ;
 
 CMSExtension:
@@ -307,7 +307,11 @@ Backend returns BackendSection:
 ;
 
 PageReference returns PageReference:
-	'*Page :' page=[Page|QualifiedName] ('from :' pagescr=[Component|QualifiedName] sect = SectionKinds)?
+	'*Page :' page=[Page|QualifiedName] ('from :' pagescr= ComponentReference) sect = SectionKinds?
+;
+
+ComponentReference:
+	ref=[Component|QualifiedName] | core=CoreComponent
 ;
 
 Frontend returns FrontendSection:
@@ -489,13 +493,13 @@ enum PluginKinds:
     search | system | user | xml_rpc
 ;
 enum PageActionKind:
-	SAVE | NEW | SAVE_CLOSE | SAVE_COPY | CANCEL | CLOSE | ARCHIVE | EDIT | PUBLISH | UNPUBLISH | HIDE | CHECKIN | TRASH |INDIVIDUAL
+	SAVE | NEW | SAVE_CLOSE | SAVE_COPY | CANCEL | CLOSE | ARCHIVE | EDIT | PUBLISH | UNPUBLISH | HIDE | CHECKIN | TRASH |INDIVIDUAL | LOGIN | PWRESET
 ;
 enum PageActionPositionKind:
 	top | center | bottom
 ;
 enum StandardTypeKinds:
-	Integer | Boolean | Text | Short_Text | Time | Date | Datetime | Link | Image | File | Label
+	Integer | Boolean | Text | Short_Text | Time | Date | Datetime | Link | Image | File | Label | Encrypted_Text
 ;
 enum SectionKinds:
 	backend='.backend' | frontend='.frontend'
@@ -508,4 +512,7 @@ enum SimpleHTMLTypeKinds:
 ;
 enum ComplexHTMLTypeKinds:
 	Select| Multiselect | Checkbox | Radiobutton
+;
+enum CoreComponent:
+	User | Menu | Content
 ;
