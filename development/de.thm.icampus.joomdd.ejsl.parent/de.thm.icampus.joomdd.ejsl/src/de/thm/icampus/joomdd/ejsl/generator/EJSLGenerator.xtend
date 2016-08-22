@@ -8,9 +8,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.EJSLModel
 import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.ExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
-import de.thm.icampus.joomdd.ejsl.guifx.Mygui
 import de.thm.icampus.joomdd.ejsl.ressourceTransformator.RessourceTransformer
-import java.util.concurrent.Executors
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
@@ -24,13 +22,7 @@ import org.eclipse.xtext.generator.IGeneratorContext
 class EJSLGenerator extends AbstractGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-//		var JooMDDPropertiesHandler config = new JooMDDPropertiesHandler(fsa)
-//		  config.loadConfig()
-//		  
-      var app = new Mygui();
-      app.run;
-      println(app.isshow);
-      app.stop;
+   
 		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
 			
 			var EJSLModel domainModel = e as EJSLModel ;
