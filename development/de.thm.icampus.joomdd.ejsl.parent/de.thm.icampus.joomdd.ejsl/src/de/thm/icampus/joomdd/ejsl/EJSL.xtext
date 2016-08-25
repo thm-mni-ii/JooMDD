@@ -307,7 +307,7 @@ Backend returns BackendSection:
 ;
 
 PageReference returns PageReference:
-	'*Page :' page=[Page|QualifiedName] ('from :' pagescr= ComponentReference)? sect = SectionKinds?
+	'*Page :' page=[Page|QualifiedName] ('from :' pagescr= ComponentReference "section" sect = SectionKinds)?
 ;
 
 ComponentReference:
