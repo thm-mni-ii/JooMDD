@@ -4,7 +4,7 @@
 	<description>
       This plugin allows the creation of eJSL models and generates installable Joomla 3.x extensions.
 	</description>
-	<version>0.3.0</version>
+	<version>x.x.x</version>   <!--The Version is auto incremented from gradle. You can find it in the parent project/pom.xml-->
 	<vendor>Institut für Informationswissenschaften, Technische Hochschule Mittelhessen</vendor>
 
 	<idea-version since-build="131"/>
@@ -31,6 +31,7 @@
 			<implementation-class>classes.InitalSettings</implementation-class>
 		</component>
 	</project-components>	
+
 
 	<xi:include href="plugin_gen.xml" xpointer="xpointer(/idea-plugin/*)"/>
 </idea-plugin>

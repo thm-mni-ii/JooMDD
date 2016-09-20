@@ -5,7 +5,8 @@ buildscript {
 	dependencies {
 		classpath 'org.xtext:xtext-gradle-plugin:1.0.1'
 		classpath 'org.xtext:xtext-idea-gradle-plugin:1.0.1'
-	}
+        classpath 'org.xtext:xtext-gradle-plugin:1.0.2'
+    }
 }
 
 subprojects {
@@ -22,7 +23,14 @@ subprojects {
 	apply plugin: 'idea'
 	
 	group = 'de.thm.icampus.joomdd.ejsl'
-	version = '0.3.0'
+
+	// Load version from pom.xml file
+	def xmlFile = file ('../pom.xml')
+	def xmlText = xmlFile.getText()
+	def parser = new XmlParser()
+	def list = parser.parseText(xmlText)
+	
+	version =  list.version[0].text()
 	
 	sourceCompatibility = '1.8'
 	targetCompatibility = '1.8'
@@ -31,3 +39,5 @@ subprojects {
 		exclude group: 'asm'
 	}
 }
+
+apply plugin: 'org.xtext.xtend'

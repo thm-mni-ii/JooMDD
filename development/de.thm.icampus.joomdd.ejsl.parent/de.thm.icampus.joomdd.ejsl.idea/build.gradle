@@ -18,3 +18,236 @@ ideaDevelopment {
 }
 
 ideaRepository.rootUrl = "${buildDir}/ideaRepository"
+
+/*
+	JooMDD Tasks for IDEA and PhpStorm support
+
+	For manual changes in version
+	Change it in the pom.xml file in the parent project 
+	(joomdd_repo\development\de.thm.icampus.joomdd.ejsl.parent\pom.xml) Line 4
+*/
+task deleteOldPlugin(type: Delete){
+	description 'delete old Plugin'
+	group ('JooMDD_Help_Task')
+	delete '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/'
+	
+}
+
+
+task unzip(type: Copy){
+	description 'unZip IDEA Plugin'
+	group ('JooMDD_Help_Task')
+
+	def zipFile = file('../de.thm.icampus.joomdd.ejsl.idea/build/distributions/de.thm.icampus.joomdd.ejsl.idea-'+ version +'.zip')
+
+	from zipTree(zipFile)		
+	into '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution'
+}
+
+
+task parsePhpStormUpdatePluginsXml{
+	description 'Parse updatePlugins.xml for the new version'
+	group ('JooMDD_Help_Task')
+
+	doLast{
+		def xmlFile = file ('../../../releases/PhpStorm/ideaRepository/updatePlugins.xml')
+		def xmlText = xmlFile.getText()
+		def parser = new XmlParser()
+		def list = parser.parseText(xmlText)
+
+		list.plugin[0].replaceNode{	
+			plugin(name:"JooMDD", 
+				id:"de.thm.icampus.joomdd.ejsl.phpstorm", 
+				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+ version +".zip",
+				version: version ){}
+		}
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)			
+	}
+}
+
+task parseIntelliJUpdatePluginsXml{
+	description 'Parse updatePlugins.xml for the new version'
+	group ('JooMDD_Help_Task')
+
+	doLast{
+		def xmlFile = file ('../../../releases/IntelliJ/ideaRepository/updatePlugins.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()	
+		def list = parser.parseText(xmlText)
+
+		list.plugin[0].replaceNode{	
+			plugin(name:"JooMDD", 
+				id:"de.thm.icampus.joomdd.ejsl.idea", 
+				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+ version +".zip",
+				version: version ){}
+		}
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)			
+	}
+}
+
+
+
+task changeDependencies{	
+	description 'Edit Plugin.xml to add dependencies for PhpStorm'
+	group ('JooMDD_Help_Task')
+
+	doLast{
+		def xmlFile = file ('../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/META-INF/plugin.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()	
+		def list = parser.parseText(xmlText)		
+
+		list.depends[1].replaceNode{
+			depends("com.intellij.modules.lang"){}		
+			depends("com.jetbrains.php"){}		
+		}	
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
+}
+
+task changeVersion{
+	description 'Parse Plugin.xml and add the version'
+	group ('JooMDD_Help_Task')
+
+	doLast{
+		def xmlFile = file ('../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/META-INF/plugin.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()	
+		def list = parser.parseText(xmlText)	
+
+		list.version.replaceNode{
+			version(version){}
+		}		
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
+}
+
+
+task incrementVersion{
+	description 'Increment the Version for the Project'
+	group ('JooMDD')
+
+	doLast{	
+		def xmlFile = file ('../pom.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()	
+		def list = parser.parseText(xmlText)
+
+		def lastversion = list.version[0].text()		
+
+		def newversion
+
+		if (lastversion.charAt(lastversion.length()-2) != ".")
+		{	
+			newversion= lastversion.substring(0,lastversion.length()-2) + (lastversion[lastversion.length()-2..lastversion.length()-1].toInteger() + 1)		
+		}else
+		{
+			newversion = lastversion.substring(0,lastversion.length()-1) + (lastversion[lastversion.length()-1].toInteger() + 1)
+		}			
+	
+		println "Newversion=" + newversion		
+
+		list.version[0].replaceNode{		
+				version(newversion){}		
+		}	
+		
+		def writer = new FileWriter(xmlFile)
+		
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)		
+	}
+}
+
+task zipIntelliJ(type: Zip){
+	description 'Zip and copy IDEA Plugin to releases'
+	group ('JooMDD_Help_Task')
+
+	from '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/'	
+	destinationDir file("../../../releases/IntelliJ/ideaRepository")
+}
+
+
+task zipPhpStorm(type: Zip){
+	description 'Zip and copy PhpStorm Plugin to releases'
+	group ('JooMDD_Help_Task')
+	
+	from '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/'	
+	destinationDir file('../../../releases/PhpStorm/ideaRepository/')
+}
+
+/*
+	For the Wizard the sources must be in the out folder
+*/
+task addIntelliJWizard(type: Copy){
+	description 'add the newest Wizard to Plugin'
+	group ('JooMDD_Help_Task')
+		
+	from('../../ProjectWizard/out/production/ProjectWizard/')
+	into ('../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/classes/')
+}
+
+
+/*
+	Order of JooMDDDeploy tasks	
+			incrementVersion
+		1.	ideaZip							(xtext gradle standard)
+		2. 	deleteOldPlugin
+		3. 	unzip
+		4. 	changeVersion
+		5. 	addIntelliJWizard
+		6. 	zipIntelliJ
+		7. 	changeDependencies
+		8. 	zipPhpStorm
+		9. 	parsePhpStormUpdatePluginsXml
+		10.	parseIntelliJUpdatePluginsXml
+*/
+
+task JooMDDDeploy  (dependsOn: [
+		'ideaZip', 'deleteOldPlugin', 'unzip' , 'changeVersion' , 'addIntelliJWizard' ,'zipIntelliJ' , 
+		'changeDependencies' , 'zipPhpStorm', 'parsePhpStormUpdatePluginsXml',
+		'parseIntelliJUpdatePluginsXml']){
+	description 'Create all for deployment ... until now only IntelliJ/PhpStorm'
+	group ('JooMDD')
+
+	//ideaZip.mustRunAfter						incrementVersion
+	deleteOldPlugin.mustRunAfter				ideaZip
+	unzip.mustRunAfter							deleteOldPlugin
+	changeVersion.mustRunAfter 					unzip
+	addIntelliJWizard.mustRunAfter				changeVersion
+	zipIntelliJ.mustRunAfter 					addIntelliJWizard
+	changeDependencies.mustRunAfter 			zipIntelliJ
+	zipPhpStorm.mustRunAfter 					changeDependencies
+	parsePhpStormUpdatePluginsXml.mustRunAfter	zipPhpStorm
+	parseIntelliJUpdatePluginsXml.mustRunAfter	parsePhpStormUpdatePluginsXml
+}
+
+/*
+	Eclipse automation
+	
+	Steps ...
+	
+*/
+
+
+
