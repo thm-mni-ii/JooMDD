@@ -1,13 +1,12 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator
 
-import de.thm.icampus.joomdd.ejsl.eJSL.Component
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import java.io.File
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import org.eclipse.xtext.generator.IFileSystemAccess
 
 class FieldsGenerator {
 
@@ -199,7 +198,6 @@ class FieldsGenerator {
 	 protected function getOptions()
 	    {
 	
-	        $input = JFactory::getApplication()->input;
 	        $valueColumn = $this->getAttribute('valueColumn');
 	        $textColumn = $this->getAttribute('textColumn');
 	
@@ -213,7 +211,18 @@ class FieldsGenerator {
 	        $dbo = JFactory::getDbo();
 	        $query = $dbo->getQuery(true);
 	        $query->select("DISTINCT $valueColumn as value, $textColumn as text")
-	             ->from("$this->table")
+	             ->from("$this->table AS «entFrom.name.toLowerCase»")
+	             «FOR ExtendedReference ref:entFrom.extendedReference »
+	             ->join('LEFT', "«Slug.databaseName(com.name,ref.extendedToEntity.name)» as  «ref.extendedToEntity.name.toLowerCase» ON
+	             «FOR ExtendedAttribute attr: ref.extendedAttribute»
+	             «IF ref.extendedAttribute.last != attr»
+	             «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.extendedToEntity.name.toLowerCase».«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf((attr))).name.toLowerCase» AND
+	             «ELSE»
+	              «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.extendedToEntity.name.toLowerCase».«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf((attr))).name.toLowerCase»
+	             «ENDIF»
+	             «ENDFOR»
+	             ")
+	             «ENDFOR»
 	            ->order("$textColumn ASC");
 	        $dbo->setQuery($query);
 	        $result = $dbo->loadObjectList();
@@ -238,7 +247,7 @@ class FieldsGenerator {
 	<?php
 	«Slug.generateFileDoc(component, true)»
 	JFormHelper::loadFieldClass('list');
-	class JFormField«component.name.toFirstUpper»user extends JFormFieldList{
+	class JFormFieldComponentuser extends JFormFieldList{
 	    
 	      protected function getOptions(){
 	           $entity = $this->getAttribute('entity');
@@ -265,9 +274,9 @@ class FieldsGenerator {
 		if(!fieldEntity.exists){
 		access.generateFile(path+ "/"+entFrom.name +".php", genFieldsForEntity)
 		}
-		var File fieldUser = new File (path+ "/"+com.name +"user" +".php")
+		var File fieldUser = new File (path+ "/componentuser.php")
 		if(!fieldUser.exists){
-		access.generateFile(path+ "/"+com.name +"user" +".php", FieldsGenerator.genFieldsForUserView(com))
+		access.generateFile(path+ "/componentuser.php", FieldsGenerator.genFieldsForUserView(com))
 		
 		}
 	}

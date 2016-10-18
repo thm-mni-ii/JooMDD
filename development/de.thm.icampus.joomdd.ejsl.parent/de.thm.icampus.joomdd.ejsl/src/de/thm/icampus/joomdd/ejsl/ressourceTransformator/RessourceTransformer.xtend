@@ -23,6 +23,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypeKinds
 import de.thm.icampus.joomdd.ejsl.eJSL.HTMLTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
+import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 
 class RessourceTransformer {
 	EJSLModel modelInstance
@@ -36,10 +37,13 @@ class RessourceTransformer {
 		
 	}
 	def dotransformation(){
+		featurs.entities.forEach[t | t.name = Util.slugify(t.name)]
+		featurs.pages.forEach[t | t.name = Util.slugify(t.name)]
 		createMappingsTable(featurs.entities)
 		formatEntitiesAttribute(featurs.entities)
 		completeDetailsPage();
 		completeIndexPage();
+		
 		var JoomlaTranformator jt = new JoomlaTranformator(modelInstance)
 		jt.completeCMSExtension
 		
@@ -75,17 +79,17 @@ class RessourceTransformer {
 	}
 	
 	private def completeTableColumnAndEditedFields(DetailsPage page) {
-		if(page.editfields.empty && !page.tablecolumns.empty){
-			for(Attribute attr: page.tablecolumns){
-				page.editfields.add(parseAttributeType(attr))
-			}
-		}
-		if(!page.editfields.empty && page.tablecolumns.empty){
-			
-			for( DetailPageField editedAttr: page.editfields){
-				page.tablecolumns.add(editedAttr.attribute)
-			}
-		}
+//		if(page.editfields.empty && !page.tablecolumns.empty){
+//			for(Attribute attr: page.tablecolumns){
+//				page.editfields.add(parseAttributeType(attr))
+//			}
+//		}
+//		if(!page.editfields.empty && page.tablecolumns.empty){
+//			
+//			for( DetailPageField editedAttr: page.editfields){
+//				page.tablecolumns.add(editedAttr.attribute)
+//			}
+//		}
 		if(page.editfields.empty && page.tablecolumns.empty){
 			for(Attribute attr: page.entities.get(0).attributes){
 				page.tablecolumns.add(attr)
@@ -94,7 +98,7 @@ class RessourceTransformer {
 			}
 		}
 	}
-	private def completeColUmnAndFilterList(IndexPage page) {
+	private def completeColUmnAndFilterList(IndexPage page) {		
 		if(page.filters.empty && !page.tablecolumns.empty){
 			for(Attribute attr: page.tablecolumns){
 				page.filters.add(attr)
@@ -108,11 +112,14 @@ class RessourceTransformer {
 		}
 		if(page.filters.empty&& page.tablecolumns.empty){
 			for(Attribute attr: page.entities.get(0).attributes){
+				if((page.entities.get(0).references.filter[t | !t.attribute.contains(attr) && t.upper != 1]).size ==0)
 				page.tablecolumns.add(attr)
 				page.filters.add(attr)
 			}
 		}
 	}
+	
+	
 	
 	//todo   
 	def void createMappingsTable(EList<Entity> entitiesList){ 
@@ -129,11 +136,22 @@ class RessourceTransformer {
 				 		var Entity mappingEntity = EJSLFactory.eINSTANCE.createEntity
 				 		mappingEntity.name = mappingEntityName
 				 		var EList<Attribute> attributeFromEntity = new BasicEList<Attribute>
+				 		var EList<Attribute> copy_attributeFromEntity = new BasicEList<Attribute>
+				 		var EList<Attribute> to_rename_attributeFromEntity = new BasicEList<Attribute>
 				 		var EList<Attribute> attributeToEntity = new BasicEList<Attribute>
+				 		var EList<Attribute> copy_attributeToEntity = new BasicEList<Attribute>
+				 	    var EList<Attribute> to_rename_attributeToEntity = new BasicEList<Attribute>
+				 		
 				 		attributeFromEntity.addAll(ref.entity.references.filter[t | t.entity.name == ent.name].get(0).attributerefereced)
+				 		to_rename_attributeToEntity.addAll(ref.entity.references.filter[t | t.entity.name == ent.name].get(0).attribute)
 				 		attributeToEntity.addAll(ref.attributerefereced)
-				 		mappingEntity.attributes.addAll(copyAttribute( ent,attributeFromEntity))
-				 		mappingEntity.attributes.addAll(copyAttribute( ref.entity,attributeToEntity))
+				 		to_rename_attributeFromEntity.addAll(ref.attribute);
+				 		copy_attributeFromEntity.addAll(copyAttribute( ent,attributeFromEntity))
+				 		mappingEntity.attributes.addAll(copy_attributeFromEntity)
+				 		copy_attributeToEntity.addAll(copyAttribute( ref.entity,attributeToEntity))
+				 		renameOldReference(to_rename_attributeFromEntity, copy_attributeToEntity)
+				 		renameOldReference(to_rename_attributeToEntity, copy_attributeFromEntity)
+				 		mappingEntity.attributes.addAll(copy_attributeToEntity)
 				 		ent.attributes.removeAll(ref.attribute)
 				 		ref.entity.attributes.removeAll(ref.entity.references.filter[t | t.entity.name == ent.name].get(0).attribute)
 				 		mappingEntity.references.addAll(solveReference(ref,mappingEntity,ent,ref.entity))
@@ -158,6 +176,27 @@ class RessourceTransformer {
 			
 		}
 		entitiesList.addAll(newEntity)
+		
+	}
+	
+	 def void renameOldReference(EList<Attribute> torenameAttribute, EList<Attribute> newAttribute) {
+		
+		
+		for( Page page: featurs.pages.filter[t | t instanceof  DynamicPage]){
+			var DynamicPage dynPage = page as DynamicPage
+			for(Attribute attr : torenameAttribute){
+				if(dynPage.filters.contains(attr)){
+					var Attribute newAttr = newAttribute.get(torenameAttribute.indexOf(attr))
+					dynPage.filters.remove(attr)
+					dynPage.filters.add(newAttr)
+				}
+				if(dynPage.tablecolumns.contains(attr)){
+					var Attribute newAttr = newAttribute.get(torenameAttribute.indexOf(attr))
+					dynPage.tablecolumns.remove(attr)
+					dynPage.tablecolumns.add(newAttr)
+				}
+			}
+		}
 		
 	}
 	

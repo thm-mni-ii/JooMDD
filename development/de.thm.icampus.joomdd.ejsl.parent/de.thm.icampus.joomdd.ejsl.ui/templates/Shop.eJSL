@@ -1,0 +1,364 @@
+eJSLModel "Shop" {
+	eJSL part: CMS Extension {
+		entities{
+			Entity creditInstitute {
+				attributes {
+					Attribute name {
+						type = Short_Text
+						Unique attribute with ID
+					}
+					Attribute adress {  
+						type = Short_Text
+					}   
+					Attribute iBan { 
+						type = Text
+					}
+					Attribute bic {   
+						type = Text 
+					}
+				}	 
+			}
+			Entity Product {   
+				attributes {
+					Attribute name {
+						type = Short_Text
+						Unique attribute with ID
+					}
+					Attribute price {
+						type = Text
+					}
+					Attribute desc {
+						type = Text
+					}
+					Attribute value {
+						type = Integer
+					}
+					Attribute porder {
+						type = Text
+						Unique attribute
+					}  
+					Attribute supplier {
+						type = Text
+						Unique attribute 
+					}
+				}
+				references {
+					Reference {
+						EntityAttribute = porder 
+						*Entity =  Contra
+						*EntityReference = Contra.ordNr    
+						lower = 1
+						upper = -1
+						
+					} 
+					Reference {
+						EntityAttribute = supplier
+						*Entity = supplier
+						*EntityReference = supplier.name
+						lower = 1
+						upper = -1
+					}
+				}       
+			}
+			Entity Contra { 
+				
+				attributes { 
+					Attribute ordNr {
+						type = Integer
+						Primary attribute
+					}
+					Attribute customer {
+						type = Short_Text
+						Unique attribute
+					}
+					Attribute date {
+						type = Date
+					}
+					Attribute product {
+						type = Short_Text
+						Unique attribute 
+					}
+					
+				}
+				references {
+					Reference {
+						EntityAttribute = product
+						*Entity = Product
+						*EntityReference = Product.name
+						lower = 1
+						upper = -1
+					}
+					Reference {
+						EntityAttribute = customer 
+						*Entity = customer
+						*EntityReference = customer.lName
+						lower = 1
+						upper = -1
+					}
+				}
+			}
+			Entity location {	
+				attributes  {
+					Attribute postCode {
+						type = Integer
+						Unique attribute
+					}
+					Attribute name {
+						type = Short_Text
+					}
+				}
+			}
+			Entity supplier {
+				attributes {
+					Attribute name {
+						type = Short_Text
+						Unique attribute with ID
+					}
+					Attribute bank {
+						type = Short_Text
+					}
+					Attribute location {
+						type = Integer
+					}
+					Attribute adress {
+						type = Text
+					}
+					Attribute tel {
+						type = Text
+					}
+					Attribute product {
+						type = Short_Text
+					}
+				}
+				references {
+					Reference {
+						EntityAttribute = bank
+						*Entity = creditInstitute
+						*EntityReference = creditInstitute.name
+						lower = 1
+						upper = 1
+					}  
+					Reference {
+						EntityAttribute = location
+						*Entity = location
+						*EntityReference = location.postCode
+						lower = 1
+						upper = 1 
+					}
+					Reference {
+						EntityAttribute = product
+						*Entity = Product
+						*EntityReference = Product.name
+						lower = 1
+						upper = -1
+					}
+				}
+			}
+			Entity customer {
+				attributes {
+					Attribute lName {
+						type = Short_Text
+						Unique attribute with ID
+					}
+					Attribute sName {
+						type = Short_Text
+					}
+					Attribute adress {
+						type = Text
+					}
+					Attribute tel {
+						type = Text
+					}
+					Attribute ktoNr{
+						type = Integer
+					}
+					Attribute bank {
+						type = Short_Text
+					}
+					Attribute ^order{
+						type = Short_Text
+					}
+				}
+				references {
+					Reference {
+						EntityAttribute = bank
+						*Entity = creditInstitute
+						*EntityReference = creditInstitute.name
+						lower = 1
+						upper = 1
+					}
+					Reference {
+						EntityAttribute = ^order 
+						*Entity = Contra
+						*EntityReference = Contra.ordNr
+						lower = 1
+						upper = -1
+					}
+				
+				}
+			}
+		}
+		pages {
+			IndexPage Customers {  
+				*Entities customer
+				table columns = customer.sName, customer.lName, customer.adress
+				filters = customer.lName, customer.adress links {
+					InternalcontextLink Details {
+						target = Customer linked attribute = customer.lName
+						linkparameters {
+							Parameter name = *Attribute "customer.lName"
+						}
+					} 
+				}
+			}
+			DetailsPage Customer {
+				*Entities customer links {
+					InternalLink Index {
+						target = Customers linked attribute = customer.lName
+					}
+				}
+			}
+			IndexPage Products {
+				*Entities Product
+				table columns = Product.name, Product.price, Product.desc
+				filters = Product.name, Product.price links {
+					InternalcontextLink Details { 
+						target = product linked attribute = Product.name
+						linkparameters {
+							Parameter name = *Attribute  "Product.name"
+						}
+					}
+				}
+			}
+			DetailsPage product { 
+				*Entities Product links { 
+					InternalLink Index {
+						target = Products linked attribute = Product.name
+					}
+				}
+			}
+			IndexPage CreditInstitutes {
+				*Entities creditInstitute
+				table columns = creditInstitute.name, creditInstitute.adress, creditInstitute.iBan
+				filters = creditInstitute.name, creditInstitute.adress, creditInstitute.iBan links {
+					InternalcontextLink Details {
+						target = CreditInstitute linked attribute = creditInstitute.name
+						linkparameters {
+							Parameter name = *Attribute  "creditInstitute.name"
+						}
+					}
+				}
+			}
+			DetailsPage CreditInstitute {
+				*Entities creditInstitute links {
+					InternalLink Index {
+						target = CreditInstitutes linked attribute = creditInstitute.name
+					}
+				}
+			}
+			IndexPage Contras {                  
+				*Entities Contra
+				table columns = Contra.ordNr, Contra.date 
+				filters = Contra.ordNr, Contra.date, Contra.customer
+				links { 
+					InternalcontextLink Details {
+						target = Contra linked attribute = Contra.ordNr
+						linkparameters {
+							Parameter ordNr = *Attribute  "Contra.ordNr"
+						}
+					}
+				}
+			}
+			DetailsPage Contra {
+				*Entities Contra links {
+					InternalLink Index {
+						target = Contras linked attribute = Contra.ordNr
+					}
+				}
+			}
+			IndexPage Locations {
+				*Entities location
+				table columns = location.postCode, location.name
+				filters = location.postCode, location.name links {
+					InternalcontextLink Details {
+						target = Location linked attribute = location.name
+						linkparameters {
+							Parameter name = *Attribute  "location.name"
+						}
+					}
+				}
+			}
+			DetailsPage Location {
+				*Entities location links {
+					InternalLink Index {
+						target = Locations linked attribute = location.name
+					}
+				}
+			}
+			IndexPage Suppliers {
+				*Entities supplier
+				table columns = supplier.name, supplier.adress, supplier.location
+				filters = supplier.name, supplier.adress, supplier.location links {
+					InternalcontextLink Details {
+						target = Supplier linked attribute = supplier.name
+						linkparameters {
+							Parameter name = *Attribute  "supplier.name"
+						}
+					}
+				}
+			}
+			DetailsPage Supplier {
+				*Entities supplier links {
+					InternalLink Index {
+						target = Suppliers linked attribute = supplier.name
+					}
+				}
+			}
+		}
+		extensions {
+			Component ExampleShop {  
+				Manifestation {
+					authors {
+						Author "Peter Janauschek" {
+							authoremail = "peter.janauschek@mni.thm.de"
+						}
+					}
+					copyright = "Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved."
+					license = "GNU General Public License version 2 or later; see LICENSE.txt"
+					version = "1.0.1"
+				}
+				languages {
+					Language de-DE {
+					}     
+					Language en-GB {     
+					}
+				}
+				sections { 
+					Frontend section {
+						*Pages {
+							*Page : Customer
+							*Page : Products
+							*Page : product
+						}
+					}  
+					Backend section {      
+						*Pages { 
+							*Page : Customers
+							*Page : Customer
+							*Page : Products 
+							*Page : product
+							*Page : Contras
+							*Page : Contra 
+							*Page : CreditInstitutes
+							*Page : CreditInstitute
+							*Page : Locations
+							*Page : Location
+							*Page : Suppliers
+							*Page : Supplier
+						}
+					}
+				}
+			}
+		}
+	}
+}

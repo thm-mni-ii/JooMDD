@@ -169,9 +169,9 @@ class IndexPageTemplateSiteHelper {
             <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
         </th>
     <?php endif; ?>
-    «FOR Attribute attr: indexpage.tablecolumns»
+    «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
     	<th class='left'>
-			<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.eContainer as Entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+			<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 		</th>
     «ENDFOR»
     <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit ): ?>
@@ -179,12 +179,6 @@ class IndexPageTemplateSiteHelper {
             <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
         </th>
     <?php endif; ?>
-
-		<?php if ($canEdit || $canDelete): ?>
-		<th class="center">
-	<?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_«indexpage.name.toUpperCase»_ACTIONS'); ?>
-	</th>
-	<?php endif; ?>
 
     </tr>
     </thead>
@@ -258,16 +252,7 @@ class IndexPageTemplateSiteHelper {
                 </td>
             <?php endif; ?>
 
-            				<?php if ($canEdit || $canDelete): ?>
-					<td class="center">
-						<?php if ($canEdit): ?>
-							<a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name»); ?>" class="btn btn-mini" type="button"><i class="icon-edit" ></i></a>
-						<?php endif; ?>
-						<?php if ($canDelete): ?>
-                            <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name»); ?>" class="btn btn-mini delete-button" type="button"><i class="icon-trash" ></i></a>
-                            <?php endif; ?>
-					</td>
-				<?php endif; ?>
+            	
 
         </tr>
     <?php endforeach; ?>

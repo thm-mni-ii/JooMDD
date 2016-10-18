@@ -31,7 +31,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		backHelp = new   DetailsPageTemplateBackendHelper(dpage, com, sec)
 		frontHelp = new   DetailsPageTemplateFrontEndHelper(dpage, com, sec)
 		this.path = path
-		pagename = dpage.name.toLowerCase
+		pagename = Slug.slugify(dpage.name.toLowerCase)
 		this.fsa = fsa
 		mainEntity = dp.extendedEntityList.get(0)
 	}
@@ -48,19 +48,37 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		 
 		 }
 		 else{
-		 generateJoomlaDirectory(path+"/" + pagename+"edit")
-		  generateFile(path+"/" + pagename+"edit"+"/"+ "view.html.php", generateSiteView(true))
-		  generateJoomlaDirectory(path+"/" + pagename+ "edit"+"/" + "tmpl")
-		   generateFile(path+"/" + pagename+ "edit"+"/" + "tmpl"+"/" + "default.php" , generateSiteViewLayoutEdit())
-		   generateFile(path+"/" + pagename + "edit"+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename+ "edit", dpage, com))
-		   
-		   generateJoomlaDirectory(path+"/" + pagename)
-		  generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView(false))
-		  generateJoomlaDirectory(path +"/"+ pagename+"/" + "tmpl")
-		   generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow())
-		   generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
+			 if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty){	
+			      generateFrontEndEditView(pagename+"edit")
+			      generateFrontEndShowView(pagename+"edit")
+			  		}
+		  		else{
+			       if( !dpage.extendedEditedFieldsList.isEmpty){
+			       	generateFrontEndEditView(pagename)
+			       }else{
+			       	generateFrontEndShowView(pagename)
+			       }
+			       
+				}
+		
 		 }
 		
+	}
+	def void generateFrontEndShowView(String editPagename){
+		 generateJoomlaDirectory(path+"/" + pagename)
+		  generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView(false, ''))
+		  generateJoomlaDirectory(path +"/"+ pagename+"/" + "tmpl")
+		   generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow(editPagename))
+		   generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
+		
+	}
+	def void generateFrontEndEditView(String editPagename){
+		 generateJoomlaDirectory(path+"/" + editPagename)
+		  generateFile(path+"/" + editPagename+"/"+ "view.html.php", generateSiteView(true,editPagename))
+		  generateJoomlaDirectory(path+"/" + editPagename+"/" + "tmpl")
+		   generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.php" , generateSiteViewLayoutEdit(editPagename))
+		   generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(editPagename, dpage, com))
+		   
 	}
 	def void generateController(){
 		if(sec.equalsIgnoreCase("admin")){
@@ -77,11 +95,21 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		  
 		   generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 		 }else{
-		
-		  generateFile(path+"/" + pagename+"edit"+ ".php", generateSiteModelEdit())
+		 generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+		 	
+		 if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty){	
+		  generateFile(path+"/" + pagename+"edit"+ ".php", generateSiteModelEdit(pagename+"edit"))
 		   
 		  generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
-		  generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+		  
+		  }else{
+		  	 if( !dpage.extendedEditedFieldsList.isEmpty){
+		  	 	 generateFile(path+"/" + pagename+ ".php", generateSiteModelEdit(pagename))
+		  	 }else{
+		  	 	 generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
+		  
+		  	 }
+		  }
 		}
 	}
 	
@@ -392,7 +420,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«frontHelp.generateSiteModelDelete()»
 	}
 	'''
-	def CharSequence generateSiteModelEdit()'''
+	def CharSequence generateSiteModelEdit(String editPageName)'''
 	«generateFileDoc(dpage,com,true)»
 	
 	jimport('joomla.application.component.modelform');
@@ -403,7 +431,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	/**
 	 * Model to Edit  a Dataitem
 	 */
-	class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper»Edit extends JModelForm {
+	class «com.name.toFirstUpper»Model«editPageName.toFirstUpper» extends JModelForm {
 		var $_item = null;
 		«frontHelp.generateSiteModelPopulatestate()»
 		«frontHelp.generateSiteModelCheckin()»
@@ -419,25 +447,25 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	}
 	'''
 	
-	def CharSequence generateSiteView(Boolean isedit)'''
+	def CharSequence generateSiteView(Boolean isedit, String editPageName)'''
 	«generateFileDoc(dpage,com,true)»
 	
 	jimport('joomla.application.component.view');
 
 /**
- * View to « if(isedit) "Edit" else "Show"» edit
+ * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»
  */
-class «com.name.toFirstUpper»View« if(isedit)dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper  » extends JViewLegacy {
+class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else dpage.name.toFirstUpper  » extends JViewLegacy {
 
     protected $state;
     protected $item;
     protected $form;
     protected $params;
-    «frontHelp.generateSiteViewDisplay(isedit)»
+    «frontHelp.generateSiteViewDisplay(isedit, editPageName)»
     «frontHelp.generateSiteViewprepareDocument()»
     } 
 	'''
-	def CharSequence generateSiteViewLayoutEdit()'''
+	def CharSequence generateSiteViewLayoutEdit(String editPageName)'''
 	«generateFileDoc(dpage,com,false)»
 	JHtml::_('behavior.keepalive');
 	JHtml::_('behavior.tooltip');
@@ -457,9 +485,9 @@ class «com.name.toFirstUpper»View« if(isedit)dpage.name.toFirstUpper + "Edit"
 	    <?php else: ?>
 	        <h1>Add</h1>
 	    <?php endif; ?>
-	    «frontHelp.generateSiteViewLayoutEditForm()»
+	    «frontHelp.generateSiteViewLayoutEditForm(editPageName)»
 	'''
-	def CharSequence generateSiteViewLayoutShow()'''
+	def CharSequence generateSiteViewLayoutShow(String editPageName)'''
 	«generateFileDoc(dpage,com,false)»
 	//Load admin language file
 	$lang = JFactory::getLanguage();
@@ -469,7 +497,7 @@ class «com.name.toFirstUpper»View« if(isedit)dpage.name.toFirstUpper + "Edit"
 		$canEdit = JFactory::getUser()->id == $this->item->created_by;
 	}
 	?>
-	«frontHelp.generateSiteViewLayoutShow»
+	«frontHelp.generateSiteViewLayoutShow(editPageName)»
 	 '''
 		
 		

@@ -16,6 +16,9 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.eJSL.Reference
+import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 
 class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamicPage {
 	
@@ -44,6 +47,8 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		this.preserve = page.preserve
 		initList()
 	}
+	
+
 	
 	def initList() {
 		extendedTableColumnList = new BasicEList<ExtendedAttribute> 

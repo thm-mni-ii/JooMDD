@@ -144,7 +144,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 	 <field
       name="created_by"
        addfieldpath="administrator/components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
-      type="«component.name.toLowerCase»user"
+      type="componentuser"
       label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_CREATED_BY"
       description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_CREATED_BY"
        entity = "«page.extendedEntityList.get(0).name.toLowerCase»"
@@ -158,8 +158,8 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
           type="«page.extendedEntityList.get(0).name.toLowerCase»"
           label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.name.toUpperCase»_«attr.name.toUpperCase»"
           description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.name.toUpperCase»_«attr.name.toUpperCase»"
-           valueColumn="«attr.name.toLowerCase»"
-           textColumn="«attr.name.toLowerCase»"
+           valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
+           textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
           >
       <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
   </field>

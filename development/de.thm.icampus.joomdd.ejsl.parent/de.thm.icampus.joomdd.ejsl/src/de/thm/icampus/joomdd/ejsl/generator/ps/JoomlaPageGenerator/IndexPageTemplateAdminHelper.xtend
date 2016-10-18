@@ -11,6 +11,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 
 class IndexPageTemplateAdminHelper {
 	
@@ -90,13 +91,13 @@ class IndexPageTemplateAdminHelper {
 	    public function __construct($config = array()) {
 	        if (empty($config['filter_fields'])) {
 	            $config['filter_fields'] = array(
-	                                '«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»',
-	                'ordering', 'a.ordering',
-	                'state', 'a.state',
-	                'created_by', 'a.created_by'
-	                , 'published', 'a.published'
+	                                '«mainEntity.primaryKey.name»', '«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name»',
+	                'ordering', '«indexpage.entities.get(0).name.toLowerCase».ordering',
+	                'state', '«indexpage.entities.get(0).name.toLowerCase».state',
+	                'created_by', '«indexpage.entities.get(0).name.toLowerCase».created_by'
+	                , 'published', '«indexpage.entities.get(0).name.toLowerCase».published'
 	                «FOR ExtendedAttribute attr: indexpage.allAttributeOfFilterAndColum»
-	                ,'«attr.name.toLowerCase»', 'a.«attr.name.toLowerCase»'
+	                ,'«attr.name.toLowerCase»', '«attr.entity.name.toLowerCase».«attr.name.toLowerCase»'
 	                «ENDFOR»
 	                );}
 	                parent::__construct($config);
@@ -119,54 +120,61 @@ class IndexPageTemplateAdminHelper {
 	        // Select the required fields from the table.
 	        $query->select(
 	                $this->getState(
-	                        'list.select', 'a.*'
+	                        'list.select', '«indexpage.entities.get(0).name.toLowerCase».*'
 	                )
 	        );
-	        $query->from('`#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»` AS a');
+	        $query->from('`#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»` AS «indexpage.entities.get(0).name.toLowerCase»');
 	        // Join over the users for the checked out user
 		$query->select("uc.name AS editor");
-		$query->join("LEFT", "#__users AS uc ON uc.id=a.checked_out");
+		$query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name.toLowerCase».checked_out");
 		// Join over the user field 'created_by'
 		$query->select('created_by.name AS created_by');
-		$query->join('LEFT', '#__users AS created_by ON created_by.id = a.created_by');
+		$query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name.toLowerCase».created_by');
 		// Join over the user field 'user'
 		$query->select('user.name AS user');
-		$query->join('LEFT', '#__users AS user ON user.id =  a.created_by');
-
-	
-
+		$query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name.toLowerCase».created_by');
+		 «FOR ExtendedReference ref:indexpage.extendedEntityList.get(0).extendedReference »
+		 $query->join('LEFT', "«Slug.databaseName(com.name,ref.extendedToEntity.name)»  AS «ref.extendedToEntity.name.toLowerCase» ON
+         «FOR ExtendedAttribute attr: ref.extendedAttribute»
+         «IF ref.extendedAttribute.last != attr»
+         «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.extendedToEntity.name.toLowerCase».«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf((attr))).name.toLowerCase» AND
+         «ELSE»
+          «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.extendedToEntity.name.toLowerCase».«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf((attr))).name.toLowerCase»
+         «ENDIF»
+         «ENDFOR»
+		 ");
+         «ENDFOR»
 		// Filter by published state
 		$published = $this->getState('filter.state');
 		if (is_numeric($published)) {
-			$query->where('a.state = ' . (int) $published);
+			$query->where('«indexpage.entities.get(0).name.toLowerCase».state = ' . (int) $published);
 		} else if ($published === '') {
-			$query->where('(a.state IN (0, 1))');
+			$query->where('(«indexpage.entities.get(0).name.toLowerCase».state IN (0, 1))');
 		}
 		// Filter by User 
 		$created_by = $this->getState('filter.created_by');
 		if (!empty($created_by)) {
-            $query->where("a.created_by = '$created_by'");
+            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '$created_by'");
             }
         «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
         // Filter by «attr.name» 
 		$«attr.name» = $this->getState('filter.«attr.name»');
 		if (!empty($«attr.name»)) {
-            $query->where("a.«attr.name» = '$«attr.name»'");
+            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '$«attr.name»'");
             }
         «ENDFOR»
-		
 		// Filter by search in attribute
         $search = $this->getState('filter.search');
         if (!empty($search)) {
             if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
-                $query->where('a.«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
+                $query->where('«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
             } else {
                 $search = $db->Quote('%' . $db->escape($search, true) . '%');
                 «IF !filters.empty»
-                $query->where('( a.«filters.get(0).name.toLowerCase» LIKE '.$search. 
+                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE '.$search. 
                 «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
                 «IF filters.indexOf(attr) > 0»
-                 'OR  a.«attr.name.toLowerCase» LIKE '.$search.
+                 'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE '.$search.
                  «ENDIF»
                  «ENDFOR»
                  
@@ -482,7 +490,7 @@ if ($saveOrder)
      *
      * Note. Calling getState in this method will result in recursion.
      */
-    protected function populateState($ordering = 'a.«mainEntity.primaryKey.name»', $direction = 'asc') {
+    protected function populateState($ordering = '«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name»', $direction = 'asc') {
         
         // Load the parameters.
         $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');

@@ -21,6 +21,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.LinkParameter
 import de.thm.icampus.joomdd.ejsl.eJSL.StaticPage
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 import de.thm.icampus.joomdd.ejsl.eJSL.Datatype
+import org.eclipse.emf.ecore.EObject
 
 class JoomlaTranformator {
 	
@@ -73,8 +74,8 @@ class JoomlaTranformator {
 			typeid.notnull = true
 			typeid.autoincrement = true
 			id.type = typeid
-			ent.attributes.add(id)
 			id.isprimary = true
+			ent.attributes.add(id)
 			
 		}
 		if(!haveAttribute(ent,"asset_id" )){

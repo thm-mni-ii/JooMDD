@@ -433,7 +433,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    return $table->store();
 	}
 	'''
-	def CharSequence generateSiteViewDisplay(Boolean isedit)'''
+	def CharSequence generateSiteViewDisplay(Boolean isedit,String editName)'''
 	/**
 	* Display the view
 	*/
@@ -533,12 +533,12 @@ class DetailsPageTemplateFrontEndHelper {
 	 
 	'''
 	
-	def generateSiteViewLayoutEditForm() '''
-	<form id="form-«dpage.name.toLowerCase»" action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
+	def generateSiteViewLayoutEditForm(String editPageName) '''
+	<form id="form-«dpage.name.toLowerCase»" action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
 		<div class="control-group">
             <div class="controls">
                 <button type="submit" class="validate btn btn-primary"><?php echo JText::_('JSUBMIT'); ?></button>
-                <a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.cancel'); ?>" title="<?php echo JText::_('JCANCEL'); ?>"><?php echo JText::_('JCANCEL'); ?></a>
+                <a class="btn" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».cancel'); ?>" title="<?php echo JText::_('JCANCEL'); ?>"><?php echo JText::_('JCANCEL'); ?></a>
             </div>
         </div>
          <div class="form-horizontal">
@@ -582,12 +582,12 @@ class DetailsPageTemplateFrontEndHelper {
 	        <?php endif; ?>
 	    	<?php echo JHtml::_('bootstrap.endTabSet'); ?>
 	            <input type="hidden" name="option" value="«Slug.nameExtensionBind("com",com.name).toLowerCase»" />
-	            <input type="hidden" name="task" value="«dpage.name»edit.save" />
+	            <input type="hidden" name="task" value="«editPageName».save" />
 	            <?php echo JHtml::_('form.token'); ?>
 	        </form>
 	    </div>
 	'''
-	def generateSiteViewLayoutShow() '''
+	def generateSiteViewLayoutShow(String editPageName) '''
 	<?php if ($this->item ) : ?>
 
 	<div class="item_fields">
@@ -607,12 +607,13 @@ class DetailsPageTemplateFrontEndHelper {
 	«ENDFOR»
 	</table>
 	</div>
+	
 	<?php if($canEdit && $this->item->checked_out == 0): ?>
-		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«dpage.name.toLowerCase»edit&«mainEntity.primaryKey.name»='.$this->item->«mainEntity.primaryKey.name»); ?>">
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«editPageName.toLowerCase»&«mainEntity.primaryKey.name»='.$this->item->«mainEntity.primaryKey.name»); ?>">
 		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
 	<?php endif; ?>
 	<?php if(JFactory::getUser()->authorise('core.delete','«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$this->item->«mainEntity.primaryKey.name»)):?>
-		<a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«dpage.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=' . $this->item->«mainEntity.primaryKey.name»); ?>">
+		<a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».remove&«mainEntity.primaryKey.name»=' . $this->item->«mainEntity.primaryKey.name»); ?>">
 		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
 	<?php endif; ?>
 	<?php

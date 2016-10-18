@@ -36,17 +36,33 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	}
 	
 	new(Attribute attr, Entity ent) {
+		instance = attr
 		this.type = attr.type
 		this.name = PlattformIUtil.slugify(attr.name).toLowerCase
 		this.isunique = attr.isIsunique
 		this.withattribute = attr.withattribute
-		entity = ent
+		entity = searchEntity(ent)
 		genType = generatorType()
 		htmlType = generatorTypeHtmlType()
 		this.preserve = attr.preserve
-		instance = attr
+		this.isprimary = attr.isprimary
 		initAttributeProperties
 	}
+	
+	def Entity searchEntity(Entity entity) {
+		var Entity ent = instance.eContainer as Entity
+		
+		if(ent == null){
+			var Reference ref = (entity.references.filter[t | t.entity.attributes.contains(instance)]).get(0)
+			return ref.entity
+		}
+		
+		if(ent.name != entity.name)
+		return ent
+		
+		return entity
+	}
+	
 	def initAttributeProperties() {
 		
 			for(Reference ref: entity.references.filter[t | !t.upper.equalsIgnoreCase("1")]){
@@ -132,11 +148,11 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 			}
 		}
 		var String result = value
-		if (eJSlType.notnull)
+		if (eJSlType.notnull || isprimary)
 			result = result + "NOT NULL "
 		if (eJSlType.^default!= null)
 			result = result + "DEFAULT " + '''"«eJSlType.^default.toString»"'''
-		if (eJSlType.autoincrement)
+		if (eJSlType.autoincrement || isprimary)
 			result = result + " AUTO_INCREMENT "
 
 		return result

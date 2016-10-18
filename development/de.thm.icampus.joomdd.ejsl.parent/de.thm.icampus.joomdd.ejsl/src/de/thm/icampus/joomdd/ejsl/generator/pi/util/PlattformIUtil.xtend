@@ -48,30 +48,38 @@ class PlattformIUtil {
 	static def EList<ExtendedEntity> getAllReferenceOfEntity(ExtendedEntity entity){
 			val LinkedList<Entity> visited = new LinkedList<Entity> ();
 		visited.add(entity.instance)
-		var LinkedList<Entity> tovisited = new LinkedList<Entity> ();
+		var LinkedList<Entity> tosearch = new LinkedList<Entity> ();
 		for(Reference ref: entity.references){
-			if(!visited.contains(ref.entity))
-			tovisited.add(ref.entity)
+			if(!visited.contains(ref.entity) && !tosearch.contains(ref.entity))
+			tosearch.add(ref.entity)
 		}
-		var int sizeOfToVisited = tovisited.size
-		while(!tovisited.isEmpty){
+		while(tosearch.size != 0){
 			var LinkedList<Entity> childs = new LinkedList<Entity> ();
-			for(Entity ent : tovisited){
-				if(!visited.contains(ent)){
+			var LinkedList<Entity> toremove = new LinkedList<Entity> ();
+			for(Entity ent : tosearch){
+				
+				if(!visited.contains(ent)){//22
 					for(Reference ref: ent.references){
-						if(!visited.contains(ref.entity))
-						 childs.add(ref.entity)
+						if(!visited.contains(ref.entity) ){
+							
+						 if(!tosearch.contains(ref.entity))
+							childs.add(ref.entity)
+							}
+						 
 					}
-					if(!visited.contains(ent))
+					
 					  visited.add(ent);
-					tovisited.remove(ent)
-				}else{
-					tovisited.remove(ent)
+					toremove.add(ent)
+				}// 22
+				
+				else{
+					toremove.add(ent)
 				}
 			}
-			tovisited.addAll(childs.filter[t | !visited.contains(t)])
-			sizeOfToVisited = tovisited.size
 			
+			tosearch.removeAll(toremove)
+			
+			tosearch.addAll(childs.filter[t | !visited.contains(t)])
 		}
 		visited.removeFirst
 		var EList<ExtendedEntity> allEntityFromReference= new BasicEList<ExtendedEntity>()

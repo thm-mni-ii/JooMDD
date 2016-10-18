@@ -209,7 +209,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			 <field
               name="created_by"
                addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
-              type="«com.toLowerCase»user"
+              type="componentuser"
               label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
               description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
                entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»"
@@ -223,8 +223,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
                   type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
                   label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
                   description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-                   valueColumn="«attr.name.toLowerCase»"
-                   textColumn="«attr.name.toLowerCase»"
+                   valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
+                   textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
                   >
               <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
           </field>

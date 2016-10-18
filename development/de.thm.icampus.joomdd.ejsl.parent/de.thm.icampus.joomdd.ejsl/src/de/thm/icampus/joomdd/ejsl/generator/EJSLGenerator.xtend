@@ -31,6 +31,7 @@ class EJSLGenerator extends AbstractGenerator {
 				{
 					var CMSExtension extensionPart = domainModel.ejslPart as CMSExtension
 					var RessourceTransformer trans = new RessourceTransformer(e)
+				
 			 		trans.dotransformation
 					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions,"Extensions/", fsa, domainModel.name)
 					mainExtensionGen.dogenerate() 

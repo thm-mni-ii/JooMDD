@@ -24,7 +24,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		helperAdmin = new IndexPageTemplateAdminHelper(ipage,com,sec)
 		frontHelp = new IndexPageTemplateSiteHelper(ipage,com,sec)
 		this.path = path
-		pagename = dp.name.toLowerCase
+		pagename = Slug.slugify(dp.name.toLowerCase)
 		this.fsa = fsa
 	}
 	
@@ -251,7 +251,7 @@ class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLega
            </field>
         <field
               name="created_by"
-              type="«com.name.toLowerCase»user"
+              type="componentuser"
               label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
               description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
                entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
@@ -265,8 +265,8 @@ class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLega
                 type="«ipage.extendedEntityList.get(0).name.toLowerCase»"
                 label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
                 description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-                 valueColumn="«attr.name.toLowerCase»"
-                 textColumn="«attr.name.toLowerCase»"
+                 valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
+                 textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
                 onchange="this.form.submit();"
                 >
             <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>

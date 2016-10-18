@@ -4,21 +4,486 @@
 package de.thm.icampus.joomdd.ejsl.ui.quickfix
 
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
+import de.thm.icampus.joomdd.ejsl.validation.EJSLValidator
+import org.eclipse.xtext.ui.editor.quickfix.Fix
+import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
+import org.eclipse.xtext.validation.Issue
+import de.thm.icampus.joomdd.ejsl.eJSL.Author
+import de.thm.icampus.joomdd.ejsl.eJSL.Manifestation
+import de.thm.icampus.joomdd.ejsl.eJSL.Language
+import de.thm.icampus.joomdd.ejsl.eJSL.Component
+import org.eclipse.xtext.ui.editor.model.IXtextDocument
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.eJSL.Reference
+import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
+import de.thm.icampus.joomdd.ejsl.eJSL.Entity
+import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
+import java.util.HashSet
+import de.thm.icampus.joomdd.ejsl.eJSL.Feature
+import de.thm.icampus.joomdd.ejsl.eJSL.Extension
+import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.joomdd.ejsl.eJSL.Page
 
 /**
  * Custom quickfixes.
  *
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#quick-fixes
  */
+
 class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 
-//	@Fix(EJSLValidator.INVALID_NAME)
-//	def capitalizeName(Issue issue, IssueResolutionAcceptor acceptor) {
-//		acceptor.accept(issue, 'Capitalize name', 'Capitalize the name.', 'upcase.png') [
-//			context |
+	/**
+	 * Add Reference for Attribute
+	 */
+	 @Fix(EJSLValidator::MISSING_REFERENCE)
+	 def referenceToEntity(Issue issue, IssueResolutionAcceptor acceptor){
+	 	acceptor.accept(issue, 'Insert Reference', 'Insert a Reference for this Attribute.', '') [
+			element, context |
+			
+			val attribute = element as Attribute
+			val parentEntity = attribute.eContainer as Entity
+			val allEntites = (parentEntity.eContainer as Feature).entities
+			val referencedEntity = new HashSet<Entity>
+			
+			val ref = parentEntity.references
+			
+			for (entity : allEntites) {
+				if (entity.name.toLowerCase == attribute.name.toLowerCase) {
+					referencedEntity.add(entity)
+				}
+			}
+			
+			//TODO errors -> backtracking, cannot modify model
+			
+			val newReference = EJSLFactory.eINSTANCE.createReference()
+			newReference.entity = referencedEntity.get(0)
+			newReference.id = false
+			newReference.lower = '1'
+			newReference.upper = '1'
+			newReference.preserve = false
+			ref.add(newReference)
+		]
+	 }
+	
+	/**
+	 * Delete underscore in extension name
+	 */
+	@Fix(EJSLValidator::FORBIDDEN_UNDERSCORE_EXTENSIONNAME)
+	def deleteUnderscoreInExtensionName(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Delete underscore', 'Delete the underscore from the extension name.', '') [
+			element, context |
+			
+			val ext = element as Extension
+			val extName = ext.name.replace('_','')
+			context.xtextDocument.replace(issue.offset, issue.length, extName)
+			]
+	}
+
+	/**
+	 * Delete underscore in entity name
+	 */
+	@Fix(EJSLValidator::FORBIDDEN_UNDERSCORE_ENTITYNAME)
+	def deleteUnderscoreInEntityName(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Delete underscore', 'Delete the underscore from the entity name.', '') [
+			element, context |
+			
+			val ent = element as Entity
+			val entName = ent.name.replace('_','')
+			context.xtextDocument.replace(issue.offset, issue.length, entName)
+			]
+	}
+	
+	/**
+	 * Delete underscore in page name
+	 */
+	@Fix(EJSLValidator::FORBIDDEN_UNDERSCORE_PAGENAME)
+	def deleteUnderscoreInPageName(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Delete underscore', 'Delete the underscore from the page name.', '') [
+			element, context |
+			
+			val page = element as Page
+			val pageName = page.name.replace('_','')
+			context.xtextDocument.replace(issue.offset, issue.length, pageName)
+			]
+	}
+
+	/**
+	 * Delete an author of a manifestation
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_AUTHOR)
+	def uniqueManifestationAuthors(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Delete this author', 'Delete the name of the author.', '') [
+			element, context |
+			
+			val doubleAuthor = element as Author				// cast element as author
+			val man = doubleAuthor.eContainer as Manifestation	// get the manifestation from the author
+			man.authors.remove(doubleAuthor)					// delete the doubled author
+		]
+	}
+	
+	/**
+	 * Adds an Id to an Entity with a double defined name:
+	 * _ID_ + LineNumber
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_ENTITY)
+	def addIDtoEntity(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Add ID to Entity', 'Change the name.', '') [ context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset + issue.length, 1, "_ID_"+ issue.lineNumber.toString +" " )	// set the ID string after the underlined issue
+		]
+	}
+
+	/**
+	 * Example Qickfix for the Presentation
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_LANGUAGE)
+	def deletedoubleLanguageKey(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Hilf mir Quickfix', 'Remove the LanguageKey.', '') [ language, context |	
+			val doubleLang = language as Language
+			val c = doubleLang.eContainer as Component
+			c.languages.remove(doubleLang)
+		]
+	}
+
+	/**
+	 * Fix a double datatype: remove it or add an ID to the name
+	 */
+//	@Fix(EJSLValidator::AMBIGUOUS_DATATYPE)
+//	def addIDtoDatatype(Issue issue, IssueResolutionAcceptor acceptor) {
+//		acceptor.accept(issue, 'Add ID to Datatype', 'Change the name.', '') [ context |
+//			val xtextDocument = context.xtextDocument					
+//			xtextDocument.replace(issue.offset + issue.length - 1, 1, "_ID_"+ issue.lineNumber.toString +"\" ")
+//		]
+//		acceptor.accept(issue, 'Delete Datatype', 'Remove the Datatype.', '') [ context |
 //			val xtextDocument = context.xtextDocument
-//			val firstLetter = xtextDocument.get(issue.offset, 1)
-//			xtextDocument.replace(issue.offset, 1, firstLetter.toUpperCase)
+//			val doc = context.xtextDocument
+//			xtextDocument.replace(issue.offset, issue.length, "")
+//			deleteUntil(issue.offset,",",doc)			
 //		]
 //	}
+
+	/**
+	 * Set a http:// or https:// as String before an invalid url
+	 */
+	@Fix(EJSLValidator::INVALID_AUTHOR_URL)
+	def validURL(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Set "http" before', 'Setting HTTP:// before invalid URL', '') [ context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset, 1, "\"http://") // http:// before "-char
+		]
+		acceptor.accept(issue, 'Set "https" before', 'Setting HTTPS:// before invalid URL', '') [ context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset, 1, "\"https://") // https:// before "-char
+		]
+	}
+
+	/**
+	 * Add a missing primary attribute to the first attribute of an entity
+	 */
+	@Fix(EJSLValidator::MISSING_PRIMARY_ATTRIBUTE)
+	def fixNonExistingPrimaryAttribute(Issue issue, IssueResolutionAcceptor acceptor) {
+		acceptor.accept(issue, 'Add primary attribute (define attribute first!)', 'Adding primary attribute to the first Attribute', '')[ element, context |
+			val firstAttribute = element as Attribute
+			firstAttribute.isunique = true
+			firstAttribute.id = true
+		]
+	}
+	
+	/**
+	 * Changes a non-primary attribute of a reference to a primary attribute
+	 */
+	@Fix(EJSLValidator::NOT_PRIMARY_REFERENCE)
+	def fixReferenceAttributeError(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Change to a primary attribute.', 'Change the attribute to a primary attribute from the same entity.', '')[ reference, context |
+			val ref = reference as Reference
+			var hasNewReference = false
+			val parentEntity = ref.getEntity				// first get the parent entity of the reference
+			val allAttributes = parentEntity.eContents		// then get all attributes of this entity
+			
+			for(att : allAttributes){						// now look which of the attributes is a primary and set the first as attributereferenced
+				val a = att as Attribute
+				if(a.isIsprimary && !hasNewReference){
+					
+					//TODO check if this works
+					ref.attributerefereced.set(ref.attributerefereced.size, a)
+					hasNewReference = true
+				}
+			}
+		]
+	}
+	
+	/**
+	 * Adding an ID to a double defined attribute
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_ATTRIBUTE_NAME)
+	def attributename(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to attribute', 'Change the name.', '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+	
+	/**
+	 * Adds an ID to a double defined page
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_PAGE)
+	def pagename(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to page', 'Change the name.', '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+	
+	/**
+	 * Delete a page which is used more than once
+	 */
+	@Fix(EJSLValidator::PAGE_USED_MULTIPLE_TIMES)
+	def pageUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this page', 'Delete this page.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset - 1), (issue.length+1), " " )
+			]
+	}
+	
+	/**
+	 * Delete a Entity which is used more than once
+	 */
+	@Fix(EJSLValidator::ENTITY_USED_MULTIPLE_TIMES)
+	def entityUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this entity', 'Delete this entity.', '') [
+			context |
+			val doc = context.xtextDocument
+			var off = issue.offset
+			
+			doc.replace((issue.offset), (issue.length), "" )
+			deleteUntil(off, ",", doc)
+			]
+	}
+	
+	/**
+	 * Delete a extension package which is included in another extension package
+	 */
+	@Fix(EJSLValidator::EXTPACKAGE_CONTAINS_EXTPACKAGE)
+	def extpackageContainsExtpackage(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this Extension package', 'Delete this Extension package.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset), (issue.length), " " )
+			]
+	}
+	
+	/**
+	 * Add an ID to a double defined local parameter 
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_LOCALPARAMETER)
+	def localParameter(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to Parameter', 'Change the name.', '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}	
+	
+	/**
+	 * Own written function which deletes text out of the xtextdocument until a given symbol
+	 */
+	def deleteUntil(int off, String searchChar, IXtextDocument doc){
+		var offset = off
+		var e=true
+		while(e){										// while the current char is equals the searchChar 
+				var getchar = doc.get((offset -1), 1)
+				if(getchar.equals(searchChar)){
+					e=false
+				}
+				doc.replace((offset - 1), (1), "" )		// delete the current char
+				offset = offset-1						// count offset down
+			}
+	}
+	
+	/**
+	 * Deletes a double defined backend from a page
+	 */
+	@Fix(EJSLValidator::MORE_THAN_ONE_BACKEND)
+	def moreThanOneBackend(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this Backend', 'Delete this Backend.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset), (issue.length), " " )
+			]
+	}
+	
+	/**
+	 *  Deletes a double defined frontend from a page
+	 */
+	@Fix(EJSLValidator::MORE_THAN_ONE_FRONTEND)
+	def moreThanOneFronted(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this Fronted', 'Delete this Fronted.', '') [
+			context |
+			val doc = context.xtextDocument
+			doc.replace((issue.offset), (issue.length), " " )
+			]
+	}
+	
+	/**
+	 * Add an ID to a double defined global parameter
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_GLOBALPARAMETER)
+	def globalParameter(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to Parameter', "Change the name of the parameter.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+	
+	/**
+	 * Add an ID to a double defined class
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_CLASS)
+	def className(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to Class', "Change the name of the Class.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+	
+	/**
+	 * Add an ID to a double defined extension
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_EXTENSION)
+	def extensionName(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to extension', "Change the name of the extension.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+
+	/**
+	 * Change the name of a keyvalue to x_ + linenumber
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_KEY)
+	def keyValuePairsName(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Delete Name and give a unique one', "Change the name of the the keyvalue.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset, issue.length, "x_"+ issue.lineNumber.toString +" " )
+			]
+	}
+
+	/**
+	 * Add an ID to a double defined method of a class
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_METHOD)
+	def methodeName(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Add ID to methode', "Change the name of the methode.", '') [
+			context |
+			val xtextDocument = context.xtextDocument
+			xtextDocument.replace(issue.offset+issue.length, 0, "_ID_"+ issue.lineNumber.toString +" " )
+			]
+	}
+	
+	/**
+	 * Add the missing entity of a defined filter attribute to the page OR remove the whole page
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_FILTER_ATTRIBUTE)
+	def handleMissingFilterEntity(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Add the missing entity.', 'Add the missing entity to the page to fix this failure', '')[
+			page, context |
+			val p = page as IndexPage				// cast page as indexpage
+			for(f : p.filters){						// step through the filters
+				val enti = f.eContainer as Entity	// get the entity of the current filter
+				if(!p.entities.contains(enti)){		// look if the used entity is not used in the page
+					p.entities.add(enti)			// add needed entity
+				}
+			}
+		]
+		acceptor.accept(issue, 'Remove this page', 'Remove this page to fix this failure', '') [
+			context |
+			val doc = context.xtextDocument			
+			doc.replace((issue.offset), (issue.length), " " )	// remove the whole page
+		]
+	}
+	
+	/**
+	 * Add the missing entity of a defined table column attribute to the page OR remove the whole page
+	 */
+	@Fix(EJSLValidator::AMBIGUOUS_TABLE_COLUMN_ATTRIBUTE)
+	def handleMissingTableColumnEntity(Issue issue, IssueResolutionAcceptor acceptor){
+		acceptor.accept(issue, 'Add the missing entity.', 'Add the missing entity to the page to fix this failure', '')[
+			page, context |
+			val p = page as IndexPage				// cast page as indexpage
+			for(tc : p.tablecolumns){				// step through the table columns
+				val enti = tc.eContainer as Entity	// get the entity of the current table column
+				if(!p.entities.contains(enti)){		// look if the used entity is not used in the page
+					p.entities.add(enti)			// add needed entity
+				}
+			}
+		]
+		acceptor.accept(issue, 'Remove this page', 'Remove this page to fix this failure', '') [
+			context |
+			val doc = context.xtextDocument			
+			doc.replace((issue.offset), (issue.length), " " )	// remove the whole page		
+		]
+	}
+	
+	/**
+	 * Remove a filter which is used more than once OR delete the whole page
+	 */
+	@Fix(EJSLValidator::FILTER_USED_MULTIPLE_TIMES)			
+	def filterUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this page', 'Delete the whole page.', '') [
+			context |
+			val doc = context.xtextDocument					
+			doc.replace((issue.offset), (issue.length), "" ) 	// remove the whole page
+			]
+				acceptor.accept(issue, 'Remove this multiple filter', 'Delete this filter.', '') [
+			page,context |
+			val p = page as DynamicPage					// cast page as dynamic page
+			var entiattr = new HashSet<Attribute>		// create a new HashSet to remove doulbe filter
+			for (attr : p.filters) {					// step through the filters of the page
+				val enti = attr.eContainer as Entity	// get entity from current attribute
+				if (!entiattr.add(attr)) {				
+					p.filters.remove(enti)				// if entity can't get added to HashSet, the entity	will be removed from the filters
+				}
+			}
+			p.filters.clear								// delete all filters
+			for (var i=0; i< entiattr.size; i++){				
+				p.filters.add(i,entiattr.get(i))		// add all filters from the HashSet to the filters list
+			}			
+			]
+	}
+	
+	/**
+	 * Remove a table column which is used more than once OR delete the whole page
+	 */
+	@Fix(EJSLValidator::COLUMNS_USED_MULTIPLE_TIMES)			
+	def tableColumnUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
+				acceptor.accept(issue, 'Remove this multiple table column', 'Delete this table column.', '') [
+			page, context | 
+			val p = page as DynamicPage					// cast page as dynamic page
+			var entiattr = new HashSet<Attribute>		// create a new HashSet to remove doulbe table columns
+			for (attr : p.tablecolumns) {				// step through the table columns of the page
+				val enti = attr.eContainer as Entity	// get entity from current attribute
+				if (!entiattr.add(attr)) { 				
+					p.tablecolumns.remove(enti)			// if entity can't get added to HashSet, the entity	will be removed from the table columns
+				}
+			}
+			p.tablecolumns.clear						// delete all table columns
+			for (var i=0; i< entiattr.size; i++){		
+				p.tablecolumns.add(i,entiattr.get(i))	// add all table columns from the HashSet to the table columns list
+			}
+			]
+				acceptor.accept(issue, 'Remove this page', 'Delete the whole page.', '') [
+			context |
+			val doc = context.xtextDocument					
+			doc.replace((issue.offset), (issue.length), "" )	// remove the whole page
+			]
+	}		
+	
 }
+
