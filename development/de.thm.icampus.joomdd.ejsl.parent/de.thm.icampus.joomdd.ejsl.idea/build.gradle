@@ -196,8 +196,31 @@ task zipPhpStorm(type: Zip){
 	destinationDir file('../../../releases/PhpStorm/ideaRepository/')
 }
 
+
+task renamePhpStormPlugin(type: Copy){
+	description 'NEW'
+	group ('JooMDD_Help_Task')
+	
+	
+	from "../../../releases/PhpStorm/ideaRepository/"
+	into "../../../releases/PhpStorm/ideaRepository/"
+	def file = 'de.thm.icampus.joomdd.ejsl.idea-'+ version +'.zip'
+	def newfile = 'de.thm.icampus.joomdd.ejsl.phpstorm-'+ version +'.zip'
+	
+	include(file)
+	
+	rename (file , newfile)	
+}
+
+
+task deleteOldIdeaPlugin(type: Delete){
+	description 'delete old Plugin'
+	group ('JooMDD_Help_Task')
+	delete '../../../releases/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-'+ version +'.zip'
+}
+
 /*
-	For the Wizard the sources must be in the out folder
+	For the Wizard sources must be in the out folder
 */
 task addIntelliJWizard(type: Copy){
 	description 'add the newest Wizard to Plugin'
@@ -210,23 +233,25 @@ task addIntelliJWizard(type: Copy){
 
 /*
 	Order of JooMDDDeploy tasks	
-			incrementVersion
-		1.	ideaZip							(xtext gradle standard)
-		2. 	deleteOldPlugin
-		3. 	unzip
-		4. 	changeVersion
-		5. 	addIntelliJWizard
-		6. 	zipIntelliJ
-		7. 	changeDependencies
-		8. 	zipPhpStorm
-		9. 	parsePhpStormUpdatePluginsXml
-		10.	parseIntelliJUpdatePluginsXml
+		-	incrementVersion				// manual step. 
+		-	ideaZip							(xtext gradle standard)
+		- 	deleteOldPlugin
+		- 	unzip
+		- 	changeVersion
+		- 	addIntelliJWizard
+		- 	zipIntelliJ
+		- 	changeDependencies
+		- 	zipPhpStorm
+		-	renamePhpStormPlugin
+		-	deleteOldIdeaPlugin
+		- 	parsePhpStormUpdatePluginsXml
+		-	parseIntelliJUpdatePluginsXml
 */
 
 task JooMDDDeploy  (dependsOn: [
-		'ideaZip', 'deleteOldPlugin', 'unzip' , 'changeVersion' , 'addIntelliJWizard' ,'zipIntelliJ' , 
-		'changeDependencies' , 'zipPhpStorm', 'parsePhpStormUpdatePluginsXml',
-		'parseIntelliJUpdatePluginsXml']){
+		'ideaZip', 'deleteOldPlugin', 'unzip', 'changeVersion' , 'addIntelliJWizard', 'zipIntelliJ', 
+		'changeDependencies', 'zipPhpStorm', 'renamePhpStormPlugin', 'deleteOldIdeaPlugin', 
+		'parsePhpStormUpdatePluginsXml', 'parseIntelliJUpdatePluginsXml']){
 	description 'Create all for deployment ... until now only IntelliJ/PhpStorm'
 	group ('JooMDD')
 
@@ -238,15 +263,16 @@ task JooMDDDeploy  (dependsOn: [
 	zipIntelliJ.mustRunAfter 					addIntelliJWizard
 	changeDependencies.mustRunAfter 			zipIntelliJ
 	zipPhpStorm.mustRunAfter 					changeDependencies
-	parsePhpStormUpdatePluginsXml.mustRunAfter	zipPhpStorm
+	renamePhpStormPlugin.mustRunAfter			zipPhpStorm
+	deleteOldIdeaPlugin.mustRunAfter			renamePhpStormPlugin
+	parsePhpStormUpdatePluginsXml.mustRunAfter	deleteOldIdeaPlugin
 	parseIntelliJUpdatePluginsXml.mustRunAfter	parsePhpStormUpdatePluginsXml
 }
 
 /*
 	Eclipse automation
 	
-	Steps ...
-	
+	Steps ...	
 */
 
 
