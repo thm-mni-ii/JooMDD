@@ -26,25 +26,17 @@ import org.eclipse.xtext.junit4.util.ParseHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import Util.TemplateLoader
 
 @RunWith(XtextRunner)
 @InjectWith(EJSLInjectorProvider)
 class EJSLParsingTest{
 	
 	//import reference model instances (All tests are based on this model) TODO make dynamic
-	public val models = getTemplateFiles()
+	public val models = TemplateLoader.getTemplateFiles()
 	public String reference = new Scanner(new File(this.class.getClassLoader().getResource("").getPath().replace('tests/bin/', 'ui/templates/Shop.eJSL'))).useDelimiter('\\A').next()
 	
-	def getTemplateFiles() {
-		val tModels = newArrayList()
-		val templateFolder = new File(this.class.getClassLoader().getResource("").getPath().replace('tests/bin/', 'ui/templates'));
-		for ( template : templateFolder.listFiles) {
-			if (Files.getFileExtension(template.path) == 'eJSL') {
-				tModels.add(new Scanner(template).useDelimiter('\\A').next())
-			}
-		}
-		return tModels
-	}
+	
 	
 	@Inject
 	ParseHelper<EJSLModel> parseHelper;
@@ -55,7 +47,7 @@ class EJSLParsingTest{
 	@Test
 	def void ejslModelParsingTest() {
 		for (model : models) {
-			Assert.assertNotNull(parseHelper.parse(model))
+			Assert.assertNotNull(parseHelper.parse(model).name)
 		}
 	}
 	
@@ -182,9 +174,9 @@ class EJSLParsingTest{
 		Assert.assertSame("Failure: Reference to Entity failed", referencedEntity.get(1), instance.ejslPart.feature.entities.get(4))
 		
 		//check values
-		Assert.assertEquals("name, price, desc, value, ^order, supplier", actualAttr);
+		Assert.assertEquals("name, price, desc, value, porder, supplier", actualAttr);
 		Assert.assertEquals(
-			"EntityAttribute = ^order *EntityReference = ^Order.ordNr, EntityAttribute = supplier *EntityReference = supplier.name",
+			"EntityAttribute = porder *EntityReference = Prodorder.ordNr, EntityAttribute = supplier *EntityReference = supplier.name",
 			 actualRef
 		);
 		Assert.assertEquals("1 -1, 1 -1", actualRel);
@@ -363,7 +355,7 @@ class EJSLParsingTest{
 		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension) as Component
 		
 		//test component values
-		Assert.assertEquals("Example_Shop", cmp.name)
+		Assert.assertEquals("ExampleShop", cmp.name)
 		Assert.assertEquals("Peter Janauschek", cmp.manifest.authors.get(0).name)
 		Assert.assertEquals("peter.janauschek@mni.thm.de", cmp.manifest.authors.get(0).authoremail)
 		Assert.assertNotNull("Parsing-Error copyright should not be Null", cmp.manifest.copyright)
