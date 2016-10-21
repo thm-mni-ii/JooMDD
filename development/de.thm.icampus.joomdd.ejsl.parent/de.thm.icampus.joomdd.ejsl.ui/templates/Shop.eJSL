@@ -45,8 +45,8 @@ eJSLModel "Shop" {
 				references {
 					Reference {
 						EntityAttribute = porder 
-						*Entity =  Contra
-						*EntityReference = Contra.ordNr    
+						*Entity =  Prodorder
+						*EntityReference = Prodorder.ordNr    
 						lower = 1
 						upper = -1
 						
@@ -60,7 +60,7 @@ eJSLModel "Shop" {
 					}
 				}       
 			}
-			Entity Contra { 
+			Entity Prodorder { 
 				
 				attributes { 
 					Attribute ordNr {
@@ -189,8 +189,8 @@ eJSLModel "Shop" {
 					}
 					Reference {
 						EntityAttribute = ^order 
-						*Entity = Contra
-						*EntityReference = Contra.ordNr
+						*Entity = Prodorder
+						*EntityReference = Prodorder.ordNr
 						lower = 1
 						upper = -1
 					}
@@ -256,23 +256,23 @@ eJSLModel "Shop" {
 					}
 				}
 			}
-			IndexPage Contras {                  
-				*Entities Contra
-				table columns = Contra.ordNr, Contra.date 
-				filters = Contra.ordNr, Contra.date, Contra.customer
+			IndexPage Prodorders {                  
+				*Entities Prodorder
+				table columns = Prodorder.ordNr, Prodorder.date 
+				filters = Prodorder.ordNr, Prodorder.date, Prodorder.customer
 				links { 
 					InternalcontextLink Details {
-						target = Contra linked attribute = Contra.ordNr
+						target = Prodorder linked attribute = Prodorder.ordNr
 						linkparameters {
-							Parameter ordNr = *Attribute  "Contra.ordNr"
+							Parameter ordNr = *Attribute  "Prodorder.ordNr"
 						}
 					}
 				}
 			}
-			DetailsPage Contra {
-				*Entities Contra links {
+			DetailsPage Prodorder {
+				*Entities Prodorder links {
 					InternalLink Index {
-						target = Contras linked attribute = Contra.ordNr
+						target = Prodorders linked attribute = Prodorder.ordNr
 					}
 				}
 			}
@@ -347,8 +347,8 @@ eJSLModel "Shop" {
 							*Page : Customer
 							*Page : Products 
 							*Page : product
-							*Page : Contras
-							*Page : Contra 
+							*Page : Prodorders
+							*Page : Prodorder 
 							*Page : CreditInstitutes
 							*Page : CreditInstitute
 							*Page : Locations
