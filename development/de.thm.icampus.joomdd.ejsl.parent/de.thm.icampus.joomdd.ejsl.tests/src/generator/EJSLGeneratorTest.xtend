@@ -24,10 +24,17 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import de.thm.icampus.joomdd.ejsl.tests.EJSLInjectorProvider
+import Util.TemplateLoader
 
 @RunWith(XtextRunner)
 @InjectWith(EJSLInjectorProvider)
 
 class EJSLGeneratorTest {
+	@Inject
+	ParseHelper<EJSLModel> parseHelper;
+	
+	public val models = TemplateLoader.getTemplateFiles()
+	
+	
 	
 }

@@ -6,7 +6,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import org.eclipse.emf.common.util.BasicEList
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedParameterGroupImpl extends ParameterGroupImpl implements ExtendedParameterGroup {
 	
@@ -14,7 +14,7 @@ class ExtendedParameterGroupImpl extends ParameterGroupImpl implements ExtendedP
 	EList<ExtendedParameter> extendedParameterList
 	new(ParameterGroup group){
 		instance = group
-		this.name = PlattformIUtil.slugify(group.name)
+		this.name = PlattformUtil.slugify(group.name)
 		this.label = group.label
 		this.globalparameters =group.globalparameters
 		initListen()

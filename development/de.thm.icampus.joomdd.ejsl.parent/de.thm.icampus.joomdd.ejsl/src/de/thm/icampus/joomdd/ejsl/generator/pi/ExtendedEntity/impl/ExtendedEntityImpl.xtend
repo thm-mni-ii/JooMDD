@@ -7,11 +7,11 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.eJSL.Feature
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import java.util.LinkedList
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 
@@ -27,7 +27,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	
 
 	new(Entity entity) {
-		entity.name = PlattformIUtil.slugify(entity.name)
+		entity.name = PlattformUtil.slugify(entity.name)
 		this.name = entity.name.toLowerCase
 		this.supertype = entity.supertype
 		this.attributes = entity.attributes
@@ -155,14 +155,12 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	override getRefactoryReference() {
 		return allRefactoryReference
 	}
-	
 	override isAutomatedGenerated() {
 		if(name.startsWith("mappingMDD") && references.size == 2){
 			return true
 		}
 		return false
 	}
-	
 	override getPrimaryKey() {
 		return primariyAttribute
 	}

@@ -6,10 +6,10 @@ import de.thm.icampus.joomdd.ejsl.eJSL.StaticPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedStaticPageImpl extends StaticPageImpl implements ExtendedStaticPage {
 	
@@ -19,7 +19,7 @@ class ExtendedStaticPageImpl extends StaticPageImpl implements ExtendedStaticPag
 	EList<ExtendedParameterGroup> extendedParamterGroup
 	new(StaticPage page){
 		instance = page
-		this.name = PlattformIUtil.slugify(page.name)
+		this.name = PlattformUtil.slugify(page.name)
 		this.links = page.links
 		this.HTMLBody = page.HTMLBody
 		this.globalparameters = page.globalparameters

@@ -8,13 +8,20 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import org.eclipse.emf.common.util.BasicEList
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedPageImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensions
 
 class ExtendedCMSExtensionImpl extends CMSExtensionImpl implements ExtendedCMSExtension{
 	CMSExtension instance
 	EList<ExtendedParameter> globalparameterExtended
-	EList<ExtendedParameterGroup> paramtergroupExtended
+	EList<ExtendedParameterGroup> parametergroupExtended
 	EList<ExtendedEntity> entitiesExtended
 	EList<ExtendedExtensions> extensionsExtended
+	EList<ExtendedPage>pagesextended
 	
 	new(CMSExtension model){
 		instance = model
@@ -31,8 +38,13 @@ class ExtendedCMSExtensionImpl extends CMSExtensionImpl implements ExtendedCMSEx
 			this.feature.entities.forEach[t | ref.addAll(t.references)]
 			entitiesExtended = new BasicEList<ExtendedEntity>
 			extensionsExtended = new BasicEList<ExtendedExtensions>
-			paramtergroupExtended = new BasicEList<ExtendedParameterGroup>
+			parametergroupExtended = new BasicEList<ExtendedParameterGroup>
 			globalparameterExtended = new BasicEList<ExtendedParameter>
+			parametergroupExtended.addAll(this.parametergroups.map(t | new ExtendedParameterGroupImpl(t)))
+			globalparameterExtended.addAll(this.globalparameters.map[t | new ExtendedParameterImpl(t)])
+			entitiesExtended.addAll(this.feature.entities.map[t | new ExtendedEntityImpl(t)])
+			pagesextended.addAll(this.feature.pages.map(t | new ExtendedPageImpl(t)))
+			
 			
 			
 		

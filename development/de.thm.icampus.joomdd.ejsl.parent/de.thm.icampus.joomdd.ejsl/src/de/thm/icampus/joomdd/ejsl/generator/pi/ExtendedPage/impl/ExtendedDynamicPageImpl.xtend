@@ -7,7 +7,6 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 import org.eclipse.emf.common.util.BasicEList
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
@@ -19,6 +18,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttri
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamicPage {
 	

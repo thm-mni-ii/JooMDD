@@ -3,16 +3,16 @@ package de.thm.icampus.joomdd.ejsl.generator.pi.util.impl
 import de.thm.icampus.joomdd.ejsl.eJSL.impl.ParameterImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.eJSL.Parameter
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedParameterImpl extends ParameterImpl implements ExtendedParameter {
 	
 	Parameter instance 
 	String type
 	new(Parameter para){
-		this.name = PlattformIUtil.slugify(para.name)
+		this.name = PlattformUtil.slugify(para.name)
 		this.defaultvalue = para.defaultvalue
 		this.label = para.label
 		this.descripton = para.descripton

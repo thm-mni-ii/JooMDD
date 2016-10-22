@@ -14,7 +14,7 @@ import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import java.util.LinkedList
 
-class PlattformIUtil {
+class PlattformUtil {
 	
 	
 	

@@ -6,17 +6,17 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedPluginImpl extends PluginImpl implements ExtendedPlugin {
 	
 	EList<ExtendedEntity> extendedEntities
 	EList<ExtendedParameter> extendedParameter
 	new(Plugin plug){
-		this.name = PlattformIUtil.slugify(plug.name)
+		this.name = PlattformUtil.slugify(plug.name)
 		this.manifest = plug.manifest
 		this.type = plug.type
 		this.languages = plug.languages

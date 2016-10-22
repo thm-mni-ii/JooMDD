@@ -4,18 +4,18 @@ import de.thm.icampus.joomdd.ejsl.eJSL.impl.ModuleImpl
 import de.thm.icampus.joomdd.ejsl.eJSL.Module
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.eJSL.ComponentReference
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.eJSL.CoreComponent
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 	
 	ExtendedPageReference extendedReference
 	String comName
 	new(Module mod){
-		this.name = PlattformIUtil.slugify(mod.name)
+		this.name = PlattformUtil.slugify(mod.name)
 		this.manifest = mod.manifest
 		this.languages = mod.languages
 		this.pageRef = mod.pageRef
@@ -33,7 +33,7 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 	override getExtendedPageReference() {
 		return extendedReference
 	}
-	
+
 	override getExtendedComponentName() {
 		return comName
 	}

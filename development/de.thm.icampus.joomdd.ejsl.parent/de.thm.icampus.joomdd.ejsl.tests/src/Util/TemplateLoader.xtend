@@ -16,4 +16,14 @@ class TemplateLoader {
 		}
 		return tModels
 	}
+	static  def String getOneTemplateFile(String name) {
+	
+		val templateFolder = new File(TemplateLoader.getClassLoader().getResource("").getPath().replace('tests/bin/', 'ui/templates'));
+		for ( template : templateFolder.listFiles) {
+			if (Files.getFileExtension(template.path) == 'eJSL' && Files.getNameWithoutExtension(template.path).equalsIgnoreCase(name)) {
+				return new Scanner(template).useDelimiter('\\A').next()
+			}
+		}
+		return ""
+	}
 }

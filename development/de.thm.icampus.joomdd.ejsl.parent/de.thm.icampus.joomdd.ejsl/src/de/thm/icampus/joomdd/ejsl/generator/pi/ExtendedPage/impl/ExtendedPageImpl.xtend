@@ -6,7 +6,6 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Page
 import de.thm.icampus.joomdd.ejsl.eJSL.StaticPage
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
@@ -14,6 +13,7 @@ import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedPageImpl extends PageImpl implements ExtendedPage {
 	
@@ -23,7 +23,7 @@ class ExtendedPageImpl extends PageImpl implements ExtendedPage {
 	EList<ExtendedParameterGroup> extendedParamterGroup
 	new(Page page){
 		instance = page
-		this.name = PlattformIUtil.slugify(page.name)
+		this.name = PlattformUtil.slugify(page.name)
 		this.links = page.links
 		this.globalparameters = page.globalparameters
 		this.localparameters = page.localparameters

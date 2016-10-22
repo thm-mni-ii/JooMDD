@@ -16,8 +16,8 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntit
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.TableGeneratorTemplate
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsGenerator
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsCardinalityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class EntityGenerator extends AbstracteGenerator {
 	
@@ -61,7 +61,7 @@ class EntityGenerator extends AbstracteGenerator {
 		}
 		else if(page != null){
 				
-			var EList<ExtendedEntity> pageEntities =PlattformIUtil.getAllReferenceOfEntity(page.extendedEntityList.get(0))
+			var EList<ExtendedEntity> pageEntities =PlattformUtil.getAllReferenceOfEntity(page.extendedEntityList.get(0))
 			pageEntities.add(page.extendedEntityList.get(0))
 			var JoomlaEntityGenerator joomExt = new JoomlaEntityGenerator(pageEntities,extensions.name,true)
 			joomExt.dogenerate(path+"sql", fsa)

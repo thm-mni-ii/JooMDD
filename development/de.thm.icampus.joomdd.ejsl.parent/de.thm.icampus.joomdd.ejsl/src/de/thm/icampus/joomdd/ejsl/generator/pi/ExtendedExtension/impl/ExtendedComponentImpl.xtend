@@ -15,7 +15,6 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedDynamicPageImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
@@ -24,6 +23,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedPageImpl
 import de.thm.icampus.joomdd.ejsl.eJSL.CMSExtension
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	
@@ -36,7 +36,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	EList <ExtendedDynamicPage> allDynamicPage
 	new(Component comp){
 		instance = comp
-		this.name = PlattformIUtil.slugify(comp.name)
+		this.name = PlattformUtil.slugify(comp.name)
 		this.languages = comp.languages
 		this.manifest = comp.manifest
 		this.globalParamter = comp.globalParamter
@@ -60,7 +60,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 						for(ExtendedEntity entBackend: extp.extendedEntityList){
 							if(allextendedEntity.filter[t | t.name == entBackend.name].size == 0){
 								allextendedEntity.add(entBackend)
-								for(ExtendedEntity refEntity: PlattformIUtil.getAllReferenceOfEntity(entBackend)){
+								for(ExtendedEntity refEntity: PlattformUtil.getAllReferenceOfEntity(entBackend)){
 									if(allextendedEntity.filter[t | t.name.equalsIgnoreCase(refEntity.name)].empty){
 										allextendedEntity.add(refEntity)
 									}
@@ -76,7 +76,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 						for(ExtendedEntity entFrontend: extp.extendedEntityList){
 							if(allextendedEntity.filter[t | t.name == entFrontend.name].size == 0){
 							allextendedEntity.add(entFrontend)
-							for(ExtendedEntity refEntity: PlattformIUtil.getAllReferenceOfEntity(entFrontend)){
+							for(ExtendedEntity refEntity: PlattformUtil.getAllReferenceOfEntity(entFrontend)){
 									if(allextendedEntity.filter[t | t.name.equalsIgnoreCase(refEntity.name)].empty){
 										allextendedEntity.add(refEntity)
 									}

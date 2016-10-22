@@ -8,8 +8,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformIUtil
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 
@@ -22,7 +22,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	new(Attribute attr) {
 
 		this.type = attr.type
-		this.name = PlattformIUtil.slugify(attr.name).toLowerCase
+		this.name = PlattformUtil.slugify(attr.name).toLowerCase
 		this.isunique = attr.isIsunique
 		this.withattribute = attr.withattribute
 		entity = attr.eContainer as Entity
@@ -38,7 +38,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	new(Attribute attr, Entity ent) {
 		instance = attr
 		this.type = attr.type
-		this.name = PlattformIUtil.slugify(attr.name).toLowerCase
+		this.name = PlattformUtil.slugify(attr.name).toLowerCase
 		this.isunique = attr.isIsunique
 		this.withattribute = attr.withattribute
 		entity = searchEntity(ent)

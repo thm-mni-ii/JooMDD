@@ -34,8 +34,7 @@ class EJSLParsingTest{
 	
 	//import reference model instances (All tests are based on this model) TODO make dynamic
 	public val models = TemplateLoader.getTemplateFiles()
-	public String reference = new Scanner(new File(this.class.getClassLoader().getResource("").getPath().replace('tests/bin/', 'ui/templates/Shop.eJSL'))).useDelimiter('\\A').next()
-	
+	public String reference = 	TemplateLoader.getOneTemplateFile("Shop")
 	
 	
 	@Inject
