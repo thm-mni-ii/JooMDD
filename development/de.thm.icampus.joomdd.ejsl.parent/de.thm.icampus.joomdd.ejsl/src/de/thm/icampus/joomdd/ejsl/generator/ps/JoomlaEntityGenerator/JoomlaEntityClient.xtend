@@ -56,7 +56,7 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 	private def generateTable(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t!=null]) {
 			var TableGeneratorTemplate table = new TableGeneratorTemplate(comp, ent)
-			generateFile(path + "tables/componentuser.php", table.genClassTable)
+			generateFile(path + "tables/"+ent.name.toLowerCase+".php", table.genClassTable)
 
 		}
 	}
