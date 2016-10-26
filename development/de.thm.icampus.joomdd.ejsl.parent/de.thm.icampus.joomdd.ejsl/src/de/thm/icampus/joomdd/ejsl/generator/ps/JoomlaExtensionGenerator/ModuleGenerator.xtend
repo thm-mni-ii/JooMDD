@@ -283,7 +283,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			/**
 			 *if Component-Helper to be used
 			 *
-			 *require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php';
+			 *require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php>';
 			 *$baseurl = JUri::base();
 			 */
 			?>
