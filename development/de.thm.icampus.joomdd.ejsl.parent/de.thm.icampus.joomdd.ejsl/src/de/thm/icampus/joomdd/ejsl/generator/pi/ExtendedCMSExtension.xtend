@@ -11,7 +11,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensi
 interface ExtendedCMSExtension extends CMSExtension {
 	
 	def EList<ExtendedParameter> getGlobalparameterExtended()
-	def EList<ExtendedParameterGroup> getparamterGroupExtended()
+	def EList<ExtendedParameterGroup> getparameterGroupExtended()
 	def EList<ExtendedEntity> getEntitiesextended()
 	def EList<ExtendedPage> getPageExtended()
 	def EList<ExtendedExtensions> getExtensionsExtended()

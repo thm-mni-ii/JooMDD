@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+  <xs:element name="extension" type="extensionType"/>
+  <xs:complexType name="fileType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="driver" use="optional"/>
+        <xs:attribute type="xs:string" name="charset" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="sqlType">
+    <xs:sequence>
+      <xs:element type="fileType" name="file"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="installType">
+    <xs:sequence>
+      <xs:element type="sqlType" name="sql"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="uninstallType">
+    <xs:sequence>
+      <xs:element type="sqlType" name="sql"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="schemapathType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="type"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="schemasType">
+    <xs:sequence>
+      <xs:element type="schemapathType" name="schemapath"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateType">
+    <xs:sequence>
+      <xs:element type="schemasType" name="schemas"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="filesType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="filename" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation> Admin Main File Copy Section </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="folder" maxOccurs="unbounded" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation> Additional Files  SQL Files Section  Table Files Section  Model Files Section  View Files Section </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="folder" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="languageType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="tag" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="languagesType">
+    <xs:sequence>
+      <xs:element type="languageType" name="language" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="menuType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="link" use="optional"/>
+        <xs:attribute type="xs:string" name="alias" use="optional"/>
+        <xs:attribute type="xs:string" name="view" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="submenuType">
+    <xs:sequence>
+      <xs:element type="menuType" name="menu" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="administrationType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="menu">
+        <xs:annotation>
+          <xs:documentation> Administration Menu Section </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="submenuType" name="submenu"/>
+      <xs:element type="filesType" name="files">
+        <xs:annotation>
+          <xs:documentation> Administration Main File Copy Section </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="languagesType" name="languages"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="extensionType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="author"/>
+      <xs:element type="xs:string" name="authorEmail"/>
+      <xs:element type="xs:anyURI" name="authorUrl"/>
+      <xs:element type="xs:short" name="creationDate"/>
+      <xs:element type="xs:string" name="copyright"/>
+      <xs:element type="xs:string" name="license"/>
+      <xs:element type="xs:string" name="version"/>
+      <xs:element type="xs:string" name="description"/>
+      <xs:element type="installType" name="install">
+        <xs:annotation>
+          <xs:documentation> Install Section </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="uninstallType" name="uninstall">
+        <xs:annotation>
+          <xs:documentation> Uninstall Section </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="updateType" name="update">
+        <xs:annotation>
+          <xs:documentation> Update Section </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="filesType" name="files">
+        <xs:annotation>
+          <xs:documentation> Site Main File Copy Section </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="languagesType" name="languages"/>
+      <xs:element type="administrationType" name="administration"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="type"/>
+    <xs:attribute type="xs:float" name="version"/>
+    <xs:attribute type="xs:string" name="method"/>
+  </xs:complexType>
+</xs:schema>

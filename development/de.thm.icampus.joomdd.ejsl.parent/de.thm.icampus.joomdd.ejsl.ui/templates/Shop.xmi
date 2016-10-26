@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="ASCII"?>
+<eJSL:EJSLModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:eJSL="http://www.thm.de/icampus/joomdd/ejsl/EJSL" name="Shop">
+  <ejslPart xsi:type="eJSL:CMSExtension">
+    <feature>
+      <entities name="creditInstitute">
+        <attributes name="name" isunique="true" id="true">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="adress">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="iBan">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <attributes name="bic">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+      </entities>
+      <entities name="Product">
+        <attributes name="name" isunique="true" id="true">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="price">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <attributes name="desc">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <attributes name="value">
+          <type xsi:type="eJSL:StandardTypes"/>
+        </attributes>
+        <attributes name="porder">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <attributes name="supplier" isunique="true">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <references attribute="//@ejslPart/@feature/@entities.1/@attributes.4" entity="//@ejslPart/@feature/@entities.2" attributerefereced="//@ejslPart/@feature/@entities.2/@attributes.0" lower="1" upper="-1"/>
+        <references attribute="//@ejslPart/@feature/@entities.1/@attributes.5" entity="//@ejslPart/@feature/@entities.4" attributerefereced="//@ejslPart/@feature/@entities.4/@attributes.0" lower="1" upper="-1"/>
+      </entities>
+      <entities name="Prodorder">
+        <attributes name="ordNr" isprimary="true">
+          <type xsi:type="eJSL:StandardTypes"/>
+        </attributes>
+        <attributes name="customer" isunique="true">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="date">
+          <type xsi:type="eJSL:StandardTypes" type="Date"/>
+        </attributes>
+        <attributes name="product" isunique="true">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <references attribute="//@ejslPart/@feature/@entities.2/@attributes.3" entity="//@ejslPart/@feature/@entities.1" attributerefereced="//@ejslPart/@feature/@entities.1/@attributes.0" lower="1" upper="-1"/>
+        <references attribute="//@ejslPart/@feature/@entities.2/@attributes.1" entity="//@ejslPart/@feature/@entities.5" attributerefereced="//@ejslPart/@feature/@entities.5/@attributes.0" lower="1" upper="-1"/>
+      </entities>
+      <entities name="location">
+        <attributes name="postCode" isunique="true">
+          <type xsi:type="eJSL:StandardTypes"/>
+        </attributes>
+        <attributes name="name">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+      </entities>
+      <entities name="supplier">
+        <attributes name="name" isunique="true" id="true">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="bank">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="location">
+          <type xsi:type="eJSL:StandardTypes"/>
+        </attributes>
+        <attributes name="adress">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <attributes name="tel">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <attributes name="product">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <references attribute="//@ejslPart/@feature/@entities.4/@attributes.1" entity="//@ejslPart/@feature/@entities.0" attributerefereced="//@ejslPart/@feature/@entities.0/@attributes.0" lower="1" upper="1"/>
+        <references attribute="//@ejslPart/@feature/@entities.4/@attributes.2" entity="//@ejslPart/@feature/@entities.3" attributerefereced="//@ejslPart/@feature/@entities.3/@attributes.0" lower="1" upper="1"/>
+        <references attribute="//@ejslPart/@feature/@entities.4/@attributes.5" entity="//@ejslPart/@feature/@entities.1" attributerefereced="//@ejslPart/@feature/@entities.1/@attributes.0" lower="1" upper="-1"/>
+      </entities>
+      <entities name="customer">
+        <attributes name="lName" isunique="true" id="true">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="sName">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="adress">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <attributes name="tel">
+          <type xsi:type="eJSL:StandardTypes" type="Text"/>
+        </attributes>
+        <attributes name="ktoNr">
+          <type xsi:type="eJSL:StandardTypes"/>
+        </attributes>
+        <attributes name="bank">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <attributes name="prodorder">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <references attribute="//@ejslPart/@feature/@entities.5/@attributes.5" entity="//@ejslPart/@feature/@entities.0" attributerefereced="//@ejslPart/@feature/@entities.0/@attributes.0" lower="1" upper="1"/>
+        <references attribute="//@ejslPart/@feature/@entities.5/@attributes.6" entity="//@ejslPart/@feature/@entities.2" attributerefereced="//@ejslPart/@feature/@entities.2/@attributes.0" lower="1" upper="-1"/>
+      </entities>
+      <pages xsi:type="eJSL:IndexPage" name="Customers" entities="//@ejslPart/@feature/@entities.5" tablecolumns="//@ejslPart/@feature/@entities.5/@attributes.1 //@ejslPart/@feature/@entities.5/@attributes.0 //@ejslPart/@feature/@entities.5/@attributes.2" filters="//@ejslPart/@feature/@entities.5/@attributes.0 //@ejslPart/@feature/@entities.5/@attributes.2">
+        <links xsi:type="eJSL:ContextLink" linkedAttribute="//@ejslPart/@feature/@entities.5/@attributes.0" name="Details" target="//@ejslPart/@feature/@pages.1">
+          <linkparameters name="name" attvalue="//@ejslPart/@feature/@entities.5/@attributes.0"/>
+        </links>
+      </pages>
+      <pages xsi:type="eJSL:DetailsPage" name="Customer" entities="//@ejslPart/@feature/@entities.5">
+        <links xsi:type="eJSL:InternalLink" linkedAttribute="//@ejslPart/@feature/@entities.5/@attributes.0" name="Index" target="//@ejslPart/@feature/@pages.0"/>
+      </pages>
+      <pages xsi:type="eJSL:IndexPage" name="Products" entities="//@ejslPart/@feature/@entities.1" tablecolumns="//@ejslPart/@feature/@entities.1/@attributes.0 //@ejslPart/@feature/@entities.1/@attributes.1 //@ejslPart/@feature/@entities.1/@attributes.2" filters="//@ejslPart/@feature/@entities.1/@attributes.0 //@ejslPart/@feature/@entities.1/@attributes.1">
+        <links xsi:type="eJSL:ContextLink" linkedAttribute="//@ejslPart/@feature/@entities.1/@attributes.0" name="Details" target="//@ejslPart/@feature/@pages.3">
+          <linkparameters name="name" attvalue="//@ejslPart/@feature/@entities.1/@attributes.0"/>
+        </links>
+      </pages>
+      <pages xsi:type="eJSL:DetailsPage" name="product" entities="//@ejslPart/@feature/@entities.1">
+        <links xsi:type="eJSL:InternalLink" linkedAttribute="//@ejslPart/@feature/@entities.1/@attributes.0" name="Index" target="//@ejslPart/@feature/@pages.2"/>
+      </pages>
+      <pages xsi:type="eJSL:IndexPage" name="CreditInstitutes" entities="//@ejslPart/@feature/@entities.0" tablecolumns="//@ejslPart/@feature/@entities.0/@attributes.0 //@ejslPart/@feature/@entities.0/@attributes.1 //@ejslPart/@feature/@entities.0/@attributes.2" filters="//@ejslPart/@feature/@entities.0/@attributes.0 //@ejslPart/@feature/@entities.0/@attributes.1 //@ejslPart/@feature/@entities.0/@attributes.2">
+        <links xsi:type="eJSL:ContextLink" linkedAttribute="//@ejslPart/@feature/@entities.0/@attributes.0" name="Details" target="//@ejslPart/@feature/@pages.5">
+          <linkparameters name="name" attvalue="//@ejslPart/@feature/@entities.0/@attributes.0"/>
+        </links>
+      </pages>
+      <pages xsi:type="eJSL:DetailsPage" name="CreditInstitute" entities="//@ejslPart/@feature/@entities.0">
+        <links xsi:type="eJSL:InternalLink" linkedAttribute="//@ejslPart/@feature/@entities.0/@attributes.0" name="Index" target="//@ejslPart/@feature/@pages.4"/>
+      </pages>
+      <pages xsi:type="eJSL:IndexPage" name="Prodorders" entities="//@ejslPart/@feature/@entities.2" tablecolumns="//@ejslPart/@feature/@entities.2/@attributes.0 //@ejslPart/@feature/@entities.2/@attributes.2" filters="//@ejslPart/@feature/@entities.2/@attributes.0 //@ejslPart/@feature/@entities.2/@attributes.2 //@ejslPart/@feature/@entities.2/@attributes.1">
+        <links xsi:type="eJSL:ContextLink" linkedAttribute="//@ejslPart/@feature/@entities.2/@attributes.0" name="Details" target="//@ejslPart/@feature/@pages.7">
+          <linkparameters name="ordNr" attvalue="//@ejslPart/@feature/@entities.2/@attributes.0"/>
+        </links>
+      </pages>
+      <pages xsi:type="eJSL:DetailsPage" name="Prodorder" entities="//@ejslPart/@feature/@entities.2">
+        <links xsi:type="eJSL:InternalLink" linkedAttribute="//@ejslPart/@feature/@entities.2/@attributes.0" name="Index" target="//@ejslPart/@feature/@pages.6"/>
+      </pages>
+      <pages xsi:type="eJSL:IndexPage" name="Locations" entities="//@ejslPart/@feature/@entities.3" tablecolumns="//@ejslPart/@feature/@entities.3/@attributes.0 //@ejslPart/@feature/@entities.3/@attributes.1" filters="//@ejslPart/@feature/@entities.3/@attributes.0 //@ejslPart/@feature/@entities.3/@attributes.1">
+        <links xsi:type="eJSL:ContextLink" linkedAttribute="//@ejslPart/@feature/@entities.3/@attributes.1" name="Details" target="//@ejslPart/@feature/@pages.9">
+          <linkparameters name="name" attvalue="//@ejslPart/@feature/@entities.3/@attributes.1"/>
+        </links>
+      </pages>
+      <pages xsi:type="eJSL:DetailsPage" name="Location" entities="//@ejslPart/@feature/@entities.3">
+        <links xsi:type="eJSL:InternalLink" linkedAttribute="//@ejslPart/@feature/@entities.3/@attributes.1" name="Index" target="//@ejslPart/@feature/@pages.8"/>
+      </pages>
+      <pages xsi:type="eJSL:IndexPage" name="Suppliers" entities="//@ejslPart/@feature/@entities.4" tablecolumns="//@ejslPart/@feature/@entities.4/@attributes.0 //@ejslPart/@feature/@entities.4/@attributes.3 //@ejslPart/@feature/@entities.4/@attributes.2" filters="//@ejslPart/@feature/@entities.4/@attributes.0 //@ejslPart/@feature/@entities.4/@attributes.3 //@ejslPart/@feature/@entities.4/@attributes.2">
+        <links xsi:type="eJSL:ContextLink" linkedAttribute="//@ejslPart/@feature/@entities.4/@attributes.0" name="Details" target="//@ejslPart/@feature/@pages.11">
+          <linkparameters name="name" attvalue="//@ejslPart/@feature/@entities.4/@attributes.0"/>
+        </links>
+      </pages>
+      <pages xsi:type="eJSL:DetailsPage" name="Supplier" entities="//@ejslPart/@feature/@entities.4">
+        <links xsi:type="eJSL:InternalLink" linkedAttribute="//@ejslPart/@feature/@entities.4/@attributes.0" name="Index" target="//@ejslPart/@feature/@pages.10"/>
+      </pages>
+    </feature>
+    <extensions xsi:type="eJSL:Component" name="ExampleShop">
+      <manifest copyright="Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved." license="GNU General Public License version 2 or later; see LICENSE.txt" version="1.0.1" description="this a good thing">
+        <authors name="Peter Janauschek" authoremail="peter.janauschek@mni.thm.de" authorurl="www.test.de"/>
+      </manifest>
+      <languages name="de-DE"/>
+      <languages name="en-GB"/>
+      <sections xsi:type="eJSL:FrontendSection">
+        <pageRef page="//@ejslPart/@feature/@pages.1"/>
+        <pageRef page="//@ejslPart/@feature/@pages.2"/>
+        <pageRef page="//@ejslPart/@feature/@pages.3"/>
+      </sections>
+      <sections xsi:type="eJSL:BackendSection">
+        <pageRef page="//@ejslPart/@feature/@pages.0"/>
+        <pageRef page="//@ejslPart/@feature/@pages.1"/>
+        <pageRef page="//@ejslPart/@feature/@pages.2"/>
+        <pageRef page="//@ejslPart/@feature/@pages.3"/>
+        <pageRef page="//@ejslPart/@feature/@pages.6"/>
+        <pageRef page="//@ejslPart/@feature/@pages.7"/>
+        <pageRef page="//@ejslPart/@feature/@pages.4"/>
+        <pageRef page="//@ejslPart/@feature/@pages.5"/>
+        <pageRef page="//@ejslPart/@feature/@pages.8"/>
+        <pageRef page="//@ejslPart/@feature/@pages.9"/>
+        <pageRef page="//@ejslPart/@feature/@pages.10"/>
+        <pageRef page="//@ejslPart/@feature/@pages.11"/>
+      </sections>
+    </extensions>
+  </ejslPart>
+</eJSL:EJSLModel>

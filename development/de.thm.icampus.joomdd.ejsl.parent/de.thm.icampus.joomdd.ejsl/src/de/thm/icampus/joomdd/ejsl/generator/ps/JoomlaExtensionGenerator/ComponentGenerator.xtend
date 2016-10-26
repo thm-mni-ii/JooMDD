@@ -38,6 +38,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.path = path
 		this.updatePath = updatePath
 	}
+	
+	
 
 	def void formatName(Component component) {
 		component.name = Slug.slugify(component.name)

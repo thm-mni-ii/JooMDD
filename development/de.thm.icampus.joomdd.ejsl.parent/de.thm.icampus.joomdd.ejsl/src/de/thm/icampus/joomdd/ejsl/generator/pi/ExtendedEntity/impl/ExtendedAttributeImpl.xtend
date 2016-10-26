@@ -20,7 +20,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	boolean isreferenced = false
 
 	new(Attribute attr) {
-
+		attr.name = PlattformUtil.slugify(attr.name).toLowerCase
 		this.type = attr.type
 		this.name = PlattformUtil.slugify(attr.name).toLowerCase
 		this.isunique = attr.isIsunique

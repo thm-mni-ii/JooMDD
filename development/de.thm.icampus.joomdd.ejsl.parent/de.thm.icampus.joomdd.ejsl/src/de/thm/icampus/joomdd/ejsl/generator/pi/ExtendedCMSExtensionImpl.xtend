@@ -14,6 +14,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntit
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedPageImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensions
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedExtensionsImpl
 
 class ExtendedCMSExtensionImpl extends CMSExtensionImpl implements ExtendedCMSExtension{
 	CMSExtension instance
@@ -37,13 +38,15 @@ class ExtendedCMSExtensionImpl extends CMSExtensionImpl implements ExtendedCMSEx
 			val EList<Reference> ref = new BasicEList<Reference>
 			this.feature.entities.forEach[t | ref.addAll(t.references)]
 			entitiesExtended = new BasicEList<ExtendedEntity>
+			pagesextended = new BasicEList<ExtendedPage>
 			extensionsExtended = new BasicEList<ExtendedExtensions>
 			parametergroupExtended = new BasicEList<ExtendedParameterGroup>
 			globalparameterExtended = new BasicEList<ExtendedParameter>
 			parametergroupExtended.addAll(this.parametergroups.map(t | new ExtendedParameterGroupImpl(t)))
 			globalparameterExtended.addAll(this.globalparameters.map[t | new ExtendedParameterImpl(t)])
 			entitiesExtended.addAll(this.feature.entities.map[t | new ExtendedEntityImpl(t)])
-			pagesextended.addAll(this.feature.pages.map(t | new ExtendedPageImpl(t)))
+			pagesextended.addAll(this.feature.pages.map[t | new ExtendedPageImpl(t)])
+			extensionsExtended.addAll(this.extensions.map[t | new ExtendedExtensionsImpl(t)])
 			
 			
 			
@@ -51,23 +54,23 @@ class ExtendedCMSExtensionImpl extends CMSExtensionImpl implements ExtendedCMSEx
 	}
 	
 	override getGlobalparameterExtended() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		return globalparameterExtended
 	}
 	
-	override getparamterGroupExtended() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	override getparameterGroupExtended() {
+		return parametergroupExtended
 	}
 	
 	override getEntitiesextended() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		return entitiesExtended
 	}
 	
 	override getPageExtended() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		return pagesextended
 	}
 	
 	override getExtensionsExtended() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		return extensionsExtended
 	}
 	
 }

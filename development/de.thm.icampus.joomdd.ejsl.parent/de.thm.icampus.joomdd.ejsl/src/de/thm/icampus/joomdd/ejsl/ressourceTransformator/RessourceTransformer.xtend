@@ -121,7 +121,7 @@ class RessourceTransformer {
 	
 	
 	
-	//todo   
+   
 	def void createMappingsTable(EList<Entity> entitiesList){ 
 		
 		var EList<Entity> newEntity = new BasicEList<Entity>()

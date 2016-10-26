@@ -14,6 +14,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.eJSL.Library
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import de.thm.icampus.joomdd.ejsl.eJSL.impl.ExtensionPackageImpl
+import de.thm.icampus.joomdd.ejsl.eJSL.ExtensionPackage
 
 class ExtendedExtensionsImpl extends ExtensionImpl implements ExtendedExtensions {
 	
@@ -48,7 +50,7 @@ class ExtendedExtensionsImpl extends ExtensionImpl implements ExtendedExtensions
 	}
 	
 	override getExtensionPackageExtended() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		return new ExtendedExtensionPackageImpl(instance as ExtensionPackage)
 	}
 	
 	override getPluginExtended() {

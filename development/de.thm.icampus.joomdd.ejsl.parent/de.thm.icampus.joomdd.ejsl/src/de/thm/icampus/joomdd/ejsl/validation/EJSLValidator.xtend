@@ -99,7 +99,7 @@ public static val AMBIGUOUS_ATTRIBUTE_NAME = 'ambiguousAttrName'
 	 */
 	private static final Set<String> XTEXT_KEYWORDS =
     Collections.unmodifiableSet(
-        new HashSet(Arrays.asList('Options', 'Order', 'Keyword')));
+        new HashSet(Arrays.asList('Options', 'Order', 'Keyword', 'first', 'user')));
 
 	/**
 	 * Validates if the defined Datatypes of the model have different/unique names

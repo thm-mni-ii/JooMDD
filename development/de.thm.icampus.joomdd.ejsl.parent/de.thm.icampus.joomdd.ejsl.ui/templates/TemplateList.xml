@@ -20,6 +20,11 @@
     	<description>Abstract complex model for simple start.</description>
     	<src>Complex Model.eJSL</src>
     </template>
+     <template>
+        <name>Shop</name>
+        <description>This is a complex example, this Model is a Shop System with Product, Order, supplier, customer and more... </description>
+        <src>Shop.eJSL</src>
+    </template>
     <!-- <template>
     	<name>Weblinks</name>
     	<description>Model of Joomla's Weblinks extensions</description>

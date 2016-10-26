@@ -35,22 +35,22 @@ eJSLModel "Shop" {
 					}
 					Attribute porder {
 						type = Text
-						Unique attribute
+						
 					}  
 					Attribute supplier {
 						type = Text
 						Unique attribute 
 					}
 				}
-				references {
+				references {  
 					Reference {
 						EntityAttribute = porder 
 						*Entity =  Prodorder
 						*EntityReference = Prodorder.ordNr    
 						lower = 1
 						upper = -1
-						
-					} 
+						  
+					}   
 					Reference {
 						EntityAttribute = supplier
 						*Entity = supplier
@@ -65,7 +65,7 @@ eJSLModel "Shop" {
 				attributes { 
 					Attribute ordNr {
 						type = Integer
-						Primary attribute
+					Primary attribute
 					}
 					Attribute customer {
 						type = Short_Text
@@ -175,7 +175,7 @@ eJSLModel "Shop" {
 					Attribute bank {
 						type = Short_Text
 					}
-					Attribute ^order{
+					Attribute prodorder{
 						type = Short_Text
 					}
 				}
@@ -188,7 +188,7 @@ eJSLModel "Shop" {
 						upper = 1
 					}
 					Reference {
-						EntityAttribute = ^order 
+						EntityAttribute = prodorder 
 						*Entity = Prodorder
 						*EntityReference = Prodorder.ordNr
 						lower = 1
@@ -321,11 +321,14 @@ eJSLModel "Shop" {
 					authors {
 						Author "Peter Janauschek" {
 							authoremail = "peter.janauschek@mni.thm.de"
+							authorurl = "www.test.de"
+							
 						}
 					}
 					copyright = "Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved."
 					license = "GNU General Public License version 2 or later; see LICENSE.txt"
 					version = "1.0.1"
+					description ="this a good thing"
 				}
 				languages {
 					Language de-DE {
