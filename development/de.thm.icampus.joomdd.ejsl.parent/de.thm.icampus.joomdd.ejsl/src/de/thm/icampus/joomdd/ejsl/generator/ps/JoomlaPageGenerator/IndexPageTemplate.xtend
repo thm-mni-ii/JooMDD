@@ -5,6 +5,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class IndexPageTemplate extends DynamicPageTemplate {
 
@@ -16,7 +17,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	private String path
 	private String pagename
 
-	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess fsa) {
+	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {
 
 		ipage = dp
 		com = cp

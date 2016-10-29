@@ -13,6 +13,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +29,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 	@Property ExtendedLibrary library
 	private String subpackageName;
 
-	new(ExtendedLibrary library, IFileSystemAccess access, String path) {
+	new(ExtendedLibrary library, IFileSystemAccess2 access, String path) {
 		this.library = library
 		this.name = "lib_" + Slug.slugify(library.name)
 		

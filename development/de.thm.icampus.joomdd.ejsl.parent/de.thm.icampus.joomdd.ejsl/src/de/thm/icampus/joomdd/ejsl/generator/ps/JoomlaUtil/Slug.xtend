@@ -40,6 +40,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageFi
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
+import java.io.File
 
 /**
  * <!-- begin-user-doc -->
@@ -595,6 +596,7 @@ public class Slug  {
 		}
 		
 	}
+
 	
 	
 } // Slug

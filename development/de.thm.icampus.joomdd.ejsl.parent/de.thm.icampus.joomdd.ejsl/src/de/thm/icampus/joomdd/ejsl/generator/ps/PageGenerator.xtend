@@ -13,17 +13,18 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class PageGenerator extends AbstracteGenerator {
 
-	IFileSystemAccess fsa
+	IFileSystemAccess2 fsa
 	EList<ExtendedPage> pageList = new BasicEList<ExtendedPage>
 	String path
 	ExtendedComponent comp 
 	String section = "site"
 	boolean extUpdate
 
-	new(EList<Page> pages, IFileSystemAccess access, String path, String domainName) {
+	new(EList<Page> pages, IFileSystemAccess2 access, String path, String domainName) {
 		fsa = access
 		pageList.addAll(pages.map[t|new ExtendedPageImpl(t)])
 		this.path = path + domainName +"/"
@@ -31,7 +32,7 @@ class PageGenerator extends AbstracteGenerator {
 		
 	}
 
-	new(ExtendedComponent component, EList<ExtendedPage> pages, IFileSystemAccess access, String path, String section, boolean extensionsUpdate) {
+	new(ExtendedComponent component, EList<ExtendedPage> pages, IFileSystemAccess2 access, String path, String section, boolean extensionsUpdate) {
 		fsa = access
 		pageList.addAll(pages)
 		this.path = path

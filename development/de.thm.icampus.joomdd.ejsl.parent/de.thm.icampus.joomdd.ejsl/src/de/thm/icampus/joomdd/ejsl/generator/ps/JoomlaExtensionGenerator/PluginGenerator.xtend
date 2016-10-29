@@ -2,14 +2,12 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator
 
-import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
-import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.joomdd.ejsl.eJSL.Language
-import java.util.Calendar
-import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
+import java.util.Calendar
+import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**
  * <!-- begin-user-doc -->
@@ -26,7 +24,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	private String slug;
 	private Plugin plugin;
 	
-	new(Plugin plugin, IFileSystemAccess fsa, String path)
+	new(Plugin plugin, IFileSystemAccess2 fsa, String path)
 	{
 		this.fsa = fsa;
 		this.slug = Slug.slugify(plugin.name);
@@ -36,7 +34,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		this.path = path
 	}
 	
-	def static PluginGenerator getGenerator(Plugin plugin, IFileSystemAccess fsa, String path) {
+	def static PluginGenerator getGenerator(Plugin plugin, IFileSystemAccess2 fsa, String path) {
 		return new PluginGenerator(plugin, fsa,path)
 	}
 	

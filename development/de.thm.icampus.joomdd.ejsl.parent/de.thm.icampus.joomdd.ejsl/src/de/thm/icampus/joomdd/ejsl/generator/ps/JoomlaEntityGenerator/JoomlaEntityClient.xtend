@@ -5,11 +5,12 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class JoomlaEntityClient extends AbstractExtensionGenerator {
 	
 	
-	new( IFileSystemAccess fsa){
+	new( IFileSystemAccess2 fsa){
 		this.fsa = fsa
 	}
 	

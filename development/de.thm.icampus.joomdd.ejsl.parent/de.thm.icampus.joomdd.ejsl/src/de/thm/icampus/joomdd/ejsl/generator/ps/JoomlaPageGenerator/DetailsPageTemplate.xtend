@@ -11,6 +11,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class DetailsPageTemplate extends   DynamicPageTemplate {
 	
@@ -23,7 +24,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	private String pagename
 	private ExtendedEntity mainEntity
 	
-	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess fsa){
+	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa){
 		
 		dpage = dp
 		com = cp

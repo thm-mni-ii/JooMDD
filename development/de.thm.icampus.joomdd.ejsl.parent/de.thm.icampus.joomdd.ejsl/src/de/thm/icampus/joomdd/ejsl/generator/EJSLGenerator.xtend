@@ -13,6 +13,22 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
+import org.eclipse.xtext.generator.JavaIoFileSystemAccess
+import com.google.inject.Inject
+import org.eclipse.xtext.parser.IEncodingProvider
+import org.eclipse.xtext.resource.IResourceServiceProvider
+import java.util.Map
+import org.eclipse.xtext.generator.OutputConfiguration
+import java.util.HashMap
+import org.eclipse.emf.common.util.URI
+import java.io.File
+import java.nio.file.Path
+import org.eclipse.core.runtime.IPath
+import org.eclipse.emf.common.util.ResourceLocator
+import org.eclipse.emf.ecore.plugin.EcorePlugin
+import java.util.ResourceBundle
+import org.eclipse.core.resources.IFile
+import org.eclipse.core.resources.ResourcesPlugin
 
 /**
  * Generates code from your model files on save.
@@ -20,21 +36,46 @@ import org.eclipse.xtext.generator.IGeneratorContext
  * see http://www.eclipse.org/Xtext/documentation.html#TutorialCodeGeneration
  */
 class EJSLGenerator extends AbstractGenerator {
+	private JavaIoFileSystemAccess genData;
+	public final static String DEFAULT_OUTPUT_ONCE = "DEFAULT_OUTPUT_ONCE";
+
+	@Inject
+	private IEncodingProvider encodingProvider;
+
+	@Inject
+	private IResourceServiceProvider.Registry registry;
+
+	
+	
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		
+		genData = new JavaIoFileSystemAccess(registry, encodingProvider)
+//		println( ResourcesPlugin.getWorkspace().getRoot().rawLocationURI.toString)
+//		println(new File(ResourcesPlugin.getWorkspace().getRoot().rawLocationURI.rawPath))
+        var String outputFolder = ResourcesPlugin.getWorkspace().getRoot().rawLocationURI.rawPath + fsa.getURI("").toPlatformString(true)
+        if(outputFolder.charAt(0).compareTo("/")==0)
+            outputFolder.replaceFirst("/","")
+           
+		println(outputFolder)
+	  		
+			genData.setOutputConfigurations(mapOutputConfigurations(outputFolder))		
    
 		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
 			
 			var EJSLModel domainModel = e as EJSLModel ;
+			
+						
 			switch(domainModel.ejslPart){
 				CMSExtension:
 				{
+					
 					var RessourceTransformer trans = new RessourceTransformer(e)
 				
 			 		trans.dotransformation
 					var CMSExtension extensionPart = domainModel.ejslPart as CMSExtension
 					
-					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions,"Extensions/", fsa, domainModel.name)
+					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions,"Extensions/", fsa, domainModel.name, outputFolder)
 					mainExtensionGen.dogenerate() 
 					//if(config.getKey("entities").equalsIgnoreCase("true")){
 					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities, "Entities/", fsa, domainModel.name)
@@ -45,12 +86,22 @@ class EJSLGenerator extends AbstractGenerator {
 					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages,fsa,"Pages/",domainModel.name)
 				     mainPageGen.dogenerate()
 				     
-				 //    }
+				     }
 				}
 			}
 			println("The code generation was successfull! \n Thank you for using this tool!")
-			
-			
-		}
+	}
+	def Map<String, OutputConfiguration> mapOutputConfigurations(String path) {
+		var OutputConfiguration defaultOutput = new OutputConfiguration(IFileSystemAccess2.DEFAULT_OUTPUT);
+		defaultOutput.setDescription("Output Folder");
+		defaultOutput.setOutputDirectory(path);
+		defaultOutput.setOverrideExistingResources(true);
+		defaultOutput.setCreateOutputDirectory(true);
+		defaultOutput.setCleanUpDerivedResources(true);
+		defaultOutput.setSetDerivedProperty(true);
+		var Map<String, OutputConfiguration> mapconfig = new HashMap()
+		mapconfig.put("DEFAULT_OUTPUT", defaultOutput)
+
+		return mapconfig
 	}
 }

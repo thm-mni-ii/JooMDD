@@ -1,25 +1,25 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil
 
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator.AbstractExtensionGenerator
-import de.thm.icampus.joomdd.ejsl.eJSL.Language
-import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
+import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
+import de.thm.icampus.joomdd.ejsl.eJSL.Entity
+import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
+import de.thm.icampus.joomdd.ejsl.eJSL.Language
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
-import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.eJSL.Entity
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator.AbstractExtensionGenerator
+import org.eclipse.emf.common.util.EList
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class LanguageGenerator extends AbstractExtensionGenerator {
 
-	new(IFileSystemAccess fileAccess) {
+	new(IFileSystemAccess2 fileAccess) {
 		fsa = fileAccess
 	}
 
