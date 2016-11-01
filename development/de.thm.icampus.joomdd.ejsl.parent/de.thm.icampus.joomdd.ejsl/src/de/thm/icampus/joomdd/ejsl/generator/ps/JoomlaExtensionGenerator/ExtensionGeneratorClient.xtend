@@ -20,6 +20,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedLibraryImpl
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensionPackage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedExtensionPackageImpl
 
 public class  ExtensionGeneratorClient  {
 	
@@ -55,7 +57,7 @@ public class  ExtensionGeneratorClient  {
 	public def CharSequence generateExtension(){
 		switch ext {
 			ExtensionPackage : {
-					var ExtensionPackage tempext  =  ext as ExtensionPackage
+					var ExtendedExtensionPackage tempext  =  new ExtendedExtensionPackageImpl (ext as ExtensionPackage)
 					extensionsgenerator = new PackageGenerator(tempext,fsa,path + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase +"/", rootpath)
 				}
 			Component :{

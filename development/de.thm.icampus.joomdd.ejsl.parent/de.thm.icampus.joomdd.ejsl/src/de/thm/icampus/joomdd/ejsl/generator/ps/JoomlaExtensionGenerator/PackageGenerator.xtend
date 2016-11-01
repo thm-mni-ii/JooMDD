@@ -17,22 +17,22 @@ import java.util.Calendar
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import org.eclipse.xtend.lib.Property
-import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess2
-import de.thm.icampus.joomdd.ejsl.ressourceTransformator.RessourceTransformer
-import org.apache.log4j.lf5.util.Resource
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensionPackage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensions
 
 public class PackageGenerator extends AbstractExtensionGenerator {
 	
 	private ExtensionGeneratorClient extClient
-	@Property ExtensionPackage pkg
+	@Property ExtendedExtensionPackage pkg
 	String rootPath
-	new(ExtensionPackage pkg, IFileSystemAccess2 access, String path,String rootPath) {
+	new(ExtendedExtensionPackage pkg, IFileSystemAccess2 access, String path,String rootPath) {
 		this.pkg = pkg
 		this.fsa = access
 		this.name = "pkg_" + Slug.slugify(pkg.name)
 		this.path = path
 		this.rootPath = rootPath
+		
 		
 	}
 	
@@ -57,15 +57,19 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 	def compressExtensions( String fromSrc, String toSrc) {
 		
         val byte[] buffer = newByteArrayOfSize(1024)
-          var File dir = new File( fromSrc)
-          println(dir.path)
-          
-        var  File[] files = dir.listFiles()
-        println(dir.path);
-        for (File f : files) {
-            println("Adding file: " + f.path + " name " + f.getName())
-           if(f.isDirectory()){
+        for ( ExtendedExtensions ext: pkg.extendedExtensions) {
+         
            	try{
+           	var File f = null
+           	switch(ext.instance){
+       		 Component :{ f = new File (fromSrc + ext.extensionName+ "/new/"+ext.extensionName)
+       		 	
+       		 } 
+       		 
+       		 default:{
+       		 	 f = new File (fromSrc + ext.extensionName)
+       		 }
+           	}
             var String  zipFilepath =   toSrc + f.name + ".zip";
             println(zipFilepath)
             var FileOutputStream fileOut = new FileOutputStream(zipFilepath)
@@ -77,7 +81,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 
 		        System.out.println("Error creating zip file" + ioe);
 		        }
-        }
+        
         }
        
 	}
@@ -124,35 +128,28 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 				</files>
 			</extension>
 	'''
-	public def void scanDirectorie(ZipOutputStream zos, byte[]buffer, String  src, String root){
+	public def void scanDirectorie(ZipOutputStream zos, byte[]buffer, String  src, String path){
 		 var File dir = new File(src);
 
 	       var  File[] files = dir.listFiles();
-
+           
 	        for (File f : files) {
-	            println("Adding file: " + f.getName());
 	           if(! f.isDirectory()){
-	           	if(root.isEmpty){
+	           	if(path.isEmpty){
 	           		 putFile(zos, f, buffer, "");
 	           	}else{
-	           		if(root.equalsIgnoreCase(dir.getName())){
-	           		 putFile(zos, f, buffer, dir.getName()+"/");
-	           		 }else{
-	           		 	 putFile(zos, f, buffer,root+ dir.getName()+"/");
-	           		 }
+	           		putFile(zos, f, buffer,path);
 	          
 	           	}
 	            }else{
-	            		if(root.isEmpty){
+	            		if(path.isEmpty){
 	            		    scanDirectorie(zos,buffer,f.getPath(),f.getName() +"/" );
 	            			
 	            			}
 	            		else{	            	
-	            			if(root.equalsIgnoreCase(f.getName())){
-	            			  scanDirectorie(zos,buffer,f.getPath(),"" );}
-	            			  else{
-	            			scanDirectorie(zos,buffer,f.getPath(),root+f.getName() +"/" );}
-	            		}
+	            			
+	            			scanDirectorie(zos,buffer,f.getPath(),path+f.getName() +"/" );}
+	            		
 	            }
 	        }
 	}

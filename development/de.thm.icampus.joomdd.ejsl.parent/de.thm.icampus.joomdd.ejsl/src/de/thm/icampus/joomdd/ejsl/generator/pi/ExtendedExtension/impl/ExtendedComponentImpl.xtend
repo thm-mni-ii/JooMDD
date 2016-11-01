@@ -34,6 +34,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	EList<ExtendedParameterGroup> extendedParamaterGroups
 	EList<ExtendedPage> allExtendedPage
 	EList <ExtendedDynamicPage> allDynamicPage
+	String extensionName 
 	new(Component comp){
 		instance = comp
 		this.name = PlattformUtil.slugify(comp.name)
@@ -41,6 +42,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 		this.manifest = comp.manifest
 		this.globalParamter = comp.globalParamter
 		this.sections = comp.sections
+		extensionName = "com_" + this.name.toLowerCase
 		
 		initListen()
 	}
@@ -154,6 +156,10 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	
 	override getAllExtendedPage() {
 		return allExtendedPage
+	}
+	
+	override extensionName() {
+		return extensionName
 	}
 	
 }

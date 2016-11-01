@@ -9,4 +9,5 @@ interface ExtendedPlugin extends Plugin {
 	
 	def EList<ExtendedEntity> getExtendedEntities()
 	def EList<ExtendedParameter> getExtendedParameter()
+	def String extensionName()
 }

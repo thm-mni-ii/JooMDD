@@ -10,5 +10,6 @@ interface ExtendedExtensions  extends Extension{
 	def ExtendedExtensionPackage getExtensionPackageExtended()
 	def ExtendedPlugin getPluginExtended()
 	def Extension getInstance()
+	def String extensionName() 
 	
 }

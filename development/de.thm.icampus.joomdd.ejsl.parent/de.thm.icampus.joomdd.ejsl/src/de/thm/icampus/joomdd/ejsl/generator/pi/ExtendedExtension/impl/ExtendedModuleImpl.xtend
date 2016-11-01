@@ -14,6 +14,7 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 	
 	ExtendedPageReference extendedReference
 	String comName
+	String extensionName 
 	new(Module mod){
 		this.name = PlattformUtil.slugify(mod.name)
 		this.manifest = mod.manifest
@@ -21,6 +22,7 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 		this.pageRef = mod.pageRef
 		extendedReference = new ExtendedPageReferenceImpl(pageRef)
 		comName = init(mod.pageRef.pagescr)
+		extensionName = "mod_" + this.name.toLowerCase
 	}
 	
 	def init(ComponentReference reference) {
@@ -37,6 +39,10 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 
 	override getExtendedComponentName() {
 		return comName
+	}
+	
+	override extensionName() {
+		return extensionName
 	}
 	
 }

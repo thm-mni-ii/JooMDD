@@ -69,4 +69,24 @@ class ExtendedExtensionsImpl extends ExtensionImpl implements ExtendedExtensions
 		return new ExtendedLibraryImpl(instance as Library)
 	}
 	
+	override extensionName() {
+		switch(instance){
+			Component:{
+				return "com_" + this.name.toLowerCase
+			}
+			Module:{
+				return "mod_" + this.name.toLowerCase
+			}
+			ExtensionPackage:{
+				return "pkg_" + this.name.toLowerCase
+			}
+			Library:{
+				return "lib_" + this.name.toLowerCase
+			}
+			Plugin:{
+				return "plg_" + this.name.toLowerCase
+			}
+		}
+	}
+	
 }

@@ -7,4 +7,5 @@ import org.eclipse.emf.common.util.EList
 interface ExtendedLibrary extends Library {
 	
 	def EList<ExtendedEntity> getExtendedEntities()
+	def String extensionName()
 }

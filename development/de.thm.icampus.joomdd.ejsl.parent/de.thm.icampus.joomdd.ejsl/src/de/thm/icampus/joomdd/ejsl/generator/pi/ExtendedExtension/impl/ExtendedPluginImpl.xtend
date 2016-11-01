@@ -15,6 +15,7 @@ class ExtendedPluginImpl extends PluginImpl implements ExtendedPlugin {
 	
 	EList<ExtendedEntity> extendedEntities
 	EList<ExtendedParameter> extendedParameter
+	String extensionName 
 	new(Plugin plug){
 		this.name = PlattformUtil.slugify(plug.name)
 		this.manifest = plug.manifest
@@ -22,6 +23,7 @@ class ExtendedPluginImpl extends PluginImpl implements ExtendedPlugin {
 		this.languages = plug.languages
 		this.entities = plug.entities
 		this.localparameters = plug.localparameters
+		extensionName =  "plg_" + this.name.toLowerCase
 		init()
 	}
 	
@@ -38,6 +40,10 @@ class ExtendedPluginImpl extends PluginImpl implements ExtendedPlugin {
 	
 	override getExtendedParameter() {
 		return extendedParameter
+	}
+	
+	override extensionName() {
+		return extensionName
 	}
 	
 }

@@ -7,5 +7,6 @@ interface ExtendedExtensionPackage extends ExtensionPackage {
 	
 	def ExtensionPackage getIntance()
 	def EList<ExtendedExtensions> getExtendedExtensions()
+	def String extensionName()
 	
 }

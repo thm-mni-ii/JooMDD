@@ -14,6 +14,7 @@ interface ExtendedComponent extends Component {
 	def EList<ExtendedParameterGroup>getExtendedParameterGroupList()
 	def EList<ExtendedPage>getAllExtendedPage()
 	def Component getInstance()
+	def String extensionName()
 	
 	
 }

@@ -12,6 +12,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 class ExtendedLibraryImpl extends LibraryImpl implements ExtendedLibrary {
 	
 	EList<ExtendedEntity> extendedEntities
+	String extensionName 
 	new(Library lib){
 		this.entities = lib.entities
 		this.name = PlattformUtil.slugify(lib.name)
@@ -19,6 +20,7 @@ class ExtendedLibraryImpl extends LibraryImpl implements ExtendedLibrary {
 		this.manifest = lib.manifest
 		this.packages = lib.packages
 		this.languages = lib.languages
+		 extensionName == "lib_" + this.name.toLowerCase
 		init()
 	}
 	def void init(){
@@ -28,6 +30,10 @@ class ExtendedLibraryImpl extends LibraryImpl implements ExtendedLibrary {
 	}
 	override getExtendedEntities() {
 		return extendedEntities
+	}
+	
+	override extensionName() {
+		return extensionName
 	}
 	
 }
