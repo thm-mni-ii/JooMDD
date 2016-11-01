@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
+import classes.eJSL_PHP_Wizard_Step;
 
 import javax.swing.*;
 import java.io.*;
@@ -20,9 +21,9 @@ import java.io.*;
 public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
 
     public Icon getIcon()
-        {
-            return IconLoader.getIcon("/resources/icons/eJSL.PNG");
-        }
+    {
+        return IconLoader.getIcon("/resources/icons/eJSL.PNG");
+    }
 
     public Icon getLogo() {
         return IconLoader.getIcon("/resources/icons/eJSL.PNG");
@@ -79,6 +80,8 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
             src.mkdir();
             src_gen.mkdir();
             FileWriter fw = new FileWriter(project.getBasePath() + "/src/Model.eJSL");
+            FileWriter fwproperties = new FileWriter(project.getBasePath() + "/src/generator.properties");
+
             FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/"+eJSL_PHP_Wizard_Step.getOption() );
             BufferedReader br = new BufferedReader(fr);
             String buffer = "";
@@ -88,12 +91,17 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
 
             model.createNewFile();
             BufferedWriter bw = new BufferedWriter(fw);
+            BufferedWriter bwproperties = new BufferedWriter(fwproperties);
+            bwproperties.write(eJSL_PHP_Wizard_Step.getGereratorProperties());
             bw.write(example.toString());
+
 
             br.close();
             bw.close();
+            bwproperties.close();
             fr.close();
             fw.close();
+            fwproperties.close();
 
             project.getBaseDir().refresh(false,true);
 
