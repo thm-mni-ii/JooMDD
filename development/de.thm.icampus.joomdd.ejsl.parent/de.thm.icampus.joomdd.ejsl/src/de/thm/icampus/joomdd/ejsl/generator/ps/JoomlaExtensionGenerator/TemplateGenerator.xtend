@@ -3,12 +3,10 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Template
-import org.eclipse.xtext.generator.IFileSystemAccess
-import java.util.Calendar
-import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
+import java.util.Calendar
+import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**
  * <!-- begin-user-doc -->
@@ -24,7 +22,7 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 	
 	Template template
 	
-	new(Template template, IFileSystemAccess fsa, String path) {
+	new(Template template, IFileSystemAccess2 fsa, String path) {
 		this.fsa = fsa;
 		this.name = "tpl_" + Slug.slugify(template.name)
 		this.template = template
@@ -62,7 +60,7 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		return ''
 	}
 
-	def static TemplateGenerator getGenerator(Template template, IFileSystemAccess fsa, String path) {
+	def static TemplateGenerator getGenerator(Template template, IFileSystemAccess2 fsa, String path) {
 		return new TemplateGenerator(template, fsa, path)
 	}
 

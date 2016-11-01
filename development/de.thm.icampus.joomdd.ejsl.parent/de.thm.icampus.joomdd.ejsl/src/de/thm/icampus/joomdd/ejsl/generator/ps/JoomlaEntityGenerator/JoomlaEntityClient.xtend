@@ -5,11 +5,12 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class JoomlaEntityClient extends AbstractExtensionGenerator {
 	
 	
-	new( IFileSystemAccess fsa){
+	new( IFileSystemAccess2 fsa){
 		this.fsa = fsa
 	}
 	
@@ -56,7 +57,7 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 	private def generateTable(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t!=null]) {
 			var TableGeneratorTemplate table = new TableGeneratorTemplate(comp, ent)
-			generateFile(path + "tables/componentuser.php", table.genClassTable)
+			generateFile(path + "tables/"+ent.name.toLowerCase+".php", table.genClassTable)
 
 		}
 	}

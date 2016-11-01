@@ -2,28 +2,20 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator;
 
-import org.eclipse.emf.ecore.EObject;
-import de.thm.icampus.joomdd.ejsl.eJSL.Type
-import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.eJSL.BackendSection
+import de.thm.icampus.joomdd.ejsl.eJSL.Page
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
-import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
-import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
-import de.thm.icampus.joomdd.ejsl.eJSL.BackendSection
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
-import de.thm.icampus.joomdd.ejsl.eJSL.Page
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
+import org.eclipse.emf.common.util.EList
+import org.eclipse.xtend.lib.Property
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 abstract public class AbstractPageGenerator {
-	@Property IFileSystemAccess fsa
+	@Property IFileSystemAccess2 fsa
 	@Property String name
 	@Property String path = ""
 	 

@@ -19,18 +19,21 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedLibraryImpl
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 public class  ExtensionGeneratorClient  {
 	
 	AbstractExtensionGenerator extensionsgenerator
-	IFileSystemAccess fsa
+	IFileSystemAccess2 fsa
 	Extension ext
 	String path
+	String rootpath
 	
-	new(IFileSystemAccess access, Extension extens, String path) {
+	new(IFileSystemAccess2 access, Extension extens, String path, String rootPath) {
 		fsa=access
 		ext=extens
 		this.path = path
+		this.rootpath = rootPath
 	}
 
 	
@@ -53,7 +56,7 @@ public class  ExtensionGeneratorClient  {
 		switch ext {
 			ExtensionPackage : {
 					var ExtensionPackage tempext  =  ext as ExtensionPackage
-					extensionsgenerator = new PackageGenerator(tempext,fsa,path + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase +"/")
+					extensionsgenerator = new PackageGenerator(tempext,fsa,path + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase +"/", rootpath)
 				}
 			Component :{
 				var ExtendedComponent tempext  = new ExtendedComponentImpl(ext as Component)

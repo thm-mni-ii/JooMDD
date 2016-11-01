@@ -5,28 +5,20 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.eJSL.StaticPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntityGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntityClient
-import de.thm.icampus.joomdd.ejsl.eJSL.Component
-import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
+import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 public class PageGeneratorClient {
 	
 	ExtendedPage extPage
 	ExtendedComponent com
 	String pathExt
-	IFileSystemAccess fsa
+	IFileSystemAccess2 fsa
 	String sectionExt
 	
 	
-	new(ExtendedPage page, ExtendedComponent component, String path, String section,IFileSystemAccess access) {
+	new(ExtendedPage page, ExtendedComponent component, String path, String section,IFileSystemAccess2 access) {
 		extPage = page
 		com = component
 		pathExt = path 
@@ -39,7 +31,7 @@ public class PageGeneratorClient {
 		static.generate
 	}
 
-	private def  void generateView(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess fsa) {
+	private def  void generateView(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess2 fsa) {
 		if(page.detailsPage) {
 			
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path, fsa)
@@ -55,7 +47,7 @@ public class PageGeneratorClient {
 		
 
 
-	private def void generateController(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess fsa) {
+	private def void generateController(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess2 fsa) {
 			if(page.detailsPage) {
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path,fsa)
 				dp.generateController()
@@ -67,7 +59,7 @@ public class PageGeneratorClient {
 			
 		}
 		
-	private def  generateModel(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess fsa) {
+	private def  generateModel(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess2 fsa) {
 			if(page.detailsPage) {
 				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path,fsa)
 				dp.generateModel()

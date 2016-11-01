@@ -2,23 +2,19 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator
 
-import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
-import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
-import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import de.thm.icampus.joomdd.ejsl.eJSL.Link
 import de.thm.icampus.joomdd.ejsl.eJSL.Module
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.LinkGeneratorClient
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.LanguageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import java.util.Calendar
 import org.eclipse.emf.common.util.EList
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.LanguageGenerator
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**
  * <!-- begin-user-doc -->
@@ -48,7 +44,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	ExtendedDynamicPage dynpage
 	String com
 
-	new(ExtendedModule module, IFileSystemAccess fsa, String path) {
+	new(ExtendedModule module, IFileSystemAccess2 fsa, String path) {
 		this.fsa = fsa
 		this.name = 'mod_' + Slug.slugify(module.name)
 		this.extMod = module

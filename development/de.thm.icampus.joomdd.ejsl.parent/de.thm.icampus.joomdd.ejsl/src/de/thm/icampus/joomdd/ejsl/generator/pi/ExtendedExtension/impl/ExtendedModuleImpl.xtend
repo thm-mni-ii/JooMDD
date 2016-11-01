@@ -24,10 +24,11 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 	}
 	
 	def init(ComponentReference reference) {
+		 if(reference.ref != null)
+	    return reference.ref.name
 	  if(reference.core != null)
 	  return reference.core.getName()
-	  if(reference.ref != null)
-	    return reference.ref.name
+	 
 	}
 	
 	override getExtendedPageReference() {

@@ -3,21 +3,14 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator;
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Author
-import org.eclipse.emf.common.util.EList
-import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
-import de.thm.icampus.joomdd.ejsl.eJSL.Type
-import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
-import de.thm.icampus.joomdd.ejsl.eJSL.Parameter
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.ProtectedRegion
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.KVPairGeneratorClient
-import de.thm.icampus.joomdd.ejsl.generator.ps.ExtensionGenerator
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
+import org.eclipse.emf.common.util.EList
+import org.eclipse.xtend.lib.Property
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 abstract public class AbstractExtensionGenerator  {
 
-	@Property IFileSystemAccess fsa
+	@Property IFileSystemAccess2 fsa
 	@Property String name
 	@Property String path = ""
 	public Extension ext

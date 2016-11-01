@@ -7,17 +7,15 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
+import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.LanguageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 import java.util.Calendar
 import java.util.List
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
@@ -26,7 +24,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	private String class_name
 	private String updatePath
     
-	new(ExtendedComponent component, IFileSystemAccess fsa, String path, String updatePath) {
+	new(ExtendedComponent component, IFileSystemAccess2 fsa, String path, String updatePath) {
 		this.fsa = fsa;
 		this.slug = component.name
 		this.noPrefixName = this.slug

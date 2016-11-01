@@ -6,6 +6,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Page
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**
  * <!-- begin-user-doc -->
@@ -24,7 +25,7 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	String sect
 
 	
-	new (ExtendedStaticPage page, ExtendedComponent component, String section, String path,IFileSystemAccess access ){
+	new (ExtendedStaticPage page, ExtendedComponent component, String section, String path,IFileSystemAccess2 access ){
 		staticpage = page
 		comp = component
 		sect = section

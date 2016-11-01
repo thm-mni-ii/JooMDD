@@ -18,6 +18,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsCardinalityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class EntityGenerator extends AbstracteGenerator {
 	
@@ -25,16 +26,16 @@ class EntityGenerator extends AbstracteGenerator {
 	ExtendedComponent extensions
 	ExtendedDynamicPage page
 	String path
-	IFileSystemAccess fsa
+	IFileSystemAccess2 fsa
 	boolean isBackendSection
 	
-	new(EList<Entity> entitiesList, String path ,IFileSystemAccess fsa, String domainName) {
+	new(EList<Entity> entitiesList, String path ,IFileSystemAccess2 fsa, String domainName) {
 		this.entities = new BasicEList<ExtendedEntity>
 		entities.addAll(entitiesList.map[t | new ExtendedEntityImpl(t)])
 		this.path = path + domainName +"/"
 		this.fsa = fsa
 	}
-	new(ExtendedComponent extensions,String path,IFileSystemAccess fsa, boolean isBackenSection ){
+	new(ExtendedComponent extensions,String path,IFileSystemAccess2 fsa, boolean isBackenSection ){
 		this.entities = new BasicEList<ExtendedEntity>
 		this.entities = extensions.allExtendedEntity
 		this.extensions = extensions
@@ -42,7 +43,7 @@ class EntityGenerator extends AbstracteGenerator {
 		this.fsa = fsa
 		this.isBackendSection = isBackenSection
 	}
-	new(ExtendedDynamicPage page, ExtendedComponent extensions,String path , IFileSystemAccess fsa,boolean isBackend){
+	new(ExtendedDynamicPage page, ExtendedComponent extensions,String path , IFileSystemAccess2 fsa,boolean isBackend){
 		this.entities = new BasicEList<ExtendedEntity>
 		this.entities =page.extendedEntityList
 		this.page = page
