@@ -155,6 +155,8 @@ public class InitalSettings implements ProjectComponent {
                 src_gen.mkdir();
                 FileWriter fw = new FileWriter(project.getBasePath() + "/src/Model.eJSL");
                 FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/" + eJSLWizardStep.getOption());
+                FileWriter fwproperties = new FileWriter(project.getBasePath() + "/src/generator.properties");
+
                 BufferedReader br = new BufferedReader(fr);
                 String buffer = "";
                 while ((buffer = br.readLine()) != null) {
@@ -163,12 +165,18 @@ public class InitalSettings implements ProjectComponent {
 
                 model.createNewFile();
                 BufferedWriter bw = new BufferedWriter(fw);
+
+                BufferedWriter bwproperties = new BufferedWriter(fwproperties);
+                bwproperties.write(eJSL_PHP_Wizard_Step.getGereratorProperties());
+
                 bw.write(example.toString());
 
                 br.close();
                 bw.close();
+                bwproperties.close();
                 fr.close();
                 fw.close();
+                fwproperties.close();
 
 
             } catch (Exception e) {
