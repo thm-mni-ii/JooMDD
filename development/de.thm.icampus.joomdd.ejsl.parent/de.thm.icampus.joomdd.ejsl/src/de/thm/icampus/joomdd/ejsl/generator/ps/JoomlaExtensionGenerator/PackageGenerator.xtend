@@ -47,14 +47,18 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         	this.extClient = new ExtensionGeneratorClient(fsa, ext, path + "packages/tocompress/", rootPath)
 			this.extClient.generateExtension
         }
-         compressExtensions(rootPath + "/" +path + "packages/tocompress/" , rootPath + "/"+ path + "packages/")
-         var File toDelete = new File(rootPath + "/packages/tocompress")
-         toDelete.delete
+         var success = compressExtensions(rootPath + "/" +path + "packages/tocompress/" , rootPath + "/"+ path + "packages/")
+         if(success){
+
+         	Slug.deleteFolder(rootPath + "/" +path + "packages/tocompress")
+         }
+         
+        
         
         return ''
 	}
 	
-	def compressExtensions( String fromSrc, String toSrc) {
+	def boolean compressExtensions( String fromSrc, String toSrc) {
 		
         val byte[] buffer = newByteArrayOfSize(1024)
         for ( ExtendedExtensions ext: pkg.extendedExtensions) {
@@ -83,6 +87,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 		        }
         
         }
+        return true
        
 	}
 	
@@ -99,8 +104,9 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 			    «IF (pkg.manifest.copyright != null)»
 			    	<copyright>«pkg.manifest.copyright»</copyright>
 			    «ENDIF»
+			    <packagename>«pkg.name»</packagename>
 			    «IF (pkg.manifest.license != null)»
-			    	<license>GPL 2.0</license>
+			    	<license>«pkg.manifest.license»</license>
 			    «ENDIF»
 			    «IF (pkg.manifest.version != null)»
 			    	<version>«pkg.manifest.version»</version>
@@ -111,19 +117,19 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 			    
 				<files folder="packages">
 					«FOR com : pkg.extensions.filter(typeof(Component))»
-						<file type="component" id="«pkg.name»">«com.name».zip</file>
+						<file type="component" id="«pkg.name»">«Slug.nameExtensionBind("com",com.name).toLowerCase».zip</file>
 	                «ENDFOR»
 	                «FOR lib : pkg.extensions.filter(typeof(Library))»
-	                	<file type="library" id="«pkg.name»">«lib.name».zip</file>
+	                	<file type="library" id="«pkg.name»">«Slug.nameExtensionBind("lib",lib.name).toLowerCase».zip</file>
 	                «ENDFOR»
 	                «FOR mod : pkg.extensions.filter(typeof(Module))»
-	                	<file type="module" id="«pkg.name»" client="site">«mod.name».zip</file>
+	                	<file type="module" id="«pkg.name»" client="site">«Slug.nameExtensionBind("mod",mod.name).toLowerCase».zip</file>
 	                «ENDFOR»
 	                «FOR tpl : pkg.extensions.filter(typeof(Template))»
-						<file type="template" id="«pkg.name»">«tpl.name».zip</file>
+						<file type="template" id="«pkg.name»">«Slug.nameExtensionBind("tpl",tpl.name).toLowerCase».zip</file>
 	                «ENDFOR»
 	                «FOR plg : pkg.extensions.filter(typeof(Plugin))»
-						<file type="plugin" id="«pkg.name»" group="«plg.type»">«plg.name».zip</file>
+						<file type="plugin" id="«pkg.name»" group="«plg.type»">«Slug.nameExtensionBind("plg",plg.name).toLowerCase».zip</file>
 	                «ENDFOR»
 				</files>
 			</extension>

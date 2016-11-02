@@ -596,6 +596,18 @@ public class Slug  {
 		}
 		
 	}
+	
+	def static void deleteFolder(String folder) {
+	 var File root = new File(folder)
+	 for(File item : root.listFiles){
+	 	if(item.directory){
+	 		deleteFolder(item.path)
+	 	}else{
+	 		item.delete
+	 	}
+	 }
+	 root.delete
+	}
 
 	
 	
