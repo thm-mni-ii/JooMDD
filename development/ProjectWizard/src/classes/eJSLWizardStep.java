@@ -31,6 +31,15 @@ public class eJSLWizardStep extends ModuleWizardStep {
     public static void setOption(String newoption) {option = newoption;}
     public static boolean getwizardactive() {return  wizardstatus;}
 
+    public static String outputPath;
+
+    public static String getOutputPath() {return outputPath;}
+
+    public static void setOutputPath(String path) {
+        outputPath = path;
+    }
+
+
     public String getPreviewFromFile(String filename){
 
         StringBuilder preview = new StringBuilder();
@@ -41,7 +50,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
             String buffer = "";
             String text = "";
-            int maxLines = 12;
+            int maxLines = 8;
             int lines = 0;
 
             while ((buffer = br.readLine()) != null) {
@@ -140,7 +149,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         JCheckBox checkboxPage = new JCheckBox ("Page");
         JCheckBox checkboxEntieties = new JCheckBox ("Entities");
 
-        JLabel generatorInfoLableupdatefolder = new JLabel("Extesnsion Package output:");
+       // JLabel generatorInfoLableupdatefolder = new JLabel("Extesnsion Package output:");
 
         /*
         ButtonGroup folderstrucure = new ButtonGroup();
@@ -161,7 +170,8 @@ public class eJSLWizardStep extends ModuleWizardStep {
         btngroupframework.add(radiobtnPHPUnit);
         btngroupframework.add(radiobtnCodeception);
 
-
+        JLabel lblOutputPath = new JLabel("Output Path:                       ");
+        JTextField txtOutputPath = new JBTextField();
         JLabel lbllogindaten = new JLabel("Host configuration:           ");
         JTextField txtHostConfiguration = new JBTextField();
         JLabel lbllPort = new JLabel("Port configuration:            ");
@@ -216,8 +226,13 @@ public class eJSLWizardStep extends ModuleWizardStep {
         panelsouth4.add(radiobtnCodeception, BorderLayout.CENTER);
         panelsouth4.add(radiobtnPHPUnit, BorderLayout.WEST);
 
+        JPanel panelsouth4_1 = new JPanel(new BorderLayout());
+        panelsouth4.add(panelsouth4_1,BorderLayout.SOUTH);
+        panelsouth4_1.add(lblOutputPath, BorderLayout.WEST);
+        panelsouth4_1.add(txtOutputPath, BorderLayout.CENTER);
+
         JPanel panelsouth5 = new JPanel(new BorderLayout());
-        panelsouth4.add(panelsouth5,BorderLayout.SOUTH);
+        panelsouth4_1.add(panelsouth5,BorderLayout.SOUTH);
         panelsouth5.add(lbllogindaten, BorderLayout.WEST);
         panelsouth5.add(txtHostConfiguration, BorderLayout.CENTER);
 
@@ -274,6 +289,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         checkboxWordpress.setSelected(true);
         //radbtnfolder.setSelected(true);
         radiobtnPHPUnit.setSelected(true);
+        txtOutputPath.setText("/src-gen/");
         txtadminname.setText("admin");
         txtadminpwd.setText("admin");
         txtbrowser.setText("");
@@ -283,11 +299,6 @@ public class eJSLWizardStep extends ModuleWizardStep {
         txtpath.setText("c:/xampp/htdocs");
         txtServerpath.setText("");
         txtPort.setText("4445");
-
-
-
-
-        // End
 
 
         selectLabel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -333,7 +344,9 @@ public class eJSLWizardStep extends ModuleWizardStep {
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 super.ancestorRemoved(event);
-                System.out.print("removed");
+
+                setOutputPath(txtOutputPath.getText());
+
                 eJSL_PHP_Wizard_Step.createGeneratorProperties(checkboxPage.isSelected(),checkboxEntieties.isSelected(),checkboxJoomla.isSelected(),checkboxWordpress.isSelected(),
                         radiobtnPHPUnit.isSelected(),radiobtnCodeception.isSelected(),txtHostConfiguration.getText(),txtPort.getText(),txtadminname.getText(),
                         txtadminpwd.getText(),browserChrome.isSelected(),browserInternetExplorer.isSelected(),browserFirefox.isSelected(),txtpath.getText(),

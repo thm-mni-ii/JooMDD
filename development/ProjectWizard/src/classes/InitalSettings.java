@@ -167,7 +167,20 @@ public class InitalSettings implements ProjectComponent {
                 BufferedWriter bw = new BufferedWriter(fw);
 
                 BufferedWriter bwproperties = new BufferedWriter(fwproperties);
-                bwproperties.write(eJSL_PHP_Wizard_Step.getGereratorProperties());
+
+
+                StringBuilder genproperties = new StringBuilder(eJSL_PHP_Wizard_Step.getGereratorProperties());
+
+                if (eJSLWizardStep.getOutputPath().equals("/src-gen/")){
+                    genproperties.append("Output_Path="+project.getBasePath()+eJSLWizardStep.getOutputPath());
+                }else{
+                    genproperties.append("Output_Path="+eJSLWizardStep.getOutputPath());
+                }
+
+                genproperties.append("\nProject_Path="+project.getBasePath());
+
+
+                bwproperties.write(genproperties.toString());
 
                 bw.write(example.toString());
 

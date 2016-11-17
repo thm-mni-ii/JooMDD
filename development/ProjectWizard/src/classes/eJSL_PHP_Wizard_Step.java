@@ -36,6 +36,13 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
     public static void setOption(String newoption) {option = newoption;}
 
     public static String gereratorProperties ;
+    public static String outputPath;
+
+    public static String getOutputPath() {return outputPath;}
+
+    public static void setOutputPath(String path) {
+        outputPath = path;
+    }
 
     public static String getGereratorProperties() {return gereratorProperties;}
 
@@ -95,11 +102,9 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         properties.append("Serverpath="+Serverpath+"\n");
 
 
-
-
+        //properties.append("")+;
 
         //properties.append("folderstructure="+folderstructure+"\n");
-        System.out.print(properties.toString());
         gereratorProperties = properties.toString();
     }
 
@@ -187,7 +192,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         JCheckBox checkboxPage = new JCheckBox ("Page");
         JCheckBox checkboxEntieties = new JCheckBox ("Entities");
 
-        JLabel generatorInfoLableupdatefolder = new JLabel("Extesnsion Package output:");
+        //JLabel generatorInfoLableupdatefolder = new JLabel("Extesnsion Package output:");
 
         /*
         ButtonGroup folderstrucure = new ButtonGroup();
@@ -209,6 +214,8 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         btngroupframework.add(radiobtnCodeception);
 
 
+        JLabel lblOutputPath = new JLabel("Output Path:                       ");
+        JTextField txtOutputPath = new JBTextField();
         JLabel lbllogindaten = new JLabel("Host configuration:           ");
         JTextField txtHostConfiguration = new JBTextField();
         JLabel lbllPort = new JLabel("Port configuration:            ");
@@ -263,8 +270,14 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         panelsouth4.add(radiobtnCodeception, BorderLayout.CENTER);
         panelsouth4.add(radiobtnPHPUnit, BorderLayout.WEST);
 
+        JPanel panelsouth4_1 = new JPanel(new BorderLayout());
+        panelsouth4.add(panelsouth4_1,BorderLayout.SOUTH);
+        panelsouth4_1.add(lblOutputPath, BorderLayout.WEST);
+        panelsouth4_1.add(txtOutputPath, BorderLayout.CENTER);
+
+
         JPanel panelsouth5 = new JPanel(new BorderLayout());
-        panelsouth4.add(panelsouth5,BorderLayout.SOUTH);
+        panelsouth4_1.add(panelsouth5,BorderLayout.SOUTH);
         panelsouth5.add(lbllogindaten, BorderLayout.WEST);
         panelsouth5.add(txtHostConfiguration, BorderLayout.CENTER);
 
@@ -321,6 +334,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         checkboxWordpress.setSelected(true);
         //radbtnfolder.setSelected(true);
         radiobtnPHPUnit.setSelected(true);
+        txtOutputPath.setText("/src-gen/");
         txtadminname.setText("admin");
         txtadminpwd.setText("admin");
         txtbrowser.setText("");
@@ -332,9 +346,6 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         txtPort.setText("4445");
 
 
-
-
-        // End
 
         selectLabel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         selectScroll.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -381,7 +392,8 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
             @Override
             public void ancestorRemoved(AncestorEvent event) {
                 super.ancestorRemoved(event);
-                System.out.print("removed");
+
+                setOutputPath(txtOutputPath.getText());
 
                 createGeneratorProperties(checkboxPage.isSelected(),checkboxEntieties.isSelected(),checkboxJoomla.isSelected(),checkboxWordpress.isSelected(),
                         radiobtnPHPUnit.isSelected(),radiobtnCodeception.isSelected(),txtHostConfiguration.getText(),txtPort.getText(),txtadminname.getText(),

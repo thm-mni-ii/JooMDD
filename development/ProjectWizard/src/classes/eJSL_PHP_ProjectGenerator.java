@@ -92,7 +92,18 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
             model.createNewFile();
             BufferedWriter bw = new BufferedWriter(fw);
             BufferedWriter bwproperties = new BufferedWriter(fwproperties);
-            bwproperties.write(eJSL_PHP_Wizard_Step.getGereratorProperties());
+
+            StringBuilder genproperties = new StringBuilder(eJSL_PHP_Wizard_Step.getGereratorProperties());
+
+            if (eJSL_PHP_Wizard_Step.getOutputPath().equals("/src-gen/")){
+                genproperties.append("Output_Path="+project.getBasePath()+eJSL_PHP_Wizard_Step.getOutputPath());
+            }else{
+                genproperties.append("Output_Path="+eJSL_PHP_Wizard_Step.getOutputPath());
+            }
+
+            genproperties.append("\nProject_Path="+project.getBasePath());
+
+            bwproperties.write(genproperties.toString());
             bw.write(example.toString());
 
 
