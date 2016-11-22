@@ -1,0 +1,44 @@
+buildscript {
+    repositories {
+        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    }
+}
+
+plugins {
+    id "org.jetbrains.intellij" version "0.1.10"
+}
+
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'eclipse'
+
+intellij {
+    version  'IC-2016.1'
+    pluginName 'ProjectWizard'
+}
+
+task deleteOldWizardPlugin(type: Delete){
+	description 'delete old Wizard Plugin'
+	group ('Jetbrinas_Wizard_Help_Task')
+	delete 'build/wizardSources'
+}
+
+task createIntelliJWizardPluginSource(type: Copy, dependsOn:['buildPlugin','deleteOldWizardPlugin']){
+	description 'Creates IDEA Wizard Plugin source for Deployment'
+	group ('Jetbrinas_Wizard')
+
+    from 'build/resources/main'
+    from 'build/classes/main'
+	into 'build/wizardSources'
+}
+
+
+task buildIntelliJPlugin(dependsOn:'buildPlugin'){
+    description 'Create standalone IntelliJ Wizard zip file'
+    group ('Jetbrinas_Wizard_Help_Task')
+}
+
+
+task runIntelliJPlugin(dependsOn:'runIdea'){
+    description 'Create Wizard Wizard and run IntelliJ'
+    group ('Jetbrinas_Wizard')
+}

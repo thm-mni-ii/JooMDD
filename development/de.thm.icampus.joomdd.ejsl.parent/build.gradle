@@ -1,20 +1,20 @@
 buildscript {
 	repositories {
-		jcenter()
+		jcenter()		
 	}
 	dependencies {
-		classpath 'org.xtext:xtext-gradle-plugin:1.0.1'
-		classpath 'org.xtext:xtext-idea-gradle-plugin:1.0.1'
-        classpath 'org.xtext:xtext-gradle-plugin:1.0.2'
+		classpath 'org.xtext:xtext-gradle-plugin:1.0.12'  // new 1.0.12
+		classpath 'org.xtext:xtext-idea-gradle-plugin:1.0.2'
+        //classpath 'org.xtext:xtext-gradle-plugin:1.0.2'
     }
 }
 
 subprojects {
-	ext.xtextVersion = '2.9.1'
+	ext.xtextVersion = '2.10.0'
 	repositories {
 		jcenter()
 	}
-	
+
 	apply plugin: 'java'
 	apply plugin: 'org.xtext.xtend'
 	apply from: "${rootDir}/gradle/source-layout.gradle"
@@ -29,15 +29,14 @@ subprojects {
 	def xmlText = xmlFile.getText()
 	def parser = new XmlParser()
 	def list = parser.parseText(xmlText)
-	
+
 	version =  list.version[0].text()
-	
+	//version =  '0.3.0'
+
 	sourceCompatibility = '1.8'
 	targetCompatibility = '1.8'
-	
+
 	configurations.all {
 		exclude group: 'asm'
 	}
 }
-
-apply plugin: 'org.xtext.xtend'

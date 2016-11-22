@@ -26,11 +26,11 @@ ideaRepository.rootUrl = "${buildDir}/ideaRepository"
 	Change it in the pom.xml file in the parent project 
 	(joomdd_repo\development\de.thm.icampus.joomdd.ejsl.parent\pom.xml) Line 4
 */
+
 task deleteOldPlugin(type: Delete){
 	description 'delete old Plugin'
 	group ('JooMDD_Help_Task')
 	delete '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/'
-	
 }
 
 
@@ -48,22 +48,23 @@ task unzip(type: Copy){
 task parsePhpStormUpdatePluginsXml{
 	description 'Parse updatePlugins.xml for the new version'
 	group ('JooMDD_Help_Task')
-
 	doLast{
 		def xmlFile = file ('../../../releases/PhpStorm/ideaRepository/updatePlugins.xml')
 		def xmlText = xmlFile.getText()
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
-
+		
 		list.plugin[0].replaceNode{	
 			plugin(name:"JooMDD", 
 				id:"de.thm.icampus.joomdd.ejsl.phpstorm", 
-				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+ version +".zip",
-				version: version ){}
+				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/"
+				 + "PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"
+				 + version +".zip",
+				version: version){}
 		}
-
+		
 		def writer = new FileWriter(xmlFile)
-
+		
 		def printer = new XmlNodePrinter(new PrintWriter(writer))
 		printer.preserveWhitespace = true
 		printer.print(list)			
@@ -222,11 +223,12 @@ task deleteOldIdeaPlugin(type: Delete){
 /*
 	For the Wizard sources must be in the out folder
 */
+
 task addIntelliJWizard(type: Copy){
 	description 'add the newest Wizard to Plugin'
 	group ('JooMDD_Help_Task')
 		
-	from('../../ProjectWizard/out/production/ProjectWizard/')
+	from('../ProjectWizard/build/wizardSources')
 	into ('../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/classes/')
 }
 
@@ -235,16 +237,16 @@ task addIntelliJWizard(type: Copy){
 	Order of JooMDDDeploy tasks	
 		-	incrementVersion				// manual step. 
 		-	ideaZip							(xtext gradle standard)
-		- 	deleteOldPlugin
-		- 	unzip
-		- 	changeVersion
-		- 	addIntelliJWizard
-		- 	zipIntelliJ
-		- 	changeDependencies
-		- 	zipPhpStorm
+		-	deleteOldPlugin
+		-	unzip
+		-	changeVersion
+		-	addIntelliJWizard
+		-	zipIntelliJ
+		-	changeDependencies
+		-	zipPhpStorm
 		-	renamePhpStormPlugin
 		-	deleteOldIdeaPlugin
-		- 	parsePhpStormUpdatePluginsXml
+		-	parsePhpStormUpdatePluginsXml
 		-	parseIntelliJUpdatePluginsXml
 */
 
@@ -268,12 +270,3 @@ task JooMDDDeploy  (dependsOn: [
 	parsePhpStormUpdatePluginsXml.mustRunAfter	deleteOldIdeaPlugin
 	parseIntelliJUpdatePluginsXml.mustRunAfter	parsePhpStormUpdatePluginsXml
 }
-
-/*
-	Eclipse automation
-	
-	Steps ...	
-*/
-
-
-
