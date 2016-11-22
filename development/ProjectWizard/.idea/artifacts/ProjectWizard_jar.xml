@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="ProjectWizard:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/ProjectWizard_jar</output-path>
-    <root id="archive" name="ProjectWizard.jar">
-      <element id="module-output" name="ProjectWizard" />
-    </root>
-  </artifact>
-</component>
