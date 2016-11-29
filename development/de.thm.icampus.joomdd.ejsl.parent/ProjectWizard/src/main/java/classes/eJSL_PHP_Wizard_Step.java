@@ -77,8 +77,8 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
     }
 
 
-    public static void createGeneratorProperties(boolean page, boolean enteties, boolean joomla, boolean wordpress , Boolean PHPUnit ,
-                                          Boolean Codeceptio, String Host, String Port, String AdminName, String AdminPasswort, Boolean Chrome,
+    public static void createGeneratorProperties(boolean page, boolean enteties, boolean joomla, boolean wordpress , Boolean PHPUnit ,Boolean UpdateFolder,
+                                          Boolean Codeception, String Host, String Port, String AdminName, String AdminPasswort, Boolean Chrome,
                                           Boolean IE, Boolean Firefox, String Path, String DBUSerName, String DBUserPwd, String Serverpath){
         StringBuilder properties = new StringBuilder();
 
@@ -88,7 +88,8 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         properties.append("joomla="+joomla+"\n");
         properties.append("wordpress="+wordpress+"\n");
         properties.append("PHPUnit="+PHPUnit+"\n");
-        properties.append("Codeceptio="+Codeceptio+"\n");
+        properties.append("UpdateFolder="+UpdateFolder+"\n");
+        properties.append("Codeceptio="+Codeception+"\n");
         properties.append("Host="+Host+"\n");
         properties.append("Port="+Port+"\n");
         properties.append("AdminName="+AdminName+"\n");
@@ -205,6 +206,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         JLabel generatorInfoLablegernerator = new JLabel("Generator options:");
         JCheckBox checkboxJoomla = new JCheckBox ("Joomla!");
         JCheckBox checkboxWordpress = new JCheckBox ("Wordpress");
+        JCheckBox checkBoxGenUpdateFolder = new JCheckBox("Generate Update Folder");
 
         JLabel lblTestConfiguration = new JLabel("Test Configuration:");
         ButtonGroup btngroupframework = new ButtonGroup();
@@ -229,7 +231,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         JCheckBox browserInternetExplorer = new JBCheckBox("Internet Explorer");
         JCheckBox browserFirefox = new JBCheckBox("Firefox                        ");
         JTextField txtbrowser = new JBTextField();
-        JLabel lblpath = new JLabel("Path:                                    ");
+        JLabel lblpath = new JLabel("Website Path:                      ");
         JTextField txtpath = new JBTextField();
         JLabel lblDBUsername = new JLabel("DB Username:                     ");
         JTextField txtDBUsername = new JBTextField();
@@ -254,8 +256,14 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         panelsouth2.add(checkboxJoomla, BorderLayout.CENTER);
         panelsouth2.add(checkboxWordpress, BorderLayout.WEST);
 
+        JPanel panelsouth2_1 = new JPanel(new BorderLayout());
+        panelsouth2.add(panelsouth2_1,BorderLayout.SOUTH);
+
+        panelsouth2_1.add(checkBoxGenUpdateFolder, BorderLayout.NORTH);
+
+
         JPanel panelsouth3 = new JPanel(new BorderLayout());
-        panelsouth2.add(panelsouth3,BorderLayout.SOUTH);
+        panelsouth2_1.add(panelsouth3,BorderLayout.SOUTH);
 
         /*
         panelsouth3.add(generatorInfoLableupdatefolder, BorderLayout.NORTH);
@@ -341,8 +349,8 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         txtDBUsername.setText("DBUser");
         txtDBUserpwd.setText("");
         txtHostConfiguration.setText("http://localhost");
-        txtpath.setText("c:/xampp/htdocs");
-        txtServerpath.setText("");
+        txtpath.setText("");
+        txtServerpath.setText("c:/xampp/htdocs");
         txtPort.setText("4445");
 
 
@@ -395,7 +403,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
 
                 setOutputPath(txtOutputPath.getText());
 
-                createGeneratorProperties(checkboxPage.isSelected(),checkboxEntieties.isSelected(),checkboxJoomla.isSelected(),checkboxWordpress.isSelected(),
+                createGeneratorProperties(checkboxPage.isSelected(),checkboxEntieties.isSelected(),checkboxJoomla.isSelected(),checkboxWordpress.isSelected(),checkBoxGenUpdateFolder.isSelected(),
                         radiobtnPHPUnit.isSelected(),radiobtnCodeception.isSelected(),txtHostConfiguration.getText(),txtPort.getText(),txtadminname.getText(),
                         txtadminpwd.getText(),browserChrome.isSelected(),browserInternetExplorer.isSelected(),browserFirefox.isSelected(),txtpath.getText(),
                         txtDBUsername.getText(),txtDBUserpwd.getText(),txtServerpath.getText());

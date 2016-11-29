@@ -1,0 +1,36 @@
+<idea-plugin version="2" xmlns:xi="http://www.w3.org/2001/XInclude">
+	<id>de.thm.icampus.joomdd.ejsl.idea</id>
+	<name>JooMDD - eJSL Editor</name>
+	<description>
+      This plugin allows the creation of eJSL models and generates installable Joomla 3.x extensions.
+	</description>
+	<version>x.x.x</version>   <!--The Version is auto incremented from gradle. You can find it in the parent project/pom.xml-->
+	<vendor>Institut für Informationswissenschaften, Technische Hochschule Mittelhessen</vendor>
+
+	<idea-version since-build="131"/>
+	<depends>org.eclipse.xtext.idea</depends>
+	<depends>com.intellij.modules.lang</depends>
+	<!--<depends>com.jetbrains.php</depends>  --> <!--Necesarry for PHPStorm take out for IntelliJ -->
+
+
+	<extensions defaultExtensionNs="com.intellij">
+		<moduleBuilder builderClass="classes.eJSLModuleBuilder" id="DEMO_STEP" order="first"/>
+		<directoryProjectGenerator implementation="classes.eJSL_PHP_ProjectGenerator"/>
+		<projectTemplatesFactory implementation="classes.eJSL_PHP_ProjectTemplatesFactory"/>
+	</extensions>
+
+	<actions>
+		<action id="eJSLFile" class="classes.eJSLFile" text= "eJSLFile">
+			<add-to-group group-id="NewGroup" anchor="first"/>
+		</action>
+	</actions>
+
+
+	<project-components>
+		<component>
+			<implementation-class>classes.InitalSettings</implementation-class>
+		</component>
+	</project-components>	
+
+	<xi:include href="plugin_gen.xml" xpointer="xpointer(/idea-plugin/*)"/>
+</idea-plugin>

@@ -8,7 +8,7 @@ dependencies {
 }
 
 ideaDevelopment {
-	ideaVersion = '143.381.42'
+	ideaVersion = '163.7743.44'  //143.381.42'
 	pluginRepositories {
 		url "http://download.eclipse.org/modeling/tmf/xtext/idea/${xtextVersion}/updatePlugins.xml"
 	}
@@ -44,6 +44,22 @@ task unzip(type: Copy){
 	into '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution'
 }
 
+
+task deletePluginXml(type: Delete){
+	description 'delete old pluginxml for live IDE'
+	group ('JooMDD_Help_Task')
+	
+	delete 'build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/META-INF/plugin.xml'
+
+}
+
+task copyDeploymentPluginXml(type: Copy, dependsOn:'deletePluginXml'){
+	description 'copy plugin Xml to Plugin'
+	group ('JooMDD_Help_Task')
+
+	from 'META-INF_deployment/plugin.xml'
+	into 'build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/META-INF/'
+}
 
 task parsePhpStormUpdatePluginsXml{
 	description 'Parse updatePlugins.xml for the new version'
@@ -186,6 +202,9 @@ task zipIntelliJ(type: Zip){
 
 	from '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/'	
 	destinationDir file("../../../releases/IntelliJ/ideaRepository")
+	doLast{
+		println "Plugin created in path: joomdd_repo/releases/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+ version +'.zip'
+	}
 }
 
 
@@ -210,7 +229,11 @@ task renamePhpStormPlugin(type: Copy){
 	
 	include(file)
 	
-	rename (file , newfile)	
+	rename (file , newfile)
+	
+	doLast{
+		println "Plugin created in path: joomdd_repo/releases/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+ version +'.zip'
+	}	
 }
 
 
@@ -232,7 +255,6 @@ task addIntelliJWizard(type: Copy){
 	into ('../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/de.thm.icampus.joomdd.ejsl.idea/classes/')
 }
 
-
 /*
 	Order of JooMDDDeploy tasks	
 		-	incrementVersion				// manual step. 
@@ -251,7 +273,7 @@ task addIntelliJWizard(type: Copy){
 */
 
 task JooMDDDeploy  (dependsOn: [
-		'ideaZip', 'deleteOldPlugin', 'unzip', 'changeVersion' , 'addIntelliJWizard', 'zipIntelliJ', 
+		'ideaZip', 'deleteOldPlugin', 'unzip', 'copyDeploymentPluginXml' , 'changeVersion' , 'addIntelliJWizard', 'zipIntelliJ', 
 		'changeDependencies', 'zipPhpStorm', 'renamePhpStormPlugin', 'deleteOldIdeaPlugin', 
 		'parsePhpStormUpdatePluginsXml', 'parseIntelliJUpdatePluginsXml']){
 	description 'Create all for deployment ... until now only IntelliJ/PhpStorm'
@@ -260,7 +282,8 @@ task JooMDDDeploy  (dependsOn: [
 	//ideaZip.mustRunAfter						incrementVersion
 	deleteOldPlugin.mustRunAfter				ideaZip
 	unzip.mustRunAfter							deleteOldPlugin
-	changeVersion.mustRunAfter 					unzip
+	copyDeploymentPluginXml.mustRunAfter		unzip
+	changeVersion.mustRunAfter 					copyDeploymentPluginXml
 	addIntelliJWizard.mustRunAfter				changeVersion
 	zipIntelliJ.mustRunAfter 					addIntelliJWizard
 	changeDependencies.mustRunAfter 			zipIntelliJ
@@ -269,4 +292,10 @@ task JooMDDDeploy  (dependsOn: [
 	deleteOldIdeaPlugin.mustRunAfter			renamePhpStormPlugin
 	parsePhpStormUpdatePluginsXml.mustRunAfter	deleteOldIdeaPlugin
 	parseIntelliJUpdatePluginsXml.mustRunAfter	parsePhpStormUpdatePluginsXml
+	
+	
+	doLast{
+		println "Deployment finished"
+	}	
 }
+

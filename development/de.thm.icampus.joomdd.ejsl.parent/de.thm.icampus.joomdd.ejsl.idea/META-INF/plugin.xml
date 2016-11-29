@@ -12,7 +12,7 @@
 	<depends>com.intellij.modules.lang</depends>
 	<!--<depends>com.jetbrains.php</depends>  --> <!--Necesarry for PHPStorm take out for IntelliJ -->
 
-
+<!--
 	<extensions defaultExtensionNs="com.intellij">
 		<moduleBuilder builderClass="classes.eJSLModuleBuilder" id="DEMO_STEP" order="first"/>
 		<directoryProjectGenerator implementation="classes.eJSL_PHP_ProjectGenerator"/>
@@ -31,7 +31,7 @@
 			<implementation-class>classes.InitalSettings</implementation-class>
 		</component>
 	</project-components>	
-
+-->	<!--Required for Wizard integration!-->
 
 	<xi:include href="plugin_gen.xml" xpointer="xpointer(/idea-plugin/*)"/>
 </idea-plugin>

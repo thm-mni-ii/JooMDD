@@ -4,6 +4,8 @@ buildscript {
     }
 }
 
+
+
 plugins {
     id "org.jetbrains.intellij" version "0.1.10"
 }
@@ -11,24 +13,82 @@ plugins {
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'eclipse'
 
-intellij {
-    version  'IC-2016.1'
-    pluginName 'ProjectWizard'
+intellij{
+    //version '143.116.4'			// old IntelliJ
+    version  'IC-2016.3' 			// new IntelliJ distribution
+	//alternativeIdePath "C:\\Program Files (x86)\\JetBrains\\PhpStorm 2016.1" //Local PhpStorm IDE
+    updateSinceUntilBuild false		// assumption of old plugin.xml build
+   
+}
+
+def xmlFile = file ('../pom.xml')
+def xmlText = xmlFile.getText()
+def parser = new XmlParser()
+def list = parser.parseText(xmlText)
+def version =  list.version[0].text() //version of Project
+
+def buildPath = "build/"
+def pluginSandbox = "build/idea-sandbox/plugins/"
+def ideabuildpath = "../de.thm.icampus.joomdd.ejsl.idea/build/distributions/de.thm.icampus.joomdd.ejsl.idea-"+version+".zip"
+def xtextIntelliJSource = "../../../releases/IntelliJ/org.eclipse.xtext.idea-2.10.0.zip"
+def xtextPhpStormSource = "../../../releases/PhpStorm/xtext_plugin/PhpStorm16/Xtext.idea-2.10.0WithDependencies2016.1.2-.zip"
+def phpStormeJSLPlugin = "../../../releases/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+version+".zip"
+def intelliJeJSLPlugin = "../../../releases/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+version+".zip"
+
+
+task cleanXtextPlugin(type: Delete){
+    description 'delete old Xtext Plugin from Sandbox'
+    group ('Jetbrinas_Wizard_Help_Task')
+    delete pluginSandbox + "org.eclipse.xtext.idea"
+}
+
+task cleaneJSLPlugin(type: Delete){
+    description 'delete old eJSL Plugin from Sandbox'
+    group ('Jetbrinas_Wizard_Help_Task')
+    delete pluginSandbox + "de.thm.icampus.joomdd.ejsl.idea"
 }
 
 task deleteOldWizardPlugin(type: Delete){
-	description 'delete old Wizard Plugin'
+	description 'delete old Wizard Plugin from wizard Sources'
 	group ('Jetbrinas_Wizard_Help_Task')
-	delete 'build/wizardSources'
+	delete buildPath+'wizardSources'
+}
+
+task addXtextPlugin(type: Copy, dependsOn: cleanXtextPlugin){
+    description 'Add Xtext IDEA Core Plugin to Sandbox (IntelliJ or PhpStorm)'
+    group ('Jetbrinas_Wizard_Help_Task')
+
+    if (intellij.alternativeIdePath == null){
+        // Load IntelliJ Xtet Plugin
+        from zipTree(xtextIntelliJSource)
+    }else{
+        // Load PhpStorm Xtext Plugin
+        from zipTree(xtextPhpStormSource)
+    }
+    into pluginSandbox
+}
+
+task addeJSLPlugin(type: Copy, dependsOn: cleaneJSLPlugin){
+    description 'add latest eJSL Plugin to Sandbox'
+    group ('Jetbrinas_Wizard_Help_Task')
+
+    if (intellij.alternativeIdePath == null){
+        // Load IntelliJ Xtet Plugin
+        from zipTree(ideabuildpath)
+    }else{
+        // Load PhpStorm Xtext Plugin
+        from zipTree(ideabuildpath)
+    }
+    into pluginSandbox
 }
 
 task createIntelliJWizardPluginSource(type: Copy, dependsOn:['buildPlugin','deleteOldWizardPlugin']){
 	description 'Creates IDEA Wizard Plugin source for Deployment'
 	group ('Jetbrinas_Wizard')
 
-    from 'build/resources/main'
-    from 'build/classes/main'
-	into 'build/wizardSources'
+    from buildPath + 'resources/main'
+    from buildPath + 'classes/main'
+	into buildPath + 'wizardSources'
 }
 
 
@@ -38,7 +98,12 @@ task buildIntelliJPlugin(dependsOn:'buildPlugin'){
 }
 
 
-task runIntelliJPlugin(dependsOn:'runIdea'){
-    description 'Create Wizard Wizard and run IntelliJ'
+task runJetbrinasIDEWithWizard(dependsOn:['cleanXtextPlugin','cleaneJSLPlugin','runIdea']){
+    description 'Create Wizard and run IntelliJ'
+    group ('Jetbrinas_Wizard')
+}
+
+task runJetbrainsIDEWithAllPlugins(dependsOn:['addXtextPlugin','addeJSLPlugin','runIdea']){
+    description 'Create Wizard, add eJSL, Xtext and run IntelliJ'
     group ('Jetbrinas_Wizard')
 }

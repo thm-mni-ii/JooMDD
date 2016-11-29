@@ -162,6 +162,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         JLabel generatorInfoLablegernerator = new JLabel("Generator options:");
         JCheckBox checkboxJoomla = new JCheckBox ("Joomla!");
         JCheckBox checkboxWordpress = new JCheckBox ("Wordpress");
+        JCheckBox checkBoxGenUpdateFolder = new JCheckBox("Generate Update Folder");
 
         JLabel lblTestConfiguration = new JLabel("Test Configuration:");
         ButtonGroup btngroupframework = new ButtonGroup();
@@ -185,7 +186,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         JCheckBox browserInternetExplorer = new JBCheckBox("Internet Explorer");
         JCheckBox browserFirefox = new JBCheckBox("Firefox                        ");
         JTextField txtbrowser = new JBTextField();
-        JLabel lblpath = new JLabel("Path:                                    ");
+        JLabel lblpath = new JLabel("Website Path:                      ");
         JTextField txtpath = new JBTextField();
         JLabel lblDBUsername = new JLabel("DB Username:                     ");
         JTextField txtDBUsername = new JBTextField();
@@ -210,8 +211,14 @@ public class eJSLWizardStep extends ModuleWizardStep {
         panelsouth2.add(checkboxJoomla, BorderLayout.CENTER);
         panelsouth2.add(checkboxWordpress, BorderLayout.WEST);
 
+        JPanel panelsouth2_1 = new JPanel(new BorderLayout());
+        panelsouth2.add(panelsouth2_1,BorderLayout.SOUTH);
+
+        panelsouth2_1.add(checkBoxGenUpdateFolder, BorderLayout.NORTH);
+
+
         JPanel panelsouth3 = new JPanel(new BorderLayout());
-        panelsouth2.add(panelsouth3,BorderLayout.SOUTH);
+        panelsouth2_1.add(panelsouth3,BorderLayout.SOUTH);
 
         /*
         panelsouth3.add(generatorInfoLableupdatefolder, BorderLayout.NORTH);
@@ -347,7 +354,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
                 setOutputPath(txtOutputPath.getText());
 
-                eJSL_PHP_Wizard_Step.createGeneratorProperties(checkboxPage.isSelected(),checkboxEntieties.isSelected(),checkboxJoomla.isSelected(),checkboxWordpress.isSelected(),
+                eJSL_PHP_Wizard_Step.createGeneratorProperties(checkboxPage.isSelected(),checkboxEntieties.isSelected(),checkboxJoomla.isSelected(),checkboxWordpress.isSelected(),checkBoxGenUpdateFolder.isSelected(),
                         radiobtnPHPUnit.isSelected(),radiobtnCodeception.isSelected(),txtHostConfiguration.getText(),txtPort.getText(),txtadminname.getText(),
                         txtadminpwd.getText(),browserChrome.isSelected(),browserInternetExplorer.isSelected(),browserFirefox.isSelected(),txtpath.getText(),
                         txtDBUsername.getText(),txtDBUserpwd.getText(),txtServerpath.getText());

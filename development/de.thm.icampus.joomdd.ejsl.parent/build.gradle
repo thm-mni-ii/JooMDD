@@ -3,9 +3,8 @@ buildscript {
 		jcenter()		
 	}
 	dependencies {
-		classpath 'org.xtext:xtext-gradle-plugin:1.0.12'  // new 1.0.12
-		classpath 'org.xtext:xtext-idea-gradle-plugin:1.0.2'
-        //classpath 'org.xtext:xtext-gradle-plugin:1.0.2'
+		classpath 'org.xtext:xtext-gradle-plugin:1.0.12'
+		classpath 'org.xtext:xtext-idea-gradle-plugin:1.0.2'      
     }
 }
 
@@ -30,8 +29,7 @@ subprojects {
 	def parser = new XmlParser()
 	def list = parser.parseText(xmlText)
 
-	version =  list.version[0].text()
-	//version =  '0.3.0'
+	version =  list.version[0].text()	
 
 	sourceCompatibility = '1.8'
 	targetCompatibility = '1.8'
@@ -40,3 +38,6 @@ subprojects {
 		exclude group: 'asm'
 	}
 }
+
+
+
