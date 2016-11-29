@@ -14,33 +14,26 @@ import de.thm.icampus.joomdd.ejsl.eJSL.ExternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.Link
+import de.thm.icampus.joomdd.ejsl.eJSL.MethodParameter
 import de.thm.icampus.joomdd.ejsl.eJSL.Module
 import de.thm.icampus.joomdd.ejsl.eJSL.Page
-import de.thm.icampus.joomdd.ejsl.eJSL.PageReference
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.eJSL.Section
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.LinkGeneratorClient
-import java.util.Calendar
-import java.util.GregorianCalendar
-import java.util.HashSet
-import java.util.LinkedList
-import java.util.List
-import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.eJSL.SectionKinds
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.eJSL.MethodParameter
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
-import org.eclipse.emf.common.util.BasicEList
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.LinkGeneratorClient
 import java.io.File
+import java.util.Calendar
+import java.util.GregorianCalendar
+import org.eclipse.emf.common.util.EList
 
 /**
  * <!-- begin-user-doc -->

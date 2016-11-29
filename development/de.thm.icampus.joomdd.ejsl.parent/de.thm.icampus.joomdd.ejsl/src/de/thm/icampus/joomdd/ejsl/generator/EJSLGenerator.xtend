@@ -3,32 +3,27 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator
 
+import com.google.inject.Inject
 import de.thm.icampus.joomdd.ejsl.eJSL.CMSExtension
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLModel
 import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.ExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 import de.thm.icampus.joomdd.ejsl.ressourceTransformator.RessourceTransformer
+import java.util.HashMap
+import java.util.Map
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess
-import com.google.inject.Inject
+import org.eclipse.xtext.generator.OutputConfiguration
 import org.eclipse.xtext.parser.IEncodingProvider
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.util.Map
-import org.eclipse.xtext.generator.OutputConfiguration
-import java.util.HashMap
-import org.eclipse.emf.common.util.URI
 import java.io.File
-import java.nio.file.Path
-import org.eclipse.core.runtime.IPath
-import org.eclipse.emf.common.util.ResourceLocator
-import org.eclipse.emf.ecore.plugin.EcorePlugin
-import java.util.ResourceBundle
-import org.eclipse.core.resources.IFile
-import org.eclipse.core.resources.ResourcesPlugin
+import java.util.Properties
+import org.eclipse.core.internal.localstore.FileSystemResourceManager
+import java.io.FileWriter
 
 /**
  * Generates code from your model files on save.
@@ -45,21 +40,52 @@ class EJSLGenerator extends AbstractGenerator {
 	@Inject
 	private IResourceServiceProvider.Registry registry;
 
+	 Properties config = new Properties()
+	override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		super.beforeGenerate(input, fsa, context)
+		if(fsa.isFile("generator.properties"))
+		config.load(fsa.readBinaryFile("generator.properties"))
+		else{
+			defaultSettings()
+		}
+		
+		
+	}
 	
-	
+	def defaultSettings() {
+		 config = new Properties();
+		
+		config.setProperty("page","true");
+		config.setProperty("entities", "true");
+		config.setProperty("test","false");
+		config.setProperty("updateFolder","true");
+		config.setProperty("joomla","true");
+		config.setProperty("wordpress","false");
+		config.setProperty("outputFolder","./src-gen");
+		
+		config.setProperty("hostconfig","http:\\localhost/");
+		config.setProperty("portconfig","4445");
+		config.setProperty("serverpath","");
+		config.setProperty("rootpath","");
+		config.setProperty("adminname","admin");
+		config.setProperty("adminpass","admin");
+		
+		config.setProperty("browser","firerfox");
+		
+	}
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
 		genData = new JavaIoFileSystemAccess(registry, encodingProvider)
-//		println( ResourcesPlugin.getWorkspace().getRoot().rawLocationURI.toString)
-//		println(new File(ResourcesPlugin.getWorkspace().getRoot().rawLocationURI.rawPath))
-        var String outputFolder = ResourcesPlugin.getWorkspace().getRoot().rawLocationURI.rawPath + fsa.getURI("").toPlatformString(true)
-        if(outputFolder.charAt(0).compareTo("/")==0)
-            outputFolder.replaceFirst("/","")
-           
-		println(outputFolder)
+	
+		
+        
+        var String outputFolder = config.getProperty("outputFolder")
+
+         println(outputFolder)
 	  		
-			genData.setOutputConfigurations(mapOutputConfigurations(outputFolder))		
+			genData.setOutputConfigurations(mapOutputConfigurations(outputFolder))	
+				
    
 		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
 			
@@ -89,8 +115,16 @@ class EJSLGenerator extends AbstractGenerator {
 				     }
 				}
 			}
+			
 			println("The code generation was successfull! \n Thank you for using this tool!")
 	}
+	
+//	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+//		super.afterGenerate(input, fsa, context)
+//		config.store(new FileWriter(config.get("outputFolder") + "/generator.properties"),"Generator configuration")
+//		
+//	}
+	
 	def Map<String, OutputConfiguration> mapOutputConfigurations(String path) {
 		var OutputConfiguration defaultOutput = new OutputConfiguration(IFileSystemAccess2.DEFAULT_OUTPUT);
 		defaultOutput.setDescription("Output Folder");
@@ -104,4 +138,5 @@ class EJSLGenerator extends AbstractGenerator {
 
 		return mapconfig
 	}
+	
 }

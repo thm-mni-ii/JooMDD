@@ -1,10 +1,9 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator
 
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class IndexPageTemplate extends DynamicPageTemplate {

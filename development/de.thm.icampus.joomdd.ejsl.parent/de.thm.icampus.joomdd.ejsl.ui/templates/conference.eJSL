@@ -165,7 +165,7 @@ eJSLModel "Conference" {
 			}
 		}
 		extensions {
-			Component Simple_Conference {
+			Component SimpleConference {
 				Manifestation {
 					authors {
 						Author "John Doe" {

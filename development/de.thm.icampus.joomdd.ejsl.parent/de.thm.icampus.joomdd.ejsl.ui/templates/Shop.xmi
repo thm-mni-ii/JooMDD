@@ -169,6 +169,7 @@
         <pageRef page="//@ejslPart/@feature/@pages.1"/>
         <pageRef page="//@ejslPart/@feature/@pages.2"/>
         <pageRef page="//@ejslPart/@feature/@pages.3"/>
+        <pageRef page="//@ejslPart/@feature/@pages.0"/>
       </sections>
       <sections xsi:type="eJSL:BackendSection">
         <pageRef page="//@ejslPart/@feature/@pages.0"/>
@@ -184,6 +185,60 @@
         <pageRef page="//@ejslPart/@feature/@pages.10"/>
         <pageRef page="//@ejslPart/@feature/@pages.11"/>
       </sections>
+    </extensions>
+    <extensions xsi:type="eJSL:Module" name="Customers">
+      <manifest copyright="Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved." license="GNU General Public License version 2 or later; see LICENSE.txt" version="1.0.1" description="this a good thing">
+        <authors name="Peter Janauschek" authoremail="peter.janauschek@mni.thm.de" authorurl="www.test.de"/>
+      </manifest>
+      <languages name="de-DE"/>
+      <languages name="en-GB"/>
+      <pageRef page="//@ejslPart/@feature/@pages.0" sect=".frontend">
+        <pagescr ref="//@ejslPart/@extensions.0"/>
+      </pageRef>
+    </extensions>
+    <extensions xsi:type="eJSL:ExtensionPackage" name="Shop">
+      <manifest copyright="Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved." license="GNU General Public License version 2 or later; see LICENSE.txt" version="1.0.1" description="this a good thing">
+        <authors name="Peter Janauschek" authoremail="peter.janauschek@mni.thm.de" authorurl="www.test.de"/>
+      </manifest>
+      <languages name="de-DE"/>
+      <languages name="en-GB"/>
+      <extensions xsi:type="eJSL:Component" name="ExampleShop">
+        <manifest copyright="Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved." license="GNU General Public License version 2 or later; see LICENSE.txt" version="1.0.1" description="this a good thing">
+          <authors name="Peter Janauschek" authoremail="peter.janauschek@mni.thm.de" authorurl="www.test.de"/>
+        </manifest>
+        <languages name="de-DE"/>
+        <languages name="en-GB"/>
+        <sections xsi:type="eJSL:FrontendSection">
+          <pageRef page="//@ejslPart/@feature/@pages.1"/>
+          <pageRef page="//@ejslPart/@feature/@pages.2"/>
+          <pageRef page="//@ejslPart/@feature/@pages.3"/>
+          <pageRef page="//@ejslPart/@feature/@pages.0"/>
+        </sections>
+        <sections xsi:type="eJSL:BackendSection">
+          <pageRef page="//@ejslPart/@feature/@pages.0"/>
+          <pageRef page="//@ejslPart/@feature/@pages.1"/>
+          <pageRef page="//@ejslPart/@feature/@pages.2"/>
+          <pageRef page="//@ejslPart/@feature/@pages.3"/>
+          <pageRef page="//@ejslPart/@feature/@pages.6"/>
+          <pageRef page="//@ejslPart/@feature/@pages.7"/>
+          <pageRef page="//@ejslPart/@feature/@pages.4"/>
+          <pageRef page="//@ejslPart/@feature/@pages.5"/>
+          <pageRef page="//@ejslPart/@feature/@pages.8"/>
+          <pageRef page="//@ejslPart/@feature/@pages.9"/>
+          <pageRef page="//@ejslPart/@feature/@pages.10"/>
+          <pageRef page="//@ejslPart/@feature/@pages.11"/>
+        </sections>
+      </extensions>
+      <extensions xsi:type="eJSL:Module" name="Customers">
+        <manifest copyright="Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved." license="GNU General Public License version 2 or later; see LICENSE.txt" version="1.0.1" description="this a good thing">
+          <authors name="Peter Janauschek" authoremail="peter.janauschek@mni.thm.de" authorurl="www.test.de"/>
+        </manifest>
+        <languages name="de-DE"/>
+        <languages name="en-GB"/>
+        <pageRef page="//@ejslPart/@feature/@pages.0" sect=".frontend">
+          <pagescr ref="//@ejslPart/@extensions.2/@extensions.0"/>
+        </pageRef>
+      </extensions>
     </extensions>
   </ejslPart>
 </eJSL:EJSLModel>

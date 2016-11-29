@@ -6,7 +6,6 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import java.util.Calendar
-import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**

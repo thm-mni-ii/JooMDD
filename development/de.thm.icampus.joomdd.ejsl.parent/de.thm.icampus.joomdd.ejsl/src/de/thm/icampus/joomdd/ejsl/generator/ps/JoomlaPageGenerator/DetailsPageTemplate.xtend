@@ -1,16 +1,14 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator
 
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import org.eclipse.xtext.generator.IFileSystemAccess
-import java.io.File
-import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class DetailsPageTemplate extends   DynamicPageTemplate {

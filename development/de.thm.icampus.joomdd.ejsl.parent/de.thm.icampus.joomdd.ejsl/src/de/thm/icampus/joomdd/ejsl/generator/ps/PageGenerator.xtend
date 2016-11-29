@@ -1,18 +1,16 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps
 
-import org.eclipse.xtext.generator.IFileSystemAccess
-import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.eJSL.Page
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedPageImpl
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.joomdd.ejsl.eJSL.Page
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedPageImpl
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
 import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class PageGenerator extends AbstracteGenerator {

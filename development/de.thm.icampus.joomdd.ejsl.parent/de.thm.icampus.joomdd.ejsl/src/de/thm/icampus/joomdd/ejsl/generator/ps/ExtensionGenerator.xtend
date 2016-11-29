@@ -1,9 +1,8 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps
 
-import org.eclipse.xtext.generator.IFileSystemAccess
-import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator.ExtensionGeneratorClient
+import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class ExtensionGenerator extends AbstracteGenerator{

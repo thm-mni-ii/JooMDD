@@ -1,23 +1,22 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps
 
+import de.thm.icampus.joomdd.ejsl.eJSL.Component
+import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntityClient
-import org.eclipse.emf.common.util.BasicEList
-import org.eclipse.emf.common.util.EList
-import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
-import de.thm.icampus.joomdd.ejsl.eJSL.Component
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsCardinalityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntityClient
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.TableGeneratorTemplate
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsCardinalityGenerator
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 class EntityGenerator extends AbstracteGenerator {

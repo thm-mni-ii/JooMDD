@@ -1,12 +1,9 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator
 
+import de.thm.icampus.joomdd.ejsl.eJSL.Reference
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
-import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.eJSL.Entity
-import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 
 class FieldsCardinalityGenerator extends FieldsGenerator {

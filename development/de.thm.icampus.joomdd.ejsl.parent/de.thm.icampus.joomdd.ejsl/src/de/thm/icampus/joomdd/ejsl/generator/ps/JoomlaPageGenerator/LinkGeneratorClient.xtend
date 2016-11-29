@@ -2,11 +2,10 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator
 
-import org.eclipse.emf.ecore.EObject;
-import de.thm.icampus.joomdd.ejsl.eJSL.Link
+import de.thm.icampus.joomdd.ejsl.eJSL.ContextLink
 import de.thm.icampus.joomdd.ejsl.eJSL.ExternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
-import de.thm.icampus.joomdd.ejsl.eJSL.ContextLink
+import de.thm.icampus.joomdd.ejsl.eJSL.Link
 
 public class LinkGeneratorClient  {
 	
