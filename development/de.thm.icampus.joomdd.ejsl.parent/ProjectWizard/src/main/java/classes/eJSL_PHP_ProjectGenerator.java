@@ -80,7 +80,7 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
             src.mkdir();
             src_gen.mkdir();
             FileWriter fw = new FileWriter(project.getBasePath() + "/src/Model.eJSL");
-            FileWriter fwproperties = new FileWriter(project.getBasePath() + "/src/generator.properties");
+            FileWriter fwproperties = new FileWriter(project.getBasePath() + "/src-gen/generator.properties");
 
             FileReader fr = new FileReader(PathUtil.getJarPathForClass(getClass()) + "/templates/"+eJSL_PHP_Wizard_Step.getOption() );
             BufferedReader br = new BufferedReader(fr);
