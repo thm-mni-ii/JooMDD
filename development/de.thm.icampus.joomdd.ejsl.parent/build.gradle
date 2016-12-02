@@ -39,5 +39,15 @@ subprojects {
 	}
 }
 
+task JooMDDDeploy(){
+	group ('joomdd')
+    description = "Test: run unit tests"
+    	
+	doLast{
+		println "Deployment finished"
+	}	
+}
 
+JooMDDDeploy.dependsOn(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+JooMDDDeploy.dependsOn(":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains")
 

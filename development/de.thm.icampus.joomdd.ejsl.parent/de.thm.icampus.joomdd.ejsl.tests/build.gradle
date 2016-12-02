@@ -6,3 +6,29 @@ dependencies {
 //this is an eclipse plugin project
 eclipseClasspath.enabled=false
 cleanEclipseClasspath.enabled=false
+
+
+task cleanBuildFolder(type: Delete){
+	group ('JooMDD_help_task')
+    description = "Test: Copy Test Resources in Build folder"
+	delete 'build/classes/test/'
+}
+
+task copyTestResources(type: Copy, dependsOn: 'cleanBuildFolder') {	
+	group ('JooMDD_help_task')
+    description = "Test: Copy Test Resources in Build folder"
+    
+    from('testdata/')
+    from('../de.thm.icampus.joomdd.ejsl.ui/templates/')
+	into('build/classes/test/')    
+}
+
+
+task runJUnitTest(dependsOn: ['copyTestResources', 'test']){
+	group ('JooMDD_help_task')
+    description = "Test: run unit tests"
+	
+	test.mustRunAfter	copyTestResources
+}
+
+

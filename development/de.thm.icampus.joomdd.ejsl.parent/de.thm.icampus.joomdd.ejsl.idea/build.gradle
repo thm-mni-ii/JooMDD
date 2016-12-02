@@ -261,6 +261,7 @@ task addIntelliJWizard(type: Copy){
 		-	ideaZip							(xtext gradle standard)
 		-	deleteOldPlugin
 		-	unzip
+		-	copyDeploymentPluginXml
 		-	changeVersion
 		-	addIntelliJWizard
 		-	zipIntelliJ
@@ -272,12 +273,12 @@ task addIntelliJWizard(type: Copy){
 		-	parseIntelliJUpdatePluginsXml
 */
 
-task JooMDDDeploy  (dependsOn: [
+task JooMDDDeployJetBrains  (dependsOn: [
 		'ideaZip', 'deleteOldPlugin', 'unzip', 'copyDeploymentPluginXml' , 'changeVersion' , 'addIntelliJWizard', 'zipIntelliJ', 
 		'changeDependencies', 'zipPhpStorm', 'renamePhpStormPlugin', 'deleteOldIdeaPlugin', 
 		'parsePhpStormUpdatePluginsXml', 'parseIntelliJUpdatePluginsXml']){
 	description 'Create all for deployment ... until now only IntelliJ/PhpStorm'
-	group ('JooMDD')
+	group ('JooMDD_Help_Task')
 
 	//ideaZip.mustRunAfter						incrementVersion
 	deleteOldPlugin.mustRunAfter				ideaZip
@@ -293,9 +294,6 @@ task JooMDDDeploy  (dependsOn: [
 	parsePhpStormUpdatePluginsXml.mustRunAfter	deleteOldIdeaPlugin
 	parseIntelliJUpdatePluginsXml.mustRunAfter	parsePhpStormUpdatePluginsXml
 	
-	
-	doLast{
-		println "Deployment finished"
-	}	
+
 }
 
