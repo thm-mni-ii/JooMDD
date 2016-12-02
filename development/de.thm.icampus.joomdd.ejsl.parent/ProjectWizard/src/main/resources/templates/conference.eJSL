@@ -39,7 +39,7 @@ eJSLModel "Conference" {
 						lower = 1
 						upper = 1
 					}
-				}
+				} 
 			}
 			Entity Room {
 				attributes {
@@ -165,7 +165,7 @@ eJSLModel "Conference" {
 			}
 		}
 		extensions {
-			Component Simple_Conference {
+			Component SimpleConference {
 				Manifestation {
 					authors {
 						Author "John Doe" {
@@ -203,6 +203,6 @@ eJSLModel "Conference" {
 					}
 				}
 			}
-		}
+		}	
 	}
 }

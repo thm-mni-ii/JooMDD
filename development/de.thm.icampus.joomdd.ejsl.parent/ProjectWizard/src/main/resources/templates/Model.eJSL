@@ -108,7 +108,7 @@ eJSLModel "name of the model" {
 				sections {
 					Frontend section{ 
 					   *Pages {
-						    *Page : DetailsPage1 from : Component1.backend
+						    *Page : DetailsPage1 from : Component1 section .backend
 						    *Page : IndexPage1
 					   }
 					}

@@ -16,9 +16,8 @@ apply plugin: 'eclipse'
 intellij{
     //version '143.116.4'			// old IntelliJ
     version  'IC-2016.3' 			// new IntelliJ distribution
-	//alternativeIdePath "C:\\Program Files (x86)\\JetBrains\\PhpStorm 2016.1" //Local PhpStorm IDE
+	//alternativeIdePath "C:\\Program Files (x86)\\JetBrains\\PhpStorm 2016.3" //Local PhpStorm IDE
     updateSinceUntilBuild false		// assumption of old plugin.xml build
-   
 }
 
 def xmlFile = file ('../pom.xml')
@@ -34,7 +33,7 @@ def xtextIntelliJSource = "../../../releases/IntelliJ/org.eclipse.xtext.idea-2.1
 def xtextPhpStormSource = "../../../releases/PhpStorm/xtext_plugin/PhpStorm16/Xtext.idea-2.10.0WithDependencies2016.1.2-.zip"
 def phpStormeJSLPlugin = "../../../releases/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+version+".zip"
 def intelliJeJSLPlugin = "../../../releases/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+version+".zip"
-
+def templatePath = "../de.thm.icampus.joomdd.ejsl.ui/templates/"
 
 task cleanXtextPlugin(type: Delete){
     description 'delete old Xtext Plugin from Sandbox'
@@ -82,28 +81,47 @@ task addeJSLPlugin(type: Copy, dependsOn: cleaneJSLPlugin){
     into pluginSandbox
 }
 
-task createIntelliJWizardPluginSource(type: Copy, dependsOn:['buildPlugin','deleteOldWizardPlugin']){
-	description 'Creates IDEA Wizard Plugin source for Deployment'
-	group ('Jetbrinas_Wizard')
-
-    from buildPath + 'resources/main'
-    from buildPath + 'classes/main'
-	into buildPath + 'wizardSources'
-}
-
-
 task buildIntelliJPlugin(dependsOn:'buildPlugin'){
     description 'Create standalone IntelliJ Wizard zip file'
     group ('Jetbrinas_Wizard_Help_Task')
 }
 
 
-task runJetbrinasIDEWithWizard(dependsOn:['cleanXtextPlugin','cleaneJSLPlugin','runIdea']){
-    description 'Create Wizard and run IntelliJ'
-    group ('Jetbrinas_Wizard')
+task deleteTemplates(type: Delete){
+	description 'delete old Templates'
+	group ('Jetbrinas_Wizard_Help_Task')
+	
+	delete "src/main/resources/templates/"
+	
 }
 
-task runJetbrainsIDEWithAllPlugins(dependsOn:['addXtextPlugin','addeJSLPlugin','runIdea']){
+task copyNewTemplates(type: Copy, dependsOn:'deleteTemplates'){
+	description 'copy Templates from Ui Project'
+	group ('Jetbrinas_Wizard_Help_Task')
+	
+	from templatePath
+	into "src/main/resources/templates/"	
+}
+
+task createIntelliJWizardPluginSource(type: Copy, dependsOn:['copyNewTemplates','buildPlugin','deleteOldWizardPlugin']){
+	description 'Creates IDEA Wizard Plugin source for Deployment'
+	group ('Jetbrinas_Wizard')
+	
+	compileJava.mustRunAfter	copyNewTemplates
+
+    from buildPath + 'resources/main'
+    from buildPath + 'classes/main'
+	into buildPath + 'wizardSources'
+}
+
+task runJetbrinasIDEWithWizard(dependsOn:['copyNewTemplates','cleanXtextPlugin','cleaneJSLPlugin','runIdea']){
+    description 'Create Wizard and run IntelliJ'
+    group ('Jetbrinas_Wizard')
+	compileJava.mustRunAfter	copyNewTemplates
+}
+
+task runJetbrainsIDEWithAllPlugins(dependsOn:['copyNewTemplates','addXtextPlugin','addeJSLPlugin','runIdea']){
     description 'Create Wizard, add eJSL, Xtext and run IntelliJ'
     group ('Jetbrinas_Wizard')
+    compileJava.mustRunAfter	copyNewTemplates
 }

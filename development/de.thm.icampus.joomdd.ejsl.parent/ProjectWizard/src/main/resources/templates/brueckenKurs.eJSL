@@ -4,19 +4,19 @@ eJSLModel "Brueckenkurs"{
 			Entity Teilnehemer{                            
 				attributes {            
 					Attribute name {
-						type = Textfield  Not Null Unique attribute with ID
+						type = Short_Text  Not Null Unique attribute with ID
 					}
 					Attribute vorname {   
-						type = Textfield Not Null 
+						type = Short_Text Not Null 
 					}
 					Attribute geburtsdatum {       
-						type = Textfield Not Null 
+						type = Short_Text Not Null 
 					} 
 					 Attribute adresse {                
-					 	type = Textfield       
+					 	type = Short_Text       
 					 }     
 					 Attribute kursgruppe{     
-					 	type = Textfield  
+					 	type = Short_Text  
 					 } 
 				}   
 				references {
@@ -27,10 +27,10 @@ eJSLModel "Brueckenkurs"{
 			Entity Kurs{ 
 				attributes {
 					Attribute titel { 
-						type = Textfield Not Null Unique attribute with ID
+						type = Short_Text Not Null Unique attribute with ID
 					}
 					Attribute kurzfassung {
-						type = Textarea
+						type = Text
 					}
 					Attribute creditpoint{
 						type = Integer
@@ -40,19 +40,19 @@ eJSLModel "Brueckenkurs"{
 			Entity Tutor {
 				attributes {
 						Attribute name {
-						type = Textfield  Not Null Unique attribute with ID
+						type = Short_Text  Not Null Unique attribute with ID
 					}
 					Attribute vorname {
-						type = Textfield Not Null
+						type = Short_Text Not Null
 					}
 					Attribute geschlecht {
-						type = Textfield Not Null
+						type = Short_Text Not Null
 					}
 					Attribute geburtsdatum {
-						type = Textfield Not Null
+						type = Short_Text Not Null
 					}
 					Attribute kurs {
-						type = Textfield Not Null
+						type = Short_Text Not Null
 					}
 				}
 				references {
@@ -62,7 +62,7 @@ eJSLModel "Brueckenkurs"{
 			Entity Kurstermin {
 				attributes {
 					Attribute Gruppename {
-						type = Textfield Not Null Unique attribute with ID
+						type = Short_Text Not Null Unique attribute with ID
 					}
 					Attribute date {
 						type = Datetime
@@ -72,10 +72,10 @@ eJSLModel "Brueckenkurs"{
 					}				
 					
 					Attribute kurs {
-						type = Textfield Not Null
+						type = Short_Text Not Null
 					}
 					Attribute Raum {
-						type = Textfield Not Null
+						type = Short_Text Not Null
 					}
 				}
 				references {
@@ -119,7 +119,7 @@ eJSLModel "Brueckenkurs"{
 				}
 				pageactions {     
 					PageAction zurueck {
-						type = Button position = top 
+						type = CANCEL position = top 
 					}
 				}
 				table columns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe , Teilnehemer.geburtsdatum, Teilnehemer.adresse
@@ -153,7 +153,7 @@ eJSLModel "Brueckenkurs"{
 				
 				pageactions {
 					PageAction zurueck {
-						type = Button position = top 
+						type = CANCEL position = top 
 					}
 				}
 				
@@ -194,7 +194,7 @@ eJSLModel "Brueckenkurs"{
 				
 				pageactions {
 					PageAction zurueck {
-						type = Button position = top 
+						type = CANCEL position = top 
 					}
 				}
 				table columns = Tutor.name,Tutor.vorname, Tutor.kurs
@@ -235,7 +235,7 @@ eJSLModel "Brueckenkurs"{
 				}
 				pageactions {
 					PageAction zurueck {
-						type = Button position = top 
+						type = CANCEL position = top 
 					}
 				}
 			table columns = Kurstermin.Gruppename,Kurstermin.kurs,Kurstermin.Raum,Kurstermin.date,Kurstermin.tag
