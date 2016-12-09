@@ -77,3 +77,25 @@ task updateVersion(dependsOn : [ 'copyBackupManifest', 'deleteOriginManifest','u
 	updateManifestVersion.mustRunAfter		deleteOriginManifest
 	deleteOriginManifest.mustRunAfter		copyBackupManifest
 }
+
+
+task deleteXtendGen (type: Delete){
+	description 'delete Xtend-Gen Folder for the Project'
+	group ('JooMDD_Help_Task')
+	
+	delete('/xtend-gen/')
+}
+
+ant.importBuild 'CreateGenFolders.xml'
+
+task runAntScript(dependsOn: make){
+	description 'runs Ant Skript'
+	group ('JooMDD_Help_Task')
+}
+
+task regrenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript']){
+	description 'delete and create xtend gen'
+	group ('JooMDD')
+
+	runAntScript.mustRunAfter	deleteXtendGen
+}
