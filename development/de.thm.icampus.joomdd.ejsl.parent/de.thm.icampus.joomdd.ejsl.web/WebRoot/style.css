@@ -24,33 +24,35 @@ a:hover {
 	margin: 20px;
 }
 
-.header {
-	display: block;
-	position: absolute;
-	background-color: #e8e8e8;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 60px;
-	padding: 10px;
+.logo {
+	max-width: 100%;
 }
 
+button.blue, .blue {
+	background-color: #0070C0;
+	
+}
+
+
+
 .content {
-	display: block;
-	position: absolute;
-	top: 90px;
-	bottom: 0;
-	left: 0;
-	width: 640px;
+	display: flex;
+}
+
+.item {
+
+}
+
+.filetree {
+	margin-top: 20px;
 }
 
 #xtext-editor {
-	display: block;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	padding: 4px;
-	border: 1px solid #aaa;
+	min-width: 60%;
+	min-height: 80%;
+	margin-top: 10px;
+	margin-right: 20px;
+}
+.intro {
+
 }
