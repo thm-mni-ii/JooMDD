@@ -169,6 +169,7 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		checkChrome.setText("Chrome");
 		checkFirefox = new Button(browser, SWT.RADIO);
 		checkFirefox.setText("Firefox");
+		checkFirefox.setSelection(true);
 		checkie = new Button(browser, SWT.RADIO);
 		checkie.setText("IE");
 	    
@@ -198,10 +199,13 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		listKonfig.setProperty("updateFolder",checkUpdateFolder.getEnabled()+"");
 		listKonfig.setProperty("joomla","true");
 		listKonfig.setProperty("wordpress","false");
-		if(src_path.equalsIgnoreCase("./src-gen"))
+		if(src_path.equalsIgnoreCase("./src-gen")){
 		listKonfig.setProperty("outputFolder", src_gen.getAbsolutePath());
+		src_path = src_gen.getAbsolutePath();
+		}
 		else{
 			listKonfig.setProperty("outputFolder", generatorPath.getText());
+			src_path = generatorPath.getText();
 		}
 		listKonfig.setProperty("hostconfig",hostconfig.getText());
 		listKonfig.setProperty("portconfig",portconfig.getText());
@@ -218,10 +222,10 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		
 		
 		try {
-			FileWriter genproperties = new FileWriter(src.getAbsolutePath() + "/generator.properties");
-			genproperties.write(listKonfig.toString());
-			genproperties.flush();
-			genproperties.close();
+			FileWriter genproperties = new FileWriter(src_path + "/generator.properties");
+			listKonfig.store(genproperties, "Generator configuration");
+			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
