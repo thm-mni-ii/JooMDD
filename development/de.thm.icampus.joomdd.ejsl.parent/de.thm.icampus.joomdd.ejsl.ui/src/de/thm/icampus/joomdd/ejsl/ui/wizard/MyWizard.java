@@ -43,10 +43,13 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 
 	private static final String PAGE_NAME_1 = "Custom Plug-in Project Wizard 1"; //$NON-NLS-1$
 	private static final String PAGE_NAME_2 = "Custom Plug-in Project Wizard 2"; //$NON-NLS-1$
+	private static final String PAGE_NAME_3 = "Custom Plug-in Project Wizard 3"; //$NON-NLS-1$
 	private static final String WIZARD_NAME = "New EJSL Project"; //$NON-NLS-1$
 	
 	private WizardNewProjectCreationPage _pageOne;
 	private TemplateSelectionPage _pageTwo;
+	private TemplateConfigurationPage _pageTree;
+	
 	
 	private EJSLProjectInfo epi;
 	private IProject newProject;
@@ -65,8 +68,10 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this._workbench = workbench;
+		
 		 _pageOne = new WizardNewProjectCreationPage(PAGE_NAME_1);
 		 _pageTwo = new TemplateSelectionPage(PAGE_NAME_2, true);
+		 _pageTree = new TemplateConfigurationPage(PAGE_NAME_3, "");
 		 
 		 try {
 			imgFolder = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("img"), null));
@@ -101,9 +106,13 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 	
 		 _pageTwo.setTitle("EJSL Template");
 		 _pageTwo.setDescription("Select an EJSL template.");
+		 _pageTree.setTitle("EJSL Template");
+		 _pageTree.setDescription("Select Generator Configuration.");
 		 
 		 addPage(_pageOne);
 		 addPage(_pageTwo);
+		 addPage(_pageTree);
+	
 	 }
 
 	@Override
@@ -113,8 +122,10 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 		File workspace = _pageOne.getLocationPath().toFile();
 		File project = new File(workspace, _pageOne.getProjectName());
 		try {	
-			new File(project, "src").mkdir();
-			new File(project, "src-gen").mkdir();
+			File src = new File(project, "src");
+			src.mkdir();
+			File src_gen = new File(project, "src-gen");
+			src_gen.mkdir();
 			FileWriter fw = new FileWriter(new File(project, ".classpath"));
 			fw.write(epi.classpathFile());
 			fw.close();
@@ -123,7 +134,8 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 				public InputStream getInput() throws IOException {
 					return _pageTwo.getSelectedTemplate();
 				}
-			}, new File(project, "src/" + _pageTwo.getFileName()));		
+			}, new File(project, "src/" + _pageTwo.getFileName()));	
+			_pageTree.saveConfig(src, src_gen);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e){
@@ -155,6 +167,7 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 		
 		BasicNewProjectResourceWizard.updatePerspective(cfge);
 		BasicNewProjectResourceWizard.selectAndReveal(newProject, _workbench.getActiveWorkbenchWindow());
+		
 		
 		return true;
 	}

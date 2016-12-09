@@ -50,24 +50,7 @@ class EJSLGenerator extends AbstractGenerator {
 	}
 	
 	def defaultSettings() {
-		 config = new Properties();
 		
-		config.setProperty("page","true");
-		config.setProperty("entities", "true");
-		config.setProperty("test","false");
-		config.setProperty("updateFolder","true");
-		config.setProperty("joomla","true");
-		config.setProperty("wordpress","false");
-		config.setProperty("outputFolder","./src-gen");
-		
-		config.setProperty("hostconfig","http:\\localhost/");
-		config.setProperty("portconfig","4445");
-		config.setProperty("serverpath","");
-		config.setProperty("rootpath","");
-		config.setProperty("adminname","admin");
-		config.setProperty("adminpass","admin");
-		
-		config.setProperty("browser","firerfox");
 		
 	}
 	

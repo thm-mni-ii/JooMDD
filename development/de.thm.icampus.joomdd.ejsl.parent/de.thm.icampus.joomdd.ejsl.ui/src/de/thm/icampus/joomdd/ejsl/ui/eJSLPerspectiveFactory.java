@@ -23,6 +23,7 @@ public class eJSLPerspectiveFactory implements IPerspectiveFactory {
         layout.addShowViewShortcut(IPageLayout.ID_OUTLINE);
         layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
         layout.addShowViewShortcut(IPageLayout.ID_TASK_LIST);
+      
 	}
 	
 	public void defineLayout(IPageLayout layout) {
