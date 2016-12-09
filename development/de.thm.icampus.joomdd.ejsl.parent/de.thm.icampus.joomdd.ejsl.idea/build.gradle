@@ -160,41 +160,7 @@ task changeVersion{
 }
 
 
-task incrementVersion{
-	description 'Increment the Version for the Project'
-	group ('JooMDD')
 
-	doLast{	
-		def xmlFile = file ('../pom.xml')
-		def xmlText = xmlFile.getText()	
-		def parser = new XmlParser()	
-		def list = parser.parseText(xmlText)
-
-		def lastversion = list.version[0].text()		
-
-		def newversion
-
-		if (lastversion.charAt(lastversion.length()-2) != ".")
-		{	
-			newversion= lastversion.substring(0,lastversion.length()-2) + (lastversion[lastversion.length()-2..lastversion.length()-1].toInteger() + 1)		
-		}else
-		{
-			newversion = lastversion.substring(0,lastversion.length()-1) + (lastversion[lastversion.length()-1].toInteger() + 1)
-		}			
-	
-		println "Newversion=" + newversion		
-
-		list.version[0].replaceNode{		
-				version(newversion){}		
-		}	
-		
-		def writer = new FileWriter(xmlFile)
-		
-		def printer = new XmlNodePrinter(new PrintWriter(writer))
-		printer.preserveWhitespace = true
-		printer.print(list)		
-	}
-}
 
 task zipIntelliJ(type: Zip){
 	description 'Zip and copy IDEA Plugin to releases'
@@ -277,10 +243,10 @@ task JooMDDDeployJetBrains  (dependsOn: [
 		'ideaZip', 'deleteOldPlugin', 'unzip', 'copyDeploymentPluginXml' , 'changeVersion' , 'addIntelliJWizard', 'zipIntelliJ', 
 		'changeDependencies', 'zipPhpStorm', 'renamePhpStormPlugin', 'deleteOldIdeaPlugin', 
 		'parsePhpStormUpdatePluginsXml', 'parseIntelliJUpdatePluginsXml']){
-	description 'Create all for deployment ... until now only IntelliJ/PhpStorm'
+	description 'Create all for deployment resources for IntelliJ/PhpStorm'
 	group ('JooMDD_Help_Task')
 
-	//ideaZip.mustRunAfter						incrementVersion
+	//ideaZip.mustRunAfter						incrementVersion	// versioning is at the moment a manual task
 	deleteOldPlugin.mustRunAfter				ideaZip
 	unzip.mustRunAfter							deleteOldPlugin
 	copyDeploymentPluginXml.mustRunAfter		unzip

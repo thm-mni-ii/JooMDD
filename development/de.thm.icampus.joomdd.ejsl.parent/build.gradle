@@ -39,15 +39,360 @@ subprojects {
 	}
 }
 
-task JooMDDDeploy(){
-	group ('joomdd')
-    description = "Test: run unit tests"
-    	
-	doLast{
-		println "Deployment finished"
-	}	
+
+task incrementPatchLevelVersion{
+	description 'Increment the Patch level Version for the Project'
+	group ('JooMDD')
+
+	doLast{	
+		def xmlFile = file ('/pom.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()	
+		def list = parser.parseText(xmlText)
+
+		def lastversion = list.version[0].text()		
+		
+		def a = 0
+		def newMajorVersion
+		def newMinorVersion
+		def newPatchVersion
+		 
+		(lastversion =~ /(\d+)/).each { match, digit -> 
+			if (a == 0){
+				newMajorVersion = "$digit"		
+			}else if (a == 1){
+				newMinorVersion = "$digit"				
+			}else if (a == 2){
+				newPatchVersion = "$digit"
+				newPatchVersion = newPatchVersion.toInteger()+1
+			}
+			a = a +1
+		}
+		
+		def newVersion = newMajorVersion + '.' + newMinorVersion + '.' + newPatchVersion
+		println "NewVersion:"+newVersion
+		
+		
+		list.version[0].replaceNode{		
+				version(newVersion){}		
+		}	
+		
+		def writer = new FileWriter(xmlFile)
+		
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
 }
 
-JooMDDDeploy.dependsOn(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
-JooMDDDeploy.dependsOn(":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains")
+
+task incrementMinorVersion{
+	description 'Increment the Minor Version for the Project'
+	group ('JooMDD')
+
+	doLast{	
+		def xmlFile = file ('/pom.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()	
+		def list = parser.parseText(xmlText)
+
+		def lastversion = list.version[0].text()
+		
+		def a = 0
+		def newMajorVersion
+		def newMinorVersion
+		def newPatchVersion
+		 
+		(lastversion =~ /(\d+)/).each { match, digit -> 
+			if (a == 0){
+				newMajorVersion = "$digit"		
+			}else if (a == 1){
+				newMinorVersion = "$digit"
+				newMinorVersion = newMinorVersion.toInteger()+1
+			}else if (a == 2){
+				newPatchVersion = "$digit"
+			}
+			a = a +1
+		}
+		
+		def newVersion = newMajorVersion + '.' + newMinorVersion + '.' + '0'
+		println "NewVersion:"+newVersion
+		version = newVersion
+				
+		list.version[0].replaceNode{		
+				version(newVersion){}		
+		}	
+		
+		def writer = new FileWriter(xmlFile)
+		
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+		
+		
+	}
+}
+
+task incrementMajorVersion{
+	description 'Increment the Major Version for the Project'
+	group ('JooMDD')
+
+	doLast{	
+		def xmlFile = file ('/pom.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()	
+		def list = parser.parseText(xmlText)
+
+		def lastversion = list.version[0].text()		
+		
+		def a = 0
+		def newMajorVersion
+		def newMinorVersion
+		def newPatchVersion
+		 
+		(lastversion =~ /(\d+)/).each { match, digit -> 
+			if (a == 0){
+				newMajorVersion = "$digit"		
+				newMajorVersion = newMajorVersion.toInteger()+1
+			}else if (a == 1){
+				newMinorVersion = "$digit"				
+			}else if (a == 2){
+				newPatchVersion = "$digit"
+			}
+			a = a +1
+		}
+		
+		def newVersion = newMajorVersion + '.' + '0' + '.' + '0'
+		println "NewVersion:"+newVersion
+		
+		
+		list.version[0].replaceNode{		
+				version(newVersion){}		
+		}	
+		
+		def writer = new FileWriter(xmlFile)
+		
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
+}
+
+/*
+	Update Version for UI project
+
+*/
+task updateUIPomVersion{
+	description 'Update the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	doLast{	
+		def xmlFile = file ('/de.thm.icampus.joomdd.ejsl.ui/pom.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()
+		def list = parser.parseText(xmlText)
+		
+		
+		list.parent[0].version[0].replaceNode{		
+				version(version){}	
+		}
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
+}
+
+
+task updateUIManifestVersion(type: Copy){
+	description 'Update the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	def manifestFile = file ('/META-INF/MANIFEST.MF')	
+    def number = '[0|1|2|3|4|5|6|7|8|9]*' 
+	
+	from('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/MANIFEST.MF'){		
+		filter{String line -> line.replaceAll('Bundle-Version: '+number+'.'+number+'.'+number , 'Bundle-Version: '+ version)} 
+	}	
+	into('/de.thm.icampus.joomdd.ejsl.ui/META-INF/')
+}
+
+task deleteUIOriginManifest(type: Delete){
+	description 'delete the Original Manifest file'
+	group ('JooMDD_Help_Task')
+	
+	delete('/de.thm.icampus.joomdd.ejsl.ui/META-INF/')
+}
+
+
+task deleteUIBackupManifest(type: Delete){
+	description 'delete the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	delete('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
+}
+
+task copyUIBackupManifest(type: Copy){
+	description 'Update the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	from('/de.thm.icampus.joomdd.ejsl.ui/META-INF/MANIFEST.MF')	
+	
+	into('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
+}
+
+task loadVersion{
+	description 'Update the Version for the Project ejsl'
+	group ('JooMDD_Help_Task')
+	
+	def xmlFile = file ('/pom.xml')
+	def xmlText = xmlFile.getText()
+	def parser = new XmlParser()
+	def list = parser.parseText(xmlText)
+
+	version =  list.version[0].text()	
+
+}
+
+task updateUIVersion(dependsOn : [ 'loadVersion','copyUIBackupManifest', 'deleteUIOriginManifest','updateUIManifestVersion', 'deleteUIBackupManifest', 'updateUIPomVersion' ]){
+	description 'Update the Version for the Project ejsl'
+	group ('JooMDD_Help_Task')
+	
+	updateUIManifestVersion.mustRunAfter	loadVersion
+	deleteUIBackupManifest.mustRunAfter		updateUIManifestVersion
+	updateUIManifestVersion.mustRunAfter	deleteUIOriginManifest
+	deleteUIOriginManifest.mustRunAfter		copyUIBackupManifest
+}
+
+/*
+	End Update Version for UI project
+*/
+
+
+/*
+	Update Version in sdk Project
+*/
+task updateSDKVersionXml(type:Copy){
+	description 'Update the Version for the Project SDK'
+	group ('JooMDD_Help_Task')
+	
+	def number = '[0|1|2|3|4|5|6|7|8|9]*' 
+	
+	from('./de.thm.icampus.joomdd.ejsl.sdk/tmp/feature.xml'){		
+		filter{String line -> line.replaceFirst('     version=\"'+number+'.'+number+'.'+number , '     version=\"'+ version)} 
+	}	
+	into('/de.thm.icampus.joomdd.ejsl.sdk/')	
+}
+
+task deleteSDKOriginXml(type: Delete){
+	description 'delete the Original Manifest file'
+	group ('JooMDD_Help_Task')
+	
+	delete('./de.thm.icampus.joomdd.ejsl.sdk/feature.xml')
+}
+
+
+task deleteSDKBackupXml(type: Delete){
+	description 'delete the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	delete('./de.thm.icampus.joomdd.ejsl.sdk/tmp/')
+}
+
+task copySDKBackupXml(type: Copy){
+	description 'Update the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	from('./de.thm.icampus.joomdd.ejsl.sdk/feature.xml')	
+	
+	into('./de.thm.icampus.joomdd.ejsl.sdk/tmp/')
+}
+
+task updateSDKVersion(dependsOn : [ 'copySDKBackupXml', 'deleteSDKOriginXml' , 'updateSDKVersionXml' , 'deleteSDKBackupXml']){
+	description 'Update the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	deleteSDKOriginXml.mustRunAfter		copySDKBackupXml
+	updateSDKVersionXml.mustRunAfter	deleteSDKOriginXml
+	deleteSDKBackupXml.mustRunAfter		updateSDKVersionXml
+}
+/*
+	End Update Version in sdk Project
+*/
+
+/*
+	Update Version EJSLUpdateSite Project
+*/
+
+task updateEJSLUpdateSiteVersion{
+	description 'Update the Version for the update Site Project '
+	group ('JooMDD_Help_Task')
+	
+	doLast{	
+		def xmlFile = file ('../../releases/Eclipse/JooMDDUpdateSite/site.xml') ///de.thm.icampus.joomdd.ejsl.ui/pom.xml
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()
+		def list = parser.parseText(xmlText)
+		
+		list.feature[0].replaceNode{
+			feature(
+				url:"features/de.thm.icampus.joomdd.ejsl.sdk_"+version+".jar",
+				id:"de.thm.icampus.joomdd.ejsl.sdk",
+				version : version,
+			){
+				category(
+					name:"JooMDD"
+				)
+			}
+		}
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
+}
+
+/*
+	Start update Version from all Projects
+*/
+task updateAllVersions(dependsOn: ['updateUIVersion', 'updateSDKVersion', 'updateEJSLUpdateSiteVersion', ':de.thm.icampus.joomdd.ejsl:updateVersion',':de.thm.icampus.joomdd.ejsl.ide:updateVersion']){
+	description 'Update all Versions for the Project'
+	group ('JooMDD_Help_Task')
+}
+
+
+/*
+	Eclipse Deployment Automation
+*/
+task cleanEJSLUpdateSite(type: Delete){
+	description 'delete the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	delete('../../releases/Eclipse/JooMDDUpdateSite/features/')
+	delete('../../releases/Eclipse/JooMDDUpdateSite/plugins/')
+	
+	delete('../../releases/Eclipse/JooMDDUpdateSite/content.jar')
+	delete('../../releases/Eclipse/JooMDDUpdateSite/artifacts.jar')
+}
+
+/*
+	JooMDD Deploy
+*/
+
+task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", "updateAllVersions" , "cleanEJSLUpdateSite" ,":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
+	group ('joomdd')
+    description "Create all deployment resources (JetBrains IDE) , prepare Eclipse Deploy "
+    
+    
+    task('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	task(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+    cleanEJSLUpdateSite.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
+    
+	doLast{
+		println "Deployment finished"
+	}
+}
 
