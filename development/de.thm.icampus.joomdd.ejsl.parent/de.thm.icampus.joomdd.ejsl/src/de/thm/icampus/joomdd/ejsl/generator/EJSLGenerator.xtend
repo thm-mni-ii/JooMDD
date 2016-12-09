@@ -12,6 +12,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 import de.thm.icampus.joomdd.ejsl.ressourceTransformator.RessourceTransformer
 import java.util.HashMap
 import java.util.Map
+import java.util.Properties
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
@@ -20,10 +21,6 @@ import org.eclipse.xtext.generator.JavaIoFileSystemAccess
 import org.eclipse.xtext.generator.OutputConfiguration
 import org.eclipse.xtext.parser.IEncodingProvider
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.io.File
-import java.util.Properties
-import org.eclipse.core.internal.localstore.FileSystemResourceManager
-import java.io.FileWriter
 
 /**
  * Generates code from your model files on save.
