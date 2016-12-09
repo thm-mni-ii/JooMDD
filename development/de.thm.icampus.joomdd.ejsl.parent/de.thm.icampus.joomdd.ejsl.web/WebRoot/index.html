@@ -8,8 +8,6 @@
 	<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 	<script src="webjars/requirejs/2.1.20/require.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 	<script type="text/javascript">
 		var baseUrl = window.location.pathname;
 		var fileIndex = baseUrl.indexOf("index.html");
@@ -57,16 +55,6 @@
 </div>
 
 
-<script>
-$(function () { $('#jstree_demo_div').jstree(); });
-$('#using_json_2').jstree({ 'core' : {
-    'data' : [
-       { "id" : "ajson1", "parent" : "#", "text" : "com_thm_groups" },
-       { "id" : "ajson2", "parent" : "#", "text" : "com_conference" },
-       { "id" : "ajson3", "parent" : "ajson2", "text" : "admin" },
-       { "id" : "ajson4", "parent" : "ajson2", "text" : "site" },
-    ]
-} });
-</script>
+
 </body>
 </html>
