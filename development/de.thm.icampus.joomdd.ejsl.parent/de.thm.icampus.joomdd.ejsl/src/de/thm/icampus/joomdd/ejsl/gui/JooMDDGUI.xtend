@@ -5,6 +5,8 @@ import java.awt.FlowLayout
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import javax.swing.JFileChooser
@@ -12,35 +14,40 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
+import javax.swing.JRadioButton
+import java.util.Properties
 
 class JooMDDGUI   extends JFrame implements ActionListener{
 	
 	private  JCheckBox page = new JCheckBox("Pages")
 	private  JCheckBox entities = new JCheckBox("Entities")
+	private  JCheckBox test = new JCheckBox("Tests")
 	private JCheckBox updateFolder = new JCheckBox("Update Folder")
 	private JCheckBox joomla = new JCheckBox("Joomla")
 	private JCheckBox workpress = new JCheckBox("Wordpress")
 	private  JTextField file = new JTextField(20)
+	private  JTextField userName = new JTextField("Admin Name",20)
+	private  JTextField userPass = new JTextField("Admin Pass",20)
+	private  JTextField serverPath = new JTextField("Server Path",20)
+	private  JTextField localHost = new JTextField("Host Url",20)
+	private  JTextField port = new JTextField("Port",10)
+	private JRadioButton chrome= new JRadioButton("Chrome", true)
+	private JRadioButton ie= new JRadioButton("Internet Explorer")
+	private JRadioButton firefox= new JRadioButton("Firefox")
 	private JButton browse = new JButton("Browse")
 	private JButton save = new JButton("Save")
 	private JButton cancel = new JButton("Close")
-	public JooMDDPropertiesHandler genProperties
+	public Properties genProperties
 	
-	new(JooMDDPropertiesHandler properties){
+	new(Properties properties){
+		genProperties = properties
 		initGui(properties)
 		
 	}
-	private def void initGui(JooMDDPropertiesHandler properties){
-		if(properties == null){
-		     genProperties = new JooMDDPropertiesHandler
-			 genProperties.loadConfig
-		}
-		 else{
-		 	genProperties = properties
-		 }
+	private def void initGui(Properties properties){
 		val te = this
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
-    	override windowClosing(java.awt.event.WindowEvent windowEvent) {
+		this.addWindowListener(new WindowAdapter() {
+    	override windowClosing(WindowEvent windowEvent) {
 	       {
 	       	 te.enabled = false
 	        }}})
@@ -53,23 +60,25 @@ class JooMDDGUI   extends JFrame implements ActionListener{
 	}
 	private def void addComponent(){
 		var JPanel containerPanel = new JPanel()
-		containerPanel.layout = new GridLayout(9,0)
+		containerPanel.layout = new GridLayout(16,0)
 		
 		var JLabel artefact = new JLabel("Artefacts")
 		containerPanel.add(artefact)
 		
-		var JPanel toGeneraFolder = new JPanel(new GridLayout(1,2))
-		page.selected = Boolean.parseBoolean(genProperties.listKonfig.get("page") as String)
+		var JPanel toGeneraFolder = new JPanel(new GridLayout(1,3))
+		page.selected = Boolean.parseBoolean(genProperties.get("page") as String)
 		page.addActionListener(this)
 		toGeneraFolder.add(page)
-		entities.selected = Boolean.parseBoolean(genProperties.listKonfig.get("entities") as String)
+		entities.selected = Boolean.parseBoolean(genProperties.get("entities") as String)
 		entities.addActionListener(this)
 		toGeneraFolder.add(entities)
+		test.addActionListener(this)
+		toGeneraFolder.add(test)
 		containerPanel.add(toGeneraFolder)
 		var JLabel updateLabel = new JLabel("Update Folder for Extensions")
 		containerPanel.add(updateLabel)
 		
-		updateFolder.selected = Boolean.parseBoolean(genProperties.listKonfig.get("updateFolder") as String)
+		updateFolder.selected = Boolean.parseBoolean(genProperties.get("updateFolder") as String)
 		updateFolder.addActionListener(this)
 		containerPanel.add(updateFolder)
 		
@@ -77,26 +86,37 @@ class JooMDDGUI   extends JFrame implements ActionListener{
 		containerPanel.add(generator)
 		
 		var JPanel useGenerator = new JPanel(new GridLayout(1,2))
-		joomla.selected = Boolean.parseBoolean(genProperties.listKonfig.get("joomla") as String)
+		joomla.selected = Boolean.parseBoolean(genProperties.get("joomla") as String)
 		joomla.addActionListener(this)
-		workpress.selected = Boolean.parseBoolean(genProperties.listKonfig.get("wordpress") as String)
+		workpress.selected = Boolean.parseBoolean(genProperties.get("wordpress") as String)
 		workpress.addActionListener(this)
 		useGenerator.add(joomla)
 		useGenerator.add(workpress)
 		containerPanel.add(useGenerator)
+		
+		var JPanel testOption = new JPanel(new GridLayout(1,2))
+		var JLabel userNameLabel = new JLabel("User Name")
+		testOption.add(userNameLabel)
+		userName.setPreferredSize =  new Dimension(30,25)
+		userName.addActionListener(this)
+		testOption.add(userName,CENTER_ALIGNMENT)
+		containerPanel.add(testOption)
 		
 		var JLabel destination = new JLabel("Destination")
 		containerPanel.add(destination)
 		
 		var JPanel chooseFilePanel = new JPanel(new FlowLayout)
 		
-		file.text = genProperties.listKonfig.get("outputFolder") as String
+		file.text = genProperties.get("outputFolder") as String
 		file.setPreferredSize =  new Dimension(30,25)
 		chooseFilePanel.add(file)
 		
 		browse.addActionListener(this)
 		chooseFilePanel.add(browse)
 		containerPanel.add(chooseFilePanel)
+		
+		
+		
 		
 		var JPanel footerPanel = new JPanel(new FlowLayout)
 		footerPanel.maximumSize = new Dimension(12,23)
@@ -122,49 +142,49 @@ class JooMDDGUI   extends JFrame implements ActionListener{
 				file.visible = false
 				file.text = fileName
 				file.visible = true
-				genProperties.listKonfig.setProperty("outputFolder", fileName)
+				genProperties.setProperty("outputFolder", fileName)
 				
 			}
 			case save:{
-				genProperties.save
+				genProperties.saveProperties()
 			}
 			case page:{
 				if(page.selected)
-				   genProperties.listKonfig.setProperty("page", "true")
+				   genProperties.setProperty("page", "true")
 				 else{
-				 	genProperties.listKonfig.setProperty("page", "false")
+				 	genProperties.setProperty("page", "false")
 				 }
 			}
 			case entities:{
 				if(entities.selected)
-				   genProperties.listKonfig.setProperty("entities", "true")
+				   genProperties.setProperty("entities", "true")
 				 else{
-				 	genProperties.listKonfig.setProperty("entities", "false")
+				 	genProperties.setProperty("entities", "false")
 				 }
 			}
 			case updateFolder:{
 				if(updateFolder.selected)
-				   genProperties.listKonfig.setProperty("updateFolder", "true")
+				   genProperties.setProperty("updateFolder", "true")
 				 else{
-				 	genProperties.listKonfig.setProperty("updateFolder", "false")
+				 	genProperties.setProperty("updateFolder", "false")
 				 }
 			}
 			case joomla:{
 				if(joomla.selected)
-				   genProperties.listKonfig.setProperty("joomla", "true")
+				   genProperties.setProperty("joomla", "true")
 				 else{
-				 	genProperties.listKonfig.setProperty("joomla", "false")
+				 	genProperties.setProperty("joomla", "false")
 				 }
 			}
 			case workpress:{
 				if(workpress.selected)
-				   genProperties.listKonfig.setProperty("workpress", "true")
+				   genProperties.setProperty("workpress", "true")
 				 else{
-				 	genProperties.listKonfig.setProperty("workpress", "false")
+				 	genProperties.setProperty("workpress", "false")
 				 }
 			}
 			case file:{
-				genProperties.listKonfig.setProperty("outputFolder", file.text)
+				genProperties.setProperty("outputFolder", file.text)
 				
 			}
 			case cancel:{
@@ -174,6 +194,16 @@ class JooMDDGUI   extends JFrame implements ActionListener{
 				
 			}
 		}
+	}
+	
+	def saveProperties(Properties properties) {
+		
+	}
+	
+	static def void main(String[] args){
+		
+		new JooMDDGUI(new Properties)
+		
 	}
 	
 	

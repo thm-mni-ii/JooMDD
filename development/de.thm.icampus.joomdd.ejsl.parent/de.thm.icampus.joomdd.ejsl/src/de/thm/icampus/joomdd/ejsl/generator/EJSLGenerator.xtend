@@ -21,6 +21,8 @@ import org.eclipse.xtext.generator.JavaIoFileSystemAccess
 import org.eclipse.xtext.generator.OutputConfiguration
 import org.eclipse.xtext.parser.IEncodingProvider
 import org.eclipse.xtext.resource.IResourceServiceProvider
+import de.thm.icampus.joomdd.ejsl.gui.ConfigGUI
+import java.awt.EventQueue
 
 /**
  * Generates code from your model files on save.
@@ -43,16 +45,36 @@ class EJSLGenerator extends AbstractGenerator {
 		if(fsa.isFile("generator.properties"))
 		config.load(fsa.readBinaryFile("generator.properties"))
 		else{
-			defaultSettings()
+			defaultSettings(fsa)
 		}
 		
 		
 	}
 	
-	def defaultSettings() {
-		
+	def defaultSettings(IFileSystemAccess2 fsa) {
+		val ConfigGUI conf = new ConfigGUI
+		EventQueue.invokeLater(new Runnable() {
+			public override void run() {
+				try {
+					
+					conf.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		while(conf.configList.empty){
+			
+		}
+		config = conf.configList
+		fsa.generateFile("generator.properties",getWriteProperties )
 		
 	}
+	def CharSequence getWriteProperties() '''
+	«FOR  prop  : config.keySet»
+	  «prop»=«config.getProperty(prop as String)»
+	«ENDFOR»
+	'''
 	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
@@ -81,15 +103,15 @@ class EJSLGenerator extends AbstractGenerator {
 			 		trans.dotransformation
 					var CMSExtension extensionPart = domainModel.ejslPart as CMSExtension
 					
-					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions,"Extensions/", fsa, domainModel.name, outputFolder)
+					var ExtensionGenerator mainExtensionGen = new ExtensionGenerator(extensionPart.extensions,"Extensions/", genData, domainModel.name, outputFolder)
 					mainExtensionGen.dogenerate() 
 					//if(config.getKey("entities").equalsIgnoreCase("true")){
-					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities, "Entities/", fsa, domainModel.name)
+					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities, "Entities/", genData, domainModel.name)
 					mainEntitiesGen.dogenerate()
 		
 				//	}
 				//	if(config.getKey("page").equalsIgnoreCase("true")){
-					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages,fsa,"Pages/",domainModel.name)
+					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages,genData,"Pages/",domainModel.name)
 				     mainPageGen.dogenerate()
 				     
 				     }
@@ -99,11 +121,11 @@ class EJSLGenerator extends AbstractGenerator {
 			println("The code generation was successfull! \n Thank you for using this tool!")
 	}
 	
-//	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-//		super.afterGenerate(input, fsa, context)
-//		config.store(new FileWriter(config.get("outputFolder") + "/generator.properties"),"Generator configuration")
-//		
-//	}
+	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+		super.afterGenerate(input, fsa, context)
+		fsa.generateFile("generator.properties",getWriteProperties )
+		
+	}
 	
 	def Map<String, OutputConfiguration> mapOutputConfigurations(String path) {
 		var OutputConfiguration defaultOutput = new OutputConfiguration(IFileSystemAccess2.DEFAULT_OUTPUT);

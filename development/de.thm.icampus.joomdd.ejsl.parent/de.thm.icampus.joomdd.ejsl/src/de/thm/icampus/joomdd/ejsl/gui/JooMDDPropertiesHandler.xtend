@@ -1,11 +1,8 @@
 package de.thm.icampus.joomdd.ejsl.gui
 
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileWriter
+import java.io.StringReader
 import java.util.Properties
 import org.eclipse.xtext.generator.IFileSystemAccess2
-import java.io.StringReader
 
 class JooMDDPropertiesHandler   {
 	
