@@ -21,3 +21,28 @@ task jettyRun(type:JavaExec) {
 	group = 'run'
 	description = 'Starts an example Jetty server with your language'
 }
+
+
+
+
+
+task deleteXtendGen (type: Delete){
+	description 'delete Xtend-Gen Folder for the Project'
+	group ('JooMDD_Help_Task')
+	
+	delete('/xtend-gen/')
+}
+
+ant.importBuild 'CreateGenFolders.xml'
+
+task runAntScript(dependsOn: make){
+	description 'runs Ant Skript'
+	group ('JooMDD_Help_Task')
+}
+
+task regrenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript']){
+	description 'delete and create xtend gen'
+	group ('JooMDD')
+
+	runAntScript.mustRunAfter	deleteXtendGen
+}

@@ -377,6 +377,59 @@ task cleanEJSLUpdateSite(type: Delete){
 	
 	delete('../../releases/Eclipse/JooMDDUpdateSite/content.jar')
 	delete('../../releases/Eclipse/JooMDDUpdateSite/artifacts.jar')
+	
+	doLast{
+		println('Update Site cleaned')
+	}
+}
+
+
+/*
+	regenerate Xtend-Gen Folder Tests Project
+*/
+task deleteXtendGenTests (type: Delete){
+	description 'delete Xtend-Gen Folder for the UI Project'
+	group ('JooMDD_Help_Task')
+	
+	delete('/de.thm.icampus.joomdd.ejsl.tests/xtend-gen/')
+}
+
+ant.importBuild './de.thm.icampus.joomdd.ejsl.tests/CreateGenFolders.xml'
+
+task runAntScriptTests(dependsOn: make){
+	description 'runs Ant Skript'
+	group ('JooMDD_Help_Task')
+}
+
+task regrenerateXtendGenFolderTests(dependsOn:['deleteXtendGenTests','runAntScriptTests']){
+	description 'Delete and create xtend-gen'
+	group ('JooMDD_Help_Task')
+
+	runAntScriptTests.mustRunAfter	deleteXtendGenTests
+}
+
+/*
+	regenerate Xtend-Gen Folder UI Project
+*/
+task deleteXtendGen (type: Delete){
+	description 'delete Xtend-Gen Folder for the UI Project'
+	group ('JooMDD_Help_Task')
+	
+	delete('/de.thm.icampus.joomdd.ejsl.ui/xtend-gen/')
+}
+
+ant.importBuild './de.thm.icampus.joomdd.ejsl.ui/CreateGenFolders.xml'
+
+task runAntScript(dependsOn: makeUI){
+	description 'runs Ant Skript'
+	group ('JooMDD_Help_Task')
+}
+
+task regrenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript','regrenerateXtendGenFolderTests']){
+	description 'Delete and create xtend-gen'
+	group ('JooMDD')
+
+	runAntScript.mustRunAfter	deleteXtendGen
 }
 
 /*
