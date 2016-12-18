@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class ConfigGUI extends JFrame implements ActionListener {
 
@@ -25,6 +26,9 @@ public class ConfigGUI extends JFrame implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private JFrame frame;
 	private JTextField outputFolder;
 	private JTextField adminName;
@@ -42,6 +46,10 @@ public class ConfigGUI extends JFrame implements ActionListener {
 	private JButton save, close, browse;
 	private JCheckBox generateUpdate;
 	public static boolean run;
+	
+	private JRadioButton phpunit;
+	
+	private JRadioButton codeception;
 	
 
 	/**
@@ -81,13 +89,14 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		run = true;
 		frame = new JFrame();
 		frame.setTitle("eJSL Generator Configuration");
-		frame.setBounds(100, 100, 508, 420);
+		frame.setBounds(100, 100, 540, 491);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(0, 4, 0, 0));
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		
 		JLabel lblArtefact = new JLabel("Artefact:");
+		lblArtefact.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblArtefact.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblArtefact);
 		
@@ -104,6 +113,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(test);
 		
 		JLabel lblNewLabel = new JLabel("Update Folder:");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblNewLabel);
 		
@@ -118,6 +128,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(label_2);
 		
 		JLabel lblNewLabel_1 = new JLabel("Generator:");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblNewLabel_1);
 		
@@ -134,6 +145,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(label_3);
 		
 		JLabel lblNewLabel_2 = new JLabel("Destination:");
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblNewLabel_2);
 		
@@ -149,6 +161,34 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		JLabel label_4 = new JLabel("");
 		frame.getContentPane().add(label_4);
 		
+		JLabel lblNewLabel_29 = new JLabel("");
+		frame.getContentPane().add(lblNewLabel_29);
+		
+		JLabel lblNewLabel_30 = new JLabel("");
+		frame.getContentPane().add(lblNewLabel_30);
+		
+		JLabel lblNewLabel_31 = new JLabel("");
+		frame.getContentPane().add(lblNewLabel_31);
+		JLabel lblNewLabel_32 = new JLabel("");
+		frame.getContentPane().add(lblNewLabel_32);
+		
+		
+		JLabel lblTestsFramework = new JLabel("Tests Framework:");
+		lblTestsFramework.setHorizontalAlignment(SwingConstants.CENTER);
+		frame.getContentPane().add(lblTestsFramework);
+		phpunit= new JRadioButton("PHPUnit");
+		phpunit.setHorizontalAlignment(SwingConstants.LEFT);
+		phpunit.addActionListener(this);
+		phpunit.setSelected(true);
+		frame.getContentPane().add(phpunit);
+		
+		 codeception = new JRadioButton("Codeception");
+		 codeception.addActionListener(this);
+		frame.getContentPane().add(codeception);
+		
+		JLabel lblNewLabel_33 = new JLabel("");
+		frame.getContentPane().add(lblNewLabel_33);
+		
 		JLabel lblNewLabel_9 = new JLabel("");
 		frame.getContentPane().add(lblNewLabel_9);
 		
@@ -162,6 +202,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(lblNewLabel_12);
 		
 		JLabel lblNewLabel_3 = new JLabel("Admin Name:");
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblNewLabel_3);
 		
@@ -189,6 +230,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(lblNewLabel_16);
 		
 		JLabel adminPassLabel = new JLabel("Admin Pass:");
+		adminPassLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		//adminPassLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(adminPassLabel);
 		
@@ -216,6 +258,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(lblNewLabel_20);
 		
 		JLabel lblNewLabel_5 = new JLabel("Server URL:");
+		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblNewLabel_5);
 		
@@ -243,6 +286,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(lblNewLabel_24);
 		
 		JLabel lblNewLabel_6 = new JLabel("Root Path:");
+		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblNewLabel_6);
 		
@@ -270,6 +314,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(lblNewLabel_28);
 		
 		JLabel lblNewLabel_7 = new JLabel("Port:");
+		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblNewLabel_7.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblNewLabel_7);
 		
@@ -284,7 +329,8 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		JLabel label_14 = new JLabel("");
 		frame.getContentPane().add(label_14);
 		
-		JLabel lblNewLabel_8 = new JLabel("Browser");
+		JLabel lblNewLabel_8 = new JLabel("Browser:");
+		lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblNewLabel_8.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblNewLabel_8);
 		
@@ -393,6 +439,11 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		configList.setProperty("joomla", joomla.isSelected()+"");
 	
 		configList.setProperty("workpress", workpress.isSelected()+"");
+		 if(phpunit.isSelected())
+			 configList.setProperty("framework", "phpunit"+""); 
+		 else{
+			 configList.setProperty("framework", "codeception"+""); 
+		 }
 	
 		configList.setProperty("adminName", adminName.getText());
 	
@@ -400,9 +451,9 @@ public class ConfigGUI extends JFrame implements ActionListener {
 	
 		configList.setProperty("serverUrl", serverURL.getText());
 	    if(rootPath.getText().contains("\\")){
-		configList.setProperty("rootPath", rootPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
+		configList.setProperty("serverpath", rootPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
 	    }else{
-	    configList.setProperty("rootPath", rootPath.getText());	}
+	    configList.setProperty("serverpath", rootPath.getText());	}
 	    
 	    if(outputFolder.getText().contains("\\")){
 		configList.setProperty("outputFolder", outputFolder.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
@@ -417,8 +468,12 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		configList.setProperty("browser", "chrome");
 	    if(firefox.isEnabled())
 		configList.setProperty("browser", "firefox");
+	    if(phpunit.isEnabled())
+	    	configList.setProperty("framework", "phpunit");
+	    if(codeception.isEnabled())
+	    	configList.setProperty("framework", "codeception");
+		
 		
 		
 	}
-
 }
