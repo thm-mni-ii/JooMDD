@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -204,12 +206,16 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		src_path = src_gen.getAbsolutePath();
 		}
 		else{
-			listKonfig.setProperty("outputFolder", generatorPath.getText());
-			src_path = generatorPath.getText();
+			listKonfig.setProperty("outputFolder", generatorPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
+			src_path = generatorPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\"));
 		}
-		listKonfig.setProperty("hostconfig",hostconfig.getText());
+		
+		listKonfig.setProperty("serverUrl",hostconfig.getText());
 		listKonfig.setProperty("portconfig",portconfig.getText());
-		listKonfig.setProperty("serverpath",serverPath.getText());
+		 if(rootPath.getText().contains("\\")){
+			 listKonfig.setProperty("serverpath", rootPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
+			    }else{
+			    	listKonfig.setProperty("serverpath", rootPath.getText());	}
 		listKonfig.setProperty("rootpath",rootPath.getText());
 		listKonfig.setProperty("adminname",adminName.getText());
 		listKonfig.setProperty("adminpass",adminPass.getText());
