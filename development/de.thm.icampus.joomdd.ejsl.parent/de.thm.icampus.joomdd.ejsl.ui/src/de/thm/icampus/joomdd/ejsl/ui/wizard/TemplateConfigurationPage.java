@@ -3,10 +3,11 @@ package de.thm.icampus.joomdd.ejsl.ui.wizard;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.JFileChooser;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -24,16 +25,16 @@ import org.eclipse.swt.widgets.Text;
 public class TemplateConfigurationPage extends WizardPage implements SelectionListener  {
 	
 	private Composite container;
-	private String src_path ="./src-gen";
-	private Text generatorPath,hostconfig,portconfig,adminName,adminPass,serverPath,rootPath,dbUsername,dbUserpass;
+	public static String src_path;
+	public Text generatorPath,hostconfig,portconfig,adminName,adminPass,serverPath,rootPath,dbUsername,dbUserpass;
 	private Button checkPage, checkEntities, checkWordpress,
-	checkJoomla,checkTest,checkUpdateFolder, checkFirefox,checkChrome,checkie,checkPHPUnit, checkCodeCeption;
+	checkJoomla,checkTest,checkUpdateFolder, checkFirefox,checkChrome,checkie,checkPHPUnit, checkCodeCeption,browse ;
 	Properties listKonfig;
 
 	protected TemplateConfigurationPage(String pageName, String pathSrc) {
 		super(pageName);
-		if(!pathSrc.isEmpty())
-		src_path = pathSrc;
+		src_path ="./src-gen";
+		
 	}
 
 	@Override
@@ -61,18 +62,25 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		generatorPath = new Text(fileBrowse, SWT.BORDER);
 		generatorPath.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		generatorPath.setText(src_path);
-		Button browse = new Button(fileBrowse, SWT.PUSH);
+		 browse = new Button(fileBrowse, SWT.PUSH);
 		browse.setText("browse");
 		browse.addSelectionListener(new SelectionAdapter() {
 		      public void widgetSelected(SelectionEvent e) {
 		        DirectoryDialog dialog = new DirectoryDialog(main.getShell(), SWT.OPEN);
-		        String file = dialog.open();
-		        if (file != null) {
-		        	generatorPath.setText(file);
-		        }
+		         dialog.open();
+		         final String filePath = dialog.getFilterPath();
+		        TemplateConfigurationPage.src_path=filePath;
+		        setSrc_path(filePath);
 		      }
 		    });
 		
+		
+	}
+	public void setSrc_path(final String filePath){
+		
+        if (filePath != null) {
+        	generatorPath.setText(filePath);
+        }
 	}
 	private void createArtefactsOptions(Composite main){
 		
@@ -181,7 +189,7 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 
 	@Override
 	public void widgetSelected(SelectionEvent e) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -201,12 +209,12 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		listKonfig.setProperty("updateFolder",checkUpdateFolder.getEnabled()+"");
 		listKonfig.setProperty("joomla","true");
 		listKonfig.setProperty("wordpress","false");
-		if(src_path.equalsIgnoreCase("./src-gen")){
+		if( src_path.equalsIgnoreCase("./src-gen")){
 		listKonfig.setProperty("outputFolder", src_gen.getAbsolutePath());
 		src_path = src_gen.getAbsolutePath();
 		}
 		else{
-			listKonfig.setProperty("outputFolder", generatorPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
+			listKonfig.setProperty("outputFolder", src_path.replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
 			src_path = generatorPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\"));
 		}
 		
@@ -229,7 +237,9 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		
 		try {
 			FileWriter genproperties = new FileWriter(src_path + "/generator.properties");
+			FileWriter genproperties2 = new FileWriter(src_gen.getAbsolutePath() + "/generator.properties");
 			listKonfig.store(genproperties, "Generator configuration");
+			listKonfig.store(genproperties2, "Generator configuration");
 			
 
 		} catch (IOException e) {

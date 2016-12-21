@@ -17,7 +17,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.JoomlaEntit
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.TableGeneratorTemplate
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
-import org.eclipse.xtext.generator.IFileSystemAccess2
+import org.eclipse.xtext.generator.IFileSystemAccess2 
 
 class EntityGenerator extends AbstracteGenerator {
 	
@@ -25,7 +25,7 @@ class EntityGenerator extends AbstracteGenerator {
 	ExtendedComponent extensions
 	ExtendedDynamicPage page
 	String path
-	IFileSystemAccess2 fsa
+	IFileSystemAccess2 fsa 
 	boolean isBackendSection
 	
 	new(EList<Entity> entitiesList, String path ,IFileSystemAccess2 fsa, String domainName) {

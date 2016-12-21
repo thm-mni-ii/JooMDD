@@ -23,6 +23,8 @@ import org.eclipse.xtext.parser.IEncodingProvider
 import org.eclipse.xtext.resource.IResourceServiceProvider
 import de.thm.icampus.joomdd.ejsl.gui.ConfigGUI
 import java.awt.EventQueue
+import java.util.regex.Pattern
+import java.util.regex.Matcher
 
 /**
  * Generates code from your model files on save.
@@ -42,7 +44,9 @@ class EJSLGenerator extends AbstractGenerator {
 	 Properties config = new Properties()
 	override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		super.beforeGenerate(input, fsa, context)
+		config = new Properties()
 		if(fsa.isFile("generator.properties"))
+		 
 		config.load(fsa.readBinaryFile("generator.properties"))
 		else{
 			defaultSettings(fsa)
@@ -72,7 +76,11 @@ class EJSLGenerator extends AbstractGenerator {
 	}
 	def CharSequence getWriteProperties() '''
 	«FOR  prop  : config.keySet»
+	«IF config.getProperty(prop as String).contains("\\") »
+	  «prop»=«config.getProperty(prop as String).replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\"))»
+	  «ELSE»
 	  «prop»=«config.getProperty(prop as String)»
+	  «ENDIF»
 	«ENDFOR»
 	'''
 	
@@ -118,12 +126,13 @@ class EJSLGenerator extends AbstractGenerator {
 				}
 			}
 			
-			println("The code generation was successfull! \n Thank you for using this tool!")
+			fsa.generateFile("status","The code generation was successfull! \n Thank you for using this tool!")
 	}
 	
 	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		super.afterGenerate(input, fsa, context)
 		fsa.generateFile("generator.properties",getWriteProperties )
+		config = new Properties()
 		
 	}
 	
