@@ -1,6 +1,7 @@
 buildscript {
 	repositories {
-		jcenter()		
+		jcenter()
+		//maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }		
 	}
 	dependencies {
 		classpath 'org.xtext:xtext-gradle-plugin:1.0.12'
@@ -8,34 +9,49 @@ buildscript {
     }
 }
 
+/*
+plugins {
+    id "org.jetbrains.intellij" version "0.1.10"
+}
+*/
 subprojects {
-	ext.xtextVersion = '2.10.0'
-	repositories {
-		jcenter()
-	}
-
-	apply plugin: 'java'
-	apply plugin: 'org.xtext.xtend'
-	apply from: "${rootDir}/gradle/source-layout.gradle"
-	apply from: "${rootDir}/gradle/maven-deployment.gradle"
-	apply plugin: 'eclipse'
-	apply plugin: 'idea'
+	println "in subpro $project"
 	
-	group = 'de.thm.icampus.joomdd.ejsl'
-
-	// Load version from pom.xml file
-	def xmlFile = file ('../pom.xml')
-	def xmlText = xmlFile.getText()
-	def parser = new XmlParser()
-	def list = parser.parseText(xmlText)
-
-	version =  list.version[0].text()	
-
-	sourceCompatibility = '1.8'
-	targetCompatibility = '1.8'
-
-	configurations.all {
-		exclude group: 'asm'
+	if(!(project.name == 'ProjectWizard' )) // excluding ProjectWizard for the standard xtext configuration
+	{
+		println "in subpro if $project"
+		
+		ext.xtextVersion = '2.10.0'
+		repositories {
+			jcenter()
+			//maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }	
+		}
+	
+		
+		apply plugin: 'java'
+		apply plugin: 'org.xtext.xtend'
+		apply from: "${rootDir}/gradle/source-layout.gradle"
+		apply from: "${rootDir}/gradle/maven-deployment.gradle"
+		apply plugin: 'eclipse'
+		apply plugin: 'idea'
+		//apply plugin: 'org.jetbrains.intellij'	
+		
+		group = 'de.thm.icampus.joomdd.ejsl'
+	
+		// Load version from pom.xml file
+		def xmlFile = file ('../pom.xml')
+		def xmlText = xmlFile.getText()
+		def parser = new XmlParser()
+		def list = parser.parseText(xmlText)
+	
+		version =  list.version[0].text()	
+	
+		sourceCompatibility = '1.8'
+		targetCompatibility = '1.8'
+	
+		configurations.all {
+			exclude group: 'asm'
+		}
 	}
 }
 
@@ -137,13 +153,13 @@ task incrementMajorVersion{
 	description 'Increment the Major Version for the Project'
 	group ('JooMDD')
 
-	doLast{	
+	doLast{
 		def xmlFile = file ('/pom.xml')
-		def xmlText = xmlFile.getText()	
+		def xmlText = xmlFile.getText()
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
 
-		def lastversion = list.version[0].text()		
+		def lastversion = list.version[0].text()	
 		
 		def a = 0
 		def newMajorVersion
@@ -155,7 +171,7 @@ task incrementMajorVersion{
 				newMajorVersion = "$digit"		
 				newMajorVersion = newMajorVersion.toInteger()+1
 			}else if (a == 1){
-				newMinorVersion = "$digit"				
+				newMinorVersion = "$digit"			
 			}else if (a == 2){
 				newPatchVersion = "$digit"
 			}
@@ -164,8 +180,7 @@ task incrementMajorVersion{
 		
 		def newVersion = newMajorVersion + '.' + '0' + '.' + '0'
 		println "NewVersion:"+newVersion
-		
-		
+				
 		list.version[0].replaceNode{		
 				version(newVersion){}		
 		}	
@@ -384,6 +399,12 @@ task cleanEJSLUpdateSite(type: Delete){
 }
 
 
+task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions"]){
+	description 'Run All Eclipse Tasks'
+	group ('JooMDD_Help_Task')
+
+}
+
 /*
 	regenerate Xtend-Gen Folder Tests Project
 */
@@ -401,7 +422,7 @@ task runAntScriptTests(dependsOn: make){
 	group ('JooMDD_Help_Task')
 }
 
-task regrenerateXtendGenFolderTests(dependsOn:['deleteXtendGenTests','runAntScriptTests']){
+task reCreateXtendGenFolderTests(dependsOn:['deleteXtendGenTests','runAntScriptTests']){
 	description 'Delete and create xtend-gen'
 	group ('JooMDD_Help_Task')
 
@@ -411,6 +432,7 @@ task regrenerateXtendGenFolderTests(dependsOn:['deleteXtendGenTests','runAntScri
 /*
 	regenerate Xtend-Gen Folder UI Project
 */
+/*
 task deleteXtendGen (type: Delete){
 	description 'delete Xtend-Gen Folder for the UI Project'
 	group ('JooMDD_Help_Task')
@@ -425,27 +447,50 @@ task runAntScript(dependsOn: makeUI){
 	group ('JooMDD_Help_Task')
 }
 
-task regrenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript','regrenerateXtendGenFolderTests']){
+task regenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript','regenerateXtendGenFolderTests']){
 	description 'Delete and create xtend-gen'
 	group ('JooMDD')
 
 	runAntScript.mustRunAfter	deleteXtendGen
 }
+*/
 
 /*
 	JooMDD Deploy
 */
 
-task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", "updateAllVersions" , "cleanEJSLUpdateSite" ,":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
+task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", ":ProjectWizard:createIntelliJWizardPluginSource","JooMDDDeployEclipse" ,":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
 	group ('joomdd')
     description "Create all deployment resources (JetBrains IDE) , prepare Eclipse Deploy "
-    
-    
-    task('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	task(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+
+	task('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	":ProjectWizard:createIntelliJWizardPluginSource"
+    task(":ProjectWizard:createIntelliJWizardPluginSource").mustRunAfter		task(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
     cleanEJSLUpdateSite.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
     
 	doLast{
 		println "Deployment finished"
 	}
+}
+
+
+/*
+	Live Tasks
+*/
+
+task JetBrainsIDEWithAllPlugins2(dependsOn:[":de.thm.icampus.joomdd.ejsl.idea:ideaZip"]){
+	group('JetBrains_Wizard_Help_Task')
+	description 'prepare Live eJSL Plugin'
+}
+
+task JetBrainsIDEWithAllPlugins(dependsOn:(":ProjectWizard:JetBrainsIDEWithAllPlugins")){
+	group('joomdd_Live')
+	description 'Create Wizard and eJSL, add Xtext and run JetBrainsIDE'
+}
+
+JetBrainsIDEWithAllPlugins.dependsOn JetBrainsIDEWithAllPlugins2
+
+task IntelliJWitheJSL(dependsOn:(":de.thm.icampus.joomdd.ejsl.idea:runIdea")){
+	group('joomdd_Live')
+	description 'Create eJSL, add Xtext and run IntelliJ IDEA'
 }
 
