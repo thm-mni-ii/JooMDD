@@ -131,9 +131,13 @@ task JetBrainsIDEWithWizard(dependsOn:['copyNewTemplates','cleanXtextPlugin','cl
     description 'Create Wizard and run JetBrains IDE'
     group ('joomdd_Live')
 	compileJava.mustRunAfter	copyNewTemplates
+	
+	doLast{
+		println "Configure the IDE in Project Wizard/build.gradle file. Line 30 - 32: intellij{version ... for IntelliJ and alternativeIdePath ... for PhpStorm."
+	}
 }
 
-task runJetBrainsIDEWithAllPlugins(dependsOn:['copyNewTemplates','addXtextPlugin','addeJSLPlugin','runIdea']){
+task JetBrainsIDEWithAllPlugins(dependsOn:['copyNewTemplates','addXtextPlugin','addeJSLPlugin','runIdea']){
     description 'Create Wizard, add eJSL, Xtext and run IntelliJ'
     group ('JetBrains_Wizard_Help_Task')
     compileJava.mustRunAfter	copyNewTemplates

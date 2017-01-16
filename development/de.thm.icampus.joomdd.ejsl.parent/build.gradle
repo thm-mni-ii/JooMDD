@@ -1,7 +1,6 @@
 buildscript {
 	repositories {
 		jcenter()
-		//maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }		
 	}
 	dependencies {
 		classpath 'org.xtext:xtext-gradle-plugin:1.0.12'
@@ -9,22 +8,13 @@ buildscript {
     }
 }
 
-/*
-plugins {
-    id "org.jetbrains.intellij" version "0.1.10"
-}
-*/
 subprojects {
-	println "in subpro $project"
-	
+		
 	if(!(project.name == 'ProjectWizard' )) // excluding ProjectWizard for the standard xtext configuration
 	{
-		println "in subpro if $project"
-		
 		ext.xtextVersion = '2.10.0'
 		repositories {
 			jcenter()
-			//maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }	
 		}
 	
 		
@@ -34,7 +24,6 @@ subprojects {
 		apply from: "${rootDir}/gradle/maven-deployment.gradle"
 		apply plugin: 'eclipse'
 		apply plugin: 'idea'
-		//apply plugin: 'org.jetbrains.intellij'	
 		
 		group = 'de.thm.icampus.joomdd.ejsl'
 	
@@ -477,7 +466,7 @@ task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", "
 	Live Tasks
 */
 
-task JetBrainsIDEWithAllPlugins2(dependsOn:[":de.thm.icampus.joomdd.ejsl.idea:ideaZip"]){
+task JetBrainsIDEWithAllPlugins2(dependsOn:":de.thm.icampus.joomdd.ejsl.idea:ideaZip"){
 	group('JetBrains_Wizard_Help_Task')
 	description 'prepare Live eJSL Plugin'
 }
@@ -485,6 +474,10 @@ task JetBrainsIDEWithAllPlugins2(dependsOn:[":de.thm.icampus.joomdd.ejsl.idea:id
 task JetBrainsIDEWithAllPlugins(dependsOn:(":ProjectWizard:JetBrainsIDEWithAllPlugins")){
 	group('joomdd_Live')
 	description 'Create Wizard and eJSL, add Xtext and run JetBrainsIDE'
+	
+	doLast{
+		println "Configure the IDE in Project Wizard/build.gradle file. Line 30 - 32: intellij{version ... for IntelliJ and alternativeIdePath ... for PhpStorm."
+	}
 }
 
 JetBrainsIDEWithAllPlugins.dependsOn JetBrainsIDEWithAllPlugins2
