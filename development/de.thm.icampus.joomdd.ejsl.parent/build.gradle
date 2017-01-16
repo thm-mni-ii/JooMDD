@@ -251,7 +251,7 @@ task loadVersion{
 	description 'Update the Version for the Project ejsl'
 	group ('JooMDD_Help_Task')
 	
-	def xmlFile = file ('/pom.xml')
+	def xmlFile = file ('pom.xml')
 	def xmlText = xmlFile.getText()
 	def parser = new XmlParser()
 	def list = parser.parseText(xmlText)
