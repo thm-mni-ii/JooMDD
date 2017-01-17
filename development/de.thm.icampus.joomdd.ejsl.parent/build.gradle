@@ -50,7 +50,7 @@ task incrementPatchLevelVersion{
 	group ('JooMDD')
 
 	doLast{	
-		def xmlFile = file ('/pom.xml')
+		def xmlFile = file ('pom.xml')
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
@@ -96,7 +96,7 @@ task incrementMinorVersion{
 	group ('JooMDD')
 
 	doLast{	
-		def xmlFile = file ('/pom.xml')
+		def xmlFile = file ('pom.xml')
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
@@ -143,7 +143,7 @@ task incrementMajorVersion{
 	group ('JooMDD')
 
 	doLast{
-		def xmlFile = file ('/pom.xml')
+		def xmlFile = file ('pom.xml')
 		def xmlText = xmlFile.getText()
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
