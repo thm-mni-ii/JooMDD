@@ -93,7 +93,7 @@ task runAntScript(dependsOn: make){
 	group ('JooMDD_Help_Task')
 }
 
-task regrenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript']){
+task regenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript']){
 	description 'delete and create xtend gen'
 	group ('JooMDD')
 

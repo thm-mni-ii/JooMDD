@@ -191,7 +191,7 @@ task updateUIPomVersion{
 	group ('JooMDD_Help_Task')
 	
 	doLast{	
-		def xmlFile = file ('/de.thm.icampus.joomdd.ejsl.ui/pom.xml')
+		def xmlFile = file ('./de.thm.icampus.joomdd.ejsl.ui/pom.xml')
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
@@ -217,17 +217,17 @@ task updateUIManifestVersion(type: Copy){
 	def manifestFile = file ('/META-INF/MANIFEST.MF')	
     def number = '[0|1|2|3|4|5|6|7|8|9]*' 
 	
-	from('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/MANIFEST.MF'){		
+	from('./de.thm.icampus.joomdd.ejsl.ui/META-INF2/MANIFEST.MF'){		
 		filter{String line -> line.replaceAll('Bundle-Version: '+number+'.'+number+'.'+number , 'Bundle-Version: '+ version)} 
 	}	
-	into('/de.thm.icampus.joomdd.ejsl.ui/META-INF/')
+	into('./de.thm.icampus.joomdd.ejsl.ui/META-INF/')
 }
 
 task deleteUIOriginManifest(type: Delete){
 	description 'delete the Original Manifest file'
 	group ('JooMDD_Help_Task')
 	
-	delete('/de.thm.icampus.joomdd.ejsl.ui/META-INF/')
+	delete('./de.thm.icampus.joomdd.ejsl.ui/META-INF/')
 }
 
 
@@ -235,16 +235,16 @@ task deleteUIBackupManifest(type: Delete){
 	description 'delete the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
-	delete('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
+	delete('./de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
 }
 
 task copyUIBackupManifest(type: Copy){
 	description 'Update the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
-	from('/de.thm.icampus.joomdd.ejsl.ui/META-INF/MANIFEST.MF')	
+	from('./de.thm.icampus.joomdd.ejsl.ui/META-INF/MANIFEST.MF')	
 	
-	into('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
+	into('./de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
 }
 
 task loadVersion{
@@ -287,7 +287,7 @@ task updateSDKVersionXml(type:Copy){
 	from('./de.thm.icampus.joomdd.ejsl.sdk/tmp/feature.xml'){		
 		filter{String line -> line.replaceFirst('     version=\"'+number+'.'+number+'.'+number , '     version=\"'+ version)} 
 	}	
-	into('/de.thm.icampus.joomdd.ejsl.sdk/')	
+	into('./de.thm.icampus.joomdd.ejsl.sdk/')	
 }
 
 task deleteSDKOriginXml(type: Delete){
@@ -401,7 +401,7 @@ task deleteXtendGenTests (type: Delete){
 	description 'delete Xtend-Gen Folder for the UI Project'
 	group ('JooMDD_Help_Task')
 	
-	delete('/de.thm.icampus.joomdd.ejsl.tests/xtend-gen/')
+	delete('./de.thm.icampus.joomdd.ejsl.tests/xtend-gen/')
 }
 
 ant.importBuild './de.thm.icampus.joomdd.ejsl.tests/CreateGenFolders.xml'
