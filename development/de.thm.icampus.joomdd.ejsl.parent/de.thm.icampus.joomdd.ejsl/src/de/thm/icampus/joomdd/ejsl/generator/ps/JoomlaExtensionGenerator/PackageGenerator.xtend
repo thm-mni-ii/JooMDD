@@ -95,7 +95,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 		<?xml version="1.0" encoding="utf-8"?>
 			<extension type="package" version="3.4.0" method="upgrade">
 			    <name>«pkg.name»</name>
-			    «pkg.manifest.authors.generate»            
+			    «Slug.generateAuthors(pkg.manifest.authors)»            
 			    «IF (pkg.manifest.creationdate != null)»
 			    	<creationDate>«pkg.manifest.creationdate»</creationDate>
 			    «ELSE»

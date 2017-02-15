@@ -863,7 +863,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	<?xml version="1.0" encoding="utf-8"?>
 	<extension version="3.1" type="plugin" group="«plugin.type»">
 		<name>«plugin.name»</name>
-		«plugin.manifest.authors.generate»
+		«Slug.generateAuthors(plugin.manifest.authors)»
 		<creationDate>«if (plugin.manifest.creationdate != null) {plugin.manifest.creationdate} 
 		else {Calendar::instance.get(Calendar::YEAR)}»</creationDate>		
 		<copyright>«if (plugin.manifest.copyright != null) {plugin.manifest.copyright}

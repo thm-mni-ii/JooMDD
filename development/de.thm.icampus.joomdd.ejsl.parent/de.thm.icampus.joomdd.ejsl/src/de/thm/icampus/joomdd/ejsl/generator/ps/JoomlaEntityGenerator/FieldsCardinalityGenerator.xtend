@@ -67,7 +67,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
       {
       		$html = array();
       		$document = JFactory::getDocument();
-      		$document->addScript( JURI::root() . '/administrator/components/«Slug.nameExtensionBind("com",com.name).toLowerCase»/assets/setMultipleForeignKeys.js');
+      		$document->addScript( JURI::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
       		$input = JFactory::getApplication()->input;
       		      $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
       		      if(empty($«entFrom.primaryKey.name»)){

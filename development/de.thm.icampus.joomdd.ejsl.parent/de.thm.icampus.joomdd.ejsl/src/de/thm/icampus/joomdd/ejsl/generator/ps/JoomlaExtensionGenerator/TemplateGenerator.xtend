@@ -68,7 +68,7 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		<?xml version="1.0" encoding="utf-8"?>
 		<extension version="3.3" type="template" client="site">
 		<name>«template.name»</name>
-		«template.manifest.authors.generate»
+		«Slug.generateAuthors(template.manifest.authors)»
 		<creationDate>«if (template.manifest.creationdate != null) {
 				template.manifest.creationdate
 			} else {

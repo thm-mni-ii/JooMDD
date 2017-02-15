@@ -112,7 +112,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			} else {
 				"GNU General Public License version 2 or later"
 			}»</license>
-			«module.manifest.authors.generate»
+			«Slug.generateAuthors(module.manifest.authors)»
 			<version>«if (module.manifest.version != null) {
 				module.manifest.version
 			} else {

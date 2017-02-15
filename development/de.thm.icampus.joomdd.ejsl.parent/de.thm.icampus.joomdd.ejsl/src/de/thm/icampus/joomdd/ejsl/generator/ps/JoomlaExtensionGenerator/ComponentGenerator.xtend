@@ -17,6 +17,11 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
+/**
+ * This class contains the Template to generate the Folders and Files for a component.
+ * 
+ * @author Dieudonne Timma
+ */
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
 	private String slug
@@ -24,6 +29,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	private String class_name
 	private String updatePath
     
+    /*
+     * this Constructor initial  all the parameters to generate a component
+     * Format the name of the extension
+     * 
+     * @param ExtendedComponent   component     contains the instance of a component
+     * @param IFileSystemAccess2  fsa 	   	    create the files and folder
+     * @param String			  path		    contains the Path for the extension
+     * @param String              updatePath	contains the path for the update folder
+     * 		
+     */
 	new(ExtendedComponent component, IFileSystemAccess2 fsa, String path, String updatePath) {
 		this.fsa = fsa;
 		this.slug = component.name
@@ -32,41 +47,52 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		this.extendeComp = component
 		this.class_name = this.noPrefixName.toFirstUpper
-		this.extendeComp.formatName
+		this.extendeComp.name = Slug.slugify(extendeComp.name)
 		this.path = path
 		this.updatePath = updatePath
 	}
 	
-	
-
-	def void formatName(Component component) {
-		component.name = Slug.slugify(component.name)
-	}
-
+	/**
+	 * this methode generate the folder structure of a component and the installation script
+	 * 
+	 */
 	override generate() {
 		println("component path " +path);
 		generateJoomlaDirectory(path+"")
 
-		/*
-		 *  indexPage variable will be used for manifest <submenu> tag
-		 *  In XTEND there are some bugs with instanceof command
-		 *  For this reason all index pages of section will be
-		 *  find and saved here
-		 */
+		
 		var indexPages = extendeComp.backEndExtendedPagerefence.map [t|
 			if(t.extendedPage.extendedDynamicPageInstance != null) t.extendedPage.extendedDynamicPageInstance
 		];
 
+        // Generate the the installation path for a compoenent
 		generateFile(path+ name + ".xml", extendeComp.xmlContent(indexPages))
+		generateFile(path+ "script.php", generateScript(extendeComp.instance, name))
 
-		// Generate language files
+		// Generate language folders and files
 		var LanguageGenerator langgen = new LanguageGenerator(fsa)
 		langgen.genComponentLanguage(extendeComp,path)
 
-			// Generate sql stuff
+			// Generate sql folders
 		generateJoomlaDirectory(path+"admin/sql")
 		generateJoomlaDirectory(path+"admin/sql/updates")
 		generateJoomlaDirectory(path+"admin/sql/updates/mysql")
+		
+		//Generate media folder
+		generateJoomlaDirectory(path+"media")
+		generateJoomlaDirectory(path+"media/css")
+		generateJoomlaDirectory(path+"media/images")
+		generateJoomlaDirectory(path+"media/js")
+		generateFile( path+"media/js/setForeignKeys.js", genScriptForForeignKeys)
+		generateFile( path+"media/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
+		
+		//Generate images folder
+		generateJoomlaDirectory(path+"images")
+		for(detailsPages : indexPages.filter[t| t.detailsPage]){
+			generateJoomlaDirectory(path+"images/" + detailsPages.name.toLowerCase)
+			generateJoomlaDirectory(path+"images/" + detailsPages.name.toLowerCase+ "/images")
+			generateJoomlaDirectory(path+"images/" + detailsPages.name.toLowerCase + "/files")
+		}
 		
 		
 
@@ -85,12 +111,20 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	}
 
 	
-	
-	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> indexPages) '''
+	/**
+	 * Generate the manifest file for  a Joomla component for more informations
+	 * see the https://docs.joomla.org/J3.x:Developing_an_MVC_Component/Developing_a_Basic_Component#helloworld.xml
+	 * 
+	 * @param ExtendedComponent         component	Containt a component
+	 * @param List<ExtendedDynamicPage> dymPages	Containt all ExtendedDynamic of a Component
+	 * 
+	 * @return  code for the manifest file
+	 */
+	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<extension type="component" version="3.3" method="upgrade">
 		    <name>«component.name»</name>
-		    «component.manifest.authors.generate»            
+		    «Slug.generateAuthors(component.manifest.authors)»            
 		    «IF (component.manifest.creationdate != null)»
 		    	<creationDate>«component.manifest.creationdate»</creationDate>
 		    «ELSE»
@@ -99,6 +133,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    «IF (component.manifest.copyright != null)»
 		    	<copyright>«component.manifest.copyright»</copyright>
 		    «ENDIF»
+		    
 		    «IF (component.manifest.license != null)»
 		    	<license>«component.manifest.license»</license>
 		    «ENDIF»
@@ -110,7 +145,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    «IF (component.manifest.description != null)»
 		    	<description>«component.manifest.description»</description>
 		    «ENDIF»
-		    
+		     <scriptfile>script.php</scriptfile>
 		    <!-- Install Section -->
 		    <install>
 		        <sql>
@@ -131,6 +166,18 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <schemapath type="mysql">sql/updates/mysql</schemapath>
 		        </schemas>
 		    </update>
+		     <media destination="«name»" folder="media">
+		     	    <folder>images</folder>
+					<folder>js</folder>
+					<folder>css</folder>
+					<filename>index.html</filename>
+		      </media>
+		      
+		      <files destination="«name»" folder="images">
+		      «FOR page : dymPages.filter[t | t.detailsPage]»
+		       <folder>«page.name»</folder>
+		      «ENDFOR»
+		      </files>
 		    
 		    <!-- Site Main File Copy Section -->
 		    <files folder="site">
@@ -154,7 +201,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <!-- Administration Menu Section -->
 		        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
 		        <submenu>
-				«FOR page : indexPages.filter[t | !t.detailsPage]»
+				«FOR page : dymPages.filter[t | !t.detailsPage]»
 					
 					<menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
 					alias="«Slug.nameExtensionBind("com", component.name).toUpperCase»_ALIAS_«page.name.toUpperCase»"
@@ -206,8 +253,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		generateJoomlaDirectory(path+"site/views")
 		generateJoomlaDirectory(path+"site/assets")
-		generateFile( path +"site/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
-		generateFile( path +"site/assets/" + "setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
+		
 
 		generateJoomlaDirectory(path+"site/controllers")
         var EntityGenerator entitygen = new EntityGenerator(extendeComp,path + "site/",fsa,false)
@@ -227,15 +273,17 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	}
 
 	private def void generateBackendSection() {
+		var indexPages = extendeComp.backEndExtendedPagerefence.map [t|
+			if(t.extendedPage.extendedDynamicPageInstance != null) t.extendedPage.extendedDynamicPageInstance
+		];
 		generateJoomlaDirectory(path+"admin")
 		generateFile( path +"admin/" + noPrefixName + ".php", extendeComp.phpAdminContent)
 		generateFile( path +"admin/controller.php", extendeComp.phpAdminControllerContent)
 
 		generateFile( path +"admin/access.xml", extendeComp.xmlAccessContent)
-		generateFile( path +"admin/config.xml", extendeComp.xmlConfigContent)
+		generateFile( path +"admin/config.xml", extendeComp.xmlConfigContent(indexPages))
 		generateJoomlaDirectory(path+"admin/assets")
-		generateFile( path +"admin/assets/" + "setForeignKeys.js", genScriptForForeignKeys)
-		generateFile( path +"admin/assets/" + "setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
+		
 		
 
 		generateJoomlaDirectory(path+"admin/views")
@@ -655,10 +703,41 @@ $this->views = $views;
 		
 	'''
 
-	def CharSequence xmlConfigContent(ExtendedComponent component) '''
+	def CharSequence xmlConfigContent(ExtendedComponent component, List<ExtendedDynamicPage> dynPages) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<config>
 			<fieldset name="component" label="«name.toUpperCase»_LABEL" description="«name.toUpperCase»_DESC">
+			<field
+				name="upload_maxsize"
+				type="text"
+				size="50"
+				default="10"
+				label="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_LABEL"
+				description="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_DESC" />
+			<field
+					name="accept_format"
+					type="text"
+					size="50"
+					default="bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
+					label="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_LABEL"
+					description="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_DESC" />
+			«FOR detailsPage : dynPages.filter[t | t.isDetailsPage]»
+			<field
+				name="«detailsPage.name.toLowerCase»_file_path"
+				type="text"
+				size="50"
+				default="images/«name.toLowerCase»/«detailsPage.name.toLowerCase»/files"
+				label="«name.toUpperCase»_«detailsPage.name.toFirstUpper»_PATH_FILE_FOLDER_LABEL"
+				description="«name.toUpperCase»_«detailsPage.name.toFirstUpper»PATH_FILE_FOLDER_DESC" />
+
+		<field
+				name="«detailsPage.name.toLowerCase»_image_path"
+				type="text"
+				size="50"
+				default="images/«name.toLowerCase»/«detailsPage.name.toLowerCase»/images"
+				label="«name.toUpperCase»_«detailsPage.name.toFirstUpper»_PATH_IMAGE_FOLDER_LABEL"
+				description="«name.toUpperCase»_«detailsPage.name.toFirstUpper»_PATH_IMAGE_FOLDER_DESC" />
+			«ENDFOR»
 			
 			</fieldset>
 			
@@ -690,59 +769,10 @@ $this->views = $views;
 
 	
 
-	def CharSequence generateHelperComponent() '''
-    <?php
-     «Slug.generateFileDoc(extendeComp,true)»
-
-/**
- * «extendeComp.name.toUpperCase»  helper.
- */
-class «extendeComp.name.toFirstUpper»Helper {
-
-    /**
-     * Configure the Linkbar.
-     */
-    public static function addSubmenu($vName = '') {
-    	«FOR ExtendedPageReference pg : extendeComp.backEndExtendedPagerefence.filter[t| t.extendedPage.extendedDynamicPageInstance != null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage]»
-    	
-    		JHtmlSidebar::addEntry(
-    		
-    		JText::_('«Slug.nameExtensionBind("com",extendeComp.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»'),
-    		'index.php?option=«Slug.nameExtensionBind("com",extendeComp.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»',
-    		$vName == '«pg.extendedPage.name.toLowerCase»'
-    		);
-    	     		
-    	  
-        «ENDFOR»
-
-        		}
-
-    /**
-     * Gets a list of the actions that can be performed.
-     *
-     * @return	JObject
-     * @since	1.6
-     */
-    public static function getActions() {
-        $user = JFactory::getUser();
-        $result = new JObject;
-
-        $assetName = '«Slug::nameExtensionBind('com', extendeComp.name)»';
-
-        $actions = array(
-            'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete'
-        );
-
-        foreach ($actions as $action) {
-            $result->set($action, $user->authorise($action, $assetName));
-        }
-
-        return $result;
-    }
-
-
-}
-    '''
+	def CharSequence generateHelperComponent() { 
+		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendeComp)
+		return help.generate
+	}
 
 	def CharSequence phpSiteRouterContent(ExtendedComponent component) '''
  <?php

@@ -337,7 +337,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		<extension type="library" version="3.3.0" method="upgrade">
 		    <name>«library.name»</name>
 		    <libraryname>«libName»</libraryname>
-		    «library.manifest.authors.generate»            
+		    «Slug.generateAuthors(library.manifest.authors)»            
 		    «IF (library.manifest.creationdate != null)»
 		    	<creationDate>«library.manifest.creationdate»</creationDate>
 		    «ELSE»

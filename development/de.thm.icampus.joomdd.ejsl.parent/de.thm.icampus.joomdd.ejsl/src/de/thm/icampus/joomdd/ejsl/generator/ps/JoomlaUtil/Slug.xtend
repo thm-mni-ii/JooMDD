@@ -22,6 +22,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Section
 import de.thm.icampus.joomdd.ejsl.eJSL.SectionKinds
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
+import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
@@ -34,6 +35,7 @@ import java.io.File
 import java.util.Calendar
 import java.util.GregorianCalendar
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.eJSL.Author
 
 /**
  * <!-- begin-user-doc -->
@@ -232,25 +234,7 @@ public class Slug  {
 	
 	'''
 
-	def static CharSequence generateFileDoc( Component component, boolean denied)'''
 	
-		/**
-		* @version v0.0.1
-		* @category Joomla component
-		* @name «component.name»View
-		«IF component.manifest != null»
-		«FOR author : component.manifest.authors»
-			* @author «author.name», <«author.authoremail»>
-		«ENDFOR»
-		* @copyright «component.manifest.copyright»
-		* @license «component.manifest.license»
-		«ENDIF»
-		*/
-		«IF denied»
-		defined('_JEXEC') or die('Restricted access');
-		«ENDIF»
-		
-	'''
 	
 	def static String generateKeysName(Component com, String name){
 		if(name!=null)
@@ -297,25 +281,113 @@ public class Slug  {
 		}
 		return null
 	}
-	def static CharSequence generateFileDoc( Module module, boolean denied)
-	'''
 	
 	/**
-	 * @version     CVS: 1.0
+     * Generate content for entity. Every generated file will be 
+     * placed in the directory defined by property path
+     */
+	def static CharSequence generateAuthors(EList<Author> authors) '''
+		«IF authors.size() == 0»
+			<author>Auto Generated Author</author>
+			<authorEmail>info@generated.com</authorEmail>
+			<authorUrl>www.generated.com</authorUrl>
+		«ELSE»
+			«FOR author : authors»
+				<author>«author.name»</author>
+				«IF author.authoremail != null»
+					<authorEmail>«author.authoremail»</authorEmail>
+				«ENDIF»
+				«IF author.authorurl != null»
+					<authorUrl>«author.authorurl»</authorUrl>
+				«ENDIF»
+			«ENDFOR»
+		«ENDIF»
+	'''
+	/**
+     * Generate content for entity. Every generated file will be 
+     * placed in the directory defined by property path
+     */
+	def static CharSequence generateAuthorsDocumentation(EList<Author> authors) '''
+		«IF authors.size() == 0»
+		* @author Auto Generated Author
+		* @authorEmail <info@generated.com> 
+		* @authorUrl www.generated.com
+		«ELSE»
+	«FOR author : authors»
+		* @author «author.name»
+		«IF author.authoremail != null»
+		* @authorEmail «author.authoremail»
+		«ENDIF»
+		«IF author.authorurl != null»
+	    * @authorUrl «author.authorurl»
+		«ENDIF»
+	«ENDFOR»
+		«ENDIF»
+	'''
+	def static CharSequence generateFileDoc( Module module, boolean denied)
+	'''
+	/**
+	 * @version     «module.manifest.version»
 	 * @category    Joomla module
-	 * @package     Packagename
-	 * @subpackage  Subpackagename
+	 * @package     Joomla.Site
+	 * @subpackage  mod_«module.name»
 	 * @name        «module.name»
-	 * @description 
-	 «FOR author :module.manifest.authors»
-	 * @author      «author.name», <«author.authoremail»>
-	 «ENDFOR»
+	 * @description  «module.manifest.description»
+	 «generateAuthorsDocumentation(module.manifest.authors)»
 	 * @copyright   «cal.get(Calendar.YEAR)»  «module.manifest.copyright»
 	 * @license     «module.manifest.license»
-	 * @link        www.link.com
+	 * @link        «module.manifest.link»
 	 */
 	'''
-	 
+	 def static CharSequence generateFileDoc( Component component, boolean denied)'''
+	    «IF component.manifest == null»
+	    * @category Joomla component
+		* @package     Joomla.Administrator
+		* @subpackage  com_«component.name»
+		* @name «component.name»View
+		«IF denied»
+		defined('_JEXEC') or die('Restricted access');
+		«ENDIF»
+		«ELSE»
+		/**
+		* @version «component.manifest.version»
+		* @category Joomla component
+		* @package     Joomla.Administrator
+		* @subpackage  com_«component.name»
+		* @name «component.name»View
+		«IF component.manifest != null»
+		«generateAuthorsDocumentation(component.manifest.authors)»
+		* @copyright «component.manifest.copyright»
+		* @license «component.manifest.license»
+		«ENDIF»
+		*/
+		«IF denied»
+		defined('_JEXEC') or die('Restricted access');
+		«ENDIF»
+	    «ENDIF»
+	    
+		
+		
+	'''
+	 def static CharSequence generateFileDoc( Extension ext, boolean denied)'''
+	    
+		/**
+		* @version «ext.manifest.version»
+		* @category Joomla component
+		* @package     Joomla.Administrator
+		* @subpackage  com_«ext.name»
+		* @name «ext.name»View
+		«IF ext.manifest != null»
+		 «generateAuthorsDocumentation(ext.manifest.authors)»
+		* @copyright «ext.manifest.copyright»
+		* @license «ext.manifest.license»
+		«ENDIF»
+		*/
+		«IF denied»
+		defined('_JEXEC') or die('Restricted access');
+		«ENDIF»
+		
+	'''
 	def static String getSectioName(Section  reference) {
 		if(reference instanceof BackendSection)
 		return 'admin'

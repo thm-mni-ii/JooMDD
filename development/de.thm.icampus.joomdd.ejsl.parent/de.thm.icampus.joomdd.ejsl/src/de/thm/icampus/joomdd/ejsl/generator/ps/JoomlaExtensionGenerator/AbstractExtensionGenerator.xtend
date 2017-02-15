@@ -97,28 +97,10 @@ abstract public class AbstractExtensionGenerator  {
 		fsa.generateFile(fileName, content)
 	}
 
-	/* Abstract Methods */
-	/**
-     * Generate content for entity. Every generated file will be 
-     * placed in the directory defined by property path
-     */
-	def CharSequence generate(EList<Author> authors) '''
-		«IF authors.size() == 0»
-			<author>Auto Generated Author</author>
-			<authorEmail>info@generated.com</authorEmail>
-			<authorUrl>www.generated.com</authorUrl>
-		«ELSE»
-			«FOR author : authors»
-				<author>«author.name»</author>
-				«IF author.authoremail != null»
-					<authorEmail>«author.authoremail»</authorEmail>
-				«ENDIF»
-				«IF author.authorurl != null»
-					<authorUrl>«author.authorurl»</authorUrl>
-				«ENDIF»
-			«ENDFOR»
-		«ENDIF»
-	'''
+	def CharSequence generateScript(Extension ext, String extName ){
+		return new ExtenionScriptGenerator(ext, extName).generate()
+	}
+	
 
 	public def CharSequence generate();
 
