@@ -1,6 +1,6 @@
 buildscript {
 	repositories {
-		jcenter()		
+		jcenter()
 	}
 	dependencies {
 		classpath 'org.xtext:xtext-gradle-plugin:1.0.12'
@@ -9,33 +9,38 @@ buildscript {
 }
 
 subprojects {
-	ext.xtextVersion = '2.10.0'
-	repositories {
-		jcenter()
-	}
-
-	apply plugin: 'java'
-	apply plugin: 'org.xtext.xtend'
-	apply from: "${rootDir}/gradle/source-layout.gradle"
-	apply from: "${rootDir}/gradle/maven-deployment.gradle"
-	apply plugin: 'eclipse'
-	apply plugin: 'idea'
+		
+	if(!(project.name == 'ProjectWizard' )) // excluding ProjectWizard for the standard xtext configuration
+	{
+		ext.xtextVersion = '2.10.0'
+		repositories {
+			jcenter()
+		}
 	
-	group = 'de.thm.icampus.joomdd.ejsl'
-
-	// Load version from pom.xml file
-	def xmlFile = file ('../pom.xml')
-	def xmlText = xmlFile.getText()
-	def parser = new XmlParser()
-	def list = parser.parseText(xmlText)
-
-	version =  list.version[0].text()	
-
-	sourceCompatibility = '1.8'
-	targetCompatibility = '1.8'
-
-	configurations.all {
-		exclude group: 'asm'
+		
+		apply plugin: 'java'
+		apply plugin: 'org.xtext.xtend'
+		apply from: "${rootDir}/gradle/source-layout.gradle"
+		apply from: "${rootDir}/gradle/maven-deployment.gradle"
+		apply plugin: 'eclipse'
+		apply plugin: 'idea'
+		
+		group = 'de.thm.icampus.joomdd.ejsl'
+	
+		// Load version from pom.xml file
+		def xmlFile = file ('../pom.xml')
+		def xmlText = xmlFile.getText()
+		def parser = new XmlParser()
+		def list = parser.parseText(xmlText)
+	
+		version =  list.version[0].text()	
+	
+		sourceCompatibility = '1.8'
+		targetCompatibility = '1.8'
+	
+		configurations.all {
+			exclude group: 'asm'
+		}
 	}
 }
 
@@ -45,7 +50,7 @@ task incrementPatchLevelVersion{
 	group ('JooMDD')
 
 	doLast{	
-		def xmlFile = file ('/pom.xml')
+		def xmlFile = file ('pom.xml')
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
@@ -91,7 +96,7 @@ task incrementMinorVersion{
 	group ('JooMDD')
 
 	doLast{	
-		def xmlFile = file ('/pom.xml')
+		def xmlFile = file ('pom.xml')
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
@@ -137,13 +142,13 @@ task incrementMajorVersion{
 	description 'Increment the Major Version for the Project'
 	group ('JooMDD')
 
-	doLast{	
-		def xmlFile = file ('/pom.xml')
-		def xmlText = xmlFile.getText()	
+	doLast{
+		def xmlFile = file ('pom.xml')
+		def xmlText = xmlFile.getText()
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
 
-		def lastversion = list.version[0].text()		
+		def lastversion = list.version[0].text()	
 		
 		def a = 0
 		def newMajorVersion
@@ -155,7 +160,7 @@ task incrementMajorVersion{
 				newMajorVersion = "$digit"		
 				newMajorVersion = newMajorVersion.toInteger()+1
 			}else if (a == 1){
-				newMinorVersion = "$digit"				
+				newMinorVersion = "$digit"			
 			}else if (a == 2){
 				newPatchVersion = "$digit"
 			}
@@ -164,8 +169,7 @@ task incrementMajorVersion{
 		
 		def newVersion = newMajorVersion + '.' + '0' + '.' + '0'
 		println "NewVersion:"+newVersion
-		
-		
+				
 		list.version[0].replaceNode{		
 				version(newVersion){}		
 		}	
@@ -187,7 +191,7 @@ task updateUIPomVersion{
 	group ('JooMDD_Help_Task')
 	
 	doLast{	
-		def xmlFile = file ('/de.thm.icampus.joomdd.ejsl.ui/pom.xml')
+		def xmlFile = file ('./de.thm.icampus.joomdd.ejsl.ui/pom.xml')
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
@@ -210,20 +214,19 @@ task updateUIManifestVersion(type: Copy){
 	description 'Update the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
-	def manifestFile = file ('/META-INF/MANIFEST.MF')	
-    def number = '[0|1|2|3|4|5|6|7|8|9]*' 
+	def number = '[0|1|2|3|4|5|6|7|8|9]*' 
 	
-	from('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/MANIFEST.MF'){		
+	from('./de.thm.icampus.joomdd.ejsl.ui/META-INF2/MANIFEST.MF'){		
 		filter{String line -> line.replaceAll('Bundle-Version: '+number+'.'+number+'.'+number , 'Bundle-Version: '+ version)} 
 	}	
-	into('/de.thm.icampus.joomdd.ejsl.ui/META-INF/')
+	into('./de.thm.icampus.joomdd.ejsl.ui/META-INF/')
 }
 
 task deleteUIOriginManifest(type: Delete){
 	description 'delete the Original Manifest file'
 	group ('JooMDD_Help_Task')
 	
-	delete('/de.thm.icampus.joomdd.ejsl.ui/META-INF/')
+	delete('./de.thm.icampus.joomdd.ejsl.ui/META-INF/')
 }
 
 
@@ -231,23 +234,23 @@ task deleteUIBackupManifest(type: Delete){
 	description 'delete the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
-	delete('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
+	delete('./de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
 }
 
 task copyUIBackupManifest(type: Copy){
 	description 'Update the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
-	from('/de.thm.icampus.joomdd.ejsl.ui/META-INF/MANIFEST.MF')	
+	from('./de.thm.icampus.joomdd.ejsl.ui/META-INF/MANIFEST.MF')	
 	
-	into('/de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
+	into('./de.thm.icampus.joomdd.ejsl.ui/META-INF2/')
 }
 
 task loadVersion{
 	description 'Update the Version for the Project ejsl'
 	group ('JooMDD_Help_Task')
 	
-	def xmlFile = file ('/pom.xml')
+	def xmlFile = file ('pom.xml')
 	def xmlText = xmlFile.getText()
 	def parser = new XmlParser()
 	def list = parser.parseText(xmlText)
@@ -283,7 +286,7 @@ task updateSDKVersionXml(type:Copy){
 	from('./de.thm.icampus.joomdd.ejsl.sdk/tmp/feature.xml'){		
 		filter{String line -> line.replaceFirst('     version=\"'+number+'.'+number+'.'+number , '     version=\"'+ version)} 
 	}	
-	into('/de.thm.icampus.joomdd.ejsl.sdk/')	
+	into('./de.thm.icampus.joomdd.ejsl.sdk/')	
 }
 
 task deleteSDKOriginXml(type: Delete){
@@ -384,6 +387,12 @@ task cleanEJSLUpdateSite(type: Delete){
 }
 
 
+task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions"]){
+	description 'Run All Eclipse Tasks'
+	group ('JooMDD_Help_Task')
+
+}
+
 /*
 	regenerate Xtend-Gen Folder Tests Project
 */
@@ -391,7 +400,7 @@ task deleteXtendGenTests (type: Delete){
 	description 'delete Xtend-Gen Folder for the UI Project'
 	group ('JooMDD_Help_Task')
 	
-	delete('/de.thm.icampus.joomdd.ejsl.tests/xtend-gen/')
+	delete('./de.thm.icampus.joomdd.ejsl.tests/xtend-gen/')
 }
 
 ant.importBuild './de.thm.icampus.joomdd.ejsl.tests/CreateGenFolders.xml'
@@ -401,7 +410,7 @@ task runAntScriptTests(dependsOn: make){
 	group ('JooMDD_Help_Task')
 }
 
-task regrenerateXtendGenFolderTests(dependsOn:['deleteXtendGenTests','runAntScriptTests']){
+task reCreateXtendGenFolderTests(dependsOn:['deleteXtendGenTests','runAntScriptTests']){
 	description 'Delete and create xtend-gen'
 	group ('JooMDD_Help_Task')
 
@@ -411,6 +420,7 @@ task regrenerateXtendGenFolderTests(dependsOn:['deleteXtendGenTests','runAntScri
 /*
 	regenerate Xtend-Gen Folder UI Project
 */
+/*
 task deleteXtendGen (type: Delete){
 	description 'delete Xtend-Gen Folder for the UI Project'
 	group ('JooMDD_Help_Task')
@@ -425,27 +435,54 @@ task runAntScript(dependsOn: makeUI){
 	group ('JooMDD_Help_Task')
 }
 
-task regrenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript','regrenerateXtendGenFolderTests']){
+task regenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript','regenerateXtendGenFolderTests']){
 	description 'Delete and create xtend-gen'
 	group ('JooMDD')
 
 	runAntScript.mustRunAfter	deleteXtendGen
 }
+*/
 
 /*
 	JooMDD Deploy
 */
 
-task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", "updateAllVersions" , "cleanEJSLUpdateSite" ,":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
+task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", ":ProjectWizard:createIntelliJWizardPluginSource","JooMDDDeployEclipse" ,":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
 	group ('joomdd')
     description "Create all deployment resources (JetBrains IDE) , prepare Eclipse Deploy "
-    
-    
-    task('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	task(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+
+	task('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	":ProjectWizard:createIntelliJWizardPluginSource"
+    task(":ProjectWizard:createIntelliJWizardPluginSource").mustRunAfter		task(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
     cleanEJSLUpdateSite.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
     
 	doLast{
 		println "Deployment finished"
 	}
+}
+
+
+/*
+	Live Tasks
+*/
+
+task JetBrainsIDEWithAllPlugins2(dependsOn:":de.thm.icampus.joomdd.ejsl.idea:ideaZip"){
+	group('JetBrains_Wizard_Help_Task')
+	description 'prepare Live eJSL Plugin'
+}
+
+task JetBrainsIDEWithAllPlugins(dependsOn:(":ProjectWizard:JetBrainsIDEWithAllPlugins")){
+	group('joomdd_Live')
+	description 'Create Wizard and eJSL, add Xtext and run JetBrainsIDE'
+	
+	doLast{
+		println "Configure the IDE in Project Wizard/build.gradle file. Line 30 - 32: intellij{version ... for IntelliJ and alternativeIdePath ... for PhpStorm."
+	}
+}
+
+JetBrainsIDEWithAllPlugins.dependsOn JetBrainsIDEWithAllPlugins2
+
+task IntelliJWitheJSL(dependsOn:(":de.thm.icampus.joomdd.ejsl.idea:runIdea")){
+	group('joomdd_Live')
+	description 'Create eJSL, add Xtext and run IntelliJ IDEA'
 }
 
