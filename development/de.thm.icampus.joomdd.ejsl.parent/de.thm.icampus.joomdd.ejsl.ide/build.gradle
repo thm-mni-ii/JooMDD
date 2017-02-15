@@ -13,7 +13,7 @@ task updatePomVersion{
 	group ('JooMDD_Help_Task')
 	
 	doLast{	
-		def xmlFile = file ('/pom.xml')
+		def xmlFile = file ('pom.xml')
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
@@ -36,20 +36,19 @@ task updateManifestVersion(type: Copy){
 	description 'Update the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
-	def manifestFile = file ('/META-INF/MANIFEST.MF')	
-    def number = '[0|1|2|3|4|5|6|7|8|9]*' 
+	def number = '[0|1|2|3|4|5|6|7|8|9]*' 
 	
-	from('/META-INF2/MANIFEST.MF'){		
+	from('./META-INF2/MANIFEST.MF'){		
 		filter{String line -> line.replaceAll('Bundle-Version: '+number+'.'+number+'.'+number , 'Bundle-Version: '+ version)} 
 	}	
-	into('/META-INF/')
+	into('./META-INF/')
 }
 
 task deleteOriginManifest(type: Delete){
 	description 'delete the Original Manifest file'
 	group ('JooMDD_Help_Task')
 	
-	delete('/META-INF/')
+	delete('./META-INF/')
 }
 
 
@@ -57,16 +56,16 @@ task deleteBackupManifest(type: Delete){
 	description 'delete the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
-	delete('/META-INF2/')
+	delete('./META-INF2/')
 }
 
 task copyBackupManifest(type: Copy){
 	description 'Update the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
-	from('/META-INF/MANIFEST.MF')	
+	from('./META-INF/MANIFEST.MF')	
 	
-	into('/META-INF2/')
+	into('./META-INF2/')
 }
 
 task updateVersion(dependsOn : [ 'copyBackupManifest', 'deleteOriginManifest','updateManifestVersion', 'deleteBackupManifest', 'updatePomVersion' ]){
@@ -83,7 +82,7 @@ task deleteXtendGen (type: Delete){
 	description 'delete Xtend-Gen Folder for the Project'
 	group ('JooMDD_Help_Task')
 	
-	delete('/xtend-gen/')
+	delete('./xtend-gen/')
 }
 
 ant.importBuild 'CreateGenFolders.xml'
@@ -93,7 +92,7 @@ task runAntScript(dependsOn: make){
 	group ('JooMDD_Help_Task')
 }
 
-task regrenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript']){
+task regenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript']){
 	description 'delete and create xtend gen'
 	group ('JooMDD')
 

@@ -5,13 +5,26 @@ buildscript {
 }
 
 
-
 plugins {
     id "org.jetbrains.intellij" version "0.1.10"
 }
 
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'eclipse'
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+		
+    }
+}
+
 
 intellij{
     //version '143.116.4'			// old IntelliJ
@@ -37,25 +50,25 @@ def templatePath = "../de.thm.icampus.joomdd.ejsl.ui/templates/"
 
 task cleanXtextPlugin(type: Delete){
     description 'delete old Xtext Plugin from Sandbox'
-    group ('Jetbrinas_Wizard_Help_Task')
+    group ('JetBrains_Wizard_Help_Task')
     delete pluginSandbox + "org.eclipse.xtext.idea"
 }
 
 task cleaneJSLPlugin(type: Delete){
     description 'delete old eJSL Plugin from Sandbox'
-    group ('Jetbrinas_Wizard_Help_Task')
+    group ('JetBrains_Wizard_Help_Task')
     delete pluginSandbox + "de.thm.icampus.joomdd.ejsl.idea"
 }
 
 task deleteOldWizardPlugin(type: Delete){
 	description 'delete old Wizard Plugin from wizard Sources'
-	group ('Jetbrinas_Wizard_Help_Task')
+	group ('JetBrains_Wizard_Help_Task')
 	delete buildPath+'wizardSources'
 }
 
 task addXtextPlugin(type: Copy, dependsOn: cleanXtextPlugin){
     description 'Add Xtext IDEA Core Plugin to Sandbox (IntelliJ or PhpStorm)'
-    group ('Jetbrinas_Wizard_Help_Task')
+    group ('JetBrains_Wizard_Help_Task')
 
     if (intellij.alternativeIdePath == null){
         // Load IntelliJ Xtet Plugin
@@ -69,7 +82,7 @@ task addXtextPlugin(type: Copy, dependsOn: cleanXtextPlugin){
 
 task addeJSLPlugin(type: Copy, dependsOn: cleaneJSLPlugin){
     description 'add latest eJSL Plugin to Sandbox'
-    group ('Jetbrinas_Wizard_Help_Task')
+    group ('JetBrains_Wizard_Help_Task')
 
     if (intellij.alternativeIdePath == null){
         // Load IntelliJ Xtet Plugin
@@ -83,13 +96,13 @@ task addeJSLPlugin(type: Copy, dependsOn: cleaneJSLPlugin){
 
 task buildIntelliJPlugin(dependsOn:'buildPlugin'){
     description 'Create standalone IntelliJ Wizard zip file'
-    group ('Jetbrinas_Wizard_Help_Task')
+    group ('JetBrains_Wizard_Help_Task')
 }
 
 
 task deleteTemplates(type: Delete){
 	description 'delete old Templates'
-	group ('Jetbrinas_Wizard_Help_Task')
+	group ('JetBrains_Wizard_Help_Task')
 	
 	delete "src/main/resources/templates/"
 	
@@ -97,7 +110,7 @@ task deleteTemplates(type: Delete){
 
 task copyNewTemplates(type: Copy, dependsOn:'deleteTemplates'){
 	description 'copy Templates from Ui Project'
-	group ('Jetbrinas_Wizard_Help_Task')
+	group ('JetBrains_Wizard_Help_Task')
 	
 	from templatePath
 	into "src/main/resources/templates/"	
@@ -105,7 +118,7 @@ task copyNewTemplates(type: Copy, dependsOn:'deleteTemplates'){
 
 task createIntelliJWizardPluginSource(type: Copy, dependsOn:['copyNewTemplates','buildPlugin','deleteOldWizardPlugin']){
 	description 'Creates IDEA Wizard Plugin source for Deployment'
-	group ('Jetbrinas_Wizard')
+	group ('JetBrains_Wizard_Help_Task')
 	
 	compileJava.mustRunAfter	copyNewTemplates
 
@@ -114,14 +127,18 @@ task createIntelliJWizardPluginSource(type: Copy, dependsOn:['copyNewTemplates',
 	into buildPath + 'wizardSources'
 }
 
-task runJetbrinasIDEWithWizard(dependsOn:['copyNewTemplates','cleanXtextPlugin','cleaneJSLPlugin','runIdea']){
-    description 'Create Wizard and run IntelliJ'
-    group ('Jetbrinas_Wizard')
+task JetBrainsIDEWithWizard(dependsOn:['copyNewTemplates','cleanXtextPlugin','cleaneJSLPlugin','runIdea']){
+    description 'Create Wizard and run JetBrains IDE'
+    group ('joomdd_Live')
 	compileJava.mustRunAfter	copyNewTemplates
+	
+	doLast{
+		println "Configure the IDE in Project Wizard/build.gradle file. Line 30 - 32: intellij{version ... for IntelliJ and alternativeIdePath ... for PhpStorm."
+	}
 }
 
-task runJetbrainsIDEWithAllPlugins(dependsOn:['copyNewTemplates','addXtextPlugin','addeJSLPlugin','runIdea']){
+task JetBrainsIDEWithAllPlugins(dependsOn:['copyNewTemplates','addXtextPlugin','addeJSLPlugin','runIdea']){
     description 'Create Wizard, add eJSL, Xtext and run IntelliJ'
-    group ('Jetbrinas_Wizard')
+    group ('JetBrains_Wizard_Help_Task')
     compileJava.mustRunAfter	copyNewTemplates
 }
