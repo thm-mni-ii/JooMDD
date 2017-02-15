@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+	<condition property="isWindows">
+	    <os family="windows" />
+	</condition>
+
+	<condition property="isUnix">
+	    <os family="unix" />
+	</condition>
+
+	<target name="antBuildEclipse" depends="mvn_windows, mvn_unix"/>
+
+	<target name="mvn_windows" if="isWindows">
+	    <exec dir="." executable="cmd">
+	        <arg line="/c mvn package -Dproject.build.sourceEncoding=UTF-8" />
+	    </exec>
+	</target>
+
+	<target name="mvn_unix" if="isUnix">
+	    <exec dir="." executable="sh">
+	        <arg line="-c 'mvn package -Dproject.build.sourceEncoding=UTF-8'" />
+	    </exec>
+	</target>
+	
+</project>
