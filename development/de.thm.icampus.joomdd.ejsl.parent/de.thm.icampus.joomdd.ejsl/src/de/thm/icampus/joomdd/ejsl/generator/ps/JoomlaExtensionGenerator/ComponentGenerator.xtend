@@ -485,7 +485,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		?>
 		<div >
 			</div>
-			<p class="text-center"> <h1><?php echo Welcome to the component JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
+			<p class="text-center"> <h1><?php echo "Welcome to ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
 			this component is generated with the Joomdd tools, for more information <a target="_blank" href="https://github.com/icampus/JooMDD">see here</a>
 			 </p> 
 			<div id="cpanel" class='cpanel'>
