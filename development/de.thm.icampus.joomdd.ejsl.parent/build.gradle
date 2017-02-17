@@ -313,7 +313,33 @@ task copySDKBackupXml(type: Copy){
 	into('./de.thm.icampus.joomdd.ejsl.sdk/tmp/')
 }
 
-task updateSDKVersion(dependsOn : [ 'copySDKBackupXml', 'deleteSDKOriginXml' , 'updateSDKVersionXml' , 'deleteSDKBackupXml']){
+
+task updateSDKPomVersion{
+	description 'Update the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	doLast{	
+		def xmlFile = file ('./de.thm.icampus.joomdd.ejsl.sdk/pom.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()
+		def list = parser.parseText(xmlText)
+		
+		
+		list.parent[0].version[0].replaceNode{		
+				version(version){}	
+		}
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
+}
+
+
+
+task updateSDKVersion(dependsOn : [ 'copySDKBackupXml', 'updateSDKPomVersion', 'deleteSDKOriginXml' , 'updateSDKVersionXml' , 'deleteSDKBackupXml']){
 	description 'Update the Version for the Project'
 	group ('JooMDD_Help_Task')
 	
@@ -324,6 +350,65 @@ task updateSDKVersion(dependsOn : [ 'copySDKBackupXml', 'deleteSDKOriginXml' , '
 /*
 	End Update Version in sdk Project
 */
+
+/*
+	update repository pom
+*/
+
+task updateRepositoryPomVersion{
+	description 'Update the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	doLast{	
+		def xmlFile = file ('./de.thm.icampus.joomdd.ejsl.repository/pom.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()
+		def list = parser.parseText(xmlText)
+		
+		
+		list.parent[0].version[0].replaceNode{		
+				version(version){}	
+		}
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
+}
+
+/*
+	update target pom
+*/
+
+
+task updateTargetPomVersion{
+	description 'Update the Version for the Project'
+	group ('JooMDD_Help_Task')
+	
+	doLast{	
+		def xmlFile = file ('./de.thm.icampus.joomdd.ejsl.target/pom.xml')
+		def xmlText = xmlFile.getText()	
+		def parser = new XmlParser()
+		def list = parser.parseText(xmlText)
+		
+		
+		list.parent[0].version[0].replaceNode{		
+				version(version){}	
+		}
+
+		def writer = new FileWriter(xmlFile)
+
+		def printer = new XmlNodePrinter(new PrintWriter(writer))
+		printer.preserveWhitespace = true
+		printer.print(list)
+	}
+}
+
+
+
+
 
 /*
 	Update Version EJSLUpdateSite Project
@@ -360,9 +445,9 @@ task updateEJSLUpdateSiteVersion{
 }
 
 /*
-	Start update Version from all Projects
+	Start update Version for all Projects
 */
-task updateAllVersions(dependsOn: ['updateUIVersion', 'updateSDKVersion', 'updateEJSLUpdateSiteVersion', ':de.thm.icampus.joomdd.ejsl:updateVersion',':de.thm.icampus.joomdd.ejsl.ide:updateVersion']){
+task updateAllVersions(dependsOn: ['updateSDKPomVersion','updateRepositoryPomVersion','updateTargetPomVersion','updateUIVersion', 'updateSDKVersion', 'updateEJSLUpdateSiteVersion', ':de.thm.icampus.joomdd.ejsl:updateVersion',':de.thm.icampus.joomdd.ejsl.ide:updateVersion']){
 	description 'Update all Versions for the Project'
 	group ('JooMDD_Help_Task')
 }
@@ -387,10 +472,40 @@ task cleanEJSLUpdateSite(type: Delete){
 }
 
 
-task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions"]){
+
+ant.importBuild 'build.xml'
+
+
+task runAntBuild(dependsOn: "antBuildEclipse"){
+	description 'Runs build.xml Ant script for Eclipse Update Site'
+	group("123")
+	
+    doLast {
+        println 'Plugins created via maven'
+    }
+}
+
+task copyEclPluginToUpdateSite(type: Copy){
+	description 'Update the Version for the Project'
+	group ('123')
+	
+	from('./de.thm.icampus.joomdd.ejsl.repository/target/repository/')	
+	
+	into('../../releases/Eclipse/JooMDDUpdateSite/')
+}
+
+
+
+
+task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions","antBuildEclipse", "copyEclPluginToUpdateSite"]){
 	description 'Run All Eclipse Tasks'
 	group ('JooMDD_Help_Task')
-
+	
+	
+	cleanEJSLUpdateSite.mustRunAfter		updateAllVersions
+	antBuildEclipse.mustRunAfter			updateAllVersions	
+	copyEclPluginToUpdateSite.mustRunAfter	antBuildEclipse
+	
 }
 
 /*
@@ -485,4 +600,3 @@ task IntelliJWitheJSL(dependsOn:(":de.thm.icampus.joomdd.ejsl.idea:runIdea")){
 	group('joomdd_Live')
 	description 'Create eJSL, add Xtext and run IntelliJ IDEA'
 }
-

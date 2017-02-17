@@ -5,14 +5,7 @@
     <artifactId>de.thm.icampus.joomdd.ejsl.parent</artifactId>
     <version>0.3.2</version>
   </parent>
-  <artifactId>de.thm.icampus.joomdd.ejsl.ui</artifactId>
-  <packaging>eclipse-plugin</packaging>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.xtend</groupId>
-        <artifactId>xtend-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
+  <artifactId>de.thm.icampus.joomdd.ejsl.sdk</artifactId>
+  <packaging>eclipse-feature</packaging>
+  <dependencies/>
 </project>
