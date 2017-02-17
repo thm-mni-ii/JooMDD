@@ -169,6 +169,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     	    <folder>images</folder>
 					<folder>js</folder>
 					<folder>css</folder>
+					«FOR page : dymPages.filter[t | t.detailsPage]»
+					<folder>«page.name.toLowerCase»</folder>
+					«ENDFOR»
 					<filename>index.html</filename>
 		      </media>
 		      
@@ -486,7 +489,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		<div >
 			</div>
 			<p class="text-center"> <h1><?php echo "Welcome to ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
-			this component is generated with the Joomdd tools, for more information <a target="_blank" href="https://github.com/icampus/JooMDD">see here</a>
+			<h4>«component.manifest.description»</h4>
 			 </p> 
 			<div id="cpanel" class='cpanel'>
 			<?php foreach ($this->views as $view)
@@ -502,7 +505,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			}
 			?>
 		</div>  
-			
+		<p>this component is generated with the Joomdd tools, for more information <a target="_blank" href="https://github.com/icampus/JooMDD">see here</a></p>	
     '''
 	/**
 	 * return the code for the  main view of the component
@@ -646,16 +649,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				type="text"
 				size="50"
 				default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/files"
-				label="«name.toUpperCase»_«detailsPage.name.toFirstUpper»_PATH_FILE_FOLDER_LABEL"
-				description="«name.toUpperCase»_«detailsPage.name.toFirstUpper»PATH_FILE_FOLDER_DESC" />
+				label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_FILE_FOLDER_LABEL"
+				description="«name.toUpperCase»_«detailsPage.name.toUpperCase»PATH_FILE_FOLDER_DESC" />
 
 		<field
 				name="«detailsPage.name.toLowerCase»_image_path"
 				type="text"
 				size="50"
 				default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/images"
-				label="«name.toUpperCase»_«detailsPage.name.toFirstUpper»_PATH_IMAGE_FOLDER_LABEL"
-				description="«name.toUpperCase»_«detailsPage.name.toFirstUpper»_PATH_IMAGE_FOLDER_DESC" />
+				label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_LABEL"
+				description="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_DESC" />
 			«ENDFOR»
 			
 			</fieldset>

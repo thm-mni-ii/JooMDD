@@ -283,8 +283,11 @@ public class Slug  {
 	}
 	
 	/**
-     * Generate content for entity. Every generated file will be 
-     * placed in the directory defined by property path
+     * Generate the author informations for the Manifest of a extension
+     * 
+     * @param EList<Author> authors List of authors
+     * @return Charsequence 
+     * 
      */
 	def static CharSequence generateAuthors(EList<Author> authors) '''
 		«IF authors.size() == 0»
@@ -304,8 +307,11 @@ public class Slug  {
 		«ENDIF»
 	'''
 	/**
-     * Generate content for entity. Every generated file will be 
-     * placed in the directory defined by property path
+     * Generate the author informations for the documentation of a file
+     * 
+     * @param EList<Author> authors List of authors
+     * @return Charsequence 
+     * 
      */
 	def static CharSequence generateAuthorsDocumentation(EList<Author> authors) '''
 		«IF authors.size() == 0»
@@ -314,13 +320,7 @@ public class Slug  {
 		* @authorUrl www.generated.com
 		«ELSE»
 	«FOR author : authors»
-		* @author «author.name»
-		«IF author.authoremail != null»
-		* @authorEmail «author.authoremail»
-		«ENDIF»
-		«IF author.authorurl != null»
-	    * @authorUrl «author.authorurl»
-		«ENDIF»
+		* @author «author.name» «IF author.authoremail != null»  <«author.authoremail»>«ENDIF» «IF author.authorurl != null» <«author.authorurl»>«ENDIF»
 	«ENDFOR»
 		«ENDIF»
 	'''
@@ -344,7 +344,7 @@ public class Slug  {
 	    * @category Joomla component
 		* @package     Joomla.Administrator
 		* @subpackage  com_«component.name»
-		* @name «component.name»View
+		* @name «component.name»
 		«IF denied»
 		defined('_JEXEC') or die('Restricted access');
 		«ENDIF»
@@ -354,7 +354,7 @@ public class Slug  {
 		* @category Joomla component
 		* @package     Joomla.Administrator
 		* @subpackage  com_«component.name»
-		* @name «component.name»View
+		* @name «component.name» 
 		«IF component.manifest != null»
 		«generateAuthorsDocumentation(component.manifest.authors)»
 		* @copyright «component.manifest.copyright»
