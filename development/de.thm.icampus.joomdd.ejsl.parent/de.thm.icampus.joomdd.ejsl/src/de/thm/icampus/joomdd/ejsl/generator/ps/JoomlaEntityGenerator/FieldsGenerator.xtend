@@ -26,6 +26,10 @@ class FieldsGenerator {
 		com = component
 		entFrom = from
 	}
+	public new(ExtendedComponent component) {
+		com = component
+		
+	}
 
 	public def String getnameField() {
 		return nameField

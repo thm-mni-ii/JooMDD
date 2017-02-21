@@ -30,6 +30,7 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 	EList<ExtendedParameter> extendedGlobalParameterList
 	EList<ExtendedParameter> extendedLocalParameterList
 	EList<ExtendedAttribute>allAttributeOfFilterAndColum
+	boolean haveFile = false
 	
 	
 	EList<ExtendedEntity> extendedEntity
@@ -46,6 +47,14 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		this.links = page.links
 		this.preserve = page.preserve
 		initList()
+		sethaveFile()
+	}
+	
+	def sethaveFile() {
+	   for(ExtendedDetailPageField t: extendedEditFieldsList){
+	   	  if(t.type.equalsIgnoreCase("Imagepicker") || t.type.equalsIgnoreCase("Filepickerpicker"))
+	   	  haveFile = true
+	   }
 	}
 	
 
@@ -125,6 +134,10 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 	
 	override getAllAttributeOfFilterAndColum() {
 		return allAttributeOfFilterAndColum
+	}
+	
+	override haveFiletoLoad() {
+		return haveFile
 	}
 	
 }

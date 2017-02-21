@@ -36,6 +36,10 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.eJSL.Author
+import java.io.File
+import  com.google.common.io.Files
+import java.util.Scanner
+import de.thm.icampus.joomdd.ejsl.generator.EJSLGenerator
 
 /**
  * <!-- begin-user-doc -->
@@ -115,10 +119,10 @@ public class Slug  {
 			 	result='''type="calendar" '''
 			 } 
 			 case "Imagepicker":{
-			 	result='''Imagepicker '''
+			 	result="imagepicker"
 			 } 
 			 case "Filepicker":{
-			 	result='''Filepicker'''
+			 	result="filepicker"
 			 } 
 			 case "Text_Field_NE":{
 			 	result='''type="text" '''
@@ -127,19 +131,19 @@ public class Slug  {
 			 	result='''type="editor" '''
 			 }
 			 case "Select":{
-			 	result='''select'''
+			 	result="select"
 			 }
 			 case "Multiselect":{
-			 	result='''multiselect'''
+			 	result="multiselect"
 			 }
 			 case "Checkbox":{
-			 	result='''checkbox'''
+			 	result="checkbox"
 			 }
 			 case "Radiobutton":{
-			 	result='''radiobutton'''
+			 	result="radiobutton"
 			 }
 			 case "hidden":{
-			 	result='''hidden '''
+			 	result="hidden"
 			 }
 		}
 		return result
@@ -673,7 +677,8 @@ public class Slug  {
 	 }
 	 root.delete
 	}
-
+  
+	
 	
 	
 } // Slug

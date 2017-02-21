@@ -44,7 +44,85 @@ class DetailsPageTemplateBackendHelper {
 	'''
 	
 	
+	def CharSequence genAdminControllerSave()'''
+	/**
+	     * Method to edit an existing record.
+	     *
+	     * @param   string $key The name of the primary key of the URL variable.
+	     * @param   string $urlVar The name of the URL variable if different from the primary key
+	     *                           (sometimes required to avoid router collisions).
+	     *
+	     * @return  boolean  True if access level check and checkout passes, false otherwise.
+	     *
+	     * @since   12.2
+	     */
+	    public function save($key = null, $urlVar = null)
+	    {
+	        $input = JFactory::getApplication()->input;
+	        $model = $this->getModel();
+	        $table = $model->getTable();
+	        // Determine the name of the primary key for the data.
+	        if (empty($key)) {
+	            $key = $table->getKeyName();
+	        }
 	
+	        // To avoid data collisions the urlVar may be different from the primary key.
+	        if (empty($urlVar)) {
+	            $urlVar = $key;
+	        }
+	
+	        $recordId = $this->input->getInt($urlVar);
+	
+	        // Populate the row id from the session.
+	        $data[$key] = $recordId;
+	        $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+	        $mediaHelper = new JHelperMedia;
+	        $uploadMaxSize = $params->get('upload_maxsize', 0) * 1024 * 1024;
+	        $uploadMaxFileSize = $mediaHelper->toBytes(ini_get('upload_max_filesize'));
+	        $files = $input->files->get("jform", array(), 'array');
+	        if (isset($files)) {
+	            foreach ($files as $file) {
+	                if (!isset($file['name'])) {
+	                    $this->setMessage(JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_INVALID_FILE_NAME'), 'error');
+	
+	                    $this->setRedirect(
+	                        JRoute::_(
+	                            'index.php?option=' . $this->option . '&view=' . $this->view_item
+	                            . $this->getRedirectToItemAppend($recordId, $urlVar), false
+	                        )
+	                    );
+	
+	                    return false;
+	                }
+	                if(strpos($file['type'],"image")!==false){
+                        $path = $params->get("«dpage.name.toLowerCase»_image_path");
+                    }else{
+                        $path = $params->get("«dpage.name.toLowerCase»_file_path");
+                    }
+	                $file['name'] = JFile::makeSafe($file['name']);
+	                $file['name'] = str_replace(' ', '-', $file['name']);
+	                $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $path, $file['name'])));
+	                if (($file['error'] == 1)
+	                    || ($uploadMaxSize > 0 && $file['size'] > $uploadMaxSize)
+	                    || ($uploadMaxFileSize > 0 && $file['size'] > $uploadMaxFileSize)
+	                ) {
+	                    // File size exceed either 'upload_max_filesize' or 'upload_maxsize'.
+	                    $this->setMessage(JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_ERROR_WARNFILETOOLARGE'), 'error');
+	
+	                    $this->setRedirect(
+	                        JRoute::_(
+	                            'index.php?option=' . $this->option . '&view=' . $this->view_item
+	                            . $this->getRedirectToItemAppend($recordId, $urlVar), false
+	                        )
+	                    );
+	                    return false;
+	                }
+	             
+	            }
+	            return parent::save($key, $urlVar);
+	        }
+	        }
+	'''
 	
 	def generateAdminModelTableFunction()'''
 	/**

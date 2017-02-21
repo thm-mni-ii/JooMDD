@@ -30,8 +30,13 @@ import org.eclipse.emf.common.util.BasicEList
  */
 public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	
-    
-    def CharSequence xmlSiteTemplateContent(String pagename, ExtendedDynamicPage page, ExtendedComponent component) '''
+ /**
+  * Generate the manifest file for the menu item of a component. 
+  * @param String 			   pagename  contains the name of a page
+  * @param ExtendedDynamicPage page		 contains the extended instance of a dynamicpage
+  * @param ExtendedComponent   component contains the compoenent name
+  */   
+def CharSequence xmlSiteTemplateContent(String pagename, ExtendedDynamicPage page, ExtendedComponent component) '''
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
     <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
@@ -60,7 +65,14 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 </fields>
 </metadata>
     '''
-    //todo Put the Settings for Details Page here
+    /**
+     * Generate the Setting parameter for the configuration of a menu item. the admin can select a item.
+     * 
+     * @param String              pagename  contains the page name
+     * @param ExtendedDynamicPage page      contains the extended instance of a dynamicpage
+     * @parem ExtendedComponent   component contains the instance of a component
+     * 
+     */
     def CharSequence genSettingForDetailsPage(String pagename, ExtendedDynamicPage page, ExtendedComponent component)'''
 
 	<fieldset name="request"
@@ -80,6 +92,14 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 		</fieldset>
 	
 '''
+  /**
+     * Generate the Setting parameter for the configuration of a menu item from a indexpage.
+     * 
+     * @param String              pagename  contains the page name
+     * @param ExtendedDynamicPage page      contains the extended instance of a dynamicpage
+     * @parem ExtendedComponent   component contains the instance of a component
+     * 
+     */
 def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage page, ExtendedComponent component)'''
  
    <fieldset name="basic" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_ORDERING_LABEL">
@@ -169,82 +189,97 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
 	«ENDIF»
 		
     '''
-		override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedComponent component) '''
-		
-		'''
-		override CharSequence generateParameter(EList<ExtendedParameter>listParams, ExtendedComponent component)'''
-		«FOR param : listParams»
-		«Slug.writeParameter(param)»
-		«ENDFOR»
-		'''
-		def CharSequence xmlAdminFields(ExtendedDynamicPage page, ExtendedComponent component, String name) '''
-		<?xml version="1.0" encoding="utf-8"?>
-		<form>
-			<field name="«page.extendedEntityList.get(0).primaryKey.name»" type="hidden" default="0" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID"
-				readonly="true" class="readonly"
-				description="JGLOBAL_FIELD_ID_DESC" /> 
+override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedComponent component) '''
+	
+	'''
+	override CharSequence generateParameter(EList<ExtendedParameter>listParams, ExtendedComponent component)'''
+	«FOR param : listParams»
+	«Slug.writeParameter(param)»
+	«ENDFOR»
+	'''
+	/**
+	 * Generate the manifest file for the formular of a details page.
+	 * 
+	 * @param String              pagename  contains the page name
+     * @param ExtendedDynamicPage page      contains the extended instance of a dynamicpage
+     * @parem ExtendedComponent   component contains the instance of a component 
+	 */
+	def CharSequence xmlAdminFields(ExtendedDynamicPage page, ExtendedComponent component, String name) '''
+	<?xml version="1.0" encoding="utf-8"?>
+	<form>
+		<field name="«page.extendedEntityList.get(0).primaryKey.name»" type="hidden" default="0" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC" /> 
 
-				<field name="created_by" type="hidden" default="" 
-				label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"
-				description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
-					
-					«FOR ExtendedEntity e : page.extendedEntityList»
-					«FOR ExtendedAttribute attr : e.extendedAttributeList.filter[t | !t.isIsprimary]»
-					«writeAttribute(e,attr,component,page)»
-					«ENDFOR»
-					«FOR ExtendedReference ref : e.extendedReference.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
-					«var Entity foreign = Slug.getOtherEntityToMapping(ref)»
-					<field name="«ref.entity.name.toLowerCase»_id"
-							   type ="«e.name.toLowerCase»To«ref.entity.name.toLowerCase»"
-							   id="«ref.entity.name.toLowerCase»_id"
-							   label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»"
-							   description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"
-						/>
-					«FOR Attribute attr: Slug.getOtherAttribute(ref)»
-					<field name="«attr.name.toLowerCase»"
-					   type ="hidden"
-					   id="«attr.name.toLowerCase»"
-						/>
-					«ENDFOR»
-					«ENDFOR»
-					«ENDFOR»
-				  
-		         <field name="published" type="hidden" filter="unset" />
-				<field name="checked_out" type="hidden" filter="unset" />
-		        <field name="checked_out_time" type="hidden" filter="unset" /> 
-					
-				 <fields name="params">
-			  <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL__LABEL">
-	        	 «generateParameter(page.extendedLocalParametersListe, component)»
-	        	</fieldset>
-        	 <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL__LABEL">
-	        	«generateParameter(page.extendedGlobalParametersListe, component)»
-	           </fieldset>
-	            «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe »
-            <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
-	            «generateParameter(e.extendedParameterList, component)»
-	            «generateParameter(e.extendedParameterList,component)»
-            </fieldset>
-	            «ENDFOR»
-				</fields>
-			
-			    <fields>
-				<fieldset name="accesscontrol">
-					<field name="asset_id" type="hidden" filter="unset" />
-					<field name="rules"
-					type="rules"
-					label="JFIELD_RULES_LABEL"
-					translate_label="false"
-					filter="rules"
-					validate="rules"
-					class="inputbox"
-					component="«Slug.nameExtensionBind("com",component.name).toLowerCase»"
-					section="«page.name.toLowerCase»"
+			<field name="created_by" type="hidden" default="" 
+			label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"
+			description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
+				
+				«FOR ExtendedEntity e : page.extendedEntityList»
+				«FOR ExtendedAttribute attr : e.extendedAttributeList.filter[t | !t.isIsprimary]»
+				«writeAttribute(e,attr,component,page)»
+				«ENDFOR»
+				«FOR ExtendedReference ref : e.extendedReference.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
+				«var Entity foreign = Slug.getOtherEntityToMapping(ref)»
+				<field name="«ref.entity.name.toLowerCase»_id"
+						   type ="«e.name.toLowerCase»To«ref.entity.name.toLowerCase»"
+						   id="«ref.entity.name.toLowerCase»_id"
+						   label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»"
+						   description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"
 					/>
-			 </fieldset>
-			 </fields>
-		</form>
-   		 '''
+				«FOR Attribute attr: Slug.getOtherAttribute(ref)»
+				<field name="«attr.name.toLowerCase»"
+				   type ="hidden"
+				   id="«attr.name.toLowerCase»"
+					/>
+				«ENDFOR»
+				«ENDFOR»
+				«ENDFOR»
+			  
+	         <field name="published" type="hidden" filter="unset" />
+			<field name="checked_out" type="hidden" filter="unset" />
+	        <field name="checked_out_time" type="hidden" filter="unset" /> 
+				
+			 <fields name="params">
+		  <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL__LABEL">
+        	 «generateParameter(page.extendedLocalParametersListe, component)»
+        	</fieldset>
+    	 <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL__LABEL">
+        	«generateParameter(page.extendedGlobalParametersListe, component)»
+           </fieldset>
+            «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe »
+        <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
+            «generateParameter(e.extendedParameterList, component)»
+            «generateParameter(e.extendedParameterList,component)»
+        </fieldset>
+            «ENDFOR»
+			</fields>
+		
+		    <fields>
+			<fieldset name="accesscontrol">
+				<field name="asset_id" type="hidden" filter="unset" />
+				<field name="rules"
+				type="rules"
+				label="JFIELD_RULES_LABEL"
+				translate_label="false"
+				filter="rules"
+				validate="rules"
+				class="inputbox"
+				component="«Slug.nameExtensionBind("com",component.name).toLowerCase»"
+				section="«page.name.toLowerCase»"
+				/>
+		 </fieldset>
+		 </fields>
+	</form>
+   	'''
+   	
+   	/**
+   	 * parse the attribute type and generate the template for the manifest file 
+   	 * @param ExtendedEntity      entity     contains the instance of a entity
+   	 * @param ExtendedAttribute   attr       contains a attribute of 
+   	 * @param ExtendedComponent   component  conatains the instance of a component
+   	 * @param ExtendedDynamicPage page       contains the instance of a details page
+   	 */
    	def CharSequence writeAttribute(ExtendedEntity entity,ExtendedAttribute attr, ExtendedComponent component, ExtendedDynamicPage page){
    	
    	 var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(page, attr)
@@ -292,14 +327,14 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    	 		''')
    	 		
    	 	}
-   	 	case "Imagepicker":{
-   	 		 result.append(''' 
-   	 		  <field name="«attr.name.toLowerCase»"
-   	 		  type ="file"
-   	 		  accept="image/*"
-   	 		  size="900"
-   	 		  id="«attr.name.toLowerCase»"
-   		     label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   	 	case "imagepicker":{
+   	 	result.append(''' 
+   		  	<field name="«attr.name.toLowerCase»"
+   		  	type ="imageloader"
+   		  	accept="image/*"
+   		  	path="«page.name.toLowerCase»_image_path"
+   		  	id="«attr.name.toLowerCase»"
+   		  	label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
    		  	 description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
    		  	«FOR KeyValuePair kvpair : options»
      	 		«kvpair.name» = "«kvpair.value»"
@@ -307,14 +342,13 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    		  	/>
    	 		 ''')
    	 	}
-   	 	case "Filepicker":{
-   	 		 result.append(''' 
-   	 		  <field name="«attr.name.toLowerCase»"
-   	 		  type ="file"
-   	 		  accept=".doc,.pdf,.csv,.txt,.xls,.xlsx"
-   	 		  size="900"
-   	 		  id="«attr.name.toLowerCase»"
-   		     label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   	 	case "filepicker":{
+   	 	result.append(''' 
+   		  	<field name="«attr.name.toLowerCase»"
+   		  	type ="fileloader"
+   		  	path="«page.name.toLowerCase»_file_path"
+     		id="«attr.name.toLowerCase»"
+   		  	label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
    		  	 description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
    		  	«FOR KeyValuePair kvpair : options»
      	 		«kvpair.name» = "«kvpair.value»"
@@ -394,7 +428,16 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    	 return result.toString
    	}
    
-   		 
+   /**
+    * return the html type of a attribute
+    * for simple attribute type="type"
+    * for the attribute of reference type="hidden"
+    * for the others only the name of the type
+   	* @param ExtendedAttribute   attr       contains a attribute of 
+   	* @param ExtendedComponent   component  conatains the instance of a component
+   	* @param ExtendedDynamicPage dynP      contains the instance of a details page
+    * 
+    */
    public def String getHtmlTypeOfAttribute(ExtendedDynamicPage dynP,ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com){
    		var StringBuffer buff = new StringBuffer
    		
@@ -412,7 +455,7 @@ def CharSequence genSettingForIndexPage(String pagename, ExtendedDynamicPage pag
    		}
    	
    		buff.append('''type ="hidden"''')
-   		return buff.toString;
+   		return buff.toString.toLowerCase;
    	}
 	
 

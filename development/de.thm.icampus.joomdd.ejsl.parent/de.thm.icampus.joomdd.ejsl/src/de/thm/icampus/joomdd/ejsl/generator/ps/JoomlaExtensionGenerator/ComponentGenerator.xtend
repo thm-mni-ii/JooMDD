@@ -85,7 +85,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateJoomlaDirectory(path+"media/js")
 		generateFile( path+"media/js/setForeignKeys.js", genScriptForForeignKeys)
 		generateFile( path+"media/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
+		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendeComp)
 		
+		generateFile( path+"media/js/bootsnip.js", help.genBootsnipJS)
+		generateFile( path+"media/css/bootsnip.css",help.genBootsnipCSS)
 		//Generate images folder
 		for(detailsPages : indexPages.filter[t| t.detailsPage]){
 			generateJoomlaDirectory(path+"media/" + detailsPages.name.toLowerCase)
@@ -308,7 +311,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		generateJoomlaDirectory(path+"admin/controllers")
 		generateJoomlaDirectory(path+"admin/helpers/")
-		generateFile( path +"admin/helpers/" + extendeComp.name.toLowerCase + ".php", generateHelperComponent)
+		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendeComp)
+		generateFile( path +"admin/helpers/" + extendeComp.name.toLowerCase + ".php", help.generate)
 
 		var EntityGenerator entitygen  = new EntityGenerator(extendeComp,path + "admin/",fsa,true)
 		
@@ -505,7 +509,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			}
 			?>
 		</div>  
-		<p>this component is generated with the Joomdd tools, for more information <a target="_blank" href="https://github.com/icampus/JooMDD">see here</a></p>	
+		<p>This component is generated with the Joomdd tools, for more information <a target="_blank" href="https://github.com/icampus/JooMDD">see here</a></p>	
     '''
 	/**
 	 * return the code for the  main view of the component
@@ -690,13 +694,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 '''
 
 	
-   /**
-    * Generate the helper class of a component
-    */
-	def CharSequence generateHelperComponent() { 
-		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendeComp)
-		return help.generate
-	}
+  
 	
    /**
     * Generate the code for the Route rule in frontend
