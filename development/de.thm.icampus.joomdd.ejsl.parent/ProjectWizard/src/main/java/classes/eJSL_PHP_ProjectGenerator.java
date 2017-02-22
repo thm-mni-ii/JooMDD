@@ -96,12 +96,12 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
             StringBuilder genproperties = new StringBuilder(eJSL_PHP_Wizard_Step.getGereratorProperties());
 
             if (eJSL_PHP_Wizard_Step.getOutputPath().equals("/src-gen/")){
-                genproperties.append("Output_Path="+project.getBasePath()+eJSL_PHP_Wizard_Step.getOutputPath());
+                genproperties.append("outputFolder="+project.getBasePath()+eJSL_PHP_Wizard_Step.getOutputPath());
             }else{
-                genproperties.append("Output_Path="+eJSL_PHP_Wizard_Step.getOutputPath());
+                genproperties.append("outputFolder="+eJSL_PHP_Wizard_Step.getOutputPath());
             }
 
-            genproperties.append("\nProject_Path="+project.getBasePath());
+           // genproperties.append("\nProject_Path="+project.getBasePath());
 
             bwproperties.write(genproperties.toString());
             bw.write(example.toString());

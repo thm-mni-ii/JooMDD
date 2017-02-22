@@ -82,13 +82,40 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
                                           Boolean IE, Boolean Firefox, String Path, String DBUSerName, String DBUserPwd, String Serverpath){
         StringBuilder properties = new StringBuilder();
 
+        String browser = "";
+        if(Firefox) {
+            browser = "firefox";
+        }else if (IE){
+            browser = "ie";
+        }else if(Chrome){
+            browser = "chrome";
+        }
+
+
+
+
         properties.append("#---JooMDD---\n");
+        properties.append("serverUrl="+Host+"\n");
+        properties.append("browser="+browser+"\n");
+        properties.append("entities="+page+"\n");
+        properties.append("wordpress="+wordpress+"\n");
+        properties.append("updateFolder="+page+"\n");
+        properties.append("rootpath="+page+"\n");
         properties.append("page="+page+"\n");
+        properties.append("test="+page+"\n");
+        properties.append("serverpath="+Serverpath+"\n");
+        properties.append("portconfig="+Port+"\n");
+        properties.append("adminpass="+AdminPasswort+"\n");
+        properties.append("joomla="+joomla+"\n");
+       // outputFolder will append at project creation
+        properties.append("adminname="+AdminName+"\n");
+
+/*      old structure
         properties.append("enteties="+enteties+"\n");
         properties.append("joomla="+joomla+"\n");
         properties.append("wordpress="+wordpress+"\n");
         properties.append("PHPUnit="+PHPUnit+"\n");
-        properties.append("UpdateFolder="+UpdateFolder+"\n");
+        properties.append("outputFolder="+UpdateFolder+"\n");
         properties.append("Codeceptio="+Codeception+"\n");
         properties.append("Host="+Host+"\n");
         properties.append("Port="+Port+"\n");
@@ -104,7 +131,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
 
 
         //properties.append("")+;
-
+*/
         //properties.append("folderstructure="+folderstructure+"\n");
         gereratorProperties = properties.toString();
     }

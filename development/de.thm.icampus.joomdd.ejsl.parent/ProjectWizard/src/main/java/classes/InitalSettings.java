@@ -172,12 +172,12 @@ public class InitalSettings implements ProjectComponent {
                 StringBuilder genproperties = new StringBuilder(eJSL_PHP_Wizard_Step.getGereratorProperties());
 
                 if (eJSLWizardStep.getOutputPath().equals("/src-gen/")){
-                    genproperties.append("Output_Path="+project.getBasePath()+eJSLWizardStep.getOutputPath());
+                    genproperties.append("outputFolder="+project.getBasePath()+eJSLWizardStep.getOutputPath());
                 }else{
-                    genproperties.append("Output_Path="+eJSLWizardStep.getOutputPath());
+                    genproperties.append("outputFolder="+eJSLWizardStep.getOutputPath());
                 }
 
-                genproperties.append("\nProject_Path="+project.getBasePath());
+                //genproperties.append("\nProject_Path="+project.getBasePath());
 
 
                 bwproperties.write(genproperties.toString());
