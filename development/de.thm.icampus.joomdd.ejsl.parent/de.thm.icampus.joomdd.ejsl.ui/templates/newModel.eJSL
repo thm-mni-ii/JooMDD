@@ -368,7 +368,14 @@ eJSLModel "AgendaModel"
 				version = "1"
 				description = "This she  versions of h worlds"
 				
-			}
+			}languages {
+					Language de-DE{
+						
+					}
+					Language en-GB{
+						
+					}
+				}
 			sections {
 				Backend section {
 					*Pages {
