@@ -456,7 +456,7 @@ public class Slug  {
 				   	
 				   }
 				   else	
-				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $this->getModel()->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
+				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
 		 	 
 		 	}}else{
 		 		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''

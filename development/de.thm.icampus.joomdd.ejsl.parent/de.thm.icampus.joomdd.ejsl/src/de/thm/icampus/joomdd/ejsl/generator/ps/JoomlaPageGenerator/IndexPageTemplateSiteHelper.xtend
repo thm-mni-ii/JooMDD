@@ -142,6 +142,7 @@ class IndexPageTemplateSiteHelper {
 		
 		$user = JFactory::getUser();
 		$userId = $user->get('id');
+		$model = $this->getModel();
 		$listOrder = $this->state->get('list.ordering');
 		$listDirn = $this->state->get('list.direction');
 		$canCreate = $user->authorise('core.create', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');

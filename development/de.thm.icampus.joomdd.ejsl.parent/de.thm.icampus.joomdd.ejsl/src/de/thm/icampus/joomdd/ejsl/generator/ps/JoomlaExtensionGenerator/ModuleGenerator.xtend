@@ -264,7 +264,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			«ENDIF»
 			// Models, Functions should be implementated here
 		    // «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::updateReset();
-			$items = &«modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::getList($params);
+			$items = &«modul.name.toFirstUpper»Helper::getList($params);
+			$model = &«modul.name.toFirstUpper»Helper::getModel();
 			$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 			require JModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
 			'''
@@ -316,10 +317,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		return "$" + result;
 		
 		for(Link lk: listLink){
-			if(lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){
-			var LinkGeneratorClient lkClient = new LinkGeneratorClient(lk, Slug.getSectioName(extMod.pageRef.sect),  extMod.extendedComponentName.toLowerCase,"$item->") 
-				
-			   return '''JHtml::_('link',«lkClient.generateLink», $item->«attribute.name.toLowerCase»)'''
+			if(lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){				
+			   return '''JHtml::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
 			   
 			   }
 		}
@@ -345,9 +344,38 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		class «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper
 		{
 			«genGetList»
+			«genGetModel()»
 		}
 		'''
 	}
+	
+	def genGetModel()'''
+	/**
+		 * @param
+		 *
+		 * @return
+		 *
+		 * @since
+		 **/
+		public static function &getModel()
+		{
+		/**
+		 * placeholder "<>" are to be replaced
+		*/
+		JModelLegacy::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
+
+		// $app = JFactory::getApplictation();
+	    «IF (extMod.pageRef.pagescr != null )»
+	    $model = JModelLegacy::getInstance('«extMod.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
+	    
+		«ELSE»
+		$model = JModelLegacy::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
+
+		«ENDIF»
+		return $model;
+		}
+	
+	'''
 	
 		def ComponentInformation (ExtendedModule modul) {
 			if( modul.pageRef.pagescr != null){
@@ -386,20 +414,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 **/
 		public static function &getList($params = null)
 		{
-		
-		/**
-		 * placeholder "<>" are to be replaced
-		*/
-		JModelLegacy::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
-		
-		// $app = JFactory::getApplictation();
-			    «IF (extMod.pageRef.pagescr != null )»
-			    $model = JModelLegacy::getInstance('«extMod.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
-			    
-				«ELSE»
-			$model = JModelLegacy::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
-		
-				«ENDIF»
+		    $model = «extMod.name.toFirstUpper»Helper::getModel();
 			$state = $params->get('state');
 			if(!empty($state))
 			$model->setState('filter.state', $state);

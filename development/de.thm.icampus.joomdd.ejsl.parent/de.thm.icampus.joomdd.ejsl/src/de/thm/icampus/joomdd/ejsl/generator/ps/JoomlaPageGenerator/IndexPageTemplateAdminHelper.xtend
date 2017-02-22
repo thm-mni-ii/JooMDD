@@ -462,6 +462,7 @@ $listOrder	= $this->state->get('list.ordering');
 $listDirn	= $this->state->get('list.direction');
 $canOrder	= $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 $saveOrder	= $listOrder == 'a.ordering';
+$model = $this->getModel();
 if ($saveOrder)
 {
 	$saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
