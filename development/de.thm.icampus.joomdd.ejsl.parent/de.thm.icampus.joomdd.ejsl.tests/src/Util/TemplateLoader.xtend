@@ -51,7 +51,7 @@ class TemplateLoader {
 
                 // Get the resource
                var  Resource resource = resSet.getResource(URI
-                                .createFileURI(	templateFolder.path + "\\"+ name +".xmi"), true);
+                                .createFileURI(	templateFolder.path + "/"+ name +".xmi"), true);
                
                return resource.getContents().get(0) as EJSLModel;
 	}

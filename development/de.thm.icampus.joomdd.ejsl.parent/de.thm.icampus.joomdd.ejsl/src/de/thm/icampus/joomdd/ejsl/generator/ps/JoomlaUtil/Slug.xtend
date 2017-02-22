@@ -36,6 +36,10 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.eJSL.Author
+import java.io.File
+import  com.google.common.io.Files
+import java.util.Scanner
+import de.thm.icampus.joomdd.ejsl.generator.EJSLGenerator
 
 /**
  * <!-- begin-user-doc -->
@@ -115,10 +119,10 @@ public class Slug  {
 			 	result='''type="calendar" '''
 			 } 
 			 case "Imagepicker":{
-			 	result='''Imagepicker '''
+			 	result="imagepicker"
 			 } 
 			 case "Filepicker":{
-			 	result='''Filepicker'''
+			 	result="filepicker"
 			 } 
 			 case "Text_Field_NE":{
 			 	result='''type="text" '''
@@ -127,19 +131,19 @@ public class Slug  {
 			 	result='''type="editor" '''
 			 }
 			 case "Select":{
-			 	result='''select'''
+			 	result="select"
 			 }
 			 case "Multiselect":{
-			 	result='''multiselect'''
+			 	result="multiselect"
 			 }
 			 case "Checkbox":{
-			 	result='''checkbox'''
+			 	result="checkbox"
 			 }
 			 case "Radiobutton":{
-			 	result='''radiobutton'''
+			 	result="radiobutton"
 			 }
 			 case "hidden":{
-			 	result='''hidden '''
+			 	result="hidden"
 			 }
 		}
 		return result
@@ -283,8 +287,11 @@ public class Slug  {
 	}
 	
 	/**
-     * Generate content for entity. Every generated file will be 
-     * placed in the directory defined by property path
+     * Generate the author informations for the Manifest of a extension
+     * 
+     * @param EList<Author> authors List of authors
+     * @return Charsequence 
+     * 
      */
 	def static CharSequence generateAuthors(EList<Author> authors) '''
 		«IF authors.size() == 0»
@@ -304,8 +311,11 @@ public class Slug  {
 		«ENDIF»
 	'''
 	/**
-     * Generate content for entity. Every generated file will be 
-     * placed in the directory defined by property path
+     * Generate the author informations for the documentation of a file
+     * 
+     * @param EList<Author> authors List of authors
+     * @return Charsequence 
+     * 
      */
 	def static CharSequence generateAuthorsDocumentation(EList<Author> authors) '''
 		«IF authors.size() == 0»
@@ -314,13 +324,7 @@ public class Slug  {
 		* @authorUrl www.generated.com
 		«ELSE»
 	«FOR author : authors»
-		* @author «author.name»
-		«IF author.authoremail != null»
-		* @authorEmail «author.authoremail»
-		«ENDIF»
-		«IF author.authorurl != null»
-	    * @authorUrl «author.authorurl»
-		«ENDIF»
+		* @author «author.name» «IF author.authoremail != null»  <«author.authoremail»>«ENDIF» «IF author.authorurl != null» <«author.authorurl»>«ENDIF»
 	«ENDFOR»
 		«ENDIF»
 	'''
@@ -344,7 +348,7 @@ public class Slug  {
 	    * @category Joomla component
 		* @package     Joomla.Administrator
 		* @subpackage  com_«component.name»
-		* @name «component.name»View
+		* @name «component.name»
 		«IF denied»
 		defined('_JEXEC') or die('Restricted access');
 		«ENDIF»
@@ -354,7 +358,7 @@ public class Slug  {
 		* @category Joomla component
 		* @package     Joomla.Administrator
 		* @subpackage  com_«component.name»
-		* @name «component.name»View
+		* @name «component.name» 
 		«IF component.manifest != null»
 		«generateAuthorsDocumentation(component.manifest.authors)»
 		* @copyright «component.manifest.copyright»
@@ -673,7 +677,8 @@ public class Slug  {
 	 }
 	 root.delete
 	}
-
+  
+	
 	
 	
 } // Slug

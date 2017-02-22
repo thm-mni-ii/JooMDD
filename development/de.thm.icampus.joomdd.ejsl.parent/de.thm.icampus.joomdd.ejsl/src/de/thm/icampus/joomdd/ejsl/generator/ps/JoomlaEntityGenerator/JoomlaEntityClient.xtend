@@ -51,6 +51,9 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 				}
 		}
 		generateFile(path + "models/fields/" + comp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(comp) )
+		var fileloader = new FieldsFileloaderGenerator(comp)
+		generateFile(path + "models/fields/" + "fileloader.php",  fileloader.generateFileloader)
+		generateFile(path + "models/fields/" + "imageloader.php", fileloader.generateImageloader )
 	
 		
 	}

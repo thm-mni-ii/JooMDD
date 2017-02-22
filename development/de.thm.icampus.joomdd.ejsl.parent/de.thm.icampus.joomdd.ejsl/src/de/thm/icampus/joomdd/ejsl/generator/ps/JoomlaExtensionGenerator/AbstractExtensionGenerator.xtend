@@ -7,6 +7,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtend.lib.Property
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 
 abstract public class AbstractExtensionGenerator  {
 
@@ -97,6 +99,12 @@ abstract public class AbstractExtensionGenerator  {
 		fsa.generateFile(fileName, content)
 	}
 
+	def CharSequence generateScript(ExtendedComponent ext, String extName ){
+		return new ExtenionScriptGenerator(ext, extName).generate()
+	}
+	def CharSequence generateScript(ExtendedModule ext, String extName ){
+		return new ExtenionScriptGenerator(ext, extName).generate()
+	}
 	def CharSequence generateScript(Extension ext, String extName ){
 		return new ExtenionScriptGenerator(ext, extName).generate()
 	}

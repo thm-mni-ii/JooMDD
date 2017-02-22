@@ -23,6 +23,9 @@ import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 import de.thm.icampus.joomdd.ejsl.eJSL.Datatype
 import org.eclipse.emf.ecore.EObject
 
+/**
+ *  Transforme and complete the data of a ejls instance for the generator
+ */
 class JoomlaTranformator {
 	
 	EJSLModel instance
@@ -38,7 +41,11 @@ class JoomlaTranformator {
 	}
 	
 
-	
+	/**
+	 * Transforme and complete and comple the data of the entities and pages,
+	 * for the entities, it solve keys pairs and create the primary attribute. 
+	 * For the pages complete the pagelinks.
+	 */
 	def void completeCMSExtension(){
 		
 		switch(instance.ejslPart){
@@ -51,7 +58,10 @@ class JoomlaTranformator {
 		}
 	}
 	
-
+	/**
+	 * 
+	 * 
+	 */
 	 private def void completeEntity(){
     	
     	for(Entity ent: entityList){
@@ -63,7 +73,13 @@ class JoomlaTranformator {
     	}
     	
     }
-	
+	/**
+	 * Create a primary attribute, when it is not exist,
+	 * replace the id symbol with the primary keys,
+	 * complete the reference with the new generated primary keys or the keys pair
+	 * and create many attributes for the joomnla specified generator
+	 * @param Entity ent contains a entity
+	 */
 	private def completeAttributeOfEntity(Entity ent) {
 		if(!ent.havePrimaryAttribute()){
 			
@@ -157,13 +173,21 @@ class JoomlaTranformator {
 		}
 	}
 	
+	/**
+	 * Search an return if the entity have a primary keys
+	 * @param Entity entity contains a entity
+	 * 
+	 */
 	private def Attribute searchIdAttribute(Entity entity){
 		for(Attribute e: entity.attributes){
 			if(e.name.equalsIgnoreCase("id") || e.name.equalsIgnoreCase("^id") || e.isIsprimary)
 			return e
 		}
 	}
-	
+	/** 
+	 * Check if the entity have a primary keys
+	 * @param Entity entity contains a entity
+	 */
 	private def boolean havePrimaryAttribute(Entity entity){
 		for(Attribute e: entity.attributes){
 			if(e.isIsprimary)
@@ -171,14 +195,24 @@ class JoomlaTranformator {
 		}
 		return false
 	}
-	private def boolean haveAttribute(Entity entity, String attrinuteName){
+	/**
+	 * Check if the entity contains a attribute
+	 * @param Entity entity        contains a entity
+	 * @param String attributeNam  contains a attribute name
+	 */
+	private def boolean haveAttribute(Entity entity, String attributeName){
 		for(Attribute e: entity.attributes){
-			if(e.name.equals(attrinuteName))
+			if(e.name.equals(attributeName))
 			return true
 		}
 		return false
 	}
 	
+	/**
+	 * replace the id symboile in the unique keys definition with a id object
+	 * and create the attribute pair of an referenced attribute in the reference entity
+	 * @param Entity ent contains a entity
+	 */
 	private def void  completeReferenceOfEntity(Entity ent) {
 		
 		for(Reference ref : ent.references){
@@ -197,7 +231,10 @@ class JoomlaTranformator {
 			}
 		}
 	}
-	
+	/**
+	 * Complete the reference of an entity , when the attribute are unique with an other.
+	 * @param Entity ent contains a Entity
+	 */
 	def void setReferenceAttribute( Entity ent){
 		for(Reference ref:ent.references){
 			var Entity referenceEntity = ref.entity
@@ -229,6 +266,12 @@ class JoomlaTranformator {
 			}
 		
 	}
+	/**
+	 * Create a new attribute and complete a reference.
+	 * @param Entity    ent      contains a entity
+	 * @param Reference ref      contains a refrence
+	 * @param Attribute attrRef  contains a attribute to clone
+	 */
 	def Attribute setNewGenAttribute(Entity ent, Reference ref, Attribute attrRef){
 		var Entity referenceEntity = ref.entity
 		var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
@@ -240,7 +283,12 @@ class JoomlaTranformator {
 	}
 	
 	
-	
+	/**
+	 * check a attribute if the a attribute to clone already exist in the referenced attribute.
+	 * @param Entity    ent               contains the origin entity
+	 * @param Entity    referencedEntity  contains the referenced entity
+	 * @param Attribute referenced        contains to referenced attribute
+	 */
 	def Attribute getAttributeReference(Entity ent, Entity referencedEntity, Attribute referenced){
 		for(Attribute a:ent.attributes ){
 			if(a.name.equalsIgnoreCase(referencedEntity.name.toString.toLowerCase +  "_"+ referenced.name))
@@ -255,29 +303,40 @@ class JoomlaTranformator {
 		}
 		return null
 	}
-def void completePage(EList<Page> pageList){
-	for(Page pg: pageList.filter[t | !(t instanceof StaticPage)]){
-		var Entity fromEnt = null
-		switch pg{
-			DynamicPage:{
-				var DynamicPage fromDynPage = pg as DynamicPage
-				fromEnt = fromDynPage.entities.get(0)
-			for(Link lk : pg.links.filter[t | t instanceof ContextLink]){
-			var ContextLink ctLink = lk as ContextLink
-			if(ctLink.target instanceof DynamicPage){
-				var DynamicPage toDynPage =  ctLink.target as DynamicPage
-				var Entity toEnt = toDynPage.entities.get(0) 
-				if(ctLink.linkparameters.size != 0)
-				completeContextLink(ctLink, fromEnt, toEnt )
+	
+	/**
+	 * Complete the context Links of a dynamic page, add the id key and refrenced attribute
+	 * @param EList<Page> pageList contains a list of page
+	 */
+	def void completePage(EList<Page> pageList){
+		for(Page pg: pageList.filter[t | !(t instanceof StaticPage)]){
+			var Entity fromEnt = null
+			switch pg{
+				DynamicPage:{
+					var DynamicPage fromDynPage = pg as DynamicPage
+					fromEnt = fromDynPage.entities.get(0)
+				for(Link lk : pg.links.filter[t | t instanceof ContextLink]){
+				var ContextLink ctLink = lk as ContextLink
+				if(ctLink.target instanceof DynamicPage){
+					var DynamicPage toDynPage =  ctLink.target as DynamicPage
+					var Entity toEnt = toDynPage.entities.get(0) 
+					if(ctLink.linkparameters.size != 0)
+					completeContextLink(ctLink, fromEnt, toEnt )
+				}
+				}
 			}
-			}
+				
+		  }
+		
 		}
-			
-	  }
-	
 	}
-}
 	
+	/**
+	 * Complete the the contextlink, when the link have a id, it replace it with the id object of the entity
+	 * @param ContextLink link        contains a Link
+	 * @param Entity      fromEntity  contains the start entity
+	 * @param Entity      toEntity    contain the target entity
+	 */
 	def void completeContextLink(ContextLink link, Entity fromEntity, Entity toEntity) {
 		
 		for(LinkParameter lkParam: link.linkparameters){
@@ -292,7 +351,11 @@ def void completePage(EList<Page> pageList){
 			
 		}
 	}
-	
+	/**
+	 * searchs and returns the attribute, that have a reference to the id.
+	 * @param Entity fromEntity  contains the start entity
+	 * @param Entity toEntity    contains the target entity
+	 */
 	def Attribute searchReferenceOfID(Entity fromEntity,Entity toEntity) {
 		var Attribute id = searchIdAttribute(toEntity)
 		for(Reference ref: fromEntity.references){

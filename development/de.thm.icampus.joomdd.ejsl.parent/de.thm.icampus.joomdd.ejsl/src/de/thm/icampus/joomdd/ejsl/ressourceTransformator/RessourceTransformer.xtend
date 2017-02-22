@@ -25,6 +25,13 @@ import de.thm.icampus.joomdd.ejsl.eJSL.HTMLTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 
+/**
+ * this class transforme and complete the ejsl model for the generator.
+ * the big points are: 
+ * -Solving of the mutilple reference between two entities 
+ * -the copy from  attribute of a entity to the tablecolumn an filters of a page.
+ * -Parsing of attribute type
+ */
 class RessourceTransformer {
 	EJSLModel modelInstance
 	CMSExtension cmsextension

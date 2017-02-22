@@ -113,27 +113,30 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	}
 	
 	def CharSequence generateAdminController()'''
-	   «generateFileDoc(dpage,com,true)»
-		jimport('joomla.application.component.controllerform');
-		
-		/**
-		 * «dpage.name.toFirstUpper» controller class.
-		 * @generated
-		 */
-		class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends JControllerForm
-		{
-		
-		    function __construct() {
-		    	«var IndexPage inPage = Slug.getPageForAll(dpage, com) »
-		    	«IF inPage != null»
-		        $this->view_list = '«Slug.getPageForAll(dpage, com).name.toLowerCase»';
-		        «ELSE»
-		         $this->view_list = '<Put the View Name>';
-		        «ENDIF»
-		        parent::__construct();
-		    }
-		
-		}
+ «generateFileDoc(dpage,com,true)»
+ jimport('joomla.application.component.controllerform');
+ jimport('joomla.filesystem.file');
+ /**
+ * «dpage.name.toFirstUpper» controller class.
+ * @generated
+ */
+ class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends JControllerForm
+ {
+ 
+ function __construct() {
+	    	«var IndexPage inPage = Slug.getPageForAll(dpage, com) »
+	    	«IF inPage != null»
+	    	$this->view_list = '«Slug.getPageForAll(dpage, com).name.toLowerCase»';
+	        «ELSE»
+	    	$this->view_list = '<Put the View Name>';
+	        «ENDIF»
+	        parent::__construct();
+ }
+	    «IF dpage.haveFiletoLoad»
+	    «backHelp.genAdminControllerSave()»
+	    «ENDIF»
+	
+ }
 	'''
 	def CharSequence generateModelLoadFormDataFunction()'''
 	
@@ -231,7 +234,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	jimport('joomla.application.component.modeladmin');
 	use Joomla\Utilities\ArrayHelper;
 	use Joomla\Registry\Registry;
-
+	require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
 	/**
 	 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
 	 */
@@ -253,11 +256,30 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«backHelp.generateAdminModelprepareTableFunction()»
 	}
 		'''
-	
+	/**
+	 * Generate the code for the save-methode of a model in backend. 
+	 */
 	def CharSequence generateModelAdminSaveData() '''
 	public function save($data){
 	$inputs =& JFactory::getApplication()->input->get("jform", array(), 'array');
-	
+	$files = JFactory::getApplication()->input->files->get("jform", array(), 'array');
+	«IF dpage.haveFiletoLoad»
+	$item = $this->getItem();
+	if(isset($files) && count($files) >0 ){
+		$params = JComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+		foreach ($files as $keys=>$file){
+			if(!empty($file)){
+				if(strpos($file['type'],"image")!==false){
+					$path = $params->get("«dpage.name.toLowerCase»_image_path");
+				}else{
+					$path = $params->get("«dpage.name.toLowerCase»_file_path");
+				}
+			  $data[$keys]=«com.name.toFirstUpper»Helper::uploadFiles($file,$path,$item->$keys);
+			}
+		}
+
+	}
+	«ENDIF»
 	if(parent::save($data)){
 		if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
 					$inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
