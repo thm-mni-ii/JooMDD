@@ -3,16 +3,31 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 
 class ExtenionScriptGenerator {
 	
 	Extension ex
+	ExtendedComponent com
 	String extName
-	new(Extension ext, String name) {
-		ex = ext
+	new(ExtendedComponent extensions, String name) {
+		ex = extensions
+		com = extensions
 		extName = name
 	}
-	
+	new(ExtendedModule mod, String extensionName){
+		ex = mod
+	}
+	new(ExtendedLibrary lib, String extensionName){
+		ex = lib
+	}
+	new(Extension pack, String extensionName){
+		ex = pack
+	}
 	public def CharSequence generate()'''
 	 <?php
 	  «Slug.generateFileDoc(ex,true)»
@@ -23,11 +38,44 @@ class ExtenionScriptGenerator {
 	 class «extName.toFirstUpper»InstallerScript
 	 {
 	   «genInstall()»
+	   «genSetCompoenentParamater()»
 	   «genUnsinstall()»
 	   «genUpsate()»
 	   «genpreflight()»
 	   «genPostflight()»
+	   
 	 }
+	'''
+	
+	def CharSequence genSetCompoenentParamater() '''
+	function  setComponentParameter(){
+	// Load the current component params.
+		 $params = JComponentHelper::getParams('«com.extensionName»');
+	// Set new value of param(s)
+	$params->set('upload_maxsize', 10);
+	$params->set('accept_format', "bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS");
+	 «FOR ExtendedPage pag: com.allExtendedPage.filter[t | t.extendedDynamicPageInstance!=null && 
+ 	t.extendedDynamicPageInstance.isDetailsPage == true && t.extendedDynamicPageInstance.haveFiletoLoad]»
+	$params->set('«pag.extendedDynamicPageInstance.name.toLowerCase»_image_path', 'media/«com.extensionName.toLowerCase»/«pag.extendedDynamicPageInstance.name.toLowerCase»/images');
+	$params->set('«pag.extendedDynamicPageInstance.name.toLowerCase»_file_path', 'media/«com.extensionName.toLowerCase»/«pag.extendedDynamicPageInstance.name.toLowerCase»/files');
+	«ENDFOR»
+	
+	// Save the parameters
+	  $componentid = JComponentHelper::getComponent('«com.extensionName»')->id;
+	  $table = JTable::getInstance('extension');
+	  $table->load($componentid);
+	  $table->bind(array('params' => $params->toString()));
+
+	// check for error
+	  if (!$table->check()) {
+		  return false;
+	  }
+	// Save to database
+	  if (!$table->store()) {
+		  return false;
+	  }
+	  return true;
+	}
 	'''
 	
 	def CharSequence genPostflight() '''
@@ -93,6 +141,9 @@ class ExtenionScriptGenerator {
 		function install($parent) 
 		{
 			«IF ex instanceof Component»
+			if(!$this->setComponentParameter()){
+			  echo '<p>' .JText::_('«extName.toUpperCase»_INSTALL_NO_PARAMETER_INSTALLED') . '</p>';
+			}
 			$parent->getParent()->setRedirectURL('index.php?option=«extName»');
 			«ELSE»
 			echo '<p>' .JText::_('«extName.toUpperCase»_INSTALL_TEXT') . '</p>';

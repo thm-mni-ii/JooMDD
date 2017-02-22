@@ -208,7 +208,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
                         var format = src.split(".").getLast() ;
                         picker_preview_image = $('<div class="imgOutline thumbnail height-80 width-80 center"style="margin-left: 40px;margin-bottom:10px;" >'+
                             '<div class="height-50">'+
-                            '<a style="display: block; width: 100%; height: 100%">'+
+                            '<a style="display: block; width: 100%; height: 100%" href="'+src+'">'+
                             '<img src="'+settings.iconpath+ format + ".png" +
                         '" class="img-responsive img-rounded" style="float: right; margin: 20px"/><br/></a>'+'</div> </div>');
                     }

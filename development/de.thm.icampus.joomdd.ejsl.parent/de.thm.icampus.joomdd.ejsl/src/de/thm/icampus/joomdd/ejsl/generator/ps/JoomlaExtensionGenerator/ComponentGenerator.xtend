@@ -67,7 +67,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
         // Generate the the installation path for a compoenent
 		generateFile(path+ name + ".xml", extendeComp.xmlContent(indexPages))
-		generateFile(path+ "script.php", generateScript(extendeComp.instance, name))
+		generateFile(path+ "script.php", generateScript(extendeComp, name))
 
 		// Generate language folders and files
 		var LanguageGenerator langgen = new LanguageGenerator(fsa)
@@ -90,7 +90,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile( path+"media/js/bootsnip.js", help.genBootsnipJS)
 		generateFile( path+"media/css/bootsnip.css",help.genBootsnipCSS)
 		//Generate images folder
-		for(detailsPages : indexPages.filter[t| t.detailsPage]){
+		for(detailsPages : indexPages.filter[t| t.detailsPage && t.haveFiletoLoad]){
 			generateJoomlaDirectory(path+"media/" + detailsPages.name.toLowerCase)
 			generateJoomlaDirectory(path+"media/" + detailsPages.name.toLowerCase+ "/images")
 			generateJoomlaDirectory(path+"media/" + detailsPages.name.toLowerCase + "/files")
@@ -172,7 +172,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     	    <folder>images</folder>
 					<folder>js</folder>
 					<folder>css</folder>
-					«FOR page : dymPages.filter[t | t.detailsPage]»
+					«FOR page : dymPages.filter[t | t.detailsPage && t.haveFiletoLoad]»
 					<folder>«page.name.toLowerCase»</folder>
 					«ENDFOR»
 					<filename>index.html</filename>
@@ -352,21 +352,21 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpSiteContent(Component component) '''
 		<?php
-		     «Slug.generateFileDoc(component,true)»
-		    
-		    
-		    // import joomla controller library
-		    jimport('joomla.application.component.controller');
-		    
-		    // Get an instance of the controller prefixed by «class_name»
-		    $controller = JControllerLegacy::getInstance('«class_name»');
-		    
-		    // Perform the Request task
-		    $input = JFactory::getApplication()->input;
-		    $controller->execute($input->getCmd('task'));
-		    
-		    // Redirect if set by the controller
-		    $controller->redirect();
+	     «Slug.generateFileDoc(component,true)»
+	    
+	    
+	    // import joomla controller library
+	    jimport('joomla.application.component.controller');
+	    
+	    // Get an instance of the controller prefixed by «class_name»
+	    $controller = JControllerLegacy::getInstance('«class_name»');
+	    
+	    // Perform the Request task
+	    $input = JFactory::getApplication()->input;
+	    $controller->execute($input->getCmd('task'));
+	    
+	    // Redirect if set by the controller
+	    $controller->redirect();
 	'''
 	
 	/**
