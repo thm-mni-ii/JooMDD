@@ -74,7 +74,7 @@ class EJSLGeneratorTest {
          var boolean result = true
          try {
           xmlFile = new StreamSource(in);
-         schemaFile = new StreamSource(new File(templateFolder.path +"\\install.xsd"));
+         schemaFile = new StreamSource(new File(templateFolder.path +"/install.xsd"));
           var SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         var  Schema schema = schemaFactory.newSchema(schemaFile);
          var Validator validator = schema.newValidator();
