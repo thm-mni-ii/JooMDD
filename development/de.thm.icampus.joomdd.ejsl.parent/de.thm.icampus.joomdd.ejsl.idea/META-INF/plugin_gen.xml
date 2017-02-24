@@ -71,11 +71,11 @@
 			implementationClass="com.intellij.lang.PsiStructureViewFactory"
 		/>
 		<facetType implementation="de.thm.icampus.joomdd.ejsl.idea.facet.EJSLFacetType"/>
-      	<lang.documentationProvider 
-      		language="de.thm.icampus.joomdd.ejsl.EJSL"
-      		factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
-      		implementationClass="org.eclipse.xtext.idea.documentation.IdeaDocumentationProvider"
-      	/>
+		<lang.documentationProvider 
+			language="de.thm.icampus.joomdd.ejsl.EJSL"
+			factoryClass="de.thm.icampus.joomdd.ejsl.idea.EJSLExtensionFactory"
+			implementationClass="org.eclipse.xtext.idea.documentation.IdeaDocumentationProvider"
+		/>
 		<colorSettingsPage implementation="de.thm.icampus.joomdd.ejsl.idea.highlighting.EJSLColorSettingsPage"/>
 		<highlightVisitor implementation="de.thm.icampus.joomdd.ejsl.idea.highlighting.EJSLSemanticHighlightVisitor"/>
 
