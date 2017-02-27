@@ -1,4 +1,4 @@
-<img src="img/Logo_b.png" alt="JooMDDLogo" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/Logo_b.png" alt="JooMDDLogo" height="300" style="max-width:100%;float:right;">
 
 **JooMDD** provides a set of plugins for a model-driven development of Joomla! extension 
 packages. 
@@ -60,7 +60,7 @@ JooMDD update site (PhpStorm): <https://raw.githubusercontent.com/icampus/JooMDD
 ***
 ## Getting Started ##
 ### The eJSL language###
- <img src="img/eJSL_Logo_trans.png" alt="eJSLLogo" height="100" style="max-width:100%;float:right;">
+ <img src="releases/img/eJSL_Logo_trans.png" alt="eJSLLogo" height="100" style="max-width:100%;float:right;">
  
 The **eJSL** plugin can be used to create extensions for the Joomla CMS in a model-driven way. 
 Through the creation of eJSL-specific models a tremendous amount of code becomes generated automatically. 
@@ -82,41 +82,41 @@ Instead of creating an eJSL project manually, you can get started easier, using 
 ##### Eclipse #####
 Create a new project and within the "new Project" dialogue open the folder eJSL Wizard. 
 
-<img src="img/eclipse_pw_1.png" alt="Eclipse Project Wizard" height="300" style="max-width:100%;float:right;">
-<img src="img/eclipse_pw_2.png" alt="Eclipse Project Wizard 2" height="300" style="max-width:100%;float:right;">
-<img src="img/eclipse_pw_3.png" alt="Eclipse Project Wizard 3" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/eclipse_pw_1.png" alt="Eclipse Project Wizard" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/eclipse_pw_2.png" alt="Eclipse Project Wizard 2" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/eclipse_pw_3.png" alt="Eclipse Project Wizard 3" height="300" style="max-width:100%;float:right;">
 
 Within this folder you should see *"EJSL Project"*. Give your project a name and select a model example template.
 Through a click on the Finish-Button the required project structure becomes generated containing source folders 
 for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
 is created within the src folder which can be used for a straightforward introduction.
 
-<img src="img/eclipse_pw_4.png" alt="Eclipse Project Wizard 4" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/eclipse_pw_4.png" alt="Eclipse Project Wizard 4" height="300" style="max-width:100%;float:right;">
 
 ##### IntelliJ #####
 Create a new project and within the "new Project" dialogue click on the *eJSL* section. 
 
-<img src="img/ij_pw_1.png" alt="IntelliJ IDEA Project Wizard" height="300" style="max-width:100%;float:right;">
-<img src="img/ij_pw_2.png" alt="IntelliJ IDEA Project Wizard 2" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/ij_pw_1.png" alt="IntelliJ IDEA Project Wizard" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/ij_pw_2.png" alt="IntelliJ IDEA Project Wizard 2" height="300" style="max-width:100%;float:right;">
 
 Select a model example template and subsequently give you project a name.
 Through a click on the Finish-Button the required project structure becomes generated containing source folders 
 for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
 is created within the src folder which can be used for a straightforward introduction.
 
-<img src="img/ij_pw_3.png" alt="IntelliJ IDEA Wizard 3" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/ij_pw_3.png" alt="IntelliJ IDEA Wizard 3" height="300" style="max-width:100%;float:right;">
 
 ##### PhpStorm #####
 Create a new project and within the "new Project" dialogue click on the *eJSL* section.
 
-<img src="img/php_pw_1.png" alt="PhpStorm Project Wizard" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/php_pw_1.png" alt="PhpStorm Project Wizard" height="300" style="max-width:100%;float:right;">
 
 Select a model example template and subsequently give you project a name.
 Through a click on the create-Button the required project structure becomes generated containing source folders 
 for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
 is created within the src folder which can be used for a straightforward introduction.
 
-<img src="img/php_pw_2.png" alt="PhpStorm Project Wizard 2" height="300" style="max-width:100%;float:right;">
+<img src="releases/img/php_pw_2.png" alt="PhpStorm Project Wizard 2" height="300" style="max-width:100%;float:right;">
 
 
 ### 2. Create a model ###
