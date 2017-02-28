@@ -195,7 +195,7 @@ DetailsPage returns DetailsPage:
 DetailPageField returns DetailPageField:
 	{DetailPageField}
 	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)? 
-	('Options {' (options+=KeyValuePair)* '}')?
+	('Options (' keyvaluepairs+=KeyValuePair (',' keyvaluepairs+=KeyValuePair)* ')')?
 ;
 
 CustomPage returns CustomPage:
@@ -221,7 +221,7 @@ SimpleHTMLTypes:
 ;
 
 ComplexHTMLTypes:
-	htmltype = ComplexHTMLTypeKinds " Options (" keyvaluepairs+=KeyValuePair (',' keyvaluepairs+=KeyValuePair)* ")"
+	htmltype = ComplexHTMLTypeKinds
 ;
 
 Link:
@@ -307,7 +307,7 @@ Backend returns BackendSection:
 ;
 
 PageReference returns PageReference:
-	'*Page :' page=[Page|QualifiedName] ('from :' pagescr= ComponentReference "section" sect = SectionKinds)?
+	'*Page :' page=[Page|QualifiedName] ('from :' pagescr= ComponentReference)? ("data" sect = DataAccessKinds)?
 ;
 
 ComponentReference:
@@ -501,8 +501,8 @@ enum PageActionPositionKind:
 enum StandardTypeKinds:
 	Integer | Boolean | Text | Short_Text | Time | Date | Datetime | Link | Image | File | Label | Encrypted_Text
 ;
-enum SectionKinds:
-	backend='.backend' | frontend='.frontend'
+enum DataAccessKinds:
+	backendDAO='backendDAO' | frontendDAO='frontendDAO' | database='database' | webservice='webservice'
 ;
 enum PageKinds:
 	list | details | custom
