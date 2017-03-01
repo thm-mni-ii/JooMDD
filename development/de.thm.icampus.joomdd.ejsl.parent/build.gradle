@@ -45,9 +45,9 @@ subprojects {
 }
 
 
-task incrementPatchLevelVersion{
+task incrementPatchLevelVersionParent{
 	description 'Increment the Patch level Version for the Project'
-	group ('JooMDD')
+	group ('JooMDD_Help_Task')
 
 	doLast{	
 		def xmlFile = file ('pom.xml')
@@ -87,13 +87,16 @@ task incrementPatchLevelVersion{
 		def printer = new XmlNodePrinter(new PrintWriter(writer))
 		printer.preserveWhitespace = true
 		printer.print(list)
+		subprojects { 
+			version = newVersion	// refresh version for update all versions
+		}
 	}
 }
 
 
-task incrementMinorVersion{
-	description 'Increment the Minor Version for the Project'
-	group ('JooMDD')
+task incrementMinorVersionParent{
+	description 'Increment the Minor Version for the Project in parent pom'
+	group ('JooMDD_Help_Task')
 
 	doLast{	
 		def xmlFile = file ('pom.xml')
@@ -133,14 +136,15 @@ task incrementMinorVersion{
 		def printer = new XmlNodePrinter(new PrintWriter(writer))
 		printer.preserveWhitespace = true
 		printer.print(list)
-		
-		
+		subprojects { 
+			version = newVersion	// refresh version for update all versions
+		}
 	}
 }
 
-task incrementMajorVersion{
-	description 'Increment the Major Version for the Project'
-	group ('JooMDD')
+task incrementMajorVersionParent{
+	description 'Increment the Major Version for the Project in parent pom'
+	group ('JooMDD_Help_Task')
 
 	doLast{
 		def xmlFile = file ('pom.xml')
@@ -179,15 +183,20 @@ task incrementMajorVersion{
 		def printer = new XmlNodePrinter(new PrintWriter(writer))
 		printer.preserveWhitespace = true
 		printer.print(list)
+		subprojects { 
+			version = newVersion	// refresh version for update all versions
+		}
 	}
 }
+
+
 
 /*
 	Update Version for UI project
 
 */
 task updateUIPomVersion{
-	description 'Update the Version for the Project'
+	description 'Update the Version for the Project in parent pom'
 	group ('JooMDD_Help_Task')
 	
 	doLast{	
@@ -453,11 +462,35 @@ task updateAllVersions(dependsOn: ['updateSDKPomVersion','updateRepositoryPomVer
 }
 
 
+
+task incrementMajorVersion(dependsOn : [ 'incrementMajorVersionParent', 'updateAllVersions' ]){
+	description 'Increment the Major Version for the Project'
+	group ('JooMDD')
+	
+	updateAllVersions.mustRunAfter	incrementMajorVersionParent	
+}
+
+task incrementMinorVersion(dependsOn : [ 'incrementMinorVersionParent', 'updateAllVersions' ]){
+	description 'Increment the Major Version for the Project'
+	group ('JooMDD')
+	
+	updateAllVersions.mustRunAfter	incrementMinorVersionParent
+	
+}
+
+task incrementPatchLevelVersion(dependsOn : [ 'incrementPatchLevelVersionParent', 'updateAllVersions' ]){
+	description 'Increment the Major Version for the Project'
+	group ('JooMDD')
+	
+	updateAllVersions.mustRunAfter	incrementPatchLevelVersionParent	
+}
+
+
 /*
 	Eclipse Deployment Automation
 */
 task cleanEJSLUpdateSite(type: Delete){
-	description 'delete the Version for the Project'
+	description 'delete the old plugin of the JooMDDUpdateSite'
 	group ('JooMDD_Help_Task')
 	
 	delete('../../releases/Eclipse/JooMDDUpdateSite/features/')
@@ -465,10 +498,6 @@ task cleanEJSLUpdateSite(type: Delete){
 	
 	delete('../../releases/Eclipse/JooMDDUpdateSite/content.jar')
 	delete('../../releases/Eclipse/JooMDDUpdateSite/artifacts.jar')
-	
-	doLast{
-		println('Update Site cleaned')
-	}
 }
 
 
@@ -478,16 +507,13 @@ ant.importBuild 'build.xml'
 
 task runAntBuild(dependsOn: "antBuildEclipse"){
 	description 'Runs build.xml Ant script for Eclipse Update Site'
-	group("123")
+	group("JooMDD_Help_Task")
 	
-    doLast {
-        println 'Plugins created via maven'
-    }
 }
 
 task copyEclPluginToUpdateSite(type: Copy){
 	description 'Update the Version for the Project'
-	group ('123')
+	group ('JooMDD_Help_Task')
 	
 	from('./de.thm.icampus.joomdd.ejsl.repository/target/repository/')	
 	
@@ -505,6 +531,10 @@ task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions","a
 	cleanEJSLUpdateSite.mustRunAfter		updateAllVersions
 	antBuildEclipse.mustRunAfter			updateAllVersions	
 	copyEclPluginToUpdateSite.mustRunAfter	antBuildEclipse
+	
+	doLast {
+        println 'Eclipse plugins created '
+    }
 	
 }
 
@@ -569,7 +599,7 @@ task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", "
 	task('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	":ProjectWizard:createIntelliJWizardPluginSource"
     task(":ProjectWizard:createIntelliJWizardPluginSource").mustRunAfter		task(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
     cleanEJSLUpdateSite.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
-    
+    JooMDDDeployEclipse.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
 	doLast{
 		println "Deployment finished"
 	}

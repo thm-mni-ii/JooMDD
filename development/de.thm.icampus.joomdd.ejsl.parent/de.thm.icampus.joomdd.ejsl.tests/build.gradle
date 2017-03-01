@@ -29,6 +29,10 @@ task runJUnitTest(dependsOn: ['copyTestResources', 'test']){
     description = "Test: run unit tests"
 	
 	test.mustRunAfter	copyTestResources
+	
+	doLast{
+		println "Test report created in ejsl.tests/build/reprots/tests/"	
+	}
 }
 
 
