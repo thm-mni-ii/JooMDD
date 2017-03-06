@@ -22,173 +22,182 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	
 	public override CharSequence genRefrenceField()'''
 		<?php
-			«Slug.generateFileDoc(com, true)»
-			
-			jimport('joomla.form.formfield');
-			
-			class JFormField«nameField.toFirstUpper» extends JFormField
-			{
-				protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
-							                       "mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
-							                       "foreignTable"=> "«Slug.databaseName(com.name,foreignReference.entity.name)»"
+		«Slug.generateFileDoc(com, true)»
+		
+		jimport('joomla.form.formfield')
+		
+		class JFormField«nameField.toFirstUpper» extends JFormField
+		{
+			protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
+				"mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
+				"foreignTable"=> "«Slug.databaseName(com.name,foreignReference.entity.name)»"
 							                                      );
-							   protected $keysAndForeignKeys= array( "table" => array(
-							     «FOR attr : mainRef.extendedAttributes»
-							     	«IF attr != mainRef.extendedAttributes.last»
-							     		"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
-							     	«ELSE»
-							     		"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
-							     	«ENDIF»
-							     «ENDFOR»
-							   ),"foreignTable" => array(
-							    «FOR attr : foreignReference.attribute»
-   							     	«IF attr != foreignReference.attribute.last»
-   							     		"«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»",
-   							     	«ELSE»
-   							     		"«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»"
-   							     	«ENDIF»
-   							     «ENDFOR»
-							   ));
-			  «genGetInput»
-							      
-		      «genGetAllData»
-		      «genAttributValue»
-			  «genGetData_item»	      
-		      «getAllReferenceData»
-		      «genGenerateJsonValue»
-		      «gengenerateStringValue»
-				
-				
-				
-			}
+			protected $keysAndForeignKeys= array( "table" => array(
+				«FOR attr : mainRef.extendedAttributes»
+					«IF attr != mainRef.extendedAttributes.last»
+							"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
+					«ELSE»
+							"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
+					«ENDIF»
+				«ENDFOR»
+			),"foreignTable" => array(
+				«FOR attr : foreignReference.attribute»
+	   				«IF attr != foreignReference.attribute.last»
+						"«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»",
+	   				«ELSE»
+	   					"«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»"
+	   				«ENDIF»
+   				«ENDFOR»
+			));
+			
+			«genGetInput»
+			
+			«genGetAllData»
+			
+			«genAttributValue»
+			
+			«genGetData_item»
+			
+			«getAllReferenceData»
+			
+			«genGenerateJsonValue»
+			
+			«gengenerateStringValue»
+		
+		}
 	'''
 	def private genGetInput()'''
-	 protected function getInput()
-      {
-      		$html = array();
-      		$document = JFactory::getDocument();
-      		$document->addScript( JURI::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
-      		$input = JFactory::getApplication()->input;
-      		      $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
-      		      if(empty($«entFrom.primaryKey.name»)){
-      		      	$alldata = $this->getAllData();
-      		      	    $html[] = "<select  onchange='setMultipleValueForeignKeys(this)' generated='true' multiple id='" . $this->id . "select'  class='form-control' >";
-      		      $html[] = "<option>". JText::_("JOPTION_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
-      		      foreach($alldata as $data){
-      		          $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
-      		          . $this->generateStringValue($data) ."</option>";
-      		      }
-      		        $html[]="</select>";
-      		      $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id. "'/>";
-      		      return implode($html);
-      		      }
-		          $data_item = $this->getData_item($«entFrom.primaryKey.name»);
-
-      		      $referenceData = $this->getAllReferenceData($data_item);
-      		      $html[] = "<select  multiple='true' onchange='setMultipleValueForeignKeys(this)' generated='true'  id='" . $this->id . "select' class='form-control' >";
-      		      $html[] = "<option>". JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
-
-      		      foreach($referenceData as $reference){
-      		          $html[] = "<option  $reference->selected  value='". $this->generateJsonValue($reference)."'>" . $this->generateStringValue($reference) ."</option>";
-      		      }
-      		      $html[]="</select>";
-      		  $html[]="<input type='hidden' value='" . $this->attributValue($referenceData). "' name='" . $this->name. "' id='" . $this->id. "'/>";
-      	return implode($html);
-      }
+		protected function getInput()
+		{
+			$html = array();
+			$document = JFactory::getDocument();
+			$document->addScript( JURI::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
+			$input = JFactory::getApplication()->input;
+			$«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
+			if(empty($«entFrom.primaryKey.name»))
+			{
+				$alldata = $this->getAllData();
+				$html[] = "<select  onchange='setMultipleValueForeignKeys(this)' generated='true' multiple id='" . $this->id . "select'  class='form-control' >";
+				$html[] = "<option>". JText::_("JOPTION_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
+				foreach($alldata as $data)
+				{
+					$html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
+					. $this->generateStringValue($data) ."</option>";
+				}
+				$html[]="</select>";
+				$html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id. "'/>";
+				return implode($html);
+			}
+			$data_item = $this->getData_item($«entFrom.primaryKey.name»);
+			$referenceData = $this->getAllReferenceData($data_item);
+			$html[] = "<select  multiple='true' onchange='setMultipleValueForeignKeys(this)' generated='true'  id='" . $this->id . "select' class='form-control' >";
+			$html[] = "<option>". JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
+			
+			foreach($referenceData as $reference)
+			{
+				$html[] = "<option  $reference->selected  value='". $this->generateJsonValue($reference)."'>" . $this->generateStringValue($reference) ."</option>";
+			}
+			$html[]="</select>";
+			$html[]="<input type='hidden' value='" . $this->attributValue($referenceData). "' name='" . $this->name. "' id='" . $this->id. "'/>";
+			return implode($html);
+		}
 	'''
 	def private genGetAllData()'''
-	  protected function getAllData(){
-          $db = JFactory::getDbo();
-          $queryALL = $db->getQuery(true);
-          $queryALL->select("«FOR foreignAttr : foreignReference.attribute»
-			          	«IF foreignAttr != foreignReference.attribute.last»
-			             b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» , 
-			  		  «ELSE»
-			  		     b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase»	       
-			          «ENDIF»
-			          «ENDFOR» 	")
-              ->from($this->referenceStruct["foreignTable"] . ' as b')
-              ->where("state = 1")
-              ->order(" «foreignReference.attributerefereced.get(0).name.toLowerCase»  ASC");
-          $db->setQuery($queryALL);
-          return $db->loadObjectList();
-      }
+		protected function getAllData(){
+			$db = JFactory::getDbo();
+			$queryALL = $db->getQuery(true);
+			$queryALL->select("
+			«FOR foreignAttr : foreignReference.attribute»
+				«IF foreignAttr != foreignReference.attribute.last»
+					b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» , 
+				«ELSE»
+					b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase»
+				«ENDIF»
+		«ENDFOR»")
+				->from($this->referenceStruct["foreignTable"] . ' as b')
+				->where("state = 1")
+				->order(" «foreignReference.attributerefereced.get(0).name.toLowerCase»  ASC");
+			$db->setQuery($queryALL);
+			return $db->loadObjectList();
+		}
 	'''
 	def private genAttributValue()'''
-	protected function attributValue($referenceData){
-	
-		$values = array();
-		foreach($referenceData as $reference){
-			if(!empty($reference->selected) && !in_array($reference->id,$values)){
-                 array_push($values, $reference->id);
+		protected function attributValue($referenceData){
+			
+			$values = array();
+			foreach($referenceData as $reference){
+				if(!empty($reference->selected) && !in_array($reference->id,$values))
+				{
+					array_push($values, $reference->id);
+				}
 			}
+			return json_encode($values);
 		}
-		return json_encode($values);
-	}
 	'''
 	def private getAllReferenceData()'''
-	 protected function getAllReferenceData($item)
-		      {
-		          $db = JFactory::getDbo();
-		          $query = $db->getQuery(true);
-	
-		          $query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
-		          (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
-		              ->from($this->referenceStruct["foreignTable"] . " as A")
-		              ->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
-		              «FOR attr : mainRef.extendedAttributes»
-			          	«IF attr != mainRef.extendedAttributes.last»
-			     C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
-			  		  «ELSE»
-				C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
-		          «ENDIF»
-		          «ENDFOR»
-		               ) as B on 
-	                 «FOR foreignAttr : foreignReference.attribute»
-			          	«IF foreignAttr != foreignReference.attribute.last»
-			             A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase» AND 
-			  		  «ELSE»
-			  		     A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase»") 	       
-			          «ENDIF»
-			          «ENDFOR»
-		      	        ->where("A.state = 1")
-				  		->order("A.«foreignReference.attributerefereced.get(0).name.toLowerCase»");
-		      	    $db->setQuery($query);
-		      	    return $db->loadObjectList();
-		      	}
-	
+		protected function getAllReferenceData($item)
+		{
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+		
+			$query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
+			(case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
+				->from($this->referenceStruct["foreignTable"] . " as A")
+				->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
+				«FOR attr : mainRef.extendedAttributes»
+					«IF attr != mainRef.extendedAttributes.last»
+						C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
+					«ELSE»
+						C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
+					«ENDIF»
+				«ENDFOR»
+				) as B on 
+				«FOR foreignAttr : foreignReference.attribute»
+					«IF foreignAttr != foreignReference.attribute.last»
+						A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase» AND 
+					«ELSE»
+						A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase»") 	       
+					«ENDIF»
+				«ENDFOR»
+				->where("A.state = 1")
+				->order("A.«foreignReference.attributerefereced.get(0).name.toLowerCase»");
+			$db->setQuery($query);
+			return $db->loadObjectList();
+		}
 	'''
 	def private genGetData_item()'''
-	protected function getData_item($«entFrom.primaryKey.name»){
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-         $query->select("*")->from($this->referenceStruct["table"])
-			 ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
-		$db->setQuery($query);
-		return $db->loadObject();
-	}
-	
+		protected function getData_item($«entFrom.primaryKey.name»){
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select("*")->from($this->referenceStruct["table"])
+				 ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
+			$db->setQuery($query);
+			return $db->loadObject();
+		}
 	'''
 	def private genGenerateJsonValue()'''
-	 public function generateJsonValue($data){
-        $result  = array();
-        foreach($this->keysAndForeignKeys["foreignTable"] as $key=>$value){
-			if(!array_key_exists("jform_$key",$result )){
-				$result["jform_$key"] = array();
+		public function generateJsonValue($data)
+		{
+			$result  = array();
+			foreach($this->keysAndForeignKeys["foreignTable"] as $key=>$value)
+			{
+				if(!array_key_exists("jform_$key",$result ))
+				{
+					$result["jform_$key"] = array();
+				}
+				array_push($result["jform_$key"],$data->{$key} );
 			}
-            array_push($result["jform_$key"],$data->{$key} );
-        }
-        return json_encode($result);
-    }
+			return json_encode($result);
+		}
 	'''
 	def private gengenerateStringValue()'''
-	 public function generateStringValue($data){
-          $result = array();
-
-	  	$result[] = $data->{array_keys($this->keysAndForeignKeys["foreignTable"])[0]} . " ";
-          
-          return implode($result);
-      }
+		public function generateStringValue($data)
+		{
+			$result = array();
 	
+			$result[] = $data->{array_keys($this->keysAndForeignKeys["foreignTable"])[0]} . " ";
+			
+			return implode($result);
+		}
 	'''
 }
