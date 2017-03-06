@@ -54,8 +54,8 @@ class JoomlaEntityGenerator {
 	def boolean isAllreferenVisited(EList<ExtendedReference> list, List<String> visited, EList<ExtendedEntity> entityLsit) {
 		
 		for(ExtendedReference r: list.filter[t | t != null && t.upper.equalsIgnoreCase("1")]){
-			if(!visited.contains(r.extendedToEntity.name)){
-			  if((entityLsit.filter[t | t.name.equalsIgnoreCase(r.extendedToEntity.name)]).size > 0)
+			if(!visited.contains(r.destinationEntity.name)){
+			  if((entityLsit.filter[t | t.name.equalsIgnoreCase(r.destinationEntity.name)]).size > 0)
 			return false
 			
 			}
@@ -71,11 +71,11 @@ class JoomlaEntityGenerator {
     «ENDIF»
 
    CREATE TABLE  IF NOT EXISTS `«Slug.databaseName( componentName, table.name.toLowerCase)»` (
-	«FOR a:table.allattribute»
+	«FOR a:table.allExtendedAttributes»
 		`«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
 	«ENDFOR»
 	
-	«FOR ExtendedAttribute a:table.extendedAttributeList»
+	«FOR ExtendedAttribute a:table.ownExtendedAttributes»
 	«IF a.isunique»
 	UNIQUE KEY («a.name»«if(a.withattribute != null)''',«a.withattribute.name»'''»),
 	«ENDIF» 
@@ -112,11 +112,11 @@ class JoomlaEntityGenerator {
 
     	 while(visited.size < entitiesList.size ){
 	        for (ExtendedEntity e:entitiesList){
-	        	if(e.extendedReference.empty && !visited.contains(e.name)){	        		
+	        	if(e.allExtendedReferences.empty && !visited.contains(e.name)){	        		
 	        		visited.add(e.name);
 	        		result.add(e)
 	        	}
-	         else if(!visited.contains(e.name) && !e.references.empty && isAllreferenVisited(e.extendedReference, visited, entitiesList) ){
+	         else if(!visited.contains(e.name) && !e.references.empty && isAllreferenVisited(e.allExtendedReferences, visited, entitiesList) ){
 	        	   visited.add(e.name);
 	        	   result.add(e)
 	        	   
@@ -186,13 +186,13 @@ class JoomlaEntityGenerator {
 	}
 	
 	def getAfterAttribute(ExtendedAttribute attribute, ExtendedEntity ent) {
-		if(ent.extendedAttributeList.get(0). name.equalsIgnoreCase(attribute.name)){
+		if(ent.ownExtendedAttributes.get(0). name.equalsIgnoreCase(attribute.name)){
 			return null
 		}
-		for(ExtendedAttribute attr: ent.extendedAttributeList){
+		for(ExtendedAttribute attr: ent.ownExtendedAttributes){
 			if(attr.name.equalsIgnoreCase(attribute.name)){
-				var int index = ent.extendedAttributeList.indexOf(attr)
-				return ent.extendedAttributeList.get(index-1)
+				var int index = ent.ownExtendedAttributes.indexOf(attr)
+				return ent.ownExtendedAttributes.get(index-1)
 			}
 		}
 	}

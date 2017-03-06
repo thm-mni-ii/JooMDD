@@ -73,7 +73,7 @@ class EntityGenerator extends AbstracteGenerator {
 			for(ExtendedEntity ent: pageEntities){
 				var FieldsGenerator fieldsEntity = new FieldsGenerator(extensions, ent)
 				fieldsEntity.dogenerate(path + "models/fields" , fsa)
-				for(ExtendedReference ref: ent.extendedReference){
+				for(ExtendedReference ref: ent.allExtendedReferences){
 				switch ref.upper{
 						case "1":{
 							var FieldsGenerator fields = new FieldsGenerator(ref,extensions, ent)
@@ -101,7 +101,7 @@ class EntityGenerator extends AbstracteGenerator {
 			for(ExtendedEntity ent: entities){
 				var FieldsGenerator fieldsEntity = new FieldsGenerator(extComp, ent)
 				fieldsEntity.dogenerate(path+"fields/" , fsa)
-				for(ExtendedReference ref: ent.extendedReference){
+				for(ExtendedReference ref: ent.allExtendedReferences){
 					switch ref.upper{
 						case "1":{
 							var FieldsGenerator fields = new FieldsGenerator(ref,extComp, ent)

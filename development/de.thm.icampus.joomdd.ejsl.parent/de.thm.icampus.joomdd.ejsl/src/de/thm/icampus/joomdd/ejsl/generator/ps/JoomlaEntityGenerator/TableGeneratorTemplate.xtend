@@ -40,7 +40,7 @@ class TableGeneratorTemplate {
 		«genInitTheForeignTableOption»
 		«genLoadAllPrimaryKeys»
 		«genPublish»
-		«IF ent.getallReferenceToEntity.size > 0»
+		«IF ent.getAllExtendedReferencesToEntity.size > 0»
 		«genDelete»
 		«ENDIF»
 	}
@@ -60,16 +60,16 @@ class TableGeneratorTemplate {
  		'''
  public def CharSequence genInitTheForeignTableOption() '''
    public function  initTheForeignTableOption(){
-   	«FOR ExtendedReference ref : ent.getallReferenceToEntity»
-   	$temp_«ent.getallReferenceToEntity.indexOf(ref)» = array(
-   	"type" => "«ref.extendedFromEntity.name.toString.toFirstUpper»",
+   	«FOR ExtendedReference ref : ent.getAllExtendedReferencesToEntity»
+   	$temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)» = array(
+   	"type" => "«ref.sourceEntity.name.toString.toFirstUpper»",
    	"prefix" => "«com.name.toFirstUpper»Table",
    	"foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
    	"refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
-   	"name" => "#__«com.name.toLowerCase»_«ref.extendedFromEntity.name.toLowerCase»",
-   	"foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.extendedToEntity).name.toLowerCase»'
+   	"name" => "#__«com.name.toLowerCase»_«ref.sourceEntity.name.toLowerCase»",
+   	"foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.destinationEntity).name.toLowerCase»'
    	);
-   	array_push($this->foreigntableOption, $temp_«ent.getallReferenceToEntity.indexOf(ref)»);
+   	array_push($this->foreigntableOption, $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)»);
         «ENDFOR»
   }
  '''

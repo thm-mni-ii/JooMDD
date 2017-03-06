@@ -47,11 +47,11 @@ class FieldsGenerator {
 			                                      "foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
 			                                      );
 			   protected $keysAndForeignKeys= array(
-			     «FOR attr : mainRef.extendedAttribute»
-			     	«IF attr != mainRef.extendedAttribute.last»
-			     		"«attr.name.toLowerCase»" => "«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»",
+			     «FOR attr : mainRef.extendedAttributes»
+			     	«IF attr != mainRef.extendedAttributes.last»
+			     		"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
 			     	«ELSE»
-			     		"«attr.name.toLowerCase»" => "«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»"
+			     		"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
 			     	«ENDIF»
 			     «ENDFOR»
 			   );
@@ -94,7 +94,7 @@ class FieldsGenerator {
 				      if(empty($«entFrom.primaryKey.name»)){
 				      	$alldata = $this->getAllData();
 				      	    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select'  class='form-control' >";
-				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
+				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
 				      foreach($alldata as $data){
 				          $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 				          . $this->generateStringValue($data) ."</option>";
@@ -106,7 +106,7 @@ class FieldsGenerator {
 				       $data = $this->getData_item($«entFrom.primaryKey.name»);
 				      $selectData = $this->getReferencedata($data);
 				      $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select' class='form-control' name='" . $this->name. "select'>";
-				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttribute.get(0).name.toUpperCase»"). "</option>";
+				      $html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
 				      foreach($selectData as $selected){
 				          $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
 				          . $this->generateStringValue($selected) ."</option>";
@@ -127,9 +127,9 @@ class FieldsGenerator {
 	{
 		  $db = JFactory::getDbo();
           $query = $db->getQuery(true);
-		  $query->select("distinct (case  when «FOR ExtendedAttribute attr: mainRef.extendedAttributeReferenced»«IF attr != mainRef.extendedAttributeReferenced.last»
-		  								b.«attr.name» = '$data->«mainRef.extendedAttribute.get(mainRef.extendedAttributeReferenced.indexOf(attr)).name»' and «ELSE»
-		  								b.«attr.name» = '$data->«mainRef.extendedAttribute.get(mainRef.extendedAttributeReferenced.indexOf(attr)).name»'
+		  $query->select("distinct (case  when «FOR ExtendedAttribute attr: mainRef.referencedExtendedAttributes»«IF attr != mainRef.referencedExtendedAttributes.last»
+		  								b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»' and «ELSE»
+		  								b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»'
 		  								 «ENDIF»
 		  								«ENDFOR»
 		  							 then 'selected'
@@ -216,13 +216,13 @@ class FieldsGenerator {
 	        $query = $dbo->getQuery(true);
 	        $query->select("DISTINCT $valueColumn as value, $textColumn as text")
 	             ->from("$this->table AS «entFrom.name.toLowerCase»")
-	             «FOR ExtendedReference ref:entFrom.extendedReference »
-	             ->join('LEFT', "«Slug.databaseName(com.name,ref.extendedToEntity.name)» as  «ref.extendedToEntity.name.toLowerCase» ON
-	             «FOR ExtendedAttribute attr: ref.extendedAttribute»
-	             «IF ref.extendedAttribute.last != attr»
-	             «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.extendedToEntity.name.toLowerCase».«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf((attr))).name.toLowerCase» AND
+	             «FOR ExtendedReference ref:entFrom.allExtendedReferences »
+	             ->join('LEFT', "«Slug.databaseName(com.name,ref.destinationEntity.name)» as  «ref.destinationEntity.name.toLowerCase» ON
+	             «FOR ExtendedAttribute attr: ref.extendedAttributes»
+	             «IF ref.extendedAttributes.last != attr»
+	             «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
 	             «ELSE»
-	              «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.extendedToEntity.name.toLowerCase».«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf((attr))).name.toLowerCase»
+	              «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
 	             «ENDIF»
 	             «ENDFOR»
 	             ")

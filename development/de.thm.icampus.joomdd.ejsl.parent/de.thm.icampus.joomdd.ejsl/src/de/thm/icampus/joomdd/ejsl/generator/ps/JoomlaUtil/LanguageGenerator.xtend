@@ -121,7 +121,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 					JGRID_HEADING_«ent.primaryKey.name.toUpperCase» = "«ent.primaryKey.name»"
 					
 					«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«ent.name.toUpperCase» = "Select a «ent.name.toFirstUpper»"
-					«FOR ExtendedAttribute attr: ent.allattribute»
+					«FOR ExtendedAttribute attr: ent.allExtendedAttributes»
 						« var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) »
 						«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»="«Slug.slugify(attr.name).toFirstUpper»"
 						«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»_DESC="Description of «Slug.slugify(attr.name).toFirstUpper»"
@@ -131,7 +131,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 							«ENDFOR»
 						«ENDIF»	
 					«ENDFOR»
-				 «FOR ExtendedReference ref: ent.extendedReference.filter[t | t.upper.equalsIgnoreCase("-1")]»
+				 «FOR ExtendedReference ref: ent.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")]»
 				 «var Entity refEntity = Slug.getOtherEntityToMapping(ref)»
 				  «Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«refEntity.name.toUpperCase» = "«refEntity.name.toFirstUpper»"
 				 «ENDFOR»

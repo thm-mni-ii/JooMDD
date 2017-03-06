@@ -33,11 +33,11 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 							                       "foreignTable"=> "«Slug.databaseName(com.name,foreignReference.entity.name)»"
 							                                      );
 							   protected $keysAndForeignKeys= array( "table" => array(
-							     «FOR attr : mainRef.extendedAttribute»
-							     	«IF attr != mainRef.extendedAttribute.last»
-							     		"«attr.name.toLowerCase»" => "«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»",
+							     «FOR attr : mainRef.extendedAttributes»
+							     	«IF attr != mainRef.extendedAttributes.last»
+							     		"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
 							     	«ELSE»
-							     		"«attr.name.toLowerCase»" => "«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»"
+							     		"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
 							     	«ENDIF»
 							     «ENDFOR»
 							   ),"foreignTable" => array(
@@ -132,15 +132,15 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		          $db = JFactory::getDbo();
 		          $query = $db->getQuery(true);
 	
-		          $query->select("B.«Slug.getPrimaryKeys(mainRef.extendedToEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
-		          (case when B.«Slug.getPrimaryKeys(mainRef.extendedToEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
+		          $query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
+		          (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
 		              ->from($this->referenceStruct["foreignTable"] . " as A")
 		              ->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
-		              «FOR attr : mainRef.extendedAttribute»
-			          	«IF attr != mainRef.extendedAttribute.last»
-			     C.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
+		              «FOR attr : mainRef.extendedAttributes»
+			          	«IF attr != mainRef.extendedAttributes.last»
+			     C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
 			  		  «ELSE»
-				C.«mainRef.extendedAttributeReferenced.get(mainRef.extendedAttribute.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
+				C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
 		          «ENDIF»
 		          «ENDFOR»
 		               ) as B on 

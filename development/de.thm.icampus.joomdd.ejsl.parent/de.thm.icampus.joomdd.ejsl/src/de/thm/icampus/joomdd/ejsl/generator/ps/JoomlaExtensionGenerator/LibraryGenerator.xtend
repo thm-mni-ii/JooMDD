@@ -101,7 +101,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 				 */
 				class «this.subpackageName»«entityName»
 				{
-					«FOR attribute : entity.extendedAttributeList»
+					«FOR attribute : entity.ownExtendedAttributes»
 						/**
 						 * @var		«attribute.generatorType»	Variable description
 						 * @since	3.3
