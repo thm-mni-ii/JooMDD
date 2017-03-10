@@ -70,7 +70,7 @@ Parameter returns Parameter:
 	'Parameter' name=ID 
 	'{'
 		//'type' '=' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-		'type =' ((dtype=Type))
+		'type =' ((dtype=Type)) 
 		('defaultvalue =' defaultvalue=STRING)?
 		('label =' label=STRING)?
 		('size =' size=INT)?
@@ -123,6 +123,7 @@ Attribute returns Attribute:
 		'type =' (type=Type)
 		(isunique ?= 'Unique attribute' ('with' (withattribute=[Attribute|QualifiedName] | id?='ID'))?)?
 		(isprimary ?= 'Primary attribute')?
+		('values' '{' values+=KeyValuePair (',' values+=KeyValuePair)* '}')?
 	'}'
 ;
 
@@ -172,7 +173,7 @@ IndexPage returns IndexPage:
 		('pageactions' '{' (pageactions+=PageAction)* '}')?
 		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
 		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
-		('links' '{' (links+=Link)* '}')?
+		('links' '{' (links+=Link)* '}')? 
 	'}'
 ;
 
@@ -181,7 +182,7 @@ DetailsPage returns DetailsPage:
 	'DetailsPage' name=MYID (preserve?='@preserve')?
 	'{'
 		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
-		('editFields' '{' (editfields+=DetailPageField)* '}')?
+		('editFields' '{' (editfields+=DetailPageField (',' editfields+=DetailPageField)*)? '}')?
 		('*ParameterGroups' parametergroups+=[ParameterGroup] (',' parametergroups+=[ParameterGroup])*)?
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
@@ -194,8 +195,11 @@ DetailsPage returns DetailsPage:
 
 DetailPageField returns DetailPageField:
 	{DetailPageField}
-	attribute = [Attribute|QualifiedName] (':' htmltype = HTMLTypes)? 
-	('Options (' keyvaluepairs+=KeyValuePair (',' keyvaluepairs+=KeyValuePair)* ')')?
+	attribute = [Attribute|QualifiedName] 
+	'{'
+		'type =' (htmltype = HTMLTypes)
+		('field_attributes' '{' (attributes+=KeyValuePair (',' attributes+=KeyValuePair)*)? '}')?
+	'}'
 ;
 
 CustomPage returns CustomPage:
