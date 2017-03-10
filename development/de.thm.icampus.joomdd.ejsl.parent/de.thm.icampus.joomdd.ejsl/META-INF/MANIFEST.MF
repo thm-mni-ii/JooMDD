@@ -39,5 +39,6 @@ Export-Package: de.thm.icampus.joomdd.ejsl.eJSL.util,
  de.thm.icampus.joomdd.ejsl.services,
  de.thm.icampus.joomdd.ejsl.eJSL.impl,
  de.thm.icampus.joomdd.ejsl.validation,
+  de.thm.icampus.joomdd.ejsl.validation.elements,
  de.thm.icampus.joomdd.ejsl.formatting2
 Import-Package: org.apache.log4j
