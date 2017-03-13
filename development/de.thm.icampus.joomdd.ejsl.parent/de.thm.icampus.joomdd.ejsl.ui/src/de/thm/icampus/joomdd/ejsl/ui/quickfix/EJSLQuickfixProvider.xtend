@@ -20,10 +20,14 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 import java.util.HashSet
 import de.thm.icampus.joomdd.ejsl.eJSL.Feature
-import de.thm.icampus.joomdd.ejsl.eJSL.Extension
+import de.thm.icampus.joomdd.ejsl.eJSL.Extension 
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.joomdd.ejsl.eJSL.Page
-
+import de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator
+import de.thm.icampus.joomdd.ejsl.validation.elements.ManifestValidator
+import de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator
+import de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator 
+  
 /**
  * Custom quickfixes.
  *
@@ -35,7 +39,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Add Reference for Attribute
 	 */
-	 @Fix(EJSLValidator::MISSING_REFERENCE)
+	 @Fix(EntityValidator::ENTITY_MISSING_REFERENCE)
 	 def referenceToEntity(Issue issue, IssueResolutionAcceptor acceptor){
 	 	acceptor.accept(issue, 'Insert Reference', 'Insert a Reference for this Attribute.', '') [
 			element, context |
@@ -82,7 +86,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Delete underscore in entity name
 	 */
-	@Fix(EJSLValidator::FORBIDDEN_UNDERSCORE_ENTITYNAME)
+	@Fix(EntityValidator::ENTITY_FORBIDDEN_UNDERSCORE)
 	def deleteUnderscoreInEntityName(Issue issue, IssueResolutionAcceptor acceptor){
 		acceptor.accept(issue, 'Delete underscore', 'Delete the underscore from the entity name.', '') [
 			element, context |
@@ -96,7 +100,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Delete underscore in page name
 	 */
-	@Fix(EJSLValidator::FORBIDDEN_UNDERSCORE_PAGENAME)
+	@Fix(PageValidator::PAGE_FORBIDDEN_UNDERSCORE)
 	def deleteUnderscoreInPageName(Issue issue, IssueResolutionAcceptor acceptor){
 		acceptor.accept(issue, 'Delete underscore', 'Delete the underscore from the page name.', '') [
 			element, context |
@@ -110,7 +114,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Delete an author of a manifestation
 	 */
-	@Fix(EJSLValidator::AMBIGUOUS_AUTHOR)
+	@Fix(ManifestValidator::MANIFEST_AUTHOR_AMBIGUOUS)
 	def uniqueManifestationAuthors(Issue issue, IssueResolutionAcceptor acceptor){
 		acceptor.accept(issue, 'Delete this author', 'Delete the name of the author.', '') [
 			element, context |
@@ -125,7 +129,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	 * Adds an Id to an Entity with a double defined name:
 	 * _ID_ + LineNumber
 	 */
-	@Fix(EJSLValidator::AMBIGUOUS_ENTITY)
+	@Fix(EntityValidator::ENTITY_AMBIGOUS)
 	def addIDtoEntity(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, 'Add ID to Entity', 'Change the name.', '') [ context |
 			val xtextDocument = context.xtextDocument
@@ -165,7 +169,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Set a http:// or https:// as String before an invalid url
 	 */
-	@Fix(EJSLValidator::INVALID_AUTHOR_URL)
+	@Fix(ManifestValidator::MANIFEST_AURHOR_URL_INVALID)
 	def validURL(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, 'Set "http" before', 'Setting HTTP:// before invalid URL', '') [ context |
 			val xtextDocument = context.xtextDocument
@@ -180,7 +184,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Add a missing primary attribute to the first attribute of an entity
 	 */
-	@Fix(EJSLValidator::MISSING_PRIMARY_ATTRIBUTE)
+	@Fix(EntityValidator::ENTITY_MISSING_PRIMARY_ATTRIBUTE)
 	def fixNonExistingPrimaryAttribute(Issue issue, IssueResolutionAcceptor acceptor) {
 		acceptor.accept(issue, 'Add primary attribute (define attribute first!)', 'Adding primary attribute to the first Attribute', '')[ element, context |
 			val firstAttribute = element as Attribute
@@ -192,7 +196,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Changes a non-primary attribute of a reference to a primary attribute
 	 */
-	@Fix(EJSLValidator::NOT_PRIMARY_REFERENCE)
+	@Fix(EntityValidator::ENTITY_REFERENCE_ATTRIBUTE_NOT_PRIMARY)
 	def fixReferenceAttributeError(Issue issue, IssueResolutionAcceptor acceptor){
 		acceptor.accept(issue, 'Change to a primary attribute.', 'Change the attribute to a primary attribute from the same entity.', '')[ reference, context |
 			val ref = reference as Reference
@@ -215,7 +219,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Adding an ID to a double defined attribute
 	 */
-	@Fix(EJSLValidator::AMBIGUOUS_ATTRIBUTE_NAME)
+	@Fix(EntityValidator::ENTITY_ATTRIBUTE_AMBIGUOUS)
 	def attributename(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Add ID to attribute', 'Change the name.', '') [
 			context |
@@ -227,7 +231,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Adds an ID to a double defined page
 	 */
-	@Fix(EJSLValidator::AMBIGUOUS_PAGE)
+	@Fix(PageValidator::PAGE_AMBIGUOUS)
 	def pagename(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Add ID to page', 'Change the name.', '') [
 			context |
@@ -239,7 +243,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Delete a page which is used more than once
 	 */
-	@Fix(EJSLValidator::PAGE_USED_MULTIPLE_TIMES)
+	@Fix(SectionValidator::SECTION_PAGE_USED_MULTIPLE_TIMES)
 	def pageUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Remove this page', 'Delete this page.', '') [
 			context |
@@ -251,7 +255,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Delete a Entity which is used more than once
 	 */
-	@Fix(EJSLValidator::ENTITY_USED_MULTIPLE_TIMES)
+	@Fix(PageValidator::PAGE_ENTITY_USED_MULTIPLE_TIMES)
 	def entityUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Remove this entity', 'Delete this entity.', '') [
 			context |
@@ -278,7 +282,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Add an ID to a double defined local parameter 
 	 */
-	@Fix(EJSLValidator::AMBIGUOUS_LOCALPARAMETER)
+	@Fix(PageValidator::PAGE_LOCALPARAMETER_AMBIGOUS)
 	def localParameter(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Add ID to Parameter', 'Change the name.', '') [
 			context |
@@ -306,7 +310,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Deletes a double defined backend from a page
 	 */
-	@Fix(EJSLValidator::MORE_THAN_ONE_BACKEND)
+	@Fix(SectionValidator::SECTION_MORE_THAN_ONE_BACKEND)
 	def moreThanOneBackend(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Remove this Backend', 'Delete this Backend.', '') [
 			context |
@@ -318,7 +322,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 *  Deletes a double defined frontend from a page
 	 */
-	@Fix(EJSLValidator::MORE_THAN_ONE_FRONTEND)
+	@Fix(SectionValidator::SECTION_MORE_THAN_ONE_FRONTEND)
 	def moreThanOneFronted(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Remove this Fronted', 'Delete this Fronted.', '') [
 			context |
@@ -330,7 +334,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Add an ID to a double defined global parameter
 	 */
-	@Fix(EJSLValidator::AMBIGUOUS_GLOBALPARAMETER)
+	@Fix(PageValidator::PAGE_GLOBALPARAMETER_AMBIGUOUS)
 	def globalParameter(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Add ID to Parameter', "Change the name of the parameter.", '') [
 			context |
@@ -390,7 +394,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Add the missing entity of a defined filter attribute to the page OR remove the whole page
 	 */
-	@Fix(EJSLValidator::AMBIGUOUS_FILTER_ATTRIBUTE)
+	@Fix(PageValidator::PAGE_FILTER_AMBIGUOUS)
 	def handleMissingFilterEntity(Issue issue, IssueResolutionAcceptor acceptor){
 		acceptor.accept(issue, 'Add the missing entity.', 'Add the missing entity to the page to fix this failure', '')[
 			page, context |
@@ -412,7 +416,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Add the missing entity of a defined table column attribute to the page OR remove the whole page
 	 */
-	@Fix(EJSLValidator::AMBIGUOUS_TABLE_COLUMN_ATTRIBUTE)
+	@Fix(PageValidator::PAGE_TABLE_COLUMN_AMBIGUOUS)
 	def handleMissingTableColumnEntity(Issue issue, IssueResolutionAcceptor acceptor){
 		acceptor.accept(issue, 'Add the missing entity.', 'Add the missing entity to the page to fix this failure', '')[
 			page, context |
@@ -434,7 +438,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Remove a filter which is used more than once OR delete the whole page
 	 */
-	@Fix(EJSLValidator::FILTER_USED_MULTIPLE_TIMES)			
+	@Fix(PageValidator::PAGE_FILTER_USED_MULTIPLE_TIMES)			
 	def filterUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Remove this page', 'Delete the whole page.', '') [
 			context |
@@ -461,7 +465,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	/**
 	 * Remove a table column which is used more than once OR delete the whole page
 	 */
-	@Fix(EJSLValidator::COLUMNS_USED_MULTIPLE_TIMES)			
+	@Fix(PageValidator::PAGE_COLUMNS_USED_MULTIPLE_TIMES)			
 	def tableColumnUsedMultipleTimes(Issue issue, IssueResolutionAcceptor acceptor){
 				acceptor.accept(issue, 'Remove this multiple table column', 'Delete this table column.', '') [
 			page, context | 
