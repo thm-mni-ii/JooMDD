@@ -237,7 +237,7 @@ class DetailsPageTemplateBackendHelper {
 			</div>
 			</div>
 	        <?php echo JHtml::_('bootstrap.endTab'); ?>
-	        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
+	        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
 			  «Slug.generateEntytiesBackendInputRefrence(ref,com)»
 			«ENDFOR» 
 	        

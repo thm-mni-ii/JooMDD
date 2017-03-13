@@ -4,30 +4,81 @@
 package de.thm.icampus.joomdd.ejsl.web
 
 import com.google.inject.Provider
+import java.io.IOException
 import java.util.List
+import java.util.Map
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.common.util.EList
+import org.eclipse.xtext.resource.IResourceServiceProvider
 import org.eclipse.xtext.web.servlet.XtextServlet
 
-/**
+/** 
  * Deploy this class into a servlet container to enable DSL-specific services.
  */
 @WebServlet(name = 'XtextServices', urlPatterns = '/xtext-service/*')
 class EJSLServlet extends XtextServlet {
-	
+	 
 	val List<ExecutorService> executorServices = newArrayList
+	
+
+	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+	
 	
 	override init() {
 		super.init()
+		println("init hier!")
 		val Provider<ExecutorService> executorServiceProvider = [Executors.newCachedThreadPool => [executorServices += it]]
 		new EJSLWebSetup(executorServiceProvider).createInjectorAndDoEMFRegistration()
 	}
 	
 	override destroy() {
+		println("destroy server or session")
 		executorServices.forEach[shutdown()]
 		executorServices.clear()
 		super.destroy()
 	}
+	
+	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
+		if(users.containsKey(req.getSession().id)==false){
+		users.put(req.getSession().id, new BasicEList<String>);
+		println(req.getSession().id)
+		
+		}
+		var resource =  req.getSession().id +"_"+req.getParameter("resource")
+		println(req.parameterMap.toString)
+		if(!(users.get(req.getSession().id) as EList<String>).contains(resource)){
+			(users.get(req.getSession().id) as EList<String>).add(resource)
+			println(resource)
+		}
+		   
+		super.doGet(req, resp)
+		
+	}
+	
+	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
+		if(users.containsKey(req.getSession().id)==false){
+		users.put(req.getSession().id,new BasicEList<String>);
+		println(req.getSession().id)
+		
+		}
+		var resource = req.getSession().id +"_"+req.getParameter("resource")
+		println(req.parameterMap.toString)
+		if(!(users.get(req.getSession().id) as EList<String>).contains(req.getParameterValues("resource"))){
+			(users.get(req.getSession().id) as EList<String>).add(resource)
+			println(resource)
+		}
+		super.doPost(req, resp)
+		
+	}
+	
+	 
 	
 }

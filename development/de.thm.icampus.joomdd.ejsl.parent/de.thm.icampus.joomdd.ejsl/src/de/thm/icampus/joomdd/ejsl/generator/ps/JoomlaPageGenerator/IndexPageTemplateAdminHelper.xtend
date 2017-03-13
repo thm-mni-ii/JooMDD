@@ -133,13 +133,13 @@ class IndexPageTemplateAdminHelper {
 		// Join over the user field 'user'
 		$query->select('user.name AS user');
 		$query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name.toLowerCase».created_by');
-		 «FOR ExtendedReference ref:indexpage.extendedEntityList.get(0).allExtendedReferences »
-		 $query->join('LEFT', "«Slug.databaseName(com.name,ref.destinationEntity.name)»  AS «ref.destinationEntity.name.toLowerCase» ON
-         «FOR ExtendedAttribute attr: ref.extendedAttributes»
-         «IF ref.extendedAttributes.last != attr»
-         «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
+		 «FOR ExtendedReference ref:indexpage.extendedEntityList.get(0).extendedReference »
+		 $query->join('LEFT', "«Slug.databaseName(com.name,ref.extendedToEntity.name)»  AS «ref.extendedToEntity.name.toLowerCase» ON
+         «FOR ExtendedAttribute attr: ref.extendedAttribute»
+         «IF ref.extendedAttribute.last != attr»
+         «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.extendedToEntity.name.toLowerCase».«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf((attr))).name.toLowerCase» AND
          «ELSE»
-          «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
+          «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.extendedToEntity.name.toLowerCase».«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf((attr))).name.toLowerCase»
          «ENDIF»
          «ENDFOR»
 		 ");

@@ -27,19 +27,17 @@
 					baseUrl: baseUrl,
 					syntaxDefinition: "xtext-resources/generated/mode-eJSL"
 				});
-				
-				jQuery("#ejslGeneraor").click(function(){
-					var editor = jQuery("#xtext-editor");
-					var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status"});
-					//generatePromise.then
-				});
+
 				
 			});
 		});
 		
 		
+		
 	</script>
-	
+    <script type="text/javascript" src="lib/generator.js"></script>
+    <script type="text/javascript" src="lib/settings.js"></script>
+    <script type="text/javascript" src="lib/templates.js"></script>
 </head>
 <body>
 
@@ -49,17 +47,36 @@
 	</header>
 	<div class="content">
 		<div id="xtext-editor" data-editor-xtext-lang="eJSL" class="w3-card-4"></div>
+		
+		
 		<div class="intro">
 			<img class="logo" src="Logo_b.png">
-			<div>Herzlich willkommen</div>
-			<button id="ejslGeneraor" class="w3-btn blue">Generiere Code</button>
+			<div></div>
+			<button id="ejslGenerator" class="w3-btn blue">Generiere Code</button>
+			<button id="ejslGeneratorsave" class="w3-btn blue">Save Code</button>
+			<button id="ejslGeneratorconfig" class="w3-btn blue">Settings</button>
 			<br>
 			<div id="using_json_2" class="filetree w3-card-4">
 
 			</div>
 		</div>
 	</div>
-			
+	<div>
+	<div>
+	<p>Select a example:<div  id="templatecontainer"> <select id="templates">
+	    <option>choose a instance</option>
+		<option value="brueckenKurs.eJSL">brueckenKurs</option>
+		<option value="conference.eJSL">Conference</option>
+		<option value="Model.eJSL">Model</option>
+		<option value="Shop.eJSL">Shop</option>
+		<option value="Simple.eJSL">Simple Model</option>
+		</select></p></div>
+	</div>	
+	<div> <p> Select a theme :<div id="themescontainer"> </div> </p> </div>
+	<div><p>Font size:<input type="number" id="fontsize"/><p></div>
+	<div><p>Font Style: <div id="fontcontainer"> </p></div>
+	</div>
+	</div>
 	
 </div>
 

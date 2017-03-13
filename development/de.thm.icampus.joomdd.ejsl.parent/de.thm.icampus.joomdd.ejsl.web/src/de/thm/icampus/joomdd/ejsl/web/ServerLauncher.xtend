@@ -11,13 +11,17 @@ import org.eclipse.jetty.webapp.MetaInfConfiguration
 import org.eclipse.jetty.webapp.WebAppContext
 import org.eclipse.jetty.webapp.WebInfConfiguration
 import org.eclipse.jetty.webapp.WebXmlConfiguration
+import org.eclipse.xtext.resource.IResourceServiceProvider
+import java.util.HashMap
 
 /**
  * This program starts an HTTP server for testing the web integration of your DSL.
  * Just execute it and point a web browser to http://localhost:8080/
  */
 class ServerLauncher {
-	def static void main(String[] args) {
+		var static resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+	
+	def static void main(String[] args) { 
 		val server = new Server(new InetSocketAddress('localhost', 8080))
 		server.handler = new WebAppContext => [
 			resourceBase = 'WebRoot'
@@ -34,6 +38,10 @@ class ServerLauncher {
 		val log = new Slf4jLog(ServerLauncher.name)
 		try {
 			server.start
+			if(resourcesProvider != null){
+		resourcesProvider.contentTypeToFactoryMap.put("serverpath",new String("C:/joomdd_server"))
+	    resourcesProvider.contentTypeToFactoryMap.put("mddsessions",new HashMap<String, Object>)
+		}
 			log.info('Server started ' + server.getURI + '...')
 			new Thread[
 				log.info('Press enter to stop the server...')

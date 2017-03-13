@@ -25,6 +25,7 @@ import de.thm.icampus.joomdd.ejsl.gui.ConfigGUI
 import java.awt.EventQueue
 import java.util.regex.Pattern
 import java.util.regex.Matcher
+import org.eclipse.emf.common.util.EList
 
 /**
  * Generates code from your model files on save.
@@ -40,11 +41,15 @@ class EJSLGenerator extends AbstractGenerator {
 
 	@Inject
 	private IResourceServiceProvider.Registry registry;
-
+	 
 	 Properties config = new Properties()
 	override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		super.beforeGenerate(input, fsa, context)
 		config = new Properties()
+		if(registry.contentTypeToFactoryMap.get("serverpath") != null){
+			println("here is the server")
+			return
+		}
 		if(fsa.isFile("generator.properties"))
 		 
 		config.load(fsa.readBinaryFile("generator.properties"))
@@ -87,10 +92,25 @@ class EJSLGenerator extends AbstractGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		
 		genData = new JavaIoFileSystemAccess(registry, encodingProvider)
+		println()
 	
-		
+		var String outputFolder
+        if(registry.contentTypeToFactoryMap.get("serverpath") != null){
+        	var Map<String, Object> users = registry.contentTypeToFactoryMap.get("mddsessions") as Map<String, Object>
+        	var act_user = "";
+        	for(String ssid : users.keySet){
+        		println(ssid)
+        		var EList<String> value = users.get(ssid) as EList<String>
+        		var String filename = resource.URI.path.split("/").last
+        		println(filename)
+        		if(value.contains(filename))
+        		  act_user = ssid
+        	}
+        	outputFolder = registry.contentTypeToFactoryMap.get("serverpath") as String + "/"+ act_user
+        }else{
+        outputFolder = config.getProperty("outputFolder")
         
-        var String outputFolder = config.getProperty("outputFolder")
+        }
 
          println(outputFolder)
 	  		

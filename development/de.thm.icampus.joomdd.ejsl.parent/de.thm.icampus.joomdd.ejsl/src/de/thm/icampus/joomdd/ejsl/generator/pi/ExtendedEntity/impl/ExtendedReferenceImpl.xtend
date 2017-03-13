@@ -5,49 +5,53 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 
 class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 	
-	EList <ExtendedAttribute> extendedAttributes
-	EList <ExtendedAttribute> referencedExtendedAttributes
-	Entity toEntity
-	Entity fromEntity
+	 EList <ExtendedAttribute> extendedAttribute
+	  EList <ExtendedAttribute> extendedAttributerefereced
+	   Entity toEntity
+	  Entity fromEntity
 	
 	new(Reference e, Entity from){
 		this.attribute = e.attribute
 		this.attributerefereced = e.attributerefereced
 		entity = e.entity
 		toEntity = e.entity
-		fromEntity = from
 		this.preserve = e.preserve
+		fromEntity = from
 		this.upper = e.upper
 		this.lower = e.lower
+		initList()
 		
-		initLists()
 	}
 	
-	def initLists() {
-		extendedAttributes = new BasicEList<ExtendedAttribute>()
-		referencedExtendedAttributes = new BasicEList<ExtendedAttribute>()
-		extendedAttributes.addAll( attribute.map[t | new ExtendedAttributeImpl(t)])
-		referencedExtendedAttributes.addAll(attributerefereced.map[t | new ExtendedAttributeImpl(t) ])
+	def initList() {
+		extendedAttribute = new BasicEList<ExtendedAttribute>()
+		extendedAttributerefereced = new BasicEList<ExtendedAttribute>()
+		extendedAttribute.addAll( attribute.map[t | new ExtendedAttributeImpl(t)])
+		extendedAttributerefereced.addAll(attributerefereced.map[t | new ExtendedAttributeImpl(t) ])
 	}
 	
-	override getExtendedAttributes() {
-		return this.extendedAttributes
+	override getExtendedAttribute() {
+		return this.extendedAttribute
 	}
 	
-	override getReferencedExtendedAttributes() {
-		return this.referencedExtendedAttributes
+	override getExtendedAttributeReferenced() {
+		return this.extendedAttributerefereced
 	}
 	
-	override getDestinationEntity() {
+	override getExtendedToEntity() {
 		return this.toEntity
 	}
-	override getSourceEntity() {
+	override getExtendedFromEntity() {
 		return this.fromEntity
 	}
+	
+	
+	
 	
 }

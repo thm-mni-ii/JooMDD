@@ -18,7 +18,8 @@ class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements Extend
 		this.attribute = field.attribute
 		this.htmltype = field.htmltype
 		extendedAttribute = new ExtendedAttributeImpl(this.attribute)
-		this.options = field.options
+		this.attributes = field.attributes
+		this.values = field.values
 		type = parseType()
 	}
 	
@@ -44,12 +45,7 @@ class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements Extend
 		return extendedAttribute
 	}
 	
-	override getExtrasKeyValue() {
-		if(this.htmltype instanceof ComplexHTMLTypes){
-			var ComplexHTMLTypes cpHtml  = this.htmltype as ComplexHTMLTypes
-			return cpHtml.keyvaluepairs
-		}
-	}
+	
 	
 	
 }

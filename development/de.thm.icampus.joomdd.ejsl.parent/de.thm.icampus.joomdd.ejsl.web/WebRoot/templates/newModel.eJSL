@@ -1,0 +1,408 @@
+eJSLModel "AgendaModel"
+{
+	eJSL part: CMS Extension { 
+	datatypes {
+		Datatype "editor" , Datatype "usergroup" , Datatype "Button"
+	}
+	
+	entities {
+		Entity Referent {
+			attributes {
+				Attribute name {
+					type = Textfield Not Null Unique attribute with ID
+				}
+				Attribute vorname {
+					type = Textfield Not Null
+				}
+				Attribute herkunftland {
+					type = Textfield
+				}
+				Attribute geburtdatum {
+					type = Date
+				}
+			}
+		}
+		Entity Raum{
+			attributes {
+				Attribute identification {
+					type = Textfield Not Null Unique attribute with ID
+				}
+				Attribute gebaeude {
+					type = Textfield
+				}
+				Attribute adresse {
+					type = Textfield
+				}
+			}
+		}
+		Entity Conference {
+			attributes {
+				Attribute titel {
+					type = Textfield Not Null Unique attribute with ID
+				}
+				Attribute date {
+					type = Time Not Null 
+				}
+				Attribute raum {
+					type = Textfield Not Null 
+				}
+				Attribute raumid{
+					type = Integer Not Null
+				}
+				Attribute referent {
+					type = Textfield Not Null
+				}
+				Attribute referentid {
+					type =  Integer 
+				}
+				Attribute ^description{
+					type = Textarea
+				}
+			}
+			references{
+				Reference {
+					EntityAttribute =  raum *Entity = Raum *EntityReference = ID Raum.identification lower = 1 upper = -1
+				}
+				Reference {
+					EntityAttribute = raumid *Entity = Raum *EntityReference = ID lower = 1 upper = -1
+				}
+				Reference {
+					EntityAttribute = referent *Entity = Referent *EntityReference = Referent.name lower = 1 upper = -1
+				}
+				Reference {
+					EntityAttribute = referentid *Entity = Referent *EntityReference = ID lower = 1 upper = -1
+				}
+				
+			}
+			
+		}
+		
+	}
+	pages {
+		IndexPage Referents {
+			*Entities Referent
+			pageactions {
+				PageAction new {
+					type = Button
+					position = top
+				}
+			}
+			table columns = Referent.name , Referent.vorname , Referent.herkunftland
+			filters = Referent.name , Referent.geburtdatum
+			
+			links{
+				InternalcontextLink DetailsReferent{
+					target = Referentdetail linked attribute = Referent.name linkparameters {
+						Parameter name = *Attribute "Referent.name"
+						Parameter id = *Attribute ID
+					}
+				}
+				InternalcontextLink NewReferent{
+					target = Referentedit linked action = new  linkparameters{
+						Parameter id = "0"
+					}
+				}
+			}
+		}
+		IndexPage ReferentsAdmin {
+			*Entities Referent
+			pageactions {
+				PageAction new
+				{
+					type = Button
+					position = top
+				}
+			}
+			table columns = Referent.name , Referent.vorname , Referent.herkunftland
+			filters = Referent.name , Referent.geburtdatum
+			links{
+				InternalcontextLink DetailsReferent{
+					target = Referentedit linked attribute = Referent.name linkparameters {
+						Parameter name = *Attribute "Referent.name"
+						Parameter id = *Attribute ID
+					}
+				}
+				InternalcontextLink NewReferent{
+					target = Referentedit linked action = new linkparameters{
+						Parameter id = "0"
+					}
+				}
+			}
+		}
+		DetailsPage Referentedit {
+			*Entities Referent
+			editFields {
+				Referent.name : Text_Field 
+				Referent.vorname : Text_Field
+				Referent.geburtdatum : Datepicker
+				Referent.herkunftland : Text_Field
+			}
+			localparameters {
+				Parameter referentList {
+					type = "Button"
+				}
+			}
+			pageactions{
+				PageAction referentList{
+					type = Button
+					position = top
+				}
+			}
+			links {
+				InternalLink gotoReferentlist {
+					target = Referents linked action = referentList 
+				}
+			}
+			
+		}
+		DetailsPage Referentdetail {
+			*Entities Referent
+			pageactions {
+				PageAction referentlist {
+					type = Button
+					position = top
+				}
+				PageAction referentedit {
+					type = Button
+					position = top
+				}
+			}
+			table columns = Referent.name , Referent.vorname , Referent.herkunftland , Referent.geburtdatum
+			links {
+				InternalLink gotoReferentlist {
+					target = Referents linked action = referentlist
+				}
+				InternalcontextLink referentedit{
+					target = Referentedit linked action = referentedit linkparameters {
+						Parameter id= *Attribute ID
+					}
+				}
+			} 
+			
+		}
+		IndexPage Raums {
+			*Entities Raum
+			table columns = Raum.identification , Raum.gebaeude , Raum.adresse
+			filters = Raum.gebaeude , Raum.identification
+			links{
+				InternalcontextLink DetailsRaum{
+					target = Raumdetail linked attribute = Raum.identification linkparameters{
+						Parameter raumname = *Attribute  "Raum.identification"
+						Parameter id = *Attribute ID
+					}
+				}
+			}
+			
+		}
+		IndexPage Raumsadmin {
+			*Entities Raum
+			table columns = Raum.identification , Raum.gebaeude , Raum.adresse
+			filters = Raum.gebaeude , Raum.identification
+			links{
+				InternalcontextLink DetailsRaum{
+					target = Raumedit linked attribute = Raum.identification linkparameters{
+						Parameter raumname = *Attribute  "Raum.identification"
+						Parameter id = *Attribute ID
+					}
+				}
+			}
+			
+		}
+		DetailsPage Raumedit {
+			*Entities Raum
+			editFields {
+				Raum.identification : Text_Field
+				Raum.gebaeude : Text_Field
+				Raum.adresse : Text_Field
+			}
+			
+			pageactions {
+			PageAction raumlist {
+					type = Button
+					position = top
+				}
+				}
+			links {
+				InternalLink gotolist {
+					target = Raums linked action = raumlist
+				}
+			}
+			
+		}
+		DetailsPage Raumdetail {
+			*Entities Raum
+			pageactions{
+					PageAction raumlist {
+					type = Button
+					position = top
+				}
+				PageAction raumedit {
+					type = Button
+					position = top
+				}
+				
+			}
+			table columns = Raum.identification, Raum.gebaeude, Raum.adresse 
+			links {
+				InternalLink gotoRaumlist {
+					target = Raums linked action = raumlist
+				}
+				InternalcontextLink raumdedit{
+					target = Raumedit linked action = raumedit  linkparameters {
+						Parameter id= *Attribute ID
+					}
+				}
+			} 
+			
+			
+		}
+		IndexPage Conferences {
+			*Entities Conference
+			table columns = Conference.titel , Conference.date, Conference.referent , Conference.raum
+			filters = Conference.titel , Conference.date, Conference.referent , Conference.raum
+			links{
+				InternalcontextLink DetailsConference{
+					target = Conferencedetail linked attribute = Conference.titel linkparameters{
+						Parameter id = *Attribute  ID
+					}
+				}
+				InternalcontextLink Detailsraum{
+					target = Raumdetail linked attribute = Conference.raum linkparameters{
+						Parameter raumname = *Attribute  "Conference.raum"
+						Parameter id = *Attribute "Conference.raumid"
+						
+					}
+				}
+			  InternalcontextLink DetailsReferent{
+					target = Referentdetail linked attribute = Conference.referent linkparameters{
+						Parameter name = *Attribute  "Conference.referent"
+					}
+				}
+			  
+				
+			}	
+		}
+		IndexPage Conferencesadmin {
+			*Entities Conference
+			table columns = Conference.titel , Conference.date, Conference.referent , Conference.raum
+			filters = Conference.titel , Conference.date, Conference.referent , Conference.raum
+			links{
+				InternalcontextLink DetailsConference{
+					target = Conferenceedit linked attribute = Conference.titel linkparameters{
+						Parameter id = *Attribute  ID
+					}
+				}
+				InternalcontextLink Detailsraum{
+					target = Raumedit linked attribute = Conference.raum linkparameters{
+						Parameter raunma = *Attribute  "Conference.titel"
+					}
+				}
+			  InternalcontextLink DetailsReferent{
+					target = Referentedit linked attribute = Conference.referent linkparameters{
+						Parameter name = *Attribute  "Conference.referent"
+					}
+				}
+			  
+				
+			}	
+		}
+		DetailsPage Conferenceedit {
+			*Entities Conference
+			editFields {
+				Conference.titel : Text_Field
+				Conference.date : Datepicker
+				Conference.raum : Text_Field
+				Conference.referent : Text_Field
+				Conference.^description : Editor
+				
+			}
+			pageactions {
+				PageAction conferencelist{
+					type = Button position = top
+				}
+			}
+			links {
+				InternalLink gotolist {
+					target = Conferences linked action =conferencelist 
+				}
+			}
+			
+		}
+		DetailsPage Conferencedetail {
+			*Entities Conference
+			
+			pageactions {
+				PageAction conferencelist {
+					type = Button position = top
+					
+				}
+				PageAction conferenceedit{
+					type = Button position = top
+				}
+			}
+			table columns = Conference.titel , Conference.date , Conference.raum , Conference.referent, Conference.^description
+			links {
+				InternalLink gotoConferencelist {
+					target = Conferences linked action =Conferenceedit.conferencelist 
+				}
+				InternalcontextLink conferenceedit{
+					target = Conferenceedit linked action = conferenceedit linkparameters {
+						Parameter id= *Attribute ID
+					}
+				}
+			} 
+			
+		}
+	}
+	extensions {
+		Component JoomMdd {
+			Manifestation {
+				authors {
+					Author "Dieudonne Timma"
+					{
+						authoremail = "dieudonnetimma@yahoo.fsr"
+						authorurl = "http://www.goosgslse.crom"
+					}	
+				}
+				copyright = "GNU 3"
+				version = "1"
+				description = "This she  versions of h worlds"
+				
+			}languages {
+					Language de-DE{
+						
+					}
+					Language en-GB{
+						
+					}
+				}
+			sections {
+				Backend section {
+					*Pages {
+						*Page : ReferentsAdmin
+						*Page : Referentedit
+						*Page : Raumsadmin
+						*Page : Raumedit
+						*Page :  Conferencesadmin
+						*Page : Conferenceedit
+					}
+				}
+				Frontend section {
+					*Pages {
+						*Page : Referents
+						*Page : Referentdetail
+						*Page : Referentedit
+						*Page : Raums
+						*Page : Raumdetail 
+						*Page : Raumedit
+						*Page : Conferences
+						*Page : Conferencedetail
+						*Page : Conferenceedit
+					}
+				}
+			}
+		}
+	}
+	
+	}
+}

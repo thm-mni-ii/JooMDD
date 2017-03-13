@@ -121,17 +121,17 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 					JGRID_HEADING_«ent.primaryKey.name.toUpperCase» = "«ent.primaryKey.name»"
 					
 					«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«ent.name.toUpperCase» = "Select a «ent.name.toFirstUpper»"
-					«FOR ExtendedAttribute attr: ent.allExtendedAttributes»
+					«FOR ExtendedAttribute attr: ent.allattribute»
 						« var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) »
 						«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»="«Slug.slugify(attr.name).toFirstUpper»"
 						«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«Slug.slugify(attr.name).toUpperCase»_DESC="Description of «Slug.slugify(attr.name).toFirstUpper»"
-						«IF field != null && field.extrasKeyValue != null»
-							«FOR KeyValuePair kv: field.extrasKeyValue»
+						«IF field != null && field.values != null»
+							«FOR KeyValuePair kv: field.values»
 								«dtPage.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION = «kv.name»
 							«ENDFOR»
 						«ENDIF»	
 					«ENDFOR»
-				 «FOR ExtendedReference ref: ent.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")]»
+				 «FOR ExtendedReference ref: ent.extendedReference.filter[t | t.upper.equalsIgnoreCase("-1")]»
 				 «var Entity refEntity = Slug.getOtherEntityToMapping(ref)»
 				  «Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«Slug.slugify(ent.name).toUpperCase»_«refEntity.name.toUpperCase» = "«refEntity.name.toFirstUpper»"
 				 «ENDFOR»
@@ -202,7 +202,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			MOD_«extmod.name.toUpperCase»_FILTER_«attr.name.toUpperCase»_DESC = "«attr.name.toFirstUpper»"
 			JOPTION_SELECT_«attr.name.toUpperCase»="Select a «attr.name»"
 			«IF field != null»
-				«FOR KeyValuePair kv: field.extrasKeyValue»
+				«FOR KeyValuePair kv: field.values»
 					«dtPage.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION = «kv.name»
 				«ENDFOR»
 			«ENDIF»	

@@ -366,7 +366,7 @@ class DetailsPageTemplateFrontEndHelper {
 	        if ($table->save($data) === true) {
 	        	if(empty($inputs['«mainEntity.primaryKey.name»']) || $inputs['«mainEntity.primaryKey.name»'] == 0 )
 	        		$inputs['patid']=$table->«mainEntity.primaryKey.name»;
-	        	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
+	        	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference»
 	        	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
 	        	 $this->set«ref.entity.name»($inputs);
 	        	«ENDIF»
@@ -569,7 +569,7 @@ class DetailsPageTemplateFrontEndHelper {
         </div>
     </div>
     <?php echo JHtml::_('bootstrap.endTab'); ?>
-	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
+	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
 	  «Slug.generateEntytiesSiteInputRefrence(ref,com)»
 	«ENDFOR»  
 	   

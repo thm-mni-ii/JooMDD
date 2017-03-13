@@ -10,20 +10,20 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.eJSL.Feature
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
+import java.util.LinkedList
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
-
 
 class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 
 	Entity instance
-	EList<ExtendedAttribute> ownExtendedAttributes
-	EList<ExtendedAttribute> parentExtendedAttributes
-	EList<ExtendedAttribute> allAttributes
-	EList<ExtendedReference> extendedReferences
-	EList<ExtendedReference> allReferencesToEntity
+	EList<ExtendedAttribute> extendedAttributeList
+	EList<ExtendedAttribute> extendedParentAttributeList
+	EList<ExtendedAttribute> allAttribute
+	EList<ExtendedReference> extendedReference
+	EList<ExtendedReference> allReferenceToEntity
 	EList<ExtendedAttribute> allRefactoryAttribute
 	EList<ExtendedReference> allRefactoryReference
-	ExtendedAttribute primaryAttribute
+	ExtendedAttribute primariyAttribute
 	
 
 	new(Entity entity) {
@@ -35,16 +35,17 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		instance = entity
 		this.preserve = entity.preserve
 		
-		initLists()
-	}
-
-	override getOwnExtendedAttributes() {
-		return ownExtendedAttributes
+		initListen()
 
 	}
 
-	override getParentExtendedAttributes() {
-		return parentExtendedAttributes
+	override getExtendedAttributeList() {
+		return extendedAttributeList
+
+	}
+
+	override getExtendedParentAttributeList() {
+		return extendedParentAttributeList
 	}
 
 	override getInstance() {
@@ -52,40 +53,40 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 
 	}
 
-	override getAllExtendedAttributes() {
-		return allAttributes
+	override getAllattribute() {
+		return allAttribute
 	}
 
-	def void initLists() {
-		ownExtendedAttributes = new BasicEList<ExtendedAttribute>
-		allAttributes = new BasicEList<ExtendedAttribute>
-		allReferencesToEntity = new BasicEList<ExtendedReference>
-		extendedReferences = new BasicEList<ExtendedReference>
-		ownExtendedAttributes.addAll(this.attributes.map[t|new ExtendedAttributeImpl(t)])
-		parentExtendedAttributes = searchAttributeParent()
+	def void initListen() {
+		extendedAttributeList = new BasicEList<ExtendedAttribute>
+		allAttribute = new BasicEList<ExtendedAttribute>
+		allReferenceToEntity = new BasicEList<ExtendedReference>
+		extendedReference = new BasicEList<ExtendedReference>
+		extendedAttributeList.addAll(this.attributes.map[t|new ExtendedAttributeImpl(t)])
+		extendedParentAttributeList = searchAttributeParent()
 
-		allAttributes.addAll(ownExtendedAttributes)
-		allAttributes.addAll(parentExtendedAttributes)
-		extendedReferences.addAll(references.map[t|new ExtendedReferenceImpl(t, this.instance)])
+		allAttribute.addAll(extendedAttributeList)
+		allAttribute.addAll(extendedParentAttributeList)
+		extendedReference.addAll(references.map[t|new ExtendedReferenceImpl(t, this.instance)])
 		var EList<Entity> allEntity = (instance.eContainer as Feature).entities
 		for (Entity ent : allEntity) {
 			if (ent.references != null) {
 				var Iterable<Reference> listRef = ent.references.filter[t|t.entity.name == instance.name]
 				for (Reference ref : listRef)
 				    if(ref.upper.equals("1"))
-					allReferencesToEntity.add(new ExtendedReferenceImpl(ref, ent))
+					allReferenceToEntity.add(new ExtendedReferenceImpl(ref, ent))
 
 			}
 		}
 	
 		allRefactoryAttribute = new BasicEList<ExtendedAttribute>
 		allRefactoryReference = new BasicEList<ExtendedReference>
-		allRefactoryAttribute.addAll(ownExtendedAttributes.filter[t | !t.preserve])
-		allRefactoryReference.addAll(extendedReferences.filter[t | !t.preserve])
+		allRefactoryAttribute.addAll(extendedAttributeList.filter[t | !t.preserve])
+		allRefactoryReference.addAll(extendedReference.filter[t | !t.preserve])
 		
-	    for(ExtendedAttribute attr: ownExtendedAttributes){
+	    for(ExtendedAttribute attr: extendedAttributeList){
 	    	if(attr.isIsprimary)
-	    	   primaryAttribute = attr;
+	    	   primariyAttribute = attr;
 	    }
 
 	}
@@ -105,8 +106,8 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		return result
 	}
 
-	override boolean hasIdAttribute() {
-		for (attr : ownExtendedAttributes) {
+	override boolean haveIdAttribute() {
+		for (attr : extendedAttributeList) {
 			if (attr.name.toLowerCase.equalsIgnoreCase("id")) {
 				attr.name = "id"
 				return true
@@ -115,13 +116,13 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		return false
 	}
 
-	override addNewAttribute(Attribute e) {
+	override putNewAttributeInEntity(Attribute e) {
 		attributes.add(e)
-		allAttributes.add(new ExtendedAttributeImpl(e))
+		allAttribute.add(new ExtendedAttributeImpl(e))
 	}
 
 	override searchIdAttribute() {
-		for (attr : ownExtendedAttributes) {
+		for (attr : extendedAttributeList) {
 			if (attr.name.toLowerCase.equalsIgnoreCase("id")) {
 				return attr
 			}
@@ -129,21 +130,23 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		return null;
 	}
 
-	override getAllExtendedReferences() {
-		return extendedReferences
+	override getExtendedReference() {
+		return extendedReference
 	}
 
-	override getAllExtendedReferencesToEntity() {
-		return allReferencesToEntity
+	override getallReferenceToEntity() {
+		return allReferenceToEntity
 	}
 
-	override getExtendedAttributeByName(String name) {
-		for (ExtendedAttribute attr : ownExtendedAttributes) {
+	override getAttributeByName(String name) {
+		for (ExtendedAttribute attr : extendedAttributeList) {
 			if (attr.name.equalsIgnoreCase(name))
 				return attr;
 		}
 		return null
 	}
+	
+	
 	
 	override getRefactoryAttribute() {
 		return allRefactoryAttribute
@@ -152,14 +155,14 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	override getRefactoryReference() {
 		return allRefactoryReference
 	}
-	override isGenerated() {
+	override isAutomatedGenerated() {
 		if(name.startsWith("mappingMDD") && references.size == 2){
 			return true
 		}
 		return false
 	}
 	override getPrimaryKey() {
-		return primaryAttribute
+		return primariyAttribute
 	}
 
 }

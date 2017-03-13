@@ -19,7 +19,6 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Module
 import de.thm.icampus.joomdd.ejsl.eJSL.Page
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.eJSL.Section
-import de.thm.icampus.joomdd.ejsl.eJSL.SectionKinds
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
@@ -211,7 +210,7 @@ public class Slug  {
 			}
 			
 		}
-		for(ExtendedAttribute attr: entity.ownExtendedAttributes){
+		for(ExtendedAttribute attr: entity.extendedAttributeList){
 			if(!notShow.contains(attr.name)){
 				buff.append(inputHiddenFeldTemplate(attr))
 			}
@@ -399,13 +398,7 @@ public class Slug  {
 		return ''
 		
 	}
-	def static String getSectioName(SectionKinds  reference) {
-		if(reference.getName.equalsIgnoreCase("backend"))
-		return 'admin'
-		
-		return ''
-		
-	}
+
 	
 	def static CharSequence databaseName(String componentName, String entityName) {
 		return "#__" + componentName.toLowerCase + "_" + entityName.toLowerCase
@@ -469,19 +462,19 @@ public class Slug  {
 	'''
 	
 	def static Entity getEntityForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage) {
-		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences){
-			if(ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)){
+		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).extendedReference){
+			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
 				
-					return ref.destinationEntity
+					return ref.extendedToEntity
 			}
 	}
 	}
 	def static ExtendedAttribute getAttributeForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage){
-		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences){
-			if(ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)){
-				for(ExtendedAttribute refAttr: ref.referencedExtendedAttributes){
+		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).extendedReference){
+			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
+				for(ExtendedAttribute refAttr: ref.extendedAttributeReferenced){
 					if(refAttr.name.equalsIgnoreCase("id"))
-					return ref.extendedAttributes.get(ref.referencedExtendedAttributes.indexOf(refAttr))
+					return ref.extendedAttribute.get(ref.extendedAttributeReferenced.indexOf(refAttr))
 				}
 			}
 		}
@@ -613,16 +606,16 @@ public class Slug  {
 	}
 //get all other referenced in the referenced Entity	
 	def static EList<Attribute> getOtherAttribute(ExtendedReference reference) {
-	var Entity toEntity = reference.destinationEntity
-	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase( reference.sourceEntity.name)]).get(0)
+	var Entity toEntity = reference.extendedToEntity
+	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase( reference.extendedFromEntity.name)]).get(0)
 	
 	return ref.attribute
 	
 	}
 	
 	def static Entity getOtherEntityToMapping(ExtendedReference reference) {
-		var Entity toEntity = reference.destinationEntity
-	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.sourceEntity.name)]).get(0)
+		var Entity toEntity = reference.extendedToEntity
+	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.extendedFromEntity.name)]).get(0)
 	
 	return ref.entity
 	}

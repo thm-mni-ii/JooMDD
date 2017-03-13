@@ -367,7 +367,7 @@ class RessourceTransformer {
 			    var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
 			    format.name = "format"
 			    format.value = "%H:%M:%S"
-			  editField.options.add(format);
+			  editField.attributes.add(format);
 			    
 				
 			}
@@ -376,14 +376,14 @@ class RessourceTransformer {
 				 var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
 			    format.name = "format"
 			    format.value = "%d-%m-%Y"
-			    editField.options.add(format);
+			    editField.attributes.add(format);
 			}
 			case "Datetime" :{
 				result.htmltype = SimpleHTMLTypeKinds.get( "Datepicker")
 					 var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
 			    format.name = "format"
 			    format.value = "%y-%m-%d %H:%M:%S"
-			    editField.options.add(format);
+			    editField.attributes.add(format);
 				}
 			case "Link" :{
 				result.htmltype = SimpleHTMLTypeKinds.get( "Link")

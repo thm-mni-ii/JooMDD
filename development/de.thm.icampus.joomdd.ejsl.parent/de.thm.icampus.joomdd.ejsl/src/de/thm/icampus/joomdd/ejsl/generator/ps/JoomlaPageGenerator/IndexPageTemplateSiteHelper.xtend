@@ -191,11 +191,6 @@ class IndexPageTemplateSiteHelper {
 	     </tr>
 	     </tfoot>
     </table>
-//TODO 
-
-
-
-
 
     <?php if ($canCreate): ?>
         <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>"

@@ -16,7 +16,7 @@ import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
  * Initialization support for running Xtext languages in web applications.
  */
 @FinalFieldsConstructor
-class EJSLWebSetup extends EJSLStandaloneSetup {
+class EJSLWebSetup extends EJSLStandaloneSetup { 
 	
 	val Provider<ExecutorService> executorServiceProvider;
 	

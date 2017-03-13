@@ -249,7 +249,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«generateModelGetFormFunction()»
 		«generateModelLoadFormDataFunction()»
 		«generateModelGetItemFunction()»
-		«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
+		«IF mainEntity.extendedReference.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
 		«generateModelAdminSaveData()»
 		«ENDIF»
 		«generateModelReferenceSave()»
@@ -283,7 +283,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	if(parent::save($data)){
 		if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
 					$inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
-	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
+	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference»
 	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
 	 $this->set«ref.entity.name»($inputs);
 	«ENDIF»
@@ -296,7 +296,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	'''
 	
 	def CharSequence generateModelReferenceSave()'''
-	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
+	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).extendedReference»
 	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
 	 public function set«ref.entity.name»($inputs){
 	 	«var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
@@ -304,7 +304,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 		$«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
 	 	«ENDFOR»
 	 		$«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
-	 		«FOR ExtendedAttribute toAttr: ref.extendedAttributes»
+	 		«FOR ExtendedAttribute toAttr: ref.extendedAttribute»
 	 		$«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
 	 		«ENDFOR»
 
@@ -325,8 +325,8 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 				«FOR Attribute attr: referenceAttr»
 	 				$dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
 	 				«ENDFOR»
-	 				«FOR ExtendedAttribute toattr: ref.extendedAttributes»
-	 				$dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
+	 				«FOR ExtendedAttribute toattr: ref.extendedAttribute»
+	 				$dataToSave["«ref.extendedAttributeReferenced.get(ref.extendedAttribute.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
 	 				«ENDFOR»
 	 				$dataToSave["state"]=1;
 	 				$mappingTable->save($dataToSave);
