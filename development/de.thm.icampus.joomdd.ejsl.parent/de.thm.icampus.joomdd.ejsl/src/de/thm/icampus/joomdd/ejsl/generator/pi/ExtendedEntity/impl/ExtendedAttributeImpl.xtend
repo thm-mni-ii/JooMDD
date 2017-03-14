@@ -7,8 +7,6 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
-import de.thm.icampus.joomdd.ejsl.eJSL.Type
-import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
 class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
@@ -17,7 +15,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	String genType
 	Attribute instance
 	String htmlType
-	boolean isreferenced = false
+	boolean isReferenced = false
 
 	new(Attribute attr) {
 		attr.name = PlattformUtil.slugify(attr.name).toLowerCase
@@ -68,7 +66,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 			for(Reference ref: entity.references.filter[t | !t.upper.equalsIgnoreCase("1")]){
 				for(Attribute refAttr: ref.attribute)
 				if(this.name.equalsIgnoreCase(refAttr.name))
-				    this.isreferenced = true
+				    this.isReferenced = true
 			}
 		
 	}
@@ -172,13 +170,12 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		return htmlType
 	}
 	
-	override isreferenced() {
-		return isreferenced
+	override isReferenced() {
+		return isReferenced
 	}
 	
-	override setIsreferenced(boolean value) {
-		this.isreferenced = value
+	override setIsReferenced(boolean value) {
+		this.isReferenced = value
 	}
-
 
 }

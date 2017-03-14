@@ -79,15 +79,15 @@ def CharSequence xmlSiteTemplateContent(String pagename, ExtendedDynamicPage pag
 		addfieldpath="/administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields">
 
 		<field name="«page.extendedEntityList.get(0).primaryKey.name»" type="«page.extendedEntityList.get(0).name.toLowerCase»"
-			label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»"
+			label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name.toUpperCase»"
 			required="true"
 			edit="true"
 			clear="false"
-		description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»_DESC"
+		description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name.toUpperCase»_DESC"
        valueColumn="«page.extendedEntityList.get(0).primaryKey.name»"
-       textColumn="«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toLowerCase»"
+       textColumn="«page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name.toLowerCase»"
       >
-  <option value="">JOPTION_SELECT_«page.extendedEntityList.get(0).extendedAttributeList.get(0).name.toUpperCase»</option>
+  <option value="">JOPTION_SELECT_«page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name.toUpperCase»</option>
   </field>
 		</fieldset>
 	
@@ -216,10 +216,10 @@ override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedCompon
 			description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
 				
 				«FOR ExtendedEntity e : page.extendedEntityList»
-				«FOR ExtendedAttribute attr : e.extendedAttributeList.filter[t | !t.isIsprimary]»
+				«FOR ExtendedAttribute attr : e.ownExtendedAttributes.filter[t | !t.isIsprimary]»
 				«writeAttribute(e,attr,component,page)»
 				«ENDFOR»
-				«FOR ExtendedReference ref : e.extendedReference.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
+				«FOR ExtendedReference ref : e.allExtendedReferences.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
 				«var Entity foreign = Slug.getOtherEntityToMapping(ref)»
 				<field name="«ref.entity.name.toLowerCase»_id"
 						   type ="«e.name.toLowerCase»To«ref.entity.name.toLowerCase»"
@@ -441,8 +441,8 @@ override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedCompon
    public def String getHtmlTypeOfAttribute(ExtendedDynamicPage dynP,ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com){
    		var StringBuffer buff = new StringBuffer
    		
-   			for(ExtendedReference ref: en.extendedReference.filter[t | t.upper.equalsIgnoreCase("1")]){
-   			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
+   			for(ExtendedReference ref: en.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("1")]){
+   			if(ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)){
    				buff.append('''type ="«en.name + "to" +ref.entity.name»"''')
    				return buff.toString
    			}

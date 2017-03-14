@@ -210,7 +210,7 @@ public class Slug  {
 			}
 			
 		}
-		for(ExtendedAttribute attr: entity.extendedAttributeList){
+		for(ExtendedAttribute attr: entity.ownExtendedAttributes){
 			if(!notShow.contains(attr.name)){
 				buff.append(inputHiddenFeldTemplate(attr))
 			}
@@ -462,19 +462,19 @@ public class Slug  {
 	'''
 	
 	def static Entity getEntityForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage) {
-		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).extendedReference){
-			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
+		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences){
+			if(ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)){
 				
-					return ref.extendedToEntity
+					return ref.destinationEntity
 			}
 	}
 	}
 	def static ExtendedAttribute getAttributeForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage){
-		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).extendedReference){
-			if(ref.extendedAttribute.get(0).name.equalsIgnoreCase(attr.name)){
-				for(ExtendedAttribute refAttr: ref.extendedAttributeReferenced){
+		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences){
+			if(ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)){
+				for(ExtendedAttribute refAttr: ref.referencedExtendedAttributes){
 					if(refAttr.name.equalsIgnoreCase("id"))
-					return ref.extendedAttribute.get(ref.extendedAttributeReferenced.indexOf(refAttr))
+					return ref.extendedAttributes.get(ref.referencedExtendedAttributes.indexOf(refAttr))
 				}
 			}
 		}
@@ -606,16 +606,16 @@ public class Slug  {
 	}
 //get all other referenced in the referenced Entity	
 	def static EList<Attribute> getOtherAttribute(ExtendedReference reference) {
-	var Entity toEntity = reference.extendedToEntity
-	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase( reference.extendedFromEntity.name)]).get(0)
+	var Entity toEntity = reference.destinationEntity
+	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase( reference.sourceEntity.name)]).get(0)
 	
 	return ref.attribute
 	
 	}
 	
 	def static Entity getOtherEntityToMapping(ExtendedReference reference) {
-		var Entity toEntity = reference.extendedToEntity
-	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.extendedFromEntity.name)]).get(0)
+		var Entity toEntity = reference.destinationEntity
+	var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.sourceEntity.name)]).get(0)
 	
 	return ref.entity
 	}
