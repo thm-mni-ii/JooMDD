@@ -192,7 +192,7 @@
       </manifest>
       <languages name="de-DE"/>
       <languages name="en-GB"/>
-      <pageRef page="//@ejslPart/@feature/@pages.0" sect=".frontend">
+      <pageRef page="//@ejslPart/@feature/@pages.0">
         <pagescr ref="//@ejslPart/@extensions.0"/>
       </pageRef>
     </extensions>
@@ -235,7 +235,7 @@
         </manifest>
         <languages name="de-DE"/>
         <languages name="en-GB"/>
-        <pageRef page="//@ejslPart/@feature/@pages.0" sect=".frontend">
+        <pageRef page="//@ejslPart/@feature/@pages.0">
           <pagescr ref="//@ejslPart/@extensions.2/@extensions.0"/>
         </pageRef>
       </extensions>

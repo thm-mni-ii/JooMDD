@@ -26,6 +26,8 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 	}
 	
 	def init(ComponentReference reference) {
+		if(reference == null)
+		  return null
 		 if(reference.ref != null)
 	    return reference.ref.name
 	  if(reference.core != null)

@@ -37,7 +37,7 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t!=null]) {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(comp, ent)
 			generateFile( path + "models/fields/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
-				for(ExtendedReference ref: ent.allExtendedReferences){
+			for(ExtendedReference ref: ent.allExtendedReferences){
 				switch ref.upper{
 						case "1":{
 							var FieldsGenerator fields = new FieldsGenerator(ref,comp, ent)

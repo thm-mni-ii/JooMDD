@@ -191,13 +191,13 @@ class IndexPageTemplateSiteHelper {
 	     </tr>
 	     </tfoot>
     </table>
-
+  «IF details != null»
     <?php if ($canCreate): ?>
         <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>"
            class="btn btn-success btn-small"><i
                 class="icon-plus"></i> <?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD_ITEM'); ?></a>
     <?php endif; ?>
-
+«ENDIF»
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
@@ -210,12 +210,14 @@ class IndexPageTemplateSiteHelper {
         jQuery('.delete-button').click(deleteItem);
     });
 
+«IF details != null»
     function deleteItem() {
         var item_id = jQuery(this).attr('data-item-id');
         if (confirm("<?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_MESSAGE'); ?>")) {
             window.location.href = '<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=') ?>' + item_id;
         }
     }
+    «ENDIF»
 </script>    
 	'''
 	public def CharSequence genViewTemplateBody()'''
@@ -232,7 +234,9 @@ class IndexPageTemplateSiteHelper {
                 <?php $class = ($canEdit || $canChange) ? 'active' : 'disabled'; ?>
                 <td class="center">
                     <a class="btn btn-micro <?php echo $class; ?>"
+                    «IF details != null»
                        href="<?php echo ($canEdit || $canChange) ? JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state ) : '#'; ?>">
+                     «ENDIF»
                         <?php if ($item->state == 1): ?>
                             <i class="icon-publish"></i>
                         <?php else: ?>

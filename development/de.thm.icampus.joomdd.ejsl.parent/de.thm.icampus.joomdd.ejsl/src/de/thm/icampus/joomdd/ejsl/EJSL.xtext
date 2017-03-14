@@ -70,11 +70,13 @@ Parameter returns Parameter:
 	'Parameter' name=ID 
 	'{'
 		//'type' '=' ((dtype=[Datatype|QualifiedName]) | ('jvmtype' jvmtype=[jvmTypes::JvmType|QualifiedName]))
-		'type =' ((dtype=Type)) 
+		'type =' (dtype=HTMLTypes) 
 		('defaultvalue =' defaultvalue=STRING)?
 		('label =' label=STRING)?
 		('size =' size=INT)?
 		('description =' descripton=STRING)?
+		('values' '{' values+=KeyValuePair (',' values+=KeyValuePair)* '}')?
+		('field attributes' '{' (attributes+=KeyValuePair (',' attributes+=KeyValuePair)*)? '}')?
 	'}'
 ;
 
@@ -217,7 +219,7 @@ CustomPage returns CustomPage:
 ;
 
 HTMLTypes:
-	SimpleHTMLTypes | ComplexHTMLTypes
+	SimpleHTMLTypes | ComplexHTMLTypes | DatatypeReference
 ;
 
 SimpleHTMLTypes:

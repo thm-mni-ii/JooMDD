@@ -7,6 +7,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.impl.DetailPageFieldImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
+import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 
 class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements ExtendedDetailPageField {
 	
@@ -32,6 +33,10 @@ class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements Extend
 				ComplexHTMLTypes:{
 					var ComplexHTMLTypes  type = instance.htmltype as ComplexHTMLTypes
 					return type.htmltype.getName
+				}
+				DatatypeReference:{
+					var DatatypeReference  type = instance.htmltype as DatatypeReference
+					return type.type.type
 				}
 			}
 	}

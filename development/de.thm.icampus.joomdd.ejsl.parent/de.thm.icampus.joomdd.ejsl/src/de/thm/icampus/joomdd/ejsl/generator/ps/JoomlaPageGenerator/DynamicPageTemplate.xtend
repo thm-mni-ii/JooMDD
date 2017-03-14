@@ -49,16 +49,15 @@ def CharSequence xmlSiteTemplateContent(String pagename, ExtendedDynamicPage pag
      «genSettingForDetailsPage(pagename,page,component)»
 	«ENDIF»
 
-  <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL__LABEL">
+  <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL_LABEL">
 	 «generateParameter(page.extendedLocalParametersListe, component)»
 	</fieldset>
-	 <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL__LABEL">
+	 <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL_LABEL">
 	«generateParameter(page.extendedGlobalParametersListe, component)»
    </fieldset>
     «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe »
     <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
     «generateParameter(e.extendedParameterList, component)»
-    «generateParameter(e.extendedParameterList,component)»
     </fieldset>
     «ENDFOR»
    

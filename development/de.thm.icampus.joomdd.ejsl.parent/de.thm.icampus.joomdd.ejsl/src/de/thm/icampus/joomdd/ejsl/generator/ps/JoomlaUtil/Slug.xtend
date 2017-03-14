@@ -144,6 +144,9 @@ public class Slug  {
 			 case "hidden":{
 			 	result="hidden"
 			 }
+			 default : {
+			 	result = type
+			 }
 		}
 		return result
 	}
