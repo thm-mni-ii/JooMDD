@@ -24,7 +24,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		<?php
 		«Slug.generateFileDoc(com, true)»
 		
-		jimport('joomla.form.formfield')
+		jimport('joomla.form.formfield');
 		
 		class JFormField«nameField.toFirstUpper» extends JFormField
 		{

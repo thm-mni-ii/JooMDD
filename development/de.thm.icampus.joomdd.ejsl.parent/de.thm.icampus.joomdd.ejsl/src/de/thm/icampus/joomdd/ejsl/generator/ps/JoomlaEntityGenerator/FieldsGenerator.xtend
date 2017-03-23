@@ -44,7 +44,7 @@ class FieldsGenerator {
 		class JFormField«nameField.toFirstUpper» extends JFormField
 		{
 			protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
-				foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
+				"foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
 			protected $keysAndForeignKeys= array(
 				«FOR attr : mainRef.extendedAttributes»
 			     	«IF attr != mainRef.extendedAttributes.last»

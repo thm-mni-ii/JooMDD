@@ -346,6 +346,7 @@ public class Slug  {
 	 */
 	'''
 	 def static CharSequence generateFileDoc( Component component, boolean denied)'''
+	    /**
 	    «IF component.manifest == null»
 	    * @category Joomla component
 		* @package     Joomla.Administrator
@@ -355,7 +356,6 @@ public class Slug  {
 		defined('_JEXEC') or die('Restricted access');
 		«ENDIF»
 		«ELSE»
-		/**
 		* @version «component.manifest.version»
 		* @category Joomla component
 		* @package     Joomla.Administrator
