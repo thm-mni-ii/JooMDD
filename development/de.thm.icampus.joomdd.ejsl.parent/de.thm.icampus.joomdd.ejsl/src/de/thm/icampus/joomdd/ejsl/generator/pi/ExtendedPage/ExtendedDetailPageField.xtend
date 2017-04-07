@@ -9,5 +9,6 @@ interface ExtendedDetailPageField extends DetailPageField {
 	
 	def String getType()
 	def ExtendedAttribute getExtendedAttribute()
+	def DetailPageField getinstance()
 	
 }

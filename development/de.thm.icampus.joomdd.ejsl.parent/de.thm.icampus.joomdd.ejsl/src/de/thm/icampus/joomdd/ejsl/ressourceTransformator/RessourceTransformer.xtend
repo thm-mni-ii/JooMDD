@@ -72,7 +72,7 @@ class RessourceTransformer {
 	
 	def completeDetailsPage(){
 		
-		for(Page page: featurs.pages.filter[t | t instanceof DetailsPage]){
+		for(Page page: featurs.pages.filter[t | t instanceof DetailsPage && (t as DetailsPage).tablecolumns.empty && (t as DetailsPage).editfields.empty]){
 			var DetailsPage dp = page as DetailsPage
 			completeTableColumnAndEditedFields(dp)
 			for(DetailPageField field: dp.editfields){

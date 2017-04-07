@@ -2,6 +2,8 @@
  */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator;
 
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
@@ -13,10 +15,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
-import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.eJSL.Entity
-import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.common.util.EList
 
 /**
  * <!-- begin-user-doc -->
@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.BasicEList
  * @generated
  */
 public abstract class DynamicPageTemplate extends AbstractPageGenerator {
+	
 	
  /**
   * Generate the manifest file for the menu item of a component. 
@@ -273,11 +274,12 @@ override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedCompon
    	'''
    	
    	/**
-   	 * parse the attribute type and generate the template for the manifest file 
+   	 * parse the attribute type and generate the template for the manifest file and create a field, when it don't exist
    	 * @param ExtendedEntity      entity     contains the instance of a entity
    	 * @param ExtendedAttribute   attr       contains a attribute of 
    	 * @param ExtendedComponent   component  conatains the instance of a component
-   	 * @param ExtendedDynamicPage page       contains the instance of a details page
+   	 * @param ExtendedDynamicPage page       contains the instance of a details page	
+   	 * 
    	 */
    	def CharSequence writeAttribute(ExtendedEntity entity,ExtendedAttribute attr, ExtendedComponent component, ExtendedDynamicPage page){
    	
@@ -305,7 +307,7 @@ override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedCompon
    	 }
    	  
    	 switch(type){
-   	 	case "multiselect" , case "select":{
+   	 	case "multiselect" , case "select", case "list":{
    	 		result.append(''' 
  		  	 <field name="«attr.name.toLowerCase»"
  		  	  type="list" 
@@ -408,6 +410,7 @@ override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedCompon
    	 		''')
    	 	}
    	 	default:{
+   	 		
    	 		result.append('''  
    	 		 <field name="«attr.name.toLowerCase»"
    	 		 «type»

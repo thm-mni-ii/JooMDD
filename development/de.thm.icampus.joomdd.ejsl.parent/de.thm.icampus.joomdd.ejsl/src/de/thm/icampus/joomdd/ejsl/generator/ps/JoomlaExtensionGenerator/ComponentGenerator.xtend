@@ -647,7 +647,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 					default="bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
 					label="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_LABEL"
 					description="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_DESC" />
-			«FOR detailsPage : dynPages.filter[t | t.isDetailsPage]»
+			«FOR detailsPage : dynPages.filter[t | t.isDetailsPage && t.haveFiletoLoad]»
 			<field
 				name="«detailsPage.name.toLowerCase»_file_path"
 				type="text"

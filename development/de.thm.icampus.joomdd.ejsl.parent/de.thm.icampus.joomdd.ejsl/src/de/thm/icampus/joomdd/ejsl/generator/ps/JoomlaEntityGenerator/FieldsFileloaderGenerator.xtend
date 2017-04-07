@@ -47,7 +47,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		        $document->addScript( JURI::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
 		        $document->addStyleSheet( JURI::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
 		        $document->addStyleSheet( JURI::root() . 'media/jui/css/bootstrap.min.css');
-		        $html []="<div class='img-picker' fieldtype='file' name='$this->name' accept='$format' file='$file' iconpath='$iconpath' showLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
+		        $html []="<div class='img-picker' fieldtype='file' name='$this->name' value='$this->value' accept='$format' file='$file' iconpath='$iconpath' showLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
 		        deleteLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
 		        return implode($html);
 		    }
@@ -84,7 +84,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		       	$document->addStyleSheet( JURI::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
 		       	$document->addStyleSheet( JURI::root() . 'media/jui/css/bootstrap.min.css');
 		        $input = JFactory::getApplication()->input;
-		        $html []="<div class='img-picker' fieldtype='image' iconpath=' '  name='$this->name'  accept='image/*' file='$file' showLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
+		        $html []="<div class='img-picker' fieldtype='image' iconpath=' '  name='$this->name' value='$this->value' accept='image/*' file='$file' showLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
 		        deleteLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
 		        return implode($html);
 		    }

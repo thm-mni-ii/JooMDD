@@ -50,6 +50,12 @@ class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements Extend
 		return extendedAttribute
 	}
 	
+
+	
+	override getinstance() {
+		return instance
+		}
+	
 	
 	
 	

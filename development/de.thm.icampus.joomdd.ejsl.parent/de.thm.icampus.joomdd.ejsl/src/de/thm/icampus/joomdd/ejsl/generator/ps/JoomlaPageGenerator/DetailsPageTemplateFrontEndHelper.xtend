@@ -622,11 +622,33 @@ else:
 endif;
 ?>
 	'''
-	def  CharSequence attributShowTemplate(Attribute attr, Entity e) '''
-	
-	<tr>
+	def  CharSequence attributShowTemplate(ExtendedAttribute attr, Entity e) '''
+	«switch (attr.htmlType.toLowerCase) {
+		case "image": {
+		 '''<tr>
 			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
-			<td><?php echo $this->item->«attr.name.toLowerCase»; ?></td></tr>
+			<td><img id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'
+						src='<?php echo $image_path . '/'. $this->item->«attr.name.toLowerCase»; ?>' /></td></tr>'''
+		}
+		case "file": {
+			'''<tr>
+			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+			<td><a id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'
+		   href="<?php echo $file_path . '/'. $this->item->«attr.name.toLowerCase»; ?>"><img
+			 src='<?php echo $iconpath . '/'. explode('.',$this->item->«attr.name.toLowerCase»)[0]; ?>' />'<?php  echo $this->item->«attr.name.toLowerCase»; ?>'</a></td></tr>'''
+}
+		case "link": {
+			'''<tr>
+			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+			<td><a href="<?php echo $this->item->«attr.name.toLowerCase»; ?>"><?php echo $this->item->«attr.name.toLowerCase»; ?></a></td></tr>'''
+		}
+		default: {
+		'''<tr>
+			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+			<td><?php echo $this->item->«attr.name.toLowerCase»; ?></td></tr>'''
+		}
+	} »
+	
 	'''
 	
 	

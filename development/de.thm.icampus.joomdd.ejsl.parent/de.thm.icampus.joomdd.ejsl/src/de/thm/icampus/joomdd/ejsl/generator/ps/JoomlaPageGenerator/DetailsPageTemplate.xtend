@@ -249,7 +249,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«generateModelGetFormFunction()»
 		«generateModelLoadFormDataFunction()»
 		«generateModelGetItemFunction()»
-		«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
+		«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0 || dpage.extendedEditedFieldsList.size > 0»
 		«generateModelAdminSaveData()»
 		«ENDIF»
 		«generateModelReferenceSave()»
@@ -280,6 +280,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 
 	}
 	«ENDIF»
+	«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
 	if(parent::save($data)){
 		if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
 					$inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
@@ -292,6 +293,9 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 				return false;
 			}
 		return true;
+	 «ELSE»
+	 return parent::save($data);        
+	«ENDIF»
 	}
 	'''
 	
@@ -513,6 +517,10 @@ class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else d
 	//Load admin language file
 	$lang = JFactory::getLanguage();
 	$lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
+	$params = JComponentHelper::getParams('«com.extensionName»');
+	$image_path = $params->get('«dpage.name»_image_path');
+	$file_path = $params->get('«dpage.name»_file_path');
+	$iconpath = JURI::root() . 'media/media/images/mime-icon-32/';
 	$canEdit = JFactory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->«mainEntity.primaryKey.name»);
 	if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->«mainEntity.primaryKey.name»)) {
 		$canEdit = JFactory::getUser()->id == $this->item->created_by;

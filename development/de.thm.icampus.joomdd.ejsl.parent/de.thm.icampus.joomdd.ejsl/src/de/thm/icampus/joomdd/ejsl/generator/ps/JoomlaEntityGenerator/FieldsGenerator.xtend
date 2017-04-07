@@ -7,6 +7,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import java.io.File
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
+import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 
 class FieldsGenerator {
 
@@ -14,6 +16,7 @@ class FieldsGenerator {
 	public ExtendedComponent com
 	public String nameField
 	public ExtendedEntity entFrom
+	private ExtendedDetailPageField field
 
 	public new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
 		mainRef = ref
@@ -28,6 +31,12 @@ class FieldsGenerator {
 	}
 	public new(ExtendedComponent component) {
 		com = component
+		
+	}
+	public new(ExtendedDetailPageField field, ExtendedComponent component) {
+		com = component
+		nameField = field.type
+		this.field = field
 		
 	}
 
@@ -67,6 +76,26 @@ class FieldsGenerator {
 			
 			«gengenerateStringValue»
 		}
+	'''
+	public def CharSequence genEmptyField()'''
+	<?php
+			«Slug.generateFileDoc(com, true)»
+			
+			jimport('joomla.form.formfield');
+			
+			class JFormField«nameField.toFirstUpper» extends JFormField
+			{
+			    protected function getInput()
+				{
+					$html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
+					«FOR KeyValuePair kv: field.attributes»
+					«kv.name» = '«kv.value»'
+					«ENDFOR»
+					/>";
+					return implode($html);
+				}
+				
+			}
 	'''
     def private genGetData_item()'''
 	protected function getData_item($«entFrom.primaryKey.name»){
