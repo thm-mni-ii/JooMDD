@@ -66,7 +66,6 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	}
 	
 	def CharSequence generateSiteController() '''
-	<?php
 	 «generateFileDoc(ipage, com,true)»
 	// No direct access.
 		defined('_JEXEC') or die;

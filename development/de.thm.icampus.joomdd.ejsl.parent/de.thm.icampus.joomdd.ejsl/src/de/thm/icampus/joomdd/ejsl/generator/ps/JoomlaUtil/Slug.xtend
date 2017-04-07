@@ -352,9 +352,6 @@ public class Slug  {
 		* @package     Joomla.Administrator
 		* @subpackage  com_«component.name»
 		* @name «component.name»
-		«IF denied»
-		defined('_JEXEC') or die('Restricted access');
-		«ENDIF»
 		«ELSE»
 		* @version «component.manifest.version»
 		* @category Joomla component
@@ -366,12 +363,11 @@ public class Slug  {
 		* @copyright «component.manifest.copyright»
 		* @license «component.manifest.license»
 		«ENDIF»
-		*/
-		«IF denied»
+	    «ENDIF»
+	    */
+	    «IF denied»
 		defined('_JEXEC') or die('Restricted access');
 		«ENDIF»
-	    «ENDIF»
-	    
 		
 		
 	'''
