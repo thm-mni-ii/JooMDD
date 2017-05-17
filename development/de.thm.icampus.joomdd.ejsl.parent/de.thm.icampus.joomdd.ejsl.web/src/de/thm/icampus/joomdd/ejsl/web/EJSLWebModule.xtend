@@ -4,10 +4,17 @@
 package de.thm.icampus.joomdd.ejsl.web
 
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
+import org.eclipse.xtext.ide.editor.contentassist.antlr.AntlrProposalConflictHelper
+import org.eclipse.xtext.ide.editor.contentassist.IProposalConflictHelper
+import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
 
 /**
  * Use this class to register additional components to be used within the web application.
  */
 @FinalFieldsConstructor
 class EJSLWebModule extends AbstractEJSLWebModule { 
+	
+	public def Class<? extends IServerResourceHandler> bindResourceHandler() {
+		return MyResourceHandler;
+	}
 }

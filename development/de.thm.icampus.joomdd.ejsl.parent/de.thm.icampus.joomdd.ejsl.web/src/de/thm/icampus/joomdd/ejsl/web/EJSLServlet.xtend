@@ -17,6 +17,8 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.resource.IResourceServiceProvider
 import org.eclipse.xtext.web.servlet.XtextServlet
+import java.io.File
+import javax.servlet.http.Cookie
 
 /** 
  * Deploy this class into a servlet container to enable DSL-specific services.
@@ -32,7 +34,7 @@ class EJSLServlet extends XtextServlet {
 	
 	override init() {
 		super.init()
-		println("init hier!")
+		println("init hier hallo!")
 		val Provider<ExecutorService> executorServiceProvider = [Executors.newCachedThreadPool => [executorServices += it]]
 		new EJSLWebSetup(executorServiceProvider).createInjectorAndDoEMFRegistration()
 	}
@@ -45,36 +47,38 @@ class EJSLServlet extends XtextServlet {
 	}
 	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(users.containsKey(req.getSession().id)==false){
-		users.put(req.getSession().id, new BasicEList<String>);
-		println(req.getSession().id)
+		var Map<String,EList<String>> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,EList<String>>
 		
+		if(checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
+			resp.sendError(404,"User not im System")
 		}
-		var resource =  req.getSession().id +"_"+req.getParameter("resource")
-		println(req.parameterMap.toString)
-		if(!(users.get(req.getSession().id) as EList<String>).contains(resource)){
-			(users.get(req.getSession().id) as EList<String>).add(resource)
-			println(resource)
-		}
+		
+		var resource = req.getParameter("resource")
+		println(resource)
+		
 		   
 		super.doGet(req, resp)
 		
 	}
 	
+	def boolean checkCookies(Cookie[] cookies) {
+		var boolean havename = false;
+		var boolean haveemail = false
+		for(Cookie cook: cookies){
+			if(cook.name == "joomddusername" && cook.value != null)
+			 havename = true
+			 if(cook.name == "joomddemail" && cook.value != null)
+			 havename = true
+		}
+		return havename && haveemail
+	}
+	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(users.containsKey(req.getSession().id)==false){
-		users.put(req.getSession().id,new BasicEList<String>);
-		println(req.getSession().id)
+		if(checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
+			resp.sendError(404,"User not im System")
+		}
 		
-		}
-		var resource = req.getSession().id +"_"+req.getParameter("resource")
-		println(req.parameterMap.toString)
-		if(!(users.get(req.getSession().id) as EList<String>).contains(req.getParameterValues("resource"))){
-			(users.get(req.getSession().id) as EList<String>).add(resource)
-			println(resource)
-		}
 		super.doPost(req, resp)
 		
 	}

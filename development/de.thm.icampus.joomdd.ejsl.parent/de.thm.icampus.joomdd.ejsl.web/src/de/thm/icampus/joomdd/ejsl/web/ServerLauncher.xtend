@@ -13,6 +13,10 @@ import org.eclipse.jetty.webapp.WebInfConfiguration
 import org.eclipse.jetty.webapp.WebXmlConfiguration
 import org.eclipse.xtext.resource.IResourceServiceProvider
 import java.util.HashMap
+import java.io.File
+import java.util.Map
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.common.util.EList
 
 /**
  * This program starts an HTTP server for testing the web integration of your DSL.
@@ -37,11 +41,24 @@ class ServerLauncher {
 		]
 		val log = new Slf4jLog(ServerLauncher.name)
 		try {
-			server.start
+			
 			if(resourcesProvider != null){
 		resourcesProvider.contentTypeToFactoryMap.put("serverpath",new String("C:/joomdd_server"))
 	    resourcesProvider.contentTypeToFactoryMap.put("mddsessions",new HashMap<String, Object>)
+	    var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
+	    var File serverPath = new File("C:/joomdd_server/")
+	    for(File userworkspace: serverPath.listFiles){
+	    	var String username = userworkspace.name
+	    	var File userfiles = new File("C:/joomdd_server/"+username+"/src/");
+	    	var EList<String> resourceName = new BasicEList<String>()
+	    	for(File resc: userfiles.listFiles){
+	    		resourceName.add(username + "/src/"+resc.name)
+	    	}
+	    	
+	    	users.put(username,resourceName)
+	    }
 		}
+		server.start
 			log.info('Server started ' + server.getURI + '...')
 			new Thread[
 				log.info('Press enter to stop the server...')

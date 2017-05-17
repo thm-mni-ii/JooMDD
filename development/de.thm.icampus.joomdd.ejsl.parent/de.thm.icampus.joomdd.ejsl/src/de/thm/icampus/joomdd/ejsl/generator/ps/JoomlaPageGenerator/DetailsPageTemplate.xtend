@@ -261,7 +261,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	def CharSequence generateModelAdminSaveData() '''
 	public function save($data){
-	$inputs =& JFactory::getApplication()->input->get("jform", array(), 'array');
+	$inputs = JFactory::getApplication()->input->get("jform", array(), 'array');
 	$files = JFactory::getApplication()->input->files->get("jform", array(), 'array');
 	«IF dpage.haveFiletoLoad»
 	$item = $this->getItem();

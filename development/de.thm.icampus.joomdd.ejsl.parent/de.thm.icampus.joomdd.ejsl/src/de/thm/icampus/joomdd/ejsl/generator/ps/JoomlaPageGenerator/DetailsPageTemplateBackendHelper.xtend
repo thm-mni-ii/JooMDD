@@ -27,7 +27,7 @@ class DetailsPageTemplateBackendHelper {
 	 */
 	protected function prepareTable($table)
 	{
-		jimport('joomla.filter.output');
+		
 
 		if (empty($table->«mainEntity.primaryKey.name»)) {
 

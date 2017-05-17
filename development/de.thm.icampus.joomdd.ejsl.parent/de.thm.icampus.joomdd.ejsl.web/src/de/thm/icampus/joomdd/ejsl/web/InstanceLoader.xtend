@@ -1,17 +1,15 @@
 package de.thm.icampus.joomdd.ejsl.web
 
-import javax.servlet.http.HttpServlet
-import javax.servlet.annotation.WebServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.ServletException
-import javax.servlet.http.HttpServletResponse
-import java.io.IOException
-import java.io.File
-import java.io.FileReader
-import java.io.BufferedReader
 import com.google.gson.Gson
-import javax.servlet.ServletContext
+import java.io.File
+import java.io.IOException
 import java.util.Scanner
+import javax.servlet.ServletContext
+import javax.servlet.ServletException
+import javax.servlet.annotation.WebServlet
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @WebServlet(name = 'InstanceLoader', urlPatterns = '/instance-loader/*')
 class InstanceLoader extends HttpServlet {
@@ -35,6 +33,7 @@ class InstanceLoader extends HttpServlet {
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 				
 	}
+	
 	
 	
 }

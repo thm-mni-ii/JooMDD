@@ -4,9 +4,10 @@
 	<meta http-equiv="Content-Language" content="en-us">
 	<title>Example Web Editor</title>
 	<link rel="stylesheet" type="text/css" href="xtext/2.10.0/xtext-ace.css"/>
-	<link rel="stylesheet" type="text/css" href="style.css"/>
-	<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<link rel="stylesheet" type="text/css" href="css/w3.css" />
+	<link rel="stylesheet" type="text/css" href="css/jtree.min.css" />
+	<!-- https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css -->
 	<script src="webjars/requirejs/2.1.20/require.min.js"></script>
 	<script type="text/javascript">
 		var baseUrl = window.location.pathname;
@@ -19,25 +20,17 @@
 				"jquery": "webjars/jquery/2.1.4/jquery.min",
 				"ace/ext/language_tools": "webjars/ace/1.2.0/src/ext-language_tools",
 				"xtext/xtext-ace": "xtext/2.10.0/xtext-ace",
+				"cookie":"lib/cookie"
 			}
 		});
-		require(["webjars/ace/1.2.0/src/ace"], function() {
-			require(["xtext/xtext-ace"], function(xtext) {
-				xtext.createEditor({
-					baseUrl: baseUrl,
-					syntaxDefinition: "xtext-resources/generated/mode-eJSL"
-				});
-
-				
-			});
-		});
-		
 		
 		
 	</script>
+	<script type="text/javascript" src="lib/firststep.js"></script>
     <script type="text/javascript" src="lib/generator.js"></script>
     <script type="text/javascript" src="lib/settings.js"></script>
     <script type="text/javascript" src="lib/templates.js"></script>
+    <script type="text/javascript" src="lib/themes.js"></script>
 </head>
 <body>
 
@@ -46,9 +39,29 @@
 		<h1>Example EJSL Web Editor</h1>
 	</header>
 	<div class="content">
-		<div id="xtext-editor" data-editor-xtext-lang="eJSL" class="w3-card-4"></div>
-		
-		
+<div id="firstStepModal" class="w3-modal w3-animate-opacity">
+    <div class="w3-modal-content w3-card-4">
+      <header class="w3-container w3-blue"> 
+        <h2>Welcome to JOOMDD</h2><br/>
+        <div id ="firstStepModalfailur"></div>
+      </header>
+      <div class="w3-container">
+      <label>Username</label>
+        <input type="text"  class="w3-input" id="username" required>
+        <label>UserEmail</label>
+        <input type="text"  class="w3-input" id="useremail" required>
+        <label>Resourcename</label>
+        <input type="text"  class="w3-input" id="resourceid" value="main.eJSL">
+      </div>
+      <footer class="w3-container">
+        <button class="w3-button w3-blue" id="newuser">New User</button>
+        <button class="w3-button w3-blue" id="existuser">Already registred</button>
+      </footer>
+    </div>
+  </div>
+
+           
+		<div id="xtext-editor" data-editor-xtext-lang="eJSL" class="w3-card-4"></div>	
 		<div class="intro">
 			<img class="logo" src="Logo_b.png">
 			<div></div>
@@ -72,7 +85,10 @@
 		<option value="Simple.eJSL">Simple Model</option>
 		</select></p></div>
 	</div>	
-	<div> <p> Select a theme :<div id="themescontainer"> </div> </p> </div>
+	<div> <p> Select a theme :<div id="div-themescontainer"> 
+	<select id="selectedtheme">
+	</select>
+	</div> </p> </div>
 	<div><p>Font size:<input type="number" id="fontsize"/><p></div>
 	<div><p>Font Style: <div id="fontcontainer"> </p></div>
 	</div>
