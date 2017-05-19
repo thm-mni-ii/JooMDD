@@ -17,15 +17,17 @@
 		require.config({
 			baseUrl: baseUrl,
 			paths: {
-				"jquery": "webjars/jquery/2.1.4/jquery.min",
+				"jquery": "https://code.jquery.com/jquery-3.2.1.min",
 				"ace/ext/language_tools": "webjars/ace/1.2.0/src/ext-language_tools",
 				"xtext/xtext-ace": "xtext/2.10.0/xtext-ace",
-				"cookie":"lib/cookie"
+				"cookie":"lib/cookie",
+				"jstree":"lib/jstree"
 			}
 		});
 		
 		
 	</script>
+	<script type="text/javascript" src="lib/treeloader.js"></script>
 	<script type="text/javascript" src="lib/firststep.js"></script>
     <script type="text/javascript" src="lib/generator.js"></script>
     <script type="text/javascript" src="lib/settings.js"></script>
@@ -69,7 +71,7 @@
 			<button id="ejslGeneratorsave" class="w3-btn blue">Save Code</button>
 			<button id="ejslGeneratorconfig" class="w3-btn blue">Settings</button>
 			<br>
-			<div id="using_json_2" class="filetree w3-card-4">
+			<div id="folder_tree" class="filetree w3-card-4">
 
 			</div>
 		</div>

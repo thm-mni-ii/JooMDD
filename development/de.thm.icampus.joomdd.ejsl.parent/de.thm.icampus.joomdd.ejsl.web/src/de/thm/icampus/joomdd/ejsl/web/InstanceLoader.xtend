@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse
 
 @WebServlet(name = 'InstanceLoader', urlPatterns = '/instance-loader/*')
 class InstanceLoader extends HttpServlet {
-	val gson = new Gson
+	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var ServletContext context = this.servletContext;
 		var String fullPath = context.getRealPath("templates");
@@ -26,6 +26,7 @@ class InstanceLoader extends HttpServlet {
 		resp.setHeader('Cache-Control', 'no-cache')
 		
 		resp.contentType = 'text/x-json'
+		val gson = new Gson
 		gson.toJson(new Scanner(temp).useDelimiter('\\A').next(), resp.writer)
 		
 	}

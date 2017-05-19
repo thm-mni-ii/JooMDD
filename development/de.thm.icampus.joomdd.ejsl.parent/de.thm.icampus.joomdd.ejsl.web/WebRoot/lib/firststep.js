@@ -1,5 +1,5 @@
 require(["jquery"], function($) {
-	require([ "cookie"],function(Cookies){
+	require([ "cookie","jstree","treeloader"],function(Cookies, jstree,treeloader){
 	
 	var name = Cookies.get('joomddusername');
 	var email = Cookies.get('joomddemail');
@@ -13,6 +13,7 @@ require(["jquery"], function($) {
 			  if(data){
 				  var resourceID = Cookies.get('resourceid');
 				  loadEditor(name, resourceID);
+				  treeloader.writeTree(name)
 			  }else{
 				  $("#firstStepModal").css("display","block");
 				}
@@ -31,6 +32,7 @@ require(["jquery"], function($) {
 				$("#firstStepModal").css("display","none");
 				Cookies.set('resourceid',resourceID);
 				loadEditor(username, resourceID);
+				treeloader.writeTree(username)
 			
 			}else{
 				$("#firstStepModalfailur").html("<h3>Login failed: the name already exist!</h3>");
@@ -50,7 +52,7 @@ require(["jquery"], function($) {
 				$("#firstStepModal").css("display","none");
 				Cookies.set('resourceid',resourceID);
 				loadEditor(username, resourceID);
-			
+				treeloader.loadTree(username)
 			}else{
 				$("#firstStepModalfailur").html("<h3>Username and Email cannot be matched, please try again or create new user!</h3>");
 			}

@@ -16,9 +16,9 @@ jQuery.loadScript = function (url, callback) {
     				fontFamily: "tahoma",
     				fontSize: "10px"
     			});*/
-    			jQuery.loadScript("/theme/twilight.js", function(){
+    			//jQuery.loadScript("/theme/twilight.js", function(){
     			 //jQuery("#xtext-editor")[0].env.editor.setTheme("theme/twilight.js");
-    			});
+    			//});
     		    
     		})	
     					
@@ -32,15 +32,4 @@ jQuery.loadScript = function (url, callback) {
 			});
 	
 });
-	jQuery(document).ready(function(){
-		var nameTemplate = jQuery(this).val();
-		jQuery.ajax({
-			  method: "GET",
-			  url: "/themes-loader/",
-			  data: {name:"all"}
-			}).done(function( msg ) {
-				 jQuery("#selectedtheme").html(msg);
-			  });
-		
-	});
 });

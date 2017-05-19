@@ -30,11 +30,15 @@ class NewUserService  extends HttpServlet  {
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String name = req.getParameter("name")
 		var String email = req.getParameter("email")
-		val gson = new Gson
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
+		val gson = new Gson
+		if(name.empty || email.empty){
+			gson.toJson(false, resp.writer)
+		}else{
+		
 		if(users.containsKey(name)==false && !haveSessionInfo(req.cookies)  ){
 		users.put(name, new BasicEList<String>);
 		println(name)
@@ -65,7 +69,7 @@ class NewUserService  extends HttpServlet  {
 		}
 		
 		   
-		
+		}
 	}
 	
 	def boolean haveSessionInfo(Cookie[] cookies) {

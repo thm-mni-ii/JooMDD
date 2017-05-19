@@ -4,6 +4,9 @@ import com.google.inject.Inject
 import java.io.File
 import java.io.IOException
 import java.io.OutputStreamWriter
+import java.util.Map
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.common.util.WrappedException
 import org.eclipse.xtext.parser.IEncodingProvider
 import org.eclipse.xtext.resource.IResourceServiceProvider
@@ -12,12 +15,8 @@ import org.eclipse.xtext.web.server.IServiceContext
 import org.eclipse.xtext.web.server.model.IWebDocumentProvider
 import org.eclipse.xtext.web.server.model.IWebResourceSetProvider
 import org.eclipse.xtext.web.server.model.IXtextWebDocument
-import org.eclipse.xtext.web.server.persistence.IResourceBaseProvider
-import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
 import org.eclipse.xtext.web.server.model.XtextWebDocument
-import org.eclipse.emf.common.util.URI
-import java.util.Map
-import org.eclipse.emf.common.util.EList
+import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
 
 class MyResourceHandler implements IServerResourceHandler {
 	
@@ -28,7 +27,7 @@ class MyResourceHandler implements IServerResourceHandler {
 	
 	@Inject IEncodingProvider encodingProvider
 	
-	@Inject IResourceServiceProvider.Registry resourcesProvider
+	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
 	override get(String resourceId, IServiceContext serviceContext) throws IOException {
 		try {
