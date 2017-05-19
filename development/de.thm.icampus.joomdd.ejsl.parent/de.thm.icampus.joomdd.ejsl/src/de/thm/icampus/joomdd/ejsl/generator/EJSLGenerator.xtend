@@ -26,6 +26,7 @@ import java.awt.EventQueue
 import java.util.regex.Pattern
 import java.util.regex.Matcher
 import org.eclipse.emf.common.util.EList
+import java.io.File
 
 /**
  * Generates code from your model files on save.
@@ -99,11 +100,14 @@ class EJSLGenerator extends AbstractGenerator {
         	var act_user = "";
         	var String[] resourceNameArray = resource.URI.path.split("/")
         	var String filename = "";
-        	for(i : 2..<resourceNameArray.size-1){
-        		filename = filename + resourceNameArray.get(i) +"/"
+        	for(i :resourceNameArray.size-1..resourceNameArray.size-3){
+        		if(filename.empty)
+        		filename =  resourceNameArray.get(i)
+        		else{
+        			filename =  resourceNameArray.get(i)+"/"+filename
+        		} 
         	}
-        	filename = filename + resourceNameArray.last
-        	println(filename)
+        	
         	for(String ssid : users.keySet){
         		var EList<String> value = users.get(ssid) as EList<String>
         		if(value.contains(filename))

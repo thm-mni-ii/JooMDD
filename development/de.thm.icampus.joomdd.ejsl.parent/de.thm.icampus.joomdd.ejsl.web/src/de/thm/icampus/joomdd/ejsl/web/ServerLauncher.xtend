@@ -40,16 +40,18 @@ class ServerLauncher {
 			setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, '.*/de\\.thm\\.icampus\\.joomdd\\.ejsl\\.web/.*,.*\\.jar')
 		]
 		val log = new Slf4jLog(ServerLauncher.name)
+		println(args.toString)
 		try {
 			
 			if(resourcesProvider != null){
-		resourcesProvider.contentTypeToFactoryMap.put("serverpath",new String("C:/joomdd_server"))
+				var String serverPathString = args.get(0)
+		resourcesProvider.contentTypeToFactoryMap.put("serverpath",serverPathString)
 	    resourcesProvider.contentTypeToFactoryMap.put("mddsessions",new HashMap<String, Object>)
 	    var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-	    var File serverPath = new File("C:/joomdd_server/")
+	    var File serverPath = new File(serverPathString)
 	    for(File userworkspace: serverPath.listFiles){
 	    	var String username = userworkspace.name
-	    	var File userfiles = new File("C:/joomdd_server/"+username+"/src/");
+	    	var File userfiles = new File(serverPathString+"/"+username+"/src/");
 	    	var EList<String> resourceName = new BasicEList<String>()
 	    	for(File resc: userfiles.listFiles){
 	    		resourceName.add(username + "/src/"+resc.name)

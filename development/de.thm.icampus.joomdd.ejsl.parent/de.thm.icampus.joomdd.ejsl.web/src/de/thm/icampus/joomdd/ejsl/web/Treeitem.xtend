@@ -15,15 +15,21 @@ class Treeitem {
 	private String icon
 	private List<Treeitem> children
 	private Map<String,Boolean> state
-	new (String path,String parentid){
+	private Map<String,String> li_attr
+	private Map<String,String> a_attr
+	new (String path,String parentid, String sourceName){
 		children = new LinkedList<Treeitem>
 		state = new HashMap<String,Boolean>
-		searchChild(path,parentid)
+		 li_attr = new HashMap<String,String> 
+	      a_attr = new  HashMap<String,String>
+		searchChild(path,parentid,sourceName)
 	}
 	new(HttpSession session){
 		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		children = new LinkedList<Treeitem>
 		state = new HashMap<String,Boolean>
+		li_attr = new HashMap<String,String> 
+	     a_attr = new  HashMap<String,String>
 		loadOrigin(session,resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String)
 		
 	}
@@ -35,22 +41,49 @@ class Treeitem {
 		this.id = name
 		icon ="jstree-folder"
 			for(File item : path.listFiles){
-				var Treeitem treeItem = new Treeitem(item.path, this.id);
+				var Treeitem treeItem = new Treeitem(item.path, this.id,path.parentFile.name);
 				children.add(treeItem);
 			}
 	}
 	
-	def searchChild(String path, String parentid) {
+	def searchChild(String path, String parentid, String source) {
 		var File file = new File(path);
 		this.text = file.name
 		this.parent = file.parentFile.name
 		this.id = parentid + "/" + file.name
 		if(file.file){
-			icon="jstree-file"
+			a_attr.put("href", source +"/"+this.id)
+			var String format = file.name.split("\\.").last
+			switch(format.toLowerCase){
+				case "txt":{
+					icon="css/txt.png"
+					
+				}
+			case "css":{
+					icon="/css/css.png"
+				}
+			case "php":{
+				icon="/css/php.png"
+			}
+			case "js":{
+				icon="/css/js.png"
+			}
+			case "sql":{
+				icon="/css/sql.png"
+			}
+			case "html":{
+				icon="/css/html.png"
+			}
+			case "xml":{
+				icon="/css/xml.png"
+			}default:{
+				icon ="jstree-file"
+			}
+			}
 		}else{
 			icon ="jstree-folder"
 			for(File item : file.listFiles){
-				var Treeitem treeItem = new Treeitem(item.path, this.id);
+				var Treeitem treeItem = new Treeitem(item.path, this.id,source);
 				children.add(treeItem);
 			}
 		}
