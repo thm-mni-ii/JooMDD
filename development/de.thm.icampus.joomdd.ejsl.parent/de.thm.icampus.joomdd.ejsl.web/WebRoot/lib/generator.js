@@ -13,5 +13,17 @@ require(["xtext/xtext-ace","cookie","jstree","treeloader"], function(xtext,Cooki
 		}
 		//generatePromise.then
 	});
-				
+	jQuery("#ejslGeneratordownload").click(function(){
+		  
+		var name = Cookies.get('joomddusername');
+		var data = $('#folder_tree').jstree(true).get_selected()
+			  $.post("/download-manager/",{"files":data,"name":name}) .done(function( data ) {
+				  var link= $("body").add("a");
+				  link.attr("href", data);
+				  link.click();
+			  })
+			  
+			})
+
 });});
+

@@ -27,10 +27,11 @@ class MyResourceHandler implements IServerResourceHandler {
 	
 	@Inject IEncodingProvider encodingProvider
 	
-	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+	
 	
 	override get(String resourceId, IServiceContext serviceContext) throws IOException {
 		try {
+			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 			var String id = serviceContext.session.get("joomddusername")
 			var Map<String,EList<String>> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,EList<String>>
 			
@@ -64,7 +65,7 @@ class MyResourceHandler implements IServerResourceHandler {
 	}
 	
 	override put(IXtextWebDocument document, IServiceContext serviceContext) throws IOException {
-	   
+	   var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		
 		try {
 			 var String id = serviceContext.session.get("joomddusername")

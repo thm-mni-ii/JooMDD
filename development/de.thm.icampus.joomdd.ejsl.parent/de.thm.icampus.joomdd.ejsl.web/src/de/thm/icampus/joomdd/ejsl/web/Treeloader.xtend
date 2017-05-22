@@ -16,9 +16,9 @@ import org.eclipse.emf.common.util.EList
 @WebServlet(name = 'Treeloader', urlPatterns = '/tree-loader/*')
 class Treeloader extends HttpServlet {
 	
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		var String name = req.getParameter("name") as String
 		req.session
 		resp.status = HttpServletResponse.SC_OK
@@ -26,7 +26,7 @@ class Treeloader extends HttpServlet {
 		
 		resp.contentType = 'text/x-json'
 		val gson = new Gson
-		if(name !=null){
+		if(name !=null ){
 		var String fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + name;
 		println(fullPath)
 		
