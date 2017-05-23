@@ -48,15 +48,18 @@ object ComponentHandler extends Handler {
 
     val extensionName = extensionRoot.getFileName.toString.substring(4) // com_name -> name
 
-    val frontendPath = extensionRoot + "site"
-    val backendPath = extensionRoot + "admin"
+    val frontendSuffix = xmlManifest \ "files" \@ "folder"
+    val frontendPath = extensionRoot + frontendSuffix
+
+    val backendSuffix = xmlManifest \ "administration" \ "files" \@ "folder"
+    val backendPath = extensionRoot + backendSuffix
 
     var frontEndPages = Set.empty[Page]
     var backEndPages = Set.empty[Page]
 
     var paramGroups = Set.empty[JParamGroup]
 
-    if (Files.exists(frontendPath)) { // Handle frontendSection
+    if (!frontendSuffix.isEmpty && Files.exists(frontendPath)) { // Handle frontendSection
       val viewsPath = frontendPath + "views"
       Files.newDirectoryStream(viewsPath).foreach {
         case viewFolder: Path if Files.isDirectory(viewFolder) ⇒ {
@@ -79,7 +82,7 @@ object ComponentHandler extends Handler {
 
 
 
-    if (Files.exists(backendPath)) { // Handle backendSection
+    if (!backendSuffix.isEmpty && Files.exists(backendPath)) { // Handle backendSection
       val viewsPath = backendPath + "views"
 
       Files.newDirectoryStream(viewsPath).foreach{
@@ -104,7 +107,7 @@ object ComponentHandler extends Handler {
 
     // Read Sql Create Statements and create entities
     val sqlInstallPathString = (xmlManifest \ "install" \ "sql" \ "file").text
-    val sqlInstallPath = extensionRoot + "admin" + sqlInstallPathString
+    val sqlInstallPath = backendPath + sqlInstallPathString
 
     val sqlTables = SQLParser.parseFile(sqlInstallPath)
 
