@@ -49,7 +49,7 @@ object EJSLModel {
         result = result + pA
       }
       removeFromA = removeFromA + pA
-      removeFromB = removeFromB + page.get
+      if (page.isDefined) removeFromB = removeFromB + page.get
     })
 
     val nnA = nA diff removeFromA
