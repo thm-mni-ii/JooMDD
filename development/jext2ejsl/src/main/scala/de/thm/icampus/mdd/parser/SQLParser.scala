@@ -42,20 +42,23 @@ class SQLParser {
   val ukeyRE = s"($tabOrSpaceRE?unique$tabOrSpaceRE+)key$tabOrSpaceRE+([^\\(]*)(\\([^\\)]*\\))"
   val tableNameIndex = 8
 
+  val shortCreateTable = s"create([\\t]|\\s)table.*;"
+
   def parseFile(path: Path): List[Table] = {
     var tables: mutable.MutableList[Table] = mutable.MutableList()
     val sqlAsString = Source.fromFile(path).mkString
-    val sqlAsStringWithoutJoomlaPlaceholder = sqlAsString.replaceAll("#__", "")
+    val sqlAsStringWithoutJoomlaPlaceholder = sqlAsString.replaceAll("#__", "").replaceAll("ON DELETE CASCADE", "").replaceAll("ON UPDATE CASCADE", "")
 
     val statements: List[String] = extractStatements(sqlAsStringWithoutJoomlaPlaceholder)
     val parser: CCJSqlParserManager = new CCJSqlParserManager
+    val preparedStatements = statements.map(prepareStatement)
 
-    for (statementString <- statements) {
+    for (statementString <- preparedStatements) {
       try {
         parseStatement(parser.parse(new StringReader(statementString))) ?=> (table => tables += table)
       } catch {
         case e: JSQLParserException => {
-          println(statementString)
+          //println(e.printStackTrace())
           println("-----------------------------------------")
           println(s"Ignoring table definition in file: $path due to malformed statement:")
           println("JSQLParserException caught: " + e.getCause)
@@ -83,7 +86,7 @@ class SQLParser {
         columns += Column(
           cd.getColumnName,
           cd.getColDataType.toString,
-          cd.getColumnSpecStrings.toList,
+          if(cd.getColumnSpecStrings == null) List() else cd.getColumnSpecStrings.toList,
           primaryKey != None && primaryKey.get == cd.getColumnName
         )
       })
@@ -103,58 +106,75 @@ class SQLParser {
     None
   }
 
+  /**
+    * Extracts all create-statement-strings of an sql string.
+    * Skips all other statements.
+    *
+    * @param content cotains all statements
+    * @return a list of create-statement-strings
+    */
   def extractStatements(content: String): List[String] = {
-    var statements: mutable.MutableList[String] = mutable.MutableList()
-    var sanitizedContent = content.replace("`", "")
-    /**
-     * jSQLParser is not able to handle "primary key [name] ([name])," so the first name occurence got to be removed
-     *
-     * BEGIN - important
-     * do not combine this expressions! one run with replaceAll required per exp, otherwise you'll burn your CPU ;-)
-     */
-    val namedPKMatcher = Pattern.compile(namedPKRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-    while (namedPKMatcher.find()) {
-      // 1 := "primary key"; 5: "([name])"
-      sanitizedContent = namedPKMatcher.replaceAll(namedPKMatcher.group(1) + namedPKMatcher.group(5))
-    }
-    val namedPKCommaMatcher = Pattern.compile(namedPKCommaRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-    while (namedPKCommaMatcher.find()) {
-      // 1 := "primary key"; 5: "([name]),"
-      sanitizedContent = namedPKCommaMatcher.replaceAll(namedPKCommaMatcher.group(1) + namedPKCommaMatcher.group(5))
-    }
-    /**
-     * END - important
-     */
+//    var statements: mutable.MutableList[String] = mutable.MutableList
+//    var sanitizedContent = content.replace("`", "")
+//    /**
+//     * jSQLParser is not able to handle "primary key [name] ([name])," so the first name occurence got to be removed
+//     *
+//     * BEGIN - important
+//     * do not combine this expressions! one run with replaceAll required per exp, otherwise you'll burn your CPU ;-)
+//     */
+//    val namedPKMatcher = Pattern.compile(namedPKRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
+//    while (namedPKMatcher.find()) {
+//      // 1 := "primary key"; 5: "([name])"
+//      sanitizedContent = namedPKMatcher.replaceAll(namedPKMatcher.group(1) + namedPKMatcher.group(5))
+//    }
+//    val namedPKCommaMatcher = Pattern.compile(namedPKCommaRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
+//    while (namedPKCommaMatcher.find()) {
+//      // 1 := "primary key"; 5: "([name]),"
+//      sanitizedContent = namedPKCommaMatcher.replaceAll(namedPKCommaMatcher.group(1) + namedPKCommaMatcher.group(5))
+//    }
+//    /**
+//     * END - important
+//     */
+//
+//    val ukeyMatcher = Pattern.compile(ukeyRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
+//    while (ukeyMatcher.find()) {
+//      if (!ukeyMatcher.group(5).isEmpty) {
+//        sanitizedContent = ukeyMatcher.replaceAll(ukeyMatcher.group(1) + ukeyMatcher.group(5) + ukeyMatcher.group(6))
+//      }
+//    }
+//
+//
+//    val createMatcher = Pattern.compile(createTableRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
+//    var tableName: String = null
+//    var tableContent: String = null
+//    var ifNotExists: String = null
+//
+//    while (createMatcher.find()) {
+//      tableName = createMatcher.group(8).trim
+//      tableContent = createMatcher.group(0).trim
+//      ifNotExists = createMatcher.group(4)
+//      if (tableName.contains("\"") == false && tableName.contains("'") == false) {
+//        tableContent = tableContent.replace(tableName, s"`$tableName`")
+//      }
+//
+//      statements += tableContent
+//    }
 
-    val ukeyMatcher = Pattern.compile(ukeyRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-    while (ukeyMatcher.find()) {
-      if (!ukeyMatcher.group(5).isEmpty) {
-        sanitizedContent = ukeyMatcher.replaceAll(ukeyMatcher.group(1) + ukeyMatcher.group(5) + ukeyMatcher.group(6))
-      }
-    }
+    val allStatements = content.split("(?<=;)").map(_.trim)
+    val createPattern = Pattern.compile(createTableRE, Pattern.MULTILINE | Pattern.CASE_INSENSITIVE | Pattern.DOTALL)
 
-    // crap...
-    sanitizedContent = sanitizedContent.replace("interval", "`interval`")
-
-    val createMatcher = Pattern.compile(createTableRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-    var tableName: String = null
-    var tableContent: String = null
-    var ifNotExists: String = null
-
-    while (createMatcher.find()) {
-      tableName = createMatcher.group(8).trim
-      tableContent = createMatcher.group(0).trim
-      ifNotExists = createMatcher.group(4)
-      if (tableName.contains("\"") == false && tableName.contains("'") == false) {
-        tableContent = tableContent.replace(tableName, s"`$tableName`")
-      }
-      if (ifNotExists != null) { // JSQLParser is not able to handle "create table if not exists...." statements...
-        tableContent = tableContent.replace(ifNotExists, "")
-      }
-
-      statements += tableContent
-    }
-
+    val statements = allStatements.filter(s => createPattern.matcher(s).matches())
     statements.toList
+  }
+
+  /**
+    * Prepare an create-statement to work with JSqlParser.
+    *
+    * @param statement to prepare
+    * @return prepared statement
+    */
+  def prepareStatement(statement: String) : String = {
+    statement.replace("`", "").replace("\"", "'")
+      .lines.filter(s => !(s.trim.matches(s"(?i)(unique$tabOrSpaceRE+)?index.*"))).mkString("\n")
   }
 }
