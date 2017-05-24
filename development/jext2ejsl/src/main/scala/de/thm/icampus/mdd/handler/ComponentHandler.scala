@@ -128,10 +128,11 @@ object ComponentHandler extends Handler {
 
     val sqlTables = SQLParser.parseFile(sqlInstallPath)
 
-    val entities = sqlTables.map(t ⇒ JEntity(
-      t.name,
-      t.columns.map(c ⇒ Attribute(c.name, c.dataType, c.isprimary))
-    ))
+    val entities = sqlTables.map(t => {
+      var newName = if(t.name.startsWith(extensionName + "_")) t.name.substring(extensionName.length + 1) else t.name
+      newName = if(newName.endsWith("s")) newName.dropRight(1) else newName
+      JEntity(newName, t.columns.map(c ⇒ Attribute(c.name, c.dataType, c.isprimary)))
+    })
 
     val backendConfigPath = backendPath + "config.xml"
     if (Files.exists(backendConfigPath)) {
