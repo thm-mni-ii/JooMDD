@@ -2,7 +2,7 @@
 @p match {
     case indexPage: de.thm.icampus.mdd.model.extensions.IndexPage => {
         IndexPage @{indexPage.name} {
-            *Entities "@{indexPage.entity}"
+            *Entities @{indexPage.entity}
             @if(indexPage.globalParamNames.nonEmpty) {
                 *ParameterGroups @{indexPage.globalParamNames.mkString(", ")}
             }
@@ -10,7 +10,7 @@
     }
     case detailsPage: de.thm.icampus.mdd.model.extensions.DetailsPage => {
         DetailsPage @{detailsPage.name} {
-            *Entities "@{detailsPage.entity}"
+            *Entities @{detailsPage.entity}
             @if(detailsPage.globalParamNames.nonEmpty) {
                 *ParameterGroups @{detailsPage.globalParamNames.mkString(", ")}
             }

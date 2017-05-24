@@ -42,11 +42,12 @@ object ComponentHandler extends Handler {
   }
 
   private def createPage(path: Path, fileName: String, pageGroupParamNames: Set[String]) : Page = {
-    if (!fileName.endsWith("s")) {
-      if(Files.exists(path + ("tables" + File.separator + fileName.dropRight(1) + ".php")))
+    if (fileName.endsWith("s")) {
+      if(Files.exists(path + ("tables" + File.separator + fileName.dropRight(1) + ".php"))) {
         IndexPage(fileName, fileName.dropRight(1), pageGroupParamNames)
-      else
+      } else {
         CustomPage(fileName, pageGroupParamNames)
+      }
     } else {
       if(Files.exists(path + ("tables" + File.separator + fileName + ".php"))){
         DetailsPage(fileName, fileName, pageGroupParamNames)
