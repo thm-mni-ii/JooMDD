@@ -1,19 +1,18 @@
 package de.thm.icampus.mdd.handler
 
 import java.nio.file.{Files, Path}
+import java.io.File
 
 import de.thm.icampus.mdd.implicits.Conversions._
 import de.thm.icampus.mdd.implicits.OptionUtils._
 import de.thm.icampus.mdd.parser.SQLParser
 
 import scala.collection.JavaConversions._
-
 import de.thm.icampus.mdd.model.{Language, Manifest}
-
 import de.thm.icampus.mdd.model.extensions._
 
-import scala.io.{Source, Codec}
-import scala.xml.{XML, Elem}
+import scala.io.{Codec, Source}
+import scala.xml.{Elem, XML}
 
 object ComponentHandler extends Handler {
 
@@ -42,11 +41,27 @@ object ComponentHandler extends Handler {
     }).toSet
   }
 
+  private def createPage(path: Path, fileName: String, pageGroupParamNames: Set[String]) : Page = {
+    if (!fileName.endsWith("s")) {
+      if(Files.exists(path + ("tables" + File.separator + fileName.dropRight(1) + ".php")))
+        IndexPage(fileName, fileName.dropRight(1), pageGroupParamNames)
+      else
+        CustomPage(fileName, pageGroupParamNames)
+    } else {
+      if(Files.exists(path + ("tables" + File.separator + fileName + ".php"))){
+        DetailsPage(fileName, fileName, pageGroupParamNames)
+      } else {
+        CustomPage(fileName, pageGroupParamNames)
+      }
+    }
+  }
+
   def handle(extensionRoot: Path, xmlManifest: Elem)(implicit codec: Codec = Codec.UTF8): ComponentExtension = {
     val manifest: Manifest = Manifest.fromXml(xmlManifest)
     val languages: Set[Language] = Language.fromXmlManifest(xmlManifest, extensionRoot)
 
-    val extensionName = extensionRoot.getFileName.toString.substring(4) // com_name -> name
+    val xmlName = (xmlManifest \ "name").text.toLowerCase // com_name -> name
+    val extensionName = if(xmlName.startsWith("com_")) xmlName.substring(4) else xmlName
 
     val frontendSuffix = xmlManifest \ "files" \@ "folder"
     val frontendPath = extensionRoot + frontendSuffix
@@ -73,8 +88,10 @@ object ComponentHandler extends Handler {
             paramGroups = paramGroups ++ pageParams
           }
 
-          if (!fileName.startsWith(extensionName))
-            frontEndPages = frontEndPages + (if (fileName.endsWith("s")) IndexPage(fileName, pageGroupParamNames) else DetailsPage(fileName, pageGroupParamNames))
+          if (!fileName.startsWith(extensionName)){
+            frontEndPages = frontEndPages + createPage(frontendPath, fileName, pageGroupParamNames)
+          }
+
         }
         case ignored: Path ⇒ println("Ignore File: " + ignored)
       }
@@ -97,9 +114,9 @@ object ComponentHandler extends Handler {
             paramGroups = paramGroups ++ pageParams
           }
 
-          if (!fileName.startsWith(extensionName))
-            backEndPages = backEndPages + (if (fileName.endsWith("s")) IndexPage(fileName, pageGroupParamNames) else DetailsPage(fileName, pageGroupParamNames))
-
+          if (!fileName.startsWith(extensionName)){
+            backEndPages = backEndPages + createPage(backendPath, fileName, pageGroupParamNames)
+          }
         }
         case ignored: Path ⇒ println("Ignore File: " + ignored)
       }
@@ -120,9 +137,9 @@ object ComponentHandler extends Handler {
     if (Files.exists(backendConfigPath)) {
       paramGroups = paramGroups ++ readParams(backendConfigPath)
     }
-    val frondendConfigPath = frontendPath + "config.xml"
-    if (Files.exists(frondendConfigPath)) {
-      paramGroups = paramGroups ++ readParams(frondendConfigPath)
+    val frontendConfigPath = frontendPath + "config.xml"
+    if (Files.exists(frontendConfigPath)) {
+      paramGroups = paramGroups ++ readParams(frontendConfigPath)
     }
 
     /*

@@ -14,5 +14,6 @@ abstract class Page {
 
 abstract class DynamicPage extends Page
 
-case class IndexPage(name: String, globalParamNames: Set[String] = Set.empty[String]) extends DynamicPage
-case class DetailsPage(name: String, globalParamNames: Set[String] = Set.empty[String]) extends DynamicPage
+case class IndexPage(name: String, entity: String, globalParamNames: Set[String] = Set.empty[String]) extends DynamicPage
+case class DetailsPage(name: String, entity: String, globalParamNames: Set[String] = Set.empty[String]) extends DynamicPage
+case class CustomPage(name: String, globalParamNames: Set[String] = Set.empty[String]) extends DynamicPage
