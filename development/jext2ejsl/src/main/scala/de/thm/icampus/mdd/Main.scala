@@ -117,8 +117,27 @@ object Main extends App {
       }
     }
     case ("-ng" | "-no-gui") :: tail => resolveArguments(tail, arguments :+ NoGUI)
+    case ("-h" | "-help") :: tail =>
+      print(s"""
+         |jext2ejsl
+         |Usage: jext2ejsl [arguments]
+         |
+         |  -h | -help
+         |    prints usage text
+         |  -m <path> | -manifest <path>
+         |    path to manifest
+         |  -o <path> | -output <path>
+         |    save path
+         |    (default is same directory as manifest)
+         |  -ng | -no-gui
+         |    disables gui
+         |    (-m option has to be set)
+         |
+         |""".stripMargin)
+      sys.exit(0)
     case argument :: tail =>
       println("Unknown argument " + argument)
+      println("Try -help")
       sys.exit(1)
   }
 
