@@ -36,7 +36,7 @@ object Main extends App {
     }
 
     new PrintWriter(outputPath.toString) {
-      write(eJSLModel.asText); close()
+      write(eJSLModel.toTemplate); close()
     }
 
     if(!noGui){

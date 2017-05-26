@@ -6,12 +6,15 @@ import de.thm.icampus.mdd.templates.basic.BasicTemplate
 /**
   * Created by tobias on 26.05.17.
   */
-trait PluginTemplate extends BasicTemplate {
+trait PluginTemplate extends BasicTemplate with ManifestTemplate with LanguageTemplate {
 
-  def pluginPartial(datatype: PluginExtension, newline: Boolean = true, indent: Int = 0) = {
+  def pluginPartial(plugin: PluginExtension, newline: Boolean = true, indent: Int = 0) = {
     toTemplate(
       s"""
-         |Datatype
+         |Plugin ${plugin.name}
+         |    ${manifestPartial(plugin.manifest, newline = false, indent = 1)}
+         |    languages ${rep(plugin.languages, languagePartial)}
+         |    Plugintype = ${plugin.pluginType}
          |}""", newline, indent)
   }
 
