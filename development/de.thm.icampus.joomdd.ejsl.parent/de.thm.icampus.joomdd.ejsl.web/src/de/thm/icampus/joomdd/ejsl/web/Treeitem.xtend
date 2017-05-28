@@ -24,26 +24,27 @@ class Treeitem {
 	      a_attr = new  HashMap<String,String>
 		searchChild(path,parentid,sourceName)
 	}
-	new(HttpSession session){
+	new(HttpSession session, String id){
 		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		children = new LinkedList<Treeitem>
 		state = new HashMap<String,Boolean>
 		li_attr = new HashMap<String,String> 
 	     a_attr = new  HashMap<String,String>
-		loadOrigin(session,resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String)
+		loadOrigin(session,resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String, id)
 		
 	}
 	
-	def loadOrigin(HttpSession session, String source) {
+	def loadOrigin(HttpSession session, String source,String id) {
 		var String name = session.getAttribute("joomddusername") as String
 		var File path = new File(source + "/" +name)
 		this.text = path.name
-		this.id = name
+		this.id = id + path.name
 		icon ="jstree-folder"
 			for(File item : path.listFiles){
-				var Treeitem treeItem = new Treeitem(item.path, this.id,path.parentFile.name);
+				var Treeitem treeItem = new Treeitem(item.path, this.id,"");
 				children.add(treeItem);
 			}
+			a_attr.put("href", "/"+this.id)
 	}
 	
 	def searchChild(String path, String parentid, String source) {
@@ -51,8 +52,9 @@ class Treeitem {
 		this.text = file.name
 		this.parent = file.parentFile.name
 		this.id = parentid + "/" + file.name
+		a_attr.put("href", source +"/"+this.id)
 		if(file.file){
-			a_attr.put("href", source +"/"+this.id)
+			
 			var String format = file.name.split("\\.").last
 			switch(format.toLowerCase){
 				case "txt":{

@@ -81,7 +81,7 @@ class NewUserService  extends HttpServlet  {
 			if(cook.name == "joomddusername" && cook.value != null)
 			 havename = true
 			 if(cook.name == "joomddemail" && cook.value != null)
-			 havename = true
+			 haveemail = true
 		}
 		return havename && haveemail
 	}

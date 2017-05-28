@@ -17,6 +17,7 @@ import org.eclipse.xtext.web.server.model.IWebResourceSetProvider
 import org.eclipse.xtext.web.server.model.IXtextWebDocument
 import org.eclipse.xtext.web.server.model.XtextWebDocument
 import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
+import java.io.FileOutputStream
 
 class MyResourceHandler implements IServerResourceHandler {
 	
@@ -74,15 +75,20 @@ class MyResourceHandler implements IServerResourceHandler {
 				throw new IOException('You can save only your own resources')
 			}
 		var File resourcesFile = new File(resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String +"/"+document.resourceId)
+		
 		if(!resourcesFile.exists){
 			 	throw new IOException('The resource not found')
 			 }
 		val URI fis = URI.createFileURI ( resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String +"/"+ document.resourceId)
-
+           
 			val outputStream = document.resource.resourceSet.URIConverter.createOutputStream(fis)
 			val writer = new OutputStreamWriter(outputStream, encodingProvider.getEncoding(fis))
+			
 			writer.write(document.text)
+			writer.flush;
 			writer.close
+			outputStream.flush
+			outputStream.close
 		} catch (WrappedException exception) {
 			throw exception.cause
 		}

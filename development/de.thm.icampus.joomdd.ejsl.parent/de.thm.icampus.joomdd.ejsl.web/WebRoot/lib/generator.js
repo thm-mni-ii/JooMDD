@@ -8,22 +8,21 @@ require(["xtext/xtext-ace","cookie","jstree","treeloader"], function(xtext,Cooki
 	
 		var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status"});
 		var name = Cookies.get('joomddusername');
-		if(generatePromise !=null){
+		
 		treeloader.writeTree(name)
-		}
 		//generatePromise.then
 	});
 	jQuery("#ejslGeneratordownload").click(function(){
-		  
+	
 		var name = Cookies.get('joomddusername');
+		var index 
 		var data = $('#folder_tree').jstree(true).get_selected()
-			  $.post("/download-manager/",{"files":data,"name":name}) .done(function( data ) {
-				  var link= $("body").add("a");
-				  link.attr("href", data);
-				  link.click();
-			  })
+		for ( index = 0; index < data.length; ++index) {
+		    var value = data[index];
+		    window.open(value)
+		}	 
 			  
-			})
+	   })
 
 });});
 

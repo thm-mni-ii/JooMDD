@@ -1,5 +1,5 @@
 require(["jquery"], function($) {
-	require([ "cookie","jstree","treeloader"],function(Cookies, jstree,treeloader){
+	require([ "cookie","jstree","treeloader","editorhandler"],function(Cookies, jstree,treeloader,editorhandler){
 	
 	var name = Cookies.get('joomddusername');
 	var email = Cookies.get('joomddemail');
@@ -12,7 +12,7 @@ require(["jquery"], function($) {
 		  .done(function( data ) {
 			  if(data){
 				  var resourceID = Cookies.get('resourceid');
-				  loadEditor(name, resourceID);
+				  editorhandler.loadEditor(name, resourceID);
 				  treeloader.writeTree(name)
 			  }else{
 				  $("#firstStepModal").css("display","block");
@@ -31,7 +31,7 @@ require(["jquery"], function($) {
 			if(data){
 				$("#firstStepModal").css("display","none");
 				Cookies.set('resourceid',resourceID);
-				loadEditor(username, resourceID);
+				editorhandler.loadEditor(username, resourceID);
 				treeloader.writeTree(username)
 			
 			}else{
@@ -51,8 +51,8 @@ require(["jquery"], function($) {
 			if(data){
 				$("#firstStepModal").css("display","none");
 				Cookies.set('resourceid',resourceID);
-				loadEditor(username, resourceID);
-				treeloader.loadTree(username)
+				editorhandler.loadEditor(username, resourceID);
+				treeloader.writeTree(username)
 			}else{
 				$("#firstStepModalfailur").html("<h3>Username and Email cannot be matched, please try again or create new user!</h3>");
 			}
@@ -60,19 +60,3 @@ require(["jquery"], function($) {
 		});
 	
 })})
-function loadEditor(username, resourceID){
-	 require(["webjars/ace/1.2.0/src/ace"], function() {
-			require(["xtext/xtext-ace"], function(xtext) {
-				var baseUrl = window.location.pathname;
-				xtext.createEditor({
-					baseUrl: baseUrl ,
-					syntaxDefinition: "xtext-resources/generated/mode-eJSL",
-					theme: "ace/theme/chrome",
-					resourceId: username +"/src/" + resourceID
-					
-				});
-	
-					
-				});
-			});
-}

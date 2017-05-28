@@ -28,6 +28,7 @@
 		
 	</script>
 	<script type="text/javascript" src="lib/treeloader.js"></script>
+	<script type="text/javascript" src="lib/editorhandler.js"></script>
 	<script type="text/javascript" src="lib/firststep.js"></script>
     <script type="text/javascript" src="lib/generator.js"></script>
     <script type="text/javascript" src="lib/settings.js"></script>
@@ -55,10 +56,12 @@
         <label>Resourcename</label>
         <input type="text"  class="w3-input" id="resourceid" value="main.eJSL">
       </div>
+      <br>
       <footer class="w3-container">
         <button class="w3-button w3-blue" id="newuser">New User</button>
         <button class="w3-button w3-blue" id="existuser">Already registred</button>
       </footer>
+      <br/>
     </div>
   </div>
 
@@ -67,9 +70,10 @@
 		<div class="intro">
 			<img class="logo" src="Logo_b.png">
 			<div></div>
-			<button id="ejslGenerator" class="w3-btn blue">Generiere Code</button>
-			<button id="ejslGeneratorsave" class="w3-btn blue">Save Code</button>
-			<button id="ejslGeneratorconfig" class="w3-btn blue">Settings</button>
+			<button id="ejslGenerator" class="w3-btn blue">Generate Code</button>
+			<button id="ejslGeneratorsave" class="w3-btn blue">Save Model</button>
+			<button id="ejslLoadModel" class="w3-btn blue">Load Model</button>
+			<button id="ejslGeneratordownload" class="w3-btn blue">Download</button>
 			<br>
 			<div id="folder_tree" class="filetree w3-card-4">
 
@@ -78,8 +82,8 @@
 	</div>
 	<div>
 	<div>
-	<p>Select a example:<div  id="templatecontainer"> <select id="templates">
-	    <option>choose a instance</option>
+	<p>Select an example:<div  id="templatecontainer"> <select id="templates">
+	    <option>choose a Model</option>
 		<option value="brueckenKurs.eJSL">brueckenKurs</option>
 		<option value="conference.eJSL">Conference</option>
 		<option value="Model.eJSL">Model</option>
@@ -87,16 +91,18 @@
 		<option value="Simple.eJSL">Simple Model</option>
 		</select></p></div>
 	</div>	
-	<div> <p> Select a theme :<div id="div-themescontainer"> 
-	<select id="selectedtheme">
-	</select>
-	</div> </p> </div>
-	<div><p>Font size:<input type="number" id="fontsize"/><p></div>
-	<div><p>Font Style: <div id="fontcontainer"> </p></div>
+	<br>
+	<div>
+	<input type="file" id="addRevers"><button id="eJSlUploadModel">Upload Extension</button><br>
+	<br>
+
+	<input type="text" id="addfile" style="margin-right:20px"><button id="eJSlCreateModel">Add new Model</button>
+	</div>
+	<p><br></p>
 	</div>
 	</div>
 	
-</div>
+
 
 
 

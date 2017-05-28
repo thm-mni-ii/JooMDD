@@ -32,7 +32,7 @@ class Treeloader extends HttpServlet {
 		
 	    var File temp = new File(fullPath)
 		if(temp.exists && req.getSession().getAttribute("joomddusername") == name){
-			var Treeitem workspace = new Treeitem(req.getSession())
+			var Treeitem workspace = new Treeitem(req.getSession(), "download-manager/")
 			workspace.text = "My Workspace"
 			workspace.setState("opened", true)
 			var EList <Treeitem> result = new BasicEList<Treeitem>
@@ -47,7 +47,8 @@ class Treeloader extends HttpServlet {
 	}
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-				
+	
+	  
 	}
 	
 
