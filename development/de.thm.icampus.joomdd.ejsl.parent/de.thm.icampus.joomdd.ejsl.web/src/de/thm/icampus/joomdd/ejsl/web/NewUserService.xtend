@@ -44,6 +44,8 @@ class NewUserService  extends HttpServlet  {
 		println(name)
 		var File createsrc = new File(resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + name+"/src")
 		createsrc.mkdirs;
+		var File createrevers = new File(resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + name+"/reverse")
+		createrevers.mkdirs;
 	     
         try {
             var File secret = new File(resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + name+"/secret.txt");

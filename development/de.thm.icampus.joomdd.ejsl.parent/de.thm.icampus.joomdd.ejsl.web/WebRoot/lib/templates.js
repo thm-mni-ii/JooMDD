@@ -50,6 +50,22 @@ require(["jquery"], function() {
 			treeloader.writeTree(name)
 
 		})
+		$('#eJSlUploadModel').click(function(){
+			var name = Cookies.get('joomddusername');
+			var input = $("#addRevers")[0].files[0];
+			$.ajax({ url:"/reverse-loader/?filename=" + input.name,
+				    method:"POST",
+					dataType: 'application/zip',
+					 contentType: "multipart/form-data",
+					 processData: false,
+					data:input})
+			
+			.done(function(data){
+				//editorhandler.loadEditor(name, data);
+				//location.reload();
+				console.log(data);
+			})
+		})
 		});
 	});
 });

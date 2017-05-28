@@ -28,7 +28,6 @@ class Treeloader extends HttpServlet {
 		val gson = new Gson
 		if(name !=null ){
 		var String fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + name;
-		println(fullPath)
 		
 	    var File temp = new File(fullPath)
 		if(temp.exists && req.getSession().getAttribute("joomddusername") == name){
