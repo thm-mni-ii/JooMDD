@@ -15,6 +15,7 @@ import java.io.BufferedOutputStream
 import java.io.FileOutputStream
 import javax.servlet.annotation.WebServlet
 import com.google.gson.Gson
+import de.thm.icampus.mdd.Main
 
 @WebServlet(name = 'ReverseLoader', urlPatterns = '/reverse-loader/*')
 class ReverseLoader extends HttpServlet {
@@ -32,14 +33,18 @@ class ReverseLoader extends HttpServlet {
 		
 	  var ZipInputStream zipIn = new ZipInputStream(req.inputStream)
 	 
-	  var String folderName = req.getParameter("filename").replace(".zip","")
+	  var String folderName = req.getParameter("filename").replace(".zip","").trim
 	   println(folderName);
 		decompress(zipIn,name,server, folderName)
+		var String[] args = #["-m",  server+ "/" +name +"/reverse"+ "/" +folderName+ "/"+folderName+".xml",
+			"-o",  server+ "/" +name +"/src/"+folderName+".eJSL","-no-gui"
+		]
+		Main.main(args)
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
 		val gson = new Gson
-		gson.toJson("test.eJSL", resp.writer)
+		gson.toJson(folderName+".eJSL", resp.writer)
 	}
 	
 	private def boolean decompress(ZipInputStream zipIn, String name,String server, String folderName){
@@ -48,6 +53,7 @@ class ReverseLoader extends HttpServlet {
 		if(!dest.exists){
 			dest.mkdir
 		}
+		println(revers + "hallo")
 		var ZipEntry entry = null
 		
 		while((entry =zipIn.nextEntry)!=null){
@@ -55,10 +61,12 @@ class ReverseLoader extends HttpServlet {
 		  var String filePath = revers + "/" + entry.getName();
             if (!entry.directory) {
             	var String[] folder = entry.name.split("/")
-            	var String pathBuilder = ""
+            	var String pathBuilder = new String
             	for(index : 0..<folder.length){
             		pathBuilder = pathBuilder +"/" + folder.get(index)
             		var File tempFolder = new File(revers +pathBuilder )
+            		println(pathBuilder)
+            		println(revers+pathBuilder)
             		if(!tempFolder.exists){
             			if(index < folder.length-1){
             				tempFolder.mkdir
