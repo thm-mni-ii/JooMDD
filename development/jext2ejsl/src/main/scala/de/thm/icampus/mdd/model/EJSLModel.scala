@@ -28,7 +28,7 @@ object EJSLModel {
 
     params.foreach(param ⇒ datatypes = datatypes + param.htmltype)
 
-    new EJSLModel(name, datatypes, pages, entities, params, paramGroups, extensions)
+    new EJSLModel(name.drop(1), datatypes, pages, entities, params, paramGroups, extensions)
   }
 
   private def mergePages(a: Set[Page], b: Set[Page]): Set[Page] = {
