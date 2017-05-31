@@ -61,21 +61,21 @@ class EJSLValidator extends AbstractEJSLValidator {
 	/**
 	 * Checks if the languages of an Extension have different/unique names
 	 */
-	@Check
-	def checkComponentLanguageIsUnique(Extension ext) {
-		var langs = new HashSet<String>
-
-		for (lang : ext.languages) {
-			if (!langs.add(lang.name)) {
-				error(
-					'Extension language must be unique.',
-					lang,
-					EJSLPackage.Literals.LANGUAGE__NAME,
-					AMBIGUOUS_LANGUAGE
-				)
-			}
-		}
-	}
+//	@Check
+//	def checkComponentLanguageIsUnique(Extension ext) {
+//		var langs = new HashSet<String>
+//
+//		for (lang : ext.languages) {
+//			if (!langs.add(lang.name)) {
+//				error(
+//					'Extension language must be unique.',
+//					lang,
+//					EJSLPackage.Literals.LANGUAGE__NAME,
+//					AMBIGUOUS_LANGUAGE
+//				)
+//			}
+//		}
+//	}
 
 	/**
 	 * Validates the Keys inside of a Language.
