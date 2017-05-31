@@ -30,7 +30,6 @@ require(["jquery"], function($) {
 				  
 			if(data){
 				$("#firstStepModal").css("display","none");
-				Cookies.set('resourceid',resourceID);
 				editorhandler.loadEditor(username, resourceID);
 				treeloader.writeTree(username)
 			
@@ -50,7 +49,6 @@ require(["jquery"], function($) {
 				  
 			if(data){
 				$("#firstStepModal").css("display","none");
-				Cookies.set('resourceid',resourceID);
 				editorhandler.loadEditor(username, resourceID);
 				treeloader.writeTree(username)
 			}else{

@@ -2,25 +2,26 @@
  * 
  */
 require(["webjars/ace/1.2.0/src/ace"], function() {
-require(["xtext/xtext-ace","cookie","jstree","treeloader"], function(xtext,Cookies, jstree,treeloader) {
+require(["xtext/xtext-ace","cookie","jstree","treeloader","infomodal"], function(xtext,Cookies, jstree,treeloader,infomodal) {
 	jQuery("#ejslGenerator").click(function(){
 		var editor = jQuery("#xtext-editor");
-	
+		infomodal.showloadmodal();
 		var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status"});
 		var name = Cookies.get('joomddusername');
 		
-		treeloader.writeTree(name)
-		//generatePromise.then
+		generatePromise.then( value => {
+			 infomodal.closeloadmodal();
+			var name = Cookies.get('joomddusername');
+			treeloader.reload(); // Success!
+			 //location.reload(); 
+		}, reason => {
+			 infomodal.closeloadmodal();
+			 infomodal.showmodal("Failed! The Model cannot be generate!"); // Error!
+		} );
 	});
 	jQuery("#ejslGeneratordownload").click(function(){
 	
-		var name = Cookies.get('joomddusername');
-		var index 
-		var data = $('#folder_tree').jstree(true).get_selected()
-		for ( index = 0; index < data.length; ++index) {
-		    var value = data[index];
-		    window.open(value)
-		}	 
+		treeloader.downloadAll();	 
 			  
 	   })
 

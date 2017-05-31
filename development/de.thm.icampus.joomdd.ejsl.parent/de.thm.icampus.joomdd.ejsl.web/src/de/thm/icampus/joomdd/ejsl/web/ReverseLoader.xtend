@@ -1,25 +1,70 @@
 package de.thm.icampus.joomdd.ejsl.web
 
+import com.google.gson.Gson
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.Enumeration
+import java.util.Map
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import javax.servlet.ServletException
+import javax.servlet.ServletInputStream
+import javax.servlet.annotation.WebServlet
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.servlet.ServletException
-import java.io.IOException
-import java.util.Map
-import javax.servlet.http.Cookie
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.util.zip.ZipInputStream
-import java.util.zip.ZipEntry
-import java.io.File
-import java.io.BufferedOutputStream
-import java.io.FileOutputStream
-import javax.servlet.annotation.WebServlet
-import com.google.gson.Gson
-import de.thm.icampus.mdd.Main
+import javax.servlet.ServletContext
 
 @WebServlet(name = 'ReverseLoader', urlPatterns = '/reverse-loader/*')
 class ReverseLoader extends HttpServlet {
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+	
+	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			var String name = req.session.getAttribute("joomddusername") as String
+		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
+		
+		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
+		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername")) ){
+			resp.sendError(404,"User not im System")
+			return
+		}
+		var String user = req.getParameter("user")
+		var String manifest = req.getParameter("manifest").replace("download-manager", server)
+		var String model =  req.getParameter("model")
+		
+		var String target = server +"/"+user+"/src/"+model
+		
+		var ServletContext context = this.servletContext;
+		var String rootPath = context.getRealPath("jar");
+		var String jarPath = rootPath + "/jext2ejsl.jar"
+		var String cmd = "java -jar " + jarPath + " -m " + manifest + " -o " + target + " -no-gui"
+		println(cmd)
+		resp.status = HttpServletResponse.SC_OK
+		resp.setHeader('Cache-Control', 'no-cache')
+		resp.contentType = 'text/x-json'
+		val gson = new Gson
+		try{
+			var Process proc = Runtime.getRuntime().exec(cmd);
+			while(proc.alive){
+				
+			}
+			var int status = proc.exitValue
+			if(status ==0){
+				gson.toJson(true, resp.writer)
+			}else{
+				gson.toJson(false, resp.writer)
+			}
+			
+		}catch(Exception e){
+			gson.toJson(#[false, e.toString], resp.writer)
+		}
+	}
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String name = req.session.getAttribute("joomddusername") as String
@@ -30,74 +75,101 @@ class ReverseLoader extends HttpServlet {
 			resp.sendError(404,"User not im System")
 			return
 		}
-		
-	  var ZipInputStream zipIn = new ZipInputStream(req.inputStream)
-	 
-	  var String folderName = req.getParameter("filename").replace(".zip","").trim
-	   println(folderName);
-		decompress(zipIn,name,server, folderName)
-		var String[] args = #["-m",  server+ "/" +name +"/reverse"+ "/" +folderName+ "/"+folderName+".xml",
-			"-o",  server+ "/" +name +"/src/"+folderName+".eJSL","-no-gui"
-		]
-		Main.main(args)
-		resp.status = HttpServletResponse.SC_OK
+	 resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
+	  var String folderName = req.getParameter("filename").replace(".zip","").trim
+	  var String srcZip =  server+ "/" +name +"/reverse"+ "/" +folderName+ "/"+folderName+".zip"
+	  var File createScr = new File(server+ "/" +name +"/reverse"+ "/" +folderName);
+	  if(!createScr.exists)
+	       createScr.mkdirs
+	  var String path = writeZip(srcZip,req.inputStream)
+	   println(folderName);
+		decompress(path,name,server, folderName)
+		var File deleteSrc = new File (srcZip) 
+		deleteSrc.delete
+		
 		val gson = new Gson
-		gson.toJson(folderName+".eJSL", resp.writer)
+		
+		gson.toJson(true, resp.writer)
 	}
 	
-	private def boolean decompress(ZipInputStream zipIn, String name,String server, String folderName){
+	def String writeZip(String filename, ServletInputStream stream) {
+		try{
+		var OutputStream out = new FileOutputStream(filename)
+		var byte[] buffer = newByteArrayOfSize(16384);
+            var int bytesRead;
+            //read from is to buffer
+            while((bytesRead = stream.read(buffer)) !=-1){
+                out.write(buffer, 0, bytesRead);
+            }
+            stream.close();
+            //flush OutputStream to write any buffered data to file
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		return filename
+	}
+	
+	private def boolean decompress(String zipIn, String name,String server, String folderName){
 		var String revers= server+ "/" +name +"/reverse"+ "/" +folderName 
+		var ZipFile zipFile = new ZipFile(zipIn);
+	       var Enumeration<? extends ZipEntry> entries = zipFile.entries()
+		
 		var File dest = new File(revers)
 		if(!dest.exists){
 			dest.mkdir
 		}
-		println(revers + "hallo")
-		var ZipEntry entry = null
+		var byte[] buffer = newByteArrayOfSize(16384);
+	       var  int len;
 		
-		while((entry =zipIn.nextEntry)!=null){
-			
-		  var String filePath = revers + "/" + entry.getName();
-            if (!entry.directory) {
-            	var String[] folder = entry.name.split("/")
-            	var String pathBuilder = new String
-            	for(index : 0..<folder.length){
-            		pathBuilder = pathBuilder +"/" + folder.get(index)
-            		var File tempFolder = new File(revers +pathBuilder )
-            		println(pathBuilder)
-            		println(revers+pathBuilder)
-            		if(!tempFolder.exists){
-            			if(index < folder.length-1){
-            				tempFolder.mkdir
-            				
-            			}else{
-            				tempFolder.createNewFile
-            			}
-            		}
-            	}
+		while(entries.hasMoreElements){
+		var ZipEntry entry = entries.nextElement() as ZipEntry;
+		var String entryFileName = entry.getName();
+	           var File dir  = buildDirectoryHierarchyFor(entryFileName, dest);
+	            if (!dir.exists()) {
+	                dir.mkdirs();
+	            }
+	 
+	            if (!entry.isDirectory()) {
+	              var  BufferedOutputStream bos = new BufferedOutputStream(
+	                        new FileOutputStream(new File(dest, entryFileName)));
+	 
+	               var BufferedInputStream bis = new BufferedInputStream(zipFile
+	                        .getInputStream(entry));
+	 
+	                while ((len = bis.read(buffer)) > 0) {
+	                    bos.write(buffer, 0, len);
+	                }
+	 
+	                bos.flush();
+	                bos.close();
+	                bis.close();
+	            }
+	        }
+	            zipFile.close();
+	 
+	    
 
-                extractFile(zipIn, filePath);
-            } else {
-                var File dir = new File(filePath);
-                dir.mkdirs();
-            }
-            zipIn.closeEntry();
-            entry = zipIn.getNextEntry();
-        }
-        zipIn.close();
         return true;
 	}
-	 private def void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
-        var BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
-      	val byte[] buffer = newByteArrayOfSize(4096)
+	    /**
+ *  build a new File name
+ * 
+ * @param String entryName
+ * @param File destDir
+ * return File
+ */
+	    def File buildDirectoryHierarchyFor(String entryName, File destDir) {
+	      var  int lastIndex = entryName.lastIndexOf('/');
+	      var  String entryFileName = entryName.substring(lastIndex + 1);
+	      var  String internalPathToEntry = entryName.substring(0, lastIndex + 1);
+	        return new File(destDir, internalPathToEntry);
+	    }
+	
 
-        var int read = 0;
-        while ((read = zipIn.read(buffer)) >0) {
-            bos.write(buffer, 0, read);
-        }
-        bos.close();
-    }
 	def boolean checkCookies(Cookie[] cookies) {
 		var boolean havename = false;
 		var boolean haveemail = false
