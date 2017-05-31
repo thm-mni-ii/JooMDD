@@ -5,7 +5,7 @@
 **/target/
 **/build/
 **/generated/
-
+**/WebRoot/workspace/
 **/.gradle/
 
 !*/.gitkeep
