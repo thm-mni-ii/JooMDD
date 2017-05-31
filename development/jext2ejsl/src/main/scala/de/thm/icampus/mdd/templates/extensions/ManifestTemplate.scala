@@ -11,15 +11,14 @@ trait ManifestTemplate extends BasicTemplate {
   def manifestPartial(manifest: Manifest, newline: Boolean = true, indent: Int = 0) : String = {
     val authorOpt = ?(true,
       s"""
-         |licence = "${manifest.license.license}""""
+         |license = "${manifest.license.license}""""
     )
 
     toTemplate(
       s"""
          |Manifestation {
          |    authors ${rep(manifest.authors, authorPartial)}
-         |    copyright "${manifest.copyright.copyright}"
-         |    licence = "${manifest.license.license}"
+         |    copyright = "${manifest.copyright.copyright}"
          |    $authorOpt
          |}""", newline, indent)
   }
@@ -29,7 +28,7 @@ trait ManifestTemplate extends BasicTemplate {
       s"""
          |Author "${author.name}" {
          |    authoremail = "${author.email}"
-         |    authorurl" = "${author.url}"
+         |    authorurl = "${author.url}"
          |}""", newline, indent)
   }
 

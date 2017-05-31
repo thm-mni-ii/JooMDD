@@ -19,14 +19,14 @@ trait EntityTemplate extends BasicTemplate{
   def attributePartial(attribute: Attribute, newline: Boolean = true, indent: Int = 0) = {
     val isPrimaryOpt = ?(attribute.isPrimary,
       s"""
-         |Primary Attribute""""
+         |Unique attribute
+         |Primary attribute"""
     )
 
     toTemplate(
       s"""
          |Attribute ${attribute.name} {
-         |    dbtype = "${attribute.dbtype}"
-         |    htmltype = "${attribute.htmltype}"
+         |    type = Text
          |    $isPrimaryOpt
          |}""", newline, indent)
   }

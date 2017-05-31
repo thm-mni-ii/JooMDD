@@ -13,25 +13,27 @@ object EJSLModelTemplate extends BasicTemplate with ParamTemplate with ParamGrou
   def ejslModelPartial(model: EJSLModel, newline: Boolean = true, indent: Int = 0) : String = {
     toTemplate(
       s"""
-         |ejslModel "${model.name}" {
-         |    datatypes ${rep(model.datatypes, datatypePartial)}
+         |eJSLModel "${model.name}" {
+         |  eJSL part: CMS Extension {
+         |    datatypes ${rep(model.datatypes, datatypePartial, sep=",\n")}
          |
          |    globalparameters ${rep(model.globalParams, paramPartial)}
          |
-         |    parametergroup ${rep(model.paramGroups, paramGroupPartial)}
+         |    parametergroups ${rep(model.paramGroups, paramGroupPartial)}
          |
          |    entities ${rep(model.entities, entityPartial)}
          |
          |    pages ${rep(model.pages, pagePartial)}
          |
          |    extensions ${rep(model.extensions, extensionPartial)}
+         |  }
          |}""", newline, indent)
   }
 
-  def datatypePartial(datatype: String, newline: Boolean = true, indent: Int = 0) = {
+  def datatypePartial(datatype: (String,String), newline: Boolean = true, indent: Int = 0) = {
     toTemplate(
       s"""
-         |Datatype $datatype""", newline, indent)
+         |Datatype ${datatype._1}="${datatype._2}"""", newline, indent)
   }
 
 

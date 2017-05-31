@@ -26,14 +26,14 @@ object ComponentHandler extends Handler {
       val fields = fieldSet \\ "field"
 
       val params = fields.map(field ⇒ {
-        val name = field \@ "name"
+        val name = "^" + (field \@ "name")
         val htmltype = field \@ "type"
         val default = (field \@ "default") asOpt
         val label = field \@ "label"
         val description = field \@ "description"
         val size = ((field \@ "size") asOpt).?[Option[Int]] (e ⇒ Option(Integer.parseInt(e)))(None)
 
-        JParam(name, htmltype, label, description, default, size)
+        JParam(name, ("^" + htmltype.replace(" (","_").replace(")",""),htmltype), label, description, default, size)
       }).toSet
 
       val fieldSetName = fieldSet \@ "name"
@@ -42,17 +42,18 @@ object ComponentHandler extends Handler {
   }
 
   private def createPage(path: Path, fileName: String, pageGroupParamNames: Set[String]) : Page = {
+    val name = "^" + fileName
     if (fileName.endsWith("s")) {
       if(Files.exists(path + ("tables" + File.separator + fileName.dropRight(1) + ".php"))) {
-        IndexPage(fileName, fileName.dropRight(1), pageGroupParamNames)
+        IndexPage(name, name.dropRight(1), pageGroupParamNames)
       } else {
-        CustomPage(fileName, pageGroupParamNames)
+        CustomPage(name, pageGroupParamNames)
       }
     } else {
       if(Files.exists(path + ("tables" + File.separator + fileName + ".php"))){
-        DetailsPage(fileName, fileName, pageGroupParamNames)
+        DetailsPage(name, name, pageGroupParamNames)
       } else {
-        CustomPage(fileName, pageGroupParamNames)
+        CustomPage(name, pageGroupParamNames)
       }
     }
   }
@@ -132,7 +133,7 @@ object ComponentHandler extends Handler {
     val entities = sqlTables.map(t => {
       var newName = if(t.name.startsWith(extensionName + "_")) t.name.substring(extensionName.length + 1) else t.name
       newName = if(newName.endsWith("s")) newName.dropRight(1) else newName
-      JEntity(newName, t.columns.map(c ⇒ Attribute(c.name, c.dataType, c.isprimary)))
+      JEntity("^" + newName, t.columns.map(c ⇒ Attribute(c.name, c.dataType, c.isprimary)))
     })
 
     val backendConfigPath = backendPath + "config.xml"
@@ -163,7 +164,7 @@ object ComponentHandler extends Handler {
         })*/
 
     ComponentExtension(
-      extensionName,
+      "^" + extensionName,
       manifest,
       languages,
       Frontend(frontEndPages),

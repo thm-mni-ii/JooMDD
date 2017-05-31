@@ -11,7 +11,10 @@ trait ParamGroupTemplate extends BasicTemplate {
   def paramGroupPartial(paramGroup: JParamGroup, newline: Boolean = true, indent: Int = 0) = {
     toTemplate(
       s"""
-         |Parametergroup ${rep(paramGroup.params,simpleParamPartial, sep="\n", indent=0)}""", newline, indent)
+         |ParameterGroup pg {
+         |  label = "Label"
+         |  Parameters ${rep(paramGroup.params,simpleParamPartial, sep="\n")}
+         |}""", newline, indent)
   }
 
   private def simpleParamPartial(param: JParam, newline: Boolean = true, indent: Int = 0) = {

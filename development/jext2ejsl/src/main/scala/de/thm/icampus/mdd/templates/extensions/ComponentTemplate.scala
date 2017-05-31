@@ -13,7 +13,7 @@ trait ComponentTemplate extends BasicTemplate with ManifestTemplate with Languag
       s"""
          |Component ${component.name} {
          |    ${manifestPartial(component.manifest, newline = false, indent = 1)}
-         |    languages ${rep(component.languages, languagePartial)}
+         |    languages ${rep(/*component.languages*/List(), languagePartial)}
          |    sections {
          |        Frontend section {
          |            *Pages ${rep(component.frontend.pages, shortPagePartial, sep="\n", indent=3)}

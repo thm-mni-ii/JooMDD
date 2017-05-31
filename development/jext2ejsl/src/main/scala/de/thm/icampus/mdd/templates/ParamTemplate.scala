@@ -16,13 +16,13 @@ trait ParamTemplate extends BasicTemplate {
 
     val sizeOpt = ?(param.size.isDefined,
       s"""
-         |size = "${param.size.get}""""
+         |size = ${param.size.get}"""
     )
 
     toTemplate(
       s"""
          |Parameter ${param.name} {
-         |    type = "${param.htmltype}"
+         |    type = ${param.htmltype._1}
          |    $definedOpt
          |    label = "${param.label}"
          |    $sizeOpt

@@ -19,7 +19,7 @@ trait LanguageTemplate extends BasicTemplate {
   private def keyValuePairPartial(entry: (String, String), newline: Boolean = true, indent: Int = 0) = {
     toTemplate(
       s"""
-         |Key ${entry._1} "${entry._2}"""", newline, indent)
+         |Key ${entry._1} = "${entry._2}"""", newline, indent)
   }
 
 }

@@ -11,7 +11,9 @@ trait CustomPageTemplate extends BasicTemplate{
   def customPagePartial(customPage: CustomPage, newline: Boolean = true, indent: Int = 0) = {
     toTemplate(
       s"""
-         |CustomPage ${customPage.name} {}""", newline, indent)
+         |CustomPage ${customPage.name} {
+         |  Page type: custom
+         |}""", newline, indent)
   }
 
 }

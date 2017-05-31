@@ -84,7 +84,7 @@ class SQLParser {
 
       ctStatement.getColumnDefinitions.foreach(cd => {
         columns += Column(
-          cd.getColumnName,
+          "^" + (cd.getColumnName),
           cd.getColDataType.toString,
           if(cd.getColumnSpecStrings == null) List() else cd.getColumnSpecStrings.toList,
           primaryKey != None && primaryKey.get == cd.getColumnName

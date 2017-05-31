@@ -7,7 +7,7 @@ trait BasicTemplate {
 
   implicit def toIterator[T](iterable: Iterable[T]) :Iterator[T] = iterable.toIterator
 
-  def rep[T](elems: Iterator[T], elemToString: (T, Boolean, Int) => String, indent: Int = 1, sep: String =",\n") : String = {
+  def rep[T](elems: Iterator[T], elemToString: (T, Boolean, Int) => String, indent: Int = 1, sep: String ="\n") : String = {
     if(elems.isEmpty) "{}"
     else {
       val begin = "{"

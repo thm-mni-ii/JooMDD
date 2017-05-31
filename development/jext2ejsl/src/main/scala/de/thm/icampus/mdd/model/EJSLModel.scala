@@ -5,7 +5,7 @@ import de.thm.icampus.mdd.model.extensions._
 
 object EJSLModel {
   def apply(name: String, extensions: List[Extension]) = {
-    var datatypes = Set.empty[String]
+    var datatypes = Set.empty[(String,String)]
     var pages = Set.empty[Page]
     var entities = Set.empty[JEntity]
     var params = Set.empty[JParam]
@@ -14,8 +14,8 @@ object EJSLModel {
     extensions.foreach {
       case c: ComponentExtension ⇒ {
         c.entities.foreach(e ⇒ e.attributes.foreach(a ⇒ {
-          datatypes = datatypes + a.dbtype
-          datatypes = datatypes + a.htmltype
+          datatypes = datatypes + (("^" + a.dbtype.replace(" (","_").replace(")",""),a.dbtype))
+          datatypes = datatypes + (("^" + a.htmltype.replace(" (","_").replace(")",""),a.htmltype))
         }))
 
         pages = mergePages (c.backend.pages, c.frontend.pages)
@@ -59,4 +59,4 @@ object EJSLModel {
   }
 }
 
-case class EJSLModel(name: String, datatypes: Set[String], pages: Set[Page], entities: Set[JEntity], globalParams: Set[JParam], paramGroups: Set[JParamGroup], extensions: List[Extension])
+case class EJSLModel(name: String, datatypes: Set[(String,String)], pages: Set[Page], entities: Set[JEntity], globalParams: Set[JParam], paramGroups: Set[JParamGroup], extensions: List[Extension])
