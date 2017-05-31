@@ -16,6 +16,7 @@ import java.util.List
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import java.util.LinkedList
 
 /**
  * This class contains the Template to generate the Folders and Files for a component.
@@ -61,9 +62,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateJoomlaDirectory(path+"")
 
 		
-		var indexPages = extendeComp.backEndExtendedPagerefence.map [t|
-			if(t.extendedPage.extendedDynamicPageInstance != null) t.extendedPage.extendedDynamicPageInstance
-		];
+		var List<ExtendedDynamicPage>  indexPages = new LinkedList<ExtendedDynamicPage>()
+		for(ExtendedPageReference ext : extendeComp.backEndExtendedPagerefence){
+			if(ext.extendedPage.extendedDynamicPageInstance != null)
+			  indexPages.add(ext.extendedPage.extendedDynamicPageInstance)
+			   
+  		}
 
         // Generate the the installation path for a compoenent
 		generateFile(path+ name + ".xml", extendeComp.xmlContent(indexPages))
@@ -172,7 +176,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     	    <folder>images</folder>
 					<folder>js</folder>
 					<folder>css</folder>
-					«FOR page : dymPages.filter[t | t.detailsPage && t.haveFiletoLoad]»
+					«FOR page : dymPages.filter[t | t != null && t.detailsPage && t.haveFiletoLoad]»
 					<folder>«page.name.toLowerCase»</folder>
 					«ENDFOR»
 					<filename>index.html</filename>
@@ -282,9 +286,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      * 
      */
 	private def void generateBackendSection() {
-		var indexPages = extendeComp.backEndExtendedPagerefence.map [t|
-			if(t.extendedPage.extendedDynamicPageInstance != null) t.extendedPage.extendedDynamicPageInstance
-		];
+		var List<ExtendedDynamicPage>  indexPages = new LinkedList<ExtendedDynamicPage>()
+		for(ExtendedPageReference ext : extendeComp.backEndExtendedPagerefence){
+			if(ext.extendedPage.extendedDynamicPageInstance != null)
+			  indexPages.add(ext.extendedPage.extendedDynamicPageInstance)
+			   
+  		}
 		generateJoomlaDirectory(path+"admin")
 		generateFile( path +"admin/" + noPrefixName + ".php", extendeComp.phpAdminContent)
 		generateFile( path +"admin/controller.php", extendeComp.phpAdminControllerContent)

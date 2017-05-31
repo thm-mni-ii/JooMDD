@@ -317,7 +317,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		return "$" + result;
 		
 		for(Link lk: listLink){
-			if(lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){				
+			if(lk != null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){				
 			   return '''JHtml::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
 			   
 			   }
