@@ -32,9 +32,11 @@ class DetailsPageTemplateBackendHelper {
 		if (empty($table->«mainEntity.primaryKey.name»)) {
 
 			// Set ordering to the last item if not set
-			if (@$table->ordering === '') {
+			if ($table->ordering === '') {
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT MAX(ordering) FROM #__«com.name.toLowerCase»_«dpage.entities.get(0).name.toLowerCase»');
+				$query = $db->getQuery(true);
+				$query->select("MAX(ordering)")->from("#__«com.name.toLowerCase»_«mainEntity.name.toLowerCase»");
+				$db->setQuery($query);
 				$max = $db->loadResult();
 				$table->ordering = $max+1;
 			}

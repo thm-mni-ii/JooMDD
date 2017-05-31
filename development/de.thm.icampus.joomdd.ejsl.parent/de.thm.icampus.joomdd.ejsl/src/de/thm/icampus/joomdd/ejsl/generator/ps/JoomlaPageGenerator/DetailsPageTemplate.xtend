@@ -180,10 +180,10 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
         {
             try{
                // Attempt to load the row.
-               $return = $table->load($pk);
+               $table->load($pk);
            }catch (Exception $e){
                // Check for a table object error.
-               throw new Exception('Database Failur:  no element Found'. $e . $return);
+               throw new Exception('Database Failur:  no element Found'. $e );
            }
         }
 
@@ -249,7 +249,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		«generateModelGetFormFunction()»
 		«generateModelLoadFormDataFunction()»
 		«generateModelGetItemFunction()»
-		«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0 || dpage.extendedEditedFieldsList.size > 0»
+		«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0 || dpage.haveFiletoLoad»
 		«generateModelAdminSaveData()»
 		«ENDIF»
 		«generateModelReferenceSave()»
@@ -261,9 +261,9 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	def CharSequence generateModelAdminSaveData() '''
 	public function save($data){
-	$inputs = JFactory::getApplication()->input->get("jform", array(), 'array');
-	$files = JFactory::getApplication()->input->files->get("jform", array(), 'array');
+	
 	«IF dpage.haveFiletoLoad»
+	$files = JFactory::getApplication()->input->files->get("jform", array(), 'array');
 	$item = $this->getItem();
 	if(isset($files) && count($files) >0 ){
 		$params = JComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
@@ -281,6 +281,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	}
 	«ENDIF»
 	«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
+	$inputs = JFactory::getApplication()->input->get("jform", array(), 'array');
 	if(parent::save($data)){
 		if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
 					$inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");

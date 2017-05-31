@@ -52,7 +52,7 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 	
 	def sethaveFile() {
 	   for(ExtendedDetailPageField t: extendedEditFieldsList){
-	   	  if(t.type.equalsIgnoreCase("Imagepicker") || t.type.equalsIgnoreCase("Filepickerpicker"))
+	   	  if(t.type.equalsIgnoreCase("Imagepicker") || t.type.equalsIgnoreCase("Filepicker"))
 	   	  haveFile = true
 	   }
 	}

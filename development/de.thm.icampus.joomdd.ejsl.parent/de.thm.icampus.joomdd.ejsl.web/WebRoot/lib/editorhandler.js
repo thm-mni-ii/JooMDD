@@ -6,7 +6,7 @@ define('editorhandler',[ 'jquery',"jstree", "cookie","webjars/ace/1.2.0/src/ace"
 		var t = xtext_ace.createEditor({
 				baseUrl: baseUrl ,
 				syntaxDefinition: "xtext-resources/generated/mode-eJSL",
-				theme: "ace/theme/chrome",
+				theme: "ace/theme/twilight",
 				resourceId: username +"/src/" + resourceID
 				
 			});
