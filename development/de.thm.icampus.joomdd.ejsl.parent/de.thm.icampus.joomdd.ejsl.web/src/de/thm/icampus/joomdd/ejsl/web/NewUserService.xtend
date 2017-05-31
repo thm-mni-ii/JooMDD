@@ -28,6 +28,10 @@ class NewUserService  extends HttpServlet  {
 	}
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(resourcesProvider != null){
+			new SessionProvider;
+		}
+		
 		var String name = req.getParameter("name")
 		var String email = req.getParameter("email")
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>

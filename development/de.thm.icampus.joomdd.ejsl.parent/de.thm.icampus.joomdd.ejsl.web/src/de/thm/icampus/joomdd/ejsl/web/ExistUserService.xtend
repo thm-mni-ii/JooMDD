@@ -25,6 +25,10 @@ class ExistUserService extends HttpServlet {
 	}
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(resourcesProvider != null){
+			new SessionProvider;
+		}
+		
 		var String name = req.getParameter("name")
 		var String email = req.getParameter("email")
 		val gson = new Gson

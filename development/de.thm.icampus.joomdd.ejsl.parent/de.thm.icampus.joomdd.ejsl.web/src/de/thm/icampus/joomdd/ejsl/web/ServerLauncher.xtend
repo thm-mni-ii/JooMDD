@@ -43,32 +43,7 @@ class ServerLauncher {
 		println(args.toString)
 		try {
 			
-			if(resourcesProvider != null){
-				var String serverPathString = args.get(0)
-		resourcesProvider.contentTypeToFactoryMap.put("serverpath",serverPathString)
-	    resourcesProvider.contentTypeToFactoryMap.put("mddsessions",new HashMap<String, Object>)
-	    var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-	    var File serverPath = new File(serverPathString)
-	    resourcesProvider.contentTypeToFactoryMap.put("serverpathname",serverPath.name)
-	    for(File userworkspace: serverPath.listFiles){
-	    	var String username = userworkspace.name
-	    	var File userfiles = new File(serverPathString+"/"+username+"/src/");
-	    	if(userfiles.exists){
-	    	var EList<String> resourceName = new BasicEList<String>()
-	    	for(File resc: userfiles.listFiles){
-	    		resourceName.add(username + "/src/"+resc.name)
-	    	}
-	    	
-	    	users.put(username,resourceName)
-	    	
-	    	}
-	    }
-	    var File temporyFile = new File(serverPathString+ "/temporyFiles")
-	    if(!temporyFile.exists){
-	    	  temporyFile.createNewFile
-	    }
-	     
-		}
+			
 		server.start
 			log.info('Server started ' + server.getURI + '...')
 			new Thread[
