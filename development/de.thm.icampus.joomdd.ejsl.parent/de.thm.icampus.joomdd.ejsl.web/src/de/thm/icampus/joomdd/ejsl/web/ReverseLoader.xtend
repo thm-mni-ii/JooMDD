@@ -26,7 +26,7 @@ class ReverseLoader extends HttpServlet {
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
 	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			var String name = req.session.getAttribute("joomddusername") as String
+		var String name = req.session.getAttribute("joomddusername") as String
 		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
 		
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
@@ -35,13 +35,16 @@ class ReverseLoader extends HttpServlet {
 			return
 		}
 		var String user = req.getParameter("user")
+		println("Manifest Param:" + req.getParameter("manifest"))
+  		println("Server:" + server)
 		var String manifest = req.getParameter("manifest").replace("download-manager", server)
 		var String model =  req.getParameter("model")
 		
 		var String target = server +"/"+user+"/src/"+model
 		
 		var ServletContext context = this.servletContext;
-		var String rootPath = context.getRealPath("jar");
+		println(context.getRealPath("/"));
+		var String rootPath = context.getRealPath("/") + "/jar";
 		var String jarPath = rootPath + "/jext2ejsl.jar"
 		var String cmd = "java -jar " + jarPath + " -m " + manifest + " -o " + target + " -no-gui"
 		println(cmd)

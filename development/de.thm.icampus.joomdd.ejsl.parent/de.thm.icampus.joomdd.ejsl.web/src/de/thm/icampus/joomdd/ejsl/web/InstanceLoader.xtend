@@ -16,7 +16,7 @@ class InstanceLoader extends HttpServlet {
 	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var ServletContext context = this.servletContext;
-		var String fullPath = context.getRealPath("templates");
+  		var String fullPath = context.getRealPath("/") + "/templates";
 		println(fullPath)
 		var String name = req.getParameter("name")
 	    var File temp = new File(fullPath+"/"+ name)
