@@ -34,7 +34,7 @@ require(["jquery"], function($) {
 				treeloader.writeTree(username)
 			
 			}else{
-				$("#firstStepModalfailur").html("<h3>Login failed: the name already exist!</h3>");
+				$("#firstStepModalfailur").html("<h3>Login failed: The name is already in use.</h3>");
 			}
 			  });
 		});
@@ -52,7 +52,7 @@ require(["jquery"], function($) {
 				editorhandler.loadEditor(username, resourceID);
 				treeloader.writeTree(username)
 			}else{
-				$("#firstStepModalfailur").html("<h3>Username and Email cannot be matched, please try again or create new user!</h3>");
+				$("#firstStepModalfailur").html("<h3>Secret cannot be matched. Please try again or create a new user.</h3>");
 			}
 			  });
 		});

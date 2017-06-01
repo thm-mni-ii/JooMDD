@@ -34,7 +34,6 @@ class EJSLServlet extends XtextServlet {
 	
 	override init() {
 		super.init()
-		println("init hier hallo!")
 		val Provider<ExecutorService> executorServiceProvider = [Executors.newCachedThreadPool => [executorServices += it]]
 		new EJSLWebSetup(executorServiceProvider).createInjectorAndDoEMFRegistration()
 		
@@ -51,7 +50,7 @@ class EJSLServlet extends XtextServlet {
 		var Map<String,EList<String>> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,EList<String>>
 		
 		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
-			resp.sendError(404,"User not im System")
+			resp.sendError(404,"User not in system")
 			return
 		}
 		
@@ -78,7 +77,7 @@ class EJSLServlet extends XtextServlet {
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
 		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
-			resp.sendError(404,"User not im System")
+			resp.sendError(404,"User not in system")
 			return
 		}
 		
@@ -89,7 +88,7 @@ class EJSLServlet extends XtextServlet {
 	override protected doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
 		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
-			resp.sendError(404,"User not im System")
+			resp.sendError(404,"User not in system")
 			return
 		}
 		
@@ -99,7 +98,7 @@ class EJSLServlet extends XtextServlet {
 	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
 		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
-			resp.sendError(404,"User not im System")
+			resp.sendError(404,"User not in system")
 			return
 		}
 		

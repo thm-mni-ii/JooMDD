@@ -16,7 +16,7 @@ require(["xtext/xtext-ace","cookie","jstree","treeloader","infomodal"], function
 			 //location.reload(); 
 		}, reason => {
 			 infomodal.closeloadmodal();
-			 infomodal.showmodal("Failed! The Model cannot be generate!"); // Error!
+			 infomodal.showmodal("Code generation failed. The model cannot be read."); // Error!
 		} );
 	});
 	jQuery("#ejslGeneratordownload").click(function(){

@@ -18,7 +18,7 @@ define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery,C
 		            "separator_after": false,
 		            "label": "Remove",
 		            "action": function (obj) { 
-		            	if(confirm('Are you sure to remove this node?')){
+		            	if(confirm('By clicking "OK" the whole sub-tree of the selected node will be deleted. Are you sure?')){
 		            		exports.deleteItem(obj,tree);
 		            	}
 		            }
@@ -53,7 +53,7 @@ define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery,C
 	            		tree.delete_node(node);
 				    	exports.reload();
 				    }else{
-				    	infomodal.showmodal("Failed! The node cannot be find!");
+				    	infomodal.showmodal("Sorry, the selected node cannot be found. (Maybe there's a blank in the file name)");
 				    }
 				  }
 				}); 

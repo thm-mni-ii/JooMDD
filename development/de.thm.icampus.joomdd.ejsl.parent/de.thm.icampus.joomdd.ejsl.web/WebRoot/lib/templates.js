@@ -22,9 +22,9 @@ require(["jquery","infomodal"], function($,infomodal) {
 		var editor = $("#xtext-editor");
 		var save = editor[0].env.editor.xtextServices.saveResource();
 		save.then( value => {
-			infomodal.showmodal("Resource was successfull saved!")
+			infomodal.showmodal("Model has been saved successfully.")
 		}, reason => {
-			infomodal.showmodal("Failur was happen! Contact the Support")
+			infomodal.showmodal("Model cannot be saved.")
 		} );
 		});
 		
@@ -45,7 +45,7 @@ require(["jquery","infomodal"], function($,infomodal) {
 					    	var name = Cookies.get('joomddusername');
 					    	treeloader.reload()
 					    }else{
-					    	infomodal.showmodal("Failed! The Model cannot be extract!");
+					    	infomodal.showmodal("The uploaded extension cannot be extracted. Please select a valid manifest file before clicking this button!");
 					    }
 					  }
 					});
@@ -62,7 +62,7 @@ require(["jquery","infomodal"], function($,infomodal) {
 				 location.reload(); 
 			}else{
 				
-			infomodal.showmodal("Choose only one Model!");
+			infomodal.showmodal("You can only load one model.");
 			}
 
 		});
@@ -92,10 +92,10 @@ require(["jquery","infomodal"], function($,infomodal) {
 					complete:function(data){
 						infomodal.closeloadmodal();
 						if(data){
-					    	infomodal.showmodal("The Upload was succesfull, reload the Page");
+					    	infomodal.showmodal("The extension has been uploaded succesfully.");
 					    	treeloader.reload()
 						}else{
-							infomodal.showmodal("Failure in the Loading of extension");
+							infomodal.showmodal("An error occured during the upload. You must use a path to a valid extension package (.zip)");
 						}
 					}
 			    	});

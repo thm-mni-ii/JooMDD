@@ -41,7 +41,7 @@ class Treeloader extends HttpServlet {
 			gson.toJson(false, resp.writer)
 		}	
 		}else{
-			gson.toJson("Username not exist" + name, resp.writer)
+			gson.toJson("Username doesn't exist" + name, resp.writer)
 		}
 	}
 	
