@@ -6,15 +6,15 @@ import java.util.Map
 import java.io.File
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.BasicEList
+import javax.servlet.ServletContext
 
-class SessionProvider {
+class SessionProvider{
 	
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		
-	new () {
-		//var String serverPathString = args.get(0)
-		//var String serverPathString = "...de.thm.icampus.joomdd.ejsl.parent/de.thm.icampus.joomdd.ejsl.web/WebRoot/workspace";
-		var String serverPathString = "/var/lib/tomcat8/webapps/ROOT/workspace";
+	new (ServletContext context) {
+  		var String serverPathString = context.getRealPath("/") + "/workspace";
+  		
 		resourcesProvider.contentTypeToFactoryMap.put("serverpath",serverPathString)
 	    resourcesProvider.contentTypeToFactoryMap.put("mddsessions",new HashMap<String, Object>)
 	    var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
