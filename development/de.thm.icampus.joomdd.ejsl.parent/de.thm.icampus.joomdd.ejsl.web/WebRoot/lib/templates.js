@@ -37,7 +37,7 @@ require(["jquery","infomodal"], function($,infomodal) {
 			var modelName = dataArray[dataArray.length-1].replace(".xml",".eJSL")
 				$.ajax({
 					  url: '/reverse-loader/',
-					  type: 'PUT',
+					  type: 'POST',
 					  data: {user:name,manifest:data[0],model:modelName},
 					  success: function(data) {
 						  infomodal.closeloadmodal();
@@ -84,7 +84,7 @@ require(["jquery","infomodal"], function($,infomodal) {
 			var input = $("#addRevers")[0].files[0];
 			infomodal.showloadmodal();
 			$.ajax({ url:"/reverse-loader/?filename=" + input.name,
-				    method:"POST",
+				    method:"PUT",
 					dataType: 'application/zip',
 					 contentType: "multipart/form-data",
 					 processData: false,

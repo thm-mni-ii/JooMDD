@@ -25,7 +25,7 @@ import javax.servlet.ServletContext
 class ReverseLoader extends HttpServlet {
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
-	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String name = req.session.getAttribute("joomddusername") as String
 		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
 		
@@ -34,7 +34,10 @@ class ReverseLoader extends HttpServlet {
 			resp.sendError(404,"User not im System")
 			return
 		}
+
 		var String user = req.getParameter("user")
+		println("Manifest Param:" + req)
+		println("Manifest Param:" + user)
 		println("Manifest Param:" + req.getParameter("manifest"))
   		println("Server:" + server)
 		var String manifest = req.getParameter("manifest").replace("download-manager", server)
@@ -69,7 +72,7 @@ class ReverseLoader extends HttpServlet {
 		}
 	}
 	
-	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String name = req.session.getAttribute("joomddusername") as String
 		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
 		

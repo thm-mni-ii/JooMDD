@@ -29,7 +29,7 @@ class NewUserService  extends HttpServlet  {
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		if(resourcesProvider != null){
-			new SessionProvider;
+			new SessionProvider(this.servletContext);
 		}
 		
 		var String name = req.getParameter("name")
