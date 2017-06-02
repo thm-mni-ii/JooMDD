@@ -149,9 +149,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 					«ENDFOR»
 					«Slug.nameExtensionBind("com", com.name).toUpperCase»_«dynamicPagereference.extendedPage.name.toUpperCase»_ACTIONS="Actions"
 				«ENDFOR»
-				«FOR e : language.keyvaluepairs»
-					«Slug.generateKeysName(com,e.name)»="«e.value»"
-					«ENDFOR»
+				
 				'''
 
 	override generate() {

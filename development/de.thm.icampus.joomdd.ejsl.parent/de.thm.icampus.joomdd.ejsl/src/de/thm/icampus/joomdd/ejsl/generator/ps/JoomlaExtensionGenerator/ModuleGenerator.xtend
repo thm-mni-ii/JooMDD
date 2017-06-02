@@ -213,6 +213,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
               <option value="">JOPTION_SELECT_CREATED_BY</option>
               </field>
             «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
+            «IF !attr.name.equalsIgnoreCase("params")»
              <field
                 addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
                   name="«attr.name»"
@@ -224,6 +225,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
                   >
               <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
           </field>
+          «ENDIF»
          «ENDFOR»
 			</fieldset>
 		«ENDIF»
@@ -264,8 +266,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			«ENDIF»
 			// Models, Functions should be implementated here
 		    // «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper::updateReset();
-			$items = &«modul.name.toFirstUpper»Helper::getList($params);
-			$model = &«modul.name.toFirstUpper»Helper::getModel();
+			$items = «modul.name.toFirstUpper»Helper::getList($params);
+			$model = «modul.name.toFirstUpper»Helper::getModel();
 			$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
 			require JModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
 			'''
@@ -298,8 +300,10 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 				<?php else : ?>
 										
 					«FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+					«IF !attr.name.equalsIgnoreCase("params")»
 					<?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
 					<?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
+					«ENDIF»
 					«ENDFOR»
 						
 				«ENDIF»
@@ -357,7 +361,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 *
 		 * @since
 		 **/
-		public static function &getModel()
+		public static function getModel()
 		{
 		/**
 		 * placeholder "<>" are to be replaced
@@ -412,41 +416,43 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 *
 		 * @since
 		 **/
-		public static function getList($params = null)
+		public static function getList($params_module = null)
 		{
 		    $model = «extMod.name.toFirstUpper»Helper::getModel();
-			$state = $params->get('state');
+			$state = $params_module->get('state');
 			if(!empty($state))
 			$model->setState('filter.state', $state);
 			
-			$search = $params->get('search');
+			$search = $params_module->get('search');
 			if(!empty($search))
 			$model->setState('filter.search', $search);
 			
-			$created_by = $params->get('created_by');
+			$created_by = $params_module->get('created_by');
 			 if(!empty($created_by))
 			$model->setState('filter.search',$created_by);
 			
-			$ordering = $params->get('ordering');
+			$ordering = $params_module->get('ordering');
 			if(!empty($ordering))
 			$model->setState('list.ordering',$ordering);
 			
-			$direction = $params->get('direction');
+			$direction = $params_module->get('direction');
 			 if(!empty($direction))
 			$model->setState('list.direction', $direction);
 			
-			$start = $params->get('start');
+			$start = $params_module->get('start');
 			if(!empty($start))
 			$model->setState('list.start', $start);
 			
-			$limit = $params->get('limit');
+			$limit = $params_module->get('limit');
 			if(!empty($limit))
 			$model->setState('list.limit', $limit);
 			«IF dynpage != null»
 			«FOR ExtendedAttribute attr: dynpage.extendFiltersList»
-			$«attr.name.toLowerCase» = $params->get('«attr.name.toLowerCase»');
+			«IF !attr.name.equalsIgnoreCase("params")»
+			$«attr.name.toLowerCase» = $params_module->get('«attr.name.toLowerCase»');
 			if(!empty($«attr.name.toLowerCase» ))
 			$model->setState('filter.«attr.name.toLowerCase»', $«attr.name.toLowerCase» );
+			«ENDIF»
 			«ENDFOR»
 			«ENDIF»
 			$items = $model->getItems();
