@@ -80,29 +80,23 @@
 		  </div>
 		</div>
 		<div class="content">
-			<div id="loadModal" class="w3-modal" style="display: none">
-				<div class="w3-modal-content  w3-display-middle w3-card-4"
+			<div id="loadModal" class="w3-modal" style="display: none; z-index: 1000;">
+				<div class="w3-display-middle"
 					style="width: 120px; height: 120px;">
 					<div class="loader"></div>
 				</div>
 			</div>
-			<div id="infoModal" class="w3-modal" style="display: none">
-				<div class="w3-modal-content  w3-display-right w3-card-4"
+			<div id="infoModal" class="w3-modal" style="display: none; z-index:1000; ">
+				<div class="w3-modal-content w3-display-middle w3-card-1"
 					style="max-width: 30%; position: absolute;">
 					<header class="w3-container w3-blue">
-						<span
-							onclick="document.getElementById('infoModal').style.display='none'"
-							class="w3-button w3-display-topright w3-red">&times;</span>
+						<span onclick="document.getElementById('infoModal').style.display='none'" 
+        				class="w3-button w3-display-topright w3-blue">&times;</span>
 						<h2>JooMDD Info</h2>
 					</header>
 					<div class="w3-container">
 						<p id="infoModalText">Some text..</p>
 					</div>
-					<footer class="w3-container w3-blue">
-						<button class="w3-button w3-red"
-							onclick="document.getElementById('infoModal').style.display='none'"
-							id="closeinfo">close</button>
-					</footer>
 				</div>
 			</div>
 			<div id="firstStepModal" class="w3-modal w3-animate-opacity">
