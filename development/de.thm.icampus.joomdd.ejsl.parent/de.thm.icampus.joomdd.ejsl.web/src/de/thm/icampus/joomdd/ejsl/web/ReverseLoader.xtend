@@ -31,26 +31,22 @@ class ReverseLoader extends HttpServlet {
 		
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
 		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername")) ){
-			resp.sendError(404,"User not im System")
+			resp.sendError(404,"User not in system")
 			return
 		}
 
 		var String user = req.getParameter("user")
-		println("Manifest Param:" + req)
-		println("Manifest Param:" + user)
-		println("Manifest Param:" + req.getParameter("manifest"))
-  		println("Server:" + server)
 		var String manifest = req.getParameter("manifest").replace("download-manager", server)
 		var String model =  req.getParameter("model")
 		
 		var String target = server +"/"+user+"/src/"+model
 		
 		var ServletContext context = this.servletContext;
-		println(context.getRealPath("/"));
+
 		var String rootPath = context.getRealPath("/") + "/jar";
 		var String jarPath = rootPath + "/jext2ejsl.jar"
 		var String cmd = "java -jar " + jarPath + " -m " + manifest + " -o " + target + " -no-gui"
-		println(cmd)
+
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
@@ -78,7 +74,7 @@ class ReverseLoader extends HttpServlet {
 		
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
 		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername")) ){
-			resp.sendError(404,"User not im System")
+			resp.sendError(404,"User not in system")
 			return
 		}
 	 resp.status = HttpServletResponse.SC_OK

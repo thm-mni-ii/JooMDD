@@ -15,12 +15,18 @@ import com.google.gson.Gson
 import javax.servlet.http.Cookie
 import java.io.BufferedWriter
 import java.io.FileWriter
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 @WebServlet(name = 'NewUserService', urlPatterns = '/new-user-service/*')
 class NewUserService  extends HttpServlet  {
 	
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-	
+	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
@@ -34,6 +40,28 @@ class NewUserService  extends HttpServlet  {
 		
 		var String name = req.getParameter("name")
 		var String email = req.getParameter("email")
+		
+//		var SecretKeySpec secretKey;
+//    	var byte[] key;
+//		var encryptedSecret = ""
+//		var MessageDigest sha = null;
+//		try
+//        {
+//        	key = email.getBytes("UTF-8");
+//            sha = MessageDigest.getInstance("SHA-1");
+//            key = sha.digest(key);
+//            key = Arrays.copyOf(key, 16); 
+//            secretKey = new SecretKeySpec(key, "AES");
+//            var Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+//            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+//            encryptedSecret = Base64.getEncoder().encodeToString(cipher.doFinal(name.getBytes("UTF-8")));
+//        } 
+//        catch (Exception e) 
+//        {
+//            System.out.println("Error while encrypting: " + e.toString());
+//        }
+
+		
 		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
