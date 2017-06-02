@@ -379,7 +379,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	
 		def ComponentInformation (ExtendedModule modul) {
 			if( modul.pageRef.pagescr != null){
-			var String section =  modul.pageRef.sect.getName()
+			var String section =  modul.extendedPageReference.extendedPage.name
             var String compName =  modul.extendedComponentName
     						if(section.equalsIgnoreCase('backend')){
 			    				modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"    		   					
@@ -412,7 +412,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 *
 		 * @since
 		 **/
-		public static function &getList($params = null)
+		public static function getList($params = null)
 		{
 		    $model = «extMod.name.toFirstUpper»Helper::getModel();
 			$state = $params->get('state');

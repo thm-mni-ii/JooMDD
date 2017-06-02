@@ -29,9 +29,9 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 		if(reference == null)
 		  return null
 		 if(reference.ref != null)
-	    return reference.ref.name
+	    return PlattformUtil.slugify(reference.ref.name)
 	  if(reference.core != null)
-	  return reference.core.getName()
+	  return PlattformUtil.slugify(reference.core.getName())
 	 
 	}
 	

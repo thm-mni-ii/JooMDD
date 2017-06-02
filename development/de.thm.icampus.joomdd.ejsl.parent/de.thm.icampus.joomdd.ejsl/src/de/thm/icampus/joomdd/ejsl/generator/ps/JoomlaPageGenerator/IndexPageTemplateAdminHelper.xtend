@@ -26,7 +26,7 @@ class IndexPageTemplateAdminHelper {
 		indexpage = dp
 		com = cp
 		sec = section
-		var DetailsPage dt = Slug.getPageForDetails(indexpage,com)
+		var ExtendedDynamicPage dt = Slug.getPageForDetails(indexpage,com)
 		details =  if( dt == null)"<Put the name Of DetailsPage>" else dt.name
 		mainEntity = dp.extendedEntityList.get(0)
 		

@@ -39,6 +39,8 @@ import java.io.File
 import  com.google.common.io.Files
 import java.util.Scanner
 import de.thm.icampus.joomdd.ejsl.generator.EJSLGenerator
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedDynamicPageImpl
 
 /**
  * <!-- begin-user-doc -->
@@ -251,19 +253,29 @@ public class Slug  {
 		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(page.name).toUpperCase + "_" + Slug.slugify(name).toUpperCase
 	}
 	
-	def static DetailsPage getPageForDetails(ExtendedDynamicPage inpage, ExtendedComponent com) {
+	def static ExtendedDynamicPage getPageForDetails(ExtendedDynamicPage inpage, ExtendedComponent com) {
 		
+		if(inpage.links.empty){
+			for(ExtendedPageReference pg : com.backEndExtendedPagerefence){
+				if(pg.extendedPage.extendedDynamicPageInstance!= null && pg.extendedPage.extendedDynamicPageInstance.detailsPage){
+					var String first = pg.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name
+					var String second = inpage.extendedEntityList.get(0).name
+					if(first.equalsIgnoreCase(second))
+					return pg.extendedPage.extendedDynamicPageInstance
+				}
+			}
+		}
 		for(Link lk: inpage.links){
 			switch lk {
 		   ContextLink:{
 				var InternalLink lkin = lk as InternalLink
 				if(lkin.target instanceof DetailsPage)
-				  return lkin.target as DetailsPage
+				  return new ExtendedDynamicPageImpl(lkin.target as DetailsPage) 
 			}
 			 InternalLink :{
 				var InternalLink lkin = lk as InternalLink
 				if(lkin.target instanceof DetailsPage)
-				  return lkin.target as DetailsPage
+				  return new ExtendedDynamicPageImpl(lkin.target as DetailsPage) 
 			}
 			}
 		}
@@ -271,6 +283,16 @@ public class Slug  {
 	}
 	
 	def static IndexPage  getPageForAll(ExtendedDynamicPage inpage, ExtendedComponent com) {
+		if(inpage.links.empty){
+			for(ExtendedPageReference pg : com.backEndExtendedPagerefence){
+				if(pg.extendedPage.extendedDynamicPageInstance!= null && !pg.extendedPage.extendedDynamicPageInstance.detailsPage){
+					var String first = pg.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name
+					var String second = inpage.extendedEntityList.get(0).name
+					if(first.equalsIgnoreCase(second))
+					return pg.extendedPage.extendedDynamicPageInstance.instance as IndexPage
+				}
+			}
+		}
 		for(Link lk: inpage.links){
 			switch lk{
 				 ContextLink:{

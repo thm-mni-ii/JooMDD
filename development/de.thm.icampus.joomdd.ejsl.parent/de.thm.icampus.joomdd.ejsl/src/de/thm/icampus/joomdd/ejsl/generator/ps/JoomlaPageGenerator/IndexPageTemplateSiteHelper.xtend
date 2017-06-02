@@ -14,7 +14,7 @@ class IndexPageTemplateSiteHelper {
 	 ExtendedDynamicPage indexpage
 	private ExtendedComponent  com
 	private String sec
-	private DetailsPage details
+	private ExtendedDynamicPage details
 	private ExtendedEntity mainEntity
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){

@@ -58,8 +58,31 @@ class RessourceTransformer {
 	
 	def formatEntitiesAttribute(EList<Entity> list) {
 		for(Entity ent: list){
-			for(Attribute attr: ent.attributes)
-			   attr.name = attr.name.toLowerCase
+			ent.name = Util.slugify(ent.name)
+			for(Attribute attr: ent.attributes){
+			   attr.name = Util.slugify(attr.name.toLowerCase)
+			   var type = attr.type.getType()
+			   if(attr.isIsprimary && type.equalsIgnoreCase("text")){
+			   	var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
+				typeid.type =  StandardTypeKinds.INTEGER
+				typeid.notnull = true
+				typeid.autoincrement = true
+			   	 attr.type =  typeid
+			   }}
+		}
+	}
+	
+	def String getType(Type type){
+		switch(type){
+			DatatypeReference:{
+				var DatatypeReference dt = type as DatatypeReference
+				return dt.type.name
+				
+			} 
+			 StandardTypes:{
+			 	var StandardTypes dt = type as StandardTypes
+			 	return dt.type.getName()
+			 }
 		}
 	}
 	
