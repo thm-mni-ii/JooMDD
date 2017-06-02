@@ -1,7 +1,7 @@
 
 require(["jquery","infomodal"], function($,infomodal) {
 	
-	$("#templates").change(function(){
+	$(".templates").click(function(){
 	var nameTemplate = $(this).val();
 	$.ajax({
 		  method: "GET",

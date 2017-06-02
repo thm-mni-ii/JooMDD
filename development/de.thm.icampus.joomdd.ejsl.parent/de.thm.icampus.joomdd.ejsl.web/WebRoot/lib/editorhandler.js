@@ -10,7 +10,7 @@ define('editorhandler',[ 'jquery',"jstree", "cookie","webjars/ace/1.2.0/src/ace"
 				resourceId: username +"/src/" + resourceID
 				
 			});
-		 $("#modelname").text(resourceID)
+		 $("#modelname").text("- " + resourceID)
 		 jQuery("#xtext-editor")[0].env.editor.setOptions({
 			 fontSize: "14px"
          });

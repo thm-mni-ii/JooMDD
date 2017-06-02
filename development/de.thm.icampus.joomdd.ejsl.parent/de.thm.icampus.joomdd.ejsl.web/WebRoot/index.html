@@ -8,25 +8,32 @@
 <link rel="stylesheet" type="text/css" href="css/w3.css" />
 <link rel="stylesheet" type="text/css" href="css/jtree.min.css" />
 <!-- https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css -->
-<script src="webjars/requirejs/2.1.20/require.min.js">
-</script>
+
+
 <script type="text/javascript">
-	var baseUrl = window.location.pathname;
-	var fileIndex = baseUrl.indexOf("index.html");
-	if (fileIndex > 0)
-		baseUrl = baseUrl.slice(0, fileIndex);
-	require
-			.config({
-				baseUrl : baseUrl,
-				paths : {
-					"jquery" : "lib/jquery-3.2.1.min",
-					"ace/ext/language_tools" : "webjars/ace/1.2.0/src/ext-language_tools",
-					"xtext/xtext-ace" : "xtext/2.10.0/xtext-ace",
-					"cookie" : "lib/cookie",
-					"jstree" : "lib/jstree"
-				}
-			});
-</script>
+  var require = {
+    callback: function() {
+	    var baseUrl = window.location.pathname;
+	    var fileIndex = baseUrl.indexOf("index.html");
+	    if (fileIndex > 0)
+	     baseUrl = baseUrl.slice(0, fileIndex);
+	    require.config({
+		     baseUrl: baseUrl,
+		     paths: {
+		      "ace/ace": "webjars/ace/1.2.0/src/ace",
+		      "jquery": "lib/jquery-3.2.1.min",
+		      "ace/ext/language_tools": "webjars/ace/1.2.0/src/ext-language_tools",
+		      "xtext/xtext-ace": "xtext/2.10.0/xtext-ace",
+		      "cookie" : "lib/cookie",
+		      "jstree" : "lib/jstree"
+		     }
+   		 });
+       }
+     };
+  
+ </script>
+<script type="text/javascript" src="webjars/requirejs/2.1.20/require.min.js"></script>
+
 <script type="text/javascript" src="lib/infomodal.js"></script>
 <script type="text/javascript" src="lib/treeloader.js"></script>
 <script type="text/javascript" src="lib/editorhandler.js"></script>
@@ -41,9 +48,37 @@
 	<div class="container">
 		<header class="w3-container w3-text-light-grey blue">
 			<h1>
-				JooMDD Web Editor: <span id="modelname"></span>
+				JooMDD Web Editor <span id="modelname"></span>
 			</h1>
 		</header>
+		<div class="w3-bar w3-light-grey">
+		  <button 
+		      	id="ejslGeneratorsave" 
+		      	class="w3-bar-item w3-button" 
+		      	title="Save your model code in the editor to the selected model in the tree.">Save Model</button>
+		  <button id="ejslLoadModel" class="w3-bar-item w3-button"
+					title="Load the contents of the selected model in the tree to the editor.">Load
+					Model</button>
+		<button id="ejslGenerator" class="w3-bar-item w3-button"
+			title="Generate Joomla code for the selected model.">Generate
+			Code</button>
+		<button id="ejslReverseModel" class="w3-bar-item w3-button"
+			title="Select a valid manifest file in the tree (in uploaded the folder) and click this button.">Model
+			extraction</button>
+		<button id="ejslGeneratordownload" class="w3-bar-item w3-button"
+					title="You can download (.zip) all models and sub-trees by selecting them/their parent node and click this button.">Download</button>
+		  
+		  <div class="w3-dropdown-hover">
+		    <button class="w3-button">Example Models</button>
+		    <div class="w3-dropdown-content w3-bar-block w3-card-4" style="z-index: 100000;">
+		      <button class="templates w3-bar-item w3-button" value="conference.eJSL">Conference</button>
+			  <button class="templates w3-bar-item w3-button" value="Shop.eJSL">Shop</button>
+			  <button class="templates w3-bar-item w3-button" value="Model.eJSL">Model</button>
+			  <button class="templates w3-bar-item w3-button" value="Simple.eJSL">Simple Model</button>
+			  <button class="templates w3-bar-item w3-button" value="brueckenKurs.eJSL">Brueckenkurs</button>
+		    </div>
+		  </div>
+		</div>
 		<div class="content">
 			<div id="loadModal" class="w3-modal" style="display: none">
 				<div class="w3-modal-content  w3-display-middle w3-card-4"
@@ -99,47 +134,24 @@
 				class="w3-card-4"></div>
 			<div class="intro">
 				<img class="logo" src="Logo_b.png">
-				<div></div>
-				<button id="ejslGeneratorsave" class="w3-btn blue"
-					title="Save your model code in the editor to the selected model in the tree.">Save
-					Model</button>
-				<button id="ejslLoadModel" class="w3-btn blue"
-					title="Load the contents of the selected model in the tree to the editor.">Load
-					Model</button>
-				<button id="ejslGenerator" class="w3-btn blue"
-					title="Generate Joomla code for the selected model.">Generate
-					Code</button>
-				<button id="ejslReverseModel" class="w3-btn blue"
-					title="Select a valid manifest file in the tree (in uploaded the folder) and click this button.">Model
-					extraction</button>
-				<button id="ejslGeneratordownload" class="w3-btn blue"
-					title="You can download (.zip) all models and sub-trees by selecting them/their parent node and click this button.">Download</button>
-				<br>
+				
 				<div id="folder_tree" class="filetree w3-card-4"></div>
 			</div>
 		</div>
 		<div>
-			<p>Need an example?</p>
-			<div id="templatecontainer">
-				<select id="templates">
-					<option>Select an example model</option>
-					<option value="conference.eJSL">Conference</option>
-					<option value="Shop.eJSL">Shop</option>
-					<option value="Model.eJSL">Model</option>
-					<option value="Simple.eJSL">Simple Model</option>
-					<option value="brueckenKurs.eJSL">Brueckenkurs</option>
-				</select>
-				<p></p>
-			</div>
 			<div>
 				<p>Do you need a new model file?</p>
 				<input type="text" id="addfile" style="margin-right: 20px">
 				<button id="eJSlCreateModel">Add new Model</button>
+			</div>
+			<hr>
+			<div>
 				<p>Upload an existing extension for a model extraction:</p>
 				<input type="file" id="addRevers">
 				<button id="eJSlUploadModel">Upload Extension</button>
 				<br>
 			</div>
+			<hr>
 		</div>
 	</div>
 </body>
