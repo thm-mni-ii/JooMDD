@@ -179,18 +179,18 @@ class EJSLValidator extends AbstractEJSLValidator {
 		}
 	}
 	
-	/**
-	 * Checks if the name of a extension contains a underscore
-	 */
-	@Check
-	def checkNoUnderscoreInExtensionName(Extension ext) {
-		if (ext.name.contains('_')) {
-			error(
-					'Extension name ' + ext.name + ' contains a underscore',
-								ext,
-								EJSLPackage.Literals.EXTENSION__NAME,
-								FORBIDDEN_UNDERSCORE_EXTENSIONNAME
-				)
-		}
-	}
+//	/**
+//	 * Checks if the name of a extension contains a underscore
+//	 */
+//	@Check
+//	def checkNoUnderscoreInExtensionName(Extension ext) {
+//		if (ext.name.contains('_')) {
+//			error(
+//					'Extension name ' + ext.name + ' contains a underscore',
+//								ext,
+//								EJSLPackage.Literals.EXTENSION__NAME,
+//								FORBIDDEN_UNDERSCORE_EXTENSIONNAME
+//				)
+//		}
+//	}
 }

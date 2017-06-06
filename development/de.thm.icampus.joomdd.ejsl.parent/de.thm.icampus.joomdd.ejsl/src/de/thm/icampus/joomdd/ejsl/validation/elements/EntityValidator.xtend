@@ -106,22 +106,22 @@ class EntityValidator extends AbstractDeclarativeValidator {
 		}
 	}
 	
-	/**
-	 * Checks if the name of a entity contains a underscore
-	 */
-	@Check
-	def checkNoUnderscoreInEntityName(EJSLModel model) {
-		for (entity : model.getEjslPart.getFeature.getEntities) {
-			if (entity.name.contains('_')) {
-				error(
-					'Entity name ' + entity.name + ' contains a underscore',
-								entity,
-								EJSLPackage.Literals.ENTITY__NAME,
-								de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_FORBIDDEN_UNDERSCORE
-				)
-			}
-		}
-	}
+//	/**
+//	 * Checks if the name of a entity contains a underscore
+//	 */
+//	@Check
+//	def checkNoUnderscoreInEntityName(EJSLModel model) {
+//		for (entity : model.getEjslPart.getFeature.getEntities) {
+//			if (entity.name.contains('_')) {
+//				error(
+//					'Entity name ' + entity.name + ' contains a underscore',
+//								entity,
+//								EJSLPackage.Literals.ENTITY__NAME,
+//								de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_FORBIDDEN_UNDERSCORE
+//				)
+//			}
+//		}
+//	}
 	
 	/**
 	 * Check entity name does not match a Xtext keyword

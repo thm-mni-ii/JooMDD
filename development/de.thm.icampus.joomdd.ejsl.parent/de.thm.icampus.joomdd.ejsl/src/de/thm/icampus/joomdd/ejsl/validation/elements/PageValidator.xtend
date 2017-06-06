@@ -167,22 +167,22 @@ class PageValidator extends AbstractDeclarativeValidator {
 		}
 	}
 	
-	/**
-	 * Checks if the name of a page contains a underscore
-	 */
-	@Check
-	def checkNoUnderscoreInPageName(EJSLModel model) {
-		for (page : model.ejslPart.getFeature.pages) {
-			if (page.name.contains('_')) {
-				error(
-					'Page name ' + page.name + ' contains a underscore',
-								page,
-								EJSLPackage.Literals.PAGE__NAME,
-								de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FORBIDDEN_UNDERSCORE
-				)
-			}
-		}
-	}
+//	/**
+//	 * Checks if the name of a page contains a underscore
+//	 */
+//	@Check
+//	def checkNoUnderscoreInPageName(EJSLModel model) {
+//		for (page : model.ejslPart.getFeature.pages) {
+//			if (page.name.contains('_')) {
+//				error(
+//					'Page name ' + page.name + ' contains a underscore',
+//								page,
+//								EJSLPackage.Literals.PAGE__NAME,
+//								de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FORBIDDEN_UNDERSCORE
+//				)
+//			}
+//		}
+//	}
 	
 	/**
 	 * Check if all local parameters of a page have different/unique names.
