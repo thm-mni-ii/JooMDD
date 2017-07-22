@@ -78,12 +78,12 @@ public class PageGeneratorClient {
 
 	def void generateExtension(){
 		if (extPage.extendedDynamicPageInstance != null) {
-			var String viewPath = pathExt + sectionExt+ "/views";
+			var String viewPath = pathExt + "/views";
 			var ExtendedDynamicPage dynPage = extPage.extendedDynamicPageInstance as ExtendedDynamicPage
 			generateView(dynPage, com, sectionExt, viewPath, fsa)
-			var String controllerpath = pathExt + sectionExt+ "/controllers"
+			var String controllerpath = pathExt + "/controllers"
 			generateController(dynPage, com, sectionExt, controllerpath, fsa)
-			var String modelpath = pathExt + sectionExt+ "/models"
+			var String modelpath = pathExt + "/models"
 			generateModel(dynPage, com, sectionExt, modelpath, fsa)
 			if(extPage.extendedDynamicPageInstance.isDetailsPage){
 				generateUnknownFields(modelpath)

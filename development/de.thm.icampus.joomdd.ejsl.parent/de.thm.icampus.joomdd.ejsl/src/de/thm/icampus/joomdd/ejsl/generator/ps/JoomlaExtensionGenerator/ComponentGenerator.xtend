@@ -29,6 +29,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	private ExtendedComponent extendeComp
 	private String class_name
 	private String updatePath
+	private  String sitePath 
+	private  String adminPath
+	private String mediaPath 
+	
+	
+	
     
     /**
      * this Constructor initial  all the parameters to generate a component
@@ -51,6 +57,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.extendeComp.name = Slug.slugify(extendeComp.name)
 		this.path = path
 		this.updatePath = updatePath
+		this.sitePath = path+"components/"+this.extendeComp.extensionName
+		this.adminPath = path+"administrator/components/"+this.extendeComp.extensionName
+		this.mediaPath =  path+"media/"+ extendeComp.extensionName
+		
 	}
 	
 	/**
@@ -77,27 +87,24 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		var LanguageGenerator langgen = new LanguageGenerator(fsa)
 		langgen.genComponentLanguage(extendeComp,path)
 
-			// Generate sql folders
-		generateJoomlaDirectory(path+"admin/sql")
-		generateJoomlaDirectory(path+"admin/sql/updates")
-		generateJoomlaDirectory(path+"admin/sql/updates/mysql")
+			
 		
 		//Generate media folder
-		generateJoomlaDirectory(path+"media")
-		generateJoomlaDirectory(path+"media/css")
-		generateJoomlaDirectory(path+"media/images")
-		generateJoomlaDirectory(path+"media/js")
-		generateFile( path+"media/js/setForeignKeys.js", genScriptForForeignKeys)
-		generateFile( path+"media/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
+		generateJoomlaDirectory(mediaPath)
+		generateJoomlaDirectory(mediaPath+"/css")
+		generateJoomlaDirectory(mediaPath+"/images")
+		generateJoomlaDirectory(mediaPath+"/js")
+		generateFile( mediaPath+"/js/setForeignKeys.js", genScriptForForeignKeys)
+		generateFile( mediaPath+"/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
 		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendeComp)
 		
-		generateFile( path+"media/js/bootsnip.js", help.genBootsnipJS)
-		generateFile( path+"media/css/bootsnip.css",help.genBootsnipCSS)
+		generateFile( mediaPath+"/js/bootsnip.js", help.genBootsnipJS)
+		generateFile( mediaPath+"/css/bootsnip.css",help.genBootsnipCSS)
 		//Generate images folder
 		for(detailsPages : indexPages.filter[t| t.detailsPage && t.haveFiletoLoad]){
-			generateJoomlaDirectory(path+"media/" + detailsPages.name.toLowerCase)
-			generateJoomlaDirectory(path+"media/" + detailsPages.name.toLowerCase+ "/images")
-			generateJoomlaDirectory(path+"media/" + detailsPages.name.toLowerCase + "/files")
+			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase)
+			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase+ "/images")
+			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase + "/files")
 		}
 		
 		
@@ -151,6 +158,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    «IF (component.manifest.description != null)»
 		    	<description>«component.manifest.description»</description>
 		    «ENDIF»
+		    
 		     <scriptfile>script.php</scriptfile>
 		    <!-- Install Section -->
 		    <install>
@@ -172,7 +180,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <schemapath type="mysql">sql/updates/mysql</schemapath>
 		        </schemas>
 		    </update>
-		     <media destination="«name»" folder="media">
+		     <media destination="«name»" folder="media/«extendeComp.extensionName»">
 		     	    <folder>images</folder>
 					<folder>js</folder>
 					<folder>css</folder>
@@ -185,8 +193,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     
 		    
 		    <!-- Site Main File Copy Section -->
-		    <files folder="site">
-		        <filename>index.html</filename>
+		    <files folder="components/«extendeComp.extensionName»">
 		        <filename>«noPrefixName».php</filename>
 		        <filename>controller.php</filename>
 		        <!-- Additional Files -->
@@ -197,8 +204,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    
 		    <languages>
 		    	«FOR lang : component.languages»
-		    		<language tag="«lang.name»">language/site/«lang.name»/«lang.name».«this.name».ini</language>
-		    		<language tag="«lang.name»">language/site/«lang.name»/«lang.name».«this.name».sys.ini</language>
+		    	«IF !lang.sys»
+		    		<language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».ini</language>
+		    		«ELSE»
+		    		<language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+		    		«ENDIF»
 		    	«ENDFOR»
 		    </languages>
 		    
@@ -214,9 +224,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				«ENDFOR»
 				</submenu>
 				<!-- Administration Main File Copy Section -->
-				<files folder="admin">
+				<files folder="administrator/components/«extendeComp.extensionName»">
 				    <!-- Admin Main File Copy Section -->
-				    <filename>index.html</filename>
 				    <filename>«noPrefixName».php</filename>
 				    <filename>controller.php</filename>
 					<filename>access.xml</filename>
@@ -236,9 +245,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				
 				<languages >
 				  	«FOR lang : component.languages»
-				  		<language tag="«lang.name»">language/admin/«lang.name»/«lang.name».«this.name».ini</language>
-				  		<language tag="«lang.name»">language/admin/«lang.name»/«lang.name».«this.name».sys.ini</language>
-				  	«ENDFOR»
+					  «IF !lang.sys»
+			    		<language tag="«lang.name»">administrator/language/«lang.name»/«lang.name».«this.name».ini</language>
+			    		«ELSE»
+			    		<language tag="«lang.name»">administrator/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+			    		«ENDIF»
+		    	«ENDFOR»
 				</languages>
 				  </administration>
 		</extension>
@@ -249,23 +261,21 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      * 
      */
 	private def void generateFrontendSection() {
-
 		// Generate frontend section
-		generateJoomlaDirectory(path+"/site")
-		generateFile( path +"site/" + noPrefixName + ".php", extendeComp.phpSiteContent)
-		generateFile( path +"site/controller.php", extendeComp.phpSiteControllerContent)
-		generateFile( path +"site/router.php", extendeComp.phpSiteRouterContent)
-		generateJoomlaDirectory(path+"site/views")
-		generateJoomlaDirectory(path+"site/models")
-		generateJoomlaDirectory(path+"site/models/fields")
-		generateJoomlaDirectory(path+"site/models/forms")
+		generateFile( sitePath +"/" + noPrefixName + ".php", extendeComp.phpSiteContent)
+		generateFile( sitePath +"/controller.php", extendeComp.phpSiteControllerContent)
+		generateFile( sitePath +"/router.php", extendeComp.phpSiteRouterContent)
+		generateJoomlaDirectory(sitePath+"/views")
+		generateJoomlaDirectory(sitePath+"/models")
+		generateJoomlaDirectory(sitePath+"/models/fields")
+		generateJoomlaDirectory(sitePath+"/models/forms")
 
-		generateJoomlaDirectory(path+"site/views")
-		generateJoomlaDirectory(path+"site/assets")
+		generateJoomlaDirectory(sitePath+"/views")
+		generateJoomlaDirectory(sitePath+"/assets")
 		
 
-		generateJoomlaDirectory(path+"site/controllers")
-        var EntityGenerator entitygen = new EntityGenerator(extendeComp,path + "site/",fsa,false)
+		generateJoomlaDirectory(sitePath+"/controllers")
+        var EntityGenerator entitygen = new EntityGenerator(extendeComp,sitePath + "/",fsa,false)
 		
 		entitygen.dogenerate()
         
@@ -275,7 +285,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		for (pageref : extendeComp.frontEndExtendedPagerefence) {
            tempPageList.add(pageref.extendedPage)
 		}
-		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,path,"site",false)
+		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,sitePath,"site",false)
 		pgGen.dogenerate
 		generateUpdatePages(tempPageList,"site")
 		
@@ -292,36 +302,41 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			  indexPages.add(ext.extendedPage.extendedDynamicPageInstance)
 			   
   		}
-		generateJoomlaDirectory(path+"admin")
-		generateFile( path +"admin/" + noPrefixName + ".php", extendeComp.phpAdminContent)
-		generateFile( path +"admin/controller.php", extendeComp.phpAdminControllerContent)
+		generateJoomlaDirectory(adminPath)
+		// Generate sql folders
+		generateJoomlaDirectory(adminPath+"/sql")
+		generateJoomlaDirectory(adminPath+"/sql/updates")
+		generateJoomlaDirectory(adminPath+"/sql/updates/mysql")
+		
+		generateFile(adminPath+"/" + noPrefixName + ".php", extendeComp.phpAdminContent)
+		generateFile( adminPath +"/controller.php", extendeComp.phpAdminControllerContent)
 
-		generateFile( path +"admin/access.xml", extendeComp.xmlAccessContent)
-		generateFile( path +"admin/config.xml", extendeComp.xmlConfigContent(indexPages))
-		generateJoomlaDirectory(path+"admin/assets")
+		generateFile( adminPath +"/access.xml", extendeComp.xmlAccessContent)
+		generateFile( adminPath +"/config.xml", extendeComp.xmlConfigContent(indexPages))
+		generateJoomlaDirectory(adminPath+"/assets")
 		
 		
 
-		generateJoomlaDirectory(path+"admin/views")
+		generateJoomlaDirectory(adminPath+"/views")
 		println(slug)
 		var tempSlug = slug + "s"
-		generateJoomlaDirectory(path+"admin/views/" + tempSlug)
-		generateFile( path +"admin/views/" + tempSlug + "/view.html.php", extendeComp.phpAdminViewContent)
-		generateJoomlaDirectory(path+"admin/views/" + tempSlug + "/tmpl")
-		generateFile( path +"admin/views/" + tempSlug + "/tmpl/default.php", extendeComp.phpAdminTemplateContent)
+		generateJoomlaDirectory(adminPath+"/views/" + tempSlug)
+		generateFile( adminPath +"/views/" + tempSlug + "/view.html.php", extendeComp.phpAdminViewContent)
+		generateJoomlaDirectory(adminPath+"/views/" + tempSlug + "/tmpl")
+		generateFile( adminPath +"/views/" + tempSlug + "/tmpl/default.php", extendeComp.phpAdminTemplateContent)
 
-		generateJoomlaDirectory(path+"admin/models")
-		generateJoomlaDirectory(path+"admin/models/fields")
-		generateJoomlaDirectory(path+"admin/tables")
+		generateJoomlaDirectory(adminPath+"/models")
+		generateJoomlaDirectory(adminPath+"/models/fields")
+		generateJoomlaDirectory(adminPath+"/tables")
 
-		generateJoomlaDirectory(path+"admin/views")
+		generateJoomlaDirectory(adminPath+"/views")
 
-		generateJoomlaDirectory(path+"admin/controllers")
-		generateJoomlaDirectory(path+"admin/helpers/")
+		generateJoomlaDirectory(adminPath+"/controllers")
+		generateJoomlaDirectory(adminPath+"/helpers/")
 		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendeComp)
-		generateFile( path +"admin/helpers/" + extendeComp.name.toLowerCase + ".php", help.generate)
+		generateFile( adminPath +"/helpers/" + extendeComp.name.toLowerCase + ".php", help.generate)
 
-		var EntityGenerator entitygen  = new EntityGenerator(extendeComp,path + "admin/",fsa,true)
+		var EntityGenerator entitygen  = new EntityGenerator(extendeComp,adminPath + "/",fsa,true)
 		
 		entitygen.dogenerate()
 		
@@ -332,7 +347,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		for (pageref : extendeComp.backEndExtendedPagerefence) {
            tempPageList.add(pageref.extendedPage)
 		}
-		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,path,"admin",false)
+		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,adminPath,"admin",false)
 		pgGen.dogenerate
 		generateUpdatePages(tempPageList,"admin")
 		
