@@ -43,22 +43,22 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			}
 			if(!lang.sys){
 				fsa.generateFile(
-				root + "/language/" + ldir + "/" + ldir + "." +
+				root +"/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
 				fileLangGen(languagesWordsFront))
 				fsa.generateFile(
-				root + "/administrator/language/" + ldir + "/" + ldir + "." +
+				root + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
 					fileLangGen(languagesWordsBack))
 			}else{
 			
 			fsa.generateFile(
-				root + "/language/" + ldir + "/" + ldir + "." +
+				root +"/components/"+ component.extensionName+ "/language/" + ldir + "/" + ldir + "." + 
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
 				fileLangGen(languagesWordsFront))
 			
 			fsa.generateFile(
-				root + "/administrator/language/" + ldir + "/" + ldir + "." +
+				root  + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
 					fileLangGen(languagesWordsBack))
 					}

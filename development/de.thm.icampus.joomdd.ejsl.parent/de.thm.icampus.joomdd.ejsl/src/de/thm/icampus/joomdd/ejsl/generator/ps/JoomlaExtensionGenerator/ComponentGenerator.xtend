@@ -199,15 +199,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <!-- Additional Files -->
 		        <folder>views</folder>
 		        <folder>models</folder>
+		        <folder>language</folder>
 		        <folder>controllers</folder>		       
 		    </files>
 		    
 		    <languages>
 		    	«FOR lang : component.languages»
 		    	«IF !lang.sys»
-		    		<language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».ini</language>
+		    		<language tag="«lang.name»">components/«extendeComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
 		    		«ELSE»
-		    		<language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+		    		<language tag="«lang.name»">components/«extendeComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
 		    		«ENDIF»
 		    	«ENDFOR»
 		    </languages>
@@ -238,6 +239,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 					         <folder>models</folder>
 					         <!-- View Files Section -->
 					         <folder>views</folder>
+					         <folder>language</folder>
 					         <folder>controllers</folder>
 					         <folder>helpers</folder>
 					         <folder>assets</folder>
@@ -246,9 +248,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				<languages >
 				  	«FOR lang : component.languages»
 					  «IF !lang.sys»
-			    		<language tag="«lang.name»">administrator/language/«lang.name»/«lang.name».«this.name».ini</language>
+			    		<language tag="«lang.name»">administrator/components/«extendeComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
 			    		«ELSE»
-			    		<language tag="«lang.name»">administrator/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+			    		<language tag="«lang.name»">administrator/components/«extendeComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
 			    		«ENDIF»
 		    	«ENDFOR»
 				</languages>

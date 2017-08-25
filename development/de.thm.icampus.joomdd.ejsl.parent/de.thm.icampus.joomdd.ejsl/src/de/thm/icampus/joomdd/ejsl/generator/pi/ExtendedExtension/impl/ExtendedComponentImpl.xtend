@@ -159,7 +159,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	}
 	
 	override extensionName() {
-		return extensionName
+		return extensionName.toLowerCase
 	}
 	
 }
