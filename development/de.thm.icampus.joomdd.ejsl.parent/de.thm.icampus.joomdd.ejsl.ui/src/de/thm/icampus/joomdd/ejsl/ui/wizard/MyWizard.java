@@ -5,7 +5,6 @@ package de.thm.icampus.joomdd.ejsl.ui.wizard;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -37,7 +36,6 @@ import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 
 public class MyWizard extends Wizard implements INewWizard, IExecutableExtension {
 
@@ -129,12 +127,9 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 			FileWriter fw = new FileWriter(new File(project, ".classpath"));
 			fw.write(epi.classpathFile());
 			fw.close();
-			Files.copy(new InputSupplier<InputStream>() {
-				@Override
-				public InputStream getInput() throws IOException {
-					return _pageTwo.getSelectedTemplate();
-				}
-			}, new File(project, "src/" + _pageTwo.getFileName()));	
+			String srcname = src.getAbsolutePath() +"/" +_pageTwo.getFileName();
+			File srcFile = new File (srcname);
+			FileWizard.copyFiles(_pageTwo.getSelectedTemplate(),srcFile);
 			_pageTree.saveConfig(src, src_gen);
 		} catch (IOException e) {
 			e.printStackTrace();
