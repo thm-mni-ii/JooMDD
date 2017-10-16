@@ -383,7 +383,7 @@ eJSLModel "Shop" {
 					Language en-GB {                             
 					}                                    
 				}        
-				*Page :Shop.Customers from :  ExampleShop section .frontend
+				*Page :Shop.Customers from :  ExampleShop data backendDAO
 			}  
 			Extension package Shop{  
 				Manifestation {              
@@ -472,7 +472,7 @@ eJSLModel "Shop" {
 					Language en-GB {     
 					}
 				}
-				*Page :Shop.Customers from : ExampleShop section .frontend
+				*Page :Shop.Customers from : ExampleShop data backendDAO
 			}
 				}
 			}

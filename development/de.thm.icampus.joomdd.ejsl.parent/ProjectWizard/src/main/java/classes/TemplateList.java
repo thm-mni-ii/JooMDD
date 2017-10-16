@@ -1,10 +1,9 @@
 package classes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 //Namespace from XSD
 @XmlRootElement(name="templateList", namespace="http://www.example.org/TemplateList")

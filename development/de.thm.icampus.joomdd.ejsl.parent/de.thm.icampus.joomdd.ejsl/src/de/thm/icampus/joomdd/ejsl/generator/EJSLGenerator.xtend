@@ -56,9 +56,7 @@ class EJSLGenerator extends AbstractGenerator {
 		config.load(fsa.readBinaryFile("generator.properties"))
 		else{
 			defaultSettings(fsa)
-		}
-		
-		
+		}		
 	}
 	
 	def defaultSettings(IFileSystemAccess2 fsa) {
@@ -118,21 +116,13 @@ class EJSLGenerator extends AbstractGenerator {
         outputFolder = config.getProperty("outputFolder")
         
         }
-
-         println(outputFolder)
-	  		
-			genData.setOutputConfigurations(mapOutputConfigurations(outputFolder))	
+        println(outputFolder)
+	  	genData.setOutputConfigurations(mapOutputConfigurations(outputFolder))	
 				
-   
 		for ( e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
-			
-			var EJSLModel domainModel = e as EJSLModel ;
-			
-						
+			var EJSLModel domainModel = e as EJSLModel ;		
 			switch(domainModel.ejslPart){
-				CMSExtension:
-				{
-					
+				CMSExtension: {
 					var RessourceTransformer trans = new RessourceTransformer(e)
 				
 			 		trans.dotransformation
@@ -143,17 +133,15 @@ class EJSLGenerator extends AbstractGenerator {
 					//if(config.getKey("entities").equalsIgnoreCase("true")){
 					var EntityGenerator mainEntitiesGen = new EntityGenerator(extensionPart.feature.entities, "Entities/", genData, domainModel.name)
 					mainEntitiesGen.dogenerate()
-		
-				//	}
-				//	if(config.getKey("page").equalsIgnoreCase("true")){
+					//}
+					//if(config.getKey("page").equalsIgnoreCase("true")){
 					var PageGenerator mainPageGen = new PageGenerator(extensionPart.feature.pages,genData,"Pages/",domainModel.name)
-				     mainPageGen.dogenerate()
-				     
-				     }
+				    mainPageGen.dogenerate()
+				    //}
 				}
 			}
-			
-			fsa.generateFile("status","The code generation was successfull! \n Thank you for using this tool!")
+		}
+		fsa.generateFile("status","The code generation was successfull! \n Thank you for using this tool!")
 	}
 	
 	override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {

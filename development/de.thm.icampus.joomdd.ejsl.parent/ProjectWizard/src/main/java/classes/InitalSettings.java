@@ -1,23 +1,16 @@
-
-
 package classes;
 
 import com.intellij.openapi.components.ProjectComponent;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.io.*;
 import java.nio.channels.FileLock;
-import java.util.ArrayList;
 
 /**
  * Created by Leon on 21.01.16.
+ * Modified by Dennis on 16.10.17
  */
 public class InitalSettings implements ProjectComponent {
 
@@ -124,7 +117,6 @@ public class InitalSettings implements ProjectComponent {
                 while ((buffer = br.readLine()) != null) {
                     projectconfig.append((buffer + "\n"));
                 }
-
 
                 projectfile.createNewFile();
                 FileWriter fw = new FileWriter(project.getBasePath() + "/" + project.getName() + ".iml");

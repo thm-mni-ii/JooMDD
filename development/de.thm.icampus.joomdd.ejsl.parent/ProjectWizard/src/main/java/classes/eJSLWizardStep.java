@@ -4,7 +4,6 @@ import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.JBScrollBar;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.PathUtil;
@@ -14,7 +13,9 @@ import javax.swing.event.AncestorEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 /**
  * Created by Max on 28.01.2016.
@@ -147,7 +148,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
         JLabel generatorInfoLableArtifacts = new JLabel("Artifacts options:");
         JCheckBox checkboxPage = new JCheckBox ("Page");
-        JCheckBox checkboxEntieties = new JCheckBox ("Entities");
+        JCheckBox checkboxEntities = new JCheckBox ("Entities");
 
        // JLabel generatorInfoLableupdatefolder = new JLabel("Extesnsion Package output:");
 
@@ -201,9 +202,9 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
 
         panelsouth1.add(generatorInfoLableArtifacts,BorderLayout.NORTH);
-        panelsouth1.add(checkboxEntieties,BorderLayout.CENTER);
+        panelsouth1.add(checkboxEntities,BorderLayout.CENTER);
         panelsouth1.add(checkboxPage,BorderLayout.WEST);
-
+        /*
         JPanel panelsouth2 = new JPanel(new BorderLayout());
         panelsouth1.add(panelsouth2,BorderLayout.SOUTH);
 
@@ -219,13 +220,13 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
         JPanel panelsouth3 = new JPanel(new BorderLayout());
         panelsouth2_1.add(panelsouth3,BorderLayout.SOUTH);
-
+        */
         /*
         panelsouth3.add(generatorInfoLableupdatefolder, BorderLayout.NORTH);
         panelsouth3.add(radbtnfolder, BorderLayout.WEST);
         panelsouth3.add(radiobtnzip, BorderLayout.CENTER);
         */
-
+        /*
         JPanel panelsouth4 = new JPanel(new BorderLayout());
         panelsouth3.add(panelsouth4,BorderLayout.SOUTH);
 
@@ -284,14 +285,15 @@ public class eJSLWizardStep extends ModuleWizardStep {
         panelsouth11.add(panelsouth12,BorderLayout.SOUTH);
         panelsouth12.add(lblServerpath,BorderLayout.WEST);
         panelsouth12.add(txtServerpath, BorderLayout.CENTER);
+        */
 
-
-        panelsouth12.add(autosaveWarning,BorderLayout.SOUTH);// end
+        panelsouth1.add(autosaveWarning,BorderLayout.SOUTH);// end
 
 
         // Standard configuration
         checkboxPage.setSelected(true);
-        checkboxEntieties.setSelected(true);
+        checkboxEntities.setSelected(true);
+
         checkboxJoomla.setSelected(true);
         checkboxWordpress.setSelected(true);
         //radbtnfolder.setSelected(true);
@@ -354,7 +356,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
 
                 setOutputPath(txtOutputPath.getText());
 
-                eJSL_PHP_Wizard_Step.createGeneratorProperties(checkboxPage.isSelected(),checkboxEntieties.isSelected(),checkboxJoomla.isSelected(),checkboxWordpress.isSelected(),checkBoxGenUpdateFolder.isSelected(),
+                eJSL_PHP_Wizard_Step.createGeneratorProperties(checkboxPage.isSelected(),checkboxEntities.isSelected(),checkboxJoomla.isSelected(),checkboxWordpress.isSelected(),checkBoxGenUpdateFolder.isSelected(),
                         radiobtnPHPUnit.isSelected(),radiobtnCodeception.isSelected(),txtHostConfiguration.getText(),txtPort.getText(),txtadminname.getText(),
                         txtadminpwd.getText(),browserChrome.isSelected(),browserInternetExplorer.isSelected(),browserFirefox.isSelected(),txtpath.getText(),
                         txtDBUsername.getText(),txtDBUserpwd.getText(),txtServerpath.getText());

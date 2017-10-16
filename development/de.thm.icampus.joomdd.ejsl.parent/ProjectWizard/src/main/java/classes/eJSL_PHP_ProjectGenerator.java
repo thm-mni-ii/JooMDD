@@ -10,7 +10,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
-import classes.eJSL_PHP_Wizard_Step;
 
 import javax.swing.*;
 import java.io.*;

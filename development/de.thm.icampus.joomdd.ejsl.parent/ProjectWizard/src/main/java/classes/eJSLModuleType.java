@@ -43,7 +43,7 @@ public class eJSLModuleType extends ModuleType<eJSLModuleBuilder> {
         return "MDD of CMS Repository for eJSL and cJSL and the according generators";
     }
 
-    @Override
+
     public Icon getBigIcon() {
         return IconLoader.getIcon("/resources/icons/eJSL.PNG");
     }

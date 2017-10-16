@@ -1,13 +1,11 @@
 package classes;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.platform.WebProjectGenerator;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.JBRadioButton;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTextField;
 import com.intellij.util.PathUtil;
@@ -16,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -278,7 +275,7 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
 
         JPanel panelsouth2 = new JPanel(new BorderLayout());
         panelsouth1.add(panelsouth2,BorderLayout.SOUTH);
-
+        /*
         panelsouth2.add(generatorInfoLablegernerator, BorderLayout.NORTH);
         panelsouth2.add(checkboxJoomla, BorderLayout.CENTER);
         panelsouth2.add(checkboxWordpress, BorderLayout.WEST);
@@ -291,13 +288,13 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
 
         JPanel panelsouth3 = new JPanel(new BorderLayout());
         panelsouth2_1.add(panelsouth3,BorderLayout.SOUTH);
-
+        */
         /*
         panelsouth3.add(generatorInfoLableupdatefolder, BorderLayout.NORTH);
         panelsouth3.add(radbtnfolder, BorderLayout.WEST);
         panelsouth3.add(radiobtnzip, BorderLayout.CENTER);
         */
-
+        /*
         JPanel panelsouth4 = new JPanel(new BorderLayout());
         panelsouth3.add(panelsouth4,BorderLayout.SOUTH);
 
@@ -357,9 +354,9 @@ public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
         panelsouth11.add(panelsouth12,BorderLayout.SOUTH);
         panelsouth12.add(lblServerpath,BorderLayout.WEST);
         panelsouth12.add(txtServerpath, BorderLayout.CENTER);
+        */
 
-
-        panelsouth12.add(autosaveWarning,BorderLayout.SOUTH);// end
+        panelsouth1.add(autosaveWarning,BorderLayout.SOUTH);// end
 
 
         // Standard configuration

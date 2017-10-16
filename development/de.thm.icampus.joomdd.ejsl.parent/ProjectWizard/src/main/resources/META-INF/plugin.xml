@@ -1,12 +1,12 @@
-<idea-plugin version="2">
+<idea-plugin>
   <id>com.your.company.unique.plugin.joomdd</id>
-  <name>Joo MDD Project Wizard</name>
-  <version>3.6</version>
-  <vendor url="http://www.mni.thm.de">iCampus - Technische Hochschule Mittelhessen</vendor>
+  <name>JooMDD Project Wizard</name>
+  <version>4.0</version>
+  <vendor url="http://www.mni.thm.de">Institute for Information Sciences - Technische Hochschule Mittelhessen</vendor>
 
   <description>
     This plugin allows the creation of eJSL models with an own project wizard
-    Developed by Leon and Max
+    Developed by Leon, Max, and Dennis
   </description>
 
   <change-notes>

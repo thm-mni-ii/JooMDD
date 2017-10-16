@@ -2,20 +2,20 @@ eJSLModel "AgendaModel"
 {
 	eJSL part: CMS Extension { 
 	datatypes {
-		Datatype "editor" , Datatype "usergroup" , Datatype "Button"
+		Datatype editor= "editor", Datatype usergroup ="usergroup" , Datatype Button ="button"
 	}
-	
+	 
 	entities {
 		Entity Referent {
 			attributes {
 				Attribute name {
-					type = Textfield Not Null Unique attribute with ID
+					type = Short_Text Not Null Unique attribute with ID
 				}
 				Attribute vorname {
-					type = Textfield Not Null
+					type = Short_Text Not Null
 				}
 				Attribute herkunftland {
-					type = Textfield
+					type = Short_Text
 				}
 				Attribute geburtdatum {
 					type = Date
@@ -25,53 +25,45 @@ eJSLModel "AgendaModel"
 		Entity Raum{
 			attributes {
 				Attribute identification {
-					type = Textfield Not Null Unique attribute with ID
+					type = Short_Text Not Null Unique attribute with ID
 				}
 				Attribute gebaeude {
-					type = Textfield
+					type = Short_Text
 				}
 				Attribute adresse {
-					type = Textfield
+					type = Short_Text
 				}
 			}
 		}
 		Entity Conference {
 			attributes {
 				Attribute titel {
-					type = Textfield Not Null Unique attribute with ID
+					type = Short_Text Not Null Unique attribute with ID
 				}
 				Attribute date {
 					type = Time Not Null 
 				}
 				Attribute raum {
-					type = Textfield Not Null 
+					type = Short_Text Not Null 
 				}
-				Attribute raumid{
-					type = Integer Not Null
-				}
+				
 				Attribute referent {
-					type = Textfield Not Null
+					type = Short_Text Not Null
 				}
-				Attribute referentid {
-					type =  Integer 
-				}
+				
 				Attribute ^description{
-					type = Textarea
+					type = Text
 				}
 			}
 			references{
 				Reference {
-					EntityAttribute =  raum *Entity = Raum *EntityReference = ID Raum.identification lower = 1 upper = -1
+					EntityAttribute =  raum *Entity = Raum *EntityReference =  Raum.identification lower = 1 upper = 1
 				}
+				
 				Reference {
-					EntityAttribute = raumid *Entity = Raum *EntityReference = ID lower = 1 upper = -1
+					EntityAttribute = referent *Entity = Referent *EntityReference = Referent.name lower = 1 upper = 1
 				}
-				Reference {
-					EntityAttribute = referent *Entity = Referent *EntityReference = Referent.name lower = 1 upper = -1
-				}
-				Reference {
-					EntityAttribute = referentid *Entity = Referent *EntityReference = ID lower = 1 upper = -1
-				}
+				
 				
 			}
 			
@@ -83,7 +75,7 @@ eJSLModel "AgendaModel"
 			*Entities Referent
 			pageactions {
 				PageAction new {
-					type = Button
+					type = NEW
 					position = top
 				}
 			}
@@ -109,7 +101,7 @@ eJSLModel "AgendaModel"
 			pageactions {
 				PageAction new
 				{
-					type = Button
+					type = NEW
 					position = top
 				}
 			}
@@ -132,19 +124,27 @@ eJSLModel "AgendaModel"
 		DetailsPage Referentedit {
 			*Entities Referent
 			editFields {
-				Referent.name : Text_Field 
-				Referent.vorname : Text_Field
-				Referent.geburtdatum : Datepicker
-				Referent.herkunftland : Text_Field
+				Referent.name {
+						type =  Text_Field 
+						},
+				Referent.vorname {
+						type =  Text_Field 
+						},
+				Referent.geburtdatum {
+						type =  Datepicker 
+						},
+				Referent.herkunftland {
+						type =  Text_Field 
+						}
 			}
 			localparameters {
 				Parameter referentList {
-					type = "Button"
+					type = Button
 				}
 			}
 			pageactions{
 				PageAction referentList{
-					type = Button
+					type = INDIVIDUAL
 					position = top
 				}
 			}
@@ -159,11 +159,11 @@ eJSLModel "AgendaModel"
 			*Entities Referent
 			pageactions {
 				PageAction referentlist {
-					type = Button
+					type = INDIVIDUAL
 					position = top
 				}
 				PageAction referentedit {
-					type = Button
+					type = EDIT
 					position = top
 				}
 			}
@@ -211,14 +211,20 @@ eJSLModel "AgendaModel"
 		DetailsPage Raumedit {
 			*Entities Raum
 			editFields {
-				Raum.identification : Text_Field
-				Raum.gebaeude : Text_Field
-				Raum.adresse : Text_Field
+				Raum.identification {
+						type =  Text_Field 
+						},
+				Raum.gebaeude {
+						type =  Text_Field 
+						},
+				Raum.adresse {
+						type =  Text_Field 
+						}
 			}
 			
 			pageactions {
 			PageAction raumlist {
-					type = Button
+					type = INDIVIDUAL
 					position = top
 				}
 				}
@@ -233,11 +239,11 @@ eJSLModel "AgendaModel"
 			*Entities Raum
 			pageactions{
 					PageAction raumlist {
-					type = Button
+					type = INDIVIDUAL
 					position = top
 				}
 				PageAction raumedit {
-					type = Button
+					type = EDIT
 					position = top
 				}
 				
@@ -269,7 +275,7 @@ eJSLModel "AgendaModel"
 				InternalcontextLink Detailsraum{
 					target = Raumdetail linked attribute = Conference.raum linkparameters{
 						Parameter raumname = *Attribute  "Conference.raum"
-						Parameter id = *Attribute "Conference.raumid"
+						
 						
 					}
 				}
@@ -309,16 +315,25 @@ eJSLModel "AgendaModel"
 		DetailsPage Conferenceedit {
 			*Entities Conference
 			editFields {
-				Conference.titel : Text_Field
-				Conference.date : Datepicker
-				Conference.raum : Text_Field
-				Conference.referent : Text_Field
-				Conference.^description : Editor
-				
+				Conference.titel {
+						type =  Text_Field 
+						},
+				Conference.date {
+						type =  Datepicker 
+						},
+				Conference.raum {
+						type =  Text_Field 
+						},
+				Conference.referent {
+						type =  Text_Field 
+						},
+				Conference.^description {
+						type =  Editor 
+						}
 			}
 			pageactions {
 				PageAction conferencelist{
-					type = Button position = top
+					type = INDIVIDUAL position = top
 				}
 			}
 			links {
@@ -333,11 +348,11 @@ eJSLModel "AgendaModel"
 			
 			pageactions {
 				PageAction conferencelist {
-					type = Button position = top
+					type = INDIVIDUAL position = top
 					
 				}
 				PageAction conferenceedit{
-					type = Button position = top
+					type = EDIT position = top
 				}
 			}
 			table columns = Conference.titel , Conference.date , Conference.raum , Conference.referent, Conference.^description
@@ -360,15 +375,22 @@ eJSLModel "AgendaModel"
 				authors {
 					Author "Dieudonne Timma"
 					{
-						authoremail = "dieudonnetimma@yahoo.fsr"
-						authorurl = "http://www.goosgslse.crom"
+						authoremail = "dieudonnetimma@yahoo.fr"
+						authorurl = "http://www.goosgle.com"
 					}	
 				}
 				copyright = "GNU 3"
 				version = "1"
-				description = "This she  versions of h worlds"
+				description = "This is the best versions of the worlds"
 				
-			}
+			}languages {
+					Language de-DE{
+						
+					}
+					Language en-GB{
+						
+					}
+				}
 			sections {
 				Backend section {
 					*Pages {

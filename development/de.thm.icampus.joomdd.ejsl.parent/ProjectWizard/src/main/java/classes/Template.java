@@ -1,9 +1,8 @@
 package classes;
 
-import java.io.File;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.File;
 
 //Namespace from XSD
 @XmlType(namespace="http://www.example.org/TemplateList")

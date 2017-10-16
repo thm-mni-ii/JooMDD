@@ -110,12 +110,23 @@ eJSLModel "Brueckenkurs"{
 				*Entities Teilnehemer
 				
 				editFields { 
-					Teilnehemer.name : Text_Field 
-					Teilnehemer.vorname : Text_Field 
-					Teilnehemer.kursgruppe : Text_Field
-					Teilnehemer.geburtsdatum : Text_Field
-					Teilnehemer.adresse : Text_Field
-					Teilnehemer.kursgruppe: Text_Field
+					Teilnehemer.name {
+						type =  Text_Field },
+					Teilnehemer.vorname {
+						type =  Text_Field 
+						},
+					Teilnehemer.kursgruppe {
+						type =  Text_Field 
+						},
+					Teilnehemer.geburtsdatum {
+						type =  Text_Field 
+						},
+					Teilnehemer.adresse {
+						type =  Text_Field 
+						},
+					Teilnehemer.kursgruppe{
+						type =  Text_Field 
+						}
 				}
 				pageactions {     
 					PageAction zurueck {
@@ -146,9 +157,15 @@ eJSLModel "Brueckenkurs"{
 				*Entities Kurs
 				
 				editFields {
-					Kurs.titel : Text_Field 
-					Kurs.creditpoint : Integer
-					Kurs.kurzfassung : Editor
+					Kurs.titel {
+						type =  Text_Field 
+						},
+					Kurs.creditpoint {
+						type =  Integer 
+						},
+					Kurs.kurzfassung {
+						type =  Editor 
+						}
 				}
 				
 				pageactions {
@@ -185,11 +202,22 @@ eJSLModel "Brueckenkurs"{
 				*Entities Tutor
 				
 				editFields {
-					Tutor.name : Text_Field
-					Tutor.vorname : Text_Field
-					Tutor.kurs : Text_Field
-					Tutor.geburtsdatum : Datepicker
-					Tutor.geschlecht : Select Options (Key Keins = "keins" , Key maennlich = "mann" , Key weiblich = "weiblich" )
+					Tutor.name {
+						type =  Text_Field 
+						},
+					Tutor.vorname {
+						type =  Text_Field 
+						},
+					Tutor.kurs {
+						type =  Text_Field 
+						},
+					Tutor.geburtsdatum {
+						type =  Text_Field 
+						},
+					Tutor.geschlecht{
+						type =  Select 
+						values { Key Keins = "keins" , Key maennlich = "mann" , Key weiblich = "weiblich"}
+						} 
 				}
 				
 				pageactions {
@@ -227,11 +255,24 @@ eJSLModel "Brueckenkurs"{
 				*Entities Kurstermin
 				
 				editFields {
-					Kurstermin.Gruppename : Text_Field
-					Kurstermin.kurs : Text_Field
-					Kurstermin.Raum : Text_Field
-					Kurstermin.date : Datepicker
-					Kurstermin.tag : Text_Field
+					Kurstermin.Gruppename {
+						type = Text_Field
+						},
+					Kurstermin.kurs {
+						type =  Text_Field 
+						},
+					Kurstermin.Raum {
+						type =  Text_Field 
+						},
+					Kurstermin.date{
+						type =  Datepicker 
+						},
+					Kurstermin.tag {
+						type =  Text_Field 
+						field attributes {
+							Key format = "'%a %d %b %Y"
+						}
+						}
 				}
 				pageactions {
 					PageAction zurueck {
@@ -262,7 +303,7 @@ eJSLModel "Brueckenkurs"{
 					Language de-DE{
 						
 					}
-					Language en-EN{
+					Language en-GB{
 						
 					}
 				}
