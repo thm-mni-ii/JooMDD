@@ -147,7 +147,7 @@ public class Slug  {
 			 	result="hidden"
 			 }
 			 default : {
-			 	result = type
+			 	result = '''type="«type»"'''
 			 }
 		}
 		return result

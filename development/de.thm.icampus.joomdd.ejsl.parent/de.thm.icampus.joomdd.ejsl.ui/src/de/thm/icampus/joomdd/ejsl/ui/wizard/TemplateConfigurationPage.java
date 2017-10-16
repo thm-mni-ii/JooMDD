@@ -42,10 +42,10 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
 		
-		createArtefactsOptions(container);
-		createGeneratorOptions(container);
+		//createArtefactsOptions(container);
+		//createGeneratorOptions(container);
 		createFilebrowser(container);
-		createTestConfiguration(container);
+		//createTestConfiguration(container);
 		
 		setControl(container);
 		setPageComplete(true);
@@ -203,12 +203,12 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		
 		 listKonfig = new Properties();
 		
-		listKonfig.setProperty("page",checkPage.getEnabled()+"");
+		/**listKonfig.setProperty("page",checkPage.getEnabled()+"");
 		listKonfig.setProperty("entities",checkEntities.getEnabled() + "");
 		listKonfig.setProperty("test", checkTest.getEnabled() + "");
 		listKonfig.setProperty("updateFolder",checkUpdateFolder.getEnabled()+"");
 		listKonfig.setProperty("joomla","true");
-		listKonfig.setProperty("wordpress","false");
+		listKonfig.setProperty("wordpress","false");*/
 		if( src_path.equalsIgnoreCase("./src-gen")){
 		listKonfig.setProperty("outputFolder", src_gen.getAbsolutePath());
 		src_path = src_gen.getAbsolutePath();
@@ -217,7 +217,7 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 			listKonfig.setProperty("outputFolder", src_path.replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
 			src_path = generatorPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\"));
 		}
-		
+		/**
 		listKonfig.setProperty("serverUrl",hostconfig.getText());
 		listKonfig.setProperty("portconfig",portconfig.getText());
 		 if(rootPath.getText().contains("\\")){
@@ -232,7 +232,7 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		if(checkie.getEnabled())
 			listKonfig.setProperty("browser","ie");
 		if(checkFirefox.getEnabled())
-			listKonfig.setProperty("browser","firerfox");
+			listKonfig.setProperty("browser","firerfox");*/
 		
 		
 		try {

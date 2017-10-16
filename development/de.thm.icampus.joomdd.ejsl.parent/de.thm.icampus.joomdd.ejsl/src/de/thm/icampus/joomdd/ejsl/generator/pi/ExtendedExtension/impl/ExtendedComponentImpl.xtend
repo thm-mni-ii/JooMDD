@@ -35,6 +35,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	EList<ExtendedPage> allExtendedPage
 	EList <ExtendedDynamicPage> allDynamicPage
 	String extensionName 
+	boolean hasFileOrImageLoader = false;
 	new(Component comp){
 		instance = comp
 		this.name = PlattformUtil.slugify(comp.name)
@@ -101,6 +102,10 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 		 allDynamicPage.addAll((allExtendedPage.filter[t | t.extendedDynamicPageInstance != null]).map[ t | new ExtendedDynamicPageImpl(t.intance as DynamicPage)])
 //		 if(instance.eContainer != null)
 //		 initPagesForMappingsEntity()
+      if( allDynamicPage.filter[t | t != null && t.detailsPage && t.haveFiletoLoad] .size >0 ){
+      	hasFileOrImageLoader = true;
+      }
+					
        	
 	}
 	
@@ -160,6 +165,9 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	
 	override extensionName() {
 		return extensionName.toLowerCase
+	}
+	override hasFileToload(){
+		return hasFileOrImageLoader;
 	}
 	
 }

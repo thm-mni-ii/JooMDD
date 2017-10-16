@@ -118,7 +118,7 @@ class IndexPageTemplateAdminHelper {
 	        $query = $db->getQuery(true);
 	
 	        // Select the required fields from the table.
-	        $query->select(
+	        $query->select("distinct " .
 	                $this->getState(
 	                        'list.select', '«indexpage.entities.get(0).name.toLowerCase».*'
 	                )

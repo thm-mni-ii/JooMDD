@@ -15,6 +15,7 @@ interface ExtendedComponent extends Component {
 	def EList<ExtendedPage>getAllExtendedPage()
 	def Component getInstance()
 	def String extensionName()
+	def boolean hasFileToload()
 	
 	
 }

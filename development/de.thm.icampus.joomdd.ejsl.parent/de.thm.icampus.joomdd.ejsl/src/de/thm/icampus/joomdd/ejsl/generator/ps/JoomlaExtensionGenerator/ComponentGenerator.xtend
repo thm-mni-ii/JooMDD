@@ -657,6 +657,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		<?xml version="1.0" encoding="utf-8"?>
 		<config>
 			<fieldset name="component" label="«name.toUpperCase»_LABEL" description="«name.toUpperCase»_DESC">
+			«IF  component.hasFileToload»
 			<field
 				name="upload_maxsize"
 				type="text"
@@ -688,9 +689,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_LABEL"
 				description="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_DESC" />
 			«ENDFOR»
-			
+			«ENDIF»
 			</fieldset>
-			
+		
 			«FOR g : component.extendedParameterGroupList»
 	<fieldset name="«g.name.toLowerCase»" label="«g.name.toUpperCase»_LABEL" description="«g.name.toUpperCase»_DESC">
 				«FOR p:g.extendedParameterList»

@@ -1,6 +1,7 @@
 package de.thm.icampus.joomdd.ejsl.ui.wizard;
 
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -122,13 +123,14 @@ public class TemplateSelectionPage extends WizardPage implements SelectionListen
 			return returnString + ".eJSL";
 	}
 	
-	public InputStream getSelectedTemplate(){
+	public File getSelectedTemplate(){
 		if(buttons != null){
 			for (int i = 0; i < buttons.length; i++) {
 				if(buttons[i].getSelection()){
+					String t = templateDirectory.getPath()+ templates[i].getSrc().toString();
 					try {
-						return new URL(templateDirectory, templates[i].getSrc().toString()).openStream();
-					} catch (IOException e) {
+						return new File(t);
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}

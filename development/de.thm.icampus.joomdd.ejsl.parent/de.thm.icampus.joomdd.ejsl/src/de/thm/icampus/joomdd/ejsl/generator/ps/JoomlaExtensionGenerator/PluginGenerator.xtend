@@ -43,18 +43,20 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	 */
 	override generate() 
 	{
-		generateJoomlaDirectory("")
-		generateFile(plugin.name + ".xml", plugin.xmlContent)
-		generateFile(plugin.name + ".php", plugin.phpContent)
+		generateJoomlaDirectory(path)
+		generateFile(path+plugin.name + ".xml", plugin.xmlContent)
+		generateFile(path +plugin.name + ".php", plugin.phpContent)
 		
 		if (plugin.languages.size > 0) {
 		
-		generateJoomlaDirectory("language")
+		generateJoomlaDirectory(path+"language")
 		
 			for (lang : plugin.languages) {
-				generateJoomlaDirectory("language/" + lang.name)
-				generateFile("language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".ini", lang.iniContent)
-				generateFile("language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".sys.ini", lang.iniContent)
+				generateJoomlaDirectory(path+"language/" + lang.name)
+				if(!lang.sys)
+				generateFile(path+"language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".ini", lang.iniContent)
+				else
+				generateFile(path+"language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".sys.ini", lang.iniContent)
 			}
 		}
 		return ""
@@ -882,8 +884,11 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 
 		<languages folder="language">
 			«FOR lang:plugin.languages»
+			«IF !lang.sys»
 				<language tag="«lang.name»">«lang.name».«plugin.name».ini</language>
+				«ELSE»
 				<language tag="«lang.name»">«lang.name».plg_«plugin.type»_«plugin.name».sys.ini</language>
+				«ENDIF»
 			«ENDFOR»
 		</languages>
 	

@@ -74,6 +74,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 		EList<ExtendedPageReference> pagerefList) {
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LABEL",com.name.toFirstUpper))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DESC",com.manifest.description))
+		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_UPDATE_TEXT","The update is succesfull"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase,com.name.toFirstUpper))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_HOME","Home"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_ID","ID"))

@@ -95,7 +95,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		
-		JLabel lblArtefact = new JLabel("Artefact:");
+		/**JLabel lblArtefact = new JLabel("Artefact:");
 		lblArtefact.setHorizontalAlignment(SwingConstants.CENTER);
 		//lblArtefact.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		frame.getContentPane().add(lblArtefact);
@@ -142,7 +142,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(workpress);
 		
 		JLabel label_3 = new JLabel("");
-		frame.getContentPane().add(label_3);
+		frame.getContentPane().add(label_3);*/
 		
 		JLabel lblNewLabel_2 = new JLabel("Destination:");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -173,7 +173,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		frame.getContentPane().add(lblNewLabel_32);
 		
 		
-		JLabel lblTestsFramework = new JLabel("Tests Framework:");
+		/**JLabel lblTestsFramework = new JLabel("Tests Framework:");
 		lblTestsFramework.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(lblTestsFramework);
 		phpunit= new JRadioButton("PHPUnit");
@@ -345,7 +345,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		
 		 ie = new JRadioButton("Internet Explorer");
 		 ie.addActionListener(this);
-		frame.getContentPane().add(ie);
+		frame.getContentPane().add(ie);*/
 		
 		JLabel label = new JLabel("");
 		frame.getContentPane().add(label);
@@ -428,15 +428,15 @@ public class ConfigGUI extends JFrame implements ActionListener {
 	}
 
 	private void saveListConfig() {
-		configList.setProperty("pages", pages.isSelected()+"");
+		//configList.setProperty("pages", pages.isSelected()+"");
 	
-		configList.setProperty("entities", entites.isSelected()+"");
+		//configList.setProperty("entities", entites.isSelected()+"");
 	
-		configList.setProperty("tests", test.isSelected()+"");
+		//configList.setProperty("tests", test.isSelected()+"");
 	
-		configList.setProperty("updtadefolder", generateUpdate.isSelected()+"");
+		//configList.setProperty("updtadefolder", generateUpdate.isSelected()+"");
 	
-		configList.setProperty("joomla", joomla.isSelected()+"");
+		/**configList.setProperty("joomla", joomla.isSelected()+"");
 	
 		configList.setProperty("workpress", workpress.isSelected()+"");
 		 if(phpunit.isSelected())
@@ -454,6 +454,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 		configList.setProperty("serverpath", rootPath.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
 	    }else{
 	    configList.setProperty("serverpath", rootPath.getText());	}
+	    */
 	    
 	    if(outputFolder.getText().contains("\\")){
 		configList.setProperty("outputFolder", outputFolder.getText().replaceAll(Pattern.quote("\\"), Matcher.quoteReplacement("\\\\")));
@@ -461,7 +462,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 	    configList.setProperty("outputFolder", outputFolder.getText());	}
 
 	
-		configList.setProperty("port", port.getText());
+		/**configList.setProperty("port", port.getText());
 	    if(ie.isEnabled())
 		configList.setProperty("browser", "ie");
 	    if(chrome.isEnabled())
@@ -471,7 +472,7 @@ public class ConfigGUI extends JFrame implements ActionListener {
 	    if(phpunit.isEnabled())
 	    	configList.setProperty("framework", "phpunit");
 	    if(codeception.isEnabled())
-	    	configList.setProperty("framework", "codeception");
+	    	configList.setProperty("framework", "codeception");*/
 		
 		
 		

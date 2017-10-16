@@ -17,6 +17,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator.FieldsGenerator
 
 /**
  * <!-- begin-user-doc -->
@@ -421,9 +422,9 @@ override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedCompon
    	 		«kvpair.name» = "«kvpair.value»"
    	 		«ENDFOR»
    	 		/> 
-   	 		
-   	 		
    	 		''');
+   	 		
+   	 		
    	 	}
    	 }
    	 
@@ -445,7 +446,7 @@ override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedCompon
    		
    			for(ExtendedReference ref: en.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("1")]){
    			if(ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)){
-   				buff.append('''type ="«en.name + "to" +ref.entity.name»"''')
+   				buff.append('''type="«en.name + "to" +ref.entity.name»"''')
    				return buff.toString
    			}
    		}
@@ -456,7 +457,7 @@ override  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedCompon
    						
    		}
    	
-   		buff.append('''type ="hidden"''')
+   		buff.append('''type="hidden"''')
    		return buff.toString.toLowerCase;
    	}
 	

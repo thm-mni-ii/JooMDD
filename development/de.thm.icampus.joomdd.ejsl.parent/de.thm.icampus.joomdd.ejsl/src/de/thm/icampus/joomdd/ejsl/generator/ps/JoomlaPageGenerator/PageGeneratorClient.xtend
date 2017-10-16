@@ -119,7 +119,7 @@ public class PageGeneratorClient {
 				var DatatypeReference  type = field.htmltype as DatatypeReference
 				if(!joomlafields.contains(type.type.type.toLowerCase) ) {
 					var FieldsGenerator gen = new FieldsGenerator(field,com)
-					fsa.generateFile(fieldsPath+ "/" + type.type.type.toLowerCase, gen.genEmptyField)
+					fsa.generateFile(fieldsPath+ "/" + type.type.type.toLowerCase+".php", gen.genEmptyField)
 				}
 			}
 		}

@@ -140,8 +140,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			<!-- All language files shipped with the modul -->
 			<languages>
 				«FOR lang : module.languages»
+				«IF lang.sys == false»
 				<language tag="«lang.name»">language/«lang.name»/«lang.name».«name».ini</language>
+				«ELSE»
 				<language tag="«lang.name»">language/«lang.name»/«lang.name».«name».sys.ini</language>
+				«ENDIF»
 				«ENDFOR»
 			</languages>
 			<!-- Optional parameters -->

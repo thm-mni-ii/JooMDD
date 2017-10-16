@@ -51,10 +51,11 @@ class JoomlaEntityClient extends AbstractExtensionGenerator {
 				}
 		}
 		generateFile(path + "models/fields/" + comp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(comp) )
+		if(comp.hasFileToload){
 		var fileloader = new FieldsFileloaderGenerator(comp)
 		generateFile(path + "models/fields/" + "fileloader.php",  fileloader.generateFileloader)
 		generateFile(path + "models/fields/" + "imageloader.php", fileloader.generateImageloader )
-	
+		}
 		
 	}
 	private def generateTable(ExtendedComponent comp, String path){
