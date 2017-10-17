@@ -1,5 +1,3 @@
-/**
- */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
@@ -8,7 +6,6 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Module
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.LinkGeneratorClient
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.LanguageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
@@ -55,7 +52,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		this.path = path
 	}
 	
-	def void formatName(Module module){
+	def void formatName(Module module) {
 		module.name = Slug.slugify(module.name)
 	}
 
@@ -68,30 +65,21 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	}
 
 	override generate() {
-		generateJoomlaDirectory(path+"")
-		println("module path " + path)
+		generateJoomlaDirectory(path + "")
 		generateFile(path + "index" + ".html", this.extMod.IndexContent)
 		generateFile(path + name + ".xml", this.extMod.xmlContent)
-		generateFile(path+name + ".php", this.extMod.phpContent)
-		generateFile(path+"helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage	))
-		
-		
+		generateFile(path + name + ".php", this.extMod.phpContent)
+		generateFile(path + "helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage))
 		generateJoomlaDirectory(path+"tmpl")
-		generateFile(path+ "tmpl/default.php", defaultTemplate())
-		generateFile(path+"tmpl/index.html", this.extMod.IndexContent)
+		generateFile(path + "tmpl/default.php", defaultTemplate())
+		generateFile(path +"tmpl/index.html", this.extMod.IndexContent)
 		
 		var LanguageGenerator lang = new LanguageGenerator(fsa)
 		lang.genModuletLanguage(extMod, path)
-         
+       
 		return ''
 	}
-	
-	
-	
-	
- 
-
-	
+		
 	def CharSequence xmlContent(ExtendedModule module) {
 		'''
 		<?xml version="1.0" encoding="utf-8"?>
@@ -323,15 +311,13 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		if(extMod.pageRef.sect == null || extMod.pageRef.pagescr == null)
 		return "$" + result;
 		
-		for(Link lk: listLink){
-			if(lk != null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)){				
-			   return '''JHtml::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
-			   
-			   }
+		for(Link lk: listLink) {
+            if(lk != null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {				
+                return '''JHtml::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
+            }
 		}
 		return "$" + result;
 	}
-	
 	
 	def CharSequence helperPHP(Module modul, DynamicPage mpage) {
 		'''
@@ -383,24 +369,22 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		}
 	
 	'''
-	
-		def ComponentInformation (ExtendedModule modul) {
-			if( modul.pageRef.pagescr != null){
-			var String section =  modul.extendedPageReference.extendedPage.name
+    def ComponentInformation (ExtendedModule modul) {
+        if( modul.pageRef.pagescr != null) {
+            var String section =  modul.extendedPageReference.extendedPage.name
             var String compName =  modul.extendedComponentName
-    						if(section.equalsIgnoreCase('backend')){
-			    				modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"    		   					
-    		   				} else{
-			    				modelPath = "'/components/com_" + compName.toLowerCase + "/models'"    		   					
-    		   				}
-			    			modelOfComponent = ("\"" + compName.toFirstUpper + "\"")
-			    			modelOfComponent2 = ("\"" +compName.toFirstUpper + "Model\"")
-			    		
-			    	}		
-    		}	
+            if(section.equalsIgnoreCase('backend')) {
+                modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"    		   					
+            } else {
+                modelPath = "'/components/com_" + compName.toLowerCase + "/models'"    		   					
+            }
+            modelOfComponent = ("\"" + compName.toFirstUpper + "\"")
+            modelOfComponent2 = ("\"" +compName.toFirstUpper + "Model\"")
+        }		
+    }	
 
-	
-		def CharSequence IndexContent(Module modul) {
+	// Todo: Is this neccessary?
+    def CharSequence IndexContent(Module modul) {
 		'''
 	<html>
 		<head>
@@ -463,8 +447,4 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			 return $items;
 			}	
 	'''
-	
-		
-	
-
-} // ModuleGenerator
+} 

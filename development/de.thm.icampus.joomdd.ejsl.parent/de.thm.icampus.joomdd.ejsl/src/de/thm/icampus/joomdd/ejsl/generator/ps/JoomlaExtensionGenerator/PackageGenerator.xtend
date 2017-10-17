@@ -1,5 +1,3 @@
-/**
- */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
@@ -16,7 +14,6 @@ import java.io.IOException
 import java.util.Calendar
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
-import org.eclipse.xtend.lib.Property
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensionPackage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensions
@@ -24,71 +21,64 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensi
 public class PackageGenerator extends AbstractExtensionGenerator {
 	
 	private ExtensionGeneratorClient extClient
-	@Property ExtendedExtensionPackage pkg
+	ExtendedExtensionPackage pkg
 	String rootPath
+	
 	new(ExtendedExtensionPackage pkg, IFileSystemAccess2 access, String path,String rootPath) {
 		this.pkg = pkg
 		this.fsa = access
 		this.name = "pkg_" + Slug.slugify(pkg.name)
 		this.path = path
 		this.rootPath = rootPath
-		
-		
 	}
 	
 	override generate() {
-		
 		// Manifest
 		generateFile(path + this.name + ".xml", pkg.xmlContent)
 		generateJoomlaDirectory(path + "packages")
 		
         // Generate extensions
         for (ext : this.pkg.extensions) {
-        	this.extClient = new ExtensionGeneratorClient(fsa, ext, path + "packages/tocompress/", rootPath)
+        	this.extClient = new ExtensionGeneratorClient(fsa, 
+        	    ext, 
+        	    path + "packages/tocompress/", 
+        	    rootPath
+        	)
 			this.extClient.generateExtension
         }
-         var success = compressExtensions(rootPath + "/" +path + "packages/tocompress/" , rootPath + "/"+ path + "packages/")
-         if(success){
-
-         	Slug.deleteFolder(rootPath + "/" +path + "packages/tocompress")
-         }
-         
-        
-        
+        var success = compressExtensions(rootPath + "/" +path + "packages/tocompress/", 
+            rootPath + "/"+ path + "packages/"
+        )
+        if(success) {
+           	Slug.deleteFolder(rootPath + "/" +path + "packages/tocompress")
+        }
         return ''
 	}
 	
 	def boolean compressExtensions( String fromSrc, String toSrc) {
-		
         val byte[] buffer = newByteArrayOfSize(1024)
         for ( ExtendedExtensions ext: pkg.extendedExtensions) {
-         
-           	try{
-           	var File f = null
-           	switch(ext.instance){
-       		 Component :{ f = new File (fromSrc + ext.extensionName+ "/new/"+ext.extensionName)
-       		 	
-       		 } 
-       		 
-       		 default:{
-       		 	 f = new File (fromSrc + ext.extensionName)
-       		 }
-           	}
-            var String  zipFilepath =   toSrc + f.name + ".zip";
-            println(zipFilepath)
-            var FileOutputStream fileOut = new FileOutputStream(zipFilepath)
-            var ZipOutputStream zipOut = new ZipOutputStream(fileOut)
-            	scanDirectorie(zipOut,buffer,f.getPath(),"" )
-            	 zipOut.close();
-            	 
+           	try {
+           	    var File f = null
+           	    switch(ext.instance) {
+                    Component: {
+                        f = new File (fromSrc + ext.extensionName+ "/new/"+ext.extensionName)
+                    } 
+                    default: {
+                        f = new File (fromSrc + ext.extensionName)
+                    }
+                }
+                var String  zipFilepath = toSrc + f.name + ".zip";
+                var FileOutputStream fileOut = new FileOutputStream(zipFilepath)
+                var ZipOutputStream zipOut = new ZipOutputStream(fileOut)
+                scanDirectorie(zipOut,buffer,f.getPath(),"")
+                zipOut.close()
             } catch (IOException ioe) {
-
-		        System.out.println("Error creating zip file" + ioe);
-		        }
-        
+                System.out.println("Error creating zip file" + ioe);
+            }
         }
+ 
         return true
-       
 	}
 	
 	def CharSequence xmlContent(ExtensionPackage pkg) '''
@@ -134,50 +124,41 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 				</files>
 			</extension>
 	'''
-	public def void scanDirectorie(ZipOutputStream zos, byte[]buffer, String  src, String path){
-		 var File dir = new File(src);
-
-	       var  File[] files = dir.listFiles();
-           
-	        for (File f : files) {
-	           if(! f.isDirectory()){
-	           	if(path.isEmpty){
-	           		 putFile(zos, f, buffer, "");
-	           	}else{
+	
+	public def void scanDirectorie(ZipOutputStream zos, byte[]buffer, String  src, String path) {
+        var File dir = new File(src);
+        var  File[] files = dir.listFiles();
+        
+        for (File f : files) {
+            if (! f.isDirectory()) {
+                if(path.isEmpty) {
+                    putFile(zos, f, buffer, "");
+	           	} else {
 	           		putFile(zos, f, buffer,path);
-	          
 	           	}
-	            }else{
-	            		if(path.isEmpty){
-	            		    scanDirectorie(zos,buffer,f.getPath(),f.getName() +"/" );
-	            			
-	            			}
-	            		else{	            	
-	            			
-	            			scanDirectorie(zos,buffer,f.getPath(),path+f.getName() +"/" );}
-	            		
-	            }
-	        }
+            } else {
+                if(path.isEmpty) {
+                    scanDirectorie(zos,buffer,f.getPath(),f.getName() +"/" );
+                } else {	            	
+                    scanDirectorie(zos,buffer,f.getPath(),path+f.getName() +"/" );
+                }	
+            }
+        }
 	}
-	public def void putFile( ZipOutputStream zos, File file,byte[] buffer, String root){
-		try{
-		 var FileInputStream fis = new FileInputStream(file);
-         // begin writing a new ZIP entry, positions the stream to the start of the entry data
-         zos.putNextEntry(new ZipEntry( root + file.getName()));
-	       var  int length;
-         while ((length = fis.read(buffer)) > 0) {
-             zos.write(buffer, 0, length);
-         }
-         zos.closeEntry();
-         // close the InputStream
-
-         fis.close();
-		}catch (IOException ioe) {
-
-	        System.out.println("Error creating zip file" + ioe);
-
-	    }
+	
+	public def void putFile( ZipOutputStream zos, File file,byte[] buffer, String root) {
+        try {
+            var FileInputStream fis = new FileInputStream(file);
+            // begin writing a new ZIP entry, positions the stream to the start of the entry data
+            zos.putNextEntry(new ZipEntry( root + file.getName()));
+            var  int length;
+            while ((length = fis.read(buffer)) > 0) {
+                zos.write(buffer, 0, length);
+            }
+            zos.closeEntry();
+            fis.close();
+        } catch (IOException ioe) {
+            System.out.println("Error creating zip file" + ioe);
+        }
 	}
-
-
-} // PackageGenerator
+}

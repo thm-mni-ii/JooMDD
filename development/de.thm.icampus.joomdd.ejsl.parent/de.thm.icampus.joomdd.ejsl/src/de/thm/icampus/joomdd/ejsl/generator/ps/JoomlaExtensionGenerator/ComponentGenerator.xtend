@@ -1,5 +1,3 @@
-/**
- */
 package de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator;
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
@@ -19,25 +17,22 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
 import java.util.LinkedList
 
 /**
- * This class contains the Template to generate the Folders and Files for a component.
+ * This class contains the templates to generate the necessary folders and files for a component.
  * 
- * @author Dieudonne Timma
+ * @author Dieudonne Timma, Dennis Priefer
  */
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
 	private String slug
-	private ExtendedComponent extendeComp
+	private ExtendedComponent extendedComp
 	private String class_name
 	private String updatePath
 	private  String sitePath 
 	private  String adminPath
 	private String mediaPath 
-	
-	
-	
-    
+ 
     /**
-     * this Constructor initial  all the parameters to generate a component
+     * this Constructor collects the initial parameters to generate a component
      * Format the name of the extension
      * 
      * @param ExtendedComponent   component     contains the instance of a component
@@ -46,49 +41,46 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      * @param String              updatePath	contains the path for the update folder
      * 		
      */
-	new(ExtendedComponent component, IFileSystemAccess2 fsa, String path, String updatePath) {
+	new (ExtendedComponent component, IFileSystemAccess2 fsa, String path, String updatePath) {
 		this.fsa = fsa;
 		this.slug = component.name
 		this.noPrefixName = this.slug
 		this.name = "com_" + this.slug
 
-		this.extendeComp = component
+		this.extendedComp = component
 		this.class_name = this.noPrefixName.toFirstUpper
-		this.extendeComp.name = Slug.slugify(extendeComp.name)
+		this.extendedComp.name = Slug.slugify(extendedComp.name)
 		this.path = path
 		this.updatePath = updatePath
-		this.sitePath = path+"components/"+this.extendeComp.extensionName
-		this.adminPath = path+"administrator/components/"+this.extendeComp.extensionName
-		this.mediaPath =  path+"media/"+ extendeComp.extensionName
+		this.sitePath = path+"components/"+this.extendedComp.extensionName
+		this.adminPath = path+"administrator/components/"+this.extendedComp.extensionName
+		this.mediaPath =  path+"media/"+ extendedComp.extensionName
 		
 	}
 	
 	/**
-	 * this methode generate the folder structure of a component and the installation script
+	 * Generates the folder structure and the installation script of a component.
 	 * 
 	 */
 	override generate() {
 		println("component path " +path);
 		generateJoomlaDirectory(path+"")
 
-		
 		var List<ExtendedDynamicPage>  indexPages = new LinkedList<ExtendedDynamicPage>()
-		for(ExtendedPageReference ext : extendeComp.backEndExtendedPagerefence){
-			if(ext.extendedPage.extendedDynamicPageInstance != null)
-			  indexPages.add(ext.extendedPage.extendedDynamicPageInstance)
-			   
+		for(ExtendedPageReference ext : extendedComp.backEndExtendedPagerefence) {
+            if(ext.extendedPage.extendedDynamicPageInstance != null) {
+                indexPages.add(ext.extendedPage.extendedDynamicPageInstance)  
+            }	   
   		}
 
         // Generate the the installation path for a compoenent
-		generateFile(path+ name + ".xml", extendeComp.xmlContent(indexPages))
-		generateFile(path+ "script.php", generateScript(extendeComp, name))
+		generateFile(path+ name + ".xml", extendedComp.xmlContent(indexPages))
+		generateFile(path+ "script.php", generateScript(extendedComp, name))
 
 		// Generate language folders and files
 		var LanguageGenerator langgen = new LanguageGenerator(fsa)
-		langgen.genComponentLanguage(extendeComp,path)
+		langgen.genComponentLanguage(extendedComp,path)
 
-			
-		
 		//Generate media folder
 		generateJoomlaDirectory(mediaPath)
 		generateJoomlaDirectory(mediaPath+"/css")
@@ -96,37 +88,33 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateJoomlaDirectory(mediaPath+"/js")
 		generateFile( mediaPath+"/js/setForeignKeys.js", genScriptForForeignKeys)
 		generateFile( mediaPath+"/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
-		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendeComp)
+		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
 		
 		generateFile( mediaPath+"/js/bootsnip.js", help.genBootsnipJS)
 		generateFile( mediaPath+"/css/bootsnip.css",help.genBootsnipCSS)
 		//Generate images folder
-		for(detailsPages : indexPages.filter[t| t.detailsPage && t.haveFiletoLoad]){
+		for(detailsPages : indexPages.filter[t| t.detailsPage && t.haveFiletoLoad]) {
 			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase)
 			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase+ "/images")
 			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase + "/files")
 		}
-		
-		
 
 		// Generate frontend section 
-		if (extendeComp.frontEndExtendedPagerefence != null) {
+		if (extendedComp.frontEndExtendedPagerefence != null) {
 			generateFrontendSection
 		}
-	   // Generate backend section 
-		if (extendeComp.backEndExtendedPagerefence != null) {
+	    // Generate backend section 
+		if (extendedComp.backEndExtendedPagerefence != null) {
 			generateBackendSection
 		}
-	  
-	   
-	
 		return ""
 	}
 
 	
 	/**
-	 * Generate the manifest file for  a Joomla component for more informations
-	 * see the https://docs.joomla.org/J3.x:Developing_an_MVC_Component/Developing_a_Basic_Component#helloworld.xml
+	 * Generates the manifest file for a Joomla component. 
+	 * For more information see the site: https://docs.joomla.org/J3.x:Developing_an_MVC_Component/
+	 * Developing_a_Basic_Component#helloworld.xml
 	 * 
 	 * @param ExtendedComponent         component	Containt a component
 	 * @param List<ExtendedDynamicPage> dymPages	Containt all ExtendedDynamic of a Component
@@ -180,7 +168,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <schemapath type="mysql">sql/updates/mysql</schemapath>
 		        </schemas>
 		    </update>
-		     <media destination="«name»" folder="media/«extendeComp.extensionName»">
+		     <media destination="«name»" folder="media/«extendedComp.extensionName»">
 		     	    <folder>images</folder>
 					<folder>js</folder>
 					<folder>css</folder>
@@ -193,7 +181,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     
 		    
 		    <!-- Site Main File Copy Section -->
-		    <files folder="components/«extendeComp.extensionName»">
+		    <files folder="components/«extendedComp.extensionName»">
 		        <filename>«noPrefixName».php</filename>
 		        <filename>controller.php</filename>
 		        <!-- Additional Files -->
@@ -206,9 +194,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    <languages>
 		    	«FOR lang : component.languages»
 		    	«IF !lang.sys»
-		    		<language tag="«lang.name»">components/«extendeComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
+		    		<language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
 		    		«ELSE»
-		    		<language tag="«lang.name»">components/«extendeComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+		    		<language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
 		    		«ENDIF»
 		    	«ENDFOR»
 		    </languages>
@@ -225,7 +213,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				«ENDFOR»
 				</submenu>
 				<!-- Administration Main File Copy Section -->
-				<files folder="administrator/components/«extendeComp.extensionName»">
+				<files folder="administrator/components/«extendedComp.extensionName»">
 				    <!-- Admin Main File Copy Section -->
 				    <filename>«noPrefixName».php</filename>
 				    <filename>controller.php</filename>
@@ -248,9 +236,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				<languages >
 				  	«FOR lang : component.languages»
 					  «IF !lang.sys»
-			    		<language tag="«lang.name»">administrator/components/«extendeComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
+			    		<language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
 			    		«ELSE»
-			    		<language tag="«lang.name»">administrator/components/«extendeComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+			    		<language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
 			    		«ENDIF»
 		    	«ENDFOR»
 				</languages>
@@ -258,117 +246,117 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		</extension>
 	'''
     /**
-     * Generate all the Folders and Files for the frontend of the Component.
-     * For that, he use the entity an page generator.
+     * Generates all the folders and files for the frontend of a component.
+     * Uses the entity an page generator.
      * 
      */
 	private def void generateFrontendSection() {
 		// Generate frontend section
-		generateFile( sitePath +"/" + noPrefixName + ".php", extendeComp.phpSiteContent)
-		generateFile( sitePath +"/controller.php", extendeComp.phpSiteControllerContent)
-		generateFile( sitePath +"/router.php", extendeComp.phpSiteRouterContent)
+		generateFile( sitePath +"/" + noPrefixName + ".php", extendedComp.phpSiteContent)
+		generateFile( sitePath +"/controller.php", extendedComp.phpSiteControllerContent)
+		generateFile( sitePath +"/router.php", extendedComp.phpSiteRouterContent)
 		generateJoomlaDirectory(sitePath+"/views")
 		generateJoomlaDirectory(sitePath+"/models")
 		generateJoomlaDirectory(sitePath+"/models/fields")
 		generateJoomlaDirectory(sitePath+"/models/forms")
-
 		generateJoomlaDirectory(sitePath+"/views")
 		generateJoomlaDirectory(sitePath+"/assets")
-		
-
 		generateJoomlaDirectory(sitePath+"/controllers")
-        var EntityGenerator entitygen = new EntityGenerator(extendeComp,sitePath + "/",fsa,false)
-		
-		entitygen.dogenerate()
         
-		
+        var EntityGenerator entitygen = new EntityGenerator(extendedComp,sitePath + "/",fsa,false)
+		entitygen.dogenerate()
+
 		var EList<ExtendedPage> tempPageList = new BasicEList()
 		
-		for (pageref : extendeComp.frontEndExtendedPagerefence) {
+		for (pageref : extendedComp.frontEndExtendedPagerefence) {
            tempPageList.add(pageref.extendedPage)
 		}
-		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,sitePath,"site",false)
+		
+		var PageGenerator pgGen 
+        pgGen = new PageGenerator(extendedComp, tempPageList,fsa,sitePath,"site",false)
 		pgGen.dogenerate
 		generateUpdatePages(tempPageList,"site")
 		
 	}
-	 /**
-     * Generate all the Folders and Files for the frontend of the Component.
-     * For that, he use the entity an page generator.
+	
+    /**
+     * Generates all the folders and files for the frontend of a component.
+     * Uses the entity and page generator.
      * 
      */
 	private def void generateBackendSection() {
-		var List<ExtendedDynamicPage>  indexPages = new LinkedList<ExtendedDynamicPage>()
-		for(ExtendedPageReference ext : extendeComp.backEndExtendedPagerefence){
-			if(ext.extendedPage.extendedDynamicPageInstance != null)
-			  indexPages.add(ext.extendedPage.extendedDynamicPageInstance)
-			   
+        var List<ExtendedDynamicPage> indexPages = new LinkedList<ExtendedDynamicPage>()
+		for(ExtendedPageReference ext: extendedComp.backEndExtendedPagerefence) {
+			if(ext.extendedPage.extendedDynamicPageInstance != null) {
+                indexPages.add(ext.extendedPage.extendedDynamicPageInstance)   
+			}
   		}
+  		// Generate sql folders
 		generateJoomlaDirectory(adminPath)
-		// Generate sql folders
-		generateJoomlaDirectory(adminPath+"/sql")
-		generateJoomlaDirectory(adminPath+"/sql/updates")
-		generateJoomlaDirectory(adminPath+"/sql/updates/mysql")
+		generateJoomlaDirectory(adminPath + "/sql")
+		generateJoomlaDirectory(adminPath + "/sql/updates")
+		generateJoomlaDirectory(adminPath + "/sql/updates/mysql")
 		
-		generateFile(adminPath+"/" + noPrefixName + ".php", extendeComp.phpAdminContent)
-		generateFile( adminPath +"/controller.php", extendeComp.phpAdminControllerContent)
+		generateFile(adminPath+"/" + noPrefixName + ".php", extendedComp.phpAdminContent)
+		generateFile( adminPath + "/controller.php", extendedComp.phpAdminControllerContent)
+		generateFile( adminPath + "/access.xml", extendedComp.xmlAccessContent)
+		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
+		generateJoomlaDirectory(adminPath + "/assets")
+		generateJoomlaDirectory(adminPath + "/views")
 
-		generateFile( adminPath +"/access.xml", extendeComp.xmlAccessContent)
-		generateFile( adminPath +"/config.xml", extendeComp.xmlConfigContent(indexPages))
-		generateJoomlaDirectory(adminPath+"/assets")
-		
-		
-
-		generateJoomlaDirectory(adminPath+"/views")
-		println(slug)
 		var tempSlug = slug + "s"
 		generateJoomlaDirectory(adminPath+"/views/" + tempSlug)
-		generateFile( adminPath +"/views/" + tempSlug + "/view.html.php", extendeComp.phpAdminViewContent)
+		generateFile(adminPath +"/views/" + tempSlug + "/view.html.php", 
+		    extendedComp.phpAdminViewContent
+		)
 		generateJoomlaDirectory(adminPath+"/views/" + tempSlug + "/tmpl")
-		generateFile( adminPath +"/views/" + tempSlug + "/tmpl/default.php", extendeComp.phpAdminTemplateContent)
-
-		generateJoomlaDirectory(adminPath+"/models")
-		generateJoomlaDirectory(adminPath+"/models/fields")
-		generateJoomlaDirectory(adminPath+"/tables")
-
-		generateJoomlaDirectory(adminPath+"/views")
-
-		generateJoomlaDirectory(adminPath+"/controllers")
-		generateJoomlaDirectory(adminPath+"/helpers/")
-		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendeComp)
-		generateFile( adminPath +"/helpers/" + extendeComp.name.toLowerCase + ".php", help.generate)
-
-		var EntityGenerator entitygen  = new EntityGenerator(extendeComp,adminPath + "/",fsa,true)
+		generateFile(adminPath +"/views/" + tempSlug + "/tmpl/default.php", 
+		    extendedComp.phpAdminTemplateContent
+		)
+		generateJoomlaDirectory(adminPath + "/models")
+		generateJoomlaDirectory(adminPath + "/models/fields")
+		generateJoomlaDirectory(adminPath + "/tables")
+		generateJoomlaDirectory(adminPath + "/views")
+		generateJoomlaDirectory(adminPath + "/controllers")
+		generateJoomlaDirectory(adminPath + "/helpers/")
 		
+		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
+		generateFile( adminPath + "/helpers/" + extendedComp.name.toLowerCase + ".php", 
+		    help.generate
+		)
+
+		var EntityGenerator entitygen
+		entitygen = new EntityGenerator(extendedComp, adminPath + "/", fsa, true)
 		entitygen.dogenerate()
 		
-		// commented out old model generation code
-		
 		var EList<ExtendedPage> tempPageList = new BasicEList()
-		
-		for (pageref : extendeComp.backEndExtendedPagerefence) {
+		for (pageref : extendedComp.backEndExtendedPagerefence) {
            tempPageList.add(pageref.extendedPage)
 		}
-		var PageGenerator pgGen = new PageGenerator(extendeComp, tempPageList,fsa,adminPath,"admin",false)
+		
+		var PageGenerator pgGen
+		pgGen = new PageGenerator(extendedComp, tempPageList, fsa, adminPath, "admin", false)
 		pgGen.dogenerate
-		generateUpdatePages(tempPageList,"admin")
+		generateUpdatePages(tempPageList, "admin")
 		
 	}
+	
 	/**
-	 * Generate the update part of the component, this content only the folder, that the component need for a page.
-	 * But the Structur of a page ist different, if page is for the frontent or backend
+	 * Generates the update part of the component, this contains only the folder which is needed
+	 * by the component for a page.
+	 * However, the structure of a page is different, if a page is used for the frontent or backend.
 	 * 
 	 * @param  EList<ExtendedPage> pageRefList  List of the pages
 	 * @param  String 			   section       section of a component(Backend or Frontend)
 	 */
-    public def void generateUpdatePages(EList<ExtendedPage> pageRefList, String section){
-    	
-    	var PageGenerator pgGenUpdate= new PageGenerator(extendeComp, pageRefList,fsa, updatePath,section,true)
-		pgGenUpdate.dogenerate
-	
+    public def void generateUpdatePages (EList<ExtendedPage> pageRefList, String section) {
+    	var PageGenerator pgGenUpdate
+    	pgGenUpdate= new PageGenerator(extendedComp, pageRefList,fsa, updatePath, section,true)
+		pgGenUpdate.dogenerate 
     }
+    
     /**
-     * Containt the Template for entry point for the frontend of a component.
+     * Contains the template for the frontend's entry point of a component.
      * For more information see component_name.php.
      * 
      * @param Component component Containt the instance of a ejsl component
@@ -377,7 +365,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	def CharSequence phpSiteContent(Component component) '''
 		<?php
 	     «Slug.generateFileDoc(component,true)»
-	    
 	    
 	    // import joomla controller library
 	    jimport('joomla.application.component.controller');
@@ -394,7 +381,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	'''
 	
 	/**
-	 * Generate the code for the main controller of a joomla component, see controller.php. 
+	 * Generates the code for the main controller of a Joomla component, see controller.php. 
 	 * 
 	 * @param ExtendedComponent component  containt a intansce of a extended ejsl component
 	 * 
@@ -429,8 +416,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            }
 		    }
 	'''
-	 /**
-     * Containt the Template for entry point for the banckend of a component.
+	
+	/**
+     * Contains the template for the entry point of the backend of a component.
      * For more information see component_name.php.
      * 
      * @param Component component Containt the instance of a ejsl component
@@ -454,8 +442,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		$controller->execute(JFactory::getApplication()->input->get('task'));
 		$controller->redirect();
 	 '''
-	 /**
-     * Containt the Template for the main controller of a component.
+	 
+	/**
+     * Contains the template for the main controller of a component.
      * For more information see controller.php.
      * 
      * @param ExtendedComponent component Containt the extended instance of a ejsl component
@@ -491,9 +480,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	'''
 
 	/**
-	 * returns the content of a simple backendSection model file
-	 * that extends from JModelAdmin and provides methods 
-	 * to handle (load,edit...) one data item
+	 * Returns the content of a simple backendSection model file that extends from JModelAdmin 
+	 * and provides methods to handle (load, edit...) of one data item
 	 */
 	def CharSequence phpAdminSimpleModelContent(ExtendedComponent component,ExtendedPage pageref) '''
 		<?php
@@ -506,8 +494,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		{
 		}
 	 '''
+	 
 	/**
-	 * return the code for the layout for the main view of the component
+	 * Returns the code for the layout of the main view of the component
 	 * @param Component component content the instance of a component
 	 */
 	def CharSequence phpAdminTemplateContent(Component component) '''
@@ -535,8 +524,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		</div>  
 		<p>This component is generated with the Joomdd tools, for more information <a target="_blank" href="https://github.com/icampus/JooMDD">see here</a></p>	
     '''
+    
 	/**
-	 * return the code for the  main view of the component
+	 * Returns the code for the main view of a component
 	 * @param Component component content the instance of a component
 	 */
 	def CharSequence phpAdminViewContent(ExtendedComponent component) '''
@@ -613,8 +603,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		}
 		}
     '''
+    
 	/**
-	 *Generate the code for access manifest of a component
+	 *Generates the code for the access manifest of a component
 	 * @param ExtendedComponent component content the instance of a component
 	 */
 	def CharSequence xmlAccessContent(ExtendedComponent component) '''
@@ -632,12 +623,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		«xmlAccessContentPage()»
 		</access>
 	 '''
+	 
 	/**
-	 * Generate the code for pageactions for each view in the component
+	 * Generates the code for the pageactions of each view in the component
 	 */
 	def CharSequence xmlAccessContentPage() '''
 		
-			«FOR dyn : extendeComp.allExtendedPage»
+			«FOR dyn : extendedComp.allExtendedPage»
 				<section name="«dyn.name.toLowerCase»">
 				<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
 				<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
@@ -646,10 +638,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
 				</section>
 			«ENDFOR»
-		
 	'''
+	
 	/**
-	 * Generate the code for configuration parameter of a component
+	 * Generates the code for the configuration parameters of a component
 	 * @param ExtendedComponent 		component content the instance of a component
 	 * @param List<ExtendedDynamicPage> dynPages  containt all dynamics pages of the component
 	 */
@@ -711,18 +703,15 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 						label="JCONFIG_PERMISSIONS_LABEL"
 						filter="rules"
 						validate="rules"
-						component="«Slug.nameExtensionBind("com",extendeComp.name)»"
+						component="«Slug.nameExtensionBind("com",extendedComp.name)»"
 						section="component" />
 				</fieldset>
 		
 			</config>
-		 '''
+	'''
 
-	
-  
-	
    /**
-    * Generate the code for the Route rule in frontend
+    * Generates the code for the route rule in the frontend
     * 
     * @param ExtendedComponent component  containt the isntance of a component
     */
@@ -776,12 +765,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    return $vars;
 		} 
 	'''
+	
 	/**
-	 * return the code javascript code to set the value of a reference of a foreign attribute 
+	 * Returns the javascript code to set the value of a reference of a foreign attribute 
 	 *  
 	 */
 	def CharSequence genScriptForForeignKeys()'''
-	 «Slug.generateFileDoc(extendeComp,false)»
+	 «Slug.generateFileDoc(extendedComp,false)»
 	 /**
 	 * this function set the value of reference for a foreign attribute 
 	 */
@@ -795,12 +785,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	    }
 	   }
 	'''
+	
 	/**
-	 * return the code javascript code to set the values of many reference of a foreigns attributes 
+	 * Returns the javascript code to set the values of many references of a foreign attribute
 	 *  
 	 */
 	def CharSequence genScriptForMultipleForeignKeys()'''
-	 «Slug.generateFileDoc(extendeComp,false)»
+	 «Slug.generateFileDoc(extendedComp,false)»
 	 
 	jQuery(document).ready(function() {
 			jQuery("select[generated='true']").each(function(){
@@ -845,5 +836,4 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			}
 	   }
 	'''
-
-} // ComponentGenerator
+}
