@@ -5,10 +5,11 @@ require(["jquery"], function($) {
 	{
 		var resourceID = "main.eJSL";
 		var editor = editorhandler.loadEditor(resourceID);
-		editor.renderer.on('afterRender', function() {
-		    editor.renderer.removeAllListeners('afterRender');
-		    treeloader.reload();
-		});
+		var changeAnnotationCB = function(){
+			 editor.getSession().off('changeAnnotation', changeAnnotationCB);
+			 treeloader.reload();
+		};
+		editor.getSession().on('changeAnnotation', changeAnnotationCB);
 	};
 	treeloader.writeTree(cb);
 })})

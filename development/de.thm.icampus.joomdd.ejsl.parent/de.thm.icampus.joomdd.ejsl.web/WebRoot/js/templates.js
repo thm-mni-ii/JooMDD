@@ -11,7 +11,6 @@ require(["jquery","infomodal"], function($,infomodal) {
 		  .done(function( msg ) {
 			  var editor = $("#xtext-editor");
 			  editor[0].env.editor.getSession().setValue(msg);
-			 
 		  });
 });
 	require([ "cookie","treeloader"],function(Cookies,treeloader){
