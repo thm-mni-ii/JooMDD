@@ -7,13 +7,16 @@ dependencies {
 	compile "org.eclipse.xtext:org.eclipse.xtext.xbase.web:${xtextVersion}"
 	compile "org.eclipse.xtext:org.eclipse.xtext.web.servlet:${xtextVersion}"
 	compile "org.eclipse.xtend:org.eclipse.xtend.lib:${xtextVersion}"
-	compile "org.webjars:requirejs:2.1.20"
-	compile "org.webjars:jquery:2.1.4"
-	compile "org.webjars:ace:1.2.0"
+	compile "org.webjars:requirejs:2.3.3"
+	compile "org.webjars:jquery:2.2.4"
+	compile "org.webjars:ace:1.2.8"
 	providedCompile "org.eclipse.jetty:jetty-annotations:9.2.11.v20150529"
 	providedCompile "org.slf4j:slf4j-simple:1.7.12"
 }
 task jettyRun(type:JavaExec) {
+
+	jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9000'
+
 	dependsOn(sourceSets.main.runtimeClasspath)
 	classpath = sourceSets.main.runtimeClasspath.filter{it.exists()}
 	main = 'de.thm.icampus.joomdd.ejsl.web.ServerLauncher'

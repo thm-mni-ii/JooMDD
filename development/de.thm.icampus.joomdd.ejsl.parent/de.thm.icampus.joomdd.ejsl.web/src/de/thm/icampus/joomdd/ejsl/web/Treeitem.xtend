@@ -31,27 +31,30 @@ class Treeitem {
 		li_attr = new HashMap<String,String> 
 	     a_attr = new  HashMap<String,String>
 		loadOrigin(session,resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String, id)
-		
 	}
 	
 	def loadOrigin(HttpSession session, String source,String id) {
-		var String name = session.getAttribute("joomddusername") as String
+		var String name = session.id;
+		
 		var File path = new File(source + "/" +name)
 		this.text = path.name
-		this.id = id + path.name
+		this.id = path.name
 		icon ="jstree-folder"
-			for(File item : path.listFiles){
-				var Treeitem treeItem = new Treeitem(item.path, this.id,"");
-				children.add(treeItem);
+			if(path.listFiles !== null)
+			{
+				for(File item : path.listFiles){
+					var Treeitem treeItem = new Treeitem(item.path, this.id,"");
+					children.add(treeItem);
+				}
 			}
-			a_attr.put("href", "/"+this.id)
+			a_attr.put("href", "/" + this.id)
 	}
 	
 	def searchChild(String path, String parentid, String source) {
 		var File file = new File(path);
 		this.text = file.name
 		this.parent = file.parentFile.name
-		this.id = parentid + "/" + file.name
+		this.id = file.name
 		a_attr.put("href", source +"/"+this.id)
 		if(file.file){
 			

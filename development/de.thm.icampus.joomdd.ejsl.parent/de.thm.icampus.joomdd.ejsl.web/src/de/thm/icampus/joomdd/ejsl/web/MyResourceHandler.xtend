@@ -18,9 +18,9 @@ import org.eclipse.xtext.web.server.model.IXtextWebDocument
 import org.eclipse.xtext.web.server.model.XtextWebDocument
 import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
 import java.io.FileOutputStream
+import org.eclipse.xtext.web.servlet.HttpServiceContext
 
 class MyResourceHandler implements IServerResourceHandler {
-	
 	
 	@Inject IWebResourceSetProvider resourceSetProvider
 	
@@ -28,30 +28,20 @@ class MyResourceHandler implements IServerResourceHandler {
 	
 	@Inject IEncodingProvider encodingProvider
 	
-	
-	
 	override get(String resourceId, IServiceContext serviceContext) throws IOException {
 		try {
 			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-			var String id = serviceContext.session.get("joomddusername")
-			var Map<String,EList<String>> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,EList<String>>
-			
-			var File resourceFile = new File (resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String +"/"+ resourceId)
-			if(!resourceFile.exists){
-				var String[]resourcearrays = resourceId.split("/");
-			var File resourcesFolder = new File(resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String +"/"+ resourcearrays.get(0) +"/src/")
-			
-			 if(resourcesFolder.exists && resourcesFolder.listFiles.length >=10){
-			 	throw new IOException('The folder of resources is full.')
-			 }
-			 resourceFile.createNewFile
-			 
-			 
+			var httpServiceContext = serviceContext as HttpServiceContext;
+			var session = httpServiceContext.request.cookies.findFirst[c|c.name.equals("JSESSIONID")];
+			var sessionID = session.value;
+			var fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + sessionID + resourceId;
+			var File resourceFile = new File (fullPath)
+			if(!resourceFile.exists)
+			{
+				resourceFile.createNewFile
 			}
-			if(!users.get(id).contains(resourceId)){
-				users.get(id).add(resourceId)
-			}
-			val URI fis = URI.createFileURI ( resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String +"/"+resourceId)
+
+			val URI fis = URI.createFileURI (fullPath)
 			
 			var resourceSet = resourceSetProvider.get(resourceId, serviceContext)
 			val XtextResource resource = resourceSet.getResource(fis, true) as XtextResource
@@ -60,7 +50,7 @@ class MyResourceHandler implements IServerResourceHandler {
 			doc.input = resource
 			
 			return doc
-		} catch (WrappedException exception) {
+		} catch (Exception exception) {
 			throw exception.cause
 		}
 	}
@@ -68,18 +58,18 @@ class MyResourceHandler implements IServerResourceHandler {
 	override put(IXtextWebDocument document, IServiceContext serviceContext) throws IOException {
 	   var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		
+		var httpServiceContext = serviceContext as HttpServiceContext;
+		var session = httpServiceContext.request.cookies.findFirst[c|c.name.equals("JSESSIONID")];
+		var sessionID = session.value;
+		var fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + sessionID + document.resourceId;
+		
 		try {
-			 var String id = serviceContext.session.get("joomddusername")
-			 var Map<String,EList<String>> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,EList<String>>
-			 if(!users.get(id).contains(document.resourceId)){
-				throw new IOException('You can save only your own resources')
-			}
-		var File resourcesFile = new File(resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String +"/"+document.resourceId)
+		var File resourcesFile = new File(fullPath)
 		
 		if(!resourcesFile.exists){
 			 	throw new IOException('The resource not found')
 			 }
-		val URI fis = URI.createFileURI ( resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String +"/"+ document.resourceId)
+		val URI fis = URI.createFileURI (fullPath)
            
 			val outputStream = document.resource.resourceSet.URIConverter.createOutputStream(fis)
 			val writer = new OutputStreamWriter(outputStream, encodingProvider.getEncoding(fis))
@@ -89,7 +79,7 @@ class MyResourceHandler implements IServerResourceHandler {
 			writer.close
 			outputStream.flush
 			outputStream.close
-		} catch (WrappedException exception) {
+		} catch (Exception exception) {
 			throw exception.cause
 		}
 	}

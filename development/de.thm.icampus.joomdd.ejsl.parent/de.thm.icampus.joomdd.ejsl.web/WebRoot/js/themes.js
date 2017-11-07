@@ -8,7 +8,7 @@ jQuery.loadScript = function (url, callback) {
         success: callback,
         async: true
     })};
-    require(["webjars/ace/1.2.0/src/ace"], function() {
+    require(["ace/ace"], function() {
     	require(["xtext/xtext-ace"], function(xtext) {
     		jQuery( document ).ready(function() {
     			// Handler for .ready() called.

@@ -28,9 +28,7 @@ class EJSLServlet extends XtextServlet {
 	 
 	val List<ExecutorService> executorServices = newArrayList
 	
-
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-	
 	
 	override init() {
 		super.init()
@@ -45,66 +43,4 @@ class EJSLServlet extends XtextServlet {
 		executorServices.clear()
 		super.destroy()
 	}
-	
-	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var Map<String,EList<String>> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,EList<String>>
-		
-		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
-			resp.sendError(404,"User not in system")
-			return
-		}
-		
-		var resource = req.getParameter("resource")
-		println(resource)
-		
-		   
-		super.doGet(req, resp)
-		
-	}
-	
-	def boolean checkCookies(Cookie[] cookies) {
-		var boolean havename = false;
-		var boolean haveemail = false
-		for(Cookie cook: cookies){
-			if(cook.name == "joomddusername" && cook.value != null)
-			 havename = true
-			 if(cook.name == "joomddemail" && cook.value != null)
-			 haveemail = true
-		}
-		return havename && haveemail
-	}
-	
-	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
-			resp.sendError(404,"User not in system")
-			return
-		}
-		
-		super.doPost(req, resp)
-		
-	}
-	
-	override protected doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
-			resp.sendError(404,"User not in system")
-			return
-		}
-		
-		super.doDelete(req, resp)
-		
-	}
-	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))){
-			resp.sendError(404,"User not in system")
-			return
-		}
-		
-		super.doPut(req, resp)
-		
-	}
-	 
-	
 }
