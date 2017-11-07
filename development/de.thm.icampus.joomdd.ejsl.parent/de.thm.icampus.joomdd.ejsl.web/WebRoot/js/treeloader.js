@@ -1,4 +1,4 @@
-define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery,Cookies,jstree,infomodal) {
+define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery, Cookies, jstree, infomodal) {
 	   var exports = {};
 	   function context_menu(node){
 			var tree = $('#folder_tree').jstree(true);

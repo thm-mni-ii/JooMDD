@@ -1,5 +1,5 @@
 
-require(["jquery","infomodal"], function($,infomodal) {
+require(["jquery","infomodal"], function($, infomodal) {
 	
 	$(".templates").click(function(){
 	var nameTemplate = $(this).val();
@@ -14,7 +14,7 @@ require(["jquery","infomodal"], function($,infomodal) {
 			 
 		  });
 });
-	require([ "cookie","treeloader"],function(Cookies,treeloader){
+	require([ "cookie","treeloader"],function(Cookies, treeloader){
 	
 		$("#ejslGeneratorsave").click(function(){
 		var name = Cookies.get('joomddusername');
@@ -98,7 +98,7 @@ require(["jquery","infomodal"], function($,infomodal) {
 							infomodal.showmodal("An error occured during the upload. You must use a path to a valid extension package (.zip)");
 						}
 					}
-			    	});
+			});
 		});
 	});
 });

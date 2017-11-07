@@ -1,5 +1,5 @@
 require(["jquery"], function($) {
-	require([ "cookie","jstree","treeloader","editorhandler"],function(Cookies, jstree,treeloader,editorhandler){
+	require([ "cookie","jstree","treeloader","editorhandler"],function(Cookies, jstree, treeloader, editorhandler){
 	
 	var name = Cookies.get('joomddusername');
 	var email = Cookies.get('joomddemail');

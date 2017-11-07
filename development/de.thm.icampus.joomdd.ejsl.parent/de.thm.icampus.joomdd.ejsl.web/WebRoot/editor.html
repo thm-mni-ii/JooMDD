@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>JooMDD</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/landing-page.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="xtext/2.10.0/xtext-ace.css" />
+
+
+    <link rel="stylesheet" type="text/css" href="css/jtree.min.css" />
+    <!-- https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css -->
+
+
+    <script type="text/javascript">
+        var require = {
+            callback: function() {
+                var baseUrl = window.location.pathname;
+                var fileIndex = baseUrl.indexOf("editor.html");
+                if (fileIndex > 0)
+                    baseUrl = baseUrl.slice(0, fileIndex);
+                require.config({
+                    baseUrl: baseUrl,
+                    paths: {
+                        "ace/ace": "webjars/ace/1.2.8/src/ace",
+                        "jquery": "js/jquery-3.2.1.min",
+                        "ace/ext/language_tools": "webjars/ace/1.2.8/src/ext-language_tools",
+                        "xtext/xtext-ace": "xtext/2.10.0/xtext-ace",
+                        "cookie" : "js/cookie",
+                        "jstree" : "js/jstree"
+                    }
+                });
+            }
+        };
+
+    </script>
+    <script type="text/javascript" src="webjars/requirejs/2.3.3/require.min.js"></script>
+
+    <script type="text/javascript" src="js/infomodal.js"></script>
+    <script type="text/javascript" src="js/treeloader.js"></script>
+    <script type="text/javascript" src="js/editorhandler.js"></script>
+    <script type="text/javascript" src="js/firststep.js"></script>
+    <script type="text/javascript" src="js/generator.js"></script>
+    <script type="text/javascript" src="js/settings.js"></script>
+    <script type="text/javascript" src="js/templates.js"></script>
+    <script type="text/javascript" src="js/themes.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="index.html"><img class="logo" src="img/Logo_b.png"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="https://github.com/icampus/JooMDD/blob/master/README.md">Documentation</a>
+            </li>
+            <li class="nav-item btn-group">
+              <div class="btn-group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-user-o fa-fw"></i> LogIn
+                </button>
+                <div class="dropdown-menu">
+                  <form class="px-4 py-3">
+                    <div class="form-group">
+                      <label for="exampleDropdownFormEmail1">Email address</label>
+                      <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleDropdownFormPassword1">Password</label>
+                      <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
+                    </div>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input">
+                        Remember me
+                      </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                  </form>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">New around here? Sign up</a>
+                  <a class="dropdown-item" href="#">Forgot password?</a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="intro-header">
+      <div class="container">
+        <div class="intro-message">
+          <h1>JooMDD Web Editor</h1>
+          <h3>Create your Joomla! Extension on the fly... </h3>
+          <hr class="intro-divider">
+
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <section id="about" class="content-section-a">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 ml-auto">
+            <div>
+              <button class="btn btn-light btn-lg">
+                <i class="fa fa-save fa-fw"></i>
+                <span>Save Model</span>
+              </button>
+              <button id="ejslGenerator" class="btn btn-light btn-lg">
+                <i class="fa fa-caret-square-o-right fa-fw"></i>
+                <span>Generate Code</span>
+              </button>
+              <span class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-light btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Load Example Model
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  <button class="templates dropdown-item" value="Model.eJSL">Example Model</button>
+                  <button class="templates dropdown-item" value="conference.eJSL">Conference</button>
+                  <button class="templates dropdown-item" value="Shop.eJSL">Shop</button>
+                  <button class="templates dropdown-item" value="brueckenKurs.eJSL">Brückenkurse</button>
+                </div>
+              </span>
+            </div>
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h4 class=""><span id="modelname">ModelName</span></h4>
+            <div id="xtext-editor" data-editor-xtext-lang="eJSL"
+                 class="jumbotron jumbotron-fluid"></div>
+          </div>
+          <div class="col-lg-4 mr-auto">
+            <div>
+              <button class="btn btn-light btn-lg">
+                <i class="fa fa-plus fa-fw"></i>
+                <span>Add Model</span>
+              </button>
+              <button id="ejslGeneratordownload" class="btn btn-light btn-lg">
+                <i class="fa fa-download fa-fw"></i>
+                <span>Download Node</span>
+              </button>
+              <button id="ejslLoadModel" class="btn btn-light btn-lg">
+                <i class="fa fa-arrow-left fa-fw"></i>
+                <span>Load Model to Editor</span>
+              </button>
+              <button class="btn btn-light btn-lg">
+                <i class="fa fa-upload fa-fw"></i>
+                <span>Upload Joomla! Extension</span>
+              </button>
+              <button id="ejslReverseModel" class="btn btn-light btn-lg">
+                <i class="fa fa-file fa-fw"></i>
+                <span>Model Extraction</span>
+              </button>
+            </div>
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <div id="folder_tree" class="filetree"></div>
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container -->
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div id="contact" class="container">
+        <p class="copyright text-muted small">Copyright &copy; Institute for Information Sciences 2017. All Rights Reserved</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom JavaScript for this theme -->
+    <script src="js/scrolling-nav.js"></script>
+
+  </body>
+
+</html>

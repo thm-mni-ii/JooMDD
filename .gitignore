@@ -21,6 +21,7 @@
 *.iml
 *.prefs
 *.class
+*.classpath
 *.xtendbin
 *._trace
 

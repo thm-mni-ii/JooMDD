@@ -1,152 +1,220 @@
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta http-equiv="Content-Language" content="en-us">
-<title>Example Web Editor</title>
-<link rel="stylesheet" type="text/css" href="xtext/2.10.0/xtext-ace.css" />
-<link rel="stylesheet" type="text/css" href="css/style.css" />
-<link rel="stylesheet" type="text/css" href="css/w3.css" />
-<link rel="stylesheet" type="text/css" href="css/jtree.min.css" />
-<!-- https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css -->
+<!DOCTYPE html>
+<html lang="en">
 
+  <head>
 
-<script type="text/javascript">
-  var require = {
-    callback: function() {
-	    var baseUrl = window.location.pathname;
-	    var fileIndex = baseUrl.indexOf("index.html");
-	    if (fileIndex > 0)
-	     baseUrl = baseUrl.slice(0, fileIndex);
-	    require.config({
-		     baseUrl: baseUrl,
-		     paths: {
-		      "ace/ace": "webjars/ace/1.2.0/src/ace",
-		      "jquery": "lib/jquery-3.2.1.min",
-		      "ace/ext/language_tools": "webjars/ace/1.2.0/src/ext-language_tools",
-		      "xtext/xtext-ace": "xtext/2.10.0/xtext-ace",
-		      "cookie" : "lib/cookie",
-		      "jstree" : "lib/jstree"
-		     }
-   		 });
-       }
-     };
-  
- </script>
-<script type="text/javascript" src="webjars/requirejs/2.1.20/require.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<script type="text/javascript" src="lib/infomodal.js"></script>
-<script type="text/javascript" src="lib/treeloader.js"></script>
-<script type="text/javascript" src="lib/editorhandler.js"></script>
-<script type="text/javascript" src="lib/firststep.js"></script>
-<script type="text/javascript" src="lib/generator.js"></script>
-<script type="text/javascript" src="lib/settings.js"></script>
-<script type="text/javascript" src="lib/templates.js"></script>
-<script type="text/javascript" src="lib/themes.js"></script>
-</head>
-<body>
+    <title>JooMDD</title>
 
-	<div class="container">
-		<header class="w3-container w3-text-light-grey blue">
-			<h1>
-				JooMDD Web Editor <span id="modelname"></span>
-			</h1>
-		</header>
-		<div class="w3-bar w3-light-grey">
-		  <button 
-		      	id="ejslGeneratorsave" 
-		      	class="w3-bar-item w3-button" 
-		      	title="Save your model code in the editor to the selected model in the tree.">Save Model</button>
-		  <button id="ejslLoadModel" class="w3-bar-item w3-button"
-					title="Load the contents of the selected model in the tree to the editor.">Load
-					Model</button>
-		<button id="ejslGenerator" class="w3-bar-item w3-button"
-			title="Generate Joomla code for the selected model.">Generate
-			Code</button>
-		<button id="ejslReverseModel" class="w3-bar-item w3-button"
-			title="Select a valid manifest file in the tree (in uploaded the folder) and click this button.">Model
-			extraction</button>
-		<button id="ejslGeneratordownload" class="w3-bar-item w3-button"
-					title="You can download (.zip) all models and sub-trees by selecting them/their parent node and click this button.">Download</button>
-		  
-		  <div class="w3-dropdown-hover">
-		    <button class="w3-button">Example Models</button>
-		    <div class="w3-dropdown-content w3-bar-block w3-card-4" style="z-index: 100000;">
-		      <button class="templates w3-bar-item w3-button" value="conference.eJSL">Conference</button>
-			  <button class="templates w3-bar-item w3-button" value="Shop.eJSL">Shop</button>
-			  <button class="templates w3-bar-item w3-button" value="Model.eJSL">Model</button>
-			  <button class="templates w3-bar-item w3-button" value="Simple.eJSL">Simple Model</button>
-			  <button class="templates w3-bar-item w3-button" value="brueckenKurs.eJSL">Brueckenkurs</button>
-		    </div>
-		  </div>
-		</div>
-		<div class="content">
-			<div id="loadModal" class="w3-modal" style="display: none; z-index: 1000;">
-				<div class="w3-display-middle"
-					style="width: 120px; height: 120px;">
-					<div class="loader"></div>
-				</div>
-			</div>
-			<div id="infoModal" class="w3-modal" style="display: none; z-index:1000; ">
-				<div class="w3-modal-content w3-display-middle w3-card-1"
-					style="max-width: 30%; position: absolute;">
-					<header class="w3-container w3-blue">
-						<span onclick="document.getElementById('infoModal').style.display='none'" 
-        				class="w3-button w3-display-topright w3-blue">&times;</span>
-						<h2>JooMDD Info</h2>
-					</header>
-					<div class="w3-container">
-						<p id="infoModalText">Some text..</p>
-					</div>
-				</div>
-			</div>
-			<div id="firstStepModal" class="w3-modal w3-animate-opacity">
-				<div class="w3-modal-content w3-card-4">
-					<header class="w3-container w3-blue">
-						<h2>Welcome to JooMDD</h2>
-						<br />
-						<div id="firstStepModalfailur"></div>
-					</header>
-					<div class="w3-container">
-						<label>Username</label> 
-						<input type="text" class="w3-input" id="username" required> 
-						<label>Secret</label> 
-						<input type="text" class="w3-input" id="useremail" required> 
-						<label>Resource</label>
-						<input type="text" class="w3-input" id="resourceid" value="main.eJSL">
-					</div>
-					<br>
-					<footer class="w3-container">
-						<button class="w3-button w3-blue" id="newuser">New user</button>
-						<button class="w3-button w3-blue" id="existuser">Already registered</button>
-					</footer>
-					<br />
-				</div>
-			</div>
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Custom fonts for this template -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
-			<div id="xtext-editor" data-editor-xtext-lang="eJSL"
-				class="w3-card-4"></div>
-			<div class="intro">
-				<img class="logo" src="Logo_b.png">
-				
-				<div id="folder_tree" class="filetree w3-card-4"></div>
-			</div>
-		</div>
-		<div>
-			<div>
-				<p>Do you need a new model file?</p>
-				<input type="text" id="addfile" style="margin-right: 20px">
-				<button id="eJSlCreateModel">Add new Model</button>
-			</div>
-			<hr>
-			<div>
-				<p>Upload an existing extension for a model extraction:</p>
-				<input type="file" id="addRevers">
-				<button id="eJSlUploadModel">Upload Extension</button>
-				<br>
-			</div>
-			<hr>
-		</div>
-	</div>
-</body>
+    <!-- Custom styles for this template -->
+    <link href="css/landing-page.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#"><img class="logo" src="img/Logo_b.png"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#gettingstarted">Getting Started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="intro-header">
+      <div class="container">
+        <div class="intro-message">
+          <h1>JooMDD</h1>
+          <h3>Create your Joomla! Extensions faster</h3>
+          <hr class="intro-divider">
+
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <section id="about" class="content-section-a">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-5 ml-auto">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Modelling</h2>
+            <p class="lead">Create abstract models of your Joomla! extension</p>
+          </div>
+          <div class="col-lg-5 mr-auto">
+            <img class="img-fluid" src="img/model.png" alt="">
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container -->
+    </section>
+
+    <section class="content-section-b">
+
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-5 mr-auto order-lg-2">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Code Generation</h2>
+            <p class="lead">Generate most of your Joomla! extension code automatically. The generated extension can be
+              installed and used within Joomla! 3.x instances.</p>
+          </div>
+          <div class="col-lg-5 ml-auto order-lg-1">
+            <img class="img-fluid" src="img/joomla_list_details_view.png" alt="">
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+    </section>
+    <!-- /.content-section-b -->
+
+    <section class="content-section-a">
+
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-5 ml-auto">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Reverse Engineering</h2>
+            <p class="lead">Extract your existing Joomla! extensions and create abstract models which are easier to maintain.</p>
+          </div>
+          <div class="col-lg-5 mr-auto ">
+            <img class="img-fluid" src="img/reverse_engineering.jpg" alt="">
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+    </section>
+    <section class="content-section-b">
+
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-5 mr-auto order-lg-2">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">IDE Support</h2>
+            <p class="lead">Use JooMDD within your IDE. We support IntelliJ IDEA, PhpStorm, and Eclipse</p>
+          </div>
+          <div class="col-lg-5 ml-auto order-lg-1">
+            <img class="img-fluid" src="img/ide.png" alt="">
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+    </section>
+    <!-- /.content-section-b -->
+    <section id="gettingstarted" class="content-section-a">
+
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-5 ml-auto">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Getting Started</h2>
+            <p class="lead">You can start directly by using our new web editor.</p>
+            <a class="btn btn-secondary btn-xl sr-button" href="editor.html">Start now...</a>
+          </div>
+          <div class="col-lg-5 mr-auto ">
+            <img class="img-fluid" src="img/webeditor.png" alt="">
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+    </section>
+    <!-- /.content-section-a -->
+
+    <aside class="banner">
+
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-6 my-auto">
+            <h2>Connect to JooMDD:</h2>
+          </div>
+          <div class="col-lg-6 my-auto">
+            <ul class="list-inline banner-social-buttons">
+              <li class="list-inline-item">
+                <a href="https://www.mni.thm.de/forschung/institute-a-gruppen/ii/ii-ueberblick" class="btn btn-secondary btn-lg">
+                  <i class="fa fa-home fa-fw"></i>
+                  <span class="network-name">Institute for Information Sciences</span>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="https://github.com/icampus/JooMDD" class="btn btn-secondary btn-lg">
+                  <i class="fa fa-github fa-fw"></i>
+                  <span class="network-name">Github</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+    </aside>
+    <!-- /.banner -->
+
+    <!-- Footer -->
+    <footer>
+      <div id="contact" class="container">
+        <p class="copyright text-muted small">Copyright &copy; Institute for Information Sciences 2017. All Rights Reserved</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom JavaScript for this theme -->
+    <script src="js/scrolling-nav.js"></script>
+
+  </body>
+
 </html>

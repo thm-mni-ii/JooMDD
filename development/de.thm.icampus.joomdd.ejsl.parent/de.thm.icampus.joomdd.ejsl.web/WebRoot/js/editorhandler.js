@@ -1,7 +1,10 @@
-define('editorhandler',[ 'jquery',"jstree", "cookie","webjars/ace/1.2.0/src/ace","xtext/xtext-ace","treeloader"], function(jQuery,jstree,Cookies,ace,xtext_ace,treeloader) {
+define('editorhandler',[ 'jquery',"jstree", "cookie","ace/ace","xtext/xtext-ace","treeloader"], function(jQuery, jstree, Cookies, ace, xtext_ace, treeloader) {
 	 var exports = {};
 	 exports.loadEditor = function(username, resourceID){
-		 var baseUrl = window.location.pathname;
+         var baseUrl = window.location.pathname;
+         var fileIndex = baseUrl.indexOf("editor.html");
+         if (fileIndex > 0)
+             baseUrl = baseUrl.slice(0, fileIndex);
 		 Cookies.set('resourceid',resourceID);
 		var t = xtext_ace.createEditor({
 				baseUrl: baseUrl ,

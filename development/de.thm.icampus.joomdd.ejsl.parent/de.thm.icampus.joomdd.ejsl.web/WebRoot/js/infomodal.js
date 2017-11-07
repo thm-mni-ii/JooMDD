@@ -1,4 +1,4 @@
-define('infomodal',[ 'jquery',"jstree", "cookie"], function(jQuery,jstree,Cookies) {
+define('infomodal',[ 'jquery',"jstree", "cookie"], function(jQuery, jstree, Cookies) {
 	var exports = {};
 	 exports.showmodal = function(text){
 		$("#infoModalText").text(text);
