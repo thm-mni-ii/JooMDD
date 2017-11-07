@@ -1,60 +1,14 @@
 require(["jquery"], function($) {
-	require([ "cookie","jstree","treeloader","editorhandler"],function(Cookies, jstree, treeloader, editorhandler){
+	require([ "cookie","jstree","treeloader","editorhandler"],function(Cookies, jstree,treeloader,editorhandler){
 	
-	var name = Cookies.get('joomddusername');
-	var email = Cookies.get('joomddemail');
-	if(name==null || email==null ){
-		$(document).ready(function(){
-			$("#firstStepModal").css("display","block");
+	var cb = function(e, data)
+	{
+		var resourceID = "main.eJSL";
+		var editor = editorhandler.loadEditor(resourceID);
+		editor.renderer.on('afterRender', function() {
+		    editor.renderer.removeAllListeners('afterRender');
+		    treeloader.reload();
 		});
-	}else{
-		$.post( "/exist-user-service/", { name: name, email:email})
-		  .done(function( data ) {
-			  if(data){
-				  var resourceID = Cookies.get('resourceid');
-				  editorhandler.loadEditor(name, resourceID);
-				  treeloader.writeTree(name)
-			  }else{
-				  $("#firstStepModal").css("display","block");
-				}
-		  })
-	}
-		$("#newuser").click(function(){
-			
-			var username = $("#username").val();
-			var useremail = $("#useremail").val();
-			var resourceID=  $("#resourceid").val();
-			
-			$.post( "/new-user-service/", { name: username, email:useremail})
-			  .done(function( data ) {
-				  
-			if(data){
-				$("#firstStepModal").css("display","none");
-				editorhandler.loadEditor(username, resourceID);
-				treeloader.writeTree(username)
-			
-			}else{
-				$("#firstStepModalfailur").html("<h3>Login failed: The name is already in use.</h3>");
-			}
-			  });
-		});
-	$("#existuser").click(function(){
-			
-			var username = $("#username").val();
-			var useremail = $("#useremail").val();
-			var resourceID=  $("#resourceid").val();
-			
-			$.post( "/exist-user-service/", { name: username, email:useremail})
-			  .done(function( data ) {
-				  
-			if(data){
-				$("#firstStepModal").css("display","none");
-				editorhandler.loadEditor(username, resourceID);
-				treeloader.writeTree(username)
-			}else{
-				$("#firstStepModalfailur").html("<h3>Secret cannot be matched. Please try again or create a new user.</h3>");
-			}
-			  });
-		});
-	
+	};
+	treeloader.writeTree(cb);
 })})

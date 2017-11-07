@@ -1,5 +1,5 @@
 
-require(["jquery","infomodal"], function($, infomodal) {
+require(["jquery","infomodal"], function($,infomodal) {
 	
 	$(".templates").click(function(){
 	var nameTemplate = $(this).val();
@@ -14,11 +14,9 @@ require(["jquery","infomodal"], function($, infomodal) {
 			 
 		  });
 });
-	require([ "cookie","treeloader"],function(Cookies, treeloader){
+	require([ "cookie","treeloader"],function(Cookies,treeloader){
 	
 		$("#ejslGeneratorsave").click(function(){
-		var name = Cookies.get('joomddusername');
-		var resourceid = Cookies.get('resourceid');
 		var editor = $("#xtext-editor");
 		var save = editor[0].env.editor.xtextServices.saveResource();
 		save.then( value => {
@@ -54,12 +52,11 @@ require(["jquery","infomodal"], function($, infomodal) {
 		require([ "editorhandler"],function(editorhandler){
 		$("#ejslLoadModel").click(function(){
 			var data = $('#folder_tree').jstree(true).get_selected();
-			var name = Cookies.get('joomddusername');
 			if(data.length ==1){
 				var nameArray = data[0].split("/");
 				var namefile = nameArray[nameArray.length-1]
-				editorhandler.loadEditor(name,namefile);
-				 location.reload(); 
+				
+				var response = editorhandler.loadEditor(namefile+"");
 			}else{
 				
 			infomodal.showmodal("You can only load one model.");
@@ -67,15 +64,13 @@ require(["jquery","infomodal"], function($, infomodal) {
 
 		});
 		$('#eJSlCreateModel').click(function(){
-			var name = Cookies.get('joomddusername');
 			var filename = $("#addfile").val()
 			var tempArray = filename.split(".")
 			if(tempArray[tempArray.length-1] != "eJSL")
 				filename= filename+".eJSL"
 			if(tempArray.length > 1)
 				filename = tempArray[0] + ".eJSL"
-				Cookies.set('resourceid',filename);
-			var response = editorhandler.loadEditor(name, filename+"");
+			var response = editorhandler.loadEditor(filename+"");
 			 location.reload(); 
 
 		});
@@ -98,7 +93,7 @@ require(["jquery","infomodal"], function($, infomodal) {
 							infomodal.showmodal("An error occured during the upload. You must use a path to a valid extension package (.zip)");
 						}
 					}
-			});
+			    	});
 		});
 	});
 });

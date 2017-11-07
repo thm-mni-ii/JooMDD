@@ -2,7 +2,7 @@
  * 
  */
 require(["ace/ace"], function() {
-require(["xtext/xtext-ace","cookie","jstree","treeloader","infomodal"], function(xtext, Cookies, jstree, treeloader, infomodal) {
+require(["xtext/xtext-ace","cookie","jstree","treeloader","infomodal"], function(xtext,Cookies, jstree,treeloader,infomodal) {
 	jQuery("#ejslGenerator").click(function(){
 		var editor = jQuery("#xtext-editor");
 		infomodal.showloadmodal();

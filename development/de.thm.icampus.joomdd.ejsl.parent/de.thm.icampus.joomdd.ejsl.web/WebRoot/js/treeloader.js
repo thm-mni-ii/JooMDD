@@ -1,4 +1,4 @@
-define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery, Cookies, jstree, infomodal) {
+define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery,Cookies,jstree,infomodal) {
 	   var exports = {};
 	   function context_menu(node){
 			var tree = $('#folder_tree').jstree(true);
@@ -26,19 +26,20 @@ define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery, 
 		    };
 		    return items;
 		}
-	   exports.writeTree= function(name){
+	   exports.writeTree= function(cb){
 		   $('#folder_tree').jstree({
 				'core' : {
 					'data' : {
-						"url" : "/tree-loader/?name=" +name,
+						"url" : "/tree-loader",
 						"dataType" : "json"
 					}
-						
-		
 				},
 				'plugins': ['contextmenu', "sort", 'state'], 
             	contextmenu: {items: context_menu}
 			}); 
+			$('#folder_tree').on("loaded.jstree", function (e, data) {
+			    cb();
+			});
 	   }
 	   exports.deleteItem = function(node,tree){
 		   var name = Cookies.get('joomddusername');

@@ -88,28 +88,13 @@ class EJSLGenerator extends AbstractGenerator {
     override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
         genData = new JavaIoFileSystemAccess(registry, encodingProvider)
         var String outputFolder
-        if (registry.contentTypeToFactoryMap.get("serverpath") != null) {
-            var Map<String, EList<String>> users = registry.contentTypeToFactoryMap.get(
-                "mddsessions") as Map<String, EList<String>>
-            var act_user = "";
-            var String[] resourceNameArray = resource.URI.path.split("/")
-            var String filename = "";
-            for (i : resourceNameArray.size - 1 .. resourceNameArray.size - 3) {
-                if (filename.empty) {
-                    filename = resourceNameArray.get(i)
-                } else {
-                    filename = resourceNameArray.get(i) + "/" + filename
-                }
-            }
-
-            for (String ssid : users.keySet) {
-                var EList<String> value = users.get(ssid) as EList<String>
-                if (value.contains(filename)) {
-                    act_user = ssid
-                }
-            }
-            outputFolder = registry.contentTypeToFactoryMap.get("serverpath") as String 
-            outputFolder = outputFolder + "/" + act_user + "/src-gen"
+        var String serverPath = (registry.contentTypeToFactoryMap.get("serverpath") as String).replace("\\", "/");
+        if (serverPath != null) {
+            var resourcePath = resource.URI.toFileString.replace("\\", "/");
+            resourcePath = resourcePath.replace(serverPath+"/", "")
+            var String[] resourceNameArray = resourcePath.split("/")
+            var sessionID = resourceNameArray.get(0)
+            outputFolder = serverPath + "/" + sessionID + "/src-gen"
         } else {
             outputFolder = config.getProperty("outputFolder")
         }

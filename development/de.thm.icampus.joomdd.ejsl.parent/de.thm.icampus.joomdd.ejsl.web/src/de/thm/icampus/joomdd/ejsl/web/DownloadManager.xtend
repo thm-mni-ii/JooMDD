@@ -127,9 +127,9 @@ class DownloadManager extends HttpServlet {
 
 		var String uri = req.requestURI;
 
-		var String name = uri.split("/").get(2)
+		var String name = req.session.id
 
-		if (name != null && (req.session.getAttribute("joomddusername") as String).equals(name)) {
+		if (name != null) {
 			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 			var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
 			var String replaceuri = uri.replace("/download-manager", serverPath)
