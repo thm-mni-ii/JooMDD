@@ -26,7 +26,7 @@ define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery,C
 		    };
 		    return items;
 		}
-	   exports.writeTree= function(cb){
+	   exports.writeTree= function(){
 		   $('#folder_tree').jstree({
 				'core' : {
 					'data' : {
@@ -36,9 +36,6 @@ define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery,C
 				},
 				'plugins': ['contextmenu', "sort", 'state'], 
             	contextmenu: {items: context_menu}
-			}); 
-			$('#folder_tree').on("loaded.jstree", function (e, data) {
-			    cb();
 			});
 	   }
 	   exports.deleteItem = function(node,tree){
