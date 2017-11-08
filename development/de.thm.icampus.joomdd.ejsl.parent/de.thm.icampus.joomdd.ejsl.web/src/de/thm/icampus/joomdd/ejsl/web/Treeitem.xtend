@@ -34,11 +34,10 @@ class Treeitem {
 	}
 	
 	def loadOrigin(HttpSession session, String source,String id) {
-		var String name = session.id;
-		
-		var File path = new File(source + "/" +name)
-		this.text = path.name
-		this.id = path.name
+		var workspaceName = "workspace"
+		var File path = new File(source + "/" + session.id)
+		this.text = ""
+		this.id = id
 		icon ="jstree-folder"
 			if(path.listFiles !== null)
 			{
@@ -54,7 +53,7 @@ class Treeitem {
 		var File file = new File(path);
 		this.text = file.name
 		this.parent = file.parentFile.name
-		this.id = file.name
+		this.id = parentid + "/" + file.name
 		a_attr.put("href", source +"/"+this.id)
 		if(file.file){
 			

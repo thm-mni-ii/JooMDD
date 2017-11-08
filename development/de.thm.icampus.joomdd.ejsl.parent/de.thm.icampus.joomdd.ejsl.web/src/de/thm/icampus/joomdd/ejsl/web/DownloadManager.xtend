@@ -124,16 +124,14 @@ class DownloadManager extends HttpServlet {
 	}
 
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		var String uri = req.requestURI;
-
 		var String name = req.session.id
+		var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
+		var String userWorkspacePath = serverPath + "/" + name + uri.replace("/download-manager", "");
 
 		if (name != null) {
-			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-			var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
-			var String replaceuri = uri.replace("/download-manager", serverPath)
-			var File out = new File(replaceuri)
+			var File out = new File(userWorkspacePath)
 			if (out.file) {
 				resp.status = HttpServletResponse.SC_OK
 				resp.setHeader('Cache-Control', 'no-cache')
@@ -150,25 +148,29 @@ class DownloadManager extends HttpServlet {
 				resp.outputStream.print(buff.toString)
 
 			} else {
+				var zipName = userWorkspacePath.split("/").last;
+				
+				if(zipName.equals(name))
+				{
+					zipName = "workspace";
+				}
 				resp.setHeader("Content-Type", "application/zip")
 				resp.setHeader("Accept-Ranges", "bytes")
-				resp.setHeader("Content-Disposition", '''attachment; filename="«uri.split("/").last».zip"''');
+				resp.setHeader("Content-Disposition", '''attachment; filename="«zipName».zip"''');
 				resp.status = HttpServletResponse.SC_OK
 				val byte[] buffer = newByteArrayOfSize(32768)
 
 				// var FileOutputStream fileOut = new FileOutputStream(filoutName)			       
 				var ZipOutputStream zipOut = new ZipOutputStream(resp.outputStream)
 				var long length = 0;
-				var String tempFilename = uri.replace("/download-manager", serverPath)
-				var File tempfile = new File(tempFilename.replace("download-manager", serverPath))
-				println(tempfile.path)
-				if (tempfile.exists) {
-					if (tempfile.file) {
-						putFile(zipOut, tempfile, buffer, "");
-						length += tempfile.length
+				println(out.path)
+				if (out.exists) {
+					if (out.file) {
+						putFile(zipOut, out, buffer, "");
+						length += out.length
 
 					} else {
-						length += scanDirectorie(zipOut, buffer, tempfile.getPath(), "")
+						length += scanDirectorie(zipOut, buffer, out.getPath(), "")
 
 					}
 

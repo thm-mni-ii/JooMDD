@@ -30,8 +30,8 @@ class MyResourceHandler implements IServerResourceHandler {
 	
 	override get(String resourceId, IServiceContext serviceContext) throws IOException {
 		try {
-			var HttpSessionWrapper session = serviceContext.session as HttpSessionWrapper
 			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+			var HttpSessionWrapper session = serviceContext.session as HttpSessionWrapper
 			var sessionID = session.session.id
 			
 			var fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + sessionID;
