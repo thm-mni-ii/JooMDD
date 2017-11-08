@@ -55,9 +55,8 @@
     <script type="text/javascript" src="js/treeloader.js"></script>
     <script type="text/javascript" src="js/editorhandler.js"></script>
     <script type="text/javascript" src="js/firststep.js"></script>
-    <script type="text/javascript" src="js/generator.js"></script>
     <script type="text/javascript" src="js/settings.js"></script>
-    <script type="text/javascript" src="js/templates.js"></script>
+    <script type="text/javascript" src="js/buttonhandler.js"></script>
     <script type="text/javascript" src="js/themes.js"></script>
 
   </head>
@@ -121,7 +120,6 @@
         </div>
       </div>
     </header>
-
     <!-- Page Content -->
     <section id="about" class="content-section-a">
 
@@ -129,11 +127,17 @@
         <div class="row">
           <div class="col-lg-8 ml-auto">
             <div>
-              <button class="btn btn-light btn-lg">
+              <button
+                      id="saveModel"
+                      class="btn btn-light btn-lg"
+                      title="Save your model code in the editor to the selected model in the tree.">
                 <i class="fa fa-save fa-fw"></i>
                 <span>Save Model</span>
               </button>
-              <button id="ejslGenerator" class="btn btn-light btn-lg">
+              <button
+                      id="generateCode"
+                      class="btn btn-light btn-lg"
+                      title="Generate Joomla! 3.x code for the selected model.">
                 <i class="fa fa-caret-square-o-right fa-fw"></i>
                 <span>Generate Code</span>
               </button>
@@ -151,29 +155,89 @@
             </div>
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
+            <div class="alert alert-danger alert-dismissable fade show">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <strong>Error!</strong> Something went wrong...
+            </div>
             <h4 class=""><span id="modelname">ModelName</span></h4>
             <div id="xtext-editor" data-editor-xtext-lang="eJSL"
                  class="jumbotron jumbotron-fluid"></div>
           </div>
           <div class="col-lg-4 mr-auto">
             <div>
-              <button class="btn btn-light btn-lg">
+              <button class="btn btn-light btn-lg" data-toggle="modal" data-target="#addModelModal">
                 <i class="fa fa-plus fa-fw"></i>
                 <span>Add Model</span>
               </button>
-              <button id="ejslGeneratordownload" class="btn btn-light btn-lg">
+              <!-- Modal to add a new model-->
+              <div class="modal fade" id="addModelModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Add Model</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      <label for="newModelName">Name:</label>
+                      <input type="text" class="form-control" id="newModelName">
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button id="createModel" type="button" class="btn btn-primary" data-dismiss="modal">Add Model</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <button
+                      id="download"
+                      class="btn btn-light btn-lg"
+                      title="You can download (.zip) all models and sub-trees by selecting them/their parent node and click this button.">
                 <i class="fa fa-download fa-fw"></i>
                 <span>Download Node</span>
               </button>
-              <button id="ejslLoadModel" class="btn btn-light btn-lg">
+              <button id="loadModel" class="btn btn-light btn-lg">
                 <i class="fa fa-arrow-left fa-fw"></i>
                 <span>Load Model to Editor</span>
               </button>
-              <button class="btn btn-light btn-lg">
+              <button class="btn btn-light btn-lg"  data-toggle="modal" data-target="#uploadExtensionModal">
                 <i class="fa fa-upload fa-fw"></i>
                 <span>Upload Joomla! Extension</span>
               </button>
-              <button id="ejslReverseModel" class="btn btn-light btn-lg">
+              <div class="modal fade" id="uploadExtensionModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Add Model</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      <input type="file" id="uploadExtensionFile">
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button id="uploadExtension" type="button" class="btn btn-primary" data-dismiss="modal">Upload</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <button
+                      id="extractModel"
+                      class="btn btn-light btn-lg"
+                      title="Select a valid manifest file in the tree (in uploaded the folder) and click this button.">
                 <i class="fa fa-file fa-fw"></i>
                 <span>Model Extraction</span>
               </button>
