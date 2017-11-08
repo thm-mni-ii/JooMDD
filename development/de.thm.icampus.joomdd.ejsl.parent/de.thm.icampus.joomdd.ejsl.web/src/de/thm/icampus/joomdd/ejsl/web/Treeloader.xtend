@@ -34,7 +34,7 @@ class Treeloader extends HttpServlet {
 				var File temp = new File(fullPath)
 				if(temp.exists)
 				{
-					var Treeitem workspace = new Treeitem(req.getSession(), "download-manager/")
+					var Treeitem workspace = new Treeitem(req.getSession(), "download-manager")
 					workspace.text = "My Workspace"
 					workspace.setState("opened", true)
 					var EList <Treeitem> result = new BasicEList<Treeitem>

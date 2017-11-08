@@ -97,8 +97,6 @@ require(["jquery","infomodal"], function($,infomodal) {
 				if(tempArray.length > 1)
 					filename = tempArray[0] + ".eJSL"
 				var response = editorhandler.loadEditor(filename+"");
-
-				location.reload();
 			});
 
 			// Upload of an existing extension

@@ -2,8 +2,8 @@ define('editorhandler',[ 'jquery',"jstree", "cookie","ace/ace","xtext/xtext-ace"
 	 var exports = {};
 	 var editor = null;
 	 exports.loadEditor = function(resourceID){
-		 var baseUrl = window.location.pathname;
-		 var fileIndex = baseUrl.indexOf("editor.html");
+		var baseUrl = window.location.pathname;
+		var fileIndex = baseUrl.indexOf("editor.html");
 	    if (fileIndex > 0)
 	    {
 	    	baseUrl = baseUrl.slice(0, fileIndex);
@@ -18,15 +18,31 @@ define('editorhandler',[ 'jquery',"jstree", "cookie","ace/ace","xtext/xtext-ace"
 				baseUrl: baseUrl ,
 				syntaxDefinition: "xtext-resources/generated/mode-eJSL",
 				theme: "ace/theme/github",
-				resourceId: "/src/" + resourceID,
-				sendFullText: true
+				resourceId: "/src/" + resourceID
 			});
 		 $("#modelname").text(resourceID)
 		 editor.setOptions({
 			 fontSize: "14px"
          });
          
-         return editor;
+        var afterEditorCreation = function(){
+        	 var jstree = $('#folder_tree').jstree(true);
+        	 
+        	 if(jstree)
+        	 {
+        	 	treeloader.reload();
+        	 }
+        	 else
+        	 {
+        	 	treeloader.writeTree();
+        	 }
+			 editor.xtextServices.successListeners = editor.xtextServices.successListeners.filter(function(obj) {
+			 											return obj.name !== "afterEditorCreation";
+			 										});
+		};
+		editor.xtextServices.successListeners.push(afterEditorCreation);
+		
+        return editor;
 	 };
 	 
 	 return exports;
