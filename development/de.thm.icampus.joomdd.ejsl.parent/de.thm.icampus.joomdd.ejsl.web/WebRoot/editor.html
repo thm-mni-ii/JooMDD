@@ -51,7 +51,7 @@
     </script>
     <script type="text/javascript" src="webjars/requirejs/2.3.3/require.min.js"></script>
 
-    <script type="text/javascript" src="js/infomodal.js"></script>
+    <script type="text/javascript" src="js/alert.js"></script>
     <script type="text/javascript" src="js/treeloader.js"></script>
     <script type="text/javascript" src="js/editorhandler.js"></script>
     <script type="text/javascript" src="js/initialise.js"></script>
@@ -155,11 +155,10 @@
             </div>
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
-            <div class="alert alert-danger alert-dismissable fade show">
-              <button type="button" class="close" data-dismiss="alert">&times;</button>
-              <strong>Error!</strong> Something went wrong...
+            <div id="alert" class="alert alert-dismissable fade show">
+              <strong id="alertState"></strong><span id="alertText"></span>
             </div>
-            <h4 class=""><span id="modelname">ModelName</span></h4>
+            <h4 class=""><span id="modelname">ModelName</span><span class="loader"></span></h4>
             <div id="xtext-editor" data-editor-xtext-lang="eJSL"
                  class="jumbotron jumbotron-fluid"></div>
           </div>

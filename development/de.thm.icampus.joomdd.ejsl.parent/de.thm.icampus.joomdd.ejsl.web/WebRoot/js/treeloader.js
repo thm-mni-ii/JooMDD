@@ -1,4 +1,4 @@
-define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery,Cookies,jstree,infomodal) {
+define('treeloader',[ 'jquery',"cookie","jstree","alert"], function(jQuery, Cookies, jstree, alert) {
 	   var exports = {};
 	   function context_menu(node){
 			var tree = $('#folder_tree').jstree(true);
@@ -51,7 +51,7 @@ define('treeloader',[ 'jquery',"cookie","jstree","infomodal"], function(jQuery,C
 	            		tree.delete_node(node);
 				    	exports.reload();
 				    }else{
-				    	infomodal.showmodal("Sorry, the selected node cannot be found. (Maybe there's a blank in the file name)");
+                        alert.showError("Sorry, the selected node cannot be found. (Maybe there's a blank in the file name)");
 				    }
 				  }
 				}); 

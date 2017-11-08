@@ -1,4 +1,4 @@
-require(["jquery","infomodal"], function($,infomodal) {
+require(["jquery","alert"], function($, alert) {
 
 	// Load example chosen template in text editor
 	$(".templates").click(function(){
@@ -21,27 +21,24 @@ require(["jquery","infomodal"], function($,infomodal) {
 		var editor = $("#xtext-editor");
 		var save = editor[0].env.editor.xtextServices.saveResource();
 		save.then( value => {
-			infomodal.showmodal("Model has been saved successfully.")
+			alert.showSuccess("Model has been saved successfully.")
 		}, reason => {
-			infomodal.showmodal("Model cannot be saved.")
+            alert.showError("Model cannot be saved.")
 		} );
 		});
 
 		// Generate Code, based on the model in the editor
         $("#generateCode").click(function(){
             var editor = $("#xtext-editor");
-            infomodal.showloadmodal();
+            alert.showloadmodal();
             var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status"});
-            var name = Cookies.get('joomddusername');
-
             generatePromise.then( value => {
-                infomodal.closeloadmodal();
-                var name = Cookies.get('joomddusername');
+                alert.closeloadmodal();
                 treeloader.reload(); // Success!
                 //location.reload();
             }, reason => {
-                infomodal.closeloadmodal();
-                infomodal.showmodal("Code generation failed. The model cannot be read."); // Error!
+                alert.closeloadmodal();
+                alert.showError("Code generation failed. The model cannot be read."); // Error!
             } );
         });
         $("#download").click(function(){
@@ -54,19 +51,19 @@ require(["jquery","infomodal"], function($,infomodal) {
 			var name = Cookies.get('joomddusername');
 			var dataArray = data[0].split("/");
 			if(dataArray[2] == "reverse" && dataArray[dataArray.length-1].endsWith(".xml")){
-				infomodal.showloadmodal();
+				alert.showloadmodal();
 			var modelName = dataArray[dataArray.length-1].replace(".xml",".eJSL")
 				$.ajax({
 					  url: '/reverse-loader/',
 					  type: 'POST',
 					  data: {user:name,manifest:data[0],model:modelName},
 					  success: function(data) {
-						  infomodal.closeloadmodal();
+						  alert.closeloadmodal();
 					    if(data){
 					    	var name = Cookies.get('joomddusername');
 					    	treeloader.reload()
 					    }else{
-					    	infomodal.showmodal("The uploaded extension cannot be extracted. " +
+                            alert.showError("The uploaded extension cannot be extracted. " +
 								"Please select a valid manifest file before clicking this button!");
 					    }
 					  }
@@ -83,9 +80,9 @@ require(["jquery","infomodal"], function($,infomodal) {
 					var namefile = nameArray[nameArray.length-1]
 
 					var response = editorhandler.loadEditor(namefile+"");
+                    alert.showSuccess("Model Successfully loaded.");
 				}else{
-
-				infomodal.showmodal("You can only load one model.");
+					alert.showError("You can only load one model.");
 				}
 			});
 			// Create a new model
@@ -105,7 +102,7 @@ require(["jquery","infomodal"], function($,infomodal) {
 			$('#uploadExtension').click(function(){
 				var name = Cookies.get('joomddusername');
 				var input = $("#uploadExtensionFile")[0].files[0];
-				infomodal.showloadmodal();
+				alert.showloadmodal();
 				$.ajax({ url:"/reverse-loader/?filename=" + input.name,
 						method:"PUT",
 						dataType: 'application/zip',
@@ -113,12 +110,12 @@ require(["jquery","infomodal"], function($,infomodal) {
 						 processData: false,
 						data:input,
 						complete:function(data){
-							infomodal.closeloadmodal();
+							alert.closeloadmodal();
 							if(data){
-								infomodal.showmodal("The extension has been uploaded succesfully.");
+                                alert.showSuccess("The extension has been uploaded succesfully.");
 								treeloader.reload()
 							}else{
-								infomodal.showmodal("An error occured during the upload. You must use a path to a valid extension package (.zip)");
+                                alert.showError("An error occured during the upload. You must use a path to a valid extension package (.zip)");
 							}
 						}
 				});
