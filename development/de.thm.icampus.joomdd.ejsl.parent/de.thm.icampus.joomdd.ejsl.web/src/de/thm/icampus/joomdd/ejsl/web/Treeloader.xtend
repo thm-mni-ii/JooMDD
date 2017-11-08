@@ -19,10 +19,6 @@ class Treeloader extends HttpServlet {
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if(resourcesProvider != null){
-			new SessionProvider(this.servletContext);
-		}
-		
 		var String name = req.session.id;
 		req.session
 		resp.status = HttpServletResponse.SC_OK
@@ -35,13 +31,7 @@ class Treeloader extends HttpServlet {
 			if(name != null)
 			{
 				var String fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + name;
-				
-				var File createsrc = new File(fullPath+"/src")
-				createsrc.mkdirs;
-				var File createrevers = new File(fullPath+"/reverse")
-				createrevers.mkdirs;
-				
-			    var File temp = new File(fullPath)
+				var File temp = new File(fullPath)
 				if(temp.exists)
 				{
 					var Treeitem workspace = new Treeitem(req.getSession(), "download-manager/")

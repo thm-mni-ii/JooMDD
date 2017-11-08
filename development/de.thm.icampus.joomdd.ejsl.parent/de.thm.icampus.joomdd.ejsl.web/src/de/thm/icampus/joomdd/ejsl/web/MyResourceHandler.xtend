@@ -17,8 +17,8 @@ import org.eclipse.xtext.web.server.model.IWebResourceSetProvider
 import org.eclipse.xtext.web.server.model.IXtextWebDocument
 import org.eclipse.xtext.web.server.model.XtextWebDocument
 import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
-import java.io.FileOutputStream
 import org.eclipse.xtext.web.servlet.HttpServiceContext
+import org.eclipse.xtext.web.servlet.HttpSessionWrapper
 
 class MyResourceHandler implements IServerResourceHandler {
 	
@@ -30,18 +30,24 @@ class MyResourceHandler implements IServerResourceHandler {
 	
 	override get(String resourceId, IServiceContext serviceContext) throws IOException {
 		try {
+			var HttpSessionWrapper session = serviceContext.session as HttpSessionWrapper
 			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-			var httpServiceContext = serviceContext as HttpServiceContext;
-			var session = httpServiceContext.request.cookies.findFirst[c|c.name.equals("JSESSIONID")];
-			var sessionID = session.value;
-			var fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + sessionID + resourceId;
-			var File resourceFile = new File (fullPath)
+			var sessionID = session.session.id
+			
+			var fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + sessionID;
+			var File resourceFile = new File (fullPath + resourceId)
+			
+			var File createsrc = new File(fullPath + "/src")
+			createsrc.mkdirs;
+			var File createrevers = new File(fullPath + "/reverse")
+			createrevers.mkdirs;
+			
 			if(!resourceFile.exists)
 			{
 				resourceFile.createNewFile
 			}
 
-			val URI fis = URI.createFileURI (fullPath)
+			val URI fis = URI.createFileURI (fullPath + resourceId)
 			
 			var resourceSet = resourceSetProvider.get(resourceId, serviceContext)
 			val XtextResource resource = resourceSet.getResource(fis, true) as XtextResource
@@ -56,12 +62,12 @@ class MyResourceHandler implements IServerResourceHandler {
 	}
 	
 	override put(IXtextWebDocument document, IServiceContext serviceContext) throws IOException {
-	   var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+	  	var HttpSessionWrapper session = serviceContext.session as HttpSessionWrapper
+		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+		var sessionID = session.session.id
+		var serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String;
 		
-		var httpServiceContext = serviceContext as HttpServiceContext;
-		var session = httpServiceContext.request.cookies.findFirst[c|c.name.equals("JSESSIONID")];
-		var sessionID = session.value;
-		var fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + sessionID + document.resourceId;
+		var fullPath = serverPath + "/" + sessionID + document.resourceId;
 		
 		try {
 		var File resourcesFile = new File(fullPath)

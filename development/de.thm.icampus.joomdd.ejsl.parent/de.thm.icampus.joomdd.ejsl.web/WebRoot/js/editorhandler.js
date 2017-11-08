@@ -18,7 +18,8 @@ define('editorhandler',[ 'jquery',"jstree", "cookie","ace/ace","xtext/xtext-ace"
 				baseUrl: baseUrl ,
 				syntaxDefinition: "xtext-resources/generated/mode-eJSL",
 				theme: "ace/theme/github",
-				resourceId: "/src/" + resourceID
+				resourceId: "/src/" + resourceID,
+				sendFullText: true
 			});
 		 $("#modelname").text(resourceID)
 		 editor.setOptions({

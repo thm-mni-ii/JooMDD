@@ -31,6 +31,9 @@ class EJSLServlet extends XtextServlet {
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
 	override init() {
+		if(resourcesProvider != null){
+			new SessionProvider(this.servletContext);
+		}
 		super.init()
 		val Provider<ExecutorService> executorServiceProvider = [Executors.newCachedThreadPool => [executorServices += it]]
 		new EJSLWebSetup(executorServiceProvider).createInjectorAndDoEMFRegistration()
