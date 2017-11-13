@@ -16,6 +16,7 @@ import com.mongodb.MongoClientOptions
 import com.mongodb.ServerAddress
 import com.mongodb.client.model.Filters
 import de.thm.icampus.joomdd.ejsl.web.database.codec.SessionCodecProvider
+import com.mongodb.client.result.DeleteResult
 
 @Singleton
 class DatabaseLayer {
@@ -89,6 +90,18 @@ class DatabaseLayer {
 		{
 			sessionCollection.insertOne(session);
 			return true;
+		}
+		catch(Exception e)
+		{
+			println(e.message);
+			return false;	
+		}
+	}
+	
+	def removeSession(String sessionID) {
+		try
+		{
+			return database.getCollection("session", Session).deleteOne(Filters.eq("sessionID", sessionID))
 		}
 		catch(Exception e)
 		{
