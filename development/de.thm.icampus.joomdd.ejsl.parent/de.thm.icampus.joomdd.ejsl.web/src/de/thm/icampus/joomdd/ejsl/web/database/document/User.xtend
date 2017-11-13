@@ -2,12 +2,10 @@ package de.thm.icampus.joomdd.ejsl.web.database.document
 
 import org.bson.Document
 import java.sql.Timestamp
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.PBEKeySpec
-import javax.crypto.SecretKey
-import java.security.NoSuchAlgorithmException
+import org.bson.types.ObjectId
 
 class User extends Document {
+	private ObjectId id = new ObjectId;
 	private String username;
 	private String password;
 	private String salt;
@@ -17,6 +15,10 @@ class User extends Document {
 		this.username = username;
 		this.password = password;
 		this.timestamp = timestamp;
+	}
+	
+	def getID() {
+		return id;
 	}
 	
 	def getUsername() {
@@ -29,5 +31,9 @@ class User extends Document {
 	
 	def getTimestamp() {
 		return timestamp;
+	}
+	
+	def setID(ObjectId id) {
+		this.id = id;
 	}
 }

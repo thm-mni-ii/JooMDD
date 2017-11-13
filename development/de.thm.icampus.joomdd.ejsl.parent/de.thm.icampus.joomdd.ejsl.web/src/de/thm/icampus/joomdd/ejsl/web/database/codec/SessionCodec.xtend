@@ -35,8 +35,7 @@ class SessionCodec implements Codec<Session> {
 
     override void encode(BsonWriter writer, Session session, EncoderContext encoderContext) {
         writer.writeStartDocument();
-        writer.writeName("userID");
-        writer.writeObjectId(session.userID)
+        writer.writeObjectId("userID", session.userID)
         writer.writeName("sessionID");
         writer.writeString(session.sessionID);
         writer.writeName("timestamp");

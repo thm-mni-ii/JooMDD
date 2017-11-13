@@ -21,7 +21,7 @@ import com.mongodb.client.model.Filters
 @WebServlet(name = 'UserRegistrationService', urlPatterns = '/register')
 class UserRegistrationService extends HttpServlet {
 	
-	DatabaseLayer dbConnection = DatabaseLayer.instance;
+	DatabaseLayer db = DatabaseLayer.instance;
 		
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		val username = req.getParameter("username");
@@ -31,14 +31,14 @@ class UserRegistrationService extends HttpServlet {
 		
 		if (password.equals(passwordConfirm))
 		{
-			var storedUser = dbConnection.database.getCollection("user", User).find(Filters.eq("username", username)).first
+			var storedUser = db.getUserByUsername(username);
 			if (storedUser === null)
 			{			    
 				val passwordHash = generateStorngPasswordHash(password)
 						
 				var user = new User(username, passwordHash, timestamp);
 				
-				var added = dbConnection.addUser(user);	
+				var added = db.addUser(user);	
 				
 				if (added)
 				{

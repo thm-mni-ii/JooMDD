@@ -14,6 +14,8 @@ import org.bson.codecs.configuration.CodecRegistries
 import de.thm.icampus.joomdd.ejsl.web.database.codec.UserCodecProvider
 import com.mongodb.MongoClientOptions
 import com.mongodb.ServerAddress
+import com.mongodb.client.model.Filters
+import de.thm.icampus.joomdd.ejsl.web.database.codec.SessionCodecProvider
 
 @Singleton
 class DatabaseLayer {
@@ -37,7 +39,9 @@ class DatabaseLayer {
         {
         	var CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
                 CodecRegistries.fromProviders(new UserCodecProvider()),
+                CodecRegistries.fromProviders(new SessionCodecProvider()),
                 MongoClient.getDefaultCodecRegistry());
+                
         	var MongoClientOptions options = MongoClientOptions.builder()
                 .codecRegistry(codecRegistry).build();
 			mongoClient = new MongoClient(new ServerAddress("localhost" , 27017), options);
@@ -65,6 +69,32 @@ class DatabaseLayer {
 	
 	def getDatabase() {
 		return database;
+	}
+	
+	def getUserByUsername(String username) {
+		return database.getCollection("user", User).find(Filters.eq("username", username)).first
+	}
+	
+	def getUserBySessionID(String sessionID) {
+		var session = database.getCollection("session", Session).find(Filters.eq("sessionID", sessionID)).first
+		if (session === null)
+		{
+			return null;
+		}
+		return database.getCollection("user", User).find(Filters.eq("_id", session.userID)).first
+	}
+		
+	def addSession(Session session) {
+		try
+		{
+			sessionCollection.insertOne(session);
+			return true;
+		}
+		catch(Exception e)
+		{
+			println(e.message);
+			return false;	
+		}
 	}
 	
 }

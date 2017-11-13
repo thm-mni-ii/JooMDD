@@ -25,18 +25,20 @@ class UserCodec implements Codec<User> {
     override User decode(BsonReader reader, DecoderContext decoderContext)
     {
         reader.readStartDocument();
-        var ObjectId _id = reader.readObjectId;
+        var ObjectId id = reader.readObjectId;
         var String username = reader.readString("username");
         var String password = reader.readString("password");
         var BsonTimestamp timestamp = reader.readTimestamp("timestamp");
         reader.readEndDocument();
 
         var User user = new User(username, password, new Timestamp(timestamp.time));
+        user.ID = id;
         return user;
     }
 
     override void encode(BsonWriter writer, User user, EncoderContext encoderContext) {
         writer.writeStartDocument();
+		writer.writeObjectId(user.ID)
         writer.writeName("username");
         writer.writeString(user.username);
         writer.writeName("password");

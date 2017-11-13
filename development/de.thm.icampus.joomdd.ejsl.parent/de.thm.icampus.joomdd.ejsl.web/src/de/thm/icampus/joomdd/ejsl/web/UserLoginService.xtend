@@ -21,23 +21,28 @@ import java.security.NoSuchAlgorithmException
 import java.security.spec.InvalidKeySpecException
 import java.math.BigInteger
 import com.mongodb.client.model.Filters
+import de.thm.icampus.joomdd.ejsl.web.database.document.Session
 
 @WebServlet(name = 'UserLoginService', urlPatterns = '/login')
 class UserLoginService extends HttpServlet {	
 	
-	DatabaseLayer dbConnection = DatabaseLayer.instance;
+	DatabaseLayer db = DatabaseLayer.instance;
 		
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		val username = req.getParameter("username");
 		var password = req.getParameter("password");
 		
-		var storedUser = dbConnection.database.getCollection("user", User).find(Filters.eq("username", username)).first
+		var storedUser = db.getUserByUsername(username)
 		
 		if (storedUser !== null)
 		{	    
 			val valid = validatePassword(password, storedUser.password)
 			if (valid)
 			{
+				var newSessionID = req.changeSessionId
+				val timestamp = new Timestamp(new Date().time);
+				var session = new Session(storedUser.ID, newSessionID, timestamp);
+				db.addSession(session);
 				resp.setStatus(HttpServletResponse.SC_OK)
 			}
 			else
