@@ -48,19 +48,17 @@ require(["jquery","alert"], function($, alert) {
 		// Extract a model from a valid manifest file
 		$("#extractModel").click(function(){
 			var data = $('#folder_tree').jstree(true).get_selected();
-			var name = Cookies.get('joomddusername');
 			var dataArray = data[0].split("/");
-			if(dataArray[2] == "reverse" && dataArray[dataArray.length-1].endsWith(".xml")){
+			if(dataArray[1] == "reverse" && dataArray[dataArray.length-1].endsWith(".xml")){
 				alert.showloadmodal();
 			var modelName = dataArray[dataArray.length-1].replace(".xml",".eJSL")
 				$.ajax({
 					  url: '/reverse-loader/',
 					  type: 'POST',
-					  data: {user:name,manifest:data[0],model:modelName},
+					  data: {manifest:data[0],model:modelName},
 					  success: function(data) {
 						  alert.closeloadmodal();
 					    if(data){
-					    	var name = Cookies.get('joomddusername');
 					    	treeloader.reload()
 					    }else{
                             alert.showError("The uploaded extension cannot be extracted. " +

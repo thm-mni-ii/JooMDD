@@ -26,20 +26,13 @@ class ReverseLoader extends HttpServlet {
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var String name = req.session.getAttribute("joomddusername") as String
-		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
-		
-		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername")) ){
-			resp.sendError(404,"User not in system")
-			return
-		}
+		var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
 
-		var String user = req.getParameter("user")
-		var String manifest = req.getParameter("manifest").replace("download-manager", server)
+		var String sessionID = req.session.id
+		var String manifest = serverPath + "/" + sessionID + req.getParameter("manifest").replace("download-manager", "")
 		var String model =  req.getParameter("model")
 		
-		var String target = server +"/"+user+"/src/"+model
+		var String target = serverPath + "/" + sessionID + "/src/" + model
 		
 		var ServletContext context = this.servletContext;
 
@@ -69,30 +62,23 @@ class ReverseLoader extends HttpServlet {
 	}
 	
 	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var String name = req.session.getAttribute("joomddusername") as String
+		var String sessionID = req.session.id
 		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
 		
-		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername")) ){
-			resp.sendError(404,"User not in system")
-			return
-		}
-	 resp.status = HttpServletResponse.SC_OK
+		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
-	  var String folderName = req.getParameter("filename").replace(".zip","").trim
-	  var String srcZip =  server+ "/" +name +"/reverse"+ "/" +folderName+ "/"+folderName+".zip"
-	  var File createScr = new File(server+ "/" +name +"/reverse"+ "/" +folderName);
-	  if(!createScr.exists)
-	       createScr.mkdirs
-	  var String path = writeZip(srcZip,req.inputStream)
-	   println(folderName);
-		decompress(path,name,server, folderName)
+		var String folderName = req.getParameter("filename").replace(".zip","").trim
+		var String srcZip =  server+ "/" + sessionID +"/reverse"+ "/" + folderName + "/" + folderName + ".zip"
+		var File createScr = new File(server+ "/" + sessionID +"/reverse"+ "/" + folderName);
+		if(!createScr.exists)
+		createScr.mkdirs
+		var String path = writeZip(srcZip,req.inputStream)
+		println(folderName);
+		decompress(path, sessionID, server, folderName)
 		var File deleteSrc = new File (srcZip) 
 		deleteSrc.delete
-		
 		val gson = new Gson
-		
 		gson.toJson(true, resp.writer)
 	}
 	
