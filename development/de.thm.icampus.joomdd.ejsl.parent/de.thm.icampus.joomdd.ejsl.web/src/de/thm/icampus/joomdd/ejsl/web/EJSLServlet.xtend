@@ -37,7 +37,6 @@ class EJSLServlet extends XtextServlet {
 		super.init()
 		val Provider<ExecutorService> executorServiceProvider = [Executors.newCachedThreadPool => [executorServices += it]]
 		new EJSLWebSetup(executorServiceProvider).createInjectorAndDoEMFRegistration()
-		
 	}
 	
 	override destroy() {

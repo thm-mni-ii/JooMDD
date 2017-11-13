@@ -10,6 +10,7 @@ dependencies {
 	compile "org.webjars:requirejs:2.3.3"
 	compile "org.webjars:jquery:2.2.4"
 	compile "org.webjars:ace:1.2.8"
+	compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.5.0'
 	providedCompile "org.eclipse.jetty:jetty-annotations:9.2.11.v20150529"
 	providedCompile "org.slf4j:slf4j-simple:1.7.12"
 }
@@ -24,10 +25,6 @@ task jettyRun(type:JavaExec) {
 	group = 'run'
 	description = 'Starts an example Jetty server with your language'
 }
-
-
-
-
 
 task deleteXtendGen (type: Delete){
 	description 'delete Xtend-Gen Folder for the Project'

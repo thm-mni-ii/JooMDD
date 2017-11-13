@@ -13,6 +13,30 @@ require(["jquery","alert"], function($, alert) {
 			  editor[0].env.editor.getSession().setValue(msg);
 		  });
 	});
+	
+	$("#registerBtn").click(function(){
+	var data = $("#register-form").serialize();
+	$.ajax({
+		  method: "POST",
+		  url: "/register",
+		  data: data
+		})
+		  .done(function( msg ) {
+			  console.log(msg);
+		  });
+	});
+	
+	$("#loginBtn").click(function(){
+	var data = $("#login-form").serialize();
+	$.ajax({
+		  method: "POST",
+		  url: "/login",
+		  data: data
+		})
+		  .done(function( msg ) {
+			  console.log(msg);
+		  });
+	});
 
 	require(["cookie","treeloader"],function(Cookies,treeloader) {
 
