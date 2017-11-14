@@ -24,18 +24,18 @@ class Treeitem {
 	      a_attr = new  HashMap<String,String>
 		searchChild(path,parentid,sourceName)
 	}
-	new(HttpSession session, String id){
+	new(String workspacePath, String id){
 		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		children = new LinkedList<Treeitem>
 		state = new HashMap<String,Boolean>
 		li_attr = new HashMap<String,String> 
 	     a_attr = new  HashMap<String,String>
-		loadOrigin(session,resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String, id)
+		loadOrigin(workspacePath, id)
 	}
 	
-	def loadOrigin(HttpSession session, String source,String id) {
+	def loadOrigin(String workspacePath, String id) {
 		var workspaceName = "workspace"
-		var File path = new File(source + "/" + session.id)
+		var File path = new File(workspacePath)
 		this.text = ""
 		this.id = id
 		icon ="jstree-folder"

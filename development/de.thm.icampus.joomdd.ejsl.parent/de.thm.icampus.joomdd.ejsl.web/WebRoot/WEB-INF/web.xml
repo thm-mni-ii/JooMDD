@@ -2,16 +2,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
-                           
-                           
+                   
+	<!-- Sets the session timeout to 60 minutes -->
+	<session-config>
+		<session-timeout>60</session-timeout>
+	</session-config>    
+	             
     <listener>
 		<description>sessionListener</description> 
 		<listener-class>de.thm.icampus.joomdd.ejsl.web.listener.ApplicationSessionListener</listener-class>
-	</listener>  
-	
-	<!-- Define a session timeout to 60 minutes -->
-	<session-config>
-		<session-timeout>60</session-timeout>
-	</session-config>                 
+	</listener> 
 
+	<filter>
+	   <filter-name>XtextServiceFilter</filter-name>
+	   <filter-class>de.thm.icampus.joomdd.ejsl.web.filter.XtextServiceFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+	   <filter-name>XtextServiceFilter</filter-name>
+	   <url-pattern>/xtext-service/*</url-pattern>
+	</filter-mapping>
 </web-app>

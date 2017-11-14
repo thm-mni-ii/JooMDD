@@ -12,15 +12,18 @@ import javax.servlet.http.HttpServletResponse
 import org.eclipse.xtext.resource.IResourceServiceProvider
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.web.database.document.User
+import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 
 @WebServlet(name = 'Treeloader', urlPatterns = '/tree-loader/*')
 class Treeloader extends HttpServlet {
 	
 	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
+	DatabaseLayer db = DatabaseLayer.instance;
+	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var String name = req.session.id;
-		req.session
+		var String sessionID = req.session.id;
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		
@@ -28,13 +31,23 @@ class Treeloader extends HttpServlet {
 		val gson = new Gson
 		try
 		{
-			if(name != null)
+			if(sessionID != null)
 			{
-				var String fullPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/" + name;
-				var File temp = new File(fullPath)
+				var userPath = sessionID;
+				var User user = db.getUserBySessionID(sessionID);
+				var serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String;
+				
+				if (user !== null)
+				{
+					userPath = user.username
+				}
+				
+				var workspacePath = serverPath + "/" + userPath;
+				
+				var File temp = new File(workspacePath)
 				if(temp.exists)
 				{
-					var Treeitem workspace = new Treeitem(req.getSession(), "download-manager")
+					var Treeitem workspace = new Treeitem(workspacePath, "download-manager")
 					workspace.text = "My Workspace"
 					workspace.setState("opened", true)
 					var EList <Treeitem> result = new BasicEList<Treeitem>
@@ -48,7 +61,7 @@ class Treeloader extends HttpServlet {
 			}
 			else
 			{
-				gson.toJson("Username doesn't exist" + name, resp.writer)
+				gson.toJson("No sessionID found.", resp.writer)
 			}
 		}
 		catch(Exception e)
