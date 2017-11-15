@@ -7,7 +7,7 @@ dependencies {
 	compile "org.eclipse.xtext:org.eclipse.xtext.xbase.web:${xtextVersion}"
 	compile "org.eclipse.xtext:org.eclipse.xtext.web.servlet:${xtextVersion}"
 	compile "org.eclipse.xtend:org.eclipse.xtend.lib:${xtextVersion}"
-	compile "org.webjars:requirejs:2.3.3"
+	runtime group: 'org.webjars', name: 'requirejs', version: '2.3.5'
 	compile "org.webjars:jquery:2.2.4"
 	compile "org.webjars:ace:1.2.8"
 	compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.5.0'
