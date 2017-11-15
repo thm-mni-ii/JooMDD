@@ -36,6 +36,7 @@ require(["jquery","alert"], function($, alert) {
                 alert.closeloadmodal();
                 treeloader.reload(); // Success!
                 //location.reload();
+                alert.showSuccess("Code successful generated.")
             }, reason => {
                 alert.closeloadmodal();
                 alert.showError("Code generation failed. The model cannot be read."); // Error!

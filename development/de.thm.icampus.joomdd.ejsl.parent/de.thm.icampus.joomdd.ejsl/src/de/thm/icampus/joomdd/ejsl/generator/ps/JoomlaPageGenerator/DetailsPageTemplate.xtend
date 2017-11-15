@@ -11,19 +11,23 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
+/**
+ * This class contains the templates to generate the files and necessary code or pages.
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ */
 class DetailsPageTemplate extends   DynamicPageTemplate {
 	
 	private ExtendedDynamicPage dpage
 	private ExtendedComponent  com
 	private String sec
-	private   DetailsPageTemplateBackendHelper backHelp
-	private   DetailsPageTemplateFrontEndHelper frontHelp
+	private DetailsPageTemplateBackendHelper backHelp
+	private DetailsPageTemplateFrontEndHelper frontHelp
 	private String path
 	private String pagename
 	private ExtendedEntity mainEntity
 	
-	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa){
-		
+	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {
 		dpage = dp
 		com = cp
 		sec = section
@@ -35,112 +39,97 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		mainEntity = dp.extendedEntityList.get(0)
 	}
 	
-	
-	
-	def void generateView(){
-		
-		if(sec.equalsIgnoreCase("admin")){
-		  generateJoomlaDirectory(path +"/" + pagename)
-		  generateFile(path+"/" + pagename +"/"+ "view.html.php", generateAdminViewClass())
-		  generateJoomlaDirectory(path +"/" + pagename +"/" + "tmpl" )
-		  generateFile(path+"/" + pagename+"/" + "tmpl"+"/" + "edit.php" , generateAdminViewLayout())
-		 
+	def void generateView() {
+	    if(sec.equalsIgnoreCase("admin")) {
+	        generateJoomlaDirectory(path +"/" + pagename)
+	        generateFile(path+"/" + pagename +"/"+ "view.html.php", generateAdminViewClass())
+	        generateJoomlaDirectory(path +"/" + pagename +"/" + "tmpl" )
+	        generateFile(path+"/" + pagename+"/" + "tmpl"+"/" + "edit.php" , generateAdminViewLayout())
+		 } else {
+		     if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {
+		         generateFrontEndEditView(pagename+"edit")
+		         generateFrontEndShowView(pagename+"edit")
+		     } else {
+		         if( !dpage.extendedEditedFieldsList.isEmpty) {
+		             generateFrontEndEditView(pagename)
+		         } else {
+		             generateFrontEndShowView(pagename)
+		         }
+		     }
 		 }
-		 else{
-			 if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty){	
-			      generateFrontEndEditView(pagename+"edit")
-			      generateFrontEndShowView(pagename+"edit")
-			  		}
-		  		else{
-			       if( !dpage.extendedEditedFieldsList.isEmpty){
-			       	generateFrontEndEditView(pagename)
-			       }else{
-			       	generateFrontEndShowView(pagename)
-			       }
-			       
-				}
-		
-		 }
-		
 	}
-	def void generateFrontEndShowView(String editPagename){
-		 generateJoomlaDirectory(path+"/" + pagename)
-		  generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView(false, ''))
-		  generateJoomlaDirectory(path +"/"+ pagename+"/" + "tmpl")
-		   generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow(editPagename))
-		   generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
-		
+	
+	def void generateFrontEndShowView(String editPagename) {
+	    generateJoomlaDirectory(path+"/" + pagename)
+	    generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView(false, ''))
+	    generateJoomlaDirectory(path +"/"+ pagename+"/" + "tmpl")
+	    generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow(editPagename))
+	    generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
 	}
-	def void generateFrontEndEditView(String editPagename){
-		 generateJoomlaDirectory(path+"/" + editPagename)
-		  generateFile(path+"/" + editPagename+"/"+ "view.html.php", generateSiteView(true,editPagename))
-		  generateJoomlaDirectory(path+"/" + editPagename+"/" + "tmpl")
-		   generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.php" , generateSiteViewLayoutEdit(editPagename))
-		   generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(editPagename, dpage, com))
-		   
+	
+	def void generateFrontEndEditView(String editPagename) {
+	    generateJoomlaDirectory(path+"/" + editPagename)
+	    generateFile(path+"/" + editPagename+"/"+ "view.html.php", generateSiteView(true,editPagename))
+	    generateJoomlaDirectory(path+"/" + editPagename+"/" + "tmpl")
+	    generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.php" , generateSiteViewLayoutEdit(editPagename))
+	    generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(editPagename, dpage, com)) 
 	}
-	def void generateController(){
-		if(sec.equalsIgnoreCase("admin")){
-		  generateFile(path+"/" + pagename + ".php", generateAdminController())
-		 }else{
-		  generateFile(path+"/" + pagename +"edit" +".php", generateSiteController(true))
-		  generateFile(path+"/" + pagename+ ".php", generateSiteController(false))
-		}
+	
+	def void generateController() {
+	    if(sec.equalsIgnoreCase("admin")) {
+	        generateFile(path+"/" + pagename + ".php", generateAdminController())
+	    } else {
+	        generateFile(path+"/" + pagename +"edit" +".php", generateSiteController(true))
+	        generateFile(path+"/" + pagename+ ".php", generateSiteController(false))
+	    }
 	}
-	def void generateModel(){
-		if(sec.equalsIgnoreCase("admin")){
-		
-		  generateFile(path+"/" + pagename + ".php", generateAdminModel())
-		  
-		   generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
-		 }else{
-		 generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+	
+	def void generateModel() {
+	    if(sec.equalsIgnoreCase("admin")) {
+	        generateFile(path+"/" + pagename + ".php", generateAdminModel())
+	        generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+	    } else {
+	        generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 		 	
-		 if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty){	
-		  generateFile(path+"/" + pagename+"edit"+ ".php", generateSiteModelEdit(pagename+"edit"))
-		   
-		  generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
-		  
-		  }else{
-		  	 if( !dpage.extendedEditedFieldsList.isEmpty){
-		  	 	 generateFile(path+"/" + pagename+ ".php", generateSiteModelEdit(pagename))
-		  	 }else{
-		  	 	 generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
-		  
-		  	 }
-		  }
+		 	if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {	
+		 	    generateFile(path+"/" + pagename+"edit"+ ".php", generateSiteModelEdit(pagename+"edit"))
+		 	    generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)		  
+		 	} else {
+		 	    if (!dpage.extendedEditedFieldsList.isEmpty) {
+		 	        generateFile(path+"/" + pagename+ ".php", generateSiteModelEdit(pagename))
+		 	    } else {
+		 	        generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)		  
+		 	    }
+		 	}
 		}
 	}
 	
 	def CharSequence generateAdminController()'''
- «generateFileDoc(dpage,com,true)»
- jimport('joomla.application.component.controllerform');
- jimport('joomla.filesystem.file');
- /**
- * «dpage.name.toFirstUpper» controller class.
- * @generated
- */
- class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends JControllerForm
- {
- 
- function __construct() {
-	    	«var IndexPage inPage = Slug.getPageForAll(dpage, com) »
-	    	«IF inPage != null»
-	    	$this->view_list = '«Slug.getPageForAll(dpage, com).name.toLowerCase»';
+	«generateFileDoc(dpage,com,true)»
+	jimport('joomla.application.component.controllerform');
+	jimport('joomla.filesystem.file');
+	/**
+	 * «dpage.name.toFirstUpper» controller class.
+	 * @generated
+	 */
+	class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends JControllerForm
+	{
+	    function __construct()
+	    {
+	        «var IndexPage inPage = Slug.getPageForAll(dpage, com) »
+	        «IF inPage != null»
+	        $this->view_list = '«Slug.getPageForAll(dpage, com).name.toLowerCase»';
 	        «ELSE»
-	    	$this->view_list = '<Put the View Name>';
+	        $this->view_list = '<Put the View Name>';
 	        «ENDIF»
 	        parent::__construct();
- }
+	    }
 	    «IF dpage.haveFiletoLoad»
 	    «backHelp.genAdminControllerSave()»
 	    «ENDIF»
-	
- }
+	}
 	'''
-	def CharSequence generateModelLoadFormDataFunction()'''
-	
-	
+	def CharSequence generateModelLoadFormDataFunction()'''	
 	/**
 	 * Method to get the data that should be injected in the form.
 	 *
@@ -160,6 +149,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		return $data;
 	}
 	'''
+	
 	def CharSequence generateModelGetItemFunction() '''
 	/**
 	 * Method to get a single record.
@@ -174,36 +164,36 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	{
 		$app	= JFactory::getApplication();
 		$pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
-        $table = $this->getTable();
-
-        if ($pk > 0)
-        {
-            try{
-               // Attempt to load the row.
-               $table->load($pk);
-           }catch (Exception $e){
-               // Check for a table object error.
-               throw new Exception('Database Failur:  no element Found'. $e );
-           }
-        }
-
-       // Convert to the JObject before adding other data.
-        $properties = $table->getProperties(1);
-        $item =  ArrayHelper::toObject($properties);
-
-        if (property_exists($item, 'params'))
-        {
-            $registry = new Registry;
-            $registry->loadString($item->params);
-            $item->params = $registry->toArray();
-        }
+		$table = $this->getTable();
+		if ($pk > 0)
+		{
+		    try {
+		        // Attempt to load the row.
+		        $table->load($pk);
+		    }
+		    catch (Exception $e)
+		    {
+		        // Check for a table object error.
+		        throw new Exception('Database Failur:  no element Found'. $e );
+		    }
+		}
+		
+		// Convert to the JObject before adding other data.
+		$properties = $table->getProperties(1);
+		$item =  ArrayHelper::toObject($properties);
+		
+		if (property_exists($item, 'params'))
+		{
+		    $registry = new Registry;
+		    $registry->loadString($item->params);
+		    $item->params = $registry->toArray();
+		}
 
 		return $item;
 	}
 	'''
 	
 	def CharSequence generateModelGetFormFunction()'''
-	
 	/**
 	 * Method to get the record form.
 	 *
@@ -215,32 +205,32 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		
-		
-
-		// Get the form.
+	    // Get the form.
 		$form = $this->loadForm('«Slug.nameExtensionBind("com",com.name.toLowerCase)».«dpage.name.toLowerCase»', '«dpage.extendedEntityList.get(0).name.toLowerCase»', array('control' => 'jform', 'load_data' => $loadData));
 
-		if (empty($form)) {
-			return false;
+		if (empty($form))
+		{
+		    return false;
 		}
 
 		return $form;
 	}
 	'''
+	
 	def CharSequence generateAdminModel()'''
 	«generateFileDoc(dpage,com,true)»
-	
 	jimport('joomla.application.component.modeladmin');
+	
 	use Joomla\Utilities\ArrayHelper;
 	use Joomla\Registry\Registry;
 	require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
+	
 	/**
 	 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
 	 */
 	class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends JModelAdmin
 	{
-		/**
+	    /**
 		 * @var		string	The prefix to use with controller messages.
 		 * @since	1.6
 		 */
@@ -260,113 +250,120 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	 * Generate the code for the save-methode of a model in backend. 
 	 */
 	def CharSequence generateModelAdminSaveData() '''
-	public function save($data){
-	
-	«IF dpage.haveFiletoLoad»
-	$files = JFactory::getApplication()->input->files->get("jform", array(), 'array');
-	$item = $this->getItem();
-	if(isset($files) && count($files) >0 ){
-		$params = JComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
-		foreach ($files as $keys=>$file){
-			if(!empty($file)){
-				if(strpos($file['type'],"image")!==false){
-					$path = $params->get("«dpage.name.toLowerCase»_image_path");
-				}else{
-					$path = $params->get("«dpage.name.toLowerCase»_file_path");
-				}
-			  $data[$keys]=«com.name.toFirstUpper»Helper::uploadFiles($file,$path,$item->$keys);
-			}
-		}
-
-	}
-	«ENDIF»
-	«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
-	$inputs = JFactory::getApplication()->input->get("jform", array(), 'array');
-	if(parent::save($data)){
-		if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
-					$inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
-	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
-	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
-	 $this->set«ref.entity.name»($inputs);
-	«ENDIF»
-	«ENDFOR»
-	}else{
-				return false;
-			}
-		return true;
-	 «ELSE»
-	 return parent::save($data);        
-	«ENDIF»
+	public function save($data)
+	{
+	    «IF dpage.haveFiletoLoad»
+	    $files = JFactory::getApplication()->input->files->get("jform", array(), 'array');
+	    $item = $this->getItem();
+	    if(isset($files) && count($files) >0)
+	    {
+	        $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+	        foreach ($files as $keys=>$file)
+	        {
+	            if(!empty($file))
+	            {
+	                if(strpos($file['type'],"image")!==false)
+	                {
+	                    $path = $params->get("«dpage.name.toLowerCase»_image_path");
+	                }
+	                else
+	                {
+	                    $path = $params->get("«dpage.name.toLowerCase»_file_path");
+	                }
+	                $data[$keys]=«com.name.toFirstUpper»Helper::uploadFiles($file,$path,$item->$keys);
+	            }
+	        }
+	    }
+	    «ENDIF»
+	    «IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
+	    $inputs = JFactory::getApplication()->input->get("jform", array(), 'array');
+	    if(parent::save($data))
+	    {
+	        if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
+	        {
+	            $inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
+	        }
+	        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
+	        «IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
+	        $this->set«ref.entity.name»($inputs);
+	        «ENDIF»
+	        «ENDFOR»
+	    }
+	    else
+	    {
+	        return false;
+	    }
+	    return true;
+	«ELSE»
+	    return parent::save($data);        
+    «ENDIF»
 	}
 	'''
 	
 	def CharSequence generateModelReferenceSave()'''
 	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
 	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
-	 public function set«ref.entity.name»($inputs){
-	 	«var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
+	public function set«ref.entity.name»($inputs)
+	{
+	    «var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
 	 	«FOR Attribute attr : referenceAttr»
-	 		$«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
+	 	$«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
 	 	«ENDFOR»
-	 		$«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
-	 		«FOR ExtendedAttribute toAttr: ref.extendedAttributes»
-	 		$«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
-	 		«ENDFOR»
-
-	 		if(«Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")»){
-	 			if(!empty($«ref.entity.name.toLowerCase»_id)){
-	 			foreach( $«ref.entity.name.toLowerCase»_id as $item){
-	 				if(intval($item) != 0){
-	 					$mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
+	 	$«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
+	 	«FOR ExtendedAttribute toAttr: ref.extendedAttributes»
+	 	$«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
+	 	«ENDFOR»
+	 	
+	 	if(«Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")»)
+	 	{
+	 	    if(!empty($«ref.entity.name.toLowerCase»_id))
+	 	    {
+	 	        foreach( $«ref.entity.name.toLowerCase»_id as $item)
+	 	        {
+	 	            if(intval($item) != 0)
+	 	            {
+	 	                $mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
 	 					$mappingTableDelete->delete($item);
 	 				}
 	 			}
-	 			}
-	 			$mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
-	            for($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++){
-	         
-	 				
-	 				$dataToSave = array();
-	 				«FOR Attribute attr: referenceAttr»
-	 				$dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
-	 				«ENDFOR»
-	 				«FOR ExtendedAttribute toattr: ref.extendedAttributes»
-	 				$dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
-	 				«ENDFOR»
-	 				$dataToSave["state"]=1;
-	 				$mappingTable->save($dataToSave);
-	 				$mappingTable->reset();
-	 					 			
-	            }
-	 			
-	 
+	 		}
+	 		$mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
+	        for($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++)
+	        {
+	            $dataToSave = array();
+	 			«FOR Attribute attr: referenceAttr»
+	 			$dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
+	 			«ENDFOR»
+	 			«FOR ExtendedAttribute toattr: ref.extendedAttributes»
+	 			$dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
+	 			«ENDFOR»
+	 			$dataToSave["state"]=1;
+	 			$mappingTable->save($dataToSave);
+	 			$mappingTable->reset();
 	 		}
 	 	}
+	 }
 	«ENDIF»
 	«ENDFOR»
 	'''
-
-	
 	
 	def generateAdminViewClass()'''
 	«generateFileDoc(dpage,com, true)»
-		jimport('joomla.application.component.view');
+	jimport('joomla.application.component.view');
 
-		/**
-		 * View to edit a «dpage.name»
-		 */
-		class «com.name.toFirstUpper»View«dpage.name.toFirstUpper» extends JViewLegacy {
+	/**
+	 * View to edit a «dpage.name»
+	 */
+	class «com.name.toFirstUpper»View«dpage.name.toFirstUpper» extends JViewLegacy
+	{
+	    protected $state;
+		protected $item;
+		protected $form;
 		
-		    protected $state;
-		    protected $item;
-		    protected $form;
-		    
-		    «backHelp.generateAdminViewDisplay()»
-		    «backHelp.generateAdminViewAddToolbar()»
-		}		
-			'''
-	
-	
+		«backHelp.generateAdminViewDisplay()»
+		«backHelp.generateAdminViewAddToolbar()»
+	}
+	'''
 	
 	def CharSequence generateAdminViewLayout()'''
 	«generateFileDoc(dpage,com, false)»
@@ -403,7 +400,7 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 		        }
 		    }
 		</script>
-		«backHelp.generateAdminViewLayoutFormular()»
+		«backHelp.generateAdminViewLayoutForm()»
 	'''
 	
 	def CharSequence generateSiteController(Boolean isedit)'''
@@ -414,15 +411,16 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	/**
 	 * «dpage.name.toFirstUpper» controller class to «if(isedit)  "Edit" else "Show"» a Item .
 	 */
-	class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»Controller {
-		«IF isedit»
+	class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»Controller
+	{
+	    «IF isedit»
 		«frontHelp.generateSiteControllerSave»
 		«frontHelp.generateSiteControllerCancel»
 		«frontHelp.generateSiteControllerRemove»
 		«ELSE»
 		«frontHelp.generateSiteControllerRemove»
 		«ENDIF»
-		}
+	}
 	'''
 	def CharSequence generateSiteModelShow()'''
 	«generateFileDoc(dpage,com,true)»
@@ -435,7 +433,8 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	/**
 	 * Model to show a Dataitem
 	 */
-	class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends JModelItem {
+	class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends JModelItem
+	{
 		«frontHelp.generateSiteModelPopulatestate()»
 		«generateModelGetItemFunction»
 		«frontHelp.generateSiteModelCheckin()»
@@ -457,7 +456,8 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	/**
 	 * Model to Edit  a Dataitem
 	 */
-	class «com.name.toFirstUpper»Model«editPageName.toFirstUpper» extends JModelForm {
+	class «com.name.toFirstUpper»Model«editPageName.toFirstUpper» extends JModelForm
+	{
 		var $_item = null;
 		«frontHelp.generateSiteModelPopulatestate()»
 		«frontHelp.generateSiteModelCheckin()»
@@ -477,19 +477,19 @@ class DetailsPageTemplate extends   DynamicPageTemplate {
 	«generateFileDoc(dpage,com,true)»
 	
 	jimport('joomla.application.component.view');
-
-/**
- * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»
- */
-class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else dpage.name.toFirstUpper  » extends JViewLegacy {
-
-    protected $state;
-    protected $item;
-    protected $form;
-    protected $params;
-    «frontHelp.generateSiteViewDisplay(isedit, editPageName)»
-    «frontHelp.generateSiteViewprepareDocument()»
-    } 
+	
+	/**
+	 * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»
+	 */
+	class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else dpage.name.toFirstUpper  » extends JViewLegacy
+	{
+	    protected $state;
+	    protected $item;
+	    protected $form;
+	    protected $params;
+	    «frontHelp.generateSiteViewDisplay(isedit, editPageName)»
+	    «frontHelp.generateSiteViewprepareDocument()»
+	}
 	'''
 	def CharSequence generateSiteViewLayoutEdit(String editPageName)'''
 	«generateFileDoc(dpage,com,false)»
@@ -528,7 +528,5 @@ class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else d
 	}
 	?>
 	«frontHelp.generateSiteViewLayoutShow(editPageName)»
-	 '''
-		
-		
+	'''
 }

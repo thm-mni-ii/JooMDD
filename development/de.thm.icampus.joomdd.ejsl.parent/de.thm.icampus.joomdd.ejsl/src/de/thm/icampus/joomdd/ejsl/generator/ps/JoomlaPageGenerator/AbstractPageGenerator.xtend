@@ -51,29 +51,28 @@ abstract public class AbstractPageGenerator {
 
    def CharSequence generateFileDoc(Page page, ExtendedComponent component, boolean denied)'''
 	<?php
-		/**
-		«IF component.manifest != null»
-		* @version «component.manifest.version»
-		«ENDIF»
-		* @category Joomla component
-		* @subpackage com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
-		* @name «component.name»View
-		«IF component.manifest != null»
-		«FOR author : component.manifest.authors»
-			* @author «author.name», <«author.authoremail»>
-		«ENDFOR»
-		* @copyright «component.manifest.copyright»
-		* @license «component.manifest.license»
-		*/
-		«ENDIF»
-		«IF denied»
-		defined('_JEXEC') or die('Restricted access');
-		«ENDIF»
+	
+	/**
+	 «IF component.manifest != null»
+	 * @version «component.manifest.version»
+	 «ENDIF»
+	 * @category Joomla component
+	 * @subpackage com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
+	 * @name «component.name»View
+	 «IF component.manifest != null»
+	 «FOR author : component.manifest.authors»
+	 * @author «author.name», <«author.authoremail»>
+     «ENDFOR»
+	 * @copyright «component.manifest.copyright»
+	 * @license «component.manifest.license»
+	 */
+	 «ENDIF»
+	«IF denied»
+	defined('_JEXEC') or die('Restricted access');
+	«ENDIF»
 	
 	'''
-
-
-    
+	   
     def CharSequence xmlSiteTemplateContent(String pagename, ExtendedStaticPage page, ExtendedComponent component) '''
         <?xml version="1.0" encoding="utf-8"?>
         <metadata>

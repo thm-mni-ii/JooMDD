@@ -169,7 +169,7 @@
                 <span>Add Model</span>
               </button>
               <!-- Modal to add a new model-->
-              <div class="modal fade" id="addModelModal">
+              <div class="modal fade" id="addModelModal" onload="$('#newModelName').focus();"">
                 <div class="modal-dialog">
                   <div class="modal-content">
 
@@ -182,12 +182,12 @@
                     <!-- Modal body -->
                     <div class="modal-body">
                       <label for="newModelName">Name:</label>
-                      <input type="text" class="form-control" id="newModelName">
+                      <input type="text" class="form-control" id="newModelName" autofocus placeholder="myModel">
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                      <button id="createModel" type="button" class="btn btn-primary" data-dismiss="modal">Add Model</button>
+                      <button id="createModel" type="button" class="btn btn-primary" data-dismiss="modal" onclick="$('#newModelName').val('');">Add Model</button>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
 
