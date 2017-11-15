@@ -24,7 +24,6 @@ class Treeitem {
 		searchChild(path,parentid,sourceName)
 	}
 	new(String workspacePath, String id){
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		children = new LinkedList<Treeitem>
 		state = new HashMap<String,Boolean>
 		li_attr = new HashMap<String,String> 
@@ -33,7 +32,6 @@ class Treeitem {
 	}
 	
 	def loadOrigin(String workspacePath, String id) {
-		var workspaceName = "workspace"
 		var File path = new File(workspacePath)
 		this.text = ""
 		this.id = id

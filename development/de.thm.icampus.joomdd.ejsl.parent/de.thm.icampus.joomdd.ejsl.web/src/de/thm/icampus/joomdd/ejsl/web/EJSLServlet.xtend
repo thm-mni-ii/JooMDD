@@ -8,7 +8,6 @@ import java.util.List
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.servlet.annotation.WebServlet
-import org.eclipse.xtext.resource.IResourceServiceProvider
 import org.eclipse.xtext.web.servlet.XtextServlet
 
 /** 

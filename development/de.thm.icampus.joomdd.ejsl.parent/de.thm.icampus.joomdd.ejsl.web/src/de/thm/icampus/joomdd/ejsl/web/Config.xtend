@@ -42,7 +42,7 @@ class Config {
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			} finally {
-				if (input != null) {
+				if (input !== null) {
 					try {
 						input.close();
 					} catch (IOException e) {

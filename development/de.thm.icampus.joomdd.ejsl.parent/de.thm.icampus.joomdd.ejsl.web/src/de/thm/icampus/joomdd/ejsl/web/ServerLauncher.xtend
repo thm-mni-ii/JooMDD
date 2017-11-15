@@ -17,9 +17,7 @@ import org.eclipse.xtext.resource.IResourceServiceProvider
  * This program starts an HTTP server for testing the web integration of your DSL.
  * Just execute it and point a web browser to http://localhost:8080/
  */
-class ServerLauncher {
-		var static resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-	
+class ServerLauncher {	
 	def static void main(String[] args) { 
 		val server = new Server(new InetSocketAddress('localhost', 8080))
 		server.handler = new WebAppContext => [

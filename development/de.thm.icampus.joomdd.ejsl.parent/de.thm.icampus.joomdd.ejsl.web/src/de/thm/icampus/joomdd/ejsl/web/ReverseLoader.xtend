@@ -18,21 +18,20 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import org.eclipse.xtext.resource.IResourceServiceProvider
+import de.thm.icampus.joomdd.ejsl.web.util.Helper
 
 @WebServlet(name = 'ReverseLoader', urlPatterns = '/reverse-loader/*')
 class ReverseLoader extends HttpServlet {
-
-	Config config = Config.instance;
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
-
 		var String sessionID = req.session.id
-		var String manifest = workspacePath + "/" + sessionID + req.getParameter("manifest").replace("download-manager", "")
-		var String model =  req.getParameter("model")
+
+		var workspaceUserPath = Helper.getWorkspaceUserPath(sessionID)
 		
-		var String target = workspacePath + "/" + sessionID + "/src/" + model
+		var String manifest = workspaceUserPath + req.getParameter("manifest").replace("download-manager", "")
+		var String model = req.getParameter("model")
+		
+		var String target = workspaceUserPath + "/src/" + model
 		
 		var ServletContext context = this.servletContext;
 
@@ -63,19 +62,19 @@ class ReverseLoader extends HttpServlet {
 	
 	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String sessionID = req.session.id
-		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
+		var workspaceUserPath = Helper.getWorkspaceUserPath(sessionID)
 		
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
 		var String folderName = req.getParameter("filename").replace(".zip","").trim
-		var String srcZip =  workspacePath + "/" + sessionID +"/reverse"+ "/" + folderName + "/" + folderName + ".zip"
-		var File createScr = new File(workspacePath + "/" + sessionID +"/reverse"+ "/" + folderName);
+		var String srcZip =  workspaceUserPath + "/reverse" + "/" + folderName + "/" + folderName + ".zip"
+		var File createScr = new File(workspaceUserPath +"/reverse"+ "/" + folderName);
 		if(!createScr.exists)
 		createScr.mkdirs
 		var String path = writeZip(srcZip,req.inputStream)
 		println(folderName);
-		decompress(path, sessionID, workspacePath, folderName)
+		decompress(path, workspaceUserPath, folderName)
 		var File deleteSrc = new File (srcZip) 
 		deleteSrc.delete
 		val gson = new Gson
@@ -101,12 +100,12 @@ class ReverseLoader extends HttpServlet {
 		return filename
 	}
 	
-	private def boolean decompress(String zipIn, String name,String server, String folderName){
-		var String revers= server+ "/" +name +"/reverse"+ "/" +folderName 
+	private def boolean decompress(String zipIn, String workspaceUserPath, String folderName){
+		var String reverse = workspaceUserPath + "/reverse" + "/" +folderName 
 		var ZipFile zipFile = new ZipFile(zipIn);
 	       var Enumeration<? extends ZipEntry> entries = zipFile.entries()
 		
-		var File dest = new File(revers)
+		var File dest = new File(reverse)
 		if(!dest.exists){
 			dest.mkdir
 		}

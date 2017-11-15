@@ -1,8 +1,6 @@
 package de.thm.icampus.joomdd.ejsl.web
 
 import com.google.gson.Gson
-import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
-import de.thm.icampus.joomdd.ejsl.web.database.document.User
 import java.io.File
 import java.io.IOException
 import javax.servlet.ServletException
@@ -12,13 +10,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
-import org.eclipse.xtext.resource.IResourceServiceProvider
+import de.thm.icampus.joomdd.ejsl.web.util.Helper
 
 @WebServlet(name = 'Treeloader', urlPatterns = '/tree-loader/*')
 class Treeloader extends HttpServlet {
-		
-	DatabaseLayer db = DatabaseLayer.instance;
-	Config config = Config.instance;
 	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String sessionID = req.session.id;
@@ -29,18 +24,9 @@ class Treeloader extends HttpServlet {
 		val gson = new Gson
 		try
 		{
-			if(sessionID != null)
+			if(sessionID !== null)
 			{
-				var userPath = sessionID;
-				var User user = db.getUserBySessionID(sessionID);
-				var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
-				
-				if (user !== null)
-				{
-					userPath = user.username
-				}
-				
-				var workspaceUserPath = workspacePath + "/" + userPath;
+				var workspaceUserPath = Helper.getWorkspaceUserPath(sessionID)
 				
 				var File temp = new File(workspaceUserPath)
 				if(temp.exists)

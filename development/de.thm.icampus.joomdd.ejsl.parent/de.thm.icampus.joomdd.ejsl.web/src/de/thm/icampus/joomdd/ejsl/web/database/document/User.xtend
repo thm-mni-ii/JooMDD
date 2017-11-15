@@ -8,7 +8,6 @@ class User extends Document {
 	private ObjectId id = new ObjectId;
 	private String username;
 	private String password;
-	private String salt;
 	private Timestamp timestamp;
 	
 	new(String username, String password, Timestamp timestamp) {

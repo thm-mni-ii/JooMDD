@@ -24,7 +24,6 @@ class MyResourceHandler implements IServerResourceHandler {
 	
 	@Inject IEncodingProvider encodingProvider
 	
-	DatabaseLayer db = DatabaseLayer.instance;
 	Config config = Config.instance;
 	
 	override get(String resourceId, IServiceContext serviceContext) throws IOException {

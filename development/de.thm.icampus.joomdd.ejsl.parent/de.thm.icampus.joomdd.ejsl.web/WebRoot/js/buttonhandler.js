@@ -54,7 +54,7 @@ require(["jquery","alert"], function($, alert) {
 		});
 	});
 
-	require([,"treeloader"],function(treeloader) {
+	require(["treeloader"],function(treeloader) {
 
 		// Save the current model
 		$("#saveModel").click(function(){

@@ -6,16 +6,13 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileReader
 import java.io.IOException
-import java.util.Map
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
-import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import org.eclipse.xtext.resource.IResourceServiceProvider
 
 @WebServlet(name='DownLoadManager', urlPatterns='/download-manager/*')
 class DownloadManager extends HttpServlet {
@@ -29,12 +26,11 @@ class DownloadManager extends HttpServlet {
 		println(fileTozip.toString)
 
 		val gson = new Gson
-		if (name != null && (req.session.getAttribute("joomddusername") as String).equals(name) && !fileTozip.empty) {
+		if (name !== null && (req.session.getAttribute("joomddusername") as String).equals(name) && !fileTozip.empty) {
 			resp.setHeader("Content-Type", "application/zip")
 			resp.setHeader("Accept-Ranges", "bytes")
 			resp.setHeader("Content-Disposition", '''attachment; filename="«name».zip"''');
 			resp.status = HttpServletResponse.SC_OK
-			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 			val byte[] buffer = newByteArrayOfSize(4096000)
 			var String serverPath = config.properties.getProperty("serverPath")
 
@@ -131,7 +127,7 @@ class DownloadManager extends HttpServlet {
 		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
 		var String userWorkspacePath = workspacePath + "/" + name + uri.replace("/download-manager", "");
 
-		if (name != null) {
+		if (name !== null) {
 			var File out = new File(userWorkspacePath)
 			if (out.file) {
 				resp.status = HttpServletResponse.SC_OK
