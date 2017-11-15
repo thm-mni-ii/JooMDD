@@ -36,16 +36,10 @@
                     baseUrl = baseUrl.slice(0, fileIndex);
                 require.config({
                     baseUrl: baseUrl,
-                    shim: {
-				        "bootstrap": {
-				            deps: [ "jquery" ]
-				        },
-				        "jquery-easing": {
-				            deps: [ "jquery" ]
-				        },
-				        "scrolling-nav": {
-				            deps: [ "jquery" ]
-				        }
+                    "shim": {
+				        "bootstrap":  ["jquery"],
+				        "jquery-easing":  ["jquery"],
+				        "scrolling-nav": ["jquery"]
 				    },
                     paths: {
                         "ace/ace": "webjars/ace/1.2.8/src/ace",

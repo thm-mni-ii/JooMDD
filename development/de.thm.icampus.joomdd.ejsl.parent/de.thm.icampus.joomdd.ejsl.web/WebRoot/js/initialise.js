@@ -1,4 +1,4 @@
-require(["jquery"], function($) {
+require(["jquery", "bootstrap", "jquery-easing", "scrolling-nav"], function($) {
 	require(["jstree","treeloader","editorhandler"],function(jstree,treeloader,editorhandler){
 		var loginMenuBtn = $("#loginMenuBtn");
 		var logoutMenuBtn = $("#logoutMenuBtn");
