@@ -22,16 +22,17 @@ import org.eclipse.xtext.resource.IResourceServiceProvider
 
 @WebServlet(name = 'ReverseLoader', urlPatterns = '/reverse-loader/*')
 class ReverseLoader extends HttpServlet {
-	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+
+	Config config = Config.instance;
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
+		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
 
 		var String sessionID = req.session.id
-		var String manifest = serverPath + "/" + sessionID + req.getParameter("manifest").replace("download-manager", "")
+		var String manifest = workspacePath + "/" + sessionID + req.getParameter("manifest").replace("download-manager", "")
 		var String model =  req.getParameter("model")
 		
-		var String target = serverPath + "/" + sessionID + "/src/" + model
+		var String target = workspacePath + "/" + sessionID + "/src/" + model
 		
 		var ServletContext context = this.servletContext;
 
@@ -62,19 +63,19 @@ class ReverseLoader extends HttpServlet {
 	
 	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String sessionID = req.session.id
-		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
+		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
 		
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
 		var String folderName = req.getParameter("filename").replace(".zip","").trim
-		var String srcZip =  server+ "/" + sessionID +"/reverse"+ "/" + folderName + "/" + folderName + ".zip"
-		var File createScr = new File(server+ "/" + sessionID +"/reverse"+ "/" + folderName);
+		var String srcZip =  workspacePath + "/" + sessionID +"/reverse"+ "/" + folderName + "/" + folderName + ".zip"
+		var File createScr = new File(workspacePath + "/" + sessionID +"/reverse"+ "/" + folderName);
 		if(!createScr.exists)
 		createScr.mkdirs
 		var String path = writeZip(srcZip,req.inputStream)
 		println(folderName);
-		decompress(path, sessionID, server, folderName)
+		decompress(path, sessionID, workspacePath, folderName)
 		var File deleteSrc = new File (srcZip) 
 		deleteSrc.delete
 		val gson = new Gson

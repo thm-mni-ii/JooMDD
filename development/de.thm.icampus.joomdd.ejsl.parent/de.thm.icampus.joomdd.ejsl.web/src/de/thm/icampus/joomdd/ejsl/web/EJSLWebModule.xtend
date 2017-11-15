@@ -11,7 +11,7 @@ import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
  */
 @FinalFieldsConstructor
 class EJSLWebModule extends AbstractEJSLWebModule { 
-	
+
 	public def Class<? extends IServerResourceHandler> bindResourceHandler() {
 		return MyResourceHandler;
 	}

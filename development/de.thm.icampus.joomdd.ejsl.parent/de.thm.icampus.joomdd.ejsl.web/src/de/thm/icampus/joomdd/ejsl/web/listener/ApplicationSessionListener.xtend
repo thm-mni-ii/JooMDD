@@ -6,13 +6,12 @@ import javax.servlet.http.HttpSessionListener
 
 class ApplicationSessionListener implements HttpSessionListener {
 
-	DatabaseLayer db = DatabaseLayer.instance;
-
 	override sessionCreated(HttpSessionEvent event) {
    		println("Session Created");
  	}
 
 	override sessionDestroyed(HttpSessionEvent event) {
+		var DatabaseLayer db = DatabaseLayer.instance;
 		var sessionID = event.session.id;
 	    db.removeSession(sessionID)
 	    println("Session Destroyed");

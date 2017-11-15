@@ -18,13 +18,8 @@ import org.eclipse.xtext.web.servlet.XtextServlet
 class EJSLServlet extends XtextServlet {
 	 
 	val List<ExecutorService> executorServices = newArrayList
-	
-	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-	
-	override init() {
-		if(resourcesProvider != null){
-			new SessionProvider(this.servletContext);
-		}				
+		
+	override init() {		
 		super.init()
 		val Provider<ExecutorService> executorServiceProvider = [Executors.newCachedThreadPool => [executorServices += it]]
 		new EJSLWebSetup(executorServiceProvider).createInjectorAndDoEMFRegistration()

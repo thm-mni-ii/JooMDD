@@ -12,11 +12,11 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 
 class XtextServiceFilter implements Filter {
-  	FilterConfig filterConfig;  
-	DatabaseLayer db = DatabaseLayer.instance;                                      
+  	FilterConfig filterConfig;                                     
 
 	override doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
+		var DatabaseLayer db = DatabaseLayer.instance;   
 		var HttpServletRequest httpRequest = request as HttpServletRequest;
 		var String resourceParameterName = "resource";
 		var ServletRequest requestWrapper = new MyHttpServletRequestWrapper(httpRequest);
@@ -44,7 +44,7 @@ class XtextServiceFilter implements Filter {
                                          
   	} 
 
-  	override void init(FilterConfig filterConfig) {              
+  	override void init(FilterConfig filterConfig) {
     	this.filterConfig = filterConfig;
  	} 
 

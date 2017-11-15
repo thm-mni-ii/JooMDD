@@ -11,7 +11,12 @@
     <listener>
 		<description>sessionListener</description> 
 		<listener-class>de.thm.icampus.joomdd.ejsl.web.listener.ApplicationSessionListener</listener-class>
-	</listener> 
+	</listener>
+	
+   <listener>
+   		<description>configurationListener</description> 
+		<listener-class>de.thm.icampus.joomdd.ejsl.web.listener.ConfigurationListener</listener-class>
+   </listener>
 
 	<filter>
 	   <filter-name>XtextServiceFilter</filter-name>

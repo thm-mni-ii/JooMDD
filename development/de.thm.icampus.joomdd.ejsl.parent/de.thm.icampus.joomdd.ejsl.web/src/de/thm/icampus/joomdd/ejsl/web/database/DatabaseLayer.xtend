@@ -16,6 +16,9 @@ import de.thm.icampus.joomdd.ejsl.web.database.document.Session
 import de.thm.icampus.joomdd.ejsl.web.database.document.User
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.configuration.CodecRegistry
+import de.thm.icampus.joomdd.ejsl.web.Config
+import com.mongodb.MongoCredential
+import java.util.Arrays
 
 @Singleton
 class DatabaseLayer {
@@ -24,6 +27,8 @@ class DatabaseLayer {
 	private MongoDatabase database;
 	private MongoCollection<User> userCollection;
 	private MongoCollection<Session> sessionCollection;
+	
+	Config config = Config.instance;
 
   	def static DatabaseLayer getInstance()
   	{
@@ -44,8 +49,33 @@ class DatabaseLayer {
                 
         	var MongoClientOptions options = MongoClientOptions.builder()
                 .codecRegistry(codecRegistry).build();
-			mongoClient = new MongoClient(new ServerAddress("localhost" , 27017), options);
-			database = mongoClient.getDatabase("joomdd");
+                
+            var dbHost = config.properties.getProperty("databaseHost");
+            var dbPort = Integer.parseInt(config.properties.getProperty("databasePort"));
+            var dbName = config.properties.getProperty("databaseName");
+            var dbUser = config.properties.getProperty("databaseUser");
+            var dbPassword = config.properties.getProperty("databasePassword");
+            var authenticationDatabase = config.properties.getProperty("authenticationDatabase");
+            
+            try
+            {
+	            if (dbUser === null || dbUser.empty || dbPassword === null || dbPassword.empty)
+	            {
+		           // Try to connect without credentials
+					mongoClient = new MongoClient(new ServerAddress(dbHost, dbPort), options);
+	            }
+	            else
+	            {
+	            	var MongoCredential credential = MongoCredential.createCredential(dbUser, authenticationDatabase, dbPassword.toCharArray());
+					mongoClient = new MongoClient(new ServerAddress(dbHost, dbPort), Arrays.asList(credential), options);
+				}
+				database = mongoClient.getDatabase(dbName);
+			}
+			catch(Exception e)
+			{
+				println(e.message)
+			}
+			
 			userCollection = database.getCollection("user", User);
 			sessionCollection = database.getCollection("session", Session);
 			// Empties the session table and create a new one.

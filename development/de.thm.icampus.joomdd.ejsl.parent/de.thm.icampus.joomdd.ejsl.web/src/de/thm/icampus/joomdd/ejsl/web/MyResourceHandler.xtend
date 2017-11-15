@@ -25,21 +25,21 @@ class MyResourceHandler implements IServerResourceHandler {
 	@Inject IEncodingProvider encodingProvider
 	
 	DatabaseLayer db = DatabaseLayer.instance;
+	Config config = Config.instance;
 	
 	override get(String resourceId, IServiceContext serviceContext) throws IOException {
 		try
 		{
-			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-			var workspacePath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/";
+			var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
 			var workspaceUserPart = resourceId.split("/").get(0)
-			var resourcePath = workspacePath + resourceId;
-			var workspaceUser = workspacePath + workspaceUserPart
+			var resourcePath = workspacePath + "/" + resourceId;
+			var workspaceUserPath = workspacePath + "/" + workspaceUserPart
 		
 			var File resourceFile = new File (resourcePath)
 			
-			var File createsrc = new File(workspaceUser + "/src")
+			var File createsrc = new File(workspaceUserPath + "/src")
 			createsrc.mkdirs;
-			var File createrevers = new File(workspaceUser + "/reverse")
+			var File createrevers = new File(workspaceUserPath + "/reverse")
 			createrevers.mkdirs;
 			
 			if(!resourceFile.exists)
@@ -63,9 +63,8 @@ class MyResourceHandler implements IServerResourceHandler {
 	}
 	
 	override put(IXtextWebDocument document, IServiceContext serviceContext) throws IOException {
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-		var workspacePath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String + "/";
-		var resourcePath = workspacePath + document.resourceId;
+		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
+		var resourcePath = workspacePath + "/" + document.resourceId;
 		
 		try
 		{

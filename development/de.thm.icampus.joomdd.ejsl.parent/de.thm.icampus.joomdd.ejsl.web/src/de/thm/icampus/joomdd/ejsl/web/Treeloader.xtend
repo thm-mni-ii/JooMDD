@@ -16,10 +16,9 @@ import org.eclipse.xtext.resource.IResourceServiceProvider
 
 @WebServlet(name = 'Treeloader', urlPatterns = '/tree-loader/*')
 class Treeloader extends HttpServlet {
-	
-	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-	
+		
 	DatabaseLayer db = DatabaseLayer.instance;
+	Config config = Config.instance;
 	
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String sessionID = req.session.id;
@@ -34,19 +33,19 @@ class Treeloader extends HttpServlet {
 			{
 				var userPath = sessionID;
 				var User user = db.getUserBySessionID(sessionID);
-				var serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String;
+				var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
 				
 				if (user !== null)
 				{
 					userPath = user.username
 				}
 				
-				var workspacePath = serverPath + "/" + userPath;
+				var workspaceUserPath = workspacePath + "/" + userPath;
 				
-				var File temp = new File(workspacePath)
+				var File temp = new File(workspaceUserPath)
 				if(temp.exists)
 				{
-					var Treeitem workspace = new Treeitem(workspacePath, "download-manager")
+					var Treeitem workspace = new Treeitem(workspaceUserPath, "download-manager")
 					workspace.text = "My Workspace"
 					workspace.setState("opened", true)
 					var EList <Treeitem> result = new BasicEList<Treeitem>

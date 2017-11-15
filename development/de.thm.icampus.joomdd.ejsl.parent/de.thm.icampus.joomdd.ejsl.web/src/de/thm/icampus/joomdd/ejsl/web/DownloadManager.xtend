@@ -20,6 +20,8 @@ import org.eclipse.xtext.resource.IResourceServiceProvider
 @WebServlet(name='DownLoadManager', urlPatterns='/download-manager/*')
 class DownloadManager extends HttpServlet {
 
+	Config config = Config.instance;
+
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 		var String name = req.getParameter("name") as String
@@ -34,7 +36,7 @@ class DownloadManager extends HttpServlet {
 			resp.status = HttpServletResponse.SC_OK
 			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 			val byte[] buffer = newByteArrayOfSize(4096000)
-			var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
+			var String serverPath = config.properties.getProperty("serverPath")
 
 			// var FileOutputStream fileOut = new FileOutputStream(filoutName)			       
 			var ZipOutputStream zipOut = new ZipOutputStream(resp.outputStream)
@@ -124,11 +126,10 @@ class DownloadManager extends HttpServlet {
 	}
 
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		var String uri = req.requestURI;
 		var String name = req.session.id
-		var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
-		var String userWorkspacePath = serverPath + "/" + name + uri.replace("/download-manager", "");
+		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
+		var String userWorkspacePath = workspacePath + "/" + name + uri.replace("/download-manager", "");
 
 		if (name != null) {
 			var File out = new File(userWorkspacePath)
@@ -193,11 +194,10 @@ class DownloadManager extends HttpServlet {
 	}
 
 	override protected doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		var String name = req.session.id
 		var String uri = req.requestURI;
-		var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
-		var String userWorkspacePath = serverPath + "/" + name + uri.replace("/download-manager", "");
+		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
+		var String userWorkspacePath = workspacePath + "/" + name + uri.replace("/download-manager", "");
 
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
