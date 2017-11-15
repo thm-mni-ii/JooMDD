@@ -36,12 +36,26 @@
                     baseUrl = baseUrl.slice(0, fileIndex);
                 require.config({
                     baseUrl: baseUrl,
+                    shim: {
+				        "bootstrap": {
+				            deps: [ "jquery" ]
+				        },
+				        "jquery-easing": {
+				            deps: [ "jquery" ]
+				        },
+				        "scrolling-nav": {
+				            deps: [ "jquery" ]
+				        }
+				    },
                     paths: {
                         "ace/ace": "webjars/ace/1.2.8/src/ace",
-                        "jquery": "js/jquery-3.2.1.min",
+                        "jquery": "vendor/jquery/jquery.min",
                         "ace/ext/language_tools": "webjars/ace/1.2.8/src/ext-language_tools",
                         "xtext/xtext-ace": "xtext/2.10.0/xtext-ace",
-                        "jstree" : "js/jstree"
+                        "jstree": "js/jstree",
+                        "bootstrap": "vendor/bootstrap/js/bootstrap.bundle.min",
+                        "jquery-easing": "vendor/jquery-easing/jquery.easing.min",
+                        "scrolling-nav": "js/scrolling-nav"
                     }
                 });
             }
@@ -260,17 +274,7 @@
         <p class="copyright text-muted small">Copyright &copy; Institute for Information Sciences 2017. All Rights Reserved</p>
       </div>
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom JavaScript for this theme -->
-    <script src="js/scrolling-nav.js"></script>
-
+    
 	<!-- Registration form -->
 	<div class="modal fade" id="registrationForm">
             <div class="modal-dialog">
