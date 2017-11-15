@@ -3,20 +3,19 @@
  */
 package de.thm.icampus.joomdd.ejsl.web.database
 
-import com.mongodb.MongoClient
 import com.google.inject.Singleton
-import com.mongodb.client.MongoDatabase
-import com.mongodb.client.MongoCollection
-import de.thm.icampus.joomdd.ejsl.web.database.document.User
-import de.thm.icampus.joomdd.ejsl.web.database.document.Session
-import org.bson.codecs.configuration.CodecRegistry
-import org.bson.codecs.configuration.CodecRegistries
-import de.thm.icampus.joomdd.ejsl.web.database.codec.UserCodecProvider
+import com.mongodb.MongoClient
 import com.mongodb.MongoClientOptions
 import com.mongodb.ServerAddress
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters
 import de.thm.icampus.joomdd.ejsl.web.database.codec.SessionCodecProvider
-import com.mongodb.client.result.DeleteResult
+import de.thm.icampus.joomdd.ejsl.web.database.codec.UserCodecProvider
+import de.thm.icampus.joomdd.ejsl.web.database.document.Session
+import de.thm.icampus.joomdd.ejsl.web.database.document.User
+import org.bson.codecs.configuration.CodecRegistries
+import org.bson.codecs.configuration.CodecRegistry
 
 @Singleton
 class DatabaseLayer {

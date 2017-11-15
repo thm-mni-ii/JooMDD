@@ -4,8 +4,6 @@
 package de.thm.icampus.joomdd.ejsl.web
 
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
-import org.eclipse.xtext.ide.editor.contentassist.antlr.AntlrProposalConflictHelper
-import org.eclipse.xtext.ide.editor.contentassist.IProposalConflictHelper
 import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
 
 /**

@@ -4,21 +4,12 @@
 package de.thm.icampus.joomdd.ejsl.web
 
 import com.google.inject.Provider
-import java.io.IOException
 import java.util.List
-import java.util.Map
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-import org.eclipse.emf.common.util.BasicEList
-import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.resource.IResourceServiceProvider
 import org.eclipse.xtext.web.servlet.XtextServlet
-import java.io.File
-import javax.servlet.http.Cookie
 
 /** 
  * Deploy this class into a servlet container to enable DSL-specific services.

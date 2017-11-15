@@ -1,17 +1,14 @@
 package de.thm.icampus.joomdd.ejsl.web.database.codec
 
-import org.bson.codecs.Codec
 import de.thm.icampus.joomdd.ejsl.web.database.document.User
-import org.bson.codecs.configuration.CodecRegistry
-import org.bson.BsonReader
-import org.bson.codecs.DecoderContext
 import java.sql.Timestamp
-import org.bson.Document
+import org.bson.BsonReader
 import org.bson.BsonTimestamp
-import java.util.List
-import org.bson.BsonType
 import org.bson.BsonWriter
+import org.bson.codecs.Codec
+import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
+import org.bson.codecs.configuration.CodecRegistry
 import org.bson.types.ObjectId
 
 class UserCodec implements Codec<User> {

@@ -1,12 +1,11 @@
 package de.thm.icampus.joomdd.ejsl.web
 
-import java.util.List
-import java.util.LinkedList
 import java.io.File
-import java.util.Map
 import java.util.HashMap
+import java.util.LinkedList
+import java.util.List
+import java.util.Map
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import javax.servlet.http.HttpSession
 
 class Treeitem {
 	private String id

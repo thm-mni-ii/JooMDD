@@ -1,7 +1,8 @@
 package de.thm.icampus.joomdd.ejsl.web
 
 import com.google.gson.Gson
-import com.google.inject.Inject
+import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
+import de.thm.icampus.joomdd.ejsl.web.database.document.User
 import java.io.File
 import java.io.IOException
 import javax.servlet.ServletException
@@ -9,11 +10,9 @@ import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import org.eclipse.xtext.resource.IResourceServiceProvider
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.web.database.document.User
-import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
+import org.eclipse.xtext.resource.IResourceServiceProvider
 
 @WebServlet(name = 'Treeloader', urlPatterns = '/tree-loader/*')
 class Treeloader extends HttpServlet {

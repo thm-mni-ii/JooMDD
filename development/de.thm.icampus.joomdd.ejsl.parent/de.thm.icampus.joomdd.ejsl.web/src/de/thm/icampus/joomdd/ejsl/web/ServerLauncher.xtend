@@ -12,11 +12,6 @@ import org.eclipse.jetty.webapp.WebAppContext
 import org.eclipse.jetty.webapp.WebInfConfiguration
 import org.eclipse.jetty.webapp.WebXmlConfiguration
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.util.HashMap
-import java.io.File
-import java.util.Map
-import org.eclipse.emf.common.util.BasicEList
-import org.eclipse.emf.common.util.EList
 
 /**
  * This program starts an HTTP server for testing the web integration of your DSL.

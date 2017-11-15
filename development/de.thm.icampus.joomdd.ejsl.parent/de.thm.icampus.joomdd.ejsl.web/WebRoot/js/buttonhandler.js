@@ -33,9 +33,25 @@ require(["jquery","alert"], function($, alert) {
 		  url: "/login",
 		  data: data
 		})
-		  .done(function( msg ) {
-			  console.log(msg);
-		  });
+		.done(function( data, textStatus, jqXHR ) {
+			location.reload();
+		})
+		.fail(function( jqXHR, textStatus, errorThrown ) {
+		  	// LogIn credentials might be wrong.
+		});
+	});
+	
+	$("#logoutMenuBtn").click(function(){
+	$.ajax({
+		  method: "GET",
+		  url: "/logout"
+		})
+		.done(function( data, textStatus, jqXHR ) {
+			location.reload();
+		})
+		.fail(function( jqXHR, textStatus, errorThrown ) {
+		  	// Something went wrong.
+		});
 	});
 
 	require(["cookie","treeloader"],function(Cookies,treeloader) {

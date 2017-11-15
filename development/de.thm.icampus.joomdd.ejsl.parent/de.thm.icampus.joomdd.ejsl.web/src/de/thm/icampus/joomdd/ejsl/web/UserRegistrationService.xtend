@@ -1,22 +1,21 @@
 package de.thm.icampus.joomdd.ejsl.web
 
-import javax.servlet.http.HttpServlet
-import javax.servlet.annotation.WebServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.ServletException
-import java.io.IOException
-import java.sql.Timestamp
-import java.util.Date
 import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 import de.thm.icampus.joomdd.ejsl.web.database.document.User
+import java.io.IOException
+import java.math.BigInteger
+import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
+import java.security.spec.InvalidKeySpecException
+import java.sql.Timestamp
+import java.util.Date
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
-import java.security.NoSuchAlgorithmException
-import java.security.spec.InvalidKeySpecException
-import java.math.BigInteger
-import com.mongodb.client.model.Filters
+import javax.servlet.ServletException
+import javax.servlet.annotation.WebServlet
+import javax.servlet.http.HttpServlet
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @WebServlet(name = 'UserRegistrationService', urlPatterns = '/register')
 class UserRegistrationService extends HttpServlet {

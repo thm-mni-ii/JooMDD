@@ -1,8 +1,8 @@
 package de.thm.icampus.joomdd.ejsl.web.listener
 
-import javax.servlet.http.HttpSessionListener
-import javax.servlet.http.HttpSessionEvent
 import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
+import javax.servlet.http.HttpSessionEvent
+import javax.servlet.http.HttpSessionListener
 
 class ApplicationSessionListener implements HttpSessionListener {
 

@@ -11,7 +11,6 @@ import de.thm.icampus.joomdd.ejsl.EJSLRuntimeModule
 import de.thm.icampus.joomdd.ejsl.EJSLStandaloneSetup
 import java.util.concurrent.ExecutorService
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
-import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 
 /**
  * Initialization support for running Xtext languages in web applications.

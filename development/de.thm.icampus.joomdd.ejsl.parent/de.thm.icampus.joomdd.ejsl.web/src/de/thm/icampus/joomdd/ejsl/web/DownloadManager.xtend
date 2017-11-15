@@ -6,16 +6,16 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileReader
 import java.io.IOException
+import java.util.Map
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.util.Map
-import javax.servlet.http.Cookie
 
 @WebServlet(name='DownLoadManager', urlPatterns='/download-manager/*')
 class DownloadManager extends HttpServlet {

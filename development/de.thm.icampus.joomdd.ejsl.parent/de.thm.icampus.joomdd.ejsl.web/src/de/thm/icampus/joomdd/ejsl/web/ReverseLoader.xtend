@@ -8,9 +8,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.Enumeration
-import java.util.Map
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import javax.servlet.ServletContext
 import javax.servlet.ServletException
 import javax.servlet.ServletInputStream
 import javax.servlet.annotation.WebServlet
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import javax.servlet.ServletContext
 
 @WebServlet(name = 'ReverseLoader', urlPatterns = '/reverse-loader/*')
 class ReverseLoader extends HttpServlet {

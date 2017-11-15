@@ -1,27 +1,19 @@
 package de.thm.icampus.joomdd.ejsl.web
 
+import com.google.gson.Gson
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.util.Map
+import javax.servlet.ServletException
 import javax.servlet.annotation.WebServlet
+import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import javax.servlet.ServletException
-import java.io.IOException
-import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.util.Map
 import org.eclipse.emf.common.util.BasicEList
-import java.io.File
-import org.eclipse.emf.common.util.EList
-import com.google.gson.Gson
-import javax.servlet.http.Cookie
-import java.io.BufferedWriter
-import java.io.FileWriter
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Base64;
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
+import org.eclipse.xtext.resource.IResourceServiceProvider
 
 @WebServlet(name = 'NewUserService', urlPatterns = '/new-user-service/*')
 class NewUserService  extends HttpServlet  {

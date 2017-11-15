@@ -78,8 +78,11 @@
             </li>
             <li class="nav-item btn-group">
               <div class="btn-group">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-user-o fa-fw"></i> LogIn
+                <button id="loginMenuBtn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-spinner fa-pulse fa-fw"></i> LogIn
+                </button>
+                <button id="logoutMenuBtn" type="button" class="btn btn-secondary d-none">
+                  <i class="fa fa-user-o fa-fw"></i> LogOut
                 </button>
                 <div class="dropdown-menu">
                   <form id="login-form" class="px-4 py-3" role="form">

@@ -1,7 +1,7 @@
 package de.thm.icampus.joomdd.ejsl.web.database.document
 
-import org.bson.Document
 import java.sql.Timestamp
+import org.bson.Document
 import org.bson.types.ObjectId
 
 class Session extends Document {

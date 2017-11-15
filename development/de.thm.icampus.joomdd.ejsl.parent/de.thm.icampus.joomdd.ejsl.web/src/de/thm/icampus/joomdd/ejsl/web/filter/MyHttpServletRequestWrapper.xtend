@@ -1,13 +1,13 @@
 package de.thm.icampus.joomdd.ejsl.web.filter
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletRequestWrapper
 import java.io.BufferedReader
+import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import javax.servlet.ServletInputStream
-import java.io.ByteArrayInputStream
 import javax.servlet.ReadListener
+import javax.servlet.ServletInputStream
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletRequestWrapper
 import org.apache.commons.io.IOUtils
 
 /**

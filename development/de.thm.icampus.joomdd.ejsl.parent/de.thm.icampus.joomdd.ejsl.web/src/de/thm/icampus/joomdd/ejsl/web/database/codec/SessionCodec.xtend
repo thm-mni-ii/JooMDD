@@ -1,15 +1,14 @@
 package de.thm.icampus.joomdd.ejsl.web.database.codec
 
-import org.bson.codecs.Codec
-import de.thm.icampus.joomdd.ejsl.web.database.document.User
-import org.bson.codecs.configuration.CodecRegistry
-import org.bson.BsonReader
-import org.bson.codecs.DecoderContext
+import de.thm.icampus.joomdd.ejsl.web.database.document.Session
 import java.sql.Timestamp
+import org.bson.BsonReader
 import org.bson.BsonTimestamp
 import org.bson.BsonWriter
+import org.bson.codecs.Codec
+import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
-import de.thm.icampus.joomdd.ejsl.web.database.document.Session
+import org.bson.codecs.configuration.CodecRegistry
 import org.bson.types.ObjectId
 
 class SessionCodec implements Codec<Session> {
