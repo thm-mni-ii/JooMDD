@@ -54,7 +54,7 @@ require(["jquery","alert"], function($, alert) {
 		});
 	});
 
-	require(["cookie","treeloader"],function(Cookies,treeloader) {
+	require([,"treeloader"],function(treeloader) {
 
 		// Save the current model
 		$("#saveModel").click(function(){
@@ -136,7 +136,6 @@ require(["jquery","alert"], function($, alert) {
 
 			// Upload of an existing extension
 			$('#uploadExtension').click(function(){
-				var name = Cookies.get('joomddusername');
 				var input = $("#uploadExtensionFile")[0].files[0];
 				alert.showloadmodal();
 				$.ajax({ url:"/reverse-loader/?filename=" + input.name,

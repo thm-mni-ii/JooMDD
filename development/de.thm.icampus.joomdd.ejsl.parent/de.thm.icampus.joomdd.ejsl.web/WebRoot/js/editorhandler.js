@@ -1,4 +1,4 @@
-define('editorhandler',[ 'jquery',"jstree", "cookie","ace/ace","xtext/xtext-ace","treeloader"], function(jQuery,jstree,Cookies,ace,xtext_ace,treeloader) {
+define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeloader"], function(jQuery,jstree,ace,xtext_ace,treeloader) {
 	 var exports = {};
 	 var editor = null;
 	 exports.loadEditor = function(resourceID){

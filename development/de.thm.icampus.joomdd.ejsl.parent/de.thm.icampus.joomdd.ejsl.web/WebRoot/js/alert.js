@@ -1,4 +1,4 @@
-define('alert',[ 'jquery',"jstree", "cookie"], function(jQuery,jstree,Cookies) {
+define('alert',['jquery',"jstree"], function(jQuery, jstree) {
 	var alert = {};
 	alert.showSuccess = function(text){
         $("#alert").toggleClass('alert-success', true)

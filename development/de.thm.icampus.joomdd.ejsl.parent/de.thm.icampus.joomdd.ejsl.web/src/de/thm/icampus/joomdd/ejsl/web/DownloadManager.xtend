@@ -194,23 +194,17 @@ class DownloadManager extends HttpServlet {
 
 	override protected doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
+		var String name = req.session.id
+		var String uri = req.requestURI;
+		var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
+		var String userWorkspacePath = serverPath + "/" + name + uri.replace("/download-manager", "");
 
-		var Map<String, Object> users = resourcesProvider.contentTypeToFactoryMap.get(
-			"mddsessions") as Map<String, Object>
-		if (!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))) {
-			resp.sendError(404, "User not im System")
-			return
-		}
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
 		val gson = new Gson
-		var String uri = req.requestURI;
-		var String name = uri.split("/").get(2)
-		var String replaceuri = uri.replace("/download-manager", server)
-		var File out = new File(replaceuri)
-		println("Delete " + replaceuri)
+		var File out = new File(userWorkspacePath)
+		println("Delete " + userWorkspacePath)
 		if (out.exists) {
 			var boolean delete = false
 			if(out.file){
@@ -228,28 +222,18 @@ class DownloadManager extends HttpServlet {
 			gson.toJson(false, resp.writer)
 		}
 	}
+	
     public def boolean deleteDirectory(File path) {
-    if (path.exists()) {
-        var File[] files = path.listFiles();
-        for (File f: files) {
-            if (f.isDirectory()) {
-                deleteDirectory(f);
-            } else {
-                f.delete();
-            }
-        }
-    }
-    return (path.delete());
-}
-	def boolean checkCookies(Cookie[] cookies) {
-		var boolean havename = false;
-		var boolean haveemail = false
-		for (Cookie cook : cookies) {
-			if (cook.name == "joomddusername" && cook.value != null)
-				havename = true
-			if (cook.name == "joomddemail" && cook.value != null)
-				haveemail = true
-		}
-		return havename && haveemail
+	    if (path.exists()) {
+	        var File[] files = path.listFiles();
+	        for (File f: files) {
+	            if (f.isDirectory()) {
+	                deleteDirectory(f);
+	            } else {
+	                f.delete();
+	            }
+	        }
+	    }
+    	return (path.delete());
 	}
 }

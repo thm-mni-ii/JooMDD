@@ -1,5 +1,5 @@
 require(["jquery"], function($) {
-	require(["cookie","jstree","treeloader","editorhandler"],function(Cookies, jstree,treeloader,editorhandler){
+	require(["jstree","treeloader","editorhandler"],function(jstree,treeloader,editorhandler){
 		var loginMenuBtn = $("#loginMenuBtn");
 		var logoutMenuBtn = $("#logoutMenuBtn");
 		var loginMenuSpinner = loginMenuBtn.children("i");

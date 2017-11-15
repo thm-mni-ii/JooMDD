@@ -1,4 +1,4 @@
-define('treeloader',[ 'jquery',"cookie","jstree","alert"], function(jQuery, Cookies, jstree, alert) {
+define('treeloader',[ 'jquery',"jstree","alert"], function(jQuery, jstree, alert) {
 	   var exports = {};
 	   function context_menu(node){
 			var tree = $('#folder_tree').jstree(true);
@@ -39,13 +39,12 @@ define('treeloader',[ 'jquery',"cookie","jstree","alert"], function(jQuery, Cook
 			});
 	   }
 	   exports.deleteItem = function(node,tree){
-		   var name = Cookies.get('joomddusername');
 		   var tnode = node.reference[0];
 		   	var link= tnode.href;
 			$.ajax({
 				  url: link,
 				  type: 'DELETE',
-				  data: {user:name,id:node.reference[0].id},
+				  data: {id:node.reference[0].id},
 				  success: function(data) {
 				    if(data){
 	            		tree.delete_node(node);
