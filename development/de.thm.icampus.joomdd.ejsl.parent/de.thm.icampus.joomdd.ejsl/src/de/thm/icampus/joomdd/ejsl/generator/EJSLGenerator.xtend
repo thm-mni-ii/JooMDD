@@ -87,16 +87,18 @@ class EJSLGenerator extends AbstractGenerator {
 
     override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
         genData = new JavaIoFileSystemAccess(registry, encodingProvider)
-        var String outputFolder
-        var String serverPath = (registry.contentTypeToFactoryMap.get("serverpath") as String).replace("\\", "/");
-        if (serverPath != null) {
-            var resourcePath = resource.URI.toFileString.replace("\\", "/");
-            resourcePath = resourcePath.replace(serverPath+"/", "")
-            var String[] resourceNameArray = resourcePath.split("/")
-            var sessionID = resourceNameArray.get(0)
-            outputFolder = serverPath + "/" + sessionID + "/src-gen"
-        } else {
-            outputFolder = config.getProperty("outputFolder")
+        var String outputFolder 
+        if (registry.contentTypeToFactoryMap.containsKey("serverpath")) {
+            var String serverPath = (registry.contentTypeToFactoryMap.get("serverpath") as String).replace("\\", "/"); 
+            if (serverPath !== null) {
+                var resourcePath = resource.URI.toFileString.replace("\\", "/");
+                resourcePath = resourcePath.replace(serverPath+"/", "")
+                var String[] resourceNameArray = resourcePath.split("/")
+                var sessionID = resourceNameArray.get(0)
+                outputFolder = serverPath + "/" + sessionID + "/src-gen"
+            } else {
+                outputFolder = config.getProperty("outputFolder")
+            }
         }
         println(outputFolder)
         genData.setOutputConfigurations(mapOutputConfigurations(outputFolder))
