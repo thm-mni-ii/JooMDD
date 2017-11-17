@@ -16,14 +16,41 @@ require(["jquery","alert"], function($, alert) {
 	
 	$("#registerBtn").click(function(){
 	var data = $("#register-form").serialize();
+	
+	var alert = {};
+	alert.showSuccess = function(text){
+        $("#registerAlert").toggleClass('alert-success', true)
+        $("#registerAlert").toggleClass('alert-danger', false)
+		$("#registerAlert").hide().show();
+        $("#registerAlert #alertState").text("Success! ");
+		$("#registerAlert #alertText").text(text);
+	};
+	alert.showError = function(text){
+        $("#registerAlert").toggleClass('alert-danger', true)
+        $("#registerAlert").toggleClass('alert-success', false)
+        $("#registerAlert").hide().show();
+        $("#registerAlert #alertState").text("Error! ");
+        $("#registerAlert #alertText").text(text);
+    };
+	
 	$.ajax({
 		  method: "POST",
 		  url: "/register",
 		  data: data
 		})
-		  .done(function( msg ) {
-			  console.log(msg);
-		  });
+		.done(function( data, textStatus, jqXHR ) {
+			$('#registrationForm').on('hidden.bs.modal', function () {
+			    location.reload();
+			});
+			
+			alert.showSuccess("Registered successfully.");
+			$("#registerBtn").text("Close");
+			$("#registerBtn").removeClass("btn-success");
+			$("#registerBtn").attr("data-dismiss", "modal");
+		})
+		.fail(function( jqXHR, textStatus, errorThrown ) {
+			alert.showError("An error occurred.");
+		});
 	});
 	
 	$("#loginBtn").click(function(){
@@ -127,6 +154,7 @@ require(["jquery","alert"], function($, alert) {
 			// Create a new model
 			$('#createModel').click(function(){
 				var filename = $("#newModelName").val()
+				$("#newModelName").val("");
 				var tempArray = filename.split(".")
 				if(tempArray[tempArray.length-1] != "eJSL")
 					filename= filename+".eJSL"

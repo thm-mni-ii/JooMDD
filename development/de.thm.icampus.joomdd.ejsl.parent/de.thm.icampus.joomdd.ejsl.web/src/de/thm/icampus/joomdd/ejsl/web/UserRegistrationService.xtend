@@ -28,7 +28,7 @@ class UserRegistrationService extends HttpServlet {
 		val passwordConfirm = req.getParameter("password-confirmation");
 		val timestamp = new Timestamp(new Date().time);
 		
-		if (password.equals(passwordConfirm))
+		if (!username.empty && !password.empty && password.equals(passwordConfirm))
 		{
 			var storedUser = db.getUserByUsername(username);
 			if (storedUser === null)

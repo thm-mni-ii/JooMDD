@@ -101,17 +101,10 @@
                       <label for="loginPassword">Password</label>
                       <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Password">
                     </div>
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">
-                        Remember me
-                      </label>
-                    </div>
                  	<button id="loginBtn" type="button" class="btn btn-primary">Sign in</button>
                   </form>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" data-toggle="modal" data-target="#registrationForm" href="#">New around here? Sign up</a>
-                  <a class="dropdown-item" href="#">Forgot password?</a>
                 </div>
               </div>
             </li>
@@ -180,7 +173,7 @@
                 <span>Add Model</span>
               </button>
               <!-- Modal to add a new model-->
-              <div class="modal fade" id="addModelModal" onload="$('#newModelName').focus();"">
+              <div class="modal fade" id="addModelModal">
                 <div class="modal-dialog">
                   <div class="modal-content">
 
@@ -193,12 +186,12 @@
                     <!-- Modal body -->
                     <div class="modal-body">
                       <label for="newModelName">Name:</label>
-                      <input type="text" class="form-control" id="newModelName" autofocus placeholder="myModel">
+                      <input type="text" class="form-control" id="newModelName"  placeholder="myModel" autofocus>
                     </div>
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                      <button id="createModel" type="button" class="btn btn-primary" data-dismiss="modal" onclick="$('#newModelName').val('');">Add Model</button>
+                      <button id="createModel" type="button" class="btn btn-primary" data-dismiss="modal">Add Model</button>
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
 
@@ -285,10 +278,10 @@
                         <div class="container">
 						    <form id="register-form" class="form-horizontal" role="form">
 						        <div class="row">
-						            <div class="col-md-3 field-label-responsive">
+						            <div class="col-md-4 field-label-responsive">
 						                <label for="registrationUsername">Username</label>
 						            </div>
-						            <div class="col-md-6">
+						            <div class="col-md-8">
 						                <div class="form-group">
 						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
 						                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-user"></i></div>
@@ -297,19 +290,12 @@
 						                    </div>
 						                </div>
 						            </div>
-						            <div class="col-md-3">
-						                <div class="form-control-feedback">
-						                        <span class="text-danger align-middle">
-						                            <!-- Put name validation error messages here -->
-						                        </span>
-						                </div>
-						            </div>
 						        </div>
 						        <div class="row">
-						            <div class="col-md-3 field-label-responsive">
+						            <div class="col-md-4 field-label-responsive">
 						                <label for="registrationPassword">Password</label>
 						            </div>
-						            <div class="col-md-6">
+						            <div class="col-md-8">
 						                <div class="form-group has-danger">
 						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
 						                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>
@@ -318,19 +304,12 @@
 						                    </div>
 						                </div>
 						            </div>
-						            <div class="col-md-3">
-						                <div class="form-control-feedback">
-						                        <span class="text-danger align-middle">
-						                            <i class="fa fa-close"> Example Error Message</i>
-						                        </span>
-						                </div>
-						            </div>
 						        </div>
 						        <div class="row">
-						            <div class="col-md-3 field-label-responsive">
+						            <div class="col-md-4 field-label-responsive">
 						                <label for="password">Confirm Password</label>
 						            </div>
-						            <div class="col-md-6">
+						            <div class="col-md-8">
 						                <div class="form-group">
 						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
 						                        <div class="input-group-addon" style="width: 2.6rem">
@@ -342,6 +321,14 @@
 						                </div>
 						            </div>
 						        </div>
+						        
+						        <div class="row">
+						            <div class="col-md-12">
+						            	<div id="registerAlert" class="alert alert-dismissable fade show">
+							             	<strong id="alertState"></strong><span id="alertText"></span>
+							            </div>
+							        </div>
+						        </div>
 						    </form>
 						</div>
                     </div>
@@ -349,7 +336,6 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
 				        <div class="row">
-				            <div class="col-md-3"></div>
 				            <div class="col-md-6">
 				                <button id="registerBtn" class="btn btn-success"><i class="fa fa-user-plus"></i> Register</button>
 				            </div>

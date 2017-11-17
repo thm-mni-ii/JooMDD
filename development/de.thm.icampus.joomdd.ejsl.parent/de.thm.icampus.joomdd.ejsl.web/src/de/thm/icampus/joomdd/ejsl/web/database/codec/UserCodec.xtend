@@ -35,7 +35,6 @@ class UserCodec implements Codec<User> {
 
     override void encode(BsonWriter writer, User user, EncoderContext encoderContext) {
         writer.writeStartDocument();
-		writer.writeObjectId(user.ID)
         writer.writeName("username");
         writer.writeString(user.username);
         writer.writeName("password");

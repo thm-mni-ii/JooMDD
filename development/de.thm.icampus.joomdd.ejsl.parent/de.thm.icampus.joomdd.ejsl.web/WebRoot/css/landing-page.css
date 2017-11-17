@@ -170,6 +170,8 @@ p.copyright {
 #xtext-editor {
   min-width: 60%;
   min-height: 80%;
+  
+  max-height: 80%;
   margin-top: 10px;
   margin-right: 20px;
 }
