@@ -3,7 +3,7 @@ package de.thm.icampus.joomdd.ejsl.web.listener
 import javax.servlet.ServletContextListener
 import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContext
-import de.thm.icampus.joomdd.ejsl.web.Config
+import de.thm.icampus.joomdd.ejsl.util.Config
 
 class ConfigurationListener implements ServletContextListener {
     override void contextInitialized(ServletContextEvent sce) {

@@ -1,7 +1,7 @@
 package de.thm.icampus.joomdd.ejsl.web.util
 
 import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
-import de.thm.icampus.joomdd.ejsl.web.Config
+import de.thm.icampus.joomdd.ejsl.util.Config
 import de.thm.icampus.joomdd.ejsl.web.database.document.User
 
 class Helper {

@@ -23,6 +23,7 @@ import java.awt.EventQueue
 import java.util.regex.Pattern
 import java.util.regex.Matcher
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.util.Config
 
 /**
  * This is the main class of the code generator of JooMDD. 
@@ -40,11 +41,12 @@ class EJSLGenerator extends AbstractGenerator {
     private IResourceServiceProvider.Registry registry;
 
     Properties config = new Properties()
+	Config webConfig = Config.instance;
 
     override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
         super.beforeGenerate(input, fsa, context)
         config = new Properties()
-        if (registry.contentTypeToFactoryMap.get("serverpath") != null) {
+        if (webConfig.properties.getProperty("serverPath") !== null) {
             println("Server started...")
             return
         }
@@ -88,14 +90,16 @@ class EJSLGenerator extends AbstractGenerator {
     override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
         genData = new JavaIoFileSystemAccess(registry, encodingProvider)
         var String outputFolder 
-        if (registry.contentTypeToFactoryMap.containsKey("serverpath")) {
-            var String serverPath = (registry.contentTypeToFactoryMap.get("serverpath") as String).replace("\\", "/"); 
+        
+        if (webConfig.properties.getProperty("serverPath") !== null) {
+            var String serverPath = webConfig.properties.getProperty("serverPath").replace("\\", "/"); 
             if (serverPath !== null) {
+            	var workspacePath = serverPath + "/" + webConfig.properties.getProperty("workspaceName")
                 var resourcePath = resource.URI.toFileString.replace("\\", "/");
-                resourcePath = resourcePath.replace(serverPath+"/", "")
+                resourcePath = resourcePath.replace(workspacePath + "/", "")
                 var String[] resourceNameArray = resourcePath.split("/")
                 var sessionID = resourceNameArray.get(0)
-                outputFolder = serverPath + "/" + sessionID + "/src-gen"
+                outputFolder = workspacePath + "/" + sessionID + "/src-gen"
             } else {
                 outputFolder = config.getProperty("outputFolder")
             }
