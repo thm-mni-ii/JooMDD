@@ -1,13 +1,11 @@
 package de.thm.icampus.joomdd.ejsl.web
 
 import com.google.inject.Inject
-import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 import java.io.File
 import java.io.IOException
 import java.io.OutputStreamWriter
 import org.eclipse.emf.common.util.URI
 import org.eclipse.xtext.parser.IEncodingProvider
-import org.eclipse.xtext.resource.IResourceServiceProvider
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.web.server.IServiceContext
 import org.eclipse.xtext.web.server.model.IWebDocumentProvider
@@ -15,6 +13,7 @@ import org.eclipse.xtext.web.server.model.IWebResourceSetProvider
 import org.eclipse.xtext.web.server.model.IXtextWebDocument
 import org.eclipse.xtext.web.server.model.XtextWebDocument
 import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
+import de.thm.icampus.joomdd.ejsl.util.Config
 
 class MyResourceHandler implements IServerResourceHandler {
 	

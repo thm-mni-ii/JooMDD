@@ -16,7 +16,7 @@ import de.thm.icampus.joomdd.ejsl.web.database.document.Session
 import de.thm.icampus.joomdd.ejsl.web.database.document.User
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.configuration.CodecRegistry
-import de.thm.icampus.joomdd.ejsl.web.Config
+import de.thm.icampus.joomdd.ejsl.util.Config
 import com.mongodb.MongoCredential
 import java.util.Arrays
 

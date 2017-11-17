@@ -1,4 +1,4 @@
-package de.thm.icampus.joomdd.ejsl.web
+package de.thm.icampus.joomdd.ejsl.util
 
 import java.util.Properties
 import java.io.InputStream

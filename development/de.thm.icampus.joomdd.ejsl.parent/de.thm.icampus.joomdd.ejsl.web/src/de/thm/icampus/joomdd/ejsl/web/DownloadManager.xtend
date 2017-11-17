@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import de.thm.icampus.joomdd.ejsl.util.Config
 
 @WebServlet(name='DownLoadManager', urlPatterns='/download-manager/*')
 class DownloadManager extends HttpServlet {
