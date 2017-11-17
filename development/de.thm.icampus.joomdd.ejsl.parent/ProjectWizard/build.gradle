@@ -30,7 +30,8 @@ intellij{
     //version '143.116.4'			// old IntelliJ
     version  'IC-2016.3' 			// new IntelliJ distribution
 	//alternativeIdePath "C:\\Program Files\\JetBrains\\PhpStorm 2017.2.4" //Local PhpStorm IDE
-	alternativeIdePath "C:\\Program Files\\JetBrains\\PhpStorm 2017.1.4" //Local PhpStorm IDE
+	//alternativeIdePath "C:\\Program Files\\JetBrains\\PhpStorm 2017.1.4" //Local PhpStorm IDE
+	alternativeIdePath "C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2017.2.5" //Local IntelliJ IDE
     updateSinceUntilBuild false		// assumption of old plugin.xml build
 }
 

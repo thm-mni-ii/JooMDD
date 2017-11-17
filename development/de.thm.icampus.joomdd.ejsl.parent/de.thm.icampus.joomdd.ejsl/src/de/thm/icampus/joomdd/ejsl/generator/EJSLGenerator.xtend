@@ -24,6 +24,7 @@ import java.util.regex.Pattern
 import java.util.regex.Matcher
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.util.Config
+import java.io.InputStream
 
 /**
  * This is the main class of the code generator of JooMDD. 
@@ -40,7 +41,7 @@ class EJSLGenerator extends AbstractGenerator {
     @Inject
     private IResourceServiceProvider.Registry registry;
 
-    Properties config = new Properties()
+    Properties config
 	Config webConfig = Config.instance;
 
     override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
@@ -51,7 +52,8 @@ class EJSLGenerator extends AbstractGenerator {
             return
         }
         if (fsa.isFile("generator.properties")) {
-            config.load(fsa.readBinaryFile("generator.properties"))
+            var InputStream is = fsa.readBinaryFile("generator.properties")
+            config.load(is)
         } else {
             defaultSettings(fsa)
         }
@@ -100,10 +102,11 @@ class EJSLGenerator extends AbstractGenerator {
                 var String[] resourceNameArray = resourcePath.split("/")
                 var sessionID = resourceNameArray.get(0)
                 outputFolder = workspacePath + "/" + sessionID + "/src-gen"
-            } else {
-                outputFolder = config.getProperty("outputFolder")
             }
+        } else {
+            outputFolder = config.getProperty("outputFolder")
         }
+        
         println(outputFolder)
         genData.setOutputConfigurations(mapOutputConfigurations(outputFolder))
 
