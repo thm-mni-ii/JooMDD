@@ -14,11 +14,13 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import de.thm.icampus.joomdd.ejsl.util.Config
+import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 
 @WebServlet(name='DownLoadManager', urlPatterns='/download-manager/*')
 class DownloadManager extends HttpServlet {
 
 	Config config = Config.instance;
+	DatabaseLayer db = DatabaseLayer.instance;
 
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -124,8 +126,16 @@ class DownloadManager extends HttpServlet {
 
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String uri = req.requestURI;
-		var String name = req.session.id
 		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
+		var String sessionID = req.session.id
+		var String name = sessionID;
+		
+		var storedUser = db.getUserBySessionID(sessionID);
+
+		if (storedUser !== null) {
+			name = storedUser.username
+		}
+		
 		var String userWorkspacePath = workspacePath + "/" + name + uri.replace("/download-manager", "");
 
 		if (name !== null) {
