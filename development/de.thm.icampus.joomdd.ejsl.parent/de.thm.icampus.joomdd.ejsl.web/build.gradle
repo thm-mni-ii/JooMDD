@@ -17,7 +17,7 @@ dependencies {
 }
 task jettyRun(type:JavaExec) {
 
-	jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9000'
+	jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=27072'
 
 	dependsOn(sourceSets.main.runtimeClasspath)
 	classpath = sourceSets.main.runtimeClasspath.filter{it.exists()}
