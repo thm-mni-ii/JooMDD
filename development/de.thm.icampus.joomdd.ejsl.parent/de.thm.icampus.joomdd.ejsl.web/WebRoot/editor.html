@@ -39,7 +39,7 @@
                     "shim": {
 				        "bootstrap":  ["jquery"],
 				        "jquery-easing":  ["jquery"],
-				        "scrolling-nav": ["jquery"]
+                        "scrolling-nav": ["jquery","bootstrap","jquery-easing"]
 				    },
                     paths: {
                         "ace/ace": "webjars/ace/1.2.8/src/ace",
@@ -88,9 +88,6 @@
                 <button id="loginMenuBtn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-spinner fa-pulse fa-fw"></i> LogIn
                 </button>
-                <button id="logoutMenuBtn" type="button" class="btn btn-secondary d-none">
-                  <i class="fa fa-user-o fa-fw"></i> LogOut
-                </button>
                 <div class="dropdown-menu">
                   <form id="login-form" class="px-4 py-3" role="form">
                     <div class="form-group">
@@ -107,6 +104,11 @@
                   <a class="dropdown-item" data-toggle="modal" data-target="#registrationForm" href="#">New around here? Sign up</a>
                 </div>
               </div>
+            </li>
+            <li>
+              <button id="logoutMenuBtn" type="button" class="btn btn-secondary d-none">
+                <i class="fa fa-user-o fa-fw"></i> LogOut
+              </button>
             </li>
           </ul>
         </div>
@@ -261,7 +263,7 @@
         <p class="copyright text-muted small">Copyright &copy; Institute for Information Sciences 2017. All Rights Reserved</p>
       </div>
     </footer>
-    
+
 	<!-- Registration form -->
 	<div class="modal fade" id="registrationForm">
             <div class="modal-dialog">
@@ -321,7 +323,7 @@
 						                </div>
 						            </div>
 						        </div>
-						        
+
 						        <div class="row">
 						            <div class="col-md-12">
 						            	<div id="registerAlert" class="alert alert-dismissable fade show">

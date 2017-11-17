@@ -168,10 +168,9 @@ p.copyright {
 }
 
 #xtext-editor {
-  min-width: 60%;
-  min-height: 80%;
+  min-height: 400px;
   
-  max-height: 80%;
+  max-height: 400px;
   margin-top: 10px;
   margin-right: 20px;
 }
@@ -195,4 +194,10 @@ p.copyright {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.filetree {
+  margin-top: 20px;
+  height: 250px;
+  overflow: auto;
 }
