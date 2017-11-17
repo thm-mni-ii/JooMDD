@@ -36,20 +36,27 @@
                     baseUrl = baseUrl.slice(0, fileIndex);
                 require.config({
                     baseUrl: baseUrl,
+                    "shim": {
+				        "bootstrap":  ["jquery"],
+				        "jquery-easing":  ["jquery"],
+				        "scrolling-nav": ["jquery"]
+				    },
                     paths: {
                         "ace/ace": "webjars/ace/1.2.8/src/ace",
-                        "jquery": "js/jquery-3.2.1.min",
+                        "jquery": "vendor/jquery/jquery.min",
                         "ace/ext/language_tools": "webjars/ace/1.2.8/src/ext-language_tools",
                         "xtext/xtext-ace": "xtext/2.10.0/xtext-ace",
-                        "cookie" : "js/cookie",
-                        "jstree" : "js/jstree"
+                        "jstree": "js/jstree",
+                        "bootstrap": "vendor/bootstrap/js/bootstrap.bundle.min",
+                        "jquery-easing": "vendor/jquery-easing/jquery.easing.min",
+                        "scrolling-nav": "js/scrolling-nav"
                     }
                 });
             }
         };
 
     </script>
-    <script type="text/javascript" src="webjars/requirejs/2.3.3/require.min.js"></script>
+    <script type="text/javascript" src="webjars/requirejs/2.3.5/require.min.js"></script>
 
     <script type="text/javascript" src="js/alert.js"></script>
     <script type="text/javascript" src="js/treeloader.js"></script>
@@ -70,6 +77,7 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
+ 
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
@@ -77,18 +85,21 @@
             </li>
             <li class="nav-item btn-group">
               <div class="btn-group">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-user-o fa-fw"></i> LogIn
+                <button id="loginMenuBtn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-spinner fa-pulse fa-fw"></i> LogIn
+                </button>
+                <button id="logoutMenuBtn" type="button" class="btn btn-secondary d-none">
+                  <i class="fa fa-user-o fa-fw"></i> LogOut
                 </button>
                 <div class="dropdown-menu">
-                  <form class="px-4 py-3">
+                  <form id="login-form" class="px-4 py-3" role="form">
                     <div class="form-group">
-                      <label for="exampleDropdownFormEmail1">Email address</label>
-                      <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
+                      <label for="loginUsername">Username</label>
+                      <input type="text" class="form-control" id="loginUsername" name="username"  placeholder="Username">
                     </div>
                     <div class="form-group">
-                      <label for="exampleDropdownFormPassword1">Password</label>
-                      <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
+                      <label for="loginPassword">Password</label>
+                      <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Password">
                     </div>
                     <div class="form-check">
                       <label class="form-check-label">
@@ -96,10 +107,10 @@
                         Remember me
                       </label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Sign in</button>
+                 	<button id="loginBtn" type="button" class="btn btn-primary">Sign in</button>
                   </form>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">New around here? Sign up</a>
+                  <a class="dropdown-item" data-toggle="modal" data-target="#registrationForm" href="#">New around here? Sign up</a>
                   <a class="dropdown-item" href="#">Forgot password?</a>
                 </div>
               </div>
@@ -257,17 +268,96 @@
         <p class="copyright text-muted small">Copyright &copy; Institute for Information Sciences 2017. All Rights Reserved</p>
       </div>
     </footer>
+    
+	<!-- Registration form -->
+	<div class="modal fade" id="registrationForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Register New User</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
 
-    <!-- Plugin JavaScript -->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="container">
+						    <form id="register-form" class="form-horizontal" role="form">
+						        <div class="row">
+						            <div class="col-md-3 field-label-responsive">
+						                <label for="registrationUsername">Username</label>
+						            </div>
+						            <div class="col-md-6">
+						                <div class="form-group">
+						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+						                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-user"></i></div>
+						                        <input type="text" name="username" class="form-control" id="registrationUsername"
+						                               placeholder="John Doe" required autofocus>
+						                    </div>
+						                </div>
+						            </div>
+						            <div class="col-md-3">
+						                <div class="form-control-feedback">
+						                        <span class="text-danger align-middle">
+						                            <!-- Put name validation error messages here -->
+						                        </span>
+						                </div>
+						            </div>
+						        </div>
+						        <div class="row">
+						            <div class="col-md-3 field-label-responsive">
+						                <label for="registrationPassword">Password</label>
+						            </div>
+						            <div class="col-md-6">
+						                <div class="form-group has-danger">
+						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+						                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>
+						                        <input type="password" name="password" class="form-control" id="registrationPassword"
+						                               placeholder="Password" required>
+						                    </div>
+						                </div>
+						            </div>
+						            <div class="col-md-3">
+						                <div class="form-control-feedback">
+						                        <span class="text-danger align-middle">
+						                            <i class="fa fa-close"> Example Error Message</i>
+						                        </span>
+						                </div>
+						            </div>
+						        </div>
+						        <div class="row">
+						            <div class="col-md-3 field-label-responsive">
+						                <label for="password">Confirm Password</label>
+						            </div>
+						            <div class="col-md-6">
+						                <div class="form-group">
+						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+						                        <div class="input-group-addon" style="width: 2.6rem">
+						                            <i class="fa fa-repeat"></i>
+						                        </div>
+						                        <input type="password" name="password-confirmation" class="form-control"
+						                               id="registrationPasswordConfirm" placeholder="Password" required>
+						                    </div>
+						                </div>
+						            </div>
+						        </div>
+						    </form>
+						</div>
+                    </div>
 
-    <!-- Custom JavaScript for this theme -->
-    <script src="js/scrolling-nav.js"></script>
-
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+				        <div class="row">
+				            <div class="col-md-3"></div>
+				            <div class="col-md-6">
+				                <button id="registerBtn" class="btn btn-success"><i class="fa fa-user-plus"></i> Register</button>
+				            </div>
+				        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
   </body>
 
 </html>

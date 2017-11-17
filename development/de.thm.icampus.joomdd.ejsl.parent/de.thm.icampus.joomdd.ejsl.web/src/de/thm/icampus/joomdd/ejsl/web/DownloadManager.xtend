@@ -13,12 +13,11 @@ import javax.servlet.annotation.WebServlet
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.util.Map
-import javax.servlet.http.Cookie
 
 @WebServlet(name='DownLoadManager', urlPatterns='/download-manager/*')
 class DownloadManager extends HttpServlet {
+
+	Config config = Config.instance;
 
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -27,14 +26,13 @@ class DownloadManager extends HttpServlet {
 		println(fileTozip.toString)
 
 		val gson = new Gson
-		if (name != null && (req.session.getAttribute("joomddusername") as String).equals(name) && !fileTozip.empty) {
+		if (name !== null && (req.session.getAttribute("joomddusername") as String).equals(name) && !fileTozip.empty) {
 			resp.setHeader("Content-Type", "application/zip")
 			resp.setHeader("Accept-Ranges", "bytes")
 			resp.setHeader("Content-Disposition", '''attachment; filename="«name».zip"''');
 			resp.status = HttpServletResponse.SC_OK
-			var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 			val byte[] buffer = newByteArrayOfSize(4096000)
-			var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
+			var String serverPath = config.properties.getProperty("serverPath")
 
 			// var FileOutputStream fileOut = new FileOutputStream(filoutName)			       
 			var ZipOutputStream zipOut = new ZipOutputStream(resp.outputStream)
@@ -124,13 +122,12 @@ class DownloadManager extends HttpServlet {
 	}
 
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 		var String uri = req.requestURI;
 		var String name = req.session.id
-		var String serverPath = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
-		var String userWorkspacePath = serverPath + "/" + name + uri.replace("/download-manager", "");
+		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
+		var String userWorkspacePath = workspacePath + "/" + name + uri.replace("/download-manager", "");
 
-		if (name != null) {
+		if (name !== null) {
 			var File out = new File(userWorkspacePath)
 			if (out.file) {
 				resp.status = HttpServletResponse.SC_OK
@@ -193,24 +190,17 @@ class DownloadManager extends HttpServlet {
 	}
 
 	override protected doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String
+		var String name = req.session.id
+		var String uri = req.requestURI;
+		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
+		var String userWorkspacePath = workspacePath + "/" + name + uri.replace("/download-manager", "");
 
-		var Map<String, Object> users = resourcesProvider.contentTypeToFactoryMap.get(
-			"mddsessions") as Map<String, Object>
-		if (!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername"))) {
-			resp.sendError(404, "User not im System")
-			return
-		}
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
 		val gson = new Gson
-		var String uri = req.requestURI;
-		var String name = uri.split("/").get(2)
-		var String replaceuri = uri.replace("/download-manager", server)
-		var File out = new File(replaceuri)
-		println("Delete " + replaceuri)
+		var File out = new File(userWorkspacePath)
+		println("Delete " + userWorkspacePath)
 		if (out.exists) {
 			var boolean delete = false
 			if(out.file){
@@ -228,28 +218,18 @@ class DownloadManager extends HttpServlet {
 			gson.toJson(false, resp.writer)
 		}
 	}
+	
     public def boolean deleteDirectory(File path) {
-    if (path.exists()) {
-        var File[] files = path.listFiles();
-        for (File f: files) {
-            if (f.isDirectory()) {
-                deleteDirectory(f);
-            } else {
-                f.delete();
-            }
-        }
-    }
-    return (path.delete());
-}
-	def boolean checkCookies(Cookie[] cookies) {
-		var boolean havename = false;
-		var boolean haveemail = false
-		for (Cookie cook : cookies) {
-			if (cook.name == "joomddusername" && cook.value != null)
-				havename = true
-			if (cook.name == "joomddemail" && cook.value != null)
-				haveemail = true
-		}
-		return havename && haveemail
+	    if (path.exists()) {
+	        var File[] files = path.listFiles();
+	        for (File f: files) {
+	            if (f.isDirectory()) {
+	                deleteDirectory(f);
+	            } else {
+	                f.delete();
+	            }
+	        }
+	    }
+    	return (path.delete());
 	}
 }

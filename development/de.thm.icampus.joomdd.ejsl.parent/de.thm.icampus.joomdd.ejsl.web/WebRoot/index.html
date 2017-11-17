@@ -19,7 +19,36 @@
 
     <!-- Custom styles for this template -->
     <link href="css/landing-page.css" rel="stylesheet">
-
+	<script type="text/javascript">
+	        var require = {
+	            callback: function() {
+	                var baseUrl = window.location.pathname;
+	                var fileIndex = baseUrl.indexOf("index.html");
+	                if (fileIndex > 0)
+	                    baseUrl = baseUrl.slice(0, fileIndex);
+	                require.config({
+	                    baseUrl: baseUrl,
+	                    "shim": {
+					        "bootstrap":  ["jquery"],
+					        "jquery-easing":  ["jquery"],
+					        "scrolling-nav": ["jquery"]
+					    },
+	                    paths: {
+	                        "jquery": "vendor/jquery/jquery.min",
+	                        "bootstrap": "vendor/bootstrap/js/bootstrap.bundle.min",
+	                        "jquery-easing": "vendor/jquery-easing/jquery.easing.min",
+	                        "scrolling-nav": "js/scrolling-nav"
+	                    }
+	                });
+	                
+	                // Needed to load necessary bootstrap files.
+	                require(["jquery", "bootstrap", "jquery-easing", "scrolling-nav"], function($) {});
+	            }
+	        };
+	
+    </script>
+    <script type="text/javascript" src="webjars/requirejs/2.3.5/require.min.js"></script>
+    
   </head>
 
   <body>
@@ -206,16 +235,6 @@
         <p class="copyright text-muted small">Copyright &copy; Institute for Information Sciences 2017. All Rights Reserved</p>
       </div>
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom JavaScript for this theme -->
-    <script src="js/scrolling-nav.js"></script>
 
   </body>
 

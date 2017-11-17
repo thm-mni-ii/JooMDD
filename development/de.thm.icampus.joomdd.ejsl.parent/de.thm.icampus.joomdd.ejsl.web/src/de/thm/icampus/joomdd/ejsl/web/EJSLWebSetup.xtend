@@ -23,7 +23,8 @@ class EJSLWebSetup extends EJSLStandaloneSetup {
 	override Injector createInjector() {
 		val runtimeModule = new EJSLRuntimeModule()
 		val webModule = new EJSLWebModule(executorServiceProvider)
-		return Guice.createInjector(Modules.override(runtimeModule).with(webModule))
+		var Injector injector = Guice.createInjector(Modules.override(runtimeModule).with(webModule));
+		return injector;
 	}
 	
 }

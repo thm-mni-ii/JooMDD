@@ -12,19 +12,12 @@ import org.eclipse.jetty.webapp.WebAppContext
 import org.eclipse.jetty.webapp.WebInfConfiguration
 import org.eclipse.jetty.webapp.WebXmlConfiguration
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.util.HashMap
-import java.io.File
-import java.util.Map
-import org.eclipse.emf.common.util.BasicEList
-import org.eclipse.emf.common.util.EList
 
 /**
  * This program starts an HTTP server for testing the web integration of your DSL.
  * Just execute it and point a web browser to http://localhost:8080/
  */
-class ServerLauncher {
-		var static resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
-	
+class ServerLauncher {	
 	def static void main(String[] args) { 
 		val server = new Server(new InetSocketAddress('localhost', 8080))
 		server.handler = new WebAppContext => [

@@ -1,12 +1,11 @@
 package de.thm.icampus.joomdd.ejsl.web
 
-import java.util.List
-import java.util.LinkedList
 import java.io.File
-import java.util.Map
 import java.util.HashMap
+import java.util.LinkedList
+import java.util.List
+import java.util.Map
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import javax.servlet.http.HttpSession
 
 class Treeitem {
 	private String id
@@ -24,18 +23,16 @@ class Treeitem {
 	      a_attr = new  HashMap<String,String>
 		searchChild(path,parentid,sourceName)
 	}
-	new(HttpSession session, String id){
-		var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
+	new(String workspacePath, String id){
 		children = new LinkedList<Treeitem>
 		state = new HashMap<String,Boolean>
 		li_attr = new HashMap<String,String> 
 	     a_attr = new  HashMap<String,String>
-		loadOrigin(session,resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String, id)
+		loadOrigin(workspacePath, id)
 	}
 	
-	def loadOrigin(HttpSession session, String source,String id) {
-		var workspaceName = "workspace"
-		var File path = new File(source + "/" + session.id)
+	def loadOrigin(String workspacePath, String id) {
+		var File path = new File(workspacePath)
 		this.text = ""
 		this.id = id
 		icon ="jstree-folder"

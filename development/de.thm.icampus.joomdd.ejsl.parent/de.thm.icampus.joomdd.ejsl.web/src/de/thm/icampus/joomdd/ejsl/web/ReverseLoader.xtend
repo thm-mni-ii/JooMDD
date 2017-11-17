@@ -8,9 +8,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.Enumeration
-import java.util.Map
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+import javax.servlet.ServletContext
 import javax.servlet.ServletException
 import javax.servlet.ServletInputStream
 import javax.servlet.annotation.WebServlet
@@ -18,28 +18,20 @@ import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import org.eclipse.xtext.resource.IResourceServiceProvider
-import javax.servlet.ServletContext
+import de.thm.icampus.joomdd.ejsl.web.util.Helper
 
 @WebServlet(name = 'ReverseLoader', urlPatterns = '/reverse-loader/*')
 class ReverseLoader extends HttpServlet {
-	var resourcesProvider = IResourceServiceProvider.Registry.INSTANCE
 	
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var String name = req.session.getAttribute("joomddusername") as String
-		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
-		
-		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername")) ){
-			resp.sendError(404,"User not in system")
-			return
-		}
+		var String sessionID = req.session.id
 
-		var String user = req.getParameter("user")
-		var String manifest = req.getParameter("manifest").replace("download-manager", server)
-		var String model =  req.getParameter("model")
+		var workspaceUserPath = Helper.getWorkspaceUserPath(sessionID)
 		
-		var String target = server +"/"+user+"/src/"+model
+		var String manifest = workspaceUserPath + req.getParameter("manifest").replace("download-manager", "")
+		var String model = req.getParameter("model")
+		
+		var String target = workspaceUserPath + "/src/" + model
 		
 		var ServletContext context = this.servletContext;
 
@@ -69,30 +61,23 @@ class ReverseLoader extends HttpServlet {
 	}
 	
 	override protected doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var String name = req.session.getAttribute("joomddusername") as String
-		var String server = resourcesProvider.contentTypeToFactoryMap.get("serverpath") as String 
+		var String sessionID = req.session.id
+		var workspaceUserPath = Helper.getWorkspaceUserPath(sessionID)
 		
-		var Map<String,Object> users = resourcesProvider.contentTypeToFactoryMap.get("mddsessions") as Map<String,Object>
-		if(!checkCookies(req.cookies) || !users.containsKey(req.session.getAttribute("joomddusername")) ){
-			resp.sendError(404,"User not in system")
-			return
-		}
-	 resp.status = HttpServletResponse.SC_OK
+		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
-	  var String folderName = req.getParameter("filename").replace(".zip","").trim
-	  var String srcZip =  server+ "/" +name +"/reverse"+ "/" +folderName+ "/"+folderName+".zip"
-	  var File createScr = new File(server+ "/" +name +"/reverse"+ "/" +folderName);
-	  if(!createScr.exists)
-	       createScr.mkdirs
-	  var String path = writeZip(srcZip,req.inputStream)
-	   println(folderName);
-		decompress(path,name,server, folderName)
+		var String folderName = req.getParameter("filename").replace(".zip","").trim
+		var String srcZip =  workspaceUserPath + "/reverse" + "/" + folderName + "/" + folderName + ".zip"
+		var File createScr = new File(workspaceUserPath +"/reverse"+ "/" + folderName);
+		if(!createScr.exists)
+		createScr.mkdirs
+		var String path = writeZip(srcZip,req.inputStream)
+		println(folderName);
+		decompress(path, workspaceUserPath, folderName)
 		var File deleteSrc = new File (srcZip) 
 		deleteSrc.delete
-		
 		val gson = new Gson
-		
 		gson.toJson(true, resp.writer)
 	}
 	
@@ -115,12 +100,12 @@ class ReverseLoader extends HttpServlet {
 		return filename
 	}
 	
-	private def boolean decompress(String zipIn, String name,String server, String folderName){
-		var String revers= server+ "/" +name +"/reverse"+ "/" +folderName 
+	private def boolean decompress(String zipIn, String workspaceUserPath, String folderName){
+		var String reverse = workspaceUserPath + "/reverse" + "/" +folderName 
 		var ZipFile zipFile = new ZipFile(zipIn);
 	       var Enumeration<? extends ZipEntry> entries = zipFile.entries()
 		
-		var File dest = new File(revers)
+		var File dest = new File(reverse)
 		if(!dest.exists){
 			dest.mkdir
 		}
