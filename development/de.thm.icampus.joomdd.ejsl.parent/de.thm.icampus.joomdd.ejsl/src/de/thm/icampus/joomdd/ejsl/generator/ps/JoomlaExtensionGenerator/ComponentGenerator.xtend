@@ -220,7 +220,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 					<!-- View Files Section -->
 					<folder>views</folder>
 					<folder>language</folder>
-					folder>controllers</folder>
+					<folder>controllers</folder>
 					<folder>helpers</folder>
 					<folder>assets</folder>
 				</files>
