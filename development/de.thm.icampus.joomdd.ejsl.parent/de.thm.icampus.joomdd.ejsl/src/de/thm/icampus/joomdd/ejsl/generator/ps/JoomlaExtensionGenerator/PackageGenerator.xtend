@@ -35,7 +35,6 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 	override generate() {
 		// Manifest
 		generateFile(path + this.name + ".xml", pkg.xmlContent)
-		generateJoomlaDirectory(path + "packages")
 		
         // Generate extensions
         for (ext : this.pkg.extensions) {

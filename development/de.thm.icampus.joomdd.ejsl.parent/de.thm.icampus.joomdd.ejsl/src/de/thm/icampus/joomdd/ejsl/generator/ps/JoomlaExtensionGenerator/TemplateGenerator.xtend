@@ -29,27 +29,22 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 	}
 
 	override generate() {
-		generateJoomlaDirectory("")
 		
 		generateFile("index.php", template.phpIndex)
 		generateFile("component.php", template.phpComponent)
 		generateFile("templateDetails.xml", template.xmlTemplateDetails)
-		generateJoomlaDirectory("css")
 		generateFile("css/" + "general.css", template.cssGeneral)
 		generateFile("css/" + "offline.css", template.cssGeneral)
 		generateFile("css/" + "error.css", template.cssGeneral)
 		generateFile("css/" + name + ".css", template.cssTemplate)
 		generateFile("css/" + name + "_rtl.css", template.cssTemplate)
-		generateJoomlaDirectory("fonts")
-		generateJoomlaDirectory("html")
+		generateEmptyDirectory("fonts")
 		generateFile("html/" + "modules.php", template.phpModule)
-		generateJoomlaDirectory("javascript")
-		generateJoomlaDirectory("images")
+		generateEmptyDirectory("javascript")
 		generateFile("/images/dummyImage", template.DummyImage)
 		
-		generateJoomlaDirectory("language")
+		generateEmptyDirectory("language")
 		for (lang : template.languages) {
-			generateJoomlaDirectory("/language/" + lang.name)
 			generateFile("/language/" + lang.name + "/" + lang.name + "." + name + ".ini",
 				template.iniLanguage(lang.name))
 			generateFile("/language/" + lang.name + "/" + lang.name + "." + name + ".sys.ini",
@@ -102,7 +97,6 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		<folder>images</folder>
 		<folder>javascript</folder>
 		<folder>language</folder>
-		<filename>index.html</filename>
 		<filename>index.php</filename>
 		<filename>component.php</filename>
 		</files>

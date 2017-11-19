@@ -76,7 +76,7 @@ abstract public class AbstractExtensionGenerator  {
      * 
      * @param dirName  using '/' as directory separator
      */
-	def protected generateJoomlaDirectory(String dirName) {
+	def protected generateEmptyDirectory(String dirName) {
 		var p = dirName
 		while (p.endsWith("/")) {
 			p = p.substring(0, p.length - 1);
@@ -123,10 +123,6 @@ abstract public class AbstractExtensionGenerator  {
 		this.path = path
 		generate()
 		this.path = old_path
-	}
-	
-	
-	
-	
+	}	
 
 } // AbstractExtensionGenerator

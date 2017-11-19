@@ -27,8 +27,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	private ExtendedComponent extendedComp
 	private String class_name
 	private String updatePath
-	private  String sitePath 
-	private  String adminPath
+	private String sitePath 
+	private String adminPath
 	private String mediaPath 
  
     /**
@@ -52,9 +52,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.extendedComp.name = Slug.slugify(extendedComp.name)
 		this.path = path
 		this.updatePath = updatePath
-		this.sitePath = path+"components/"+this.extendedComp.extensionName
-		this.adminPath = path+"administrator/components/"+this.extendedComp.extensionName
-		this.mediaPath =  path+"media/"+ extendedComp.extensionName
+		this.sitePath = path + "components/" + this.extendedComp.extensionName
+		this.adminPath = path + "administrator/components/" + this.extendedComp.extensionName
+		this.mediaPath =  path + "media/" + extendedComp.extensionName
 		
 	}
 	
@@ -64,47 +64,43 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	override generate() {
 		println("component path " +path);
-		generateJoomlaDirectory(path+"")
 
 		var List<ExtendedDynamicPage>  indexPages = new LinkedList<ExtendedDynamicPage>()
 		for(ExtendedPageReference ext : extendedComp.backEndExtendedPagerefence) {
-            if(ext.extendedPage.extendedDynamicPageInstance != null) {
+            if(ext.extendedPage.extendedDynamicPageInstance !== null) {
                 indexPages.add(ext.extendedPage.extendedDynamicPageInstance)  
             }	   
   		}
 
         // Generate the the installation path for a compoenent
-		generateFile(path+ name + ".xml", extendedComp.xmlContent(indexPages))
-		generateFile(path+ "script.php", generateScript(extendedComp, name))
+		generateFile(path + name + ".xml", extendedComp.xmlContent(indexPages))
+		generateFile(path + "script.php", generateScript(extendedComp, name))
 
 		// Generate language folders and files
 		var LanguageGenerator langgen = new LanguageGenerator(fsa)
 		langgen.genComponentLanguage(extendedComp,path)
 
 		//Generate media folder
-		generateJoomlaDirectory(mediaPath)
-		generateJoomlaDirectory(mediaPath+"/css")
-		generateJoomlaDirectory(mediaPath+"/images")
-		generateJoomlaDirectory(mediaPath+"/js")
-		generateFile( mediaPath+"/js/setForeignKeys.js", genScriptForForeignKeys)
-		generateFile( mediaPath+"/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
+		generateEmptyDirectory(mediaPath+"/images")
+		generateFile( mediaPath + "/js/setForeignKeys.js", genScriptForForeignKeys)
+		generateFile( mediaPath + "/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
 		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
 		
-		generateFile( mediaPath+"/js/bootsnip.js", help.genBootsnipJS)
-		generateFile( mediaPath+"/css/bootsnip.css",help.genBootsnipCSS)
+		generateFile( mediaPath + "/js/bootsnip.js", help.genBootsnipJS)
+		generateFile( mediaPath + "/css/bootsnip.css",help.genBootsnipCSS)
+		
 		//Generate images folder
 		for(detailsPages : indexPages.filter[t| t.detailsPage && t.haveFiletoLoad]) {
-			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase)
-			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase+ "/images")
-			generateJoomlaDirectory(mediaPath+"/" + detailsPages.name.toLowerCase + "/files")
+			generateEmptyDirectory(mediaPath + "/" + detailsPages.name.toLowerCase + "/images")
+			generateEmptyDirectory(mediaPath + "/" + detailsPages.name.toLowerCase + "/files")
 		}
 
 		// Generate frontend section 
-		if (extendedComp.frontEndExtendedPagerefence != null) {
+		if (extendedComp.frontEndExtendedPagerefence !== null) {
 			generateFrontendSection
 		}
 	    // Generate backend section 
-		if (extendedComp.backEndExtendedPagerefence != null) {
+		if (extendedComp.backEndExtendedPagerefence !== null) {
 			generateBackendSection
 		}
 		return ""
@@ -123,63 +119,60 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) '''
 		<?xml version="1.0" encoding="utf-8"?>
-		<extension type="component" version="3.3" method="upgrade">
+		<extension type="component" version="3.5" method="upgrade">
 		    <name>«component.name»</name>
-		    «Slug.generateAuthors(component.manifest.authors)»            
-		    «IF (component.manifest.creationdate != null)»
-		    	<creationDate>«component.manifest.creationdate»</creationDate>
+		    «Slug.generateAuthors(component.manifest.authors)»
+		    «IF (component.manifest.creationdate !== null)»
+		    <creationDate>«component.manifest.creationdate»</creationDate>
 		    «ELSE»
-		    	<creationDate>«Calendar::instance.get(Calendar::YEAR)»</creationDate>
+		    <creationDate>«Calendar::instance.get(Calendar::YEAR)»</creationDate>
 		    «ENDIF»
-		    «IF (component.manifest.copyright != null)»
-		    	<copyright>«component.manifest.copyright»</copyright>
+		    «IF (component.manifest.copyright !== null)»
+		    <copyright>«component.manifest.copyright»</copyright>
 		    «ENDIF»
-		    
-		    «IF (component.manifest.license != null)»
-		    	<license>«component.manifest.license»</license>
+		
+		    «IF (component.manifest.license !== null)»
+		    <license>«component.manifest.license»</license>
 		    «ENDIF»
-		    «IF (component.manifest.version != null)»
-		    	<version>«component.manifest.version»</version>
-		    	«ELSE»
-		    	<version>1.0.1</version>
+		    «IF (component.manifest.version !== null)»
+		    <version>«component.manifest.version»</version>
+		    «ELSE»
+		    <version>1.0.1</version>
 		    «ENDIF»
-		    «IF (component.manifest.description != null)»
-		    	<description>«component.manifest.description»</description>
+		    «IF (component.manifest.description !== null)»
+		    <description>«component.manifest.description»</description>
 		    «ENDIF»
-		    
-		     <scriptfile>script.php</scriptfile>
+		
+		    <scriptfile>script.php</scriptfile>
 		    <!-- Install Section -->
 		    <install>
 		        <sql>
 		            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
 		        </sql>
 		    </install>
-		    
+		
 		    <!-- Uninstall Section -->
 		    <uninstall>
 		        <sql>
 		            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
 		        </sql> 
 		    </uninstall>
-		    
+		
 		    <!-- Update Section -->
 		    <update>
 		        <schemas>
 		            <schemapath type="mysql">sql/updates/mysql</schemapath>
 		        </schemas>
 		    </update>
-		     <media destination="«name»" folder="media/«extendedComp.extensionName»">
-		     	    <folder>images</folder>
-					<folder>js</folder>
-					<folder>css</folder>
-					«FOR page : dymPages.filter[t | t != null && t.detailsPage && t.haveFiletoLoad]»
-					<folder>«page.name.toLowerCase»</folder>
-					«ENDFOR»
-					<filename>index.html</filename>
-		      </media>
-		      
-		     
-		    
+		    <media destination="«name»" folder="media/«extendedComp.extensionName»">
+		        <folder>images</folder>
+				<folder>js</folder>
+			    <folder>css</folder>
+			    «FOR page : dymPages.filter[t | t !== null && t.detailsPage && t.haveFiletoLoad]»
+			    <folder>«page.name.toLowerCase»</folder>
+				«ENDFOR»
+		    </media>
+		
 		    <!-- Site Main File Copy Section -->
 		    <files folder="components/«extendedComp.extensionName»">
 		        <filename>«noPrefixName».php</filename>
@@ -192,25 +185,24 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    </files>
 		    
 		    <languages>
-		    	«FOR lang : component.languages»
-		    	«IF !lang.sys»
-		    		<language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
-		    		«ELSE»
-		    		<language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
-		    		«ENDIF»
-		    	«ENDFOR»
+		        «FOR lang : component.languages»
+		        «IF !lang.sys»
+		        <language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
+		        «ELSE»
+		        <language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+		        «ENDIF»
+		        «ENDFOR»
 		    </languages>
-		    
+		
 		    <administration>
 		        <!-- Administration Menu Section -->
 		        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
 		        <submenu>
-				«FOR page : dymPages.filter[t | !t.detailsPage]»
-					
-					<menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
-					alias="«Slug.nameExtensionBind("com", component.name).toUpperCase»_ALIAS_«page.name.toUpperCase»"
-					view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«page.name.toUpperCase»</menu>
-				«ENDFOR»
+		            «FOR page : dymPages.filter[t | !t.detailsPage]»	
+		            <menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
+		                alias="«Slug.nameExtensionBind("com", component.name).toUpperCase»_ALIAS_«page.name.toUpperCase»"
+		                view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«page.name.toUpperCase»</menu>
+				    «ENDFOR»
 				</submenu>
 				<!-- Administration Main File Copy Section -->
 				<files folder="administrator/components/«extendedComp.extensionName»">
@@ -219,32 +211,33 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 				    <filename>controller.php</filename>
 					<filename>access.xml</filename>
 					<filename>config.xml</filename>
-					         <!-- SQL Files Section -->
-					         <folder>sql</folder>
-					         <!-- Table Files Section -->
-					         <folder>tables</folder>
-					         <!-- Model Files Section -->
-					         <folder>models</folder>
-					         <!-- View Files Section -->
-					         <folder>views</folder>
-					         <folder>language</folder>
-					         <folder>controllers</folder>
-					         <folder>helpers</folder>
-					         <folder>assets</folder>
-					     </files>
-				
-				<languages >
-				  	«FOR lang : component.languages»
-					  «IF !lang.sys»
-			    		<language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
-			    		«ELSE»
-			    		<language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
-			    		«ENDIF»
-		    	«ENDFOR»
+					<!-- SQL Files Section -->
+					<folder>sql</folder>
+					<!-- Table Files Section -->
+					<folder>tables</folder>
+					<!-- Model Files Section -->
+					<folder>models</folder>
+					<!-- View Files Section -->
+					<folder>views</folder>
+					<folder>language</folder>
+					folder>controllers</folder>
+					<folder>helpers</folder>
+					<folder>assets</folder>
+				</files>
+		
+				<languages>
+				    «FOR lang : component.languages»
+				    «IF !lang.sys»
+				    <language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
+				    «ELSE»
+				    <language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+				    «ENDIF»
+				    «ENDFOR»
 				</languages>
-				  </administration>
+			</administration>
 		</extension>
 	'''
+	
     /**
      * Generates all the folders and files for the frontend of a component.
      * Uses the entity an page generator.
@@ -252,17 +245,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	private def void generateFrontendSection() {
 		// Generate frontend section
-		generateFile( sitePath +"/" + noPrefixName + ".php", extendedComp.phpSiteContent)
-		generateFile( sitePath +"/controller.php", extendedComp.phpSiteControllerContent)
-		generateFile( sitePath +"/router.php", extendedComp.phpSiteRouterContent)
-		generateJoomlaDirectory(sitePath+"/views")
-		generateJoomlaDirectory(sitePath+"/models")
-		generateJoomlaDirectory(sitePath+"/models/fields")
-		generateJoomlaDirectory(sitePath+"/models/forms")
-		generateJoomlaDirectory(sitePath+"/views")
-		generateJoomlaDirectory(sitePath+"/assets")
-		generateJoomlaDirectory(sitePath+"/controllers")
-        
+		generateFile( sitePath + "/" + noPrefixName + ".php", extendedComp.phpSiteContent)
+		generateFile( sitePath + "/controller.php", extendedComp.phpSiteControllerContent)
+		generateFile( sitePath + "/router.php", extendedComp.phpSiteRouterContent)
+		        
         var EntityGenerator entitygen = new EntityGenerator(extendedComp,sitePath + "/",fsa,false)
 		entitygen.dogenerate()
 
@@ -276,7 +262,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
         pgGen = new PageGenerator(extendedComp, tempPageList,fsa,sitePath,"site",false)
 		pgGen.dogenerate
 		generateUpdatePages(tempPageList,"site")
-		
 	}
 	
     /**
@@ -287,38 +272,23 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	private def void generateBackendSection() {
         var List<ExtendedDynamicPage> indexPages = new LinkedList<ExtendedDynamicPage>()
 		for(ExtendedPageReference ext: extendedComp.backEndExtendedPagerefence) {
-			if(ext.extendedPage.extendedDynamicPageInstance != null) {
+			if(ext.extendedPage.extendedDynamicPageInstance !== null) {
                 indexPages.add(ext.extendedPage.extendedDynamicPageInstance)   
 			}
   		}
   		// Generate sql folders
-		generateJoomlaDirectory(adminPath)
-		generateJoomlaDirectory(adminPath + "/sql")
-		generateJoomlaDirectory(adminPath + "/sql/updates")
-		generateJoomlaDirectory(adminPath + "/sql/updates/mysql")
 		
-		generateFile(adminPath+"/" + noPrefixName + ".php", extendedComp.phpAdminContent)
+		generateFile( adminPath + "/" + noPrefixName + ".php", extendedComp.phpAdminContent)
 		generateFile( adminPath + "/controller.php", extendedComp.phpAdminControllerContent)
 		generateFile( adminPath + "/access.xml", extendedComp.xmlAccessContent)
 		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
-		generateJoomlaDirectory(adminPath + "/assets")
-		generateJoomlaDirectory(adminPath + "/views")
-
+		
 		var tempSlug = slug + "s"
-		generateJoomlaDirectory(adminPath+"/views/" + tempSlug)
 		generateFile(adminPath +"/views/" + tempSlug + "/view.html.php", 
-		    extendedComp.phpAdminViewContent
-		)
-		generateJoomlaDirectory(adminPath+"/views/" + tempSlug + "/tmpl")
+		    extendedComp.phpAdminViewContent)
 		generateFile(adminPath +"/views/" + tempSlug + "/tmpl/default.php", 
 		    extendedComp.phpAdminTemplateContent
 		)
-		generateJoomlaDirectory(adminPath + "/models")
-		generateJoomlaDirectory(adminPath + "/models/fields")
-		generateJoomlaDirectory(adminPath + "/tables")
-		generateJoomlaDirectory(adminPath + "/views")
-		generateJoomlaDirectory(adminPath + "/controllers")
-		generateJoomlaDirectory(adminPath + "/helpers/")
 		
 		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
 		generateFile( adminPath + "/helpers/" + extendedComp.name.toLowerCase + ".php", 
@@ -364,20 +334,20 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpSiteContent(Component component) '''
 		<?php
-	     «Slug.generateFileDoc(component,true)»
-	    
-	    // import joomla controller library
-	    jimport('joomla.application.component.controller');
-	    
-	    // Get an instance of the controller prefixed by «class_name»
-	    $controller = JControllerLegacy::getInstance('«class_name»');
-	    
-	    // Perform the Request task
-	    $input = JFactory::getApplication()->input;
-	    $controller->execute($input->getCmd('task'));
-	    
-	    // Redirect if set by the controller
-	    $controller->redirect();
+		«Slug.generateFileDoc(component,true)»
+		
+		// import joomla controller library
+		jimport('joomla.application.component.controller');
+		
+		// Get an instance of the controller prefixed by «class_name»
+		$controller = JControllerLegacy::getInstance('«class_name»');
+		
+		// Perform the Request task
+		$input = JFactory::getApplication()->input;
+		$controller->execute($input->getCmd('task'));
+		
+		// Redirect if set by the controller
+		$controller->redirect();
 	'''
 	
 	/**
@@ -390,31 +360,31 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpSiteControllerContent(ExtendedComponent component) '''
 		<?php
-		     «Slug.generateFileDoc(component,true)»
-		    
-		    // import Joomla controller library
-		    jimport('joomla.application.component.controller');
-		    
+		«Slug.generateFileDoc(component,true)»
+		
+		// import Joomla controller library
+		jimport('joomla.application.component.controller');
+		
+		/**
+		 * General Controller of «component.name» component
+		 */
+		class «class_name»Controller extends JControllerLegacy
+		{
 		    /**
-		     * General Controller of «component.name» component
+		     * display task
+		     *
+		     * @return  void
 		     */
-		    class «class_name»Controller extends JControllerLegacy
+		    function display($cachable = false) 
 		    {
-		            /**
-		             * display task
-		             *
-		             * @return void
-		             */
-		            function display($cachable = false) 
-		            {
-		                    // set default view if not set
-		                    $input = JFactory::getApplication()->input;
-		                    $input->set('view', $input->getCmd('view', '«component.name»'));
-		    
-		                    // call parent behavior
-		                    parent::display($cachable);
-		            }
+		        // set default view if not set
+		        $input = JFactory::getApplication()->input;
+		        $input->set('view', $input->getCmd('view', '«component.name»'));
+
+		        // call parent behavior
+		        parent::display($cachable);
 		    }
+		}
 	'''
 	
 	/**
@@ -426,12 +396,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminContent(ExtendedComponent component) '''
 		<?php
-		 «Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component,true)»
 		
 		// Access check.
 		if (!JFactory::getUser()->authorise('core.manage', '«Slug::nameExtensionBind("com",component.name )»')) 
 		{
-			throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+		    throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
 		}
 		
 		// Include dependancies
@@ -452,31 +422,30 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminControllerContent(ExtendedComponent component) '''
 		<?php
-		     «Slug.generateFileDoc(component,true)»
-		    
-		    // import Joomla controller library
-		    jimport('joomla.application.component.controller');
-		    
+		«Slug.generateFileDoc(component,true)»
+		
+		// import Joomla controller library
+		jimport('joomla.application.component.controller');
+		
+		/**
+		 * General Controller of «class_name» component
+		 */
+		class «class_name»Controller extends JControllerLegacy
+		{
 		    /**
-		     * General Controller of «class_name» component
+		     * display task
+		     *
+		     * @return  void
 		     */
-		    class «class_name»Controller extends JControllerLegacy
+		    public function display($cachable = false, $urlparams = false) 
 		    {
-		            /**
-		             * display task
-		             *
-		             * @return void
-		             */
-		             public function display($cachable = false, $urlparams = false) 
-		             {
-		             	
-		             	  require_once JPATH_COMPONENT . '/helpers/«component.name.toLowerCase».php';
-		             	  $view = JFactory::getApplication()->input->getCmd('view', '«class_name»s');
-		             	  JFactory::getApplication()->input->set('view', $view);
-		             	  parent::display($cachable, $urlparams);
-		             	  return $this;
-		             	}
+		        require_once JPATH_COMPONENT . '/helpers/«component.name.toLowerCase».php';
+		        $view = JFactory::getApplication()->input->getCmd('view', '«class_name»s');
+		        JFactory::getApplication()->input->set('view', $view);
+		        parent::display($cachable, $urlparams);
+		        return $this;
 		    }
+		}
 	'''
 
 	/**
@@ -486,7 +455,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	def CharSequence phpAdminSimpleModelContent(ExtendedComponent component,ExtendedPage pageref) '''
 		<?php
 		
-		 «Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component,true)»
 		
 		jimport('joomla.application.component.modeladmin');
 		
@@ -501,26 +470,27 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminTemplateContent(Component component) '''
 		<?php
-		 «Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component,true)»
 		?>
-		<div >
-			</div>
-			<p class="text-center"> <h1><?php echo "Welcome to ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
-			<h4>«component.manifest.description»</h4>
-			 </p> 
-			<div id="cpanel" class='cpanel'>
-			<?php foreach ($this->views as $view)
-			{
-			?>
-			    <div class="icon">
-			        <h3><a href='<?php echo $view['url']; ?>'
-			            <span><?php echo $view['title']; ?></span>
-			        </a></h3>
-			        <br />
-			    </div>
-			<?php
-			}
-			?>
+		<p class="text-center"> <h1><?php echo "Welcome to ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
+		    <h4>«component.manifest.description»</h4>
+		</p> 
+		<div id="cpanel" class='cpanel'>
+		    <?php 
+		    foreach ($this->views as $view)
+		    {
+		    ?>
+		        <div class="icon">
+		            <h3>
+		                <a href='<?php echo $view['url']; ?>'
+		                    <span><?php echo $view['title']; ?></span>
+		                </a>
+		            </h3>
+		            <br />
+		        </div>
+		    <?php
+		    }
+		    ?>
 		</div>  
 		<p>This component is generated with the Joomdd tools, for more information <a target="_blank" href="https://github.com/icampus/JooMDD">see here</a></p>	
     '''
@@ -541,13 +511,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		class «class_name»View«class_name»s extends JViewLegacy
 		{
 		
-		 /** Method to get display
-		 *
-		 * @param   Object  $tpl  template
-		 *
-		 * @return void
-		 * @generated
-		 */
+		    /** Method to get display
+		     *
+		     * @param   Object  $tpl (template)
+		     *
+		     * @return  void
+		     */
 		    public function display($tpl = null)
 		    {
 		        if (!JFactory::getUser()->authorise('core.administrator'))
@@ -558,49 +527,45 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        JHtml::_('behavior.tooltip');
 		
 		        $document = JFactory::getDocument();
-		
+
 		        JHtml::_('tabs.start');
-		
+
 		        $application = JFactory::getApplication("administrator");
 		        $this->option = $application->scope;
-		
+
 		        $this->addToolBar();
-		
+
 		        $this->addViews();
-		
+
 		        parent::display($tpl);
 		    }
 		
-		/**
-		 * creates a joomla administratoristrative tool bar
-		 *
-		 * @return void
-		 * @generated
-		 */
+		    /**
+		     * creates a joomla administrator tool bar
+		     *
+		     * @return  void
+		     */
 		    private function addToolBar()
 		    {
 		        JToolBarHelper::title(JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . ': ' . JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'), 'logo');
 		        JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
 		    }
-		
-		/**
-		 * creates html elements for the main menu
-		 *
-		 * @return void
-		 * @generated
-		 */
+
+		    /**
+		     * creates html elements for the main menu
+		     *
+		     * @return    void
+		     */
 		    private function addViews()
 		    {
 		        $views = array();
-		«FOR ExtendedPageReference pg : component.backEndExtendedPagerefence.filter[t | t.extendedPage.extendedDynamicPageInstance != null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage ]»
-		
-			$views['«pg.extendedPage.name.toLowerCase»'] = array();
-			$views['«pg.extendedPage.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»');
-			$views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»";
-		«ENDFOR»
-		      
-		$this->views = $views;
-		}
+		        «FOR ExtendedPageReference pg : component.backEndExtendedPagerefence.filter[t | t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage ]»
+		        $views['«pg.extendedPage.name.toLowerCase»'] = array();
+		        $views['«pg.extendedPage.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»');
+		        $views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»";
+			    «ENDFOR»
+		        $this->views = $views;
+		    }
 		}
     '''
     
@@ -611,16 +576,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	def CharSequence xmlAccessContent(ExtendedComponent component) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<access component="«name»">
-		<section name="component">
-			<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
-			<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
-			<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
-			<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
-			<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
-			<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
-			<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
-		</section>
-		«xmlAccessContentPage()»
+		    <section name="component">
+			    <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+			    <action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+			    <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+			    <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+			    <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+			    <action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+			    <action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+		    </section>
+		    «xmlAccessContentPage()»
 		</access>
 	 '''
 	 
@@ -628,16 +593,15 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 * Generates the code for the pageactions of each view in the component
 	 */
 	def CharSequence xmlAccessContentPage() '''
-		
-			«FOR dyn : extendedComp.allExtendedPage»
-				<section name="«dyn.name.toLowerCase»">
-				<action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
-				<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
-				<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
-				<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
-				<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
-				</section>
-			«ENDFOR»
+	    «FOR dyn : extendedComp.allExtendedPage»
+	    <section name="«dyn.name.toLowerCase»">
+	        <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+	        <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+	        <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+	        <action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+	        <action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+	    </section>
+		«ENDFOR»
 	'''
 	
 	/**
@@ -648,66 +612,61 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	def CharSequence xmlConfigContent(ExtendedComponent component, List<ExtendedDynamicPage> dynPages) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<config>
-			<fieldset name="component" label="«name.toUpperCase»_LABEL" description="«name.toUpperCase»_DESC">
-			«IF  component.hasFileToload»
-			<field
-				name="upload_maxsize"
-				type="text"
-				size="50"
-				default="10"
-				label="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_LABEL"
-				description="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_DESC" />
-			<field
-					name="accept_format"
-					type="text"
-					size="50"
-					default="bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
-					label="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_LABEL"
-					description="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_DESC" />
-			«FOR detailsPage : dynPages.filter[t | t.isDetailsPage && t.haveFiletoLoad]»
-			<field
-				name="«detailsPage.name.toLowerCase»_file_path"
-				type="text"
-				size="50"
-				default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/files"
-				label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_FILE_FOLDER_LABEL"
-				description="«name.toUpperCase»_«detailsPage.name.toUpperCase»PATH_FILE_FOLDER_DESC" />
-
-		<field
-				name="«detailsPage.name.toLowerCase»_image_path"
-				type="text"
-				size="50"
-				default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/images"
-				label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_LABEL"
-				description="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_DESC" />
-			«ENDFOR»
-			«ENDIF»
-			</fieldset>
-		
-			«FOR g : component.extendedParameterGroupList»
-	<fieldset name="«g.name.toLowerCase»" label="«g.name.toUpperCase»_LABEL" description="«g.name.toUpperCase»_DESC">
-				«FOR p:g.extendedParameterList»
-					«Slug.writeParameter(p)»
-				«ENDFOR»
-		</fieldset>
-			«ENDFOR»
-			<fieldset
-					name="permissions"
-					label="JCONFIG_PERMISSIONS_LABEL"
-					description="JCONFIG_PERMISSIONS_DESC"
-					>
-			
-					<field
-						name="rules"
-						type="rules"
-						label="JCONFIG_PERMISSIONS_LABEL"
-						filter="rules"
-						validate="rules"
-						component="«Slug.nameExtensionBind("com",extendedComp.name)»"
-						section="component" />
-				</fieldset>
-		
-			</config>
+		    <fieldset name="component" label="«name.toUpperCase»_LABEL" description="«name.toUpperCase»_DESC">
+			    «IF  component.hasFileToload»
+			    <field
+			        name="upload_maxsize"
+			        type="text"
+			        size="50"
+			        default="10"
+			        label="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_LABEL"
+			        description="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_DESC" />
+			    <field
+			        name="accept_format"
+			        type="text"
+			        size="50"
+			        default="bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
+			        label="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_LABEL"
+			        description="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_DESC" />
+			    «FOR detailsPage : dynPages.filter[t | t.isDetailsPage && t.haveFiletoLoad]»
+			    <field
+			        name="«detailsPage.name.toLowerCase»_file_path"
+			        type="text"
+			        size="50"
+			        default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/files"
+			        label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_FILE_FOLDER_LABEL"
+			        description="«name.toUpperCase»_«detailsPage.name.toUpperCase»PATH_FILE_FOLDER_DESC" />
+			    <field
+			        name="«detailsPage.name.toLowerCase»_image_path"
+			        type="text"
+			        size="50"
+			        default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/images"
+			        label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_LABEL"
+			        description="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_DESC" />
+			    «ENDFOR»
+			    «ENDIF»
+		    </fieldset>
+		    «FOR g : component.extendedParameterGroupList»
+		    <fieldset name="«g.name.toLowerCase»" label="«g.name.toUpperCase»_LABEL" description="«g.name.toUpperCase»_DESC">
+		    «FOR p:g.extendedParameterList»
+		    «Slug.writeParameter(p)»
+		    «ENDFOR»
+		    </fieldset>
+		    «ENDFOR»
+		    <fieldset
+		        name="permissions"
+			    label="JCONFIG_PERMISSIONS_LABEL"
+			    description="JCONFIG_PERMISSIONS_DESC">
+		        <field
+		            name="rules"
+				    type="rules"
+				    label="JCONFIG_PERMISSIONS_LABEL"
+				    filter="rules"
+				    validate="rules"
+				    component="«Slug.nameExtensionBind("com",extendedComp.name)»"
+				    section="component" />
+		    </fieldset>
+		</config>
 	'''
 
    /**
@@ -716,24 +675,28 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     * @param ExtendedComponent component  containt the isntance of a component
     */
 	def CharSequence phpSiteRouterContent(ExtendedComponent component) '''
-		 <?php
-		   «Slug.generateFileDoc(component,true)»
-		  /**
-		 * @param	array	A named array
-		 * @return	array
+		<?php
+		«Slug.generateFileDoc(component,true)»
+		/**
+		 * @param   array  A named array
+		 * @return  array
 		 */
-		function «component.name.toFirstUpper»BuildRoute(&$query) {
+		function «component.name.toFirstUpper»BuildRoute(&$query)
+		{
 		    $segments = array();
 		
-		    if (isset($query['task'])) {
+		    if (isset($query['task']))
+		    {
 		        $segments[] = implode('/', explode('.', $query['task']));
 		        unset($query['task']);
 		    }
-		    if (isset($query['view'])) {
+		    if (isset($query['view']))
+		    {
 		        $segments[] = $query['view'];
 		        unset($query['view']);
 		    }
-		    if (isset($query['id'])) {
+		    if (isset($query['id']))
+		    {
 		        $segments[] = $query['id'];
 		        unset($query['id']);
 		    }
@@ -742,28 +705,31 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		}
 		
 		/**
-		 * @param	array	A named array
-		 * @param	array
-		 *
+		 * @param  array  A named array
 		 *
 		 */
-		function «component.name.toFirstUpper»ParseRoute($segments) {
+		function «component.name.toFirstUpper»ParseRoute($segments)
+		{
 		    $vars = array();
 		
 		    // view is always the first element of the array
 		    $vars['view'] = array_shift($segments);
 		
-		    while (!empty($segments)) {
+		    while (!empty($segments))
+		    {
 		        $segment = array_pop($segments);
-		        if (is_numeric($segment)) {
+		        if (is_numeric($segment))
+		        {
 		            $vars['id'] = $segment;
-		        } else {
+		        }
+		        else
+		        {
 		            $vars['task'] = $vars['view'] . '.' . $segment;
 		        }
 		    }
 		
 		    return $vars;
-		} 
+		}
 	'''
 	
 	/**
@@ -771,19 +737,17 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 *  
 	 */
 	def CharSequence genScriptForForeignKeys()'''
-	 «Slug.generateFileDoc(extendedComp,false)»
-	 /**
-	 * this function set the value of reference for a foreign attribute 
-	 */
-	function setValueForeignKeys(element) {
-	
-	    var data = JSON.parse(element.value);
-	    var item;
-	
-	    for(item in data){
-	        jQuery("#"+item).attr("value",data[item]);
+	    «Slug.generateFileDoc(extendedComp,false)»
+	    /**
+	     * this function set the value of reference for a foreign attribute 
+	     */
+	    function setValueForeignKeys(element) {
+	        var data = JSON.parse(element.value);
+	        var item;
+	        for(item in data) {
+	            jQuery("#"+item).attr("value",data[item]);
+	        }
 	    }
-	   }
 	'''
 	
 	/**
@@ -791,49 +755,45 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 *  
 	 */
 	def CharSequence genScriptForMultipleForeignKeys()'''
-	 «Slug.generateFileDoc(extendedComp,false)»
-	 
+	«Slug.generateFileDoc(extendedComp,false)»
+
 	jQuery(document).ready(function() {
-			jQuery("select[generated='true']").each(function(){
-				jQuery(this).trigger('onchange');
-			})
-		});
-		
-		/**
-		  * this function set the values of references for many foreign attributes 
-		  */
+		jQuery("select[generated='true']").each(function() {
+		    jQuery(this).trigger('onchange');
+		})
+	});
+
+	/**
+	 * this function set the values of references for many foreign attributes 
+	 */
 	function setMultipleValueForeignKeys(element) {
-	
 	    var data = [];
-			var id = "#" + element.id + " option:selected";
-			jQuery(id).each(function (){
-				data.push(JSON.parse(jQuery(this).prop("value")));
-			});
-			if(data.length == 0)
-				return;
-	
-	    var allkeys = Object.keys(data[0])
-			var all_item = [];
-	
-			for(var a = 0; a< allkeys.length; a++){
-				all_item[allkeys[a]] = [];
-			}
-	
-	    for(var i =0; i<data.length; i++){
-			var attr_obj = data[i];
+		var id = "#" + element.id + " option:selected";
+		jQuery(id).each(function () {
+		data.push(JSON.parse(jQuery(this).prop("value")));
+	    });
+	    if(data.length == 0) {
+		    return;
+		}
+		var allkeys = Object.keys(data[0])
+		var all_item = [];
+		for(var a = 0; a< allkeys.length; a++) {
+		    all_item[allkeys[a]] = [];
+		}
+		for(var i =0; i<data.length; i++) {
+		    var attr_obj = data[i];
 			var attr_obj_keys = Object.keys(attr_obj);
-			for(var j =0; j< attr_obj_keys.length; j++){
-				var attr_key_value = attr_obj_keys[j];
-				var attr_value = attr_obj[attr_key_value][0];
-				all_item[attr_key_value].push(attr_value);
-	
+			for(var j =0; j< attr_obj_keys.length; j++) {
+			    var attr_key_value = attr_obj_keys[j];
+			    var attr_value = attr_obj[attr_key_value][0];
+			    all_item[attr_key_value].push(attr_value);
 			}
-	    }
-			for(var c =0; c < allkeys.length; c++){
-				var value = all_item[allkeys[c]];
-				jQuery("#"+ allkeys[c]).attr("value",JSON.stringify(value));
-	
-			}
-	   }
+		}
+
+		for(var c =0; c < allkeys.length; c++) {
+		    var value = all_item[allkeys[c]];
+			jQuery("#"+ allkeys[c]).attr("value",JSON.stringify(value));
+		}
+	}
 	'''
 }

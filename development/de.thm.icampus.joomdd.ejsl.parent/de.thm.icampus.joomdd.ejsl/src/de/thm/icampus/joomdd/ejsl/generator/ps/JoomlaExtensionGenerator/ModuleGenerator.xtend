@@ -65,15 +65,12 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	}
 
 	override generate() {
-		generateJoomlaDirectory(path + "")
 		generateFile(path + "index" + ".html", this.extMod.IndexContent)
 		generateFile(path + name + ".xml", this.extMod.xmlContent)
 		generateFile(path + name + ".php", this.extMod.phpContent)
 		generateFile(path + "helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage))
-		generateJoomlaDirectory(path+"tmpl")
 		generateFile(path + "tmpl/default.php", defaultTemplate())
-		generateFile(path +"tmpl/index.html", this.extMod.IndexContent)
-		
+		generateEmptyDirectory("language")
 		var LanguageGenerator lang = new LanguageGenerator(fsa)
 		lang.genModuletLanguage(extMod, path)
        
@@ -114,10 +111,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			<!-- Listing of all files that should be installed for the module -->
 			<files>
 				<filename module="«name»">«name».php</filename>
-				<filename>index.html</filename>
 				<filename>helper.php</filename>
 				<folder>
-					<filename>tmpl/index.html</filename>
 					<filename>tmpl/default.php</filename>
 				</folder>
 				<folder>language</folder>

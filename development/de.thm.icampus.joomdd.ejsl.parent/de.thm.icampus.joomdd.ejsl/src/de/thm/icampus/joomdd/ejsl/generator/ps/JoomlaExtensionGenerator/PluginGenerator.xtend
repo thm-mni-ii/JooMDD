@@ -43,16 +43,12 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	 */
 	override generate() 
 	{
-		generateJoomlaDirectory(path)
 		generateFile(path+plugin.name + ".xml", plugin.xmlContent)
 		generateFile(path +plugin.name + ".php", plugin.phpContent)
 		
 		if (plugin.languages.size > 0) {
 		
-		generateJoomlaDirectory(path+"language")
-		
 			for (lang : plugin.languages) {
-				generateJoomlaDirectory(path+"language/" + lang.name)
 				if(!lang.sys)
 				generateFile(path+"language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".ini", lang.iniContent)
 				else
@@ -879,7 +875,6 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 
 		<files>
 			<filename plugin="«plugin.name»">«plugin.name».php</filename>
-			<filename>index.html</filename>
 		</files>
 
 		<languages folder="language">
