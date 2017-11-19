@@ -14,11 +14,14 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import de.thm.icampus.joomdd.ejsl.util.Config
+import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
+import de.thm.icampus.joomdd.ejsl.web.util.Helper
 
 @WebServlet(name='DownLoadManager', urlPatterns='/download-manager/*')
 class DownloadManager extends HttpServlet {
 
 	Config config = Config.instance;
+	DatabaseLayer db = DatabaseLayer.instance;
 
 	override protected doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -124,77 +127,74 @@ class DownloadManager extends HttpServlet {
 
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		var String uri = req.requestURI;
-		var String name = req.session.id
-		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
-		var String userWorkspacePath = workspacePath + "/" + name + uri.replace("/download-manager", "");
+		var String sessionID = req.session.id
+		var String userWorkspacePath = Helper.getWorkspaceUserPath(sessionID)
+		var String name = uri.replace("/download-manager", "");
+		userWorkspacePath += name;
 
-		if (name !== null) {
-			var File out = new File(userWorkspacePath)
-			if (out.file) {
-				resp.status = HttpServletResponse.SC_OK
-				resp.setHeader('Cache-Control', 'no-cache')
-				resp.contentType = 'application/x-' + out.name.split("\\.").get(1)
-				var FileReader read = new FileReader(out)
-				var BufferedReader readBuff = new BufferedReader(read)
-				var StringBuffer buff = new StringBuffer()
-				while (readBuff.ready) {
-					buff.append(readBuff.readLine)
-					buff.append("\n")
-				}
-				read.close
-				readBuff.close
-				resp.outputStream.print(buff.toString)
-
-			} else {
-				var zipName = userWorkspacePath.split("/").last;
-				
-				if(zipName.equals(name))
-				{
-					zipName = "workspace";
-				}
-				resp.setHeader("Content-Type", "application/zip")
-				resp.setHeader("Accept-Ranges", "bytes")
-				resp.setHeader("Content-Disposition", '''attachment; filename="«zipName».zip"''');
-				resp.status = HttpServletResponse.SC_OK
-				val byte[] buffer = newByteArrayOfSize(32768)
-
-				// var FileOutputStream fileOut = new FileOutputStream(filoutName)			       
-				var ZipOutputStream zipOut = new ZipOutputStream(resp.outputStream)
-				var long length = 0;
-				println(out.path)
-				if (out.exists) {
-					if (out.file) {
-						putFile(zipOut, out, buffer, "");
-						length += out.length
-
-					} else {
-						length += scanDirectorie(zipOut, buffer, out.getPath(), "")
-
-					}
-
-				} else {
-				}
-
-				resp.setHeader("Content-Lengt", length + "");
-				zipOut.close
-				resp.outputStream.flush
-			}
-
-		} else {
+		var File out = new File(userWorkspacePath)
+		if (out.file) {
 			resp.status = HttpServletResponse.SC_OK
 			resp.setHeader('Cache-Control', 'no-cache')
-			resp.contentType = 'text/html'
-			resp.sendError(404, "Source not Found")
+			resp.contentType = 'application/x-' + out.name.split("\\.").get(1)
+			var FileReader read = new FileReader(out)
+			var BufferedReader readBuff = new BufferedReader(read)
+			var StringBuffer buff = new StringBuffer()
+			while (readBuff.ready) {
+				buff.append(readBuff.readLine)
+				buff.append("\n")
+			}
+			read.close
+			readBuff.close
+			resp.outputStream.print(buff.toString)
 
+		} else {
+			var zipName = ""
+			
+			if(name.empty)
+			{
+				zipName = "workspace";
+			}
+			else
+			{
+				zipName = userWorkspacePath.split("/").last;
+			}
+			
+			resp.setHeader("Content-Type", "application/zip")
+			resp.setHeader("Accept-Ranges", "bytes")
+			resp.setHeader("Content-Disposition", '''attachment; filename="«zipName».zip"''');
+			resp.status = HttpServletResponse.SC_OK
+			val byte[] buffer = newByteArrayOfSize(32768)
+
+			// var FileOutputStream fileOut = new FileOutputStream(filoutName)			       
+			var ZipOutputStream zipOut = new ZipOutputStream(resp.outputStream)
+			var long length = 0;
+			println(out.path)
+			if (out.exists) {
+				if (out.file) {
+					putFile(zipOut, out, buffer, "");
+					length += out.length
+
+				} else {
+					length += scanDirectorie(zipOut, buffer, out.getPath(), "")
+
+				}
+
+			} else {
+			}
+
+			resp.setHeader("Content-Lengt", length + "");
+			zipOut.close
+			resp.outputStream.flush
 		}
-
 	}
 
 	override protected doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var String name = req.session.id
 		var String uri = req.requestURI;
-		var workspacePath = config.properties.getProperty("serverPath") + "/" + config.properties.getProperty("workspaceName")
-		var String userWorkspacePath = workspacePath + "/" + name + uri.replace("/download-manager", "");
+		var String sessionID = req.session.id
+		var String userWorkspacePath = Helper.getWorkspaceUserPath(sessionID)
+		var String name = uri.replace("/download-manager", "");
+		userWorkspacePath += name;
 
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
