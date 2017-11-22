@@ -84,11 +84,11 @@
               <a class="nav-link js-scroll-trigger" href="https://github.com/icampus/JooMDD/blob/master/README.md">Documentation</a>
             </li>
             <li class="nav-item btn-group">
-              <div class="btn-group">
+              <div id="loginMenuDropdown" class="btn-group">
                 <button id="loginMenuBtn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-spinner fa-pulse fa-fw"></i> LogIn
                 </button>
-                <div class="dropdown-menu">
+                <div id="dropdownLogin" class="dropdown-menu">
                   <form id="login-form" class="px-4 py-3" role="form">
                     <div class="form-group">
                       <label for="loginUsername">Username</label>
@@ -100,8 +100,13 @@
                     </div>
                  	<button id="loginBtn" type="button" class="btn btn-primary">Sign in</button>
                   </form>
+					<div>
+						<div id="loginAlert" class="alert alert-dismissable fade show">
+					     	<strong id="alertState"></strong><span id="alertText"></span>
+					    </div>
+					</div>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" data-toggle="modal" data-target="#registrationForm" href="#">New around here? Sign up</a>
+                  <a id="registrationFormBtn" class="dropdown-item" data-toggle="modal" data-target="#registrationForm" href="#">New around here? Sign up</a>
                 </div>
               </div>
             </li>
