@@ -8,12 +8,12 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedCo
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedPageImpl
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator.PageGeneratorClient
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.PageGeneratorClient
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
-class PageGenerator extends AbstracteGenerator {
+class PageGenerator extends AbstractGenerator {
 
     IFileSystemAccess2 fsa
     EList<ExtendedPage> pageList = new BasicEList<ExtendedPage>
