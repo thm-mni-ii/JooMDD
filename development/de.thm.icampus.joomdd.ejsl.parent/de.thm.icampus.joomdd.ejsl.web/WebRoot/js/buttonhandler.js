@@ -1,4 +1,4 @@
-require(["jquery","alert"], function($, alert) {	
+require(["jquery","alert"], function($, alert) {
 	// Prevent clicks inside the login form to close it.
 	$('#dropdownLogin').on("click.bs.dropdown", function (event) {
 		var clickedElement = event.target;
@@ -12,8 +12,21 @@ require(["jquery","alert"], function($, alert) {
 	
 	$('#loginMenuDropdown').on('shown.bs.dropdown', function () {
 		$("#loginAlert").css('visibility','hidden');
-	})
-
+	});
+	
+	$('#fullscreenModal').on('show.bs.modal', function (e) {
+  		var editor = $("#xtext-editor");
+		editor = editor[0];
+		$("#fullscreenModal .modal-title").text($("#modelname").text());
+		$(editor).detach().appendTo('#fullscreenModalBody');
+	});
+	
+	$('#fullscreenModal').on('hide.bs.modal', function (e) {
+  		var editor = $("#xtext-editor");
+		editor = editor[0];
+		$(editor).detach().appendTo('#editorContainer');
+	});
+     
 	// Load example chosen template in text editor
 	$(".templates").click(function(){
 	var nameTemplate = $(this).val();

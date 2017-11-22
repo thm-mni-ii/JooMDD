@@ -41,7 +41,6 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 		};
 		
 		editor.xtextServices.successListeners.push(afterEditorCreation);
-		
         return editor;
 	 };
 	 
