@@ -1,4 +1,18 @@
-require(["jquery","alert"], function($, alert) {
+require(["jquery","alert"], function($, alert) {	
+	// Prevent clicks inside the login form to close it.
+	$('#dropdownLogin').on("click.bs.dropdown", function (event) {
+		var clickedElement = event.target;
+		
+		if (clickedElement.id !== "registrationFormBtn")
+		{
+			event.stopPropagation();
+			event.preventDefault();
+		} 
+	});
+	
+	$('#loginMenuDropdown').on('shown.bs.dropdown', function () {
+		$("#loginAlert").css('visibility','hidden');
+	})
 
 	// Load example chosen template in text editor
 	$(".templates").click(function(){
@@ -15,25 +29,25 @@ require(["jquery","alert"], function($, alert) {
 	});
 	
 	$("#registerBtn").click(function(){
-	var data = $("#register-form").serialize();
-	
-	var alert = {};
-	alert.showSuccess = function(text){
-        $("#registerAlert").toggleClass('alert-success', true)
-        $("#registerAlert").toggleClass('alert-danger', false)
-		$("#registerAlert").hide().show();
-        $("#registerAlert #alertState").text("Success! ");
-		$("#registerAlert #alertText").text(text);
-	};
-	alert.showError = function(text){
-        $("#registerAlert").toggleClass('alert-danger', true)
-        $("#registerAlert").toggleClass('alert-success', false)
-        $("#registerAlert").hide().show();
-        $("#registerAlert #alertState").text("Error! ");
-        $("#registerAlert #alertText").text(text);
-    };
-	
-	$.ajax({
+		var data = $("#register-form").serialize();
+		
+		var alert = {};
+		alert.showSuccess = function(text){
+	        $("#registerAlert").toggleClass('alert-success', true);
+	        $("#registerAlert").toggleClass('alert-danger', false);
+			$("#registerAlert").hide().show();
+	        $("#registerAlert #alertState").text("Success! ");
+			$("#registerAlert #alertText").text(text);
+		};
+		alert.showError = function(text){
+	        $("#registerAlert").toggleClass('alert-danger', true);
+	        $("#registerAlert").toggleClass('alert-success', false);
+	        $("#registerAlert").hide().show();
+	        $("#registerAlert #alertState").text("Error! ");
+	        $("#registerAlert #alertText").text(text);
+	    };
+		
+		$.ajax({
 		  method: "POST",
 		  url: "/register",
 		  data: data
@@ -54,8 +68,27 @@ require(["jquery","alert"], function($, alert) {
 	});
 	
 	$("#loginBtn").click(function(){
-	var data = $("#login-form").serialize();
-	$.ajax({
+		var data = $("#login-form").serialize();
+		
+		var alert = {};
+		alert.showSuccess = function(text){
+	        $("#loginAlert").toggleClass('alert-success', true);
+	        $("#loginAlert").toggleClass('alert-danger', false);
+	        $("#loginAlert").css('visibility','visible');
+			$("#loginAlert").hide().show();
+	        $("#loginAlert #alertState").text("Success! ");
+			$("#loginAlert #alertText").text(text);
+		};
+		alert.showError = function(text){
+	        $("#loginAlert").toggleClass('alert-danger', true);
+	        $("#loginAlert").toggleClass('alert-success', false);
+	        $("#loginAlert").css('visibility','visible');
+	        $("#loginAlert").hide().show();
+	        $("#loginAlert #alertState").text("");
+	        $("#loginAlert #alertText").text(text);
+	    };
+		
+		$.ajax({
 		  method: "POST",
 		  url: "/login",
 		  data: data
@@ -63,8 +96,8 @@ require(["jquery","alert"], function($, alert) {
 		.done(function( data, textStatus, jqXHR ) {
 			location.reload();
 		})
-		.fail(function( jqXHR, textStatus, errorThrown ) {
-		  	// LogIn credentials might be wrong.
+		.fail(function( jqXHR, textStatus, errorThrown ) {	 	
+		  	alert.showError("Wrong credentials.");
 		});
 	});
 	
