@@ -1,11 +1,16 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator.ExtensionGeneratorClient
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler
 
-class ExtensionGenerator extends AbstracteGenerator {
+/**
+ * This class is responsible for calling the platform-specific code generators. 
+ * 
+ * @author Dennis Priefer, Dieudonne Timma Meyatchie
+ */
+class ExtensionGenerator extends AbstractGenerator {
 
     EList<Extension> extensions
     String path
@@ -28,9 +33,11 @@ class ExtensionGenerator extends AbstracteGenerator {
 
     override dogenerate() {
         for (ext : extensions) {
-            var ExtensionGeneratorClient extClient
-            extClient = new ExtensionGeneratorClient(fileGen, ext, path, rootPath)
-            extClient.generateExtension
+            // Call of Joomla extension generator
+            var ExtensionGeneratorHandler joomlaExtClient
+            joomlaExtClient = new ExtensionGeneratorHandler(fileGen, ext, path, rootPath)
+            joomlaExtClient.generateExtension
+            // -----------------------------------
         }
     }
 }

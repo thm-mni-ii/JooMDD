@@ -3,9 +3,9 @@ package de.thm.icampus.joomdd.ejsl.generator
 import com.google.inject.Inject
 import de.thm.icampus.joomdd.ejsl.eJSL.CMSExtension
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLModel
-import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
+//import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.ExtensionGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
+//import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 import de.thm.icampus.joomdd.ejsl.ressourceTransformator.RessourceTransformer
 import java.util.HashMap
 import java.util.Map
@@ -22,7 +22,6 @@ import de.thm.icampus.joomdd.ejsl.gui.ConfigGUI
 import java.awt.EventQueue
 import java.util.regex.Pattern
 import java.util.regex.Matcher
-import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.util.Config
 import java.io.InputStream
 
@@ -30,6 +29,7 @@ import java.io.InputStream
  * This is the main class of the code generator of JooMDD. 
  * It generates code from your eJSL model files.
  * 
+ * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 class EJSLGenerator extends AbstractGenerator {
     private JavaIoFileSystemAccess genData;
@@ -126,26 +126,31 @@ class EJSLGenerator extends AbstractGenerator {
                     	domainModel.name, 
                     	outputFolder)
                     mainExtensionGen.dogenerate()
+                    
+                    // ------- Optional entity generator ------------------
                     // if(config.getKey("entities").equalsIgnoreCase("true")){
-                    var EntityGenerator mainEntitiesGen = new EntityGenerator (
+                    /*var EntityGenerator mainEntitiesGen = new EntityGenerator (
                     	extensionPart.feature.entities,
                         "Entities/", 
                         genData, 
                         domainModel.name)
                     mainEntitiesGen.dogenerate()
-                    // }
+                    // }*/
+                    // ----------------------------------------------------
+                    // ------- Optional page generator --------------------
                     // if(config.getKey("page").equalsIgnoreCase("true")){
-                    var PageGenerator mainPageGen = new PageGenerator (
+                    /*var PageGenerator mainPageGen = new PageGenerator (
                     	extensionPart.feature.pages, 
                     	genData, 
                     	"Pages/",
                         domainModel.name)
                     mainPageGen.dogenerate()
-                // }
+                    // }*/
+                    // ---------------------------------------------------
                 }
             }
         }
-        fsa.generateFile("status", "The code generation was successfull...")
+        fsa.generateFile("status", "Code successfully generated.")
     }
 
     override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
