@@ -14,17 +14,21 @@ require(["jquery","alert"], function($, alert) {
 		$("#loginAlert").css('visibility','hidden');
 	});
 	
+	// Fullscreen (opening) handler
 	$('#fullscreenModal').on('show.bs.modal', function (e) {
   		var editor = $("#xtext-editor");
 		editor = editor[0];
 		$("#fullscreenModal .modal-title").text($("#modelname").text());
 		$(editor).detach().appendTo('#fullscreenModalBody');
+		editor.env.editor.resize();
 	});
 	
+	// Fullscreen (closing) handler
 	$('#fullscreenModal').on('hide.bs.modal', function (e) {
   		var editor = $("#xtext-editor");
 		editor = editor[0];
 		$(editor).detach().appendTo('#editorContainer');
+		editor.env.editor.resize();
 	});
      
 	// Load example chosen template in text editor

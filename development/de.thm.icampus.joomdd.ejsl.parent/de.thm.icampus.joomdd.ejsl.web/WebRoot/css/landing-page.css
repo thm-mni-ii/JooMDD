@@ -201,3 +201,17 @@ p.copyright {
   height: 250px;
   overflow: auto;
 }
+
+
+@media (min-width: 1150px) {
+  .modal-xl {
+    max-width: 1200px;
+  }
+}
+
+@media (min-height: 850px) {
+	div#fullscreenModalBody>div#xtext-editor {
+		min-height: 650px;
+		max-height: 650px;
+	}
+}
