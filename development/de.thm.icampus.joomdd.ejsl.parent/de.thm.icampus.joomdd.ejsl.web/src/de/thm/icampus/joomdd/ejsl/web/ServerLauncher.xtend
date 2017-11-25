@@ -31,6 +31,8 @@ class ServerLauncher {
 				new MetaInfConfiguration
 			]
 			setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, '.*/de\\.thm\\.icampus\\.joomdd\\.ejsl\\.web/.*,.*\\.jar')
+			setInitParameter("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false")
+			
 		]
 		val log = new Slf4jLog(ServerLauncher.name)
 		println(args.toString)
