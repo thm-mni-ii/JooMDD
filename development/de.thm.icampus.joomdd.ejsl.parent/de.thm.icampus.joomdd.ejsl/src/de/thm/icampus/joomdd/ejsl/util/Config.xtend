@@ -18,27 +18,17 @@ class Config {
     	}
    		return Config.instance;
     }
-    
-    def static Config getInstance(String path)
-  	{
-    	if (Config.instance === null)
-    	{
-      		Config.instance = new Config(path);
-    	}
-   		return Config.instance;
-    }
-    
-    new (){
-		
-	}
 	
-	new (String path){
+	new (){
 		if (instance === null)
         {
         	try {
+        		var String workingDir = System.getProperty("user.dir");
+        		var String path = workingDir + "/conf/config.properties";
         		input = new FileInputStream(path);
 				// load a properties file
-				properties.load(input);		
+				properties.load(input);
+				properties.setProperty("serverPath", workingDir);
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			} finally {
