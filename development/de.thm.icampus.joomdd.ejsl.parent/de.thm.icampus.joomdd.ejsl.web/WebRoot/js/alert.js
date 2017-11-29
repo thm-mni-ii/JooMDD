@@ -4,15 +4,15 @@ define('alert',['jquery',"jstree"], function(jQuery, jstree) {
         $("#alert").toggleClass('alert-success', true)
         $("#alert").toggleClass('alert-danger', false)
 		$("#alert").hide().show();
-        $("#alertState").text("Success! ");
-		$("#alertText").text(text);
+        $("#alert #alertState").text("Success! ");
+		$("#alert #alertText").text(text);
 	};
 	alert.showError = function(text){
         $("#alert").toggleClass('alert-danger', true)
         $("#alert").toggleClass('alert-success', false)
         $("#alert").hide().show();
-        $("#alertState").text("Error! ");
-        $("#alertText").text(text);
+        $("#alert #alertState").text("Error! ");
+        $("#alert #alertText").text(text);
     };
 
 

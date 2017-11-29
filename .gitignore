@@ -6,6 +6,7 @@
 **/build/
 **/generated/
 **/WebRoot/workspace/
+**/workspace/
 **/.gradle/
 **/.idea/
 

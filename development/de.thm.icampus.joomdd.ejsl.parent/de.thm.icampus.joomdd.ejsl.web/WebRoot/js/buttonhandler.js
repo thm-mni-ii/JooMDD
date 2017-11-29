@@ -1,4 +1,4 @@
-require(["jquery","alert"], function($, alert) {	
+require(["jquery","alert"], function($, alert) {
 	// Prevent clicks inside the login form to close it.
 	$('#dropdownLogin').on("click.bs.dropdown", function (event) {
 		var clickedElement = event.target;
@@ -12,8 +12,34 @@ require(["jquery","alert"], function($, alert) {
 	
 	$('#loginMenuDropdown').on('shown.bs.dropdown', function () {
 		$("#loginAlert").css('visibility','hidden');
-	})
-
+	});
+	
+	// Fullscreen (opening) handler
+	$('#fullscreenModal').on('show.bs.modal', function (e) {
+  		var editor = $("#xtext-editor");
+		editor = editor[0];
+		$(editor).css('visibility','hidden');
+		$("#fullscreenModal .modal-title").text($("#modelname").text());
+		$(editor).detach().appendTo('#fullscreenModalBody');
+		editor.env.editor.setValue(editor.env.editor.getValue());
+	});
+	
+	// Fullscreen (displayed) handler
+	$('#fullscreenModal').on('shown.bs.modal', function (e) {
+  		var editor = $("#xtext-editor");
+		editor = editor[0];
+		editor.env.editor.resize();
+		$(editor).css('visibility','visible');
+	});
+	
+	// Fullscreen (closing) handler
+	$('#fullscreenModal').on('hide.bs.modal', function (e) {
+  		var editor = $("#xtext-editor");
+		editor = editor[0];
+		$(editor).detach().appendTo('#editorContainer');
+		editor.env.editor.resize();
+	});
+     
 	// Load example chosen template in text editor
 	$(".templates").click(function(){
 	var nameTemplate = $(this).val();
