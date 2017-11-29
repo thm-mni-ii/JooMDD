@@ -242,8 +242,6 @@ public class Slug  {
 	
 	'''
 
-	
-	
 	def static String generateKeysName(Component com, String name){
 		if(name!=null)
 		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(name).toUpperCase
@@ -352,7 +350,7 @@ public class Slug  {
 	«ENDFOR»
 		«ENDIF»
 	'''
-	def static CharSequence generateFileDoc( Module module, boolean denied)
+	def static CharSequence generateFileDoc( Module module)
 	'''
 	/**
 	 * @version     «module.manifest.version»
@@ -367,7 +365,7 @@ public class Slug  {
 	 * @link        «module.manifest.link»
 	 */
 	'''
-	 def static CharSequence generateFileDoc( Component component, boolean denied)'''
+	 def static CharSequence generateFileDoc( Component component)'''
 	    /**
 	    «IF component.manifest == null»
 	    * @category Joomla component
@@ -387,13 +385,11 @@ public class Slug  {
 		«ENDIF»
 	    «ENDIF»
 	    */
-	    «IF denied»
-		defined('_JEXEC') or die('Restricted access');
-		«ENDIF»
 		
 		
 	'''
-	 def static CharSequence generateFileDoc( Extension ext, boolean denied)'''
+	
+	 def static CharSequence generateFileDoc( Extension ext)'''
 	    
 		/**
 		* @version «ext.manifest.version»
@@ -407,11 +403,24 @@ public class Slug  {
 		* @license «ext.manifest.license»
 		«ENDIF»
 		*/
-		«IF denied»
-		defined('_JEXEC') or die('Restricted access');
-		«ENDIF»
 		
 	'''
+	
+	def static CharSequence generateRestrictedAccess() '''
+		defined('_JEXEC') or die('Restricted access');
+	'''
+	
+	 def static CharSequence generateUses(String extendedType)'''
+	 	«switch(extendedType) {
+		    case "AdminModel"		: { "" }
+		    case "AdminView"		: { "" }
+			case "AdminController"	: { "" }
+			case "SiteModel"		: { "" }
+			case "SiteView"			: { "" }
+			case "SiteController"	: { "" }
+		}»
+	'''
+	
 	def static String getSectioName(Section  reference) {
 		if(reference instanceof BackendSection)
 		return 'admin'

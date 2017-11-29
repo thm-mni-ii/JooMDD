@@ -48,7 +48,7 @@ abstract public class AbstractPageGenerator {
 		fsa.generateFile(fileName, content)
 	}
 
-   def CharSequence generateFileDoc(Page page, ExtendedComponent component, boolean denied)'''
+   def CharSequence generateFileDoc(Page page, ExtendedComponent component)'''
 		<?php
 		
 		/**
@@ -66,9 +66,6 @@ abstract public class AbstractPageGenerator {
 		 		* @license «component.manifest.license»
 		 		*/
 		 	«ENDIF»
-			«IF denied»
-				defined('_JEXEC') or die('Restricted access');
-			«ENDIF»
 			
 		'''
 	   

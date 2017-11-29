@@ -22,7 +22,9 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	
 	public override CharSequence genRefrenceField()'''
 		<?php
-		«Slug.generateFileDoc(com, true)»
+		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		jimport('joomla.form.formfield');
 		

@@ -105,7 +105,10 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	}
 	
 	def CharSequence generateAdminController()'''
-		«generateFileDoc(dpage,com,true)»
+		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		jimport('joomla.application.component.controllerform');
 		jimport('joomla.filesystem.file');
 		/**
@@ -218,7 +221,10 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	'''
 	
 	def CharSequence generateAdminModel()'''
-		«generateFileDoc(dpage,com,true)»
+		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		jimport('joomla.application.component.modeladmin');
 		
 		use Joomla\Utilities\ArrayHelper;
@@ -348,7 +354,10 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	'''
 	
 	def generateAdminViewClass()'''
-		«generateFileDoc(dpage,com, true)»
+		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		jimport('joomla.application.component.view');
 		
 		/**
@@ -366,7 +375,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	'''
 	
 	def CharSequence generateAdminViewLayout()'''
-		«generateFileDoc(dpage,com, false)»
+		«generateFileDoc(dpage,com)»
+		
 			JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 			JHtml::_('behavior.tooltip');
 			JHtml::_('behavior.formvalidation');
@@ -404,7 +414,9 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	'''
 	
 	def CharSequence generateSiteController(Boolean isedit)'''
-		«generateFileDoc(dpage,com,true)»
+		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		require_once JPATH_COMPONENT . '/controller.php';
 		
@@ -423,7 +435,9 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		}
 	'''
 	def CharSequence generateSiteModelShow()'''
-		«generateFileDoc(dpage,com,true)»
+		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		jimport('joomla.application.component.modelitem');
 		jimport('joomla.event.dispatcher');
@@ -446,7 +460,9 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		}
 	'''
 	def CharSequence generateSiteModelEdit(String editPageName)'''
-		«generateFileDoc(dpage,com,true)»
+		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		jimport('joomla.application.component.modelform');
 		jimport('joomla.event.dispatcher');
@@ -474,7 +490,9 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	'''
 	
 	def CharSequence generateSiteView(Boolean isedit, String editPageName)'''
-		«generateFileDoc(dpage,com,true)»
+		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		jimport('joomla.application.component.view');
 		
@@ -492,7 +510,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		}
 	'''
 	def CharSequence generateSiteViewLayoutEdit(String editPageName)'''
-		«generateFileDoc(dpage,com,false)»
+		«generateFileDoc(dpage,com)»
 		JHtml::_('behavior.keepalive');
 		JHtml::_('behavior.tooltip');
 		JHtml::_('behavior.formvalidation');
@@ -514,7 +532,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    «frontHelp.generateSiteViewLayoutEditForm(editPageName)»
 	'''
 	def CharSequence generateSiteViewLayoutShow(String editPageName)'''
-		«generateFileDoc(dpage,com,false)»
+		«generateFileDoc(dpage,com)»
 		//Load admin language file
 		$lang = JFactory::getLanguage();
 		$lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
