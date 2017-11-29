@@ -20,6 +20,9 @@ import de.thm.icampus.joomdd.ejsl.util.Config
 import com.mongodb.MongoCredential
 import java.util.Arrays
 
+/**
+ * @author Wolf Rost
+ */
 @Singleton
 class DatabaseLayer {
 	private static DatabaseLayer instance;

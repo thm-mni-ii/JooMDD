@@ -19,7 +19,9 @@ class TableGeneratorTemplate {
 	
 	public def CharSequence genClassTable() '''
 		<?php
-		«Slug.generateFileDoc(com, true)»
+		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		// import Joomla table library
 		jimport('joomla.database.table');

@@ -34,7 +34,9 @@ class ExtentionScriptGenerator {
 	}
 	public def CharSequence generate()'''
 		<?php
-		 «Slug.generateFileDoc(ex,true)»
+		 «Slug.generateFileDoc(ex)»
+		 
+		 «Slug.generateRestrictedAccess()»
 		  
 		/**
 		 * «extName»  script.

@@ -4,6 +4,9 @@ import java.sql.Timestamp
 import org.bson.Document
 import org.bson.types.ObjectId
 
+/**
+ * @author Wolf Rost
+ */
 class Session extends Document {
 	private ObjectId userID;
 	private String sessionID;

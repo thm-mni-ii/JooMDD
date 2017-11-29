@@ -49,7 +49,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	}
 	
 	def CharSequence generateSiteViewLayoutShow() '''
-	«generateFileDoc(ipage,com, false)»
+	«generateFileDoc(ipage,com)»
 	«frontHelp.genViewTemplateInit»
 	«frontHelp.genViewTemplateHead»
 	'''
@@ -66,7 +66,10 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	}
 	
 	def CharSequence generateSiteController() '''
-	 «generateFileDoc(ipage, com,true)»
+	 «generateFileDoc(ipage, com)»
+	 
+	 «Slug.generateRestrictedAccess()»
+	 
 	// No direct access.
 		defined('_JEXEC') or die;
 		
@@ -103,7 +106,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	
 	def CharSequence generateSiteModelShow() '''
-	«generateFileDoc(ipage, com, true)»
+	«generateFileDoc(ipage, com)»
+	
+	«Slug.generateRestrictedAccess()»
 	
 	jimport('joomla.application.component.modellist');
 
@@ -126,7 +131,10 @@ class IndexPageTemplate extends DynamicPageTemplate {
 
 
 	def CharSequence generateViewBackend() '''
-		«generateFileDoc(ipage, com,true)»
+		«generateFileDoc(ipage, com)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		/**
 		* @description «ipage.entities.get(0).name»View for «com.name»
 		*/
@@ -154,7 +162,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		}
 	'''
 	def CharSequence generateAdminViewLayoutBackend() ''' 
-	«generateFileDoc(ipage,com, false)»
+	«generateFileDoc(ipage,com)»
 	JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 	JHtml::_('bootstrap.tooltip');
 	JHtml::_('behavior.multiselect');
@@ -167,7 +175,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''
 	
 	def CharSequence generateAdminModel()'''
-	«generateFileDoc(ipage, com, true)»
+	«generateFileDoc(ipage, com)»
+	
+	«Slug.generateRestrictedAccess()»
 	
 	jimport('joomla.application.component.modellist');
 
@@ -193,7 +203,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''
 	
 	def CharSequence generateAdminController()'''
-	«generateFileDoc(ipage, com, true)»
+	«generateFileDoc(ipage, com)»
+	
+	«Slug.generateRestrictedAccess()»
 
 	jimport('joomla.application.component.controlleradmin');
 	
@@ -209,7 +221,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	}
 	 '''
  def CharSequence generateSiteView()'''
-	«generateFileDoc(ipage.instance,com,true)»
+	«generateFileDoc(ipage.instance,com)»
+	
+	«Slug.generateRestrictedAccess()»
 	
 	jimport('joomla.application.component.view');
 

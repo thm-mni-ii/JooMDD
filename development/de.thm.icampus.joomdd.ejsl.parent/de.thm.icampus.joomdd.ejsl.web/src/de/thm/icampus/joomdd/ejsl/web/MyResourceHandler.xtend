@@ -15,6 +15,10 @@ import org.eclipse.xtext.web.server.model.XtextWebDocument
 import org.eclipse.xtext.web.server.persistence.IServerResourceHandler
 import de.thm.icampus.joomdd.ejsl.util.Config
 
+/**
+ * @author Dieudonne Timma
+ * @author Wolf Rost
+ */
 class MyResourceHandler implements IServerResourceHandler {
 	
 	@Inject IWebResourceSetProvider resourceSetProvider

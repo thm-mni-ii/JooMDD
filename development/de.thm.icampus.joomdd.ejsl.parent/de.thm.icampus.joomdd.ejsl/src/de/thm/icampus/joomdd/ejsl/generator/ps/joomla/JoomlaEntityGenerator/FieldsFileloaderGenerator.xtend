@@ -26,7 +26,9 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 	 */
 	 def CharSequence generateFileloader()'''
 		<?php
-		«Slug.generateFileDoc(com,true)»
+		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		/**
 		 * This class contain a input field to load a document or image.
@@ -63,7 +65,9 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 	 */
 	def CharSequence generateImageloader()'''
 		<?php
-		«Slug.generateFileDoc(com,true)»
+		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		/**
 		 * This class contain a input field to load a document or image.

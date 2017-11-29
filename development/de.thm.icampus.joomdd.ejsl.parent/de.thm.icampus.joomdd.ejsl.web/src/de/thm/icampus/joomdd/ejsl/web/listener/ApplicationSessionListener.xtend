@@ -4,6 +4,9 @@ import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 import javax.servlet.http.HttpSessionEvent
 import javax.servlet.http.HttpSessionListener
 
+/**
+ * @author Wolf Rost
+ */
 class ApplicationSessionListener implements HttpSessionListener {
 
 	override sessionCreated(HttpSessionEvent event) {

@@ -20,7 +20,10 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
  
     override generate() '''
 		<?php
-		«Slug.generateFileDoc(extendeComp,true)»
+		«Slug.generateFileDoc(extendeComp)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		jimport('joomla.filesystem.file');
 		
 		/**

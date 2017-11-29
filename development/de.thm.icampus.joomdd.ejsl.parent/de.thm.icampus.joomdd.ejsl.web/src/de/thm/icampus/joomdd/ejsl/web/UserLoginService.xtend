@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * @author Wolf Rost
+ */
 @WebServlet(name='UserLoginService', urlPatterns='/login')
 class UserLoginService extends HttpServlet {
 

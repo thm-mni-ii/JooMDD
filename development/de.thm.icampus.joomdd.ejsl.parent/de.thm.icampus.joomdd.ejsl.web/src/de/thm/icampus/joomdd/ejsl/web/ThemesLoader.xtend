@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * @author Dieudonne Timma
+ */
 @WebServlet(name = 'ThemesLoader', urlPatterns = '/themes-loader/*')
 class ThemesLoader extends HttpServlet {
 	override protected doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

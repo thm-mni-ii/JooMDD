@@ -220,7 +220,10 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	def CharSequence phpContent(ExtendedModule module) {
 	'''
 		<?php
-		«Slug.generateFileDoc(extMod, true)»
+		«Slug.generateFileDoc(extMod)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		// Define used Jimports here
 		
 		// No direct access to this file
@@ -243,7 +246,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	 def CharSequence defaultTemplate() {
 	'''
 		<?php
-		«Slug.generateFileDoc(extMod, true)»
+		«Slug.generateFileDoc(extMod)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		// No direct access to this file
 		defined('_JEXEC') or die;
@@ -295,7 +300,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	def CharSequence helperPHP(Module modul, DynamicPage mpage) {
 		'''
 		<?php
-		«Slug.generateFileDoc(extMod, true)»
+		«Slug.generateFileDoc(extMod)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		// No direct access to this file
 		defined('_JEXEC') or die;

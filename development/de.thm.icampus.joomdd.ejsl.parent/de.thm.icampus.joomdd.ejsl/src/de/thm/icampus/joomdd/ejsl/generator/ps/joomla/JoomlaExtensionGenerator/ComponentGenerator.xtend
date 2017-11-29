@@ -335,7 +335,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpSiteContent(Component component) '''
 		<?php
-		«Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		// import joomla controller library
 		jimport('joomla.application.component.controller');
@@ -361,10 +363,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpSiteControllerContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component)»
 		
-		// import Joomla controller library
-		jimport('joomla.application.component.controller');
+		«Slug.generateRestrictedAccess()»
+		
+		use Joomla\CMS\MVC\Controller\BaseController;
+		
+		defined('_JEXEC') or die;
 		
 		/**
 		 * General Controller of «component.name» component
@@ -397,7 +402,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		// Access check.
 		if (!JFactory::getUser()->authorise('core.manage', '«Slug::nameExtensionBind("com",component.name )»')) 
@@ -423,10 +430,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminControllerContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component)»
 		
-		// import Joomla controller library
-		jimport('joomla.application.component.controller');
+		«Slug.generateRestrictedAccess()»
+		
+		use Joomla\CMS\MVC\Controller\BaseController;
+		
+		defined('_JEXEC') or die;
 		
 		/**
 		 * General Controller of «class_name» component
@@ -456,7 +466,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	def CharSequence phpAdminSimpleModelContent(ExtendedComponent component,ExtendedPage pageref) '''
 		<?php
 		
-		«Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		jimport('joomla.application.component.modeladmin');
 		
@@ -471,7 +483,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminTemplateContent(Component component) '''
 		<?php
-		«Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateRestrictedAccess()»
 		?>
 		<p class="text-center"> <h1><?php echo "Welcome to ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
 		    <h4>«component.manifest.description»</h4>
@@ -502,7 +516,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminViewContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		// import Joomla view library
 		jimport('joomla.application.component.view');
 		 
@@ -677,7 +694,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     */
 	def CharSequence phpSiteRouterContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component,true)»
+		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		/**
 		 * @param   array  A named array
 		 * @return  array
@@ -738,7 +758,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 *  
 	 */
 	def CharSequence genScriptForForeignKeys()'''
-		«Slug.generateFileDoc(extendedComp,false)»
+		«Slug.generateFileDoc(extendedComp)»
 		/**
 		 * this function set the value of reference for a foreign attribute 
 		 */
@@ -756,7 +776,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 *  
 	 */
 	def CharSequence genScriptForMultipleForeignKeys()'''
-		«Slug.generateFileDoc(extendedComp,false)»
+		«Slug.generateFileDoc(extendedComp)»
 		
 		jQuery(document).ready(function() {
 			jQuery("select[generated='true']").each(function() {

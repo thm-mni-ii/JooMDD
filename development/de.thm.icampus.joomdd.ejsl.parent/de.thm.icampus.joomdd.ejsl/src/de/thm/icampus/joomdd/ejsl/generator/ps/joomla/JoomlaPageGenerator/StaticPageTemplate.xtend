@@ -5,6 +5,7 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
 /**
  * <!-- begin-user-doc -->
@@ -45,7 +46,10 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	
 	
 	def CharSequence generateView() '''
-	«generateFileDoc(staticpage.instance, comp,true )»
+	«generateFileDoc(staticpage.instance, comp)»
+	
+	«Slug.generateRestrictedAccess()»
+	
 	/**
 	 * HTML View class for the «comp.name.toFirstUpper» Component
 	 *

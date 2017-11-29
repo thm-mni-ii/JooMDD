@@ -51,7 +51,9 @@ class FieldsGenerator {
 
 	public def CharSequence genRefrenceField() '''
 		<?php
-		«Slug.generateFileDoc(com, true)»
+		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		jimport('joomla.form.formfield');
 		
@@ -84,7 +86,9 @@ class FieldsGenerator {
 	'''
 	public def CharSequence genEmptyField()'''
 	<?php
-			«Slug.generateFileDoc(com, true)»
+			«Slug.generateFileDoc(com)»
+			
+			«Slug.generateRestrictedAccess()»
 			
 			jimport('joomla.form.formfield');
 			
@@ -226,7 +230,9 @@ class FieldsGenerator {
 	
 	public def CharSequence genFieldsForEntity()'''
 		<?php
-		«Slug.generateFileDoc(com, true)»
+		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateRestrictedAccess()»
 		
 		JFormHelper::loadFieldClass('list');
 		
@@ -289,7 +295,10 @@ class FieldsGenerator {
 	'''
 	static def CharSequence genFieldsForUserView(ExtendedComponent component)'''
 		<?php
-		«Slug.generateFileDoc(component, true)»
+		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateRestrictedAccess()»
+		
 		JFormHelper::loadFieldClass('list');
 		class JFormFieldComponentuser extends JFormFieldList{
 		    

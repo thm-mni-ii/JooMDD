@@ -11,6 +11,9 @@ import org.bson.codecs.EncoderContext
 import org.bson.codecs.configuration.CodecRegistry
 import org.bson.types.ObjectId
 
+/**
+ * @author Wolf Rost
+ */
 class UserCodec implements Codec<User> {
 
     private CodecRegistry codecRegistry;
