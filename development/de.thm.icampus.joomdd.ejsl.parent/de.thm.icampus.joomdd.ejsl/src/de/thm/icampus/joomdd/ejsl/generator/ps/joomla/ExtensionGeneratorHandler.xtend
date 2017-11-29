@@ -25,6 +25,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.M
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.PluginGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.LibraryGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.TemplateGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
 
 /**
  * This class represents the interface between the JooMDD generator and the Joomla-specific generator templates. 

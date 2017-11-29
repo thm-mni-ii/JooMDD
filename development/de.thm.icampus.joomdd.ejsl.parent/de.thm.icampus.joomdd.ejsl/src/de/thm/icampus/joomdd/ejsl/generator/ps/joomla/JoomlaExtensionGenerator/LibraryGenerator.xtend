@@ -5,7 +5,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Package
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.AbstractExtensionGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import java.util.Calendar
 import org.eclipse.xtend.lib.annotations.Accessors

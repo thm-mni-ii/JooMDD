@@ -1,22 +1,16 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator
 
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.AbstractExtensionGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler
 import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import java.util.Calendar
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Plugin Generator</b></em>'.
- * <!-- end-user-doc -->
+ * This class contains the templates to generate the necessary folders and files for a Joomla plugins.
  *
- *
- * @see eJSLGenerator.GeneratorTemplatePackage#getPluginGenerator()
- * @model
- * @generated
+ * @author Dieudonne Timma, Dennis Priefer
  */
 public class PluginGenerator extends AbstractExtensionGenerator {
 	
@@ -28,7 +22,6 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		this.fsa = fsa;
 		this.slug = Slug.slugify(plugin.name);
 		this.name = "plg_" + this.slug
-		//this.name = plugin.name;
 		this.plugin = plugin;
 		this.path = path
 	}
@@ -43,16 +36,17 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	 */
 	override generate() 
 	{
-		generateFile(path+plugin.name + ".xml", plugin.xmlContent)
-		generateFile(path +plugin.name + ".php", plugin.phpContent)
+		generateFile(path + plugin.name + ".xml", plugin.xmlContent)
+		generateFile(path + plugin.name + ".php", plugin.phpContent)
 		
 		if (plugin.languages.size > 0) {
 		
 			for (lang : plugin.languages) {
-				if(!lang.sys)
-				generateFile(path+"language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".ini", lang.iniContent)
-				else
-				generateFile(path+"language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".sys.ini", lang.iniContent)
+				if(!lang.sys) {
+    				generateFile(path+"language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".ini", lang.iniContent)
+				} else {
+				    generateFile(path+"language/" + lang.name + "/" + lang.name + "." + "plg_" + plugin.type + "_" + plugin.name + ".sys.ini", lang.iniContent)
+			    }
 			}
 		}
 		return ""
@@ -67,11 +61,11 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	def CharSequence phpContent(Plugin plugin) '''
 		<?php
 		/**
-		* @version $Id: «plugin.name» version date author
-		* @copyright Copyright
-		* @license License, for example GNU/GPL
-		* All other information you would like to add
-		*/
+		 * @version $Id: «plugin.name» version date author
+		 * @copyright Copyright
+		 * @license License, for example GNU/GPL
+		 * All other information you would like to add
+		 */
 		
 		// don't allow other scripts to grab and execute this file
 		defined('_JEXEC') or die('Direct Access to this location is not allowed');
@@ -79,12 +73,12 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		
 		class Plg«plugin.type.toString.toFirstUpper»«plugin.name.toString.toFirstUpper» extends JPlugin
 		{
-			public function plg«plugin.type.toString.toFirstUpper»«plugin.name.toString.toFirstUpper»(&$subject, $params)
+		    public function plg«plugin.type.toString.toFirstUpper»«plugin.name.toString.toFirstUpper»(&$subject, $params)
 			{
 				parent::__construct($subject, $params);
 				$this->loadLanguage();
 			}
-			
+		
 			«plugin.events»
 		}
 	'''
@@ -534,9 +528,9 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 			$item->path = FinderIndexerHelper::getContentPath($item->route);
 			
 			/*
-		 * Add the meta-data processing instructions based on the newsfeeds
-		 * configuration parameters.
-		 */
+			* Add the meta-data processing instructions based on the newsfeeds
+			* configuration parameters.
+			*/
 			// Add the meta-author.
 			$item->metaauthor = $item->metadata->get('author');
 		
@@ -862,36 +856,34 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		<extension version="3.1" type="plugin" group="«plugin.type»">
 			<name>«plugin.name»</name>
 			«Slug.generateAuthors(plugin.manifest.authors)»
-			<creationDate>«if (plugin.manifest.creationdate != null) {plugin.manifest.creationdate} 
-		else {Calendar::instance.get(Calendar::YEAR)}»</creationDate>		
-			<copyright>«if (plugin.manifest.copyright != null) {plugin.manifest.copyright}
+			<creationDate>«if (plugin.manifest.creationdate !== null) {plugin.manifest.creationdate} 
+		else {Calendar::instance.get(Calendar::YEAR)}»</creationDate>
+			<copyright>«if (plugin.manifest.copyright !== null) {plugin.manifest.copyright}
 			else {"Copyright (C) 2005 - 2014 Open Source Matters. All rights reserved."}»</copyright>
-			<license>«if (plugin.manifest.license != null) {plugin.manifest.license}
+			<license>«if (plugin.manifest.license !== null) {plugin.manifest.license}
 			else {"GPL 2.0"}»</license>
-			<version>«if (plugin.manifest.version != null) {plugin.manifest.version}
+			<version>«if (plugin.manifest.version !== null) {plugin.manifest.version}
 			else {"3.0.0"}»</version>
-			<description>«if (plugin.manifest.description != null) {plugin.manifest.description}
+			<description>«if (plugin.manifest.description !== null) {plugin.manifest.description}
 			else {"Place Description here"}»</description>
 		
 			<files>
-			<filename plugin="«plugin.name»">«plugin.name».php</filename>
+			    <filename plugin="«plugin.name»">«plugin.name».php</filename>
 			</files>
 		
 			<languages folder="language">
-			«FOR lang:plugin.languages»
-				«IF !lang.sys»
-					<language tag="«lang.name»">«lang.name».«plugin.name».ini</language>
+			    «FOR lang:plugin.languages»
+			    «IF !lang.sys»
+			    <language tag="«lang.name»">«lang.name».«plugin.name».ini</language>
 				«ELSE»
-					<language tag="«lang.name»">«lang.name».plg_«plugin.type»_«plugin.name».sys.ini</language>
+			    <language tag="«lang.name»">«lang.name».plg_«plugin.type»_«plugin.name».sys.ini</language>
 				«ENDIF»
-			«ENDFOR»
+			    «ENDFOR»
 			</languages>
 		
 			<config>
-			<!-- Config Section-->
+			    <!-- Config Section-->
 			</config>
 		</extension>
 	'''
-	
-	
-} // PluginGenerator
+}

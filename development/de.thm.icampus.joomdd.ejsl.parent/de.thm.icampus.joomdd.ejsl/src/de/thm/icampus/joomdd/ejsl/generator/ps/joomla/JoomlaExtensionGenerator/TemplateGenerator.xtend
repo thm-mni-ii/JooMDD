@@ -1,7 +1,7 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Template
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.AbstractExtensionGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import java.util.Calendar
 import org.eclipse.xtext.generator.IFileSystemAccess2

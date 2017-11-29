@@ -34,9 +34,9 @@ class ExtensionGenerator extends AbstractGenerator {
     override dogenerate() {
         for (ext : extensions) {
             // Call of Joomla extension generator
-            var ExtensionGeneratorHandler joomlaExtClient
-            joomlaExtClient = new ExtensionGeneratorHandler(fileGen, ext, path, rootPath)
-            joomlaExtClient.generateExtension
+            var ExtensionGeneratorHandler joomlaExtHandler
+            joomlaExtHandler = new ExtensionGeneratorHandler(fileGen, ext, path, rootPath)
+            joomlaExtHandler.generateExtension
             // -----------------------------------
         }
     }

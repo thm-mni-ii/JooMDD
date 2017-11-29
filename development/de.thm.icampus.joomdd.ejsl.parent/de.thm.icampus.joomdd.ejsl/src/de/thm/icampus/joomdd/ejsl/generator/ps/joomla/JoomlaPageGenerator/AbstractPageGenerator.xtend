@@ -1,5 +1,4 @@
-/**
- */
+
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator;
 
 import de.thm.icampus.joomdd.ejsl.eJSL.BackendSection

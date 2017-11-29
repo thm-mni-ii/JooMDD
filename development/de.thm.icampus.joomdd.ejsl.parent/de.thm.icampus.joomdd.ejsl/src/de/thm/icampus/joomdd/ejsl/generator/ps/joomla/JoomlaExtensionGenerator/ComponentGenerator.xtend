@@ -1,6 +1,6 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator;
 
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.AbstractExtensionGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
