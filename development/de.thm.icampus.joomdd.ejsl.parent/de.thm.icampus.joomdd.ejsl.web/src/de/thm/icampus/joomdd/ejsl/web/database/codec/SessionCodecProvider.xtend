@@ -5,6 +5,9 @@ import org.bson.codecs.Codec
 import org.bson.codecs.configuration.CodecProvider
 import org.bson.codecs.configuration.CodecRegistry
 
+/**
+ * @author Wolf Rost
+ */
 class SessionCodecProvider implements CodecProvider {
 
     @SuppressWarnings("unchecked")

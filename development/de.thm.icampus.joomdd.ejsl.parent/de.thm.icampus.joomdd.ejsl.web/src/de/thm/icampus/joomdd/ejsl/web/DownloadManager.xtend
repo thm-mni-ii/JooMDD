@@ -17,6 +17,10 @@ import de.thm.icampus.joomdd.ejsl.util.Config
 import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 import de.thm.icampus.joomdd.ejsl.web.util.Helper
 
+/**
+ * @author Dieudonne Timma
+ * @author Wolf Rost
+ */
 @WebServlet(name='DownLoadManager', urlPatterns='/download-manager/*')
 class DownloadManager extends HttpServlet {
 

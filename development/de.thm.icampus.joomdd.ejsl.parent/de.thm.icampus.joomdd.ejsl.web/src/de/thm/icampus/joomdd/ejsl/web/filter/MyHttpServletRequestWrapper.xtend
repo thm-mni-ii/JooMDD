@@ -13,6 +13,8 @@ import org.apache.commons.io.IOUtils
 /**
  * Code from https://stackoverflow.com/questions/4449096/how-to-read-request-getinputstream-multiple-times/38990042#38990042
  * Transformed to xtend syntax. Changed to use IOUtils.
+ * 
+ * @author Wolf Rost
  */
 class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 

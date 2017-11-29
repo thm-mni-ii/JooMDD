@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import de.thm.icampus.joomdd.ejsl.web.util.Helper
 
+/**
+ * @author Dieudonne Timma
+ */
 @WebServlet(name = 'ReverseLoader', urlPatterns = '/reverse-loader/*')
 class ReverseLoader extends HttpServlet {
 	

@@ -12,6 +12,10 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.web.util.Helper
 
+/**
+ * @author Dieudonne Timma
+ * @author Wolf Rost
+ */
 @WebServlet(name = 'Treeloader', urlPatterns = '/tree-loader/*')
 class Treeloader extends HttpServlet {
 	

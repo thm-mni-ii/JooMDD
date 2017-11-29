@@ -4,6 +4,9 @@ import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 import de.thm.icampus.joomdd.ejsl.util.Config
 import de.thm.icampus.joomdd.ejsl.web.database.document.User
 
+/**
+ * @author Wolf Rost
+ */
 class Helper {
 	
 	static DatabaseLayer db = DatabaseLayer.instance;

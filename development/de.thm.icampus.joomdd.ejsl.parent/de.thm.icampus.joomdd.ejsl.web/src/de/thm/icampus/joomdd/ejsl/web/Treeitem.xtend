@@ -7,6 +7,10 @@ import java.util.List
 import java.util.Map
 import org.eclipse.xtext.resource.IResourceServiceProvider
 
+/**
+ * @author Dieudonne Timma
+ * @author Wolf Rost
+ */
 class Treeitem {
 	private String id
 	private String text

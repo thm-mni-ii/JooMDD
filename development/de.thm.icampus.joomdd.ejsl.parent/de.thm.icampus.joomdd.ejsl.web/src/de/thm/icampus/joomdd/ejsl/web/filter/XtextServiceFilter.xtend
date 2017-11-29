@@ -11,6 +11,9 @@ import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 
+/**
+ * @author Wolf Rost
+ */
 class XtextServiceFilter implements Filter {
   	FilterConfig filterConfig;                                     
 
