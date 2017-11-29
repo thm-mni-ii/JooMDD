@@ -6,10 +6,14 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
+/**
+ * This class contains the templates to generate the fiel cardinalities.
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ */
 class FieldsCardinalityGenerator extends FieldsGenerator {
 	
 	Reference foreignReference
-	
 	
 	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
 		super(ref, component, from)
@@ -28,40 +32,39 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		
 		class JFormField«nameField.toFirstUpper» extends JFormField
 		{
-			protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
-				"mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
-				"foreignTable"=> "«Slug.databaseName(com.name,foreignReference.entity.name)»"
-							                                      );
-			protected $keysAndForeignKeys= array( "table" => array(
+		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
+			    "mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
+			    "foreignTable"=> "«Slug.databaseName(com.name,foreignReference.entity.name)»");
+		    protected $keysAndForeignKeys= array( "table" => array(
 				«FOR attr : mainRef.extendedAttributes»
-					«IF attr != mainRef.extendedAttributes.last»
-							"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
-					«ELSE»
-							"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
-					«ENDIF»
+				«IF attr != mainRef.extendedAttributes.last»
+				"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
+				«ELSE»
+				"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
+				«ENDIF»
 				«ENDFOR»
 			),"foreignTable" => array(
-				«FOR attr : foreignReference.attribute»
-	   				«IF attr != foreignReference.attribute.last»
-						"«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»",
-	   				«ELSE»
-	   					"«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»"
-	   				«ENDIF»
+			    «FOR attr : foreignReference.attribute»
+			    «IF attr != foreignReference.attribute.last»
+			    "«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»",
+			    «ELSE»
+			    "«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»"
+	   			«ENDIF»
    				«ENDFOR»
 			));
-			
+		
 			«genGetInput»
-			
+		
 			«genGetAllData»
-			
+		
 			«genAttributValue»
-			
+		
 			«genGetData_item»
-			
+		
 			«getAllReferenceData»
-			
+		
 			«genGenerateJsonValue»
-			
+		
 			«gengenerateStringValue»
 		
 		}
@@ -103,17 +106,18 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		}
 	'''
 	def private genGetAllData()'''
-		protected function getAllData(){
+		protected function getAllData()
+		{
 			$db = JFactory::getDbo();
 			$queryALL = $db->getQuery(true);
 			$queryALL->select("
 			«FOR foreignAttr : foreignReference.attribute»
-				«IF foreignAttr != foreignReference.attribute.last»
-					b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» , 
-				«ELSE»
-					b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase»
-				«ENDIF»
-		«ENDFOR»")
+			«IF foreignAttr != foreignReference.attribute.last»
+			b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» , 
+			«ELSE»
+			b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase»
+			«ENDIF»
+			«ENDFOR»")
 				->from($this->referenceStruct["foreignTable"] . ' as b')
 				->where("state = 1")
 				->order(" «foreignReference.attributerefereced.get(0).name.toLowerCase»  ASC");
@@ -122,11 +126,12 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		}
 	'''
 	def private genAttributValue()'''
-		protected function attributValue($referenceData){
-			
-			$values = array();
-			foreach($referenceData as $reference){
-				if(!empty($reference->selected) && !in_array($reference->id,$values))
+		protected function attributValue($referenceData)
+		{
+		    $values = array();
+			foreach($referenceData as $reference)
+			{
+			    if(!empty($reference->selected) && !in_array($reference->id,$values))
 				{
 					array_push($values, $reference->id);
 				}
@@ -145,19 +150,19 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 				->from($this->referenceStruct["foreignTable"] . " as A")
 				->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
 				«FOR attr : mainRef.extendedAttributes»
-					«IF attr != mainRef.extendedAttributes.last»
-						C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
-					«ELSE»
-						C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
-					«ENDIF»
+				«IF attr != mainRef.extendedAttributes.last»
+				C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
+				«ELSE»
+				C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
+				«ENDIF»
 				«ENDFOR»
 				) as B on 
 				«FOR foreignAttr : foreignReference.attribute»
-					«IF foreignAttr != foreignReference.attribute.last»
-						A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase» AND 
-					«ELSE»
-						A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase»") 	       
-					«ENDIF»
+				«IF foreignAttr != foreignReference.attribute.last»
+				A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase» AND 
+				«ELSE»
+				A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase»") 	       
+				«ENDIF»
 				«ENDFOR»
 				->where("A.state = 1")
 				->order("A.«foreignReference.attributerefereced.get(0).name.toLowerCase»");
@@ -166,7 +171,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		}
 	'''
 	def private genGetData_item()'''
-		protected function getData_item($«entFrom.primaryKey.name»){
+		protected function getData_item($«entFrom.primaryKey.name»)
+		{
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select("*")->from($this->referenceStruct["table"])
@@ -194,7 +200,6 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		public function generateStringValue($data)
 		{
 			$result = array();
-	
 			$result[] = $data->{array_keys($this->keysAndForeignKeys["foreignTable"])[0]} . " ";
 			
 			return implode($result);

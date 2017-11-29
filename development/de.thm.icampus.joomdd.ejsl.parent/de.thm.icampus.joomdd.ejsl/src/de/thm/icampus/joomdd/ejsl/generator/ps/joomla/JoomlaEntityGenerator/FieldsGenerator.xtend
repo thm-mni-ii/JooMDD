@@ -10,6 +10,11 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 
+/**
+ * This class contains the templates to generate the view fields.
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ */
 class FieldsGenerator {
 
 	public ExtendedReference mainRef

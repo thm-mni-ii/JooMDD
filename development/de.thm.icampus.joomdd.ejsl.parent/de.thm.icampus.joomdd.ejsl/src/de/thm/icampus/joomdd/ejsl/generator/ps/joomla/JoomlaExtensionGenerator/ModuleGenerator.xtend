@@ -7,12 +7,12 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.PageGeneratorClient
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.LanguageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import java.util.Calendar
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.PageGeneratorHandler
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla module.
@@ -21,7 +21,7 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
  */
 public class ModuleGenerator extends AbstractExtensionGenerator {  
 			 
-	PageGeneratorClient pageClient
+	PageGeneratorHandler pageClient
 	var modelOfComponent = '\'<modelOfComponent>\''
 	var modelPath = '\'/components/com_<nameOfComponent>/models\''
 	var String modelOfComponent2 = null;
@@ -46,11 +46,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		module.name = Slug.slugify(module.name)
 	}
 
-	public def PageGeneratorClient getPageClient() {
+	public def PageGeneratorHandler getPageClient() {
 		return this.pageClient
 	}
 
-	public def void setPageClient(PageGeneratorClient value) {
+	public def void setPageClient(PageGeneratorHandler value) {
 		this.pageClient = value;
 	}
 

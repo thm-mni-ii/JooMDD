@@ -97,7 +97,7 @@ public class ExtensionGeneratorHandler {
                 )
             }
             default: {
-                System.out.println("ExtensionGeneratorClient default")
+                System.out.println("ExtensionGeneratorHandler default")
             }
         }
 

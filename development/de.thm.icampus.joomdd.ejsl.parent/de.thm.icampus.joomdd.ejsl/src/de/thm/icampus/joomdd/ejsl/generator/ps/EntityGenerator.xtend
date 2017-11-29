@@ -12,12 +12,12 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator.FieldsCardinalityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator.FieldsGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator.JoomlaEntityClient
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator.JoomlaEntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator.TableGeneratorTemplate
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.EntityGeneratorHandler
 
 class EntityGenerator extends AbstractGenerator {
 
@@ -65,8 +65,8 @@ class EntityGenerator extends AbstractGenerator {
     }
 
     override dogenerate() {
-        if (extensions !== null && page == null) {
-            var JoomlaEntityClient client = new JoomlaEntityClient(fsa)
+        if (extensions !== null && page === null) {
+            var EntityGeneratorHandler client = new EntityGeneratorHandler(fsa)
             client.generateJoomlaComponenteElements(extensions, path, isBackendSection)
         } else if (page !== null) {
             var EList<ExtendedEntity> pageEntities = PlattformUtil.getAllReferenceOfEntity(

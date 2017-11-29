@@ -6,6 +6,11 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
+/**
+ * This class contains the templates for field file loaders.
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ */
 class FieldsFileloaderGenerator extends FieldsGenerator {
 	
 	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {

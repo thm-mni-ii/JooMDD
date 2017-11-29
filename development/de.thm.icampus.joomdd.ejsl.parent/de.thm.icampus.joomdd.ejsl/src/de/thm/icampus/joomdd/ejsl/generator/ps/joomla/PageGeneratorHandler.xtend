@@ -1,6 +1,6 @@
 /**
     */
-package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator
+package de.thm.icampus.joomdd.ejsl.generator.ps.joomla
 
 import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
@@ -11,7 +11,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator.FieldsGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
-public class PageGeneratorClient {
+public class PageGeneratorHandler {
 	
 	ExtendedPage extPage
 	ExtendedComponent com
@@ -29,18 +29,18 @@ public class PageGeneratorClient {
 	}
 	
 	private def  void generateStaticPage(ExtendedStaticPage sp) {
-		var StaticPageTemplate static = new StaticPageTemplate(sp,com,sectionExt,pathExt,fsa)
+		var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.StaticPageTemplate static = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.StaticPageTemplate(sp,com,sectionExt,pathExt,fsa)
 		static.generate
 	}
 
 	private def  void generateView(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess2 fsa) {
 		if(page.detailsPage) {
 			
-				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path, fsa)
+				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplate dp = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplate(page, component, sec, path, fsa)
 				dp.generateView()
 			}
 			else{
-				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
+				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.IndexPageTemplate dp = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.IndexPageTemplate(page, component, sec, path, fsa)
 				dp.generateView()
 			}
 			
@@ -51,11 +51,11 @@ public class PageGeneratorClient {
 
 	private def void generateController(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess2 fsa) {
 			if(page.detailsPage) {
-				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path,fsa)
+				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplate dp = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplate(page, component, sec, path,fsa)
 				dp.generateController()
 			}
 			else{
-				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
+				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.IndexPageTemplate dp = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.IndexPageTemplate(page, component, sec, path, fsa)
 				dp.generateController()
 			}
 			
@@ -63,11 +63,11 @@ public class PageGeneratorClient {
 		
 	private def  generateModel(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess2 fsa) {
 			if(page.detailsPage) {
-				var DetailsPageTemplate dp = new DetailsPageTemplate(page, component, sec, path,fsa)
+				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplate dp = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplate(page, component, sec, path,fsa)
 				dp.generateModel()
 			}
 			else {
-				var IndexPageTemplate dp = new IndexPageTemplate(page, component, sec, path, fsa)
+				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.IndexPageTemplate dp = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.IndexPageTemplate(page, component, sec, path, fsa)
 				dp.generateModel()
 			}
 			

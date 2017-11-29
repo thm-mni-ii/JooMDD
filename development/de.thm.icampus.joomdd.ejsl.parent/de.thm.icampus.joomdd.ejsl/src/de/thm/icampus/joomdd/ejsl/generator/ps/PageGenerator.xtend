@@ -8,10 +8,10 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedCo
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedPageImpl
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.PageGeneratorClient
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.PageGeneratorHandler
 
 class PageGenerator extends AbstractGenerator {
 
@@ -46,14 +46,14 @@ class PageGenerator extends AbstractGenerator {
 
     override dogenerate() {
 
-        if (!extUpdate && comp != null) {
+        if (!extUpdate && comp !== null) {
             for (ExtendedPage pg : pageList) {
-                var PageGeneratorClient client
-                client = new PageGeneratorClient(pg, comp, path, section, fsa)
+                var PageGeneratorHandler client
+                client = new PageGeneratorHandler(pg, comp, path, section, fsa)
                 client.generateExtension
             }
         } else {
-            if (comp == null) {
+            if (comp === null) {
                 var Component tempComp = EJSLFactory.eINSTANCE.createComponent
                 tempComp.name = "ExtensionsName"
                 var ExtendedComponent compTemp = new ExtendedComponentImpl(tempComp)
@@ -71,10 +71,10 @@ class PageGenerator extends AbstractGenerator {
         }
         
         for (ExtendedPage pg : pageList) {
-            var PageGeneratorClient client
-            client = new PageGeneratorClient(pg, comp, path + section + "/", section, fsa)
+            var PageGeneratorHandler client
+            client = new PageGeneratorHandler(pg, comp, path + section + "/", section, fsa)
             client.generatePages
-            if (pg.extendedDynamicPageInstance != null) {
+            if (pg.extendedDynamicPageInstance !== null) {
                 var String pathent = path + section + "/" + pg.name + "/"
                 var ExtendedDynamicPage dynPage = pg.extendedDynamicPageInstance
                 var EntityGenerator ent
