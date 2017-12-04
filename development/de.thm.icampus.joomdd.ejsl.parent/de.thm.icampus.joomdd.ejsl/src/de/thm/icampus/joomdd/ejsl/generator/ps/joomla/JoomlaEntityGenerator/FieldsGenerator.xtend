@@ -62,52 +62,51 @@ class FieldsGenerator {
 			protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 				"foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
 			protected $keysAndForeignKeys= array(
-				«FOR attr : mainRef.extendedAttributes»
-			     	«IF attr != mainRef.extendedAttributes.last»
-			     		"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
-			     	«ELSE»
-			     		"«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
-			     	«ENDIF»
-			    «ENDFOR»
-			    );
-			    
+			    «FOR attr : mainRef.extendedAttributes»
+			    «IF attr != mainRef.extendedAttributes.last»
+			    "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
+			    «ELSE»
+			    "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
+			    «ENDIF»
+			    «ENDFOR»);
+
 			«genGetInput»
-			
+		
 			«genGetAllData»
-			
+		
 			«genGetReferencedata»
-			
+		
 			«genGetData_item»
-			
+		
 			«genGenerateJsonValue»
-			
+		
 			«gengenerateStringValue»
 		}
 	'''
 	public def CharSequence genEmptyField()'''
 	<?php
-			«Slug.generateFileDoc(com)»
-			
-			«Slug.generateRestrictedAccess()»
-			
-			«Slug.generateUses(newArrayList("FormField"))»
-			
-			class FormField«nameField.toFirstUpper» extends FormField
-			{
-			    protected function getInput()
-				{
-					$html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
-					«FOR KeyValuePair kv: field.attributes»
-					«kv.name» = '«kv.value»'
-					«ENDFOR»
-					/>";
-					return implode($html);
-				}
-				
-			}
+	«Slug.generateFileDoc(com)»
+	
+	«Slug.generateRestrictedAccess()»
+	
+	«Slug.generateUses(newArrayList("FormField"))»
+	
+	class JFormField«nameField.toFirstUpper» extends JFormField
+	{
+	    protected function getInput()
+		{
+		    $html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
+		    «FOR KeyValuePair kv: field.attributes»
+		    «kv.name» = '«kv.value»'
+			«ENDFOR»
+			/>";
+			return implode($html);
+		}
+	}
 	'''
     def private genGetData_item()'''
-	protected function getData_item($«entFrom.primaryKey.name»){
+	protected function getData_item($«entFrom.primaryKey.name»)
+	{
 		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select("*")->from($this->referenceStruct["table"])
@@ -162,35 +161,35 @@ class FieldsGenerator {
 	'''
 
 	private def CharSequence genGetReferencedata() '''
-		/**
-		*Read Selected  Items
-		*
-		*/
-		protected function getReferencedata($data)
+	/**
+	*Read Selected  Items
+	*
+	*/
+	protected function getReferencedata($data)
+	{
+		$db = Factory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select("distinct (case when 
+			«FOR ExtendedAttribute attr: mainRef.referencedExtendedAttributes»
+			«IF attr != mainRef.referencedExtendedAttributes.last»
+			b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»' and 
+			«ELSE»
+			b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»'
+			«ENDIF»
+			«ENDFOR»
+			then 'selected'
+			else ' ' end) as selected");
+		foreach($this->keysAndForeignKeys as $key =>$value)
 		{
-			$db = Factory::getDbo();
-			$query = $db->getQuery(true);
-			$query->select("distinct (case when 
-				«FOR ExtendedAttribute attr: mainRef.referencedExtendedAttributes»
-					«IF attr != mainRef.referencedExtendedAttributes.last»
-						b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»' and 
-					«ELSE»
-						b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»'
-					«ENDIF»
-				«ENDFOR»
-				then 'selected'
-				else ' ' end) as selected");
-			foreach($this->keysAndForeignKeys as $key =>$value)
-			{
-				$query->select(" b.$value");
-			}
-	
-			$query->from( $this->referenceStruct["foreignTable"] . " as b ")
-				->where("b.state = 1")
-				->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
-			$db->setQuery($query);
-			return $db->loadObjectList();
+			$query->select(" b.$value");
 		}
+	
+		$query->from( $this->referenceStruct["foreignTable"] . " as b ")
+			->where("b.state = 1")
+			->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
+		$db->setQuery($query);
+		return $db->loadObjectList();
+	}
 	'''
 
 	private def CharSequence genGetAllData() '''
@@ -264,15 +263,15 @@ class FieldsGenerator {
 		$query->select("DISTINCT $valueColumn as value, $textColumn as text")
 			->from("$this->table AS «entFrom.name.toLowerCase»")
 			«FOR ExtendedReference ref:entFrom.allExtendedReferences »
-				->join('LEFT', "«Slug.databaseName(com.name,ref.destinationEntity.name)» as  «ref.destinationEntity.name.toLowerCase» ON
+			->join('LEFT', "«Slug.databaseName(com.name,ref.destinationEntity.name)» as  «ref.destinationEntity.name.toLowerCase» ON
 				«FOR ExtendedAttribute attr: ref.extendedAttributes»
-					«IF ref.extendedAttributes.last != attr»
-						«entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
-					«ELSE»
-						«entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
-					«ENDIF»
+				«IF ref.extendedAttributes.last != attr»
+				«entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
+				«ELSE»
+				«entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
+				«ENDIF»
 				«ENDFOR»
-				")
+			")
 			«ENDFOR»
 			->order("$textColumn ASC");
 		$dbo->setQuery($query);

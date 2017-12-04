@@ -6,12 +6,17 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
 
+/**
+ * This class contains the templates to generate the tables.
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ */
 class TableGeneratorTemplate {
 	
 	ExtendedComponent com
 	String tName
 	ExtendedEntity ent
-	new(ExtendedComponent component, ExtendedEntity entity){
+	new(ExtendedComponent component, ExtendedEntity entity) {
 		com = component
 		tName = entity.name
 		ent = entity
@@ -30,8 +35,8 @@ class TableGeneratorTemplate {
 		*/
 		class «com.name.toFirstUpper»Table«tName.toFirstUpper» extends Table
 		{
-			public $foreigntableOption = array();
-			
+		    public $foreigntableOption = array();
+		
 			«genContructor»
 			
 			«genBind»
@@ -51,7 +56,7 @@ class TableGeneratorTemplate {
 			«genPublish»
 			
 			«IF ent.getAllExtendedReferencesToEntity.size > 0»
-				«genDelete»
+			«genDelete»
 			«ENDIF»
 		}
 	'''
@@ -70,31 +75,32 @@ class TableGeneratorTemplate {
  	'''
  	
  	public def CharSequence genInitTheForeignTableOption() '''
- 		public function  initTheForeignTableOption()
+ 		public function initTheForeignTableOption()
  		{
  			«FOR ExtendedReference ref : ent.getAllExtendedReferencesToEntity»
- 				$temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)» = array(
- 					"type" => "«ref.sourceEntity.name.toString.toFirstUpper»",
- 					"prefix" => "«com.name.toFirstUpper»Table",
- 					"foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
- 					"refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
- 					"name" => "#__«com.name.toLowerCase»_«ref.sourceEntity.name.toLowerCase»",
- 					"foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.destinationEntity).name.toLowerCase»'
- 				);
- 				array_push($this->foreigntableOption, $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)»);
+ 			$temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)» = array(
+ 			"type" => "«ref.sourceEntity.name.toString.toFirstUpper»",
+ 			"prefix" => "«com.name.toFirstUpper»Table",
+ 			"foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
+ 			"refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
+ 			"name" => "#__«com.name.toLowerCase»_«ref.sourceEntity.name.toLowerCase»",
+ 			"foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.destinationEntity).name.toLowerCase»'
+ 			);
+ 			array_push($this->foreigntableOption, $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)»);
  			«ENDFOR»
  		}
  	'''
+ 	
 	public def genBind()'''
 		/**
-		* Overloaded bind function to pre-process the params.
-		*
-		* @param    array        Named array
-		*
-		* @return    null|string    null is operation was satisfactory, otherwise returns an error
-		* @see        Table:bind
-		* @since      1.5
-		*/
+		 * Overloaded bind function to pre-process the params.
+		 *
+		 * @param    array        Named array
+		 *
+		 * @return   null|string  null is operation was satisfactory, otherwise returns an error
+		 * @see      JTable:bind
+		 * @since    1.5
+		 */
 		public function bind($array, $ignore = '')
 		{
 			$input = Factory::getApplication()->input;
