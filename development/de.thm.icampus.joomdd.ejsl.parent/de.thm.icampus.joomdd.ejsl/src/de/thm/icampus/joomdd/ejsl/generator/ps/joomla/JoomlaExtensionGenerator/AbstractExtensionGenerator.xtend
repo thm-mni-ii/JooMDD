@@ -3,9 +3,9 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator;
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
-
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtend.lib.annotations.Accessors
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.ExtentionScriptGenerator
 
 /**
  * Abstract class for Joomla extension generator classes.
@@ -102,13 +102,13 @@ abstract public class AbstractExtensionGenerator  {
 	}
 
 	def CharSequence generateScript(ExtendedComponent ext, String extName ){
-		return new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtentionScriptGenerator(ext, extName).generate()
+		return new ExtentionScriptGenerator(ext, extName).generate()
 	}
 	def CharSequence generateScript(ExtendedModule ext, String extName ){
-		return new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtentionScriptGenerator(ext, extName).generate()
+		return new ExtentionScriptGenerator(ext, extName).generate()
 	}
 	def CharSequence generateScript(Extension ext, String extName ){
-		return new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtentionScriptGenerator(ext, extName).generate()
+		return new ExtentionScriptGenerator(ext, extName).generate()
 	}
 	
 

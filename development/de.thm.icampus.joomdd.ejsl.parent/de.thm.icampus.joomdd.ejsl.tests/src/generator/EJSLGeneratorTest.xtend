@@ -7,7 +7,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.EJSLModel
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedCMSExtension
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedCMSExtensionImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator.ComponentGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.ComponentGenerator
 import de.thm.icampus.joomdd.ejsl.ressourceTransformator.RessourceTransformer
 import de.thm.icampus.joomdd.ejsl.tests.EJSLInjectorProvider
 import java.io.ByteArrayInputStream
@@ -21,10 +21,8 @@ import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
 import org.eclipse.xtext.junit4.InjectWith
 import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.xml.sax.SAXException
 import org.junit.Assert
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 
@@ -32,9 +30,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 @InjectWith(EJSLInjectorProvider)
 
 class EJSLGeneratorTest {
-	@Inject
-	ParseHelper<EJSLModel> parseHelper;
-	
+	@Inject	
 	
 	@Test
 	public def checkEntityMappin(){
@@ -53,21 +49,21 @@ class EJSLGeneratorTest {
 	
 	@Test
 	public def checkInstallDataOfComponent(){
-		var File templateFolder = new File(TemplateLoader.getClassLoader().getResource("").getPath().replace("tests/bin","tests/testdata"))
-		  var EJSLModel model = TemplateLoader.loadXMIModel("Shop")
+	    var File templateFolder = new File(TemplateLoader.getClassLoader().getResource("").getPath().replace("tests/bin","tests/testdata"))
+		var EJSLModel model = TemplateLoader.loadXMIModel("Shop")
 		 
-		 var RessourceTransformer trans = new RessourceTransformer(model)
-         trans.dotransformation
+		var RessourceTransformer trans = new RessourceTransformer(model)
+        trans.dotransformation
          
-		 var Source schemaFile = null
-         var Source xmlFile = null 
-         var CMSExtension extensionPart = model.ejslPart as CMSExtension
+		var Source schemaFile = null
+        var Source xmlFile = null 
+        var CMSExtension extensionPart = model.ejslPart as CMSExtension
          
          var ExtendedCMSExtension cmsext = new ExtendedCMSExtensionImpl(extensionPart)
          var ExtendedComponent com = cmsext.extensionsExtended.get(0).getcomponentExtended
          var ComponentGenerator compGen = new ComponentGenerator(com,null,"","")
          var indexPages = com.backEndExtendedPagerefence.map [t|
-			if(t.extendedPage.extendedDynamicPageInstance != null) t.extendedPage.extendedDynamicPageInstance
+			if(t.extendedPage.extendedDynamicPageInstance !== null) t.extendedPage.extendedDynamicPageInstance
 		];
 		var CharSequence instalConfig = compGen.xmlContent(com,indexPages)
          var InputStream in = new ByteArrayInputStream(instalConfig.toString.getBytes());

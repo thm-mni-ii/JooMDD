@@ -1,19 +1,12 @@
-/**
- */
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Abstract Link Generator</b></em>'.
- * <!-- end-user-doc -->
- *
- *
- * @see eJSLGenerator.GeneratorTemplatePackage#getAbstractLinkGenerator()
- * @model abstract="true"
- * @generated
+ * Abstract class for Joomla page links generator classes.
+ * 
+ * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 abstract public class AbstractLinkGenerator  {
 	
 	public def CharSequence generateLink(String sect, String compname);
 	
-} // AbstractLinkGenerator
+}

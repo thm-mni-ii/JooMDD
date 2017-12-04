@@ -8,6 +8,11 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 
+/**
+ * This class contains the templates to generate the necessary code for frontend views.
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ */
 class DetailsPageTemplateFrontEndHelper {
 	private ExtendedDynamicPage dpage
 	private ExtendedComponent  com
@@ -24,7 +29,7 @@ class DetailsPageTemplateFrontEndHelper {
 		/**
 		 * Method to check out an item for editing and redirect to the edit form.
 		 *
-		 * @since	1.6
+		 * @since  1.6
 		 */
 		public function edit()
 		{
@@ -65,8 +70,8 @@ class DetailsPageTemplateFrontEndHelper {
 	/**
 	 * Method to save the data.
 	 *
-	 * @return	void
-	 * @since	1.6
+	 * @return  void
+	 * @since   1.6
 	 */
 	public function save()
 	{
@@ -253,7 +258,7 @@ class DetailsPageTemplateFrontEndHelper {
 	 *
 	 * Note. Calling getState in this method will result in recursion.
 	 *
-	 * @since	1.6
+	 * @since  1.6
 	 */
 	protected function populateState()
 	{
@@ -326,9 +331,9 @@ class DetailsPageTemplateFrontEndHelper {
 	/**
 	 * Method to check out an item for editing.
 	 *
-	 * @param	integer		The id of the row to check out.
-	 * @return	boolean		True on success, false on failure.
-	 * @since	1.6
+	 * @param   integer  The id of the row to check out.
+	 * @return  boolean  True on success, false on failure.
+	 * @since   1.6
 	 */
 	public function checkout($id = null)
 	{
@@ -361,9 +366,9 @@ class DetailsPageTemplateFrontEndHelper {
 	/**
 	 * Method to save the form data.
 	 *
-	 * @param	array		The form data.
-	 * @return	mixed		The user id on success, false on failure.
-	 * @since	1.6
+	 * @param   array  The form data.
+	 * @return  mixed  The user id on success, false on failure.
+	 * @since   1.6
 	 */
 	public function save($data)
 	{
@@ -423,7 +428,7 @@ class DetailsPageTemplateFrontEndHelper {
 	def CharSequence generateSiteModelDelete()'''
 	/**
 	 * to Delete Data of a Item
-	 * @param Int $data   content the Id
+	 * @param  Int  $datacontent  the Id
 	 *
 	 */
 	function delete($data)
@@ -451,7 +456,7 @@ class DetailsPageTemplateFrontEndHelper {
 	def CharSequence generateSiteModelgetCategory()'''
 	/**
 	 * to search the Category name
-	 * @param Int $id   content the Id
+	 * @param  Int  $id  content the Id
 	 *
 	 */
 	public function getCategoryName($id)
@@ -470,8 +475,8 @@ class DetailsPageTemplateFrontEndHelper {
 	def CharSequence generateSiteModelpublish()'''
 	/**
 	 * check, if the item published
-	 * @param Int $id   content the Id
-	 * @param Int $state
+	 * @param  Int  $id  content the Id
+	 * @param  Int  $state
 	 *
 	 */ 
 	public function publish($id, $state)
@@ -669,12 +674,12 @@ class DetailsPageTemplateFrontEndHelper {
 	    </div>
 	
 	    <?php if($canEdit && $this->item->checked_out == 0): ?>
-		    <a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«editPageName.toLowerCase»&«mainEntity.primaryKey.name»='.$this->item->«mainEntity.primaryKey.name»); ?>">
-		    <?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
+		<a class="btn btn-primary" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«editPageName.toLowerCase»&«mainEntity.primaryKey.name»='.$this->item->«mainEntity.primaryKey.name»); ?>">
+		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
 	    <?php endif; ?>
 	    <?php if(JFactory::getUser()->authorise('core.delete','«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$this->item->«mainEntity.primaryKey.name»)):?>
-		    <a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».remove&«mainEntity.primaryKey.name»=' . $this->item->«mainEntity.primaryKey.name»); ?>">
-		    <?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
+		<a class="btn btn-danger" href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».remove&«mainEntity.primaryKey.name»=' . $this->item->«mainEntity.primaryKey.name»); ?>">
+		<?php echo JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
 	    <?php endif; ?>
 	<?php 
 	else:
@@ -686,32 +691,47 @@ class DetailsPageTemplateFrontEndHelper {
 	def  CharSequence attributShowTemplate(ExtendedAttribute attr, Entity e) '''
 	«switch (attr.htmlType.toLowerCase) {
 		case "image": {
-		 '''<tr>
-			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
-			<td><img id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'
-						src='<?php echo $image_path . '/'. $this->item->«attr.name.toLowerCase»; ?>' /></td></tr>'''
+		 '''
+		 <tr>
+		     <th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+		     <td>
+		         <img id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'src='<?php echo $image_path . '/'. $this->item->«attr.name.toLowerCase»; ?>' />
+		     </td>
+		 </tr>'''
 		}
 		case "file": {
-			'''<tr>
-			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
-			<td><a id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'
-		   href="<?php echo $file_path . '/'. $this->item->«attr.name.toLowerCase»; ?>"><img
-			 src='<?php echo $iconpath . '/'. explode('.',$this->item->«attr.name.toLowerCase»)[0]; ?>' />'<?php  echo $this->item->«attr.name.toLowerCase»; ?>'</a></td></tr>'''
-}
+		'''
+		<tr>
+		    <th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+		    <td>
+		        <a id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>' href="<?php echo $file_path . '/'. $this->item->«attr.name.toLowerCase»; ?>">
+		            <img src='<?php echo $iconpath . '/'. explode('.',$this->item->«attr.name.toLowerCase»)[0]; ?>' />'<?php  echo $this->item->«attr.name.toLowerCase»; ?>'
+		        </a>
+		    </td>
+		</tr>'''
+		}
 		case "link": {
-			'''<tr>
-			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
-			<td><a href="<?php echo $this->item->«attr.name.toLowerCase»; ?>"><?php echo $this->item->«attr.name.toLowerCase»; ?></a></td></tr>'''
+		'''
+		<tr>
+		    <th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+		    <td>
+		        <a href="<?php echo $this->item->«attr.name.toLowerCase»; ?>">
+		            <?php echo $this->item->«attr.name.toLowerCase»; ?>
+		        </a>
+		    </td>
+		</tr>'''
 		}
 		default: {
-		'''<tr>
-			<th><?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
-			<td><?php echo $this->item->«attr.name.toLowerCase»; ?></td></tr>'''
+		'''
+		<tr>
+		    <th>
+		        <?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?>
+		    </th>
+		    <td>
+		        <?php echo $this->item->«attr.name.toLowerCase»; ?>
+		    </td>
+		</tr>'''
 		}
-	} »
-	
-	'''
-	
-	
-	
+	} »	
+	'''	
 }

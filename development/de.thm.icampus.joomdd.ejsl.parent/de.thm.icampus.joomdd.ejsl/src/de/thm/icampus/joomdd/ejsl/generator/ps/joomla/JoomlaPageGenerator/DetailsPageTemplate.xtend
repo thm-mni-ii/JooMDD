@@ -41,9 +41,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	
 	def void generateView() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateJoomlaDirectory(path +"/" + pagename)
 	        generateFile(path+"/" + pagename +"/"+ "view.html.php", generateAdminViewClass())
-	        generateJoomlaDirectory(path +"/" + pagename +"/" + "tmpl" )
 	        generateFile(path+"/" + pagename+"/" + "tmpl"+"/" + "edit.php" , generateAdminViewLayout())
 		 } else {
 		     if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {
@@ -60,17 +58,13 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	}
 	
 	def void generateFrontEndShowView(String editPagename) {
-	    generateJoomlaDirectory(path+"/" + pagename)
 	    generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView(false, ''))
-	    generateJoomlaDirectory(path +"/"+ pagename+"/" + "tmpl")
 	    generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow(editPagename))
 	    generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
 	}
 	
 	def void generateFrontEndEditView(String editPagename) {
-	    generateJoomlaDirectory(path+"/" + editPagename)
 	    generateFile(path+"/" + editPagename+"/"+ "view.html.php", generateSiteView(true,editPagename))
-	    generateJoomlaDirectory(path+"/" + editPagename+"/" + "tmpl")
 	    generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.php" , generateSiteViewLayoutEdit(editPagename))
 	    generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(editPagename, dpage, com)) 
 	}
@@ -541,7 +535,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		$file_path = $params->get('«dpage.name»_file_path');
 		$iconpath = JURI::root() . 'media/media/images/mime-icon-32/';
 		$canEdit = JFactory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->«mainEntity.primaryKey.name»);
-		if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->«mainEntity.primaryKey.name»)) {
+		if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->«mainEntity.primaryKey.name»))
+		{
 			$canEdit = JFactory::getUser()->id == $this->item->created_by;
 		}
 		?>

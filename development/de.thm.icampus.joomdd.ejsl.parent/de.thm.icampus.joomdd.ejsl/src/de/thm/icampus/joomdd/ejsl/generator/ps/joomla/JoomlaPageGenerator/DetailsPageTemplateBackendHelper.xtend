@@ -7,7 +7,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 
 /**
- * This class contains the templates to generate the necessary code for backend views.
+ * This class contains the templates to generate the necessary code for backend view templates.
  * 
  * @author Dieudonne Timma, Dennis Priefer
  */
@@ -228,51 +228,61 @@ class DetailsPageTemplateBackendHelper {
 		        <div class="row-fluid">
 		            <div class="span10 form-horizontal">
 		                <fieldset class="adminform">
-		                <input type="hidden" name="jform[«mainEntity.primaryKey.name»]" value="<?php echo $this->item->«mainEntity.primaryKey.name»; ?>" />
-					<input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
-					<input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
-					<input type="hidden" name="jform[published]" value="<?php if($this->item->«mainEntity.primaryKey.name» != 0) echo $this->item->state; else echo 1;?>"/>
-					«IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
-						<input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
-					«ENDIF»
-					<input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)){
-					 echo $this->item->checked_out;}else{ echo JFactory::getUser()->id;} ?>" />
-					<input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)){
-					 echo $this->item->checked_out_time;}else{ echo date("Y-m-d H:i:s") ;} ?>" />
-					
-				<?php if(empty($this->item->created_by)){ ?>
-						<input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>" />
-		
-					<?php } 
-					else{ ?>
-						<input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
-		
-					<?php } ?>
-					«Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
-					  
-					 
-					</fieldset>
+		                    <input type="hidden" name="jform[«mainEntity.primaryKey.name»]" value="<?php echo $this->item->«mainEntity.primaryKey.name»; ?>" />
+					        <input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
+					        <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
+					        <input type="hidden" name="jform[published]" value="<?php if($this->item->«mainEntity.primaryKey.name» != 0) echo $this->item->state; else echo 1;?>"/>
+					        «IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
+					        <input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
+					        «ENDIF»
+					        <input type="hidden" name="jform[checked_out]" value="<?php 
+					            if(isset($this->item->checked_out))
+					            {
+					                echo $this->item->checked_out;
+					            }
+					            else
+					            {
+					                echo JFactory::getUser()->id;
+					            } ?>" />
+					        <input type="hidden" name="jform[checked_out_time]" value="<?php 
+					            if(isset($this->item->checked_out_time))
+					            {
+					                echo $this->item->checked_out_time;
+					            }
+					            else
+					            {
+					                echo date("Y-m-d H:i:s") ;
+					            } ?>" />
+
+					        <?php
+					        if(empty($this->item->created_by))
+					        {?>
+						    <input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>" />
+							<?php
+							} 
+					        else
+					        { ?>
+						    <input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
+						    <?php 
+						    } ?>
+					        «Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
+					    </fieldset>
+				    </div>
 				</div>
-				</div>
-				      <?php echo JHtml::_('bootstrap.endTab'); ?>
-				      «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
-					«Slug.generateEntytiesBackendInputRefrence(ref,com)»
+				<?php echo JHtml::_('bootstrap.endTab'); ?>
+				«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
+				«Slug.generateEntytiesBackendInputRefrence(ref,com)»
 				«ENDFOR» 
-				
-				   <?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>
-					<?php echo $this->form->getInput('rules'); ?>
+				<?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
+				    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>
+				    <?php echo $this->form->getInput('rules'); ?>
 					<?php echo JHtml::_('bootstrap.endTab'); ?>
 				<?php endif; ?>
 		
 				<?php echo JHtml::_('bootstrap.endTabSet'); ?>
-				
-		
-		      <input type="hidden" name="task" value="" />
-		      <?php echo JHtml::_('form.token'); ?>
-		
+				<input type="hidden" name="task" value="" />
+			    <?php echo JHtml::_('form.token'); ?>
 		    </div>
 		</form>
 	'''
-	
 }

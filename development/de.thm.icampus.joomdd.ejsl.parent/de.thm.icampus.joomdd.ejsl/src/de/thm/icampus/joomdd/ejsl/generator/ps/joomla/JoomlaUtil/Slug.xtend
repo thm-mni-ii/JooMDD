@@ -3,6 +3,7 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.eJSL.Author
 import de.thm.icampus.joomdd.ejsl.eJSL.BackendSection
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.eJSL.ContextLink
@@ -10,6 +11,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
+import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import de.thm.icampus.joomdd.ejsl.eJSL.ExternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
@@ -21,26 +23,20 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.eJSL.Section
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
-import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedDynamicPageImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.LinkGeneratorClient
 import java.io.File
 import java.util.Calendar
 import java.util.GregorianCalendar
 import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.eJSL.Author
-import java.io.File
-import  com.google.common.io.Files
-import java.util.Scanner
-import de.thm.icampus.joomdd.ejsl.generator.EJSLGenerator
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedDynamicPageImpl
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.LinkGeneratorHandler
 
 /**
  * <!-- begin-user-doc -->
@@ -452,20 +448,20 @@ public class Slug  {
 	
 	«switch lk{
 		ExternalLink :{
-			'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»'''
+			'''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»'''
 			}
 		 InternalLink:{
 		 if((lk as InternalLink).target instanceof DetailsPage){
 		   if((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)){
 		   	if(!(lk instanceof ContextLink)){
-		    '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
+		    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
 		    
 		    }else{
 		    	
 		         if((lk as ContextLink).linkparameters.filter[t | t.id].size == 0){
-		    	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
+		    	'''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
 		    	}else{
-		    		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
+		    		'''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
 		    
 		   			}		   	   
 		    }}else{
@@ -475,14 +471,14 @@ public class Slug  {
 		    		
 		    
 				   if(idRef != null){
-				   '''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''
+				   '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''
 				   	
 				   }
 				   else	
-				 	'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
+				 	'''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
 		 	 
 		 	}}else{
-		 		'''«(new LinkGeneratorClient(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
+		 		'''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
 		 		}
 		 	
 		}}»

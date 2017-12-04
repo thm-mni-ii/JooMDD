@@ -33,8 +33,6 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	}
 	
 	def void generate(){
-		generateJoomlaDirectory(path)
-		generateJoomlaDirectory(path + "/tmpl")
 		
 		generateFile(path+ "/view.php", generateView())
 		generateFile(path+ "/tmpl/default.php", staticpage.HTMLBody)

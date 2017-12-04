@@ -1,13 +1,17 @@
-/**
- */
-package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator
+package de.thm.icampus.joomdd.ejsl.generator.ps.joomla
 
 import de.thm.icampus.joomdd.ejsl.eJSL.ContextLink
 import de.thm.icampus.joomdd.ejsl.eJSL.ExternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.Link
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.ExternalLinkGenerator
 
-public class LinkGeneratorClient  {
+/**
+ * This class represents the interface between the JooMDD generator and the Joomla-specific link generator templates. 
+ * 
+ * @author Dennis Priefer, Dieudonne Timma Meyatchie
+ */
+public class LinkGeneratorHandler {
 	
 	Link link
 	String sect = ''
@@ -19,7 +23,6 @@ public class LinkGeneratorClient  {
 		sect = section
 		compname = componentname
 		valueF = vaLueFeatures
-		
 	}
 	
 	new( Link link) {
@@ -31,17 +34,17 @@ public class LinkGeneratorClient  {
 	public def CharSequence generateLink(){
 		switch link {
 			ExternalLink :{
-				var ExternalLinkGen extern = new ExternalLinkGen(link)
+				var ExternalLinkGenerator extern = new ExternalLinkGenerator(link)
 				return extern.generateLink(sect,compname)
 			}
 			
 			InternalLink:{
 			if(link instanceof ContextLink) {
-				var ContextLinkGen intern = new ContextLinkGen(link,valueF)
+				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.ContextLinkGenerator intern = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.ContextLinkGenerator(link,valueF)
 				return intern.generateLink(sect,compname)
 			}
 			else{
-				var InternalLinkGen intern = new InternalLinkGen(link)
+				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.InternalLinkGen intern = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.InternalLinkGen(link)
 				return intern.generateLink(sect,compname)
 				}
 			}
@@ -52,4 +55,4 @@ public class LinkGeneratorClient  {
 	}
 	
 
-} // LinkGeneratorClient
+}

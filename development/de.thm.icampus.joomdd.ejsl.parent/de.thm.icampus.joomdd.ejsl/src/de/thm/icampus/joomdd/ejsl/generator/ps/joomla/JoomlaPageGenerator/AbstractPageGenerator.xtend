@@ -10,14 +10,18 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
-import org.eclipse.xtend.lib.Property
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import org.eclipse.xtend.lib.annotations.Accessors
 
+/**
+ * Abstract class for Joomla page generator classes.
+ * 
+ * @author Dennis Priefer, Dieudonne Timma Meyatchie
+ */
 abstract public class AbstractPageGenerator {
-	@Property IFileSystemAccess2 fsa
-	@Property String name
-	@Property String path = ""
-	 
+	@Accessors IFileSystemAccess2 fsa
+	@Accessors String name
+	@Accessors String path = ""
 	 
 	/**
      * Generate directory containing default joomla index.html.
@@ -25,7 +29,7 @@ abstract public class AbstractPageGenerator {
      * 
      * @param dirName  using '/' as directory separator
      */
-	def protected generateJoomlaDirectory(String dirName) {
+	def protected generateEmptyDirectory(String dirName) {
 		var p = dirName
 		while (p.endsWith("/")) {
 			p = p.substring(0, p.length - 1);
@@ -49,26 +53,24 @@ abstract public class AbstractPageGenerator {
 	}
 
    def CharSequence generateFileDoc(Page page, ExtendedComponent component)'''
-		<?php
-		
-		/**
-		 «IF component.manifest != null»
-		 	* @version «component.manifest.version»
-		 «ENDIF»
-		 * @category Joomla component
-		 * @subpackage com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
-		 * @name «component.name»View
-		 «IF component.manifest != null»
-		 	«FOR author : component.manifest.authors»
-		 		* @author «author.name», <«author.authoremail»>
-		 		«ENDFOR»
-		 		* @copyright «component.manifest.copyright»
-		 		* @license «component.manifest.license»
-		 		*/
-		 	«ENDIF»
-			
-		'''
-	   
+       <?php
+       /**
+        «IF component.manifest !== null»
+        * @version «component.manifest.version»
+        «ENDIF»
+        * @category Joomla component
+        * @subpackage com_«Slug.slugify(component.name)».«if(page.eContainer instanceof BackendSection) "admin" else "site"»
+        * @name «component.name»View
+        «IF component.manifest !== null»
+        «FOR author : component.manifest.authors»
+        * @author «author.name», <«author.authoremail»>
+        «ENDFOR»
+        * @copyright «component.manifest.copyright»
+        * @license «component.manifest.license»
+        */
+        «ENDIF»
+    '''
+    
     def CharSequence xmlSiteTemplateContent(String pagename, ExtendedStaticPage page, ExtendedComponent component) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<metadata>
@@ -79,25 +81,25 @@ abstract public class AbstractPageGenerator {
 		        name="request"
 		        addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
 		    >
-		   
-		    	«generateParameter(page.extendedGlobalParamater, component)»
-		    	   «generateParameter(page.extendedLocalParameter, component)»
-		    	   «FOR ExtendedParameterGroup e : page.extendedParameterGroup »
-		    	   	<fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
-		    	   	«generateParameter(e.extendedParameterList, component)»
-		    	   	«generateParameter(e.extendedParameterList,component)»
-		    	   	</fieldset>
-		    	   «ENDFOR»
-		    	  
+		
+		        «generateParameter(page.extendedGlobalParamater, component)»
+		        «generateParameter(page.extendedLocalParameter, component)»
+		        «FOR ExtendedParameterGroup e : page.extendedParameterGroup »
+		        <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
+		            «generateParameter(e.extendedParameterList, component)»
+		            «generateParameter(e.extendedParameterList,component)»
+		        </fieldset>
+		        «ENDFOR»
 		    </fields>
 		</metadata>
 	'''
-		def  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedComponent component) '''
+	def  CharSequence generateTemplate(ExtendedDynamicPage page, ExtendedComponent component) '''
 	'''
-		def CharSequence generateParameter(EList<ExtendedParameter>listParams, ExtendedComponent component)'''
-		«FOR param : listParams»
-			«Slug.writeParameter(param)»
+	
+	def CharSequence generateParameter(EList<ExtendedParameter>listParams, ExtendedComponent component)'''
+	    «FOR param : listParams»
+		    «Slug.writeParameter(param)»
 		«ENDFOR»
 	'''
 		
-} // AbstractPageGenerator
+}

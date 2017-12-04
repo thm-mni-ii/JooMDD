@@ -1,5 +1,3 @@
-/**
- */
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator;
 
 import de.thm.icampus.joomdd.ejsl.eJSL.ContextLink
@@ -7,7 +5,12 @@ import de.thm.icampus.joomdd.ejsl.eJSL.LinkParameter
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
-public class ContextLinkGen extends AbstractLinkGenerator {
+/**
+ * This class contains the code templates for context links..
+ * 
+ * @author Dennis Priefer, Dieudonne Timma Meyatchie
+ */
+public class ContextLinkGenerator extends AbstractLinkGenerator {
 	ContextLink lk
 	String valueF
 	
