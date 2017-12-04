@@ -48,11 +48,13 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	
 	«Slug.generateRestrictedAccess()»
 	
+	«Slug.generateUses(newArrayList("ViewLegacy"))»
+	
 	/**
 	 * HTML View class for the «comp.name.toFirstUpper» Component
 	 *
 	 */
-	class «comp.name.toFirstUpper»View«staticpage.name.toFirstUpper» extends JViewLegacy
+	class «comp.name.toFirstUpper»View«staticpage.name.toFirstUpper» extends HtmlView
 	{
 		/**
 		 * Display the «staticpage.name.toFirstUpper» view

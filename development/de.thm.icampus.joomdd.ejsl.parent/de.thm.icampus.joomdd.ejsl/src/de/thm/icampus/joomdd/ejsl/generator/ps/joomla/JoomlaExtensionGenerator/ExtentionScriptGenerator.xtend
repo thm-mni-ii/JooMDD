@@ -34,9 +34,11 @@ class ExtentionScriptGenerator {
 	}
 	public def CharSequence generate()'''
 		<?php
-		 «Slug.generateFileDoc(ex)»
+		«Slug.generateFileDoc(ex)»
 		 
-		 «Slug.generateRestrictedAccess()»
+		«Slug.generateRestrictedAccess()»
+		 
+		«Slug.generateUses(newArrayList("Table", "Text", "ComponentHelper"))»
 		  
 		/**
 		 * «extName»  script.
@@ -57,7 +59,7 @@ class ExtentionScriptGenerator {
 		function setComponentParameter()
 		{
 		    // Load the current component params.
-		    $params = JComponentHelper::getParams('«com.extensionName»');
+		    $params = ComponentHelper::getParams('«com.extensionName»');
 		    // Set new value of the param(s)
 		    $params->set('upload_maxsize', 10);
 		    $params->set('accept_format', "bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS");
@@ -68,8 +70,8 @@ class ExtentionScriptGenerator {
 		    «ENDFOR»
 		
 		    // Save the parameters
-		    $componentid = JComponentHelper::getComponent('«com.extensionName»')->id;
-		    $table = JTable::getInstance('extension');
+		    $componentid = ComponentHelper::getComponent('«com.extensionName»')->id;
+		    $table = Table::getInstance('extension');
 		    $table->load($componentid);
 		    $table->bind(array('params' => $params->toString()));
 		
@@ -99,7 +101,7 @@ class ExtentionScriptGenerator {
 		{
 		    // $parent is the class calling this method
 			// $type is the type of change (install, update or discover_install)
-			echo '<p>' . JText::_('«extName.toUpperCase»POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+			echo '<p>' . Text::_('«extName.toUpperCase»POSTFLIGHT_' . $type . '_TEXT') . '</p>';
 		}
 		*/ 
 	'''
@@ -116,7 +118,7 @@ class ExtentionScriptGenerator {
 		{
 		    // $parent is the class calling this method
 			// $type is the type of change (install, update or discover_install)
-			echo '<p>' . JText::_('«extName.toUpperCase»_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+			echo '<p>' . Text::_('«extName.toUpperCase»_PREFLIGHT_' . $type . '_TEXT') . '</p>';
 		}
 		*/
 	'''
@@ -129,7 +131,7 @@ class ExtentionScriptGenerator {
 		 */
 		function update($parent)
 		{
-		    echo '<p>' . JText::sprintf('«extName.toUpperCase»_UPDATE_TEXT',  $parent->get('manifest')->version) . '</p>';
+		    echo '<p>' . Text::sprintf('«extName.toUpperCase»_UPDATE_TEXT',  $parent->get('manifest')->version) . '</p>';
 		}
 	'''
 	def CharSequence genUnsinstall() '''
@@ -140,7 +142,7 @@ class ExtentionScriptGenerator {
 		 */
 		function uninstall($parent)
 		{
-		    echo '<p>' .JText::_('«extName.toUpperCase»_UNINSTALL_TEXT') . '</p>';
+		    echo '<p>' .Text::_('«extName.toUpperCase»_UNINSTALL_TEXT') . '</p>';
 		}
 	'''
 	
@@ -155,11 +157,11 @@ class ExtentionScriptGenerator {
 		    «IF ex instanceof Component»
 		    	if(!$this->setComponentParameter())
 		    	{
-		    	    echo '<p>' .JText::_('«extName.toUpperCase»_INSTALL_NO_PARAMETER_INSTALLED') . '</p>';
+		    	    echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_NO_PARAMETER_INSTALLED') . '</p>';
 		    	}
 		    	$parent->getParent()->setRedirectURL('index.php?option=«extName»');
 		    «ELSE»
-		    	echo '<p>' .JText::_('«extName.toUpperCase»_INSTALL_TEXT') . '</p>';
+		    	echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_TEXT') . '</p>';
 		    «ENDIF»
 		}
 	'''

@@ -33,9 +33,9 @@ class IndexPageTemplateSiteHelper {
 	*/
 	    public function display($tpl = null) {
 			
-	        $user = JFactory::getUser();
+	        $user = Factory::getUser();
 	
-	         $app = JFactory::getApplication();
+	         $app = Factory::getApplication();
 	         $this->params = $app->getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 	                     $state = $this->params->get('state');
 	                     if(!empty($state))
@@ -97,7 +97,7 @@ class IndexPageTemplateSiteHelper {
 	 * Prepares the document
 	 */
 	    protected function _prepareDocument() {
-	        $app = JFactory::getApplication();
+	        $app = Factory::getApplication();
 	        $menus = $app->getMenu();
 	        $title = null;
 	 
@@ -107,15 +107,15 @@ class IndexPageTemplateSiteHelper {
 	        if ($menu) {
 	            $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
 	        } else {
-	            $this->params->def('page_heading', JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
+	            $this->params->def('page_heading', Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
 	        }
 	        $title = $this->params->get('page_title', '');
 	        if (empty($title)) {
 	            $title = $app->get('sitename');
 	        } elseif ($app->get('sitename_pagetitles', 0) == 1) {
-	            $title = JText::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+	            $title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
 	        } elseif ($app->get('sitename_pagetitles', 0) == 2) {
-	            $title = JText::sprintf('JPAGETITLE', $title, $app->get('sitename'));
+	            $title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 	        }
 	        $this->document->setTitle($title);
 	 
@@ -135,12 +135,12 @@ class IndexPageTemplateSiteHelper {
 	
 	public def CharSequence genViewTemplateInit()'''
 	
-		JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-		JHtml::_('bootstrap.tooltip');
-		JHtml::_('behavior.multiselect');
-		JHtml::_('formbehavior.chosen', 'select');
+		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+		HTMLHelper::_('bootstrap.tooltip');
+		HTMLHelper::_('behavior.multiselect');
+		HTMLHelper::_('formbehavior.chosen', 'select');
 		
-		$user = JFactory::getUser();
+		$user = Factory::getUser();
 		$userId = $user->get('id');
 		$model = $this->getModel();
 		$listOrder = $this->state->get('list.ordering');
@@ -155,26 +155,26 @@ class IndexPageTemplateSiteHelper {
 	'''
 	
 	public def CharSequence genViewTemplateHead()'''
-	<form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
+	<form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
      <?php
-        echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
         ?>
     <table class="table table-striped">
         <thead >
             <tr >
                 <?php if (isset($this->items[0]->state) && $canEdit ): ?>
         <th width="1%" class="nowrap center">
-            <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+            <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
         </th>
     <?php endif; ?>
     «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
     	<th class='left'>
-			<?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+			<?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 		</th>
     «ENDFOR»
     <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit ): ?>
         <th width="1%" class="nowrap center hidden-phone">
-            <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
+            <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
         </th>
     <?php endif; ?>
 
@@ -193,16 +193,16 @@ class IndexPageTemplateSiteHelper {
     </table>
   «IF details != null»
     <?php if ($canCreate): ?>
-        <a href="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>"
+        <a href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>"
            class="btn btn-success btn-small"><i
-                class="icon-plus"></i> <?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD_ITEM'); ?></a>
+                class="icon-plus"></i> <?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD_ITEM'); ?></a>
     <?php endif; ?>
 «ENDIF»
     <input type="hidden" name="task" value=""/>
     <input type="hidden" name="boxchecked" value="0"/>
     <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
     <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
-    <?php echo JHtml::_('form.token'); ?>
+    <?php echo HTMLHelper::_('form.token'); ?>
 </form>
 <script type="text/javascript">
 
@@ -213,8 +213,8 @@ class IndexPageTemplateSiteHelper {
 «IF details != null»
     function deleteItem() {
         var item_id = jQuery(this).attr('data-item-id');
-        if (confirm("<?php echo JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_MESSAGE'); ?>")) {
-            window.location.href = '<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=') ?>' + item_id;
+        if (confirm("<?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_MESSAGE'); ?>")) {
+            window.location.href = '<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=') ?>' + item_id;
         }
     }
     «ENDIF»
@@ -226,7 +226,7 @@ class IndexPageTemplateSiteHelper {
         <?php $canEdit = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»'); ?>
 
 				<?php if (!$canEdit && $user->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»')): ?>
-			<?php $canEdit = JFactory::getUser()->id == $item->created_by; ?>
+			<?php $canEdit = Factory::getUser()->id == $item->created_by; ?>
 		<?php endif; ?>
 		 <tr class="row<?php echo $i % 2; ?>">
 
@@ -235,7 +235,7 @@ class IndexPageTemplateSiteHelper {
                 <td class="center">
                     <a class="btn btn-micro <?php echo $class; ?>"
                     «IF details != null»
-                       href="<?php echo ($canEdit || $canChange) ? JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state ) : '#'; ?>">
+                       href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state ) : '#'; ?>">
                      «ENDIF»
                         <?php if ($item->state == 1): ?>
                             <i class="icon-publish"></i>
@@ -261,12 +261,12 @@ class IndexPageTemplateSiteHelper {
    
 		
 	'''
-	public   def CharSequence genSiteModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, Component com )'''
+	public def CharSequence genSiteModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, Component com )'''
  	« FOR ExtendedAttribute attr : column»
 	«IF Slug.isAttributeLinked(attr, indexpage)»
 	
 	<td>
-		<a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")»); ?>">
+		<a href="<?php echo Route::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")»); ?>">
 			<?php echo $this->escape($item->«attr.name.toLowerCase»); ?></a>
 	«ELSE»
 		<td>

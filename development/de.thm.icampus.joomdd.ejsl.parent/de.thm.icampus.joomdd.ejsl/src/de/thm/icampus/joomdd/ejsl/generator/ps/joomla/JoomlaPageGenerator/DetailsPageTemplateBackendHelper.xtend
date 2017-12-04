@@ -37,7 +37,7 @@ class DetailsPageTemplateBackendHelper {
 		     // Set ordering to the last item if not set
 				if ($table->ordering === '') 
 				{
-					$db = JFactory::getDbo();
+					$db = Factory::getDbo();
 					$query = $db->getQuery(true);
 					$query->select("MAX(ordering)")->from("#__«com.name.toLowerCase»_«mainEntity.name.toLowerCase»");
 					$db->setQuery($query);
@@ -63,7 +63,7 @@ class DetailsPageTemplateBackendHelper {
 		 */
 		public function save($key = null, $urlVar = null)
 		{
-		    $input = JFactory::getApplication()->input;
+		    $input = Factory::getApplication()->input;
 		    $model = $this->getModel();
 		    $table = $model->getTable();
 		    
@@ -83,8 +83,8 @@ class DetailsPageTemplateBackendHelper {
 		
 		    // Populate the row id from the session.
 		    $data[$key] = $recordId;
-		    $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
-		    $mediaHelper = new JHelperMedia;
+		    $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+		    $mediaHelper = new MediaHelper;
 		    $uploadMaxSize = $params->get('upload_maxsize', 0) * 1024 * 1024;
 		    $uploadMaxFileSize = $mediaHelper->toBytes(ini_get('upload_max_filesize'));
 		    $files = $input->files->get("jform", array(), 'array');
@@ -94,9 +94,9 @@ class DetailsPageTemplateBackendHelper {
 		        {
 		            if (!isset($file['name'])) 
 		            {
-		                $this->setMessage(JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_INVALID_FILE_NAME'), 'error');
+		                $this->setMessage(Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_INVALID_FILE_NAME'), 'error');
 		                $this->setRedirect(
-		                   JRoute::_(
+		                   Route::_(
 		                   'index.php?option=' . $this->option . '&view=' . $this->view_item
 		                   . $this->getRedirectToItemAppend($recordId, $urlVar), false
 		                   ));
@@ -118,9 +118,9 @@ class DetailsPageTemplateBackendHelper {
 		                || ($uploadMaxFileSize > 0 && $file['size'] > $uploadMaxFileSize))
 		            {
 		                // File size exceed either 'upload_max_filesize' or 'upload_maxsize'.
-		                $this->setMessage(JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_ERROR_WARNFILETOOLARGE'), 'error');
+		                $this->setMessage(Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_ERROR_WARNFILETOOLARGE'), 'error');
 		                $this->setRedirect(
-		                    JRoute::_(
+		                    Route::_(
 		                        'index.php?option=' . $this->option . '&view=' . $this->view_item
 		                        . $this->getRedirectToItemAppend($recordId, $urlVar), false
 		                    ));
@@ -139,12 +139,12 @@ class DetailsPageTemplateBackendHelper {
 		 * @param	type	The table type to instantiate
 		 * @param	string	A prefix for the table class name. Optional.
 		 * @param	array	Configuration array for model. Optional.
-		 * @return	JTable	A database object
+		 * @return	Table	A database object
 		 * @since	1.6
 		 */
 		public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array())
 		{
-			return JTable::getInstance($type, $prefix, $config);
+			return Table::getInstance($type, $prefix, $config);
 		}
 	'''
 	def generateAdminViewAddToolbar() '''
@@ -153,9 +153,9 @@ class DetailsPageTemplateBackendHelper {
 		 */
 		protected function addToolbar() 
 		{
-		    JFactory::getApplication()->input->set('hidemainmenu', true);
+		    Factory::getApplication()->input->set('hidemainmenu', true);
 		
-		    $user = JFactory::getUser();
+		    $user = Factory::getUser();
 		    $isNew = ($this->item->«mainEntity.primaryKey.name» == 0);
 		    if (isset($this->item->checked_out))
 		    {
@@ -167,7 +167,7 @@ class DetailsPageTemplateBackendHelper {
 		    }
 		    $canDo = «com.name.toFirstUpper»Helper::getActions();
 		
-		    JToolBarHelper::title(JText::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»'), '«dpage.name.toLowerCase».png');
+		    JToolBarHelper::title(Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»'), '«dpage.name.toLowerCase».png');
 		
 		    // If not checked out, allow to save the item.
 		    if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create'))))
@@ -219,12 +219,12 @@ class DetailsPageTemplateBackendHelper {
 	'''
 	
 	def generateAdminViewLayoutForm() '''
-		<form action="<?php echo JRoute::_('index.php?option=com_«com.name.toLowerCase»&layout=edit&«mainEntity.primaryKey.name»=' . (int) $this->item->«mainEntity.primaryKey.name»); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="«dpage.name.toLowerCase»-form" class="form-validate">
+		<form action="<?php echo Route::_('index.php?option=com_«com.name.toLowerCase»&layout=edit&«mainEntity.primaryKey.name»=' . (int) $this->item->«mainEntity.primaryKey.name»); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="«dpage.name.toLowerCase»-form" class="form-validate">
 		
 		    <div class="form-horizontal">
-		        <?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+		        <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 		
-		        <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»', true)); ?>
+		        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»', true)); ?>
 		        <div class="row-fluid">
 		            <div class="span10 form-horizontal">
 		                <fieldset class="adminform">
@@ -242,7 +242,7 @@ class DetailsPageTemplateBackendHelper {
 					            }
 					            else
 					            {
-					                echo JFactory::getUser()->id;
+					                echo Factory::getUser()->id;
 					            } ?>" />
 					        <input type="hidden" name="jform[checked_out_time]" value="<?php 
 					            if(isset($this->item->checked_out_time))
@@ -257,7 +257,7 @@ class DetailsPageTemplateBackendHelper {
 					        <?php
 					        if(empty($this->item->created_by))
 					        {?>
-						    <input type="hidden" name="jform[created_by]" value="<?php echo JFactory::getUser()->id; ?>" />
+						    <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
 							<?php
 							} 
 					        else
@@ -269,19 +269,19 @@ class DetailsPageTemplateBackendHelper {
 					    </fieldset>
 				    </div>
 				</div>
-				<?php echo JHtml::_('bootstrap.endTab'); ?>
+				<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 				«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
 				«Slug.generateEntytiesBackendInputRefrence(ref,com)»
 				«ENDFOR» 
-				<?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-				    <?php echo JHtml::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>
+				<?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
+				    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>
 				    <?php echo $this->form->getInput('rules'); ?>
-					<?php echo JHtml::_('bootstrap.endTab'); ?>
+					<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 				<?php endif; ?>
 		
-				<?php echo JHtml::_('bootstrap.endTabSet'); ?>
+				<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
 				<input type="hidden" name="task" value="" />
-			    <?php echo JHtml::_('form.token'); ?>
+			    <?php echo HTMLHelper::_('form.token'); ?>
 		    </div>
 		</form>
 	'''

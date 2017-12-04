@@ -13,8 +13,8 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
  * 
  */
 class IndexPageTemplate extends DynamicPageTemplate {
-    
-    private ExtendedDynamicPage ipage
+
+	private ExtendedDynamicPage ipage
 	private ExtendedComponent com
 	private String sec
 	private IndexPageTemplateAdminHelper helperAdmin
@@ -46,6 +46,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateSiteViewLayoutShow() '''
 	    «generateFileDoc(ipage,com)»
+	    «Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html"))»
 	    «frontHelp.genViewTemplateInit»
 	    «frontHelp.genViewTemplateHead»
 	'''	
@@ -97,13 +98,13 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateSiteModelShow() '''
 	    «generateFileDoc(ipage, com)»
 	    «Slug.generateRestrictedAccess()»
-	    jimport('joomla.application.component.modellist');
+	    «Slug.generateUses(newArrayList("ModelList", "ComponentHelper", "Factory"))»
 	    
 	    /**
 	     * Methods supporting a list of Data.
 	     * @generated
 	     */
-	    class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends JModelList
+	    class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends ListModel
 	    {
 	        «Slug.genLinkedInfo(ipage,com)»
 	        «helperAdmin.genAdminModelConstruct»
@@ -117,11 +118,10 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateViewBackend() '''
 	    «generateFileDoc(ipage, com)»
 	    «Slug.generateRestrictedAccess()»
+	    «Slug.generateUses(newArrayList("ViewLegacy", "Text"))»
 	    /**
 	     * @description «ipage.entities.get(0).name»View for «com.name»
 	     */
-	    defined('_JEXEC') or die('Restricted access');
-	    jimport('joomla.application.component.view');
 	    jimport('joomla.filesystem.path');
 	    /**
 	     * «com.name»View class for component com_«Slug.slugify(com.name)»
@@ -142,13 +142,14 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateAdminViewLayoutBackend() ''' 
 	    «generateFileDoc(ipage,com)»
-	    JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-	    JHtml::_('bootstrap.tooltip');
-	    JHtml::_('behavior.multiselect');
-	    JHtml::_('formbehavior.chosen', 'select');
+	    «Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html"))»
+	    HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+	    HTMLHelper::_('bootstrap.tooltip');
+	    HTMLHelper::_('behavior.multiselect');
+	    HTMLHelper::_('formbehavior.chosen', 'select');
 
 	    // Import CSS
-	    $document = JFactory::getDocument();
+	    $document = Factory::getDocument();
 	    «helperAdmin.genAdminViewLayoutHeader»
 	    «helperAdmin.genAdminViewLayoutForm»
 	'''
@@ -157,13 +158,13 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	    «generateFileDoc(ipage, com)»
 	    «Slug.generateRestrictedAccess()»
 
-	    jimport('joomla.application.component.modellist');
+	    «Slug.generateUses(newArrayList("ModelList", "ComponentHelper", "Factory"))»
 
 	    /**
 	     * Methods supporting a list of Data.
 	     * @generated
 	     */
-	    class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends JModelList
+	    class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends ListModel
 	    {
 	        «IF !ipage.entities.get(0).references.empty»
 	        «Slug.genLinkedInfo(ipage,com)»
@@ -183,7 +184,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	    «generateFileDoc(ipage, com)»
 	    «Slug.generateRestrictedAccess()»
 
-	    jimport('joomla.application.component.controlleradmin');
+	    «Slug.generateUses(newArrayList("ControllerAdmin", "ResponseJson", "Factory"))»
 	    
 	    /**
 	     * «ipage.name.toFirstUpper» list controller .
@@ -201,7 +202,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	    «generateFileDoc(ipage.instance,com)»
 	    «Slug.generateRestrictedAccess()»
 
-	    jimport('joomla.application.component.view');
+	    «Slug.generateUses(newArrayList("ViewLegacy", "Text", "Factory"))»
 
 	    /**
 	     * View to  Show the Data

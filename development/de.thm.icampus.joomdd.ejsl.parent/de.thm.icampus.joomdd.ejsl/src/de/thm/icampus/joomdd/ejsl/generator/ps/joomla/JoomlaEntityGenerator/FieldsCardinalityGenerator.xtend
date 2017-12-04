@@ -30,9 +30,11 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
+		«Slug.generateUses(newArrayList("Text", "Uri", "FormField", "Factory"))»
+		
 		jimport('joomla.form.formfield');
 		
-		class JFormField«nameField.toFirstUpper» extends JFormField
+		class FormField«nameField.toFirstUpper» extends FormField
 		{
 		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 			    "mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
@@ -75,15 +77,15 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		protected function getInput()
 		{
 			$html = array();
-			$document = JFactory::getDocument();
-			$document->addScript( JURI::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
-			$input = JFactory::getApplication()->input;
+			$document = Factory::getDocument();
+			$document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
+			$input = Factory::getApplication()->input;
 			$«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
 			if(empty($«entFrom.primaryKey.name»))
 			{
 				$alldata = $this->getAllData();
 				$html[] = "<select  onchange='setMultipleValueForeignKeys(this)' generated='true' multiple id='" . $this->id . "select'  class='form-control' >";
-				$html[] = "<option>". JText::_("JOPTION_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
+				$html[] = "<option>". Text::_("JOPTION_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
 				foreach($alldata as $data)
 				{
 					$html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
@@ -96,7 +98,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 			$data_item = $this->getData_item($«entFrom.primaryKey.name»);
 			$referenceData = $this->getAllReferenceData($data_item);
 			$html[] = "<select  multiple='true' onchange='setMultipleValueForeignKeys(this)' generated='true'  id='" . $this->id . "select' class='form-control' >";
-			$html[] = "<option>". JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
+			$html[] = "<option>". Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
 			
 			foreach($referenceData as $reference)
 			{
@@ -110,7 +112,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	def private genGetAllData()'''
 		protected function getAllData()
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$queryALL = $db->getQuery(true);
 			$queryALL->select("
 			«FOR foreignAttr : foreignReference.attribute»
@@ -144,7 +146,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	def private getAllReferenceData()'''
 		protected function getAllReferenceData($item)
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true);
 		
 			$query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
@@ -175,7 +177,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	def private genGetData_item()'''
 		protected function getData_item($«entFrom.primaryKey.name»)
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select("*")->from($this->referenceStruct["table"])
 				 ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);

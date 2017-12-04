@@ -103,13 +103,14 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		jimport('joomla.application.component.controllerform');
+		«Slug.generateUses(newArrayList("ControllerForm", "Text", "ComponentHelper", "HelperMedia", "Route", "Factory"))»
+
 		jimport('joomla.filesystem.file');
 		/**
 		 * «dpage.name.toFirstUpper» controller class.
 		 * @generated
 		 */
-		class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends JControllerForm
+		class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends FormController
 		{
 		    function __construct()
 		    {
@@ -137,7 +138,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		protected function loadFormData()
 		{
 			// Check the session for previously entered form data.
-			$data = JFactory::getApplication()->getUserState('«Slug.nameExtensionBind("com",com.name.toLowerCase)».edit.«dpage.extendedEntityList.get(0).name.toLowerCase».data', array());
+			$data = Factory::getApplication()->getUserState('«Slug.nameExtensionBind("com",com.name.toLowerCase)».edit.«dpage.extendedEntityList.get(0).name.toLowerCase».data', array());
 		
 			if (empty($data)) {
 			$data = $this->getItem();
@@ -159,7 +160,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 */
 		public function getItem($pk = null)
 		{
-			$app	= JFactory::getApplication();
+			$app	= Factory::getApplication();
 			$pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
 			$table = $this->getTable();
 			if ($pk > 0)
@@ -175,7 +176,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 			    }
 			}
 			
-			// Convert to the JObject before adding other data.
+			// Convert to the CMSObject before adding other data.
 			$properties = $table->getProperties(1);
 			$item =  ArrayHelper::toObject($properties);
 			
@@ -196,7 +197,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 *
 		 * @param	array	$data		An optional array of data for the form to interogate.
 		 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
-		 * @return	JForm	A JForm object on success, false on failure
+		 * @return	Form	A Form object on success, false on failure
 		 * @since	1.6
 		 * @generated
 		 */
@@ -219,16 +220,14 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		jimport('joomla.application.component.modeladmin');
+		«Slug.generateUses(newArrayList("ModelAdmin, Factory, ArrayHelper, Registry", "Table", "ComponentHelper", "Form", "Factory"))»
 		
-		use Joomla\Utilities\ArrayHelper;
-		use Joomla\Registry\Registry;
 		require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
 		
 		/**
 		 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
 		 */
-		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends JModelAdmin
+		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ModelAdmin
 		{
 		    /**
 			 * @var		string	The prefix to use with controller messages.
@@ -253,11 +252,11 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		public function save($data)
 		{
 		    «IF dpage.haveFiletoLoad»
-		    	$files = JFactory::getApplication()->input->files->get("jform", array(), 'array');
+		    	$files = Factory::getApplication()->input->files->get("jform", array(), 'array');
 		    	$item = $this->getItem();
 		    	if(isset($files) && count($files) >0)
 		    	{
-		    	    $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+		    	    $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		    	    foreach ($files as $keys=>$file)
 		    	    {
 		    	        if(!empty($file))
@@ -276,7 +275,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    	}
 		    «ENDIF»
 		    «IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
-		    	$inputs = JFactory::getApplication()->input->get("jform", array(), 'array');
+		    	$inputs = Factory::getApplication()->input->get("jform", array(), 'array');
 		    	if(parent::save($data))
 		    	{
 		    	    if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
@@ -352,12 +351,12 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		jimport('joomla.application.component.view');
+		«Slug.generateUses(newArrayList("ViewLegacy", "Factory"))»
 		
 		/**
 		 * View to edit a «dpage.name»
 		 */
-		class «com.name.toFirstUpper»View«dpage.name.toFirstUpper» extends JViewLegacy
+		class «com.name.toFirstUpper»View«dpage.name.toFirstUpper» extends HtmlView
 		{
 		    protected $state;
 			protected $item;
@@ -371,14 +370,16 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateAdminViewLayout()'''
 		«generateFileDoc(dpage,com)»
 		
-			JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-			JHtml::_('behavior.tooltip');
-			JHtml::_('behavior.formvalidation');
-			JHtml::_('formbehavior.chosen', 'select');
-			JHtml::_('behavior.keepalive');
+		«Slug.generateUses(newArrayList("Text", "Route", "Factory", "Html"))»
+		
+			HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+			HTMLHelper::_('behavior.tooltip');
+			HTMLHelper::_('behavior.formvalidation');
+			HTMLHelper::_('formbehavior.chosen', 'select');
+			HTMLHelper::_('behavior.keepalive');
 			
 			// Import CSS
-			$document = JFactory::getDocument();
+			$document = Factory::getDocument();
 			$document->addStyleSheet('components/«Slug.nameExtensionBind("com", com.name.toLowerCase)»/assets/css/«com.name.toLowerCase».css');
 			?>
 			<script type="text/javascript">
@@ -399,7 +400,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 			                Joomla.submitform(task, document.getElementById('«dpage.name.toLowerCase»-form'));
 			            }
 			            else {
-			                alert('<?php echo $this->escape(JText::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
+			                alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 			            }
 			        }
 			    }
@@ -412,12 +413,12 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		require_once JPATH_COMPONENT . '/controller.php';
+		«Slug.generateUses(newArrayList("ControllerLegacy", "Text", "Route", "Session", "Factory"))»
 		
 		/**
 		 * «dpage.name.toFirstUpper» controller class to «if(isedit)  "Edit" else "Show"» a Item .
 		 */
-		class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»Controller
+		class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»BaseController
 		{
 		    «IF isedit»
 			«frontHelp.generateSiteControllerSave»
@@ -433,15 +434,14 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		jimport('joomla.application.component.modelitem');
+		«Slug.generateUses(newArrayList("ModelItem, Factory, ArrayHelper, Registry", "Table", "Factory"))»
+		
 		jimport('joomla.event.dispatcher');
-		use Joomla\Utilities\ArrayHelper;
-		use Joomla\Registry\Registry;
 		
 		/**
 		 * Model to show a Dataitem
 		 */
-		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends JModelItem
+		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ItemModel
 		{
 			«frontHelp.generateSiteModelPopulatestate()»
 			«generateModelGetItemFunction»
@@ -458,15 +458,14 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		jimport('joomla.application.component.modelform');
+		«Slug.generateUses(newArrayList("ModelForm, Factory, ArrayHelper, Registry", "Table", "Form", "Factory"))»
+		
 		jimport('joomla.event.dispatcher');
-		use Joomla\Utilities\ArrayHelper;
-		use Joomla\Registry\Registry;
 		
 		/**
 		 * Model to Edit  a Dataitem
 		 */
-		class «com.name.toFirstUpper»Model«editPageName.toFirstUpper» extends JModelForm
+		class «com.name.toFirstUpper»Model«editPageName.toFirstUpper» extends FormModel
 		{
 			var $_item = null;
 			«frontHelp.generateSiteModelPopulatestate()»
@@ -488,12 +487,12 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		jimport('joomla.application.component.view');
+		«Slug.generateUses(newArrayList("ViewLegacy", "Factory"))»
 		
 		/**
 		 * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»
 		 */
-		class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else dpage.name.toFirstUpper  » extends JViewLegacy
+		class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else dpage.name.toFirstUpper  » extends HtmlView
 		{
 		    protected $state;
 		    protected $item;
@@ -505,15 +504,18 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	'''
 	def CharSequence generateSiteViewLayoutEdit(String editPageName)'''
 		«generateFileDoc(dpage,com)»
-		JHtml::_('behavior.keepalive');
-		JHtml::_('behavior.tooltip');
-		JHtml::_('behavior.formvalidation');
-		JHtml::_('formbehavior.chosen', 'select');
+		
+		«Slug.generateUses(newArrayList("Text", "Html"))»
+		
+		HTMLHelper::_('behavior.keepalive');
+		HTMLHelper::_('behavior.tooltip');
+		HTMLHelper::_('behavior.formvalidation');
+		HTMLHelper::_('formbehavior.chosen', 'select');
 		
 		//Load admin language file
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getLanguage();
 		$lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
-		$doc = JFactory::getDocument();	
+		$doc = Factory::getDocument();	
 		
 		?>
 		
@@ -527,10 +529,13 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	'''
 	def CharSequence generateSiteViewLayoutShow(String editPageName)'''
 		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateUses(newArrayList("Factory", "ComponentHelper", "Uri"))»
+		
 		//Load admin language file
-		$lang = JFactory::getLanguage();
+		$lang = Factory::getLanguage();
 		$lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
-		$params = JComponentHelper::getParams('«com.extensionName»');
+		$params = ComponentHelper::getParams('«com.extensionName»');
 		$image_path = $params->get('«dpage.name»_image_path');
 		$file_path = $params->get('«dpage.name»_file_path');
 		$iconpath = JURI::root() . 'media/media/images/mime-icon-32/';

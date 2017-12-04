@@ -62,13 +62,13 @@ class IndexPageTemplateAdminHelper {
 	 */
 	public function saveordering()
 	{
-	    $app = JFactory::getApplication();
+	    $app = Factory::getApplication();
 	    $ids = $app->input->get('cid', array(), 'array');
 	    $model = $this->getModel('«indexpage.name.toLowerCase»');
 	    $result = $model->saveOrdering($ids);
 	    if($result)
 	    {
-	        echo new JResponseJson($result);
+	        echo new JsonResponse($result);
 	    }
 	}
 	'''
@@ -226,7 +226,7 @@ class IndexPageTemplateAdminHelper {
 	     */
 	    public function saveOrdering($datas_ID)
 	    {
-	        $db = JFactory::getDbo();
+	        $db = Factory::getDbo();
 	        $query = $db->getQuery(true);
 
 	        $statement = 'Update #__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase» Set `ordering` = CASE';
@@ -292,7 +292,7 @@ class IndexPageTemplateAdminHelper {
 	        $state = $this->get('State');
 	        $canDo = «com.name.toFirstUpper»Helper::getActions($state->get('filter.category_id'));
 
-	        JToolBarHelper::title(JText::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«indexpage.name.toUpperCase»'));
+	        JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«indexpage.name.toUpperCase»'));
 
 	        //Check if the form exists before showing the add/edit buttons
 	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«  details.toLowerCase»';
@@ -354,7 +354,7 @@ class IndexPageTemplateAdminHelper {
 
 	def private CharSequence genAdminViewLayoutFilters()'''
 	    <?php
-	        echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	    ?>
 	'''
     
@@ -364,7 +364,7 @@ class IndexPageTemplateAdminHelper {
                 <tr>
                     <?php if (isset($this->items[0]->ordering)): ?>
                     <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+                        <?php echo HTMLHelper::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
                     </th>
                     <?php endif; ?>
                     <th width="1%" class="hidden-phone">
@@ -372,17 +372,17 @@ class IndexPageTemplateAdminHelper {
                     </th>
                     <?php if (isset($this->items[0]->state)): ?>
                     <th width="1%" class="nowrap center">
-                        <?php echo JHtml::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                     «FOR ExtendedAttribute attr : column»
                     <th class='left'>
-                        <?php echo JHtml::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
                     </th>
                     «ENDFOR»
                     <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
                     <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo JHtml::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                 </tr>
@@ -417,11 +417,11 @@ class IndexPageTemplateAdminHelper {
                     </td>
                     <?php endif; ?>
                     <td class="center hidden-phone">
-                        <?php echo JHtml::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
+                        <?php echo HTMLHelper::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
                     </td>
                     <?php if (isset($this->items[0]->state)): ?>
                     <td class="center">
-                        <?php echo JHtml::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
+                        <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
                     </td>
                     <?php endif; ?>
                     «genAdminModelAttributeReference(column, indexpage, com)»
@@ -444,7 +444,7 @@ class IndexPageTemplateAdminHelper {
     '''
     
     def  CharSequence genAdminViewLayoutForm()''' 
-        <form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
+        <form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
             <?php if(!empty($this->sidebar)): ?>
             <div id="j-sidebar-container" class="span2">
                 <?php echo $this->sidebar; ?>
@@ -459,13 +459,13 @@ class IndexPageTemplateAdminHelper {
                 <input type="hidden" name="boxchecked" value="0" />
                 <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
                 <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-                <?php echo JHtml::_('form.token'); ?>
+                <?php echo HTMLHelper::_('form.token'); ?>
             </div>
         </form>
     '''
 
     def CharSequence genAdminViewLayoutHeader()'''
-        $user = JFactory::getUser();
+        $user = Factory::getUser();
         $userId	= $user->get('id');
         $listOrder = $this->state->get('list.ordering');
         $listDirn = $this->state->get('list.direction');
@@ -475,7 +475,7 @@ class IndexPageTemplateAdminHelper {
         if ($saveOrder)
         {
             $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
-            JHtml::_('sortablelist.sortable', '«indexpage.name.toFirstUpper»List', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+            HTMLHelper::_('sortablelist.sortable', '«indexpage.name.toFirstUpper»List', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
         }
         ?>
         <script type="text/javascript">
@@ -502,7 +502,7 @@ class IndexPageTemplateAdminHelper {
         protected function populateState($ordering = '«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name»', $direction = 'asc')
         {
             // Load the parameters.
-            $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');
+            $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');
             $this->setState('params', $params);
 
             // List state information.
@@ -523,7 +523,7 @@ class IndexPageTemplateAdminHelper {
         {
             $dbtable = $this->entitiesRef["$linkName"]["db"];
             $attribute = $this->entitiesRef["$linkName"]["refattr"];
-            $db = JFactory::getDbo();
+            $db = Factory::getDbo();
             $query = $db->getQuery(true);
             $key = $this->entitiesRef["$linkName"]["foreignPk"];
             $query->select($key)

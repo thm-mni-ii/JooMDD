@@ -28,34 +28,33 @@ class TableGeneratorTemplate {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		// import Joomla table library
-		jimport('joomla.database.table');
+		«Slug.generateUses(newArrayList("Table", "Registry", "Factory"))»
 		
 		/**
-		 * «tName.toFirstUpper» Table class
-		 */
-		class «com.name.toFirstUpper»Table«tName.toFirstUpper» extends JTable
+		* «tName.toFirstUpper» Table class
+		*/
+		class «com.name.toFirstUpper»Table«tName.toFirstUpper» extends Table
 		{
 		    public $foreigntableOption = array();
 		
 			«genContructor»
-		
+			
 			«genBind»
-		
+			
 			«genCheck»
-		
+			
 			«genReset»
-		
+			
 			«genGetAssetName»
-		
+			
 			«genGetAssetParentID»
-		
+			
 			«genInitTheForeignTableOption»
-		
+			
 			«genLoadAllPrimaryKeys»
-		
+			
 			«genPublish»
-		
+			
 			«IF ent.getAllExtendedReferencesToEntity.size > 0»
 			«genDelete»
 			«ENDIF»
@@ -64,10 +63,10 @@ class TableGeneratorTemplate {
 	
  	public def CharSequence genContructor()'''
  		/**
- 		 * Constructor
- 		 *
- 		 * @param object Database connector object
- 		 */
+ 		* Constructor
+ 		*
+ 		* @param object Database connector object
+ 		*/
  		function __construct(&$db) 
  		{
  			parent::__construct('#__«com.name.toLowerCase»_«ent.name.toLowerCase»', '«ent.primaryKey.name»', $db);
@@ -76,18 +75,18 @@ class TableGeneratorTemplate {
  	'''
  	
  	public def CharSequence genInitTheForeignTableOption() '''
- 		public function  initTheForeignTableOption()
+ 		public function initTheForeignTableOption()
  		{
- 		    «FOR ExtendedReference ref : ent.getAllExtendedReferencesToEntity»
- 		    $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)» = array(
- 		    "type" => "«ref.sourceEntity.name.toString.toFirstUpper»",
- 		    "prefix" => "«com.name.toFirstUpper»Table",
- 		    "foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
- 		    "refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
- 		    "name" => "#__«com.name.toLowerCase»_«ref.sourceEntity.name.toLowerCase»",
- 		    "foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.destinationEntity).name.toLowerCase»'
- 		    );
- 		    array_push($this->foreigntableOption, $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)»);
+ 			«FOR ExtendedReference ref : ent.getAllExtendedReferencesToEntity»
+ 			$temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)» = array(
+ 			"type" => "«ref.sourceEntity.name.toString.toFirstUpper»",
+ 			"prefix" => "«com.name.toFirstUpper»Table",
+ 			"foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
+ 			"refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
+ 			"name" => "#__«com.name.toLowerCase»_«ref.sourceEntity.name.toLowerCase»",
+ 			"foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.destinationEntity).name.toLowerCase»'
+ 			);
+ 			array_push($this->foreigntableOption, $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)»);
  			«ENDFOR»
  		}
  	'''
@@ -104,30 +103,30 @@ class TableGeneratorTemplate {
 		 */
 		public function bind($array, $ignore = '')
 		{
-			$input = JFactory::getApplication()->input;
+			$input = Factory::getApplication()->input;
 			$task = $input->getString('task', '');
-			if(($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state','«Slug.nameExtensionBind("com", com.name).toLowerCase».«tName.toLowerCase».'.$array['id']) && $array['state'] == 1))
+			if(($task == 'save' || $task == 'apply') && (!Factory::getUser()->authorise('core.edit.state','«Slug.nameExtensionBind("com", com.name).toLowerCase».«tName.toLowerCase».'.$array['id']) && $array['state'] == 1))
 			{
 				$array['state'] = 0;
 			}
 			if($array['«ent.primaryKey.name»'] == 0)
 			{
-				$array['created_by'] = JFactory::getUser()->id;
+				$array['created_by'] = Factory::getUser()->id;
 			}
 			
 			//Support for file field: file
-			$input = JFactory::getApplication()->input;
+			$input = Factory::getApplication()->input;
 			
 			if (isset($array['params']) && is_array($array['params']))
 			{
-				$registry = new JRegistry();
+				$registry = new Registry();
 				$registry->loadArray($array['params']);
 				$array['params'] = (string) $registry;
 			}
 			
 			if (isset($array['metadata']) && is_array($array['metadata']))
 			{
-				$registry = new JRegistry();
+				$registry = new Registry();
 				$registry->loadArray($array['metadata']);
 				$array['metadata'] = (string) $registry;
 			}
@@ -144,8 +143,8 @@ class TableGeneratorTemplate {
  
 	public def genCheck()'''
 		/**
-		 * Rewrite check function
-		 */
+		* Rewrite check function
+		*/
 		public function check()
 		{
 			if (property_exists($this, 'ordering') && $this->«ent.primaryKey.name» == 0)
@@ -162,7 +161,7 @@ class TableGeneratorTemplate {
 		 * Define a namespaced asset name for inclusion in the #__assets table
 		 * @return string The asset name
 		 *
-		 * @see JTable::_getAssetName
+		 * @see Table::_getAssetName
 		 */
 		protected function _getAssetName()
 		{
@@ -175,12 +174,12 @@ class TableGeneratorTemplate {
 		/**
 		 * Returns the parent asset's id. If you have a tree structure, retrieve the parent's id using the external key field
 		 *
-		 * @see  JTable::_getAssetParentId
+		 * @see Table::_getAssetParentId
 		 */
-		protected function _getAssetParentId(JTable $table = null, $id = null)
+		protected function _getAssetParentId(Table $table = null, $id = null)
 		{
 			// We will retrieve the parent-asset from the Asset-table
-			$assetParent = JTable::getInstance('Asset');
+			$assetParent = Table::getInstance('Asset');
 			// Default: if no asset-parent can be found we take the global asset
 			$assetParentId = $assetParent->getRootId();
 			// The item has the component as asset-parent
@@ -196,9 +195,9 @@ class TableGeneratorTemplate {
 	
 	public def CharSequence genDelete()'''
 		/**
-		 * @param   mixed  $pk  An optional primary key value to delete.  If not set the instance property value is used.
-		 * @return  bool
-		 */
+		* @param  mixed   $pk  An optional primary key value to delete.  If not set the instance property value is used.
+		* @return bool
+		*/
 		public function delete($pk = null)
 		{
 			$item = $this->load($pk);
@@ -206,7 +205,7 @@ class TableGeneratorTemplate {
 			{
 				foreach($this->foreigntableOptio as $key => $dbtable)
 				{
-					$instance_table = JTable::getInstance($dbtable['type'], $dbtable['prefix']);
+					$instance_table = Table::getInstance($dbtable['type'], $dbtable['prefix']);
 					$allForeignKeys = $this->loadAllPrimaryKeyofRef($pk, $dbtable['refkey']
 						, $dbtable['name'], $dbtable['foreignkey'],$dbtable["foreignId"]);
 					foreach($allForeignKeys as $keyOf)
@@ -224,15 +223,15 @@ class TableGeneratorTemplate {
 	public def CharSequence genReset()'''
 		public function reset()
 		{
-		    $this->«ent.primaryKey.name» = 0;
-		    parent::reset();
+			$this->«ent.primaryKey.name» = 0;
+			parent::reset();
 		}
 	'''
 	
 	public def CharSequence genLoadAllPrimaryKeys()'''
 		public function loadAllPrimaryKeyofRef($pk, $keylist, $foreigntable, $foreignkeys,$foreignId)
-		{
-		    $this->load($pk);
+		{   	
+			$this->load($pk);
 			$query = $this->_db->getQuery(true);
 			$query->select($foreignId)
 				->from("#__" . $foreigntable);
