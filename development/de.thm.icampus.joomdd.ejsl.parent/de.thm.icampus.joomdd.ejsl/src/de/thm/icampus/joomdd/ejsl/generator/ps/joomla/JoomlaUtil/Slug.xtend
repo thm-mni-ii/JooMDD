@@ -41,6 +41,7 @@ import java.util.Scanner
 import de.thm.icampus.joomdd.ejsl.generator.EJSLGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedDynamicPageImpl
+import java.util.ArrayList
 
 /**
  * <!-- begin-user-doc -->
@@ -385,8 +386,6 @@ public class Slug  {
 		«ENDIF»
 	    «ENDIF»
 	    */
-		
-		
 	'''
 	
 	 def static CharSequence generateFileDoc( Extension ext)'''
@@ -403,22 +402,431 @@ public class Slug  {
 		* @license «ext.manifest.license»
 		«ENDIF»
 		*/
-		
 	'''
 	
 	def static CharSequence generateRestrictedAccess() '''
 		defined('_JEXEC') or die('Restricted access');
 	'''
 	
-	 def static CharSequence generateUses(String extendedType)'''
-	 	«switch(extendedType) {
-		    case "AdminModel"		: { "" }
-		    case "AdminView"		: { "" }
-			case "AdminController"	: { "" }
-			case "SiteModel"		: { "" }
-			case "SiteView"			: { "" }
-			case "SiteController"	: { "" }
-		}»
+	 def static CharSequence generateUses(ArrayList<String> classNames)'''
+	 	«FOR String className: classNames»
+	 		«switch(className) {
+			    case 'Registry' : { "use Joomla\\Registry\\Registry;" }
+				case 'RegistryFormat' : { "use Joomla\\Registry\\AbstractRegistryFormat;" }
+				case 'RegistryFormatIni' : { "use Joomla\\Registry\\Format\\Ini;" }
+				case 'RegistryFormatJson' : { "use Joomla\\Registry\\Format\\Json;" }
+				case 'RegistryFormatPhp' : { "use Joomla\\Registry\\Format\\Php;" }
+				case 'RegistryFormatXml' : { "use Joomla\\Registry\\Format\\Xml;" }
+				case 'StringInflector' : { "use Joomla\\String\\Inflector;" }
+				case 'StringNormalise' : { "use Joomla\\String\\Normalise;" }
+				case 'Data' : { "use Joomla\\Data\\DataObject;" }
+				case 'DataSet' : { "use Joomla\\Data\\DataSet;" }
+				case 'DataDumpable' : { "use Joomla\\Data\\DumpableInterface;" }
+				
+				case 'ApplicationAdministrator' : { "use Joomla\\CMS\\Application\\AdministratorApplication;" }
+				case 'ApplicationHelper' : { "use Joomla\\CMS\\Application\\ApplicationHelper;" }
+				case 'ApplicationBase' : { "use Joomla\\CMS\\Application\\BaseApplication;" }
+				case 'ApplicationCli' : { "use Joomla\\CMS\\Application\\CliApplication;" }
+				case 'ApplicationCms' : { "use Joomla\\CMS\\Application\\CMSApplication;" }
+				case 'ApplicationDaemon' : { "use Joomla\\CMS\\Application\\DaemonApplication;" }
+				case 'ApplicationSite' : { "use Joomla\\CMS\\Application\\SiteApplication;" }
+				case 'ApplicationWeb' : { "use Joomla\\CMS\\Application\\WebApplication;" }
+				case 'ApplicationWebClient' : { "use Joomla\\Application\\Web\\WebClient;" }
+				case 'Daemon' : { "use Joomla\\CMS\\Application\\DaemonApplication;" }
+				case 'Cli' : { "use Joomla\\CMS\\Application\\CliApplication;" }
+				case 'Web' : { "use Joomla\\CMS\\Application\\WebApplication';" }
+				case 'WebClient' : { "use Joomla\\Application\\Web\\WebClient';" }
+				
+				case 'ModelAdmin' : { "use Joomla\\CMS\\MVC\\Model\\AdminModel;" }
+				case 'ModelForm' : { "use Joomla\\CMS\\MVC\\Model\\FormModel;" }
+				case 'ModelItem' : { "use Joomla\\CMS\\MVC\\Model\\ItemModel;" }
+				case 'ModelList' : { "use Joomla\\CMS\\MVC\\Model\\ListModel;" }
+				case 'ModelLegacy' : { "use Joomla\\CMS\\MVC\\Model\\BaseDatabaseModel;" }
+				case 'ViewCategories' : { "use Joomla\\CMS\\MVC\\View\\CategoriesView;" }
+				case 'ViewCategory' : { "use Joomla\\CMS\\MVC\\View\\CategoryView;" }
+				case 'ViewCategoryfeed' : { "use Joomla\\CMS\\MVC\\View\\CategoryFeedView;" }
+				case 'ViewLegacy' : { "use Joomla\\CMS\\MVC\\View\\HtmlView;" }
+				case 'ControllerAdmin' : { "use Joomla\\CMS\\MVC\\Controller\\AdminController;" }
+				case 'ControllerLegacy' : { "use Joomla\\CMS\\MVC\\Controller\\BaseController;" }
+				case 'ControllerForm' : { "use Joomla\\CMS\\MVC\\Controller\\FormController;" }
+				case 'TableInterface' : { "use Joomla\\CMS\\Table\\TableInterface;" }
+				case 'Table' : { "use Joomla\\CMS\\Table\\Table;" }
+				case 'TableNested' : { "use Joomla\\CMS\\Table\\Nested;" }
+				case 'TableAsset' : { "use Joomla\\CMS\\Table\\Asset;" }
+				case 'TableExtension' : { "use Joomla\\CMS\\Table\\Extension;" }
+				case 'TableLanguage' : { "use Joomla\\CMS\\Table\\Language;" }
+				case 'TableUpdate' : { "use Joomla\\CMS\\Table\\Update;" }
+				case 'TableUpdatesite' : { "use Joomla\\CMS\\Table\\UpdateSite;" }
+				case 'TableUser' : { "use Joomla\\CMS\\Table\\User;" }
+				case 'TableUsergroup' : { "use Joomla\\CMS\\Table\\Usergroup;" }
+				case 'TableViewlevel' : { "use Joomla\\CMS\\Table\\ViewLevel;" }
+				case 'TableContenthistory' : { "use Joomla\\CMS\\Table\\ContentHistory;" }
+				case 'TableContenttype' : { "use Joomla\\CMS\\Table\\ContentType;" }
+				case 'TableCorecontent' : { "use Joomla\\CMS\\Table\\CoreContent;" }
+				case 'TableUcm' : { "use Joomla\\CMS\\Table\\Ucm;" }
+				case 'TableCategory' : { "use Joomla\\CMS\\Table\\Category;" }
+				case 'TableContent' : { "use Joomla\\CMS\\Table\\Content;" }
+				case 'TableMenu' : { "use Joomla\\CMS\\Table\\Menu;" }
+				case 'TableMenuType' : { "use Joomla\\CMS\\Table\\MenuType;" }
+				case 'TableModule' : { "use Joomla\\CMS\\Table\\Module;" }
+				case 'TableObserver' : { "use Joomla\\CMS\\Table\\Observer\\AbstractObserver;" }
+				case 'TableObserverContenthistory' : { "use Joomla\\CMS\\Table\\Observer\\ContentHistory;" }
+				case 'TableObserverTags' : { "use Joomla\\CMS\\Table\\Observer\\Tags;" }
+				
+				case 'Access' : { "use Joomla\\CMS\\Access\\Access;" }
+				case 'AccessRule' : { "use Joomla\\CMS\\Access\\Rule;" }
+				case 'AccessRules' : { "use Joomla\\CMS\\Access\\Rules;" }
+				case 'AccessWrapperAccess' : { "use Joomla\\CMS\\Access\\Wrapper\\Access';" }
+				case 'AccessExceptionNotallowed' : { "use Joomla\\CMS\\Access\\Exception\\NotAllowed;" }
+				case 'Rule' : { "use Joomla\\CMS\\Access\\Rule;" }
+				case 'Rules' : { "use Joomla\\CMS\\Access\\Rules;" }
+				
+				case 'Help' : { "use Joomla\\CMS\\Help\\Help;" }
+				case 'Captcha' : { "use Joomla\\CMS\\Captcha\\Captcha;" }
+				
+				case 'LanguageAssociations' : { "use Joomla\\CMS\\Language\\Associations;" }
+				case 'Language' : { "use Joomla\\CMS\\Language\\Language;" }
+				case 'LanguageHelper' : { "use Joomla\\CMS\\Language\\LanguageHelper;" }
+				case 'LanguageStemmer' : { "use Joomla\\CMS\\Language\\LanguageStemmer;" }
+				case 'LanguageMultilang' : { "use Joomla\\CMS\\Language\\Multilanguage;" }
+				case 'Text' : { "use Joomla\\CMS\\Language\\Text;" }
+				case 'LanguageTransliterate' : { "use Joomla\\CMS\\Language\\Transliterate;" }
+				case 'LanguageStemmerPorteren' : { "use Joomla\\CMS\\Language\\Stemmer\\Porteren;" }
+				case 'LanguageWrapperText' : { "use Joomla\\CMS\\Language\\Wrapper\\JTextWrapper';" }
+				case 'LanguageWrapperHelper' : { "use Joomla\\CMS\\Language\\Wrapper\\LanguageHelperWrapper';" }
+				case 'LanguageWrapperTransliterate' : { "use Joomla\\CMS\\Language\\Wrapper\\TransliterateWrapper';" }
+				
+				case 'ComponentHelper' : { "use Joomla\\CMS\\Component\\ComponentHelper;" }
+				case 'ComponentRecord' : { "use Joomla\\CMS\\Component\\ComponentRecord;" }
+				case 'ComponentExceptionMissing' : { "use Joomla\\CMS\\Component\\Exception\\MissingComponentException;" }
+				case 'ComponentRouterBase' : { "use Joomla\\CMS\\Component\\Router\\RouterBase;" }
+				case 'ComponentRouterInterface' : { "use Joomla\\CMS\\Component\\Router\\RouterInterface;" }
+				case 'ComponentRouterLegacy' : { "use Joomla\\CMS\\Component\\Router\\RouterLegacy;" }
+				case 'ComponentRouterView' : { "use Joomla\\CMS\\Component\\Router\\RouterView;" }
+				case 'ComponentRouterViewconfiguration' : { "use Joomla\\CMS\\Component\\Router\\RouterViewConfiguration;" }
+				case 'ComponentRouterRulesMenu' : { "use Joomla\\CMS\\Component\\Router\\Rules\\MenuRules;" }
+				case 'ComponentRouterRulesNomenu' : { "use Joomla\\CMS\\Component\\Router\\Rules\\NomenuRules;" }
+				case 'ComponentRouterRulesInterface' : { "use Joomla\\CMS\\Component\\Router\\Rules\\RulesInterface;" }
+				case 'ComponentRouterRulesStandard' : { "use Joomla\\CMS\\Component\\Router\\Rules\\StandardRules;" }
+				
+				case 'Editor' : { "use Joomla\\CMS\\Editor\\Editor;" }
+				
+				case 'ErrorPage' : { "use Joomla\\CMS\\Exception\\ExceptionHandler;" }
+				
+				case 'AuthenticationHelper' : { "use Joomla\\CMS\\Helper\\AuthenticationHelper;" }
+				case 'Helper' : { "use Joomla\\CMS\\Helper\\CMSHelper;" }
+				case 'HelperContent' : { "use Joomla\\CMS\\Helper\\ContentHelper;" }
+				case 'HelperContenthistory' : { "use Joomla\\CMS\\Helper\\ContentHistoryHelper;" }
+				case 'LibraryHelper' : { "use Joomla\\CMS\\Helper\\LibraryHelper;" }
+				case 'HelperMedia' : { "use Joomla\\CMS\\Helper\\MediaHelper;" }
+				case 'ModuleHelper' : { "use Joomla\\CMS\\Helper\\ModuleHelper;" }
+				case 'HelperRoute' : { "use Joomla\\CMS\\Helper\\RouteHelper;" }
+				case 'SearchHelper' : { "use Joomla\\CMS\\Helper\\SearchHelper;" }
+				case 'HelperTags' : { "use Joomla\\CMS\\Helper\\TagsHelper;" }
+				case 'HelperUsergroups' : { "use Joomla\\CMS\\Helper\\UserGroupsHelper;" }
+				
+				case 'LayoutBase' : { "use Joomla\\CMS\\Layout\\BaseLayout;" }
+				case 'LayoutFile' : { "use Joomla\\CMS\\Layout\\FileLayout;" }
+				case 'LayoutHelper' : { "use Joomla\\CMS\\Layout\\LayoutHelper;" }
+				case 'Layout' : { "use Joomla\\CMS\\Layout\\LayoutInterface;" }
+				
+				case 'ResponseJson' : { "use Joomla\\CMS\\Response\\JsonResponse;" }
+				
+				case 'Plugin' : { "use Joomla\\CMS\\Plugin\\CMSPlugin;" }
+				case 'PluginHelper' : { "use Joomla\\CMS\\Plugin\\PluginHelper;" }
+				
+				case 'Menu' : { "use Joomla\\CMS\\Menu\\AbstractMenu;" }
+				case 'MenuAdministrator' : { "use Joomla\\CMS\\Menu\\AdministratorMenu;" }
+				case 'MenuItem' : { "use Joomla\\CMS\\Menu\\MenuItem;" }
+				case 'MenuSite' : { "use Joomla\\CMS\\Menu\\SiteMenu;" }
+				
+				case 'Pagination' : { "use Joomla\\CMS\\Pagination\\Pagination;" }
+				case 'PaginationObject' : { "use Joomla\\CMS\\Pagination\\PaginationObject;" }
+				
+				case 'Pathway' : { "use Joomla\\CMS\\Pathway\\Pathway;" }
+				case 'PathwaySite' : { "use Joomla\\CMS\\Pathway\\SitePathway;" }
+				
+				case 'SchemaChangeitem' : { "use Joomla\\CMS\\Schema\\ChangeItem;" }
+				case 'SchemaChangeset' : { "use Joomla\\CMS\\Schema\\ChangeSet;" }
+				case 'SchemaChangeitemMysql' : { "use Joomla\\CMS\\Schema\\ChangeItem\\MysqlChangeItem;" }
+				case 'SchemaChangeitemPostgresql' : { "use Joomla\\CMS\\Schema\\ChangeItem\\PostgresqlChangeItem;" }
+				case 'SchemaChangeitemSqlsrv' : { "use Joomla\\CMS\\Schema\\ChangeItem\\SqlsrvChangeItem;" }
+				
+				case 'Ucm' : { "use Joomla\\CMS\\UCM\\UCM;" }
+				case 'UcmBase' : { "use Joomla\\CMS\\UCM\\UCMBase;" }
+				case 'UcmContent' : { "use Joomla\\CMS\\UCM\\UCMContent;" }
+				case 'UcmType' : { "use Joomla\\CMS\\UCM\\UCMType;" }
+				
+				case 'Toolbar' : { "use Joomla\\CMS\\Toolbar\\Toolbar;" }
+				case 'ToolbarButton' : { "use Joomla\\CMS\\Toolbar\\ToolbarButton;" }
+				case 'ToolbarButtonConfirm' : { "use Joomla\\CMS\\Toolbar\\Button\\ConfirmButton;" }
+				case 'ToolbarButtonCustom' : { "use Joomla\\CMS\\Toolbar\\Button\\CustomButton;" }
+				case 'ToolbarButtonHelp' : { "use Joomla\\CMS\\Toolbar\\Button\\HelpButton;" }
+				case 'ToolbarButtonLink' : { "use Joomla\\CMS\\Toolbar\\Button\\LinkButton;" }
+				case 'ToolbarButtonPopup' : { "use Joomla\\CMS\\Toolbar\\Button\\PopupButton;" }
+				case 'ToolbarButtonSeparator' : { "use Joomla\\CMS\\Toolbar\\Button\\SeparatorButton;" }
+				case 'ToolbarButtonSlider' : { "use Joomla\\CMS\\Toolbar\\Button\\SliderButton;" }
+				case 'ToolbarButtonStandard' : { "use Joomla\\CMS\\Toolbar\\Button\\StandardButton;" }
+				case 'Button' : { "use Joomla\\CMS\\Toolbar\\ToolbarButton;" }
+				
+				case 'Version' : { "use Joomla\\CMS\\Version;" }
+				
+				case 'Authentication' : { "use Joomla\\CMS\\Authentication\\Authentication;" }
+				case 'AuthenticationResponse' : { "use Joomla\\CMS\\Authentication\\AuthenticationResponse;" }
+				
+				case 'Browser' : { "use Joomla\\CMS\\Environment\\Browser;" }
+				
+				case 'AssociationExtensionInterface' : { "use Joomla\\CMS\\Association\\AssociationExtensionInterface;" }
+				case 'AssociationExtensionHelper' : { "use Joomla\\CMS\\Association\\AssociationExtensionHelper;" }
+				
+				case 'Document' : { "use Joomla\\CMS\\Document\\Document;" }
+				case 'DocumentError' : { "use Joomla\\CMS\\Document\\ErrorDocument;" }
+				case 'DocumentFeed' : { "use Joomla\\CMS\\Document\\FeedDocument;" }
+				case 'DocumentHtml' : { "use Joomla\\CMS\\Document\\HtmlDocument;" }
+				case 'DocumentImage' : { "use Joomla\\CMS\\Document\\ImageDocument;" }
+				case 'DocumentJson' : { "use Joomla\\CMS\\Document\\JsonDocument;" }
+				case 'DocumentOpensearch' : { "use Joomla\\CMS\\Document\\OpensearchDocument;" }
+				case 'DocumentRaw' : { "use Joomla\\CMS\\Document\\RawDocument;" }
+				case 'DocumentRenderer' : { "use Joomla\\CMS\\Document\\DocumentRenderer;" }
+				case 'DocumentXml' : { "use Joomla\\CMS\\Document\\XmlDocument;" }
+				case 'DocumentRendererFeedAtom' : { "use Joomla\\CMS\\Document\\Renderer\\Feed\\AtomRenderer;" }
+				case 'DocumentRendererFeedRss' : { "use Joomla\\CMS\\Document\\Renderer\\Feed\\RssRenderer;" }
+				case 'DocumentRendererHtmlComponent' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\ComponentRenderer;" }
+				case 'DocumentRendererHtmlHead' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\HeadRenderer;" }
+				case 'DocumentRendererHtmlMessage' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\MessageRenderer;" }
+				case 'DocumentRendererHtmlModule' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\ModuleRenderer;" }
+				case 'DocumentRendererHtmlModules' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\ModulesRenderer;" }
+				case 'DocumentRendererAtom' : { "use Joomla\\CMS\\Document\\Renderer\\Feed\\AtomRenderer';" }
+				case 'DocumentRendererRSS' : { "use Joomla\\CMS\\Document\\Renderer\\Feed\\RssRenderer';" }
+				case 'DocumentRendererComponent' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\ComponentRenderer';" }
+				case 'DocumentRendererHead' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\HeadRenderer';" }
+				case 'DocumentRendererMessage' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\MessageRenderer';" }
+				case 'DocumentRendererModule' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\ModuleRenderer';" }
+				case 'DocumentRendererModules' : { "use Joomla\\CMS\\Document\\Renderer\\Html\\ModulesRenderer';" }
+				case 'FeedEnclosure' : { "use Joomla\\CMS\\Document\\Feed\\FeedEnclosure;" }
+				case 'FeedImage' : { "use Joomla\\CMS\\Document\\Feed\\FeedImage;" }
+				case 'FeedItem' : { "use Joomla\\CMS\\Document\\Feed\\FeedItem;" }
+				case 'OpenSearchImage' : { "use Joomla\\CMS\\Document\\Opensearch\\OpensearchImage;" }
+				case 'OpenSearchUrl' : { "use Joomla\\CMS\\Document\\Opensearch\\OpensearchUrl;" }
+				
+				case 'FilterInput' : { "use Joomla\\CMS\\Filter\\InputFilter;" }
+				case 'FilterOutput' : { "use Joomla\\CMS\\Filter\\OutputFilter;" }
+				case 'FilterWrapperOutput' : { "use Joomla\\CMS\\Filter\\Wrapper\\OutputFilterWrapper';" }
+				
+				case 'Http' : { "use Joomla\\CMS\\Http\\Http;" }
+				case 'HttpFactory' : { "use Joomla\\CMS\\Http\\HttpFactory;" }
+				case 'HttpResponse' : { "use Joomla\\CMS\\Http\\Response;" }
+				case 'HttpTransport' : { "use Joomla\\CMS\\Http\\TransportInterface;" }
+				case 'HttpTransportCurl' : { "use Joomla\\CMS\\Http\\Transport\\CurlTransport;" }
+				case 'HttpTransportSocket' : { "use Joomla\\CMS\\Http\\Transport\\SocketTransport;" }
+				case 'HttpTransportStream' : { "use Joomla\\CMS\\Http\\Transport\\StreamTransport;" }
+				case 'HttpWrapperFactory' : { "use Joomla\\CMS\\Http\\Wrapper\\FactoryWrapper';" }
+				
+				case 'Installer' : { "use Joomla\\CMS\\Installer\\Installer;" }
+				case 'InstallerAdapter' : { "use Joomla\\CMS\\Installer\\InstallerAdapter;" }
+				case 'InstallerExtension' : { "use Joomla\\CMS\\Installer\\InstallerExtension;" }
+				case 'Extension' : { "use Joomla\\CMS\\Installer\\InstallerExtension;" }
+				case 'InstallerHelper' : { "use Joomla\\CMS\\Installer\\InstallerHelper;" }
+				case 'InstallerScript' : { "use Joomla\\CMS\\Installer\\InstallerScript;" }
+				case 'InstallerManifest' : { "use Joomla\\CMS\\Installer\\Manifest;" }
+				case 'InstallerAdapterComponent' : { "use Joomla\\CMS\\Installer\\Adapter\\ComponentAdapter;" }
+				case 'InstallerComponent' : { "use Joomla\\CMS\\Installer\\Adapter\\ComponentAdapter;" }
+				case 'InstallerAdapterFile' : { "use Joomla\\CMS\\Installer\\Adapter\\FileAdapter;" }
+				case 'InstallerFile' : { "use Joomla\\CMS\\Installer\\Adapter\\FileAdapter;" }
+				case 'InstallerAdapterLanguage' : { "use Joomla\\CMS\\Installer\\Adapter\\LanguageAdapter;" }
+				case 'InstallerLanguage' : { "use Joomla\\CMS\\Installer\\Adapter\\LanguageAdapter;" }
+				case 'InstallerAdapterLibrary' : { "use Joomla\\CMS\\Installer\\Adapter\\LibraryAdapter;" }
+				case 'InstallerLibrary' : { "use Joomla\\CMS\\Installer\\Adapter\\LibraryAdapter;" }
+				case 'InstallerAdapterModule' : { "use Joomla\\CMS\\Installer\\Adapter\\ModuleAdapter;" }
+				case 'InstallerModule' : { "use Joomla\\CMS\\Installer\\Adapter\\ModuleAdapter;" }
+				case 'InstallerAdapterPackage' : { "use Joomla\\CMS\\Installer\\Adapter\\PackageAdapter;" }
+				case 'InstallerPackage' : { "use Joomla\\CMS\\Installer\\Adapter\\PackageAdapter;" }
+				case 'InstallerAdapterPlugin' : { "use Joomla\\CMS\\Installer\\Adapter\\PluginAdapter;" }
+				case 'InstallerPlugin' : { "use Joomla\\CMS\\Installer\\Adapter\\PluginAdapter;" }
+				case 'InstallerAdapterTemplate' : { "use Joomla\\CMS\\Installer\\Adapter\\TemplateAdapter;" }
+				case 'InstallerTemplate' : { "use Joomla\\CMS\\Installer\\Adapter\\TemplateAdapter;" }
+				case 'InstallerManifestLibrary' : { "use Joomla\\CMS\\Installer\\Manifest\\LibraryManifest;" }
+				case 'InstallerManifestPackage' : { "use Joomla\\CMS\\Installer\\Manifest\\PackageManifest;" }
+				
+				case 'RouterAdministrator' : { "use Joomla\\CMS\\Router\\AdministratorRouter;" }
+				case 'Route' : { "use Joomla\\CMS\\Router\\Route;" }
+				case 'Router' : { "use Joomla\\CMS\\Router\\Router;" }
+				case 'RouterSite' : { "use Joomla\\CMS\\Router\\SiteRouter;" }
+				
+				case 'Categories' : { "use Joomla\\CMS\\Categories\\Categories;" }
+				case 'CategoryNode' : { "use Joomla\\CMS\\Categories\\CategoryNode;" }
+				
+				case 'Date' : { "use Joomla\\CMS\\Date\\Date;" }
+				
+				case 'Log' : { "use Joomla\\CMS\\Log\\Log;" }
+				case 'LogEntry' : { "use Joomla\\CMS\\Log\\LogEntry;" }
+				case 'LogLogger' : { "use Joomla\\CMS\\Log\\Logger;" }
+				case 'Logger' : { "use Joomla\\CMS\\Log\\Logger;" }
+				case 'LogLoggerCallback' : { "use Joomla\\CMS\\Log\\Logger\\CallbackLogger;" }
+				case 'LogLoggerDatabase' : { "use Joomla\\CMS\\Log\\Logger\\DatabaseLogger;" }
+				case 'LogLoggerEcho' : { "use Joomla\\CMS\\Log\\Logger\\EchoLogger;" }
+				case 'LogLoggerFormattedtext' : { "use Joomla\\CMS\\Log\\Logger\\FormattedtextLogger;" }
+				case 'LogLoggerMessagequeue' : { "use Joomla\\CMS\\Log\\Logger\\MessagequeueLogger;" }
+				case 'LogLoggerSyslog' : { "use Joomla\\CMS\\Log\\Logger\\SyslogLogger;" }
+				case 'LogLoggerW3c' : { "use Joomla\\CMS\\Log\\Logger\\W3cLogger;" }
+				
+				case 'Profiler' : { "use Joomla\\CMS\\Profiler\\Profiler;" }
+				
+				case 'Uri' : { "use Joomla\\CMS\\Uri\\Uri;" }
+				
+				case 'Cache' : { "use Joomla\\CMS\\Cache\\Cache;" }
+				case 'CacheController' : { "use Joomla\\CMS\\Cache\\CacheController;" }
+				case 'CacheStorage' : { "use Joomla\\CMS\\Cache\\CacheStorage;" }
+				case 'CacheControllerCallback' : { "use Joomla\\CMS\\Cache\\Controller\\CallbackController;" }
+				case 'CacheControllerOutput' : { "use Joomla\\CMS\\Cache\\Controller\\OutputController;" }
+				case 'CacheControllerPage' : { "use Joomla\\CMS\\Cache\\Controller\\PageController;" }
+				case 'CacheControllerView' : { "use Joomla\\CMS\\Cache\\Controller\\ViewController;" }
+				case 'CacheStorageApc' : { "use Joomla\\CMS\\Cache\\Storage\\ApcStorage;" }
+				case 'CacheStorageApcu' : { "use Joomla\\CMS\\Cache\\Storage\\ApcuStorage;" }
+				case 'CacheStorageHelper' : { "use Joomla\\CMS\\Cache\\Storage\\CacheStorageHelper;" }
+				case 'CacheStorageCachelite' : { "use Joomla\\CMS\\Cache\\Storage\\CacheliteStorage;" }
+				case 'CacheStorageFile' : { "use Joomla\\CMS\\Cache\\Storage\\FileStorage;" }
+				case 'CacheStorageMemcached' : { "use Joomla\\CMS\\Cache\\Storage\\MemcachedStorage;" }
+				case 'CacheStorageMemcache' : { "use Joomla\\CMS\\Cache\\Storage\\MemcacheStorage;" }
+				case 'CacheStorageRedis' : { "use Joomla\\CMS\\Cache\\Storage\\RedisStorage;" }
+				case 'CacheStorageWincache' : { "use Joomla\\CMS\\Cache\\Storage\\WincacheStorage;" }
+				case 'CacheStorageXcache' : { "use Joomla\\CMS\\Cache\\Storage\\XcacheStorage;" }
+				case 'CacheException' : { "use Joomla\\CMS\\Cache\\Exception\\CacheExceptionInterface;" }
+				case 'CacheExceptionConnecting' : { "use Joomla\\CMS\\Cache\\Exception\\CacheConnectingException;" }
+				case 'CacheExceptionUnsupported' : { "use Joomla\\CMS\\Cache\\Exception\\UnsupportedCacheException;" }
+				
+				case 'Session' : { "use Joomla\\CMS\\Session\\Session;" }
+				case 'SessionExceptionUnsupported' : { "use Joomla\\CMS\\Session\\Exception\\UnsupportedStorageException;" }
+				
+				case 'User' : { "use Joomla\\CMS\\User\\User;" }
+				case 'UserHelper' : { "use Joomla\\CMS\\User\\UserHelper;" }
+				case 'UserWrapperHelper' : { "use Joomla\\CMS\\User\\UserWrapper';" }
+				
+				case 'Form' : { "use Joomla\\CMS\\Form\\Form;" }
+				case 'FormField' : { "use Joomla\\CMS\\Form\\FormField;" }
+				case 'FormHelper' : { "use Joomla\\CMS\\Form\\FormHelper;" }
+				case 'FormRule' : { "use Joomla\\CMS\\Form\\FormRule;" }
+				case 'FormWrapper' : { "use Joomla\\CMS\\Form\\FormWrapper';" }
+				case 'FormFieldAuthor' : { "use Joomla\\CMS\\Form\\Field\\AuthorField;" }
+				case 'FormFieldCaptcha' : { "use Joomla\\CMS\\Form\\Field\\CaptchaField;" }
+				case 'FormFieldChromeStyle' : { "use Joomla\\CMS\\Form\\Field\\ChromestyleField;" }
+				case 'FormFieldContenthistory' : { "use Joomla\\CMS\\Form\\Field\\ContenthistoryField;" }
+				case 'FormFieldContentlanguage' : { "use Joomla\\CMS\\Form\\Field\\ContentlanguageField;" }
+				case 'FormFieldContenttype' : { "use Joomla\\CMS\\Form\\Field\\ContenttypeField;" }
+				case 'FormFieldEditor' : { "use Joomla\\CMS\\Form\\Field\\EditorField;" }
+				case 'FormFieldFrontend_Language' : { "use Joomla\\CMS\\Form\\Field\\FrontendlanguageField;" }
+				case 'FormFieldHeadertag' : { "use Joomla\\CMS\\Form\\Field\\HeadertagField;" }
+				case 'FormFieldHelpsite' : { "use Joomla\\CMS\\Form\\Field\\HelpsiteField;" }
+				case 'FormFieldLastvisitDateRange' : { "use Joomla\\CMS\\Form\\Field\\LastvisitdaterangeField;" }
+				case 'FormFieldLimitbox' : { "use Joomla\\CMS\\Form\\Field\\LimitboxField;" }
+				case 'FormFieldMedia' : { "use Joomla\\CMS\\Form\\Field\\MediaField;" }
+				case 'FormFieldMenu' : { "use Joomla\\CMS\\Form\\Field\\MenuField;" }
+				case 'FormFieldMenuitem' : { "use Joomla\\CMS\\Form\\Field\\MenuitemField;" }
+				case 'FormFieldModuleOrder' : { "use Joomla\\CMS\\Form\\Field\\ModuleorderField;" }
+				case 'FormFieldModulePosition' : { "use Joomla\\CMS\\Form\\Field\\ModulepositionField;" }
+				case 'FormFieldModuletag' : { "use Joomla\\CMS\\Form\\Field\\ModuletagField;" }
+				case 'FormFieldOrdering' : { "use Joomla\\CMS\\Form\\Field\\OrderingField;" }
+				case 'FormFieldPlugin_Status' : { "use Joomla\\CMS\\Form\\Field\\PluginstatusField;" }
+				case 'FormFieldRedirect_Status' : { "use Joomla\\CMS\\Form\\Field\\RedirectStatusField;" }
+				case 'FormFieldRegistrationDateRange' : { "use Joomla\\CMS\\Form\\Field\\RegistrationdaterangeField;" }
+				case 'FormFieldStatus' : { "use Joomla\\CMS\\Form\\Field\\StatusField;" }
+				case 'FormFieldTag' : { "use Joomla\\CMS\\Form\\Field\\TagField;" }
+				case 'FormFieldTemplatestyle' : { "use Joomla\\CMS\\Form\\Field\\TemplatestyleField;" }
+				case 'FormFieldUserActive' : { "use Joomla\\CMS\\Form\\Field\\UseractiveField;" }
+				case 'FormFieldUserGroupList' : { "use Joomla\\CMS\\Form\\Field\\UsergrouplistField;" }
+				case 'FormFieldUserState' : { "use Joomla\\CMS\\Form\\Field\\UserstateField;" }
+				case 'FormFieldUser' : { "use Joomla\\CMS\\Form\\Field\\UserField;" }
+				case 'FormRuleBoolean' : { "use Joomla\\CMS\\Form\\Rule\\BooleanRule;" }
+				case 'FormRuleCalendar' : { "use Joomla\\CMS\\Form\\Rule\\CalendarRule;" }
+				case 'FormRuleCaptcha' : { "use Joomla\\CMS\\Form\\Rule\\CaptchaRule;" }
+				case 'FormRuleColor' : { "use Joomla\\CMS\\Form\\Rule\\ColorRule;" }
+				case 'FormRuleEmail' : { "use Joomla\\CMS\\Form\\Rule\\EmailRule;" }
+				case 'FormRuleEquals' : { "use Joomla\\CMS\\Form\\Rule\\EqualsRule;" }
+				case 'FormRuleNotequals' : { "use Joomla\\CMS\\Form\\Rule\\NotequalsRule;" }
+				case 'FormRuleNumber' : { "use Joomla\\CMS\\Form\\Rule\\NumberRule;" }
+				case 'FormRuleOptions' : { "use Joomla\\CMS\\Form\\Rule\\OptionsRule;" }
+				case 'FormRulePassword' : { "use Joomla\\CMS\\Form\\Rule\\PasswordRule;" }
+				case 'FormRuleRules' : { "use Joomla\\CMS\\Form\\Rule\\RulesRule;" }
+				case 'FormRuleTel' : { "use Joomla\\CMS\\Form\\Rule\\TelRule;" }
+				case 'FormRuleUrl' : { "use Joomla\\CMS\\Form\\Rule\\UrlRule;" }
+				case 'FormRuleUsername' : { "use Joomla\\CMS\\Form\\Rule\\UsernameRule;" }
+				
+				case 'Microdata' : { "use Joomla\\CMS\\Microdata\\Microdata;" }
+				
+				case 'Factory' : { "use Joomla\\CMS\\Factory;" }
+				
+				case 'Mail' : { "use Joomla\\CMS\\Mail\\Mail;" }
+				case 'MailHelper' : { "use Joomla\\CMS\\Mail\\MailHelper;" }
+				case 'MailWrapperHelper' : { "use Joomla\\CMS\\Mail\\MailWrapper;" }
+				
+				case 'ClientHelper' : { "use Joomla\\CMS\\Client\\ClientHelper;" }
+				case 'ClientWrapperHelper' : { "use Joomla\\CMS\\Client\\ClientWrapper;" }
+				case 'ClientFtp' : { "use Joomla\\CMS\\Client\\FtpClient;" }
+				case 'FTP' : { "use Joomla\\CMS\\Client\\FtpClient';" }
+				case 'ClientLdap' : { "use Joomla\\Ldap\\LdapClient;" }
+				case 'LDAP' : { "use Joomla\\Ldap\\LdapClient';" }
+				
+				case 'Update' : { "use Joomla\\CMS\\Updater\\Update;" }
+				case 'UpdateAdapter' : { "use Joomla\\CMS\\Updater\\UpdateAdapter;" }
+				case 'Updater' : { "use Joomla\\CMS\\Updater\\Updater;" }
+				case 'UpdaterCollection' : { "use Joomla\\CMS\\Updater\\Adapter\\CollectionAdapter;" }
+				case 'UpdaterExtension' : { "use Joomla\\CMS\\Updater\\Adapter\\ExtensionAdapter;" }
+				
+				case 'Crypt' : { "use Joomla\\CMS\\Crypt\\Crypt;" }
+				case 'CryptCipher' : { "use Joomla\\CMS\\Crypt\\CipherInterface;" }
+				case 'CryptKey' : { "use Joomla\\CMS\\Crypt\\Key;" }
+				case 'CryptPassword' : { "use Joomla\\CMS\\Crypt\\CryptPassword';" }
+				case 'CryptCipherBlowfish' : { "use Joomla\\CMS\\Crypt\\Cipher\\BlowfishCipher';" }
+				case 'CryptCipherCrypto' : { "use Joomla\\CMS\\Crypt\\Cipher\\CryptoCipher;" }
+				case 'CryptCipherMcrypt' : { "use Joomla\\CMS\\Crypt\\Cipher\\McryptCipher';" }
+				case 'CryptCipherRijndael256' : { "use Joomla\\CMS\\Crypt\\Cipher\\Rijndael256Cipher';" }
+				case 'CryptCipherSimple' : { "use Joomla\\CMS\\Crypt\\Cipher\\SimpleCipher';" }
+				case 'CryptCipher3Des' : { "use Joomla\\CMS\\Crypt\\Cipher\\TripleDesCipher';" }
+				case 'CryptPasswordSimple' : { "use Joomla\\CMS\\Crypt\\Password\\SimpleCryptPassword';" }
+				
+				case 'StringPunycode' : { "use Joomla\\CMS\\String\\PunycodeHelper;" }
+				
+				case 'Buffer' : { "use Joomla\\CMS\\Utility\\BufferStreamHandler;" }
+				case 'Utility' : { "use Joomla\\CMS\\Utility\\Utility;" }
+				
+				case 'InputCli' : { "use Joomla\\CMS\\Input\\Cli;" }
+				case 'InputCookie' : { "use Joomla\\CMS\\Input\\Cookie;" }
+				case 'InputFiles' : { "use Joomla\\CMS\\Input\\Files;" }
+				case 'Input' : { "use Joomla\\CMS\\Input\\Input;" }
+				case 'InputJSON' : { "use Joomla\\CMS\\Input\\Json;" }
+				
+				case 'Feed' : { "use Joomla\\CMS\\Feed\\Feed;" }
+				case 'FeedEntry' : { "use Joomla\\CMS\\Feed\\FeedEntry;" }
+				case 'FeedFactory' : { "use Joomla\\CMS\\Feed\\FeedFactory;" }
+				case 'FeedLink' : { "use Joomla\\CMS\\Feed\\FeedLink;" }
+				case 'FeedParser' : { "use Joomla\\CMS\\Feed\\FeedParser;" }
+				case 'FeedPerson' : { "use Joomla\\CMS\\Feed\\FeedPerson;" }
+				case 'FeedParserAtom' : { "use Joomla\\CMS\\Feed\\Parser\\AtomParser;" }
+				case 'FeedParserNamespace' : { "use Joomla\\CMS\\Feed\\Parser\\NamespaceParserInterface;" }
+				case 'FeedParserRss' : { "use Joomla\\CMS\\Feed\\Parser\\RssParser;" }
+				case 'FeedParserRssItunes' : { "use Joomla\\CMS\\Feed\\Parser\\Rss\\ItunesRssParser;" }
+				case 'FeedParserRssMedia' : { "use Joomla\\CMS\\Feed\\Parser\\Rss\\MediaRssParser;" }
+				
+				case 'Image' : { "use Joomla\\CMS\\Image\\Image;" }
+				case 'ImageFilter' : { "use Joomla\\CMS\\Image\\ImageFilter;" }
+				case 'ImageFilterBackgroundfill' : { "use Joomla\\Image\\Filter\\Backgroundfill;" }
+				case 'ImageFilterBrightness' : { "use Joomla\\Image\\Filter\\Brightness;" }
+				case 'ImageFilterContrast' : { "use Joomla\\Image\\Filter\\Contrast;" }
+				case 'ImageFilterEdgedetect' : { "use Joomla\\Image\\Filter\\Edgedetect;" }
+				case 'ImageFilterEmboss' : { "use Joomla\\Image\\Filter\\Emboss;" }
+				case 'ImageFilterNegate' : { "use Joomla\\Image\\Filter\\Negate;" }
+				case 'ImageFilterSketchy' : { "use Joomla\\Image\\Filter\\Sketchy;" }
+				case 'ImageFilterSmooth' : { "use Joomla\\Image\\Filter\\Smooth;" }
+				
+				case 'Object' : { "use Joomla\\CMS\\Object\\CMSObject;" }
+				
+				case 'ExtensionHelper' : { "use Joomla\\CMS\\Extension\\ExtensionHelper;" }
+				
+				case 'Html' : { "use Joomla\\CMS\\HTML\\HTMLHelper;" }
+				
+				default: { "use " + className + ";"}
+			}»
+		«ENDFOR»
 	'''
 	
 	def static String getSectioName(Section  reference) {
@@ -651,8 +1059,8 @@ public class Slug  {
 	}
 	
 	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference, ExtendedComponent com) '''
-	<?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
+	<?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
+				<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
 	 <div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
@@ -662,12 +1070,12 @@ public class Slug  {
 		<div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
 	</div>
 	«ENDFOR»
-	<?php echo JHtml::_('bootstrap.endTab'); ?>
+	<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 			<?php endif; ?>
 	'''
 	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
-		 <?php if (JFactory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-		 				<?php echo JHtml::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', JText::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
+		 <?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
+		 				<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
 		 <div class="control-group">
 		<div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
 		<div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
@@ -677,7 +1085,7 @@ public class Slug  {
 		<div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
 	</div>
 	«ENDFOR»
-	<?php echo JHtml::_('bootstrap.endTab'); ?>
+	<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 				<?php endif; ?>
 	'''
 	

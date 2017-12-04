@@ -67,11 +67,11 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 * All other information you would like to add
 		 */
 		
-		// don't allow other scripts to grab and execute this file
-		defined('_JEXEC') or die('Direct Access to this location is not allowed');
-		jimport('joomla.plugin.plugin');
+		«Slug.generateRestrictedAccess»
 		
-		class Plg«plugin.type.toString.toFirstUpper»«plugin.name.toString.toFirstUpper» extends JPlugin
+		«Slug.generateUses(newArrayList("Registry", "Plugin", "LanguageMultilang", "ComponentHelper", "LayoutHelper", "Uri", "Factory", "Html"))»
+		
+		class Plg«plugin.type.toString.toFirstUpper»«plugin.name.toString.toFirstUpper» extends Plugin
 		{
 		    public function plg«plugin.type.toString.toFirstUpper»«plugin.name.toString.toFirstUpper»(&$subject, $params)
 			{
@@ -253,7 +253,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 			{
 			$buttons = $this->_subject->getButtons($name, $buttons, $asset, $author);
 		
-				$return .= JLayoutHelper::render('joomla.editors.buttons', $buttons);
+				$return .= LayoutHelper::render('joomla.editors.buttons', $buttons);
 			}
 		
 			return $return;
@@ -356,7 +356,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 * Method to remove the link information for items that have been deleted.
 		 *
 		 * @param   string  $context  The context of the action being performed.
-		 * @param   JTable  $table    A JTable object containing the record to be deleted.
+		 * @param   Table   $table    A Table object containing the record to be deleted.
 		 *
 		 * @return  boolean  True on success.
 		 *
@@ -389,7 +389,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 * the category to which it belongs has been changed.
 		 *
 		 * @param   string   $context  The context of the content passed to the plugin.
-		 * @param   JTable   $row      A JTable object.
+		 * @param   Table    $row      A Table object.
 		 * @param   boolean  $isNew    True if the content has just been created.
 		 *
 		 * @return  boolean  True on success.
@@ -431,7 +431,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 * This event is fired before the data is actually saved.
 		 *
 		 * @param   string   $context  The context of the content passed to the plugin.
-		 * @param   JTable   $row      A JTable object.
+		 * @param   Table    $row      A Table object.
 		 * @param   boolean  $isNew    True if the content is just about to be created.
 		 *
 		 * @return  boolean  True on success.
@@ -506,7 +506,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		protected function index(FinderIndexerResult $item, $format = 'html')
 		{
 			// Check if the extension is enabled
-			if (JComponentHelper::isEnabled($this->extension) == false)
+			if (ComponentHelper::isEnabled($this->extension) == false)
 			{
 				return;
 			}
@@ -514,11 +514,11 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 			$item->setLanguage();
 			
 			// Initialise the item parameters.
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($item->params);
 			$item->params = $registry;
 		
-			$registry = new JRegistry;
+			$registry = new Registry;
 			$registry->loadString($item->metadata);
 			$item->metadata = $registry;
 			
@@ -584,7 +584,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		protected function getListQuery($query = null)
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			
 			// Check if we can use the supplied SQL query.
 			$query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
@@ -632,27 +632,27 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		
 		public function onGetIcons($context)
 		{
-			if ($context != $this->params->get('context', 'mod_quickicon') || !JFactory::getUser()->authorise('core.manage', 'com_installer'))
+			if ($context != $this->params->get('context', 'mod_quickicon') || !Factory::getUser()->authorise('core.manage', 'com_installer'))
 			{
 				return;
 			}
 		
-			JHtml::_('jquery.framework');
+			HTMLHelper::_('jquery.framework');
 			
 			//TODO: some code here
 			
-			$ajax_url = JUri::base() . 'index.php?option=com_installer&view=update&task=update.ajax';
+			$ajax_url = Uri::base() . 'index.php?option=com_installer&view=update&task=update.ajax';
 			
 			//TODO: some code here
 			
-			JHtml::_('script', 'plg_quickicon_«plugin.name»/«plugin.name»check.js', false, true);
+			HTMLHelper::_('script', 'plg_quickicon_«plugin.name»/«plugin.name»check.js', false, true);
 			
 			return array(
 			array(
 				'link' => '',
 				'image' => '',
 				'icon' => '',
-				'text' => JText::_('PLG_QUICKICON_«plugin.name.toString.toUpperCase»_CHECKING'),
+				'text' => Text::_('PLG_QUICKICON_«plugin.name.toString.toUpperCase»_CHECKING'),
 				'id' => 'plg_quickicon_«plugin.name»',
 				'group' => 'MOD_QUICKICON_MAINTENANCE'
 			)
@@ -702,9 +702,9 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
 		{
-			$db = JFactory::getDbo();
-			$app = JFactory::getApplication();
-			$user = JFactory::getUser();
+			$db = Factory::getDbo();
+			$app = Factory::getApplication();
+			$user = Factory::getUser();
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			
 			//not always used
@@ -809,9 +809,9 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 			->order($order);
 			
 			// Filter by language.
-			if ($app->isSite() && JLanguageMultilang::isEnabled())
+			if ($app->isSite() && Multilanguage::isEnabled())
 			{
-			$tag = JFactory::getLanguage()->getTag();
+			$tag = Factory::getLanguage()->getTag();
 			$query->where('a.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')')
 				->where('c.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')');
 			}

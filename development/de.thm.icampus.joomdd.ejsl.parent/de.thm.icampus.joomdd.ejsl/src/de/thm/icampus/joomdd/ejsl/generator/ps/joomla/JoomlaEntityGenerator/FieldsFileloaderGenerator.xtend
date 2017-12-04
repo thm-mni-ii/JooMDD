@@ -30,32 +30,34 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
+		«Slug.generateUses(newArrayList("Text", "ComponentHelper", "Uri", "FormField", "Factory"))»
+		
 		/**
 		 * This class contain a input field to load a document or image.
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class JFormFieldFileloader extends JFormField
+		class FormFieldFileloader extends FormField
 		{
 		    protected function getInput()
 		    {
 		        $html = array();
-		        $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+		        $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 		        $path = $params->get($this->getAttribute('path'));
 		        $format = $params->get($this->getAttribute('accept_format'));
 		        $file='';
 		        if(!empty($this->value))
 		        {
-		            $file=  JURI::root()  .$path . '/'. $this->value;
+		            $file=  Uri::root()  .$path . '/'. $this->value;
 		        }
 		
-		        $document = JFactory::getDocument();
-		        $iconpath = JURI::root() . 'media/media/images/mime-icon-32/';
-		        $document->addScript( JURI::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
-		        $document->addStyleSheet( JURI::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
-		        $document->addStyleSheet( JURI::root() . 'media/jui/css/bootstrap.min.css');
-		        $html []="<div class='img-picker' fieldtype='file' name='$this->name' value='$this->value' accept='$format' file='$file' iconpath='$iconpath' showLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
-		        deleteLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
+		        $document = Factory::getDocument();
+		        $iconpath = Uri::root() . 'media/media/images/mime-icon-32/';
+		        $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
+		        $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
+		        $document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
+		        $html []="<div class='img-picker' fieldtype='file' name='$this->name' value='$this->value' accept='$format' file='$file' iconpath='$iconpath' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
+		        deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
 		        return implode($html);
 		    }
 		}
@@ -69,32 +71,34 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
+		«Slug.generateUses(newArrayList("Text", "ComponentHelper", "Uri", "FormField", "Factory"))»
+		
 		/**
 		 * This class contain a input field to load a document or image.
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class JFormFieldImageloader extends JFormField
+		class FormFieldImageloader extends FormField
 		{
 		    protected function getInput()
 		    {
 		        $html = array();
-		        $params = JComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+		        $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 		        $path = $params->get($this->getAttribute('path'));
 		       
 		        $file='';
 		        if(!empty($this->value))
 		        {
-		            $file=  JURI::root()  .$path . '/'. $this->value;
+		            $file=  Uri::root()  .$path . '/'. $this->value;
 		        }
 		
-		        $document = JFactory::getDocument();
-		        $document->addScript( JURI::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
-		       	$document->addStyleSheet( JURI::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
-		       	$document->addStyleSheet( JURI::root() . 'media/jui/css/bootstrap.min.css');
-		        $input = JFactory::getApplication()->input;
-		        $html []="<div class='img-picker' fieldtype='image' iconpath=' '  name='$this->name' value='$this->value' accept='image/*' file='$file' showLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
-		        deleteLabel='".JText::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
+		        $document = Factory::getDocument();
+		        $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
+		       	$document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
+		       	$document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
+		        $input = Factory::getApplication()->input;
+		        $html []="<div class='img-picker' fieldtype='image' iconpath=' '  name='$this->name' value='$this->value' accept='image/*' file='$file' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
+		        deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
 		        return implode($html);
 		    }
 		}

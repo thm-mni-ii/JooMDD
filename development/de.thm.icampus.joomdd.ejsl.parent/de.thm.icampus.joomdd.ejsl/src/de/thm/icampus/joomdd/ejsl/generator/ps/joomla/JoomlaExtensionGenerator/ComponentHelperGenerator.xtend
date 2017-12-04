@@ -24,6 +24,8 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		
 		«Slug.generateRestrictedAccess()»
 		
+		«Slug.generateUses(newArrayList("Text", "Factory", "Object"))»
+		
 		jimport('joomla.filesystem.file');
 		
 		/**
@@ -49,7 +51,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		{
 		    «FOR ExtendedPageReference pg : extendeComp.backEndExtendedPagerefence.filter[t| t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage]»
 		    JHtmlSidebar::addEntry(
-		        JText::_('«Slug.nameExtensionBind("com",extendeComp.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»'),
+		        Text::_('«Slug.nameExtensionBind("com",extendeComp.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»'),
 		        'index.php?option=«Slug.nameExtensionBind("com",extendeComp.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»',
 		        $vName == '«pg.extendedPage.name.toLowerCase»');
 		    «ENDFOR»
@@ -63,13 +65,13 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		/**
 		 * Gets a list of the actions that can be performed.
 		 *
-		 * @return  JObject
+		 * @return  CMSObject
 		 * @since   1.6
 		 */
 		public static function getActions()
 		{
-		    $user = JFactory::getUser();
-		    $result = new JObject;
+		    $user = Factory::getUser();
+		    $result = new CMSObject;
 
 		    $assetName = '«Slug::nameExtensionBind('com', extendeComp.name)»';
 		
@@ -112,7 +114,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 					$file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
 				}
 			}
-			$object_file = new JObject($file);
+			$object_file = new CMSObject($file);
 		
 		    if (!JFile::upload($object_file->tmp_name, $object_file->filepath))
 			{

@@ -224,10 +224,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		// Define used Jimports here
-		
-		// No direct access to this file
-		defined('_JEXEC') or die;
+		«Slug.generateUses(newArrayList("ModuleHelper"))»
 		
 		// Include the «extMod.name» functions only once
 		require_once __DIR__ . '/helper.php';
@@ -239,7 +236,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		$items = «module.name.toFirstUpper»Helper::getList($params);
 		$model = «module.name.toFirstUpper»Helper::getModel();
 		$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-		require JModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
+		require ModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
 	'''
 	}
 	
@@ -250,6 +247,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
+		«Slug.generateUses(newArrayList("Uri", "Html"))»
+		
 		// No direct access to this file
 		defined('_JEXEC') or die;
 		
@@ -257,7 +256,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 * if component helper shall be used
 		 *
 		 * require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php>';
-		 * $baseurl = JUri::base();
+		 * $baseurl = Uri::base();
 		 */
 		?>
 		
@@ -291,7 +290,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		for(Link lk: listLink) {
             if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {				
-                return '''JHtml::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
+                return '''HTMLHelper::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
             }
 		}
 		return "$" + result;
@@ -304,8 +303,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		// No direct access to this file
-		defined('_JEXEC') or die;
+		«Slug.generateUses(newArrayList("ModelLegacy"))»
 		
 		/**
 		 * Helper for «extMod.name»
@@ -336,12 +334,12 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	    /**
 		 * placeholder "<>" are to be replaced
 		 */
-		JModelLegacy::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
-		// $app = JFactory::getApplictation();
+		BaseDatabaseModel::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
+
 		«IF (extMod.pageRef.pagescr !== null )»
-		$model = JModelLegacy::getInstance('«extMod.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
+		$model = BaseDatabaseModel::getInstance('«extMod.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
 		«ELSE»
-		$model = JModelLegacy::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
+		$model = BaseDatabaseModel::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
 		«ENDIF»
 		return $model;
 	}

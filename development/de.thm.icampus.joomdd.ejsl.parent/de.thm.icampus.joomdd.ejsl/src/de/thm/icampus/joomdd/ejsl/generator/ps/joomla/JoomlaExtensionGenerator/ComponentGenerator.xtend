@@ -339,14 +339,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		// import joomla controller library
-		jimport('joomla.application.component.controller');
+		«Slug.generateUses(newArrayList("ControllerLegacy", "Factory"))»
 		
 		// Get an instance of the controller prefixed by «class_name»
-		$controller = JControllerLegacy::getInstance('«class_name»');
+		$controller = BaseController::getInstance('«class_name»');
 		
 		// Perform the Request task
-		$input = JFactory::getApplication()->input;
+		$input = Factory::getApplication()->input;
 		$controller->execute($input->getCmd('task'));
 		
 		// Redirect if set by the controller
@@ -367,14 +366,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		use Joomla\CMS\MVC\Controller\BaseController;
-		
-		defined('_JEXEC') or die;
+		«Slug.generateUses(newArrayList("ControllerLegacy", "Factory"))»
 		
 		/**
 		 * General Controller of «component.name» component
 		 */
-		class «class_name»Controller extends JControllerLegacy
+		class «class_name»Controller extends BaseController
 		{
 		    /**
 		     * display task
@@ -384,7 +381,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    function display($cachable = false) 
 		    {
 		        // set default view if not set
-		        $input = JFactory::getApplication()->input;
+		        $input = Factory::getApplication()->input;
 		        $input->set('view', $input->getCmd('view', '«component.name»'));
 		
 		        // call parent behavior
@@ -406,18 +403,17 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
+		«Slug.generateUses(newArrayList("ControllerLegacy", "Text", "Factory"))»
+		
 		// Access check.
-		if (!JFactory::getUser()->authorise('core.manage', '«Slug::nameExtensionBind("com",component.name )»')) 
+		if (!Factory::getUser()->authorise('core.manage', '«Slug::nameExtensionBind("com",component.name )»')) 
 		{
-		    throw new Exception(JText::_('JERROR_ALERTNOAUTHOR'));
+		    throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
 		}
-		
-		// Include dependancies
-		jimport('joomla.application.component.controller');
-		
+				
 		// Get an instance of the controller prefixed by «Slug::nameExtensionBind("com",component.name )»
-		$controller	= JControllerLegacy::getInstance('«component.name.toFirstUpper»');
-		$controller->execute(JFactory::getApplication()->input->get('task'));
+		$controller	= BaseController::getInstance('«component.name.toFirstUpper»');
+		$controller->execute(Factory::getApplication()->input->get('task'));
 		$controller->redirect();
 	'''
 	 
@@ -434,14 +430,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		use Joomla\CMS\MVC\Controller\BaseController;
-		
-		defined('_JEXEC') or die;
+		«Slug.generateUses(newArrayList("ControllerLegacy", "Factory"))»
 		
 		/**
 		 * General Controller of «class_name» component
 		 */
-		class «class_name»Controller extends JControllerLegacy
+		class «class_name»Controller extends BaseController
 		{
 		    /**
 		     * display task
@@ -451,8 +445,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    public function display($cachable = false, $urlparams = false) 
 		    {
 		        require_once JPATH_COMPONENT . '/helpers/«component.name.toLowerCase».php';
-		        $view = JFactory::getApplication()->input->getCmd('view', '«class_name»s');
-		        JFactory::getApplication()->input->set('view', $view);
+		        $view = Factory::getApplication()->input->getCmd('view', '«class_name»s');
+		        Factory::getApplication()->input->set('view', $view);
 		        parent::display($cachable, $urlparams);
 		        return $this;
 		    }
@@ -460,7 +454,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	'''
 
 	/**
-	 * Returns the content of a simple backendSection model file that extends from JModelAdmin 
+	 * Returns the content of a simple backendSection model file that extends from ModelAdmin 
 	 * and provides methods to handle (load, edit...) of one data item
 	 */
 	def CharSequence phpAdminSimpleModelContent(ExtendedComponent component,ExtendedPage pageref) '''
@@ -470,9 +464,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		jimport('joomla.application.component.modeladmin');
+		«Slug.generateUses(newArrayList("ModelAdmin"))»
 		
-		class «component.name.toFirstUpper»Model«pageref.name.toFirstUpper» extends JModelAdmin
+		class «component.name.toFirstUpper»Model«pageref.name.toFirstUpper» extends ModelAdmin
 		{
 		}
 	'''
@@ -486,8 +480,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		«Slug.generateFileDoc(component)»
 		
 		«Slug.generateRestrictedAccess()»
+		
+		«Slug.generateUses(newArrayList("Text"))»
 		?>
-		<p class="text-center"> <h1><?php echo "Welcome to ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
+		<p class="text-center"> <h1><?php echo "Welcome to ". Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
 		    <h4>«component.manifest.description»</h4>
 		</p> 
 		<div id="cpanel" class='cpanel'>
@@ -520,13 +516,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		// import Joomla view library
-		jimport('joomla.application.component.view');
+		«Slug.generateUses(newArrayList("ViewLegacy", "Text", "Factory", "Html"))»
+
 		 
 		/**
 		 * «class_name» View
 		 */
-		class «class_name»View«class_name»s extends JViewLegacy
+		class «class_name»View«class_name»s extends HtmlView
 		{
 		
 		    /** Method to get display
@@ -537,18 +533,18 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    public function display($tpl = null)
 		    {
-		        if (!JFactory::getUser()->authorise('core.administrator'))
+		        if (!Factory::getUser()->authorise('core.administrator'))
 		        {
-		            return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+		            return JError::raiseWarning(404, Text::_('JERROR_ALERTNOAUTHOR'));
 		        }
 		
-		        JHtml::_('behavior.tooltip');
+		        HTMLHelper::_('behavior.tooltip');
 		
-		        $document = JFactory::getDocument();
+		        $document = Factory::getDocument();
 		
-		        JHtml::_('tabs.start');
+		        HTMLHelper::_('tabs.start');
 		
-		        $application = JFactory::getApplication("administrator");
+		        $application = Factory::getApplication("administrator");
 		        $this->option = $application->scope;
 		
 		        $this->addToolBar();
@@ -565,7 +561,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    private function addToolBar()
 		    {
-		        JToolBarHelper::title(JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . ': ' . JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'), 'logo');
+		        JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . ': ' . Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'), 'logo');
 		        JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
 		    }
 		
@@ -579,7 +575,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        $views = array();
 		        «FOR ExtendedPageReference pg : component.backEndExtendedPagerefence.filter[t | t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage ]»
 		        	$views['«pg.extendedPage.name.toLowerCase»'] = array();
-		        	$views['«pg.extendedPage.name.toLowerCase»']['title'] = JText::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»');
+		        	$views['«pg.extendedPage.name.toLowerCase»']['title'] = Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»');
 		        	$views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»";
 		    «ENDFOR»
 		    $this->views = $views;

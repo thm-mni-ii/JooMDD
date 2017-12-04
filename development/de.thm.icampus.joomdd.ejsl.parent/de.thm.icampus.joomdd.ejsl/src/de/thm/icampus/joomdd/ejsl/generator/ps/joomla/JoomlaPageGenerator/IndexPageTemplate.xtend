@@ -50,6 +50,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateSiteViewLayoutShow() '''
 	«generateFileDoc(ipage,com)»
+	
+	«Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html"))»
+	
 	«frontHelp.genViewTemplateInit»
 	«frontHelp.genViewTemplateHead»
 	'''
@@ -110,13 +113,13 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	«Slug.generateRestrictedAccess()»
 	
-	jimport('joomla.application.component.modellist');
+	«Slug.generateUses(newArrayList("ModelList", "ComponentHelper", "Factory"))»
 
 	/**
 	 * Methods supporting a list of Data.
 	 * @generated
 	 */
-	class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends JModelList {
+	class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends ListModel {
 		
 		«Slug.genLinkedInfo(ipage,com)»
 		«helperAdmin.genAdminModelConstruct»
@@ -135,11 +138,11 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		
 		«Slug.generateRestrictedAccess()»
 		
+		«Slug.generateUses(newArrayList("ViewLegacy", "Text"))»
+		
 		/**
 		* @description «ipage.entities.get(0).name»View for «com.name»
 		*/
-		defined('_JEXEC') or die('Restricted access');
-		jimport('joomla.application.component.view');
 		jimport('joomla.filesystem.path');
 		/**
 		* «com.name»View class for component com_«Slug.slugify(com.name)»
@@ -148,7 +151,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		* @package com_«Slug.slugify(com.name)»."admin"
 		* @generated
 		*/
-		class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLegacy
+		class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends HtmlView
 		{
 		 	protected $items;
 		
@@ -163,13 +166,16 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''
 	def CharSequence generateAdminViewLayoutBackend() ''' 
 	«generateFileDoc(ipage,com)»
-	JHtml::addIncludePath(JPATH_COMPONENT.'/helpers/html');
-	JHtml::_('bootstrap.tooltip');
-	JHtml::_('behavior.multiselect');
-	JHtml::_('formbehavior.chosen', 'select');
+	
+	«Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html"))»
+	
+	HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+	HTMLHelper::_('bootstrap.tooltip');
+	HTMLHelper::_('behavior.multiselect');
+	HTMLHelper::_('formbehavior.chosen', 'select');
 	
 	// Import CSS
-	$document = JFactory::getDocument();
+	$document = Factory::getDocument();
 	«helperAdmin.genAdminViewLayoutHeader»
 	«helperAdmin.genAdminViewLayoutForm»
 	'''
@@ -179,13 +185,13 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	«Slug.generateRestrictedAccess()»
 	
-	jimport('joomla.application.component.modellist');
+	«Slug.generateUses(newArrayList("ModelList", "ComponentHelper", "Factory"))»
 
 	/**
 	 * Methods supporting a list of Data.
 	 * @generated
 	 */
-	class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends JModelList {
+	class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends ListModel {
 		
 		«IF !ipage.entities.get(0).references.empty»
 		«Slug.genLinkedInfo(ipage,com)»
@@ -207,13 +213,13 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	«Slug.generateRestrictedAccess()»
 
-	jimport('joomla.application.component.controlleradmin');
+	«Slug.generateUses(newArrayList("ControllerAdmin", "ResponseJson", "Factory"))»
 	
 	/**
 	 * «ipage.name.toFirstUpper» list controller .
 	 * @generated
 	 */
-	class «com.name.toFirstUpper»Controller«ipage.name.toFirstUpper» extends JControllerAdmin
+	class «com.name.toFirstUpper»Controller«ipage.name.toFirstUpper» extends AdminController
 	{
 		«helperAdmin.genAdminControllerContructer»
 		«helperAdmin.genAdminControllerSaveOrdering»
@@ -221,16 +227,16 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	}
 	 '''
  def CharSequence generateSiteView()'''
-	«generateFileDoc(ipage.instance,com)»
+«generateFileDoc(ipage.instance,com)»
 	
-	«Slug.generateRestrictedAccess()»
+«Slug.generateRestrictedAccess()»
 	
-	jimport('joomla.application.component.view');
+«Slug.generateUses(newArrayList("ViewLegacy", "Text", "Factory"))»
 
 /**
  * View to  Show the Data
  */
-class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLegacy {
+class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends HtmlView {
 
     protected $state;
     protected $item;

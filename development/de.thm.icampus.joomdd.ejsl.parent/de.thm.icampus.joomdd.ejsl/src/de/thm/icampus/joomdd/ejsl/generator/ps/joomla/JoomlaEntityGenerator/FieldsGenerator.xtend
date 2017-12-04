@@ -55,9 +55,9 @@ class FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		jimport('joomla.form.formfield');
-		
-		class JFormField«nameField.toFirstUpper» extends JFormField
+		«Slug.generateUses(newArrayList("Text", "FormField"))»
+				
+		class FormField«nameField.toFirstUpper» extends FormField
 		{
 			protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 				"foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
@@ -90,9 +90,9 @@ class FieldsGenerator {
 			
 			«Slug.generateRestrictedAccess()»
 			
-			jimport('joomla.form.formfield');
+			«Slug.generateUses(newArrayList("FormField"))»
 			
-			class JFormField«nameField.toFirstUpper» extends JFormField
+			class FormField«nameField.toFirstUpper» extends FormField
 			{
 			    protected function getInput()
 				{
@@ -108,7 +108,7 @@ class FieldsGenerator {
 	'''
     def private genGetData_item()'''
 	protected function getData_item($«entFrom.primaryKey.name»){
-		$db = JFactory::getDbo();
+		$db = Factory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select("*")->from($this->referenceStruct["table"])
 			->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
@@ -127,15 +127,15 @@ class FieldsGenerator {
 		protected function getInput()
 		{
 			$html = array();
-			$document = JFactory::getDocument();
-			$document->addScript( JURI::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
-			$input = JFactory::getApplication()->input;
+			$document = Factory::getDocument();
+			$document->addScript( URI::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
+			$input = Factory::getApplication()->input;
 			$«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
 			if(empty($«entFrom.primaryKey.name»))
 			{
 				$alldata = $this->getAllData();
 				$html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select'  class='form-control' >";
-				$html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
+				$html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
 				foreach($alldata as $data)
 				{
 					$html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
@@ -148,7 +148,7 @@ class FieldsGenerator {
 			$data = $this->getData_item($«entFrom.primaryKey.name»);
 			$selectData = $this->getReferencedata($data);
 			$html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select' class='form-control' name='" . $this->name. "select'>";
-			$html[] = "<option>". JText::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
+			$html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
 			foreach($selectData as $selected)
 			{
 				$html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
@@ -168,7 +168,7 @@ class FieldsGenerator {
 		*/
 		protected function getReferencedata($data)
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select("distinct (case when 
 				«FOR ExtendedAttribute attr: mainRef.referencedExtendedAttributes»
@@ -196,7 +196,7 @@ class FieldsGenerator {
 	private def CharSequence genGetAllData() '''
 		protected function getAllData()
 		{
-			$db = JFactory::getDbo();
+			$db = Factory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select("«Slug.transformAttributeListInString("b.",mainRef.attributerefereced,',')»")
 				->from($this->referenceStruct["foreignTable"] . " as b")
@@ -234,7 +234,9 @@ class FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		JFormHelper::loadFieldClass('list');
+		«Slug.generateUses(newArrayList("FormHelper"))»
+		
+		FormHelper::loadFieldClass('list');
 		
 		class JFormField«entFrom.name.toFirstLower» extends JFormFieldList{
 		    protected $table = "«Slug.databaseName(com.name, entFrom.name)»";
@@ -257,7 +259,7 @@ class FieldsGenerator {
 	private def genGetAllDataForEntity() '''
 	protected function getAllData($valueColumn, $textColumn)
 	{
-		$dbo = JFactory::getDbo();
+		$dbo = Factory::getDbo();
 		$query = $dbo->getQuery(true);
 		$query->select("DISTINCT $valueColumn as value, $textColumn as text")
 			->from("$this->table AS «entFrom.name.toLowerCase»")
@@ -279,34 +281,38 @@ class FieldsGenerator {
 	}
 	'''
 	
-	private def CharSequence genAllSelectedDataForEntity() '''
-		protected function getAllSelectedData($«entFrom.primaryKey.name», $valueColumn, $textColumn)
-		{
-			$dbo = JFactory::getDbo();
-			$query = $dbo->getQuery(true);
-			$query->select(" $valueColumn AS value, $textColumn AS text,
-				CASE WHEN «entFrom.primaryKey.name» = $«entFrom.primaryKey.name» THEN 1
-				ELSE 0 AS checked
-				")->from("$this->table")->order("text AS ASC");
-			$dbo->setQuery($query);
-			$result = $dbo->loadObjectList();
-			return $result;
-		}
-	'''
+//	private def CharSequence genAllSelectedDataForEntity() '''
+//		protected function getAllSelectedData($«entFrom.primaryKey.name», $valueColumn, $textColumn)
+//		{
+//			$dbo = Factory::getDbo();
+//			$query = $dbo->getQuery(true);
+//			$query->select(" $valueColumn AS value, $textColumn AS text,
+//				CASE WHEN «entFrom.primaryKey.name» = $«entFrom.primaryKey.name» THEN 1
+//				ELSE 0 AS checked
+//				")->from("$this->table")->order("text AS ASC");
+//			$dbo->setQuery($query);
+//			$result = $dbo->loadObjectList();
+//			return $result;
+//		}
+//	'''
+	
 	static def CharSequence genFieldsForUserView(ExtendedComponent component)'''
 		<?php
 		«Slug.generateFileDoc(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
-		JFormHelper::loadFieldClass('list');
+		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
+		
+		FormHelper::loadFieldClass('list');
+		
 		class JFormFieldComponentuser extends JFormFieldList{
 		    
 		    protected function getOptions()
 		    {
 		    	$entity = $this->getAttribute('entity');
 		    	$table = "#__«component.name.toLowerCase»_" . $entity;
-		    	$dbo = JFactory::getDbo();
+		    	$dbo = Factory::getDbo();
 		    	$query = $dbo->getQuery(true);
 		    	$query->select("DISTINCT a.created_by AS value, b.name AS text")
 		    		->from("$table AS a ")

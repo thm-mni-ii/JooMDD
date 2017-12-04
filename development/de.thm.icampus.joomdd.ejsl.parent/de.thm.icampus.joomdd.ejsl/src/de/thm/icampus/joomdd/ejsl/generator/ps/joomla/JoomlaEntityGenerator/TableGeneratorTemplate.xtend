@@ -23,13 +23,12 @@ class TableGeneratorTemplate {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		// import Joomla table library
-		jimport('joomla.database.table');
+		«Slug.generateUses(newArrayList("Table", "Registry", "Factory"))»
 		
 		/**
 		* «tName.toFirstUpper» Table class
 		*/
-		class «com.name.toFirstUpper»Table«tName.toFirstUpper» extends JTable
+		class «com.name.toFirstUpper»Table«tName.toFirstUpper» extends Table
 		{
 			public $foreigntableOption = array();
 			
@@ -93,35 +92,35 @@ class TableGeneratorTemplate {
 		* @param    array        Named array
 		*
 		* @return    null|string    null is operation was satisfactory, otherwise returns an error
-		* @see        JTable:bind
+		* @see        Table:bind
 		* @since      1.5
 		*/
 		public function bind($array, $ignore = '')
 		{
-			$input = JFactory::getApplication()->input;
+			$input = Factory::getApplication()->input;
 			$task = $input->getString('task', '');
-			if(($task == 'save' || $task == 'apply') && (!JFactory::getUser()->authorise('core.edit.state','«Slug.nameExtensionBind("com", com.name).toLowerCase».«tName.toLowerCase».'.$array['id']) && $array['state'] == 1))
+			if(($task == 'save' || $task == 'apply') && (!Factory::getUser()->authorise('core.edit.state','«Slug.nameExtensionBind("com", com.name).toLowerCase».«tName.toLowerCase».'.$array['id']) && $array['state'] == 1))
 			{
 				$array['state'] = 0;
 			}
 			if($array['«ent.primaryKey.name»'] == 0)
 			{
-				$array['created_by'] = JFactory::getUser()->id;
+				$array['created_by'] = Factory::getUser()->id;
 			}
 			
 			//Support for file field: file
-			$input = JFactory::getApplication()->input;
+			$input = Factory::getApplication()->input;
 			
 			if (isset($array['params']) && is_array($array['params']))
 			{
-				$registry = new JRegistry();
+				$registry = new Registry();
 				$registry->loadArray($array['params']);
 				$array['params'] = (string) $registry;
 			}
 			
 			if (isset($array['metadata']) && is_array($array['metadata']))
 			{
-				$registry = new JRegistry();
+				$registry = new Registry();
 				$registry->loadArray($array['metadata']);
 				$array['metadata'] = (string) $registry;
 			}
@@ -156,7 +155,7 @@ class TableGeneratorTemplate {
 		 * Define a namespaced asset name for inclusion in the #__assets table
 		 * @return string The asset name
 		 *
-		 * @see JTable::_getAssetName
+		 * @see Table::_getAssetName
 		 */
 		protected function _getAssetName()
 		{
@@ -169,12 +168,12 @@ class TableGeneratorTemplate {
 		/**
 		 * Returns the parent asset's id. If you have a tree structure, retrieve the parent's id using the external key field
 		 *
-		 * @see JTable::_getAssetParentId
+		 * @see Table::_getAssetParentId
 		 */
-		protected function _getAssetParentId(JTable $table = null, $id = null)
+		protected function _getAssetParentId(Table $table = null, $id = null)
 		{
 			// We will retrieve the parent-asset from the Asset-table
-			$assetParent = JTable::getInstance('Asset');
+			$assetParent = Table::getInstance('Asset');
 			// Default: if no asset-parent can be found we take the global asset
 			$assetParentId = $assetParent->getRootId();
 			// The item has the component as asset-parent
@@ -200,7 +199,7 @@ class TableGeneratorTemplate {
 			{
 				foreach($this->foreigntableOptio as $key => $dbtable)
 				{
-					$instance_table = JTable::getInstance($dbtable['type'], $dbtable['prefix']);
+					$instance_table = Table::getInstance($dbtable['type'], $dbtable['prefix']);
 					$allForeignKeys = $this->loadAllPrimaryKeyofRef($pk, $dbtable['refkey']
 						, $dbtable['name'], $dbtable['foreignkey'],$dbtable["foreignId"]);
 					foreach($allForeignKeys as $keyOf)
