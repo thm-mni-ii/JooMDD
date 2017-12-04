@@ -9,6 +9,11 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 
+/**
+ * This class contains the templates to generate the necessary code for backend view templates (index pages).
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ */
 class IndexPageTemplateAdminHelper {
     ExtendedDynamicPage indexpage
 	private ExtendedComponent  com

@@ -324,7 +324,7 @@ class FieldsGenerator {
 		}
 	'''
 	def public dogenerate(String path, IFileSystemAccess access) {
-		if(this.mainRef != null)
+		if(this.mainRef !== null)
 			access.generateFile(path+ "/"+getnameField +".php", genRefrenceField)
 		var File fieldEntity = new File (path+ "/"+entFrom.name +".php")
 		if(!fieldEntity.exists){

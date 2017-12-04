@@ -115,15 +115,15 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    function __construct()
 		    {
 		        «var IndexPage inPage = Slug.getPageForAll(dpage, com) »
-		        «IF inPage != null»
-		        	$this->view_list = '«Slug.getPageForAll(dpage, com).name.toLowerCase»';
+		        «IF inPage !== null»
+		        $this->view_list = '«Slug.getPageForAll(dpage, com).name.toLowerCase»';
 		        «ELSE»
-		        	$this->view_list = '<Put the View Name>';
+		        $this->view_list = '<Put the View Name>';
 		        «ENDIF»
 		        parent::__construct();
 		    }
 		    «IF dpage.haveFiletoLoad»
-		    	«backHelp.genAdminControllerSave()»
+		    «backHelp.genAdminControllerSave()»
 		    «ENDIF»
 		}
 	'''
@@ -230,8 +230,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ModelAdmin
 		{
 		    /**
-			 * @var		string	The prefix to use with controller messages.
-			 * @since	1.6
+			 * @var    string  The prefix to use with controller messages.
+			 * @since  1.6
 			 */
 			protected $text_prefix = '«Slug.nameExtensionBind("com".toUpperCase, com.name.toUpperCase)»';
 			«backHelp.generateAdminModelTableFunction()»
@@ -252,97 +252,97 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		public function save($data)
 		{
 		    «IF dpage.haveFiletoLoad»
-		    	$files = Factory::getApplication()->input->files->get("jform", array(), 'array');
-		    	$item = $this->getItem();
-		    	if(isset($files) && count($files) >0)
+		    $files = Factory::getApplication()->input->files->get("jform", array(), 'array');
+		    $item = $this->getItem();
+		    if(isset($files) && count($files) >0)
+		    {
+		        $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+		    	foreach ($files as $keys=>$file)
 		    	{
-		    	    $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
-		    	    foreach ($files as $keys=>$file)
+		    	    if(!empty($file))
 		    	    {
-		    	        if(!empty($file))
+		    	        if(strpos($file['type'],"image")!==false)
 		    	        {
-		    	            if(strpos($file['type'],"image")!==false)
-		    	            {
-		    	                $path = $params->get("«dpage.name.toLowerCase»_image_path");
-		    	            }
-		    	            else
-		    	            {
-		    	                $path = $params->get("«dpage.name.toLowerCase»_file_path");
-		    	            }
-		    	            $data[$keys]=«com.name.toFirstUpper»Helper::uploadFiles($file,$path,$item->$keys);
+		    	            $path = $params->get("«dpage.name.toLowerCase»_image_path");
 		    	        }
+		    	        else
+		    	        {
+		    	            $path = $params->get("«dpage.name.toLowerCase»_file_path");
+		    	        }
+		    	        $data[$keys]=«com.name.toFirstUpper»Helper::uploadFiles($file,$path,$item->$keys);
 		    	    }
 		    	}
+		    }
 		    «ENDIF»
 		    «IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
-		    	$inputs = Factory::getApplication()->input->get("jform", array(), 'array');
-		    	if(parent::save($data))
+		    $inputs = Factory::getApplication()->input->get("jform", array(), 'array');
+		    if(parent::save($data))
+		    {
+		        if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
 		    	{
-		    	    if(empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0)
-		    	    {
-		    	        $inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
-		    	    }
-		    	    «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
-		    	    	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
-		    	    		$this->set«ref.entity.name»($inputs);
-		    	    	«ENDIF»
-		    	    «ENDFOR»
+		    	    $inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
 		    	}
-		    	else
-		    	{
-		    	    return false;
-		    	}
-		    	return true;
-		«ELSE»
-			return parent::save($data);        
-		   «ENDIF»
+		    	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
+		    	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
+		    	$this->set«ref.entity.name»($inputs);
+		    	«ENDIF»
+		    	«ENDFOR»
+		    }
+		    else
+		    {
+		        return false;
+		    }
+		    return true;
+		    «ELSE»
+		    return parent::save($data);        
+		    «ENDIF»
 		}
 	'''
 	
 	def CharSequence generateModelReferenceSave()'''
 		«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
-			«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
-				public function set«ref.entity.name»($inputs)
+		«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
+		public function set«ref.entity.name»($inputs)
+		{
+		    «var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
+		    «FOR Attribute attr : referenceAttr»
+		    $«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
+		    «ENDFOR»
+		    $«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
+		    «FOR ExtendedAttribute toAttr: ref.extendedAttributes»
+		    $«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
+		    «ENDFOR»
+
+		    if(«Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")»)
+			{
+			    if(!empty($«ref.entity.name.toLowerCase»_id))
 				{
-				    «var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
-				«FOR Attribute attr : referenceAttr»
-					$«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
-				«ENDFOR»
-				$«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
-				«FOR ExtendedAttribute toAttr: ref.extendedAttributes»
-					$«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
-				«ENDFOR»
-				
-				if(«Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")»)
-				{
-				    if(!empty($«ref.entity.name.toLowerCase»_id))
+				    foreach( $«ref.entity.name.toLowerCase»_id as $item)
 				    {
-				        foreach( $«ref.entity.name.toLowerCase»_id as $item)
+				        if(intval($item) != 0)
 				        {
-				            if(intval($item) != 0)
-				            {
-				                $mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
-				    $mappingTableDelete->delete($item);
-				}
-				}
+				            $mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
+				            $mappingTableDelete->delete($item);
+				        }
+				    }
 				}
 				$mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
-				     for($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++)
-				     {
-				         $dataToSave = array();
-				«FOR Attribute attr: referenceAttr»
-					$dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
-				«ENDFOR»
-				«FOR ExtendedAttribute toattr: ref.extendedAttributes»
-					$dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
-				«ENDFOR»
-				$dataToSave["state"]=1;
-				$mappingTable->save($dataToSave);
-				$mappingTable->reset();
+				for($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++)
+				{
+				    $dataToSave = array();
+				    «FOR Attribute attr: referenceAttr»
+				    $dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
+				    «ENDFOR»
+				    «FOR ExtendedAttribute toattr: ref.extendedAttributes»
+				    $dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
+					«ENDFOR»
+					$dataToSave["state"]=1;
+					$mappingTable->save($dataToSave);
+					$mappingTable->reset();
 				}
-				}
-				}
-			«ENDIF»
+			}
+		}
+		«ENDIF»
 		«ENDFOR»
 	'''
 	
@@ -372,40 +372,37 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateUses(newArrayList("Text", "Route", "Factory", "Html"))»
 		
-			HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
-			HTMLHelper::_('behavior.tooltip');
-			HTMLHelper::_('behavior.formvalidation');
-			HTMLHelper::_('formbehavior.chosen', 'select');
-			HTMLHelper::_('behavior.keepalive');
-			
-			// Import CSS
-			$document = Factory::getDocument();
-			$document->addStyleSheet('components/«Slug.nameExtensionBind("com", com.name.toLowerCase)»/assets/css/«com.name.toLowerCase».css');
-			?>
-			<script type="text/javascript">
-			    js = jQuery.noConflict();
-			    js(document).ready(function() {
-			        
-			    });
-			
-			    Joomla.submitbutton = function(task)
-			    {
-			        if (task == '«dpage.name.toLowerCase».cancel') {
+		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+		HTMLHelper::_('behavior.tooltip');
+		HTMLHelper::_('behavior.formvalidation');
+		HTMLHelper::_('formbehavior.chosen', 'select');
+		HTMLHelper::_('behavior.keepalive');
+		
+		// Import CSS
+		$document = Factory::getDocument();
+		$document->addStyleSheet('components/«Slug.nameExtensionBind("com", com.name.toLowerCase)»/assets/css/«com.name.toLowerCase».css');
+		?>
+		<script type="text/javascript">
+		    js = jQuery.noConflict();
+		    js(document).ready(function() {
+		
+		    });
+		
+		    Joomla.submitbutton = function(task)
+		    {
+		        if (task == '«dpage.name.toLowerCase».cancel') {
+		            Joomla.submitform(task, document.getElementById('«dpage.name.toLowerCase»-form'));
+			    } else {
+
+			        if (task != '«dpage.name.toLowerCase».cancel' && document.formvalidator.isValid(document.id('«dpage.name.toLowerCase»-form'))) {
 			            Joomla.submitform(task, document.getElementById('«dpage.name.toLowerCase»-form'));
-			        }
-			        else {
-			            
-			            if (task != '«dpage.name.toLowerCase».cancel' && document.formvalidator.isValid(document.id('«dpage.name.toLowerCase»-form'))) {
-			                
-			                Joomla.submitform(task, document.getElementById('«dpage.name.toLowerCase»-form'));
-			            }
-			            else {
-			                alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-			            }
+			        } else {
+			            alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
 			        }
 			    }
-			</script>
-			«backHelp.generateAdminViewLayoutForm()»
+		    }
+		</script>
+		«backHelp.generateAdminViewLayoutForm()»
 	'''
 	
 	def CharSequence generateSiteController(Boolean isedit)'''
@@ -429,6 +426,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 			«ENDIF»
 		}
 	'''
+	
 	def CharSequence generateSiteModelShow()'''
 		«generateFileDoc(dpage,com)»
 		
@@ -478,7 +476,6 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 			«frontHelp.generateSiteModelSave()»
 			«generateModelReferenceSave()»
 			«frontHelp.generateSiteModelDelete()»
-			
 		}
 	'''
 	
