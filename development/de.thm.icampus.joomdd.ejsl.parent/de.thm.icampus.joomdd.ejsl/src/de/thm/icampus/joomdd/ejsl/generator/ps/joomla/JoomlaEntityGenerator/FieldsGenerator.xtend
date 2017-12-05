@@ -233,7 +233,7 @@ class FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("FormHelper"))»
+		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
 		
 		FormHelper::loadFieldClass('list');
 		
