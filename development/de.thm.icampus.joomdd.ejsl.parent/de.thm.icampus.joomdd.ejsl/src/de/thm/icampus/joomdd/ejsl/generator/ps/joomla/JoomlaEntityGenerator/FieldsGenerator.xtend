@@ -55,7 +55,7 @@ class FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("Text", "FormField", "Factory"))»
+		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
 				
 		class JFormField«nameField.toFirstUpper» extends FormField
 		{
@@ -127,7 +127,7 @@ class FieldsGenerator {
 		{
 			$html = array();
 			$document = Factory::getDocument();
-			$document->addScript( URI::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
+			$document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
 			$input = Factory::getApplication()->input;
 			$«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
 			if(empty($«entFrom.primaryKey.name»))
