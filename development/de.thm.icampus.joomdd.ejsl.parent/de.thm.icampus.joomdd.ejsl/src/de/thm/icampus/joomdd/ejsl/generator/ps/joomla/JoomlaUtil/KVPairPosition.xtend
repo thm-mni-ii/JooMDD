@@ -1,17 +1,10 @@
-/**
- */
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil
 
-
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>KV Pair Position</b></em>'.
- * <!-- end-user-doc -->
- *
- *
- * @see eJSLGenerator.GeneratorTemplatePackage#getKVPairPosition()
- * @model
- * @generated
+ * This class generates the key value pairs for template positions.
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ * 
  */
 public class KVPairPosition extends KVPairInterface {
 	
@@ -19,4 +12,4 @@ public class KVPairPosition extends KVPairInterface {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
-} // KVPairPosition
+}

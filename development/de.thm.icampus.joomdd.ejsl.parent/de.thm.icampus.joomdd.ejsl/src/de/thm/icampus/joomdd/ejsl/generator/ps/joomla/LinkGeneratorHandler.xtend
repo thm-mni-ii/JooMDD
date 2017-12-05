@@ -5,6 +5,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.ExternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.Link
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.ExternalLinkGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.InternalLinkGenerator
 
 /**
  * This class represents the interface between the JooMDD generator and the Joomla-specific link generator templates. 
@@ -44,7 +45,7 @@ public class LinkGeneratorHandler {
 				return intern.generateLink(sect,compname)
 			}
 			else{
-				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.InternalLinkGen intern = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.InternalLinkGen(link)
+				var InternalLinkGenerator intern = new InternalLinkGenerator(link)
 				return intern.generateLink(sect,compname)
 				}
 			}

@@ -1,5 +1,3 @@
-/**
- */
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil
 
 public class KVPairGeneratorClient  {

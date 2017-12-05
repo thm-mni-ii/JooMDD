@@ -21,12 +21,9 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 class LanguageGenerator extends AbstractExtensionGenerator {
 	new(IFileSystemAccess2 fileAccess) {
 		fsa = fileAccess
-		
-		
 	}
 
 	def genComponentLanguage(ExtendedComponent component, String root) {
-
 		for (lang : component.languages) {
 			val ldir = lang.name
 			var EList<KVPairLanguage> languagesWordsFront = new BasicEList<KVPairLanguage>()
@@ -41,7 +38,8 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 					languagesWordsBack.add(new KVPairLanguage(keys) )
 				}
 			}
-			if(!lang.sys){
+			
+			if(!lang.sys) {
 				fsa.generateFile(
 				root +"/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
@@ -50,7 +48,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				root + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
 					fileLangGen(languagesWordsBack))
-			}else{
+			} else {
 			
 			fsa.generateFile(
 				root +"/components/"+ component.extensionName+ "/language/" + ldir + "/" + ldir + "." + 
@@ -61,7 +59,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				root  + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
 					fileLangGen(languagesWordsBack))
-					}
+			}
 		}
 	}
 	
@@ -128,63 +126,60 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_" + pag.page.name.toUpperCase + "_PARAMS_GLOBAL__LABEL", "Global Parameter"))
 			
 			if( pag.extendedPage.intance instanceof DetailsPage){
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_TITLE_" + Slug.slugify(pag.page.name).toUpperCase +"EDIT",pag.page.name.toFirstUpper+"edit"))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_"+ Slug.slugify(pag.page.name).toUpperCase+"EDIT_TITLE",pag.page.name.toFirstUpper+"edit"))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_" + Slug.slugify(pag.page.name).toUpperCase+"EDIT_DESC",pag.page.name.toFirstUpper+"edit description"))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_ALIAS_"+pag.page.name.toUpperCase + "EDIT",pag.page.name.toFirstUpper+"edit"))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+pag.page.name.toUpperCase+"EDIT_PARAMS_LOCAL__LABEL" ,"Local Parameter"))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ pag.page.name.toUpperCase +"EDIT_PARAMS_GLOBAL__LABEL", "Global Parameter"))
+    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_TITLE_" + Slug.slugify(pag.page.name).toUpperCase +"EDIT",pag.page.name.toFirstUpper+"edit"))
+    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_"+ Slug.slugify(pag.page.name).toUpperCase+"EDIT_TITLE",pag.page.name.toFirstUpper+"edit"))
+    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_" + Slug.slugify(pag.page.name).toUpperCase+"EDIT_DESC",pag.page.name.toFirstUpper+"edit description"))
+    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_ALIAS_"+pag.page.name.toUpperCase + "EDIT",pag.page.name.toFirstUpper+"edit"))
+    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+pag.page.name.toUpperCase+"EDIT_PARAMS_LOCAL__LABEL" ,"Local Parameter"))
+    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ pag.page.name.toUpperCase +"EDIT_PARAMS_GLOBAL__LABEL", "Global Parameter"))
 			}
+		}
 			
-			}
-			
-			for(ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]){
-				var ExtendedDynamicPage dtPage = dynamicPagereference.extendedPage.extendedDynamicPageInstance as ExtendedDynamicPage
-				for( ExtendedEntity ent: dtPage.extendedEntityList){
-					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ent.name.toUpperCase,ent.name.toFirstUpper))
-					languagesWords.add(new KVPairLanguage("JGRID_HEADING_" + ent.primaryKey.name.toUpperCase,ent.primaryKey.name))
-					
-					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_SELECT_"+ ent.name.toUpperCase, "Select a " + ent.name.toFirstUpper))
-					for(ExtendedAttribute attr: ent.allExtendedAttributes){
-						 var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) 
-						languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+ Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
-						languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_DESC","Description of " + Slug.slugify(attr.name).toFirstUpper))
-						if( field != null && field.values != null){
-							for( KeyValuePair kv: field.values){
-								languagesWords.add(new KVPairLanguage(dtPage.name.toUpperCase+"_"+attr.name.toUpperCase+"_"+kv.name.toUpperCase+"_OPTION",kv.name))
-							}
+		for(ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance !== null]){
+			var ExtendedDynamicPage dtPage = dynamicPagereference.extendedPage.extendedDynamicPageInstance as ExtendedDynamicPage
+			for( ExtendedEntity ent: dtPage.extendedEntityList) {
+				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ent.name.toUpperCase,ent.name.toFirstUpper))
+				languagesWords.add(new KVPairLanguage("JGRID_HEADING_" + ent.primaryKey.name.toUpperCase,ent.primaryKey.name))
+				
+				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_SELECT_"+ ent.name.toUpperCase, "Select a " + ent.name.toFirstUpper))
+				for(ExtendedAttribute attr: ent.allExtendedAttributes){
+					var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) 
+					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+ Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
+					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_DESC","Description of " + Slug.slugify(attr.name).toFirstUpper))
+					if( field !== null && field.values !== null){
+						for( KeyValuePair kv: field.values){
+							languagesWords.add(new KVPairLanguage(dtPage.name.toUpperCase+"_"+attr.name.toUpperCase+"_"+kv.name.toUpperCase+"_OPTION",kv.name))
 						}
 					}
-				for( ExtendedReference ref: ent.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")]){
-				 var Entity refEntity = Slug.getOtherEntityToMapping(ref)
-				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+Slug.slugify(ent.name).toUpperCase+"_"+refEntity.name.toUpperCase,refEntity.name.toFirstUpper))
 				}
-				}
+    			for( ExtendedReference ref: ent.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")]){
+    			    var Entity refEntity = Slug.getOtherEntityToMapping(ref)
+    			    languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+Slug.slugify(ent.name).toUpperCase+"_"+refEntity.name.toUpperCase,refEntity.name.toFirstUpper))
+    			}
 			}
-			for(ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance != null]){
-			    if( dynamicPagereference.extendedPage.extendedDynamicPageInstance.instance instanceof IndexPage){
+		}
+		for(ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance !== null]){
+		    if( dynamicPagereference.extendedPage.extendedDynamicPageInstance.instance instanceof IndexPage){
 			    languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase+"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_ORDERING_LABEL" , "Ordering"))
-			     languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_FILTER_LABEL" , "Filter"))
-			   }
-				for( ExtendedAttribute attr: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendFiltersList){
-					languagesWords.add(new KVPairLanguage("JOPTION_SELECT_"+ Slug.slugify(attr.name).toUpperCase, "Select a "+Slug.slugify(attr.name).toFirstUpper))
-					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
-					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase+"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
-					}
-					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+dynamicPagereference.extendedPage.name.toUpperCase+"_ACTIONS","Actions"))
-				}
-				
+			    languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_FILTER_LABEL" , "Filter"))
+			}
+			for( ExtendedAttribute attr: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendFiltersList){
+			    languagesWords.add(new KVPairLanguage("JOPTION_SELECT_"+ Slug.slugify(attr.name).toUpperCase, "Select a "+Slug.slugify(attr.name).toFirstUpper))
+				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
+				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase+"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
+			}
+			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+dynamicPagereference.extendedPage.name.toUpperCase+"_ACTIONS","Actions"))
+		}		
 	}
 
 	override generate() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	    throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
 	public def genModuletLanguage(ExtendedModule extmod, String root) {
-
 		var String name = Slug.nameExtensionBind("mod", extmod.name).toLowerCase
 		for (lang : extmod.languages) {
-			var EList<KVPairLanguage> languagesWords = new BasicEList<KVPairLanguage>()
+		    var EList<KVPairLanguage> languagesWords = new BasicEList<KVPairLanguage>()
 			languageModuleFileGen(languagesWords, extmod)
 			for(keys: lang.keyvaluepairs){
 				if(!keysContains(keys, languagesWords)){
@@ -199,15 +194,13 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				fsa.generateFile(root + "/language/" + ldir + "/" + ldir + "." + name + ".ini",
 				fileLangGen( languagesWords))
 			}
-
 		}
-
 	}
 	
 	def CharSequence fileLangGen( EList<KVPairLanguage>  list) '''
-	«FOR KVPairLanguage kv: list»
-	«kv.generateKVPair»
-	«ENDFOR»
+	    «FOR KVPairLanguage kv: list»
+	        «kv.generateKVPair»
+	    «ENDFOR»
 	'''
 	
 	def boolean keysContains(KeyValuePair pair,EList<KVPairLanguage> languagesWords) {
@@ -241,19 +234,17 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
 		languagesWords.add(new KVPairLanguage("JOPTION_SELECT_CREATED_BY","select a user"))
 		var ExtendedDynamicPage dtPage = extmod.extendedPageReference.extendedPage.extendedDynamicPageInstance 
-		for(ExtendedAttribute attr : extmod.extendedPageReference.extendedPage.extendedDynamicPageInstance.extendFiltersList){
-			 var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) 
+		for(ExtendedAttribute attr : extmod.extendedPageReference.extendedPage.extendedDynamicPageInstance.extendFiltersList) {
+			var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) 
 			languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FORM_LBL_"+ attr.name.toUpperCase, attr.name.toFirstUpper))
 			languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_" + attr.name.toUpperCase, attr.name.toFirstUpper))
 			languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_"+ attr.name.toUpperCase+"_DESC ", attr.name.toFirstUpper))
 			languagesWords.add(new KVPairLanguage("JOPTION_SELECT_" +  attr.name.toUpperCase,"Select a "+ attr.name))
-			if(field != null){
+			if(field !== null){
 				for(KeyValuePair kv: field.values){
 					languagesWords.add(new KVPairLanguage( dtPage.name.toUpperCase + "_"+attr.name.toUpperCase+ "_"+kv.name.toUpperCase+"_OPTION",kv.name))
-			}
+			    }
 			}
 		}
-		
 	}
-
 }

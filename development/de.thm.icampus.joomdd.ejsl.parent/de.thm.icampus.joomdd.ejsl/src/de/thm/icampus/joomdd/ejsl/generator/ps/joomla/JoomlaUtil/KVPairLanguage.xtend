@@ -1,20 +1,13 @@
-/**
- */
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil
 
-import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
-import de.thm.icampus.joomdd.ejsl.eJSL.impl.KeyValuePairImpl
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>KV Pair Language</b></em>'.
- * <!-- end-user-doc -->
- *
- *
- * @see eJSLGenerator.GeneratorTemplatePackage#getKVPairLanguage()
- * @model
- * @generated
+ * This class generates the key value pairs in language files.
+ * 
+ * @author Dieudonne Timma, Dennis Priefer
+ * 
  */
 public class KVPairLanguage extends KVPairInterface {
 	public KeyValuePair kv
@@ -31,4 +24,4 @@ public class KVPairLanguage extends KVPairInterface {
 		return '''«kv.name.toUpperCase»="«kv.value»"'''
 	}
 	
-} // KVPairLanguage
+}
