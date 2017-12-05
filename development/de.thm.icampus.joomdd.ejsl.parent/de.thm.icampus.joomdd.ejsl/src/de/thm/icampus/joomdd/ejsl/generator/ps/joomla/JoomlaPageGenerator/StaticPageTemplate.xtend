@@ -36,8 +36,11 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	
 	def CharSequence generateView() '''
 	    «generateFileDoc(staticpage.instance, comp)»
+	    
 	    «Slug.generateRestrictedAccess()»
-	    «Slug.generateUses(newArrayList("ViewLegacy"))»
+	    
+	    «Slug.generateUses(newArrayList("ViewLegacy", "Text"))»
+	    
 	    /**
 	     * HTML View class for the «comp.name.toFirstUpper» Component
 	     *

@@ -351,7 +351,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ViewLegacy", "Factory"))»
+		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text"))»
 		
 		/**
 		 * View to edit a «dpage.name»
@@ -484,7 +484,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ViewLegacy", "Factory"))»
+		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text"))»
 		
 		/**
 		 * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»
