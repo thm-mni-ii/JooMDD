@@ -55,9 +55,9 @@ class FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("Text", "FormField"))»
+		«Slug.generateUses(newArrayList("Text", "FormField", "Factory"))»
 				
-		class FormField«nameField.toFirstUpper» extends FormField
+		class JFormField«nameField.toFirstUpper» extends FormField
 		{
 			protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 				"foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
