@@ -223,7 +223,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 					<folder>language</folder>
 					<folder>controllers</folder>
 					<folder>helpers</folder>
-					<folder>assets</folder>
 				</files>
 		
 				<languages>
