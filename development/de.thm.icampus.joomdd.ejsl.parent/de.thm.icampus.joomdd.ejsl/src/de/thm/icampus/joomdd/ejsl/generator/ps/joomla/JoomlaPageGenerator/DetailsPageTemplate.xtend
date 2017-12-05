@@ -227,7 +227,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		/**
 		 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
 		 */
-		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ModelAdmin
+		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends AdminModel
 		{
 		    /**
 			 * @var    string  The prefix to use with controller messages.

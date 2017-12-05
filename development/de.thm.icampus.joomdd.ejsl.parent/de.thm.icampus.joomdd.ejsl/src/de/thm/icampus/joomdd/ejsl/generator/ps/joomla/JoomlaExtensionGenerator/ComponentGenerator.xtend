@@ -453,7 +453,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	'''
 
 	/**
-	 * Returns the content of a simple backendSection model file that extends from ModelAdmin 
+	 * Returns the content of a simple backendSection model file that extends from AdminModel 
 	 * and provides methods to handle (load, edit...) of one data item
 	 */
 	def CharSequence phpAdminSimpleModelContent(ExtendedComponent component,ExtendedPage pageref) '''
@@ -465,7 +465,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateUses(newArrayList("ModelAdmin"))»
 		
-		class «component.name.toFirstUpper»Model«pageref.name.toFirstUpper» extends ModelAdmin
+		class «component.name.toFirstUpper»Model«pageref.name.toFirstUpper» extends AdminModel
 		{
 		}
 	'''
