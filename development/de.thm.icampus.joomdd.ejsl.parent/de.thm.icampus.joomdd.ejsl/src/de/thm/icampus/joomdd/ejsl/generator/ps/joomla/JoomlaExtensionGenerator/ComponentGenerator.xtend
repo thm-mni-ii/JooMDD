@@ -376,7 +376,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     *
 		     * @return  void
 		     */
-		    function display($cachable = false) 
+		    public function display($cachable = false, $urlparams = array())
 		    {
 		        // set default view if not set
 		        $input = Factory::getApplication()->input;
@@ -439,7 +439,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     *
 		     * @return  void
 		     */
-		    public function display($cachable = false, $urlparams = false) 
+		    public function display($cachable = false, $urlparams = array())
 		    {
 		        require_once JPATH_COMPONENT . '/helpers/«component.name.toLowerCase».php';
 		        $view = Factory::getApplication()->input->getCmd('view', '«class_name»s');
@@ -694,7 +694,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 * @param   array  A named array
 		 * @return  array
 		 */
-		function «component.name.toFirstUpper»BuildRoute(&$query)
+		public function «component.name.toFirstUpper»BuildRoute(&$query)
 		{
 		    $segments = array();
 		
@@ -718,15 +718,14 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 * @param  array  A named array
 		 *
 		 */
-		function «component.name.toFirstUpper»ParseRoute($segments)
+		public function «component.name.toFirstUpper»ParseRoute($segments)
 		{
 		    $vars = array();
 		
 		    // view is always the first element of the array
 		    $vars['view'] = array_shift($segments);
 		
-		    while (!empty($segments))
-		    {
+		    while (!empty($segments)) {
 		        $segment = array_pop($segments);
 		        if (is_numeric($segment)) {
 		            $vars['id'] = $segment;

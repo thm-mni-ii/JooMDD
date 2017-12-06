@@ -383,12 +383,12 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
 	    $created_by = $params_module->get('created_by');
 	    if (!empty($created_by)) {
-	        $model->setState('filter.search',$created_by);
+	        $model->setState('filter.search', $created_by);
 	    }
 
 	    $ordering = $params_module->get('ordering');
 	    if (!empty($ordering)) {
-	        $model->setState('list.ordering',$ordering);
+	        $model->setState('list.ordering', $ordering);
 	    }
 
 	    $direction = $params_module->get('direction');

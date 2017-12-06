@@ -112,7 +112,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 */
 		class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends FormController
 		{
-		    function __construct()
+		    public function __construct()
 		    {
 		        «var IndexPage inPage = Slug.getPageForAll(dpage, com) »
 		        «IF inPage !== null»
@@ -416,7 +416,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelItem, Factory, ArrayHelper, Registry", "Table", "Factory"))»
+		«Slug.generateUses(newArrayList("ModelItem", "Factory", "ArrayHelper", "Registry", "Table"))»
 		
 		jimport('joomla.event.dispatcher');
 		
@@ -440,7 +440,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelForm, Factory, ArrayHelper, Registry", "Table", "Form", "Factory"))»
+		«Slug.generateUses(newArrayList("ModelForm", "Factory", "ArrayHelper", "Registry", "Table", "Form"))»
 		
 		jimport('joomla.event.dispatcher');
 		

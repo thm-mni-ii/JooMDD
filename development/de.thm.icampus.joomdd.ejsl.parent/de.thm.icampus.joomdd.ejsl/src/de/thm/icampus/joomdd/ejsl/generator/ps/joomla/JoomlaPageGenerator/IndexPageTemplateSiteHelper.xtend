@@ -48,11 +48,11 @@ class IndexPageTemplateSiteHelper {
 	        }
 	        $created_by = $this->params->get('created_by');
 	        if (!empty($created_by)) {
-	            $this->getModel()->setState('filter.search',$created_by);
+	            $this->getModel()->setState('filter.search', $created_by);
 	        }
 	        $ordering = $this->params->get('ordering');
 	        if (!empty($ordering)) {
-	            $this->getModel()->setState('list.ordering',$ordering);
+	            $this->getModel()->setState('list.ordering', $ordering);
 	        }
 	        $direction = $this->params->get('direction');
 	        if (!empty($direction)) {

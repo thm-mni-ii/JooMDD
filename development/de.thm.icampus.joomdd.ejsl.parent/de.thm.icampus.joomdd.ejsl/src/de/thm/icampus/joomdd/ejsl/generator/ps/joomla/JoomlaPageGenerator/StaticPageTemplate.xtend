@@ -54,7 +54,7 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	         *
 	         * @return  void
 	         */
-	        function display($tpl = null)
+	        public function display($tpl = null)
 	        {
 	            // Display the view
 	            parent::display($tpl);

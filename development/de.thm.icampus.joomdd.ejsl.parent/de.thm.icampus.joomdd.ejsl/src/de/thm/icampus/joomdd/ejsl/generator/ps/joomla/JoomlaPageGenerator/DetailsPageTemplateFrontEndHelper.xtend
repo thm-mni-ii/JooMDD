@@ -162,7 +162,7 @@ class DetailsPageTemplateFrontEndHelper {
 	 * To cancel the Edit of a Item
 	 *
 	 */
-	function cancel()
+	public function cancel()
 	{
 	    $app = Factory::getApplication();
 	
@@ -393,7 +393,7 @@ class DetailsPageTemplateFrontEndHelper {
 	 * @param  Int  $datacontent  the Id
 	 *
 	 */
-	function delete($data)
+	public function delete($data)
 	{
 	    $id = (!empty($data)) ? $data : (int)$this->getState($this->getName() . '.«mainEntity.primaryKey.name»');
 	    if (Factory::getUser()->authorise('core.delete', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true) {

@@ -250,7 +250,7 @@ class IndexPageTemplateAdminHelper {
 	     * @return void
 	     * @generated
 	     */
-	    public function display($tpl = null) 
+	    public function display($tpl = null)
 	    {
 	        $this->state = $this->get('State');
 	        $this->items = $this->get('Items');

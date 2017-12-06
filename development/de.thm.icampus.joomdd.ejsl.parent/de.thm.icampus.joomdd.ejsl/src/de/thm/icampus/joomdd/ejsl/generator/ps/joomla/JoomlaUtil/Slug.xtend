@@ -360,7 +360,7 @@ public class Slug  {
 	     * @category    Joomla component
 	     * @package     Joomla.Administrator
 	     * @subpackage  com_«component.name»
-	     * @name «component.name» 
+	     * @name «component.name»
 	     «IF component.manifest !== null»
 	     «generateAuthorsDocumentation(component.manifest.authors)»
 	     * @copyright   «component.manifest.copyright»
