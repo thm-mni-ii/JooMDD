@@ -71,8 +71,7 @@ class IndexPageTemplateAdminHelper {
 	    $ids = $app->input->get('cid', array(), 'array');
 	    $model = $this->getModel('«indexpage.name.toLowerCase»');
 	    $result = $model->saveOrdering($ids);
-	    if($result)
-	    {
+	    if ($result) {
 	        echo new JsonResponse($result);
 	    }
 	}
@@ -89,8 +88,7 @@ class IndexPageTemplateAdminHelper {
     	 */
     	public function __construct($config = array())
     	{
-    	    if (empty($config['filter_fields']))
-    	    {
+    	    if (empty($config['filter_fields'])) {
     	        $config['filter_fields'] = array(
     	            '«mainEntity.primaryKey.name»', '«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name»',
     	            'ordering', '«indexpage.entities.get(0).name.toLowerCase».ordering',
@@ -148,38 +146,29 @@ class IndexPageTemplateAdminHelper {
 	        «ENDFOR»
 	        // Filter by published state
 	        $published = $this->getState('filter.state');
-	        if (is_numeric($published))
-	        {
+	        if (is_numeric($published)) {
 	            $query->where('«indexpage.entities.get(0).name.toLowerCase».state = ' . (int) $published);
-	        }
-	        else if ($published === '')
-	        {
+	        } elseif ($published === '') {
 	            $query->where('(«indexpage.entities.get(0).name.toLowerCase».state IN (0, 1))');
 	        }
 	        // Filter by User 
 	        $created_by = $this->getState('filter.created_by');
-	        if (!empty($created_by))
-	        {
+	        if (!empty($created_by)) {
 	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '$created_by'");
 	        }
 	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
 	        // Filter by «attr.name» 
 	        $«attr.name» = $this->getState('filter.«attr.name»');
-	        if (!empty($«attr.name»))
-	        {
+	        if (!empty($«attr.name»)) {
 	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '$«attr.name»'");
 	        }
             «ENDFOR»
 	        // Filter by search in attribute
 	        $search = $this->getState('filter.search');
-	        if (!empty($search))
-	        {
-	            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0)
-	            {
+	        if (!empty($search)) {
+	            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
 	                $query->where('«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
-	            }
-	            else
-	            {
+	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
 	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE '.$search. 
@@ -195,8 +184,7 @@ class IndexPageTemplateAdminHelper {
 	        // Add the list ordering clause.
 	        $orderCol = $this->state->get('list.ordering');
 	        $orderDirn = $this->state->get('list.direction');
-	        if ($orderCol && $orderDirn)
-	        {
+	        if ($orderCol && $orderDirn) {
 	            $query->order($db->escape($orderCol . ' ' . $orderDirn));
 	        }
 	        return $query;
@@ -243,8 +231,7 @@ class IndexPageTemplateAdminHelper {
 	        $db->setQuery($statement);
 	        $response = $db->execute();
 
-	        if ($response)
-	        {
+	        if ($response) {
 	            $query = $db->getQuery(true);
 	            $query->select('`«mainEntity.primaryKey.name»`, `ordering`')->from('#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»');
 	            $db->setQuery($query);
@@ -263,19 +250,18 @@ class IndexPageTemplateAdminHelper {
 	     * @return void
 	     * @generated
 	     */
-	     public function display($tpl = null) 
-	     {
-	         $this->state = $this->get('State');
-	         $this->items = $this->get('Items');
-	         $this->pagination = $this->get('Pagination');
-	         $this->filterForm    = $this->get('FilterForm');
-	         $this->activeFilters = $this->get('ActiveFilters');
-	         
-	         // Check for errors.
-	         if (count($errors = $this->get('Errors')))
-	         {
-	             throw new Exception(implode("\n", $errors));
-	         }
+	    public function display($tpl = null) 
+	    {
+	        $this->state = $this->get('State');
+	        $this->items = $this->get('Items');
+	        $this->pagination = $this->get('Pagination');
+	        $this->filterForm    = $this->get('FilterForm');
+	        $this->activeFilters = $this->get('ActiveFilters');
+	    
+	        // Check for errors.
+	        if (count($errors = $this->get('Errors'))) {
+	            throw new Exception(implode("\n", $errors));
+	        }
 	         «com.name.toFirstUpper»Helper::addSubmenu('«indexpage.name.toLowerCase»');
 	        $this->addToolbar();
 	        $this->sidebar = JHtmlSidebar::render();
@@ -301,56 +287,42 @@ class IndexPageTemplateAdminHelper {
 
 	        //Check if the form exists before showing the add/edit buttons
 	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«  details.toLowerCase»';
-	        if (file_exists($formPath))
-	        {
-	            if ($canDo->get('core.create'))
-	            {
+	        if (file_exists($formPath)) {
+	            if ($canDo->get('core.create')) {
 	                JToolBarHelper::addNew('«details.toLowerCase».add', 'JTOOLBAR_NEW');
 	            }
-	            if ($canDo->get('core.edit') && isset($this->items[0]))
-	            {
+	            if ($canDo->get('core.edit') && isset($this->items[0])) {
 	                JToolBarHelper::editList('«details.toLowerCase».edit', 'JTOOLBAR_EDIT');
 	            }
 	        }
-	        if ($canDo->get('core.edit.state'))
-	        {
-	            if (isset($this->items[0]->state))
-	            {
+	        if ($canDo->get('core.edit.state')) {
+	            if (isset($this->items[0]->state)) {
 	                JToolBarHelper::divider();
 	                JToolBarHelper::custom('«indexpage.name.toLowerCase».publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
 	                JToolBarHelper::custom('«indexpage.name.toLowerCase».unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
-	            } 
-	            else if (isset($this->items[0]))
-	            {
+	            } elseif (isset($this->items[0])) {
 	                //If this component does not use state then show a direct delete button as we can not trash
 	                JToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_DELETE');
 	            }
-	            if (isset($this->items[0]->state))
-	            {
+	            if (isset($this->items[0]->state)) {
 	                JToolBarHelper::divider();
 	                JToolBarHelper::archiveList('«indexpage.name.toLowerCase».archive', 'JTOOLBAR_ARCHIVE');
 	            }
-	            if (isset($this->items[0]->checked_out))
-	            {
+	            if (isset($this->items[0]->checked_out)) {
 	                JToolBarHelper::custom('«indexpage.name.toLowerCase».checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
 	            }
 	        }
 	        //Show trash and delete for components that uses the state field
-	        if (isset($this->items[0]->state))
-	        {
-	            if ($state->get('filter.state') == -2 && $canDo->get('core.delete'))
-	            {
+	        if (isset($this->items[0]->state)) {
+	            if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
 	                JToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_EMPTY_TRASH');
 	                JToolBarHelper::divider();
-	            }
-	            else if ($canDo->get('core.edit.state'))
-	            {
+	            } elseif ($canDo->get('core.edit.state')) {
 	                JToolBarHelper::trash('«indexpage.name.toLowerCase».trash', 'JTOOLBAR_TRASH');
 	                JToolBarHelper::divider();
 	            }
 	        }
-	        if ($canDo->get('core.admin'))
-	        {
+	        if ($canDo->get('core.admin')) {
 	            JToolBarHelper::preferences('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 	        }
 	        JHtmlSidebar::setAction('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»');
@@ -477,8 +449,7 @@ class IndexPageTemplateAdminHelper {
         $canOrder = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
         $saveOrder = $listOrder == 'a.ordering';
         $model = $this->getModel();
-        if ($saveOrder)
-        {
+        if ($saveOrder) {
             $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
             HTMLHelper::_('sortablelist.sortable', '«indexpage.name.toFirstUpper»List', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
         }
@@ -533,8 +504,7 @@ class IndexPageTemplateAdminHelper {
             $key = $this->entitiesRef["$linkName"]["foreignPk"];
             $query->select($key)
                 ->from($dbtable);
-            foreach ($attribute as $index=>$attributItem)
-            {
+            foreach ($attribute as $index=>$attributItem) {
                 $query->where($attributItem . " like '".$attrvalue->$index."'");
             }
 

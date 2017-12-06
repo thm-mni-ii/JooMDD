@@ -105,35 +105,30 @@ class TableGeneratorTemplate {
 		{
 			$input = Factory::getApplication()->input;
 			$task = $input->getString('task', '');
-			if(($task == 'save' || $task == 'apply') && (!Factory::getUser()->authorise('core.edit.state','«Slug.nameExtensionBind("com", com.name).toLowerCase».«tName.toLowerCase».'.$array['id']) && $array['state'] == 1))
-			{
+			if (($task == 'save' || $task == 'apply') && (!Factory::getUser()->authorise('core.edit.state','«Slug.nameExtensionBind("com", com.name).toLowerCase».«tName.toLowerCase».'.$array['id']) && $array['state'] == 1)) {
 				$array['state'] = 0;
 			}
-			if($array['«ent.primaryKey.name»'] == 0)
-			{
+			if ($array['«ent.primaryKey.name»'] == 0) {
 				$array['created_by'] = Factory::getUser()->id;
 			}
 			
 			//Support for file field: file
 			$input = Factory::getApplication()->input;
 			
-			if (isset($array['params']) && is_array($array['params']))
-			{
+			if (isset($array['params']) && is_array($array['params'])) {
 				$registry = new Registry();
 				$registry->loadArray($array['params']);
 				$array['params'] = (string) $registry;
 			}
 			
-			if (isset($array['metadata']) && is_array($array['metadata']))
-			{
+			if (isset($array['metadata']) && is_array($array['metadata'])) {
 				$registry = new Registry();
 				$registry->loadArray($array['metadata']);
 				$array['metadata'] = (string) $registry;
 			}
 		
 			//Bind the rules for ACL where supported.
-			if (isset($array['rules']) && is_array($array['rules']))
-			{
+			if (isset($array['rules']) && is_array($array['rules'])) {
 				$this->setRules($array['rules']);
 			}
 		
@@ -147,8 +142,7 @@ class TableGeneratorTemplate {
 		*/
 		public function check()
 		{
-			if (property_exists($this, 'ordering') && $this->«ent.primaryKey.name» == 0)
-			{
+			if (property_exists($this, 'ordering') && $this->«ent.primaryKey.name» == 0) {
 				$this->ordering = self::getNextOrder();
 			}
 		
@@ -185,8 +179,7 @@ class TableGeneratorTemplate {
 			// The item has the component as asset-parent
 			$assetParent->loadByName('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 			// Return the found asset-parent-id
-			if ($assetParent->id)
-			{
+			if ($assetParent->id) {
 				$assetParentId = $assetParent->id;
 			}
 			return $assetParentId;
@@ -201,20 +194,17 @@ class TableGeneratorTemplate {
 		public function delete($pk = null)
 		{
 			$item = $this->load($pk);
-			if(isset($this->foreigntableOption))
-			{
-				foreach($this->foreigntableOptio as $key => $dbtable)
-				{
+			if (isset($this->foreigntableOption)) {
+				foreach ($this->foreigntableOptio as $key => $dbtable) {
 					$instance_table = Table::getInstance($dbtable['type'], $dbtable['prefix']);
 					$allForeignKeys = $this->loadAllPrimaryKeyofRef($pk, $dbtable['refkey']
 						, $dbtable['name'], $dbtable['foreignkey'],$dbtable["foreignId"]);
-					foreach($allForeignKeys as $keyOf)
-					{
+					foreach ($allForeignKeys as $keyOf) {
 						$result = $instance_table->delete($keyOf);
 					}
 				}
 			}
-			
+		
 			$result = parent::delete($pk);
 			return $result;
 		}
@@ -235,8 +225,7 @@ class TableGeneratorTemplate {
 			$query = $this->_db->getQuery(true);
 			$query->select($foreignId)
 				->from("#__" . $foreigntable);
-			foreach($keylist as $index=>$value)
-			{
+			foreach ($keylist as $index=>$value) {
 				$query->where($this->_db->quoteName($foreignkeys[$index]) . "=" .
 				$this->_db->quoteName($this->$value));
 			}
@@ -250,12 +239,10 @@ class TableGeneratorTemplate {
 		public function publish($pks = null, $state = 1, $userId = 0)
 		{
 			$k = $this->_tbl_keys;
-			if (!is_null($pks))
-			{
+			if (!is_null($pks)) {
 				foreach ($pks AS $key => $pk)
 				{
-					if (!is_array($pk))
-					{
+					if (!is_array($pk)) {
 						$pks[$key] = array($this->_tbl_key => $pk);
 					}
 				}
@@ -265,26 +252,19 @@ class TableGeneratorTemplate {
 			$state  = (int) $state;
 			
 			// If there are no primary keys set check to see if the instance key is set.
-			if (empty($pks))
-			{
+			if (empty($pks)) {
 				$pk = array();
-				foreach ($this->_tbl_keys AS $key)
-				{
-					if ($this->$key)
-					{
+				foreach ($this->_tbl_keys AS $key) {
+					if ($this->$key) {
 						$pk[$this->$key] = $this->$key;
-					}
-					// We don't have a full primary key - return false
-					else
-					{
+					} else {
 						return false;
 					}
 				}
 				$pks = array($pk);
 			}
 			
-			foreach ($pks AS $pk) 
-			{
+			foreach ($pks AS $pk) {
 				// Update the state state for rows with the given primary keys.
 				$query = $this->_db->getQuery(true)
 					->update($this->_tbl)

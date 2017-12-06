@@ -325,11 +325,11 @@ public class Slug  {
 	def static CharSequence generateAuthorsDocumentation(EList<Author> authors) '''
 		«IF authors.size() == 0»
 		* @author Auto Generated Author
-		* @authorEmail <info@generated.com> 
+		* @authorEmail <info@generated.com>
 		* @authorUrl www.generated.com
 		«ELSE»
 		«FOR author : authors»
-		* @author «author.name» «IF author.authoremail !== null»  <«author.authoremail»>«ENDIF» «IF author.authorurl !== null» <«author.authorurl»>«ENDIF»
+		* @author «author.name» «IF author.authoremail !== null»  <«author.authoremail»>«ENDIF»«IF author.authorurl !== null» <«author.authorurl»>«ENDIF»
 		«ENDFOR»
 		«ENDIF»
 	'''

@@ -130,13 +130,11 @@ class FieldsGenerator {
 			$document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
 			$input = Factory::getApplication()->input;
 			$«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
-			if(empty($«entFrom.primaryKey.name»))
-			{
+			if (empty($«entFrom.primaryKey.name»)) {
 				$alldata = $this->getAllData();
 				$html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select'  class='form-control' >";
 				$html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
-				foreach($alldata as $data)
-				{
+				foreach ($alldata as $data) {
 					$html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 					. $this->generateStringValue($data) ."</option>";
 				}
@@ -148,8 +146,7 @@ class FieldsGenerator {
 			$selectData = $this->getReferencedata($data);
 			$html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select' class='form-control' name='" . $this->name. "select'>";
 			$html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
-			foreach($selectData as $selected)
-			{
+			foreach ($selectData as $selected) {
 				$html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
 				. $this->generateStringValue($selected) ."</option>";
 			}
@@ -179,8 +176,7 @@ class FieldsGenerator {
 			«ENDFOR»
 			then 'selected'
 			else ' ' end) as selected");
-		foreach($this->keysAndForeignKeys as $key =>$value)
-		{
+		foreach ($this->keysAndForeignKeys as $key =>$value) {
 			$query->select(" b.$value");
 		}
 	

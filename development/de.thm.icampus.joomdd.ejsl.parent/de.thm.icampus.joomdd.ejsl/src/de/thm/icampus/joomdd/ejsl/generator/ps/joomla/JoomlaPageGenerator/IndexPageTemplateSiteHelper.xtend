@@ -39,44 +39,36 @@ class IndexPageTemplateSiteHelper {
 	        $app = Factory::getApplication();
 	        $this->params = $app->getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 	        $state = $this->params->get('state');
-	        if(!empty($state))
-	        {
+	        if (!empty($state)) {
 	            $this->getModel()->setState('filter.state', $state);
 	        }
 	        $search = $this->params->get('search');
-	        if(!empty($search))
-	        {
+	        if (!empty($search)) {
 	            $this->getModel()->setState('filter.search', $search);
 	        }
 	        $created_by = $this->params->get('created_by');
-	        if(!empty($created_by))
-	        {
+	        if (!empty($created_by)) {
 	            $this->getModel()->setState('filter.search',$created_by);
 	        }
 	        $ordering = $this->params->get('ordering');
-	        if(!empty($ordering))
-	        {
+	        if (!empty($ordering)) {
 	            $this->getModel()->setState('list.ordering',$ordering);
 	        }
 	        $direction = $this->params->get('direction');
-	        if(!empty($direction))
-	        {
+	        if (!empty($direction)) {
 	            $this->getModel()->setState('list.direction', $direction);
 	        }
 	        $start = $this->params->get('start');
-	        if(!empty($start))
-	        {
+	        if (!empty($start)) {
 	            $this->getModel()->setState('list.start', $start);
 	        }
 	        $limit = $this->params->get('limit');
-	        if(!empty($limit))
-	        {
+	        if (!empty($limit)) {
 	            $this->getModel()->setState('list.limit', $limit);
 	        }
 	        «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
 	        $«attr.name» = $this->params->get('«attr.name»');
-	        if(!empty($«attr.name»))
-	        {
+	        if (!empty($«attr.name»)) {
 	            $this->getModel()->setState('filter.«attr.name»', $«attr.name»);
 	        }
 	        «ENDFOR»
@@ -90,8 +82,7 @@ class IndexPageTemplateSiteHelper {
 	        $this->params = $app->getParams('«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 
 	        // Check for errors.
-	        if (count($errors = $this->get('Errors')))
-	        {
+	        if (count($errors = $this->get('Errors'))) {
 	            throw new Exception(implode("\n", $errors));
 	        }
 
@@ -101,56 +92,45 @@ class IndexPageTemplateSiteHelper {
 	'''
 	
 	public def CharSequence generateSiteViewprepareDocument() '''
-	    /**
-	     * Prepares the document
-	     */
-	    protected function _prepareDocument()
-	    {
-	        $app = Factory::getApplication();
-	        $menus = $app->getMenu();
-	        $title = null;
-	 
-	        // Because the application sets a default page title,
-	        // we need to get it from the menu item itself
-	        $menu = $menus->getActive();
-	        if ($menu)
-	        {
-	            $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-	        }
-	        else
-	        {
-	            $this->params->def('page_heading', Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
-	        }
-	        $title = $this->params->get('page_title', '');
-	        if (empty($title))
-	        {
-	            $title = $app->get('sitename');
-	        } 
-	        elseif ($app->get('sitename_pagetitles', 0) == 1)
-	        {
-	            $title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
-	        } 
-	        elseif ($app->get('sitename_pagetitles', 0) == 2)
-	        {
-	            $title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
-	        }
-	        $this->document->setTitle($title);
+	/**
+	 * Prepares the document
+	 */
+	protected function _prepareDocument()
+	{
+	    $app = Factory::getApplication();
+	    $menus = $app->getMenu();
+	    $title = null;
 
-	        if ($this->params->get('menu-meta_description'))
-	        {
-	            $this->document->setDescription($this->params->get('menu-meta_description'));
-	        }
-	 
-	        if ($this->params->get('menu-meta_keywords'))
-	        {
-	            $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
-	        }
-	 
-	        if ($this->params->get('robots'))
-	        {
-	            $this->document->setMetadata('robots', $this->params->get('robots'));
-	        }
+	    // Because the application sets a default page title,
+	    // we need to get it from the menu item itself
+	    $menu = $menus->getActive();
+	    if ($menu) {
+	        $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+	    } else {
+	        $this->params->def('page_heading', Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
 	    }
+	    $title = $this->params->get('page_title', '');
+	    if (empty($title)) {
+	        $title = $app->get('sitename');
+	    } elseif ($app->get('sitename_pagetitles', 0) == 1) {
+	        $title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
+	    } elseif ($app->get('sitename_pagetitles', 0) == 2) {
+	        $title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
+	    }
+	    $this->document->setTitle($title);
+
+	    if ($this->params->get('menu-meta_description')) {
+	        $this->document->setDescription($this->params->get('menu-meta_description'));
+	    }
+	
+	    if ($this->params->get('menu-meta_keywords')) {
+	        $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+	    }
+	
+	    if ($this->params->get('robots')) {
+	        $this->document->setMetadata('robots', $this->params->get('robots'));
+	    }
+	}
 	'''
 	
 	public def CharSequence genViewTemplateInit()'''

@@ -46,8 +46,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		        $path = $params->get($this->getAttribute('path'));
 		        $format = $params->get($this->getAttribute('accept_format'));
 		        $file='';
-		        if(!empty($this->value))
-		        {
+		        if (!empty($this->value)) {
 		            $file=  Uri::root()  .$path . '/'. $this->value;
 		        }
 		
@@ -87,8 +86,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		        $path = $params->get($this->getAttribute('path'));
 		       
 		        $file='';
-		        if(!empty($this->value))
-		        {
+		        if (!empty($this->value)) {
 		            $file=  Uri::root()  .$path . '/'. $this->value;
 		        }
 		

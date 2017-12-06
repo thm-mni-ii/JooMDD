@@ -32,11 +32,9 @@ class DetailsPageTemplateBackendHelper {
 		 */
 		protected function prepareTable($table)
 		{
-		    if (empty($table->«mainEntity.primaryKey.name»))
-		    {
+		    if (empty($table->«mainEntity.primaryKey.name»)) {
 		     // Set ordering to the last item if not set
-				if ($table->ordering === '') 
-				{
+				if ($table->ordering === '') {
 					$db = Factory::getDbo();
 					$query = $db->getQuery(true);
 					$query->select("MAX(ordering)")->from("#__«com.name.toLowerCase»_«mainEntity.name.toLowerCase»");
@@ -68,14 +66,12 @@ class DetailsPageTemplateBackendHelper {
 		    $table = $model->getTable();
 		    
 		    // Determine the name of the primary key for the data.
-		    if (empty($key))
-		    {
+		    if (empty($key)) {
 		        $key = $table->getKeyName();
 		    }
 		    
 		    // To avoid data collisions the urlVar may be different from the primary key.
-		    if (empty($urlVar)) 
-		    {
+		    if (empty($urlVar)) {
 		        $urlVar = $key;
 		    }
 		    
@@ -88,12 +84,9 @@ class DetailsPageTemplateBackendHelper {
 		    $uploadMaxSize = $params->get('upload_maxsize', 0) * 1024 * 1024;
 		    $uploadMaxFileSize = $mediaHelper->toBytes(ini_get('upload_max_filesize'));
 		    $files = $input->files->get("jform", array(), 'array');
-		    if (isset($files)) 
-		    {
-		        foreach ($files as $file)
-		        {
-		            if (!isset($file['name'])) 
-		            {
+		    if (isset($files)) {
+		        foreach ($files as $file) {
+		            if (!isset($file['name'])) {
 		                $this->setMessage(Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_INVALID_FILE_NAME'), 'error');
 		                $this->setRedirect(
 		                   Route::_(
@@ -102,12 +95,9 @@ class DetailsPageTemplateBackendHelper {
 		                   ));
 		                return false;
 		            }
-		            if(strpos($file['type'],"image")!==false)
-		            {
+		            if(strpos($file['type'],"image")!==false) {
 		                $path = $params->get("«dpage.name.toLowerCase»_image_path");
-		            } 
-		            else 
-		            {
+		            } else {
 		                $path = $params->get("«dpage.name.toLowerCase»_file_path");
 		            }
 		            $file['name'] = JFile::makeSafe($file['name']);
@@ -125,7 +115,7 @@ class DetailsPageTemplateBackendHelper {
 		                        . $this->getRedirectToItemAppend($recordId, $urlVar), false
 		                    ));
 		                return false;
-		            } 
+		            }
 		        }
 		        return parent::save($key, $urlVar);
 		    }
@@ -157,8 +147,7 @@ class DetailsPageTemplateBackendHelper {
 		
 		    $user = Factory::getUser();
 		    $isNew = ($this->item->«mainEntity.primaryKey.name» == 0);
-		    if (isset($this->item->checked_out))
-		    {
+		    if (isset($this->item->checked_out)) {
 		        $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $user->get('id'));
 		    }
 		    else
@@ -170,26 +159,20 @@ class DetailsPageTemplateBackendHelper {
 		    JToolBarHelper::title(Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»'), '«dpage.name.toLowerCase».png');
 		
 		    // If not checked out, allow to save the item.
-		    if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create'))))
-		    {
+		    if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
 		        JToolBarHelper::apply('«dpage.name.toLowerCase».apply', 'JTOOLBAR_APPLY');
 		        JToolBarHelper::save('«dpage.name.toLowerCase».save', 'JTOOLBAR_SAVE');
 		    }
-		    if (!$checkedOut && ($canDo->get('core.create')))
-		    {
+		    if (!$checkedOut && ($canDo->get('core.create'))) {
 		        JToolBarHelper::custom('«dpage.name.toLowerCase».save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
 		    }
 		    // If an existing item, can save to a copy.
-		    if (!$isNew && $canDo->get('core.create'))
-		    {
+		    if (!$isNew && $canDo->get('core.create')) {
 		        JToolBarHelper::custom('«dpage.name.toLowerCase».save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 		    }
-		    if (empty($this->item->id))
-		    {
+		    if (empty($this->item->id)) {
 		        JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CANCEL');
-		    }
-		    else
-		    {
+		    } else {
 		        JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CLOSE');
 		    }
 		}
@@ -207,13 +190,12 @@ class DetailsPageTemplateBackendHelper {
 		    $this->item = $this->get('Item');
 		    $this->form = $this->get('Form');
 			
-			   if (count($errors = $this->get('Errors')))
-			   {
-			      throw new Exception(implode("\n", $errors));
-			   }
-			
-			   $this->addToolbar();
-			   parent::display($tpl);
+		    if (count($errors = $this->get('Errors'))) {
+			    throw new Exception(implode("\n", $errors));
+			}
+		
+		    $this->addToolbar();
+		    parent::display($tpl);
 		}
 		
 	'''
@@ -236,35 +218,24 @@ class DetailsPageTemplateBackendHelper {
 					        <input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
 					        «ENDIF»
 					        <input type="hidden" name="jform[checked_out]" value="<?php 
-					            if(isset($this->item->checked_out))
-					            {
+					            if (isset($this->item->checked_out)) {
 					                echo $this->item->checked_out;
-					            }
-					            else
-					            {
+					            } else {
 					                echo Factory::getUser()->id;
 					            } ?>" />
 					        <input type="hidden" name="jform[checked_out_time]" value="<?php 
-					            if(isset($this->item->checked_out_time))
-					            {
+					            if (isset($this->item->checked_out_time)) {
 					                echo $this->item->checked_out_time;
-					            }
-					            else
-					            {
+					            } else {
 					                echo date("Y-m-d H:i:s") ;
 					            } ?>" />
 
 					        <?php
-					        if(empty($this->item->created_by))
-					        {?>
+					        if (empty($this->item->created_by)) {?>
 						    <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
-							<?php
-							} 
-					        else
-					        { ?>
+							<?php } else { ?>
 						    <input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
-						    <?php 
-						    } ?>
+						    <?php } ?>
 					        «Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
 					    </fieldset>
 				    </div>

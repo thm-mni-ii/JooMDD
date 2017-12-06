@@ -198,22 +198,19 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		public function onDisplay($name, $content, $width, $height, $col, $row, $buttons = true,
 			$id = null, $asset = null, $author = null, $params = array())
 		{
-			if (empty($id))
-			{
+			if (empty($id)) {
 				$id = $name;
 			}
 		
 			// Only add "px" to width and height if they are not given as a percentage
-			if (is_numeric($width))
-			{
-			$width .= 'px';
+			if (is_numeric($width)) {
+			    $width .= 'px';
 			}
 		
-			if (is_numeric($height))
-			{
-			$height .= 'px';
+			if (is_numeric($height)) {
+			    $height .= 'px';
 			}
-			
+		
 			//TODO: add some code here
 		} 
 		
@@ -238,25 +235,21 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		
 			$results = (array) $this->update($args);
 		
-			if ($results)
-			{
-			foreach ($results as $result)
-			{
-				if (is_string($result) && trim($result))
-				{
-					$return .= $result;
-				}
-			}
-			}
+			if ($results) {
+			    foreach ($results as $result) {
+		            if (is_string($result) && trim($result)) {
+		                $return .= $result;
+		            }
+		        }
+		    }
 		
-			if (is_array($buttons) || (is_bool($buttons) && $buttons))
-			{
-			$buttons = $this->_subject->getButtons($name, $buttons, $asset, $author);
+		    if (is_array($buttons) || (is_bool($buttons) && $buttons)) {
+		        $buttons = $this->_subject->getButtons($name, $buttons, $asset, $author);
 		
-				$return .= LayoutHelper::render('joomla.editors.buttons', $buttons);
-			}
+		        $return .= LayoutHelper::render('joomla.editors.buttons', $buttons);
+		    }
 		
-			return $return;
+		    return $return;
 		}
 	'''
 	
@@ -345,11 +338,10 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onFinderCategoryChangeState($extension, $pks, $value)
 		{
-			// Make sure we're handling com_names categories.
-			if ($extension == 'com_«plugin.name»')
-			{
-				$this->categoryStateChange($pks, $value);
-			}
+		    // Make sure we're handling com_names categories.
+		    if ($extension == 'com_«plugin.name»') {
+		        $this->categoryStateChange($pks, $value);
+		    }
 		}
 		
 		/**
@@ -365,21 +357,16 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onFinderAfterDelete($context, $table)
 		{
-			if ($context == 'com_«plugin.name».article')
-			{
-				$id = $table->id;
-			}
-			elseif ($context == 'com_finder.index')
-			{
-				$id = $table->link_id;
-			}
-			else
-			{
-				return true;
-			}
+		    if ($context == 'com_«plugin.name».article') {
+		        $id = $table->id;
+		    } elseif ($context == 'com_finder.index') {
+		        $id = $table->link_id;
+		    } else {
+		            return true;
+		    }
 		
-			// Remove the item from the index.
-			return $this->remove($id);
+		    // Remove the item from the index.
+		    return $this->remove($id);
 		}
 		
 		/**
@@ -399,31 +386,27 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onFinderAfterSave($context, $row, $isNew)
 		{
-			// We only want to handle «plugin.name» here. We need to handle front end and back end editing.
-			if ($context == 'com_«plugin.name».article' || $context == 'com_«plugin.name».form' )
-			{
-				// Check if the access levels are different.
-				if (!$isNew && $this->old_access != $row->access)
-				{
-					// Process the change.
-					$this->itemAccessChange($row);
-				}
+		    // We only want to handle «plugin.name» here. We need to handle front end and back end editing.
+		    if ($context == 'com_«plugin.name».article' || $context == 'com_«plugin.name».form' ) {
+		        // Check if the access levels are different.
+		        if (!$isNew && $this->old_access != $row->access) {
+		            // Process the change.
+		            $this->itemAccessChange($row);
+		        }
 		
-				// Reindex the item.
-				$this->reindex($row->id);
-			}
+		        // Reindex the item.
+		        $this->reindex($row->id);
+		    }
 		
-			// Check for access changes in the category.
-			if ($context == 'com_categories.category')
-			{
-			// Check if the access levels are different.
-			if (!$isNew && $this->old_cataccess != $row->access)
-			{
-				$this->categoryAccessChange($row);
-			}
-			}
+		    // Check for access changes in the category.
+		    if ($context == 'com_categories.category') {
+		        // Check if the access levels are different.
+		        if (!$isNew && $this->old_cataccess != $row->access) {
+		            $this->categoryAccessChange($row);
+		        }
+		    }
 		
-			return true;
+		    return true;
 		}
 		
 		/**
@@ -441,27 +424,23 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onFinderBeforeSave($context, $row, $isNew)
 		{
-			// We only want to handle «plugin.name» here.
-			if ($context == 'com_«plugin.name».article' || $context == 'com_«plugin.name».form')
-			{
-				// Query the database for the old access level if the item isn't new.
-				if (!$isNew)
-				{
-					$this->checkItemAccess($row);
-				}
-			}
+		    // We only want to handle «plugin.name» here.
+		    if ($context == 'com_«plugin.name».article' || $context == 'com_«plugin.name».form') {
+		        // Query the database for the old access level if the item isn't new.
+		        if (!$isNew) {
+		            $this->checkItemAccess($row);
+		        }
+		    }
 		
-			// Check for access levels from the category.
-			if ($context == 'com_categories.category')
-			{
-			// Query the database for the old access level if the item isn't new.
-			if (!$isNew)
-			{
-				$this->checkCategoryAccess($row);
-			}
-			}
+		    // Check for access levels from the category.
+		    if ($context == 'com_categories.category') {
+		        // Query the database for the old access level if the item isn't new.
+		        if (!$isNew) {
+		            $this->checkCategoryAccess($row);
+		        }
+		    }
 		
-			return true;
+		    return true;
 		}
 		
 		/**
@@ -479,17 +458,15 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onFinderChangeState($context, $pks, $value)
 		{
-			// We only want to handle «plugin.name» here.
-			if ($context == 'com_«plugin.name».article' || $context == 'com_«plugin.name».form')
-			{
-				$this->itemStateChange($pks, $value);
-			}
+		    // We only want to handle «plugin.name» here.
+		    if ($context == 'com_«plugin.name».article' || $context == 'com_«plugin.name».form') {
+		        $this->itemStateChange($pks, $value);
+		    }
 		
-			// Handle when the plugin is disabled.
-			if ($context == 'com_plugins.plugin' && $value === 0)
-			{
-			$this->pluginDisable($pks);
-			}
+		    // Handle when the plugin is disabled.
+		    if ($context == 'com_plugins.plugin' && $value === 0) {
+		        $this->pluginDisable($pks);
+		    }
 		}
 		
 		/**
@@ -505,37 +482,36 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		protected function index(FinderIndexerResult $item, $format = 'html')
 		{
-			// Check if the extension is enabled
-			if (ComponentHelper::isEnabled($this->extension) == false)
-			{
-				return;
-			}
+		    // Check if the extension is enabled
+		    if (ComponentHelper::isEnabled($this->extension) == false) {
+		        return;
+		    }
 		
-			$item->setLanguage();
-			
-			// Initialise the item parameters.
-			$registry = new Registry;
-			$registry->loadString($item->params);
-			$item->params = $registry;
+		    $item->setLanguage();
 		
-			$registry = new Registry;
-			$registry->loadString($item->metadata);
-			$item->metadata = $registry;
-			
-			// Build the necessary route and path information.
-			$item->url = $this->getURL($item->id, $this->extension, $this->layout);
-			$item->route = «plugin.name.toString.toFirstUpper»HelperRoute::getArticleRoute($item->slug, $item->catslug, $item->language);
-			$item->path = FinderIndexerHelper::getContentPath($item->route);
-			
-			/*
-			* Add the meta-data processing instructions based on the newsfeeds
-			* configuration parameters.
-			*/
-			// Add the meta-author.
-			$item->metaauthor = $item->metadata->get('author');
+		    // Initialise the item parameters.
+		    $registry = new Registry;
+		    $registry->loadString($item->params);
+		    $item->params = $registry;
+
+		    $registry = new Registry;
+		    $registry->loadString($item->metadata);
+		    $item->metadata = $registry;
 		
-			// Handle the link to the meta-data.
-			$item->addInstruction(FinderIndexer::META_CONTEXT, 'link');
+		    // Build the necessary route and path information.
+		    $item->url = $this->getURL($item->id, $this->extension, $this->layout);
+		    $item->route = «plugin.name.toString.toFirstUpper»HelperRoute::getArticleRoute($item->slug, $item->catslug, $item->language);
+		    $item->path = FinderIndexerHelper::getContentPath($item->route);
+		
+		    /*
+		     * Add the meta-data processing instructions based on the newsfeeds
+		     * configuration parameters.
+		     */
+		    // Add the meta-author.
+		    $item->metaauthor = $item->metadata->get('author');
+		
+		    // Handle the link to the meta-data.
+		    $item->addInstruction(FinderIndexer::META_CONTEXT, 'link');
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
 			$item->addInstruction(FinderIndexer::META_CONTEXT, 'metaauthor');
@@ -632,8 +608,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		
 		public function onGetIcons($context)
 		{
-			if ($context != $this->params->get('context', 'mod_quickicon') || !Factory::getUser()->authorise('core.manage', 'com_installer'))
-			{
+			if ($context != $this->params->get('context', 'mod_quickicon') || !Factory::getUser()->authorise('core.manage', 'com_installer')) {
 				return;
 			}
 		
@@ -710,43 +685,36 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 			//not always used
 			$searchText = $text;
 		
-			if (is_array($areas))
-			{
-			if (!array_intersect($areas, array_keys($this->onContentSearchAreas())))
-			{
-				return array();
-			}
-			}
+		    if (is_array($areas)) {
+		        if (!array_intersect($areas, array_keys($this->onContentSearchAreas()))) {
+		            return array();
+		        }
+		    }
 			
 			$sContent = $this->params->get('search_content', 1);
 			$sArchived = $this->params->get('search_archived', 1);
 			$limit = $this->params->def('search_limit', 50);
 			$state = array();
 			
-			if ($sContent)
-			{
+			if ($sContent) {
 				$state[] = 1;
 			}
 		
-			if ($sArchived)
-			{
-			$state[] = 2;
+			if ($sArchived) {
+			    $state[] = 2;
 			}
 		
-			if (empty($state))
-			{
-			return array();
+			if (empty($state)) {
+			    return array();
 			}
 		
 			$text = trim($text);
 		
-			if ($text == '')
-			{
-			return array();
+			if ($text == '') {
+			    return array();
 			}
 			
-			switch ($phrase)
-			{
+			switch ($phrase) {
 				case 'exact':
 					//TODO: place code here
 					break;
@@ -757,9 +725,8 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 					//TODO: place code here
 					break;
 			}
-			
-			switch ($ordering)
-			{
+		
+			switch ($ordering) {
 				case 'alpha':
 					//TODO: place code here
 					break;
@@ -809,8 +776,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 			->order($order);
 			
 			// Filter by language.
-			if ($app->isSite() && Multilanguage::isEnabled())
-			{
+			if ($app->isSite() && Multilanguage::isEnabled()) {
 			$tag = Factory::getLanguage()->getTag();
 			$query->where('a.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')')
 				->where('c.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')');
@@ -819,8 +785,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 			$db->setQuery($query, 0, $limit);
 			$rows = $db->loadObjectList();
 			
-			if ($rows)
-			{
+			if ($rows) {
 				foreach ($rows as $key => $row)
 				{
 					//TODO: place code here

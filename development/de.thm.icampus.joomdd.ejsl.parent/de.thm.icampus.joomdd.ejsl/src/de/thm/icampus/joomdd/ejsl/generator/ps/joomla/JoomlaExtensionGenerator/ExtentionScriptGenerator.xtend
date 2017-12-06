@@ -51,18 +51,21 @@ class ExtentionScriptGenerator {
 		    «genUpsate()»
 		    «genpreflight()»
 		    «genPostflight()»
-		  
 		}
 	'''
 	
 	def CharSequence genSetCompoenentParamater() '''
-		function setComponentParameter()
+		public function setComponentParameter()
 		{
 		    // Load the current component params.
 		    $params = ComponentHelper::getParams('«com.extensionName»');
 		    // Set new value of the param(s)
 		    $params->set('upload_maxsize', 10);
-		    $params->set('accept_format', "bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS");
+		    $params->set(
+		        'accept_format',
+		        "bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png," +
+		        "ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
+		    );
 		    «FOR ExtendedPage pag: com.allExtendedPage.filter[t | t.extendedDynamicPageInstance!==null && 
 		        t.extendedDynamicPageInstance.isDetailsPage == true && t.extendedDynamicPageInstance.haveFiletoLoad]»
 		    	$params->set('«pag.extendedDynamicPageInstance.name.toLowerCase»_image_path', 'media/«com.extensionName.toLowerCase»/«pag.extendedDynamicPageInstance.name.toLowerCase»/images');
@@ -76,13 +79,11 @@ class ExtentionScriptGenerator {
 		    $table->bind(array('params' => $params->toString()));
 		
 		    // check for error
-		    if (!$table->check())
-		    {
+		    if (!$table->check()) {
 		        return false;
 		    }
 		    // Save to database
-		    if (!$table->store())
-		    {
+		    if (!$table->store()) {
 		        return false;
 		    }
 		    return true;
@@ -97,13 +98,13 @@ class ExtentionScriptGenerator {
 		 */
 		
 		/**
-		function postflight($type, $parent)
+		public function postflight($type, $parent)
 		{
 		    // $parent is the class calling this method
-			// $type is the type of change (install, update or discover_install)
-			echo '<p>' . Text::_('«extName.toUpperCase»POSTFLIGHT_' . $type . '_TEXT') . '</p>';
+		    // $type is the type of change (install, update or discover_install)
+		    echo '<p>' . Text::_('«extName.toUpperCase»POSTFLIGHT_' . $type . '_TEXT') . '</p>';
 		}
-		*/ 
+		*/
 	'''
 	
 	def CharSequence genpreflight() '''
@@ -114,11 +115,11 @@ class ExtentionScriptGenerator {
 		 */
 		
 		/**
-		function preflight($type, $parent)
+		public function preflight($type, $parent)
 		{
 		    // $parent is the class calling this method
-			// $type is the type of change (install, update or discover_install)
-			echo '<p>' . Text::_('«extName.toUpperCase»_PREFLIGHT_' . $type . '_TEXT') . '</p>';
+		    // $type is the type of change (install, update or discover_install)
+		    echo '<p>' . Text::_('«extName.toUpperCase»_PREFLIGHT_' . $type . '_TEXT') . '</p>';
 		}
 		*/
 	'''
@@ -129,9 +130,9 @@ class ExtentionScriptGenerator {
 		 *
 		 * @return void
 		 */
-		function update($parent)
+		public function update($parent)
 		{
-		    echo '<p>' . Text::sprintf('«extName.toUpperCase»_UPDATE_TEXT',  $parent->get('manifest')->version) . '</p>';
+		    echo '<p>' . Text::sprintf('«extName.toUpperCase»_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
 		}
 	'''
 	def CharSequence genUnsinstall() '''
@@ -140,23 +141,22 @@ class ExtentionScriptGenerator {
 		 *
 		 * @return void
 		 */
-		function uninstall($parent)
+		public function uninstall($parent)
 		{
 		    echo '<p>' .Text::_('«extName.toUpperCase»_UNINSTALL_TEXT') . '</p>';
 		}
 	'''
-	
+   
 	def CharSequence genInstall() '''
 		/**
 		 * method to install the component
 		 *
 		 * @return void
 		 */
-		function install($parent)
+		public function install($parent)
 		{
 		    «IF ex instanceof Component»
-		    	if(!$this->setComponentParameter())
-		    	{
+		    	if (!$this->setComponentParameter()) {
 		    	    echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_NO_PARAMETER_INSTALLED') . '</p>';
 		    	}
 		    	$parent->getParent()->setRedirectURL('index.php?option=«extName»');

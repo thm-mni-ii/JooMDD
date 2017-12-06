@@ -405,8 +405,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		«Slug.generateUses(newArrayList("ControllerLegacy", "Text", "Factory"))»
 		
 		// Access check.
-		if (!Factory::getUser()->authorise('core.manage', '«Slug::nameExtensionBind("com",component.name )»')) 
-		{
+		if (!Factory::getUser()->authorise('core.manage', '«Slug::nameExtensionBind("com",component.name )»')) {
 		    throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
 		}
 				
@@ -532,8 +531,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    public function display($tpl = null)
 		    {
-		        if (!Factory::getUser()->authorise('core.administrator'))
-		        {
+		        if (!Factory::getUser()->authorise('core.administrator')) {
 		            return JError::raiseWarning(404, Text::_('JERROR_ALERTNOAUTHOR'));
 		        }
 		
@@ -701,18 +699,15 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		{
 		    $segments = array();
 		
-		    if (isset($query['task']))
-		    {
+		    if (isset($query['task'])) {
 		        $segments[] = implode('/', explode('.', $query['task']));
 		        unset($query['task']);
 		    }
-		    if (isset($query['view']))
-		    {
+		    if (isset($query['view'])) {
 		        $segments[] = $query['view'];
 		        unset($query['view']);
 		    }
-		    if (isset($query['id']))
-		    {
+		    if (isset($query['id'])) {
 		        $segments[] = $query['id'];
 		        unset($query['id']);
 		    }
@@ -734,12 +729,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    while (!empty($segments))
 		    {
 		        $segment = array_pop($segments);
-		        if (is_numeric($segment))
-		        {
+		        if (is_numeric($segment)) {
 		            $vars['id'] = $segment;
-		        }
-		        else
-		        {
+		        } else {
 		            $vars['task'] = $vars['view'] . '.' . $segment;
 		        }
 		    }

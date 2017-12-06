@@ -102,8 +102,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		    $file['name'] = JFile::makeSafe($file['name']);
 			$file['name'] = str_replace(' ', '_', $file['name']);
 			$file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
-			if (JFile::exists($file['filepath']))
-			{
+			if (JFile::exists($file['filepath'])) {
 			    $index =1;
 				$file["name"] = $index."_".$file["name"];
 				$file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
@@ -116,15 +115,12 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 			}
 			$object_file = new CMSObject($file);
 		
-		    if (!JFile::upload($object_file->tmp_name, $object_file->filepath))
-			{
+		    if (!JFile::upload($object_file->tmp_name, $object_file->filepath)) {
 			    return false;
 			}
-			if(!empty($oldname))
-			{
+			if (!empty($oldname)) {
 			    $pathOfold = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $oldname)));
-				if(JFile::exists($pathOfold))
-				{
+				if (JFile::exists($pathOfold)) {
 				    JFile::delete($pathOfold);
 				}
 			}

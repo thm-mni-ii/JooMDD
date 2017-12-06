@@ -79,13 +79,11 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 			$document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
 			$input = Factory::getApplication()->input;
 			$«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
-			if(empty($«entFrom.primaryKey.name»))
-			{
-				$alldata = $this->getAllData();
+			if (empty($«entFrom.primaryKey.name»)) {
+			    $alldata = $this->getAllData();
 				$html[] = "<select  onchange='setMultipleValueForeignKeys(this)' generated='true' multiple id='" . $this->id . "select'  class='form-control' >";
 				$html[] = "<option>". Text::_("JOPTION_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
-				foreach($alldata as $data)
-				{
+				foreach ($alldata as $data) {
 					$html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 					. $this->generateStringValue($data) ."</option>";
 				}
@@ -98,8 +96,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 			$html[] = "<select  multiple='true' onchange='setMultipleValueForeignKeys(this)' generated='true'  id='" . $this->id . "select' class='form-control' >";
 			$html[] = "<option>". Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
 			
-			foreach($referenceData as $reference)
-			{
+			foreach($referenceData as $reference) {
 				$html[] = "<option  $reference->selected  value='". $this->generateJsonValue($reference)."'>" . $this->generateStringValue($reference) ."</option>";
 			}
 			$html[]="</select>";
@@ -133,8 +130,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    $values = array();
 			foreach($referenceData as $reference)
 			{
-			    if(!empty($reference->selected) && !in_array($reference->id,$values))
-				{
+			    if (!empty($reference->selected) && !in_array($reference->id,$values)) {
 					array_push($values, $reference->id);
 				}
 			}
@@ -189,8 +185,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 			$result  = array();
 			foreach($this->keysAndForeignKeys["foreignTable"] as $key=>$value)
 			{
-				if(!array_key_exists("jform_$key",$result ))
-				{
+				if (!array_key_exists("jform_$key",$result )) {
 					$result["jform_$key"] = array();
 				}
 				array_push($result["jform_$key"],$data->{$key} );

@@ -50,14 +50,12 @@ class DetailsPageTemplateFrontEndHelper {
 //		    «ENDIF»
 //		
 //		    // Check out the item
-//		    if ($editId)
-//		    {
+//		    if ($editId) {
 //		        $model->checkout($editId);
 //		    }
 //		
 //		    // Check in the previous user.
-//		    if ($previousId && $previousId !== $editId)
-//		    {
+//		    if ($previousId && $previousId !== $editId) {
 //		        $model->checkin($previousId);
 //		    }
 //		
@@ -87,8 +85,7 @@ class DetailsPageTemplateFrontEndHelper {
 	
 	    // Validate the posted data.
 	    $form = $model->getForm();
-	    if (!$form)
-	    {
+	    if (!$form) {
 	        JError::raiseError(500, $model->getError());
 	        return false;
 	    }
@@ -97,20 +94,15 @@ class DetailsPageTemplateFrontEndHelper {
 	    $data = $model->validate($form, $data);
 	
 	    // Check for errors.
-	    if ($data === false)
-	    {
+	    if ($data === false) {
 	        // Get the validation messages.
 	        $errors = $model->getErrors();
 	
 	        // Push up to three validation messages out to the user.
-	        for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++)
-	        {
-	            if ($errors[$i] instanceof Exception)
-	            {
+	        for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
+	            if ($errors[$i] instanceof Exception) {
 	                $app->enqueueMessage($errors[$i]->getMessage(), 'warning');
-	            }
-	            else
-	            {
+	            } else {
 	                $app->enqueueMessage($errors[$i], 'warning');
 	            }
 	        }
@@ -132,8 +124,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    $return = $model->save($data);
 	
 	    // Check for errors.
-	    if ($return === false)
-	    {
+	    if ($return === false) {
 	        // Save the data in the session.
 	        $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».data', $data);
 	
@@ -147,8 +138,7 @@ class DetailsPageTemplateFrontEndHelper {
 	
 	
 	    // Check in the profile.
-	    if ($return)
-	    {
+	    if ($return) {
 	        $model->checkin($return);
 	    }
 	
@@ -183,8 +173,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
 
 	    // Check in the item
-		if ($editId)
-		{
+		if ($editId) {
 		    $model->checkin($editId);
 		}
 	
@@ -208,8 +197,7 @@ class DetailsPageTemplateFrontEndHelper {
 	
 		//Checking if the user can remove object
 		$user = Factory::getUser();
-		if ($user->authorise($user->authorise('core.delete', 'com_«com.name.toLowerCase»')))
-		{
+		if ($user->authorise($user->authorise('core.delete', 'com_«com.name.toLowerCase»'))) {
 		    $model = $this->getModel('«dpage.name.toFirstUpper»', '«com.name.toFirstUpper»Model');
 	
 	        // Get the user data.
@@ -219,15 +207,11 @@ class DetailsPageTemplateFrontEndHelper {
 		    $return = $model->delete($id);
 
 		    // Check for errors.
-		    if ($return === false)
-		    {
+		    if ($return === false) {
 		        $this->setMessage(Text::sprintf('Delete failed', $model->getError()), 'warning');
-		    }
-		    else
-		    {
+		    } else {
 		        // Check in the profile.
-		        if ($return)
-		        {
+		        if ($return) {
 		            $model->checkin($return);
 		        }
 
@@ -244,9 +228,7 @@ class DetailsPageTemplateFrontEndHelper {
 		    $menu = & JSite::getMenu();
 		    $item = $menu->getActive();
 		    $this->setRedirect(Route::_($item->link, false));
-		}
-		else
-		{
+		} else {
 		    throw new Exception(500);
 		}
 	}
@@ -265,12 +247,9 @@ class DetailsPageTemplateFrontEndHelper {
 	    $app = Factory::getApplication('com_«com.name.toLowerCase»');
 	
 	    // Load state from the request userState on edit or from the passed variable on default
-	    if (Factory::getApplication()->input->get('layout') == 'edit')
-	    {
+	    if (Factory::getApplication()->input->get('layout') == 'edit') {
 	        $id = Factory::getApplication()->getUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»');
-	    }
-	    else
-	    {
+	    } else {
 	        $id = Factory::getApplication()->input->get('«mainEntity.primaryKey.name»');
 	        Factory::getApplication()->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»', $id);
 	    }
@@ -279,8 +258,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    // Load the parameters.
 	    $params = $app->getParams();
 	    $params_array = $params->toArray();
-	    if (isset($params_array['item_id']))
-	    {
+	    if (isset($params_array['item_id'])) {
 	        $this->setState($this->getName().'.«mainEntity.primaryKey.name»', $params_array['item_id']);
 	    }
 	    $this->setState('params', $params);
@@ -308,16 +286,13 @@ class DetailsPageTemplateFrontEndHelper {
 	    // Get the id.
 	    $id = (!empty($id)) ? $id : (int) $this->getState($this->getName() . '.«mainEntity.primaryKey.name»');
 
-	    if ($id)
-	    {
+	    if ($id) {
 	        // Initialise the table
 	        $table = $this->getTable();
 
 	        // Attempt to check the row in.
-	        if (method_exists($table, 'checkin'))
-	        {
-	            if (!$table->checkin($id))
-	            {
+	        if (method_exists($table, 'checkin')) {
+	            if (!$table->checkin($id)) {
 	                $this->setError($table->getError());
 	                return false;
 	            }
@@ -340,8 +315,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    // Get the user id.
 	    $id = (!empty($id)) ? $id : (int) $this->getState($this->getName() . '.«mainEntity.primaryKey.name»');
 	
-	    if ($id)
-	    {
+	    if ($id) {
 	        // Initialise the table
 	        $table = $this->getTable();
 	
@@ -349,10 +323,8 @@ class DetailsPageTemplateFrontEndHelper {
 	        $user = Factory::getUser();
 	
 	        // Attempt to check the row out.
-	        if (method_exists($table, 'checkout'))
-	        {
-	            if (!$table->checkout($user->get('id'), $id))
-	            {
+	        if (method_exists($table, 'checkout')) {
+	            if (!$table->checkout($user->get('id'), $id)) {
 	                $this->setError($table->getError());
 	                return false;
 	            }
@@ -376,39 +348,31 @@ class DetailsPageTemplateFrontEndHelper {
 	    $state = (!empty($data['state'])) ? 1 : 0;
 	    $user = Factory::getUser();
 	
-	    if($id)
-	    {
+	    if ($id) {
 	        //Check the user can edit this item
 	        $authorised = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) 
 	            || $authorised = $user->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id
 	            );
-	        if($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1) //The user cannot edit the state of the item.
-	        {
+	        if ($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1) //The user cannot edit the state of the item. {
 	            $data['state'] = 0;
 	        }
-	    }
-	    else
-	    {
+	    } else {
 	        //Check the user can create new items in this section
 	        $authorised = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-	        if($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1) //The user cannot edit the state of the item.
-	        {
+	        if ($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1) //The user cannot edit the state of the item. {
 	            $data['state'] = 0;
 	        }
 	    }
 	
-	    if ($authorised !== true)
-	    {
+	    if ($authorised !== true) {
 	        JError::raiseError(403, Text::_('JERROR_ALERTNOAUTHOR'));
 	        return false;
 	    }
 	    $inputs = Factory::getApplication()->input->get("jform", array(), 'array');
 	
 	    $table = $this->getTable();
-	    if ($table->save($data) === true)
-	    {
-	        if(empty($inputs['«mainEntity.primaryKey.name»']) || $inputs['«mainEntity.primaryKey.name»'] == 0 )
-	        {
+	    if ($table->save($data) === true) {
+	        if (empty($inputs['«mainEntity.primaryKey.name»']) || $inputs['«mainEntity.primaryKey.name»'] == 0 ) {
 	            $inputs['patid']=$table->«mainEntity.primaryKey.name»;
 	        }
 	        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
@@ -417,9 +381,7 @@ class DetailsPageTemplateFrontEndHelper {
 	        «ENDIF»
 	        «ENDFOR»
 	        return $table->«mainEntity.primaryKey.name»;
-	    }
-	    else
-	    {
+	    } else {
 	        return false;
 	    }
 	}
@@ -434,18 +396,14 @@ class DetailsPageTemplateFrontEndHelper {
 	function delete($data)
 	{
 	    $id = (!empty($data)) ? $data : (int)$this->getState($this->getName() . '.«mainEntity.primaryKey.name»');
-	    if(Factory::getUser()->authorise('core.delete', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true)
-	    {
+	    if (Factory::getUser()->authorise('core.delete', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true) {
 	        JError::raiseError(403, Text::_('JERROR_ALERTNOAUTHOR'));
 	        return false;
 	    }
 	    $table = $this->getTable();
-	    if ($table->delete($data) === true)
-	    {
+	    if ($table->delete($data) === true) {
 	        return $id;
-	    }
-	    else
-	    {
+	    } else {
 	        return false;
 	    }
 	
@@ -504,41 +462,32 @@ class DetailsPageTemplateFrontEndHelper {
 	    «IF isedit» 
 	    $this->setLayout('Edit');
 	    $this->form	= $this->get('Form');
-	    if (empty($this->item->«mainEntity.primaryKey.name»))
-	    {
+	    if (empty($this->item->«mainEntity.primaryKey.name»)) {
 	        $authorised = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-	    }
-	    else
-	    {
+	    } else {
 	        $authorised = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-	    }
-	    if ($authorised !== true)
-	    {
+	    } if ($authorised !== true) {
 	        $app->enqueueMessage(Text::_('JERROR_ALERTNOAUTHOR'), 'error');
 	        $app->setHeader('status', 403, true);
 
 	        return false;
 	    }
 	    «ELSE»
-	    if (!empty($this->item))
-	    {
+	    if (!empty($this->item)) {
 	        $this->form = $this->get('Form');
 	    }
 		«ENDIF»
 		
 		// Check for errors.
-	    if (count($errors = $this->get('Errors')))
-	    {
+	    if (count($errors = $this->get('Errors'))) {
 	        throw new Exception(implode("\n", $errors));
 	    }
 	    
 		«IF !isedit»
-		if ($this->_layout == 'edit')
-		{
+		if ($this->_layout == 'edit') {
 		    $authorised = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
 			
-			if ($authorised !== true)
-			{
+			if ($authorised !== true) {
 			    throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
 			}
 		}
@@ -562,44 +511,33 @@ class DetailsPageTemplateFrontEndHelper {
 	     // Because the application sets a default page title,
 	     // we need to get it from the menu item itself
 	     $menu = $menus->getActive();
-	     if ($menu)
-	     {
+	     if ($menu) {
 	         $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
-	     }
-	     else
-	     {
+	     } else {
 	         $this->params->def('page_heading', Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
 	     }
 	     $title = $this->params->get('page_title', '');
-	     if (empty($title))
-	     {
+	     if (empty($title)) {
 	         $title = $app->get('sitename');
-	     }
-	     elseif ($app->get('sitename_pagetitles', 0) == 1)
-	     {
+	     } elseif ($app->get('sitename_pagetitles', 0) == 1) {
 	         $title = Text::sprintf('JPAGETITLE', $app->get('sitename'), $title);
-	     } 
-	     elseif ($app->get('sitename_pagetitles', 0) == 2)
-	     {
+	     } elseif ($app->get('sitename_pagetitles', 0) == 2) {
 	         $title = Text::sprintf('JPAGETITLE', $title, $app->get('sitename'));
 	     }
 	     $this->document->setTitle($title);
 	 
-	     if ($this->params->get('menu-meta_description'))
-	     {
+	     if ($this->params->get('menu-meta_description')) {
 	         $this->document->setDescription($this->params->get('menu-meta_description'));
 	     }
 	 
-	     if ($this->params->get('menu-meta_keywords'))
-	     {
+	     if ($this->params->get('menu-meta_keywords')) {
 	         $this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
 	     }
 	 
-	     if ($this->params->get('robots'))
-	     {
+	     if ($this->params->get('robots')) {
 	         $this->document->setMetadata('robots', $this->params->get('robots'));
 	     }
-	    }
+	 }
 	'''
 	
 	def generateSiteViewLayoutEditForm(String editPageName) '''
@@ -622,9 +560,9 @@ class DetailsPageTemplateFrontEndHelper {
 				        «IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
 				        <input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
 				        «ENDIF»
-				        <input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)){
+				        <input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)) {
 				        echo $this->item->checked_out;}else{ echo Factory::getUser()->id;} ?>" />
-				        <input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)){
+				        <input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)) {
 				        echo $this->item->checked_out_time;}else{ echo date("Y-m-d H:i:s") ;} ?>" />
 	                    <?php if(empty($this->item->created_by)): ?>
 		                    <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
@@ -732,6 +670,6 @@ class DetailsPageTemplateFrontEndHelper {
 		    </td>
 		</tr>'''
 		}
-	} »	
+	} »
 	'''	
 }

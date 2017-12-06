@@ -372,44 +372,37 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	{
 	    $model = «extMod.name.toFirstUpper»Helper::getModel();
 		$state = $params_module->get('state');
-		if(!empty($state))
-		{
+		if (!empty($state)) {
 		    $model->setState('filter.state', $state);
 		}
 
 		$search = $params_module->get('search');
-		if(!empty($search))
-		{
+		if (!empty($search)) {
 		    $model->setState('filter.search', $search);
 		}
 
 		$created_by = $params_module->get('created_by');
-		if(!empty($created_by))
-		{
+		if (!empty($created_by)) {
 		    $model->setState('filter.search',$created_by);
 		}
 
 		$ordering = $params_module->get('ordering');
-		if(!empty($ordering))
-		{
+		if (!empty($ordering)) {
 		    $model->setState('list.ordering',$ordering);
 		}
 
 		$direction = $params_module->get('direction');
-		if(!empty($direction))
-		{
+		if (!empty($direction)) {
 		    $model->setState('list.direction', $direction);
 		}
 		
 		$start = $params_module->get('start');
-		if(!empty($start))
-		{
+		if (!empty($start)) {
 		    $model->setState('list.start', $start);
 		}
 
 		$limit = $params_module->get('limit');
-		if(!empty($limit))
-		{
+		if (!empty($limit)) {
 		    $model->setState('list.limit', $limit);
 		}
 
@@ -417,8 +410,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		«FOR ExtendedAttribute attr: dynpage.extendFiltersList»
 		«IF !attr.name.equalsIgnoreCase("params")»
 		$«attr.name.toLowerCase» = $params_module->get('«attr.name.toLowerCase»');
-		if(!empty($«attr.name.toLowerCase» ))
-		{
+		if (!empty($«attr.name.toLowerCase» )) {
 		    $model->setState('filter.«attr.name.toLowerCase»', $«attr.name.toLowerCase» );
 		}
 		«ENDIF»

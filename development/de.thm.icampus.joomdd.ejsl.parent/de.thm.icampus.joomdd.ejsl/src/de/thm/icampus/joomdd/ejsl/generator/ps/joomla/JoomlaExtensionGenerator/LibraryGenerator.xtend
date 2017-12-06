@@ -107,8 +107,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 			 */
 			public function __get($property)
 			{
-			    if (property_exists($this, $property))
-				{
+			    if (property_exists($this, $property)) {
 				    return $this->$property;
 				}
 			}
@@ -123,8 +122,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 			 */
 			public function __set($property, $value)
 			{
-			    if (property_exists($this, $property))
-				{
+			    if (property_exists($this, $property)) {
 				    $this->$property = $value;
 				}
 			}
