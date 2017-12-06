@@ -55,9 +55,9 @@ class FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("Text", "FormField"))»
+		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
 				
-		class FormField«nameField.toFirstUpper» extends FormField
+		class JFormField«nameField.toFirstUpper» extends FormField
 		{
 			protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 				"foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
@@ -127,7 +127,7 @@ class FieldsGenerator {
 		{
 			$html = array();
 			$document = Factory::getDocument();
-			$document->addScript( URI::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
+			$document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
 			$input = Factory::getApplication()->input;
 			$«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
 			if(empty($«entFrom.primaryKey.name»))
@@ -233,7 +233,7 @@ class FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("FormHelper"))»
+		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
 		
 		FormHelper::loadFieldClass('list');
 		

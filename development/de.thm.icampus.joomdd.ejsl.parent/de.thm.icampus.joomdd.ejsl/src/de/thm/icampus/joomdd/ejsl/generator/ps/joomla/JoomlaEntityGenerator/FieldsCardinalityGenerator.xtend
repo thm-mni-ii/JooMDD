@@ -31,10 +31,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("Text", "Uri", "FormField", "Factory"))»
-		
-		jimport('joomla.form.formfield');
-		
-		class FormField«nameField.toFirstUpper» extends FormField
+				
+		class JFormField«nameField.toFirstUpper» extends FormField
 		{
 		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 			    "mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",

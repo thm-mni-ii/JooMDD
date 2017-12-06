@@ -220,14 +220,14 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelAdmin, Factory, ArrayHelper, Registry", "Table", "ComponentHelper", "Form", "Factory"))»
+		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "ComponentHelper", "Form", "Factory"))»
 		
 		require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
 		
 		/**
 		 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
 		 */
-		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ModelAdmin
+		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends AdminModel
 		{
 		    /**
 			 * @var    string  The prefix to use with controller messages.
@@ -351,7 +351,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ViewLegacy", "Factory"))»
+		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text"))»
 		
 		/**
 		 * View to edit a «dpage.name»
@@ -484,7 +484,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ViewLegacy", "Factory"))»
+		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text"))»
 		
 		/**
 		 * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»

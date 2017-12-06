@@ -404,6 +404,8 @@ public class Slug  {
 				case 'DataSet' : { "use Joomla\\Data\\DataSet;" }
 				case 'DataDumpable' : { "use Joomla\\Data\\DumpableInterface;" }
 				
+				case 'ArrayHelper' : { "use Joomla\\Utilities\\ArrayHelper;" }
+				
 				case 'ApplicationAdministrator' : { "use Joomla\\CMS\\Application\\AdministratorApplication;" }
 				case 'ApplicationHelper' : { "use Joomla\\CMS\\Application\\ApplicationHelper;" }
 				case 'ApplicationBase' : { "use Joomla\\CMS\\Application\\BaseApplication;" }
