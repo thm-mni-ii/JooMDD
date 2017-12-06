@@ -194,15 +194,15 @@ public class Slug  {
 		var notShow = newArrayList("state","created_by","asset_id","ordering","checked_out_time","checked_out", "published", "params")
 		notShow.add(entity.primaryKey.name)
 		
-		for(ExtendedDetailPageField fielditem: fields) {
-			if(!notShow.contains(fielditem.extendedAttribute.name)) {
+		for (ExtendedDetailPageField fielditem: fields) {
+			if (!notShow.contains(fielditem.extendedAttribute.name)) {
 				buff.append(inputFeldTemplate(fielditem.extendedAttribute))
 				notShow.add(fielditem.extendedAttribute.name)
 			}	
 		}
 		
-		for(ExtendedAttribute attr: entity.ownExtendedAttributes){
-			if(!notShow.contains(attr.name)){
+		for (ExtendedAttribute attr: entity.ownExtendedAttributes){
+			if (!notShow.contains(attr.name)) {
 				buff.append(inputHiddenFeldTemplate(attr))
 			}
 		}
@@ -231,9 +231,9 @@ public class Slug  {
 	}
 	
 	def static ExtendedDynamicPage getPageForDetails(ExtendedDynamicPage inpage, ExtendedComponent com) {
-		if(inpage.links.empty){
-			for(ExtendedPageReference pg : com.backEndExtendedPagerefence){
-				if(pg.extendedPage.extendedDynamicPageInstance !== null && pg.extendedPage.extendedDynamicPageInstance.detailsPage){
+		if (inpage.links.empty) {
+			for (ExtendedPageReference pg : com.backEndExtendedPagerefence) {
+				if (pg.extendedPage.extendedDynamicPageInstance !== null && pg.extendedPage.extendedDynamicPageInstance.detailsPage) {
 					var String first = pg.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name
 					var String second = inpage.extendedEntityList.get(0).name
 					if(first.equalsIgnoreCase(second))
@@ -241,17 +241,17 @@ public class Slug  {
 				}
 			}
 		}
-		for(Link lk: inpage.links) {
+		for (Link lk: inpage.links) {
 		    switch lk {
-		        ContextLink:{
+		        ContextLink: {
 		            var InternalLink lkin = lk as InternalLink
-		            if(lkin.target instanceof DetailsPage) {
+		            if (lkin.target instanceof DetailsPage) {
 		                return new ExtendedDynamicPageImpl(lkin.target as DetailsPage)
 		            }
 		        }
 		        InternalLink : {
 		            var InternalLink lkin = lk as InternalLink
-		            if(lkin.target instanceof DetailsPage) {
+		            if (lkin.target instanceof DetailsPage) {
 		                return new ExtendedDynamicPageImpl(lkin.target as DetailsPage)
 	                }
 	            }
@@ -261,27 +261,27 @@ public class Slug  {
 	}
 	
 	def static IndexPage getPageForAll(ExtendedDynamicPage inpage, ExtendedComponent com) {
-	    if(inpage.links.empty){
-		    for(ExtendedPageReference pg : com.backEndExtendedPagerefence) {
-				if(pg.extendedPage.extendedDynamicPageInstance!== null && !pg.extendedPage.extendedDynamicPageInstance.detailsPage){
+	    if (inpage.links.empty) {
+		    for (ExtendedPageReference pg : com.backEndExtendedPagerefence) {
+				if (pg.extendedPage.extendedDynamicPageInstance!== null && !pg.extendedPage.extendedDynamicPageInstance.detailsPage) {
 					var String first = pg.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name
 					var String second = inpage.extendedEntityList.get(0).name
-					if(first.equalsIgnoreCase(second)) {
+					if (first.equalsIgnoreCase(second)) {
 					    return pg.extendedPage.extendedDynamicPageInstance.instance as IndexPage
 					}
 				}
 			}
 		}
-		for(Link lk: inpage.links){
+		for (Link lk: inpage.links) {
 			switch lk {
-			    ContextLink:{
+			    ContextLink: {
 					var InternalLink lkin = lk as InternalLink
 					if(lkin.target instanceof IndexPage)
 					  return lkin.target as IndexPage
 				}
-				InternalLink:{
+				InternalLink: {
 				    var InternalLink lkin = lk as InternalLink
-					if(lkin.target instanceof IndexPage) {
+					if (lkin.target instanceof IndexPage) {
 					    return lkin.target as IndexPage
 					}
 				}
@@ -824,9 +824,9 @@ public class Slug  {
 	}
 	
 	def static Boolean isAttributeLinked(ExtendedAttribute attr, DynamicPage page) {
-		for(Link ref: page.links){
-			if(ref.linkedAttribute !== null) {
-			    if(ref.linkedAttribute.name.equalsIgnoreCase(attr.name)) {
+		for (Link ref: page.links) {
+			if (ref.linkedAttribute !== null) {
+			    if (ref.linkedAttribute.name.equalsIgnoreCase(attr.name)) {
 			        return true
 			    }
 			}
@@ -838,17 +838,17 @@ public class Slug  {
 	    «FOR Link lk: page.links»
 	    «IF lk.linkedAttribute !== null»
 	    «IF lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)»
-	    «switch lk{
-		    ExternalLink :{
+	    «switch lk {
+		    ExternalLink : {
 			    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»'''
 		    }
-		    InternalLink:{
-		        if((lk as InternalLink).target instanceof DetailsPage){
-		            if((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)){
-		                if(!(lk instanceof ContextLink)){
+		    InternalLink: {
+		        if ((lk as InternalLink).target instanceof DetailsPage) {
+		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
+		                if (!(lk instanceof ContextLink)) {
 		                    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
 		                } else {
-		                    if((lk as ContextLink).linkparameters.filter[t | t.id].size == 0) {
+		                    if ((lk as ContextLink).linkparameters.filter[t | t.id].size == 0) {
 		                        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
 		                    } else {
 		    		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
@@ -858,7 +858,7 @@ public class Slug  {
 		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
 		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
 		    	
-			            if(idRef !== null){
+			            if (idRef !== null) {
 				            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
 				        } else {
 				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
@@ -875,19 +875,20 @@ public class Slug  {
 	'''
 	
 	def static Entity getEntityForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage) {
-		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences){
-			if(ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)){
+		for (ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences) {
+			if (ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)) {
 				return ref.destinationEntity
 			}
 		}
 	}
 	
 	def static ExtendedAttribute getAttributeForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage){
-		for(ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences){
-			if(ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)){
-				for(ExtendedAttribute refAttr: ref.referencedExtendedAttributes){
-					if(refAttr.name.equalsIgnoreCase("id"))
-					return ref.extendedAttributes.get(ref.referencedExtendedAttributes.indexOf(refAttr))
+		for (ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences){
+			if (ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)) {
+				for (ExtendedAttribute refAttr: ref.referencedExtendedAttributes) {
+					if (refAttr.name.equalsIgnoreCase("id")) {
+						return ref.extendedAttributes.get(ref.referencedExtendedAttributes.indexOf(refAttr))
+					}
 				}
 			}
 		}
@@ -895,19 +896,20 @@ public class Slug  {
 	}
 	
 	def static Boolean isLinkedAttributeReference(Attribute attribute, DynamicPage page) {
-		for(Entity e: page.entities){
-			for(Reference ref: e.references){
-				if(ref.attribute.get(0).equals(attribute))
-				return true
+		for (Entity e: page.entities) {
+			for (Reference ref: e.references) {
+				if (ref.attribute.get(0).equals(attribute)) {
+					return true
+				}
 			}
 		}
 		return false
 	}
 	
 	def static Reference searchLinkedAttributeReference(Attribute attribute, DynamicPage page) {
-		for(Entity e: page.entities){
-			for(Reference ref: e.references){
-				if(ref.attribute.get(0).name.equalsIgnoreCase(attribute.name)) {
+		for (Entity e: page.entities) {
+			for (Reference ref: e.references) {
+				if (ref.attribute.get(0).name.equalsIgnoreCase(attribute.name)) {
 				    return ref
 				}
 			}
@@ -920,7 +922,7 @@ public class Slug  {
  	    «FOR Link linkItem: page.links»
  	    «switch linkItem {
  		    InternalLink :{
- 			    if(isLinkedAttributeReference(linkItem.linkedAttribute, page)){
+ 			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
  				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
  				    '''
  				    "«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.generateAttributeAndRefernce(ref)»
@@ -950,10 +952,10 @@ public class Slug  {
 	
 	static def CharSequence transformAttributeListInString(EList<Attribute>attributes, String separeSign) {
 		var StringBuffer result = new StringBuffer()
-		for(attr: attributes){
-			if(attr != attributes.last){
+		for (attr: attributes) {
+			if (attr != attributes.last) {
 			result.append(attr.name.toLowerCase + separeSign)
-			}else{
+			} else {
 				result.append(Slug.slugify(attr.name))
 			}
 		}
@@ -962,10 +964,10 @@ public class Slug  {
 	
 	static def CharSequence transformAttributeListInString(String postWord, EList<Attribute>attributes, String separeSign){
 		var StringBuffer result = new StringBuffer()
-		for(attr: attributes){
-			if(attr != attributes.last){
+		for (attr: attributes) {
+			if (attr != attributes.last) {
 			    result.append(postWord + Slug.slugify(attr.name).toLowerCase + separeSign)
-			}else{
+			} else {
 				result.append(postWord+ Slug.slugify(attr.name))
 			}
 		}
@@ -974,10 +976,10 @@ public class Slug  {
 	}
 	static def CharSequence transformAttributeListInString(String postWord, EList<Attribute>attributes, String separeSign,String afterWord){
 		var StringBuffer result = new StringBuffer()
-		for(attr: attributes){
-			if(attr != attributes.last){
+		for (attr: attributes) {
+			if (attr != attributes.last) {
 			    result.append(postWord + Slug.slugify(attr.name).toLowerCase + afterWord + separeSign)
-			}else{
+			} else {
 				result.append(postWord+ Slug.slugify(attr.name)+afterWord)
 			}
 		}
@@ -986,10 +988,10 @@ public class Slug  {
 	}
 	static def CharSequence transformAttributeListInString(String quotationMark, String postWord, EList<Attribute>attributes, String separeSign){
 		var StringBuffer result = new StringBuffer()
-		for(attr: attributes){
-			if(attr != attributes.last){
+		for (attr: attributes) {
+			if (attr != attributes.last) {
 			    result.append(quotationMark+postWord + Slug.slugify(attr.name).toLowerCase+quotationMark + separeSign)
-			}else{
+			} else {
 				result.append(quotationMark+postWord+ Slug.slugify(attr.name) +quotationMark)
 			}
 		}
@@ -1013,8 +1015,8 @@ public class Slug  {
 	'''
 	
     static def ExtendedDetailPageField getEditedFieldsForattribute(ExtendedDynamicPage dynPage, ExtendedAttribute attr){
-		for(ExtendedDetailPageField field:dynPage.extendedEditedFieldsList ){
-   		    if(field.extendedAttribute.name.equalsIgnoreCase(attr.name)){
+		for (ExtendedDetailPageField field:dynPage.extendedEditedFieldsList ) {
+   		    if (field.extendedAttribute.name.equalsIgnoreCase(attr.name)) {
    			    return field
    			}
    		}
@@ -1075,10 +1077,10 @@ public class Slug  {
 	
 	def static void deleteFolder(String folder) {
 	    var File root = new File(folder)
-	    for(File item : root.listFiles) {
-	        if(item.directory){
+	    for (File item : root.listFiles) {
+	        if (item.directory) {
 	            deleteFolder(item.path)
-	        }else{
+	        } else {
 	            item.delete
 	        }
 	    }
