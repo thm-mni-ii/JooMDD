@@ -74,12 +74,12 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		class Plg«plugin.type.toString.toFirstUpper»«plugin.name.toString.toFirstUpper» extends Plugin
 		{
 		    public function plg«plugin.type.toString.toFirstUpper»«plugin.name.toString.toFirstUpper»(&$subject, $params)
-			{
-				parent::__construct($subject, $params);
-				$this->loadLanguage();
-			}
+		    {
+		        parent::__construct($subject, $params);
+		        $this->loadLanguage();
+		    }
 		
-			«plugin.events»
+		    «plugin.events»
 		}
 	'''
 	
@@ -116,9 +116,8 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	def CharSequence authenticateEvents(Plugin plugin) '''
 		public function onUserAuthenticate($credentials, $options, &$response)
 		{
-			$response->type = '«plugin.name.toString.toFirstUpper»';
-			
-			// TODO: place code here
+		    $response->type = '«plugin.name.toString.toFirstUpper»';
+		    // TODO: place code here
 		}
 	'''
 	
@@ -129,7 +128,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	def CharSequence contentEvents(Plugin plugin) '''
 		public function onContentPrepare($context, &$article, &$params, $page = 0)
 		{
-			// TODO: place code here
+		    // TODO: place code here
 		}
 	'''
 	
@@ -145,13 +144,13 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onInit()
 		{
-			//TODO: place code here
+		    //TODO: place code here
 		}
 		
 		public function onSave()
 		{
-			//always return
-			return;
+		    //always return
+		    return;
 		}
 		
 		/**
@@ -159,7 +158,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onGetContent()
 		{
-			return '/*place code here*/';
+		    return '/*place code here*/';
 		}
 		
 		/**
@@ -167,7 +166,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onSetContent()
 		{
-			return '/*place code here*/';
+		    return '/*place code here*/';
 		}
 		
 		/**
@@ -175,7 +174,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onGetInsertMethod()
 		{
-			//TODO: place code here
+		    //TODO: place code here
 		}
 		
 		/**
@@ -196,22 +195,22 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 * @return  string  HTML Output
 		 */
 		public function onDisplay($name, $content, $width, $height, $col, $row, $buttons = true,
-			$id = null, $asset = null, $author = null, $params = array())
+		    $id = null, $asset = null, $author = null, $params = array())
 		{
-			if (empty($id)) {
-				$id = $name;
-			}
+		    if (empty($id)) {
+		        $id = $name;
+		    }
 		
-			// Only add "px" to width and height if they are not given as a percentage
-			if (is_numeric($width)) {
-			    $width .= 'px';
-			}
+		    // Only add "px" to width and height if they are not given as a percentage
+		    if (is_numeric($width)) {
+		        $width .= 'px';
+		    }
 		
-			if (is_numeric($height)) {
-			    $height .= 'px';
-			}
+		    if (is_numeric($height)) {
+		        $height .= 'px';
+		    }
 		
-			//TODO: add some code here
+		    //TODO: add some code here
 		} 
 		
 		/**
@@ -226,17 +225,17 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function _displayButtons($name, $buttons, $asset, $author)
 		{
-			$return = '';
+		    $return = '';
 		
-			$args = array(
-			'name'  => $name,
-			'event' => 'onGetInsertMethod'
-			);
+		    $args = array(
+		    'name'  => $name,
+		    'event' => 'onGetInsertMethod'
+		    );
 		
-			$results = (array) $this->update($args);
+		    $results = (array) $this->update($args);
 		
 			if ($results) {
-			    foreach ($results as $result) {
+		        foreach ($results as $result) {
 		            if (is_string($result) && trim($result)) {
 		                $return .= $result;
 		            }
@@ -512,26 +511,26 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		
 		    // Handle the link to the meta-data.
 		    $item->addInstruction(FinderIndexer::META_CONTEXT, 'link');
-			$item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
-			$item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
-			$item->addInstruction(FinderIndexer::META_CONTEXT, 'metaauthor');
-			$item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
-			$item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
-			
-			// Add the type taxonomy data.
-			$item->addTaxonomy('Type', 'Web Link');
+		    $item->addInstruction(FinderIndexer::META_CONTEXT, 'metakey');
+		    $item->addInstruction(FinderIndexer::META_CONTEXT, 'metadesc');
+		    $item->addInstruction(FinderIndexer::META_CONTEXT, 'metaauthor');
+		    $item->addInstruction(FinderIndexer::META_CONTEXT, 'author');
+		    $item->addInstruction(FinderIndexer::META_CONTEXT, 'created_by_alias');
 		
-			// Add the category taxonomy data.
-			$item->addTaxonomy('Category', $item->category, $item->cat_state, $item->cat_access);
+		    // Add the type taxonomy data.
+		    $item->addTaxonomy('Type', 'Web Link');
 		
-			// Add the language taxonomy data.
-			$item->addTaxonomy('Language', $item->language);
+		    // Add the category taxonomy data.
+		    $item->addTaxonomy('Category', $item->category, $item->cat_state, $item->cat_access);
 		
-			// Get content extras.
-			FinderIndexerHelper::getContentExtras($item);
+		    // Add the language taxonomy data.
+		    $item->addTaxonomy('Language', $item->language);
 		
-			// Index the item.
-			$this->indexer->index($item);
+		    // Get content extras.
+		    FinderIndexerHelper::getContentExtras($item);
+		
+		    // Index the item.
+		    $this->indexer->index($item);
 		}
 		
 		/**
@@ -543,10 +542,10 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		protected function setup()
 		{
-			// Load dependent classes.
-			require_once JPATH_SITE . '/components/com_«plugin.name»/helpers/route.php';
+		    // Load dependent classes.
+		    require_once JPATH_SITE . '/components/com_«plugin.name»/helpers/route.php';
 		
-			return true;
+		    return true;
 		}
 		
 		/**
@@ -560,40 +559,38 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		protected function getListQuery($query = null)
 		{
-			$db = Factory::getDbo();
-			
-			// Check if we can use the supplied SQL query.
-			$query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
-				->select('a.id, a.catid, a.title, a.alias, a.url AS link, a.description AS summary')
-				->select('a.metakey, a.metadesc, a.metadata, a.language, a.access, a.ordering')
-				->select('a.created_by_alias, a.modified, a.modified_by')
-				->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
-				->select('a.state AS state, a.created AS start_date, a.params')
-				->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
+		    $db = Factory::getDbo();
 		
-			// Handle the alias CASE WHEN portion of the query.
-			$case_when_item_alias = ' CASE WHEN ';
-			$case_when_item_alias .= $query->charLength('a.alias', '!=', '0');
-			$case_when_item_alias .= ' THEN ';
-			$a_id = $query->castAsChar('a.id');
-			$case_when_item_alias .= $query->concatenate(array($a_id, 'a.alias'), ':');
-			$case_when_item_alias .= ' ELSE ';
-			$case_when_item_alias .= $a_id . ' END as slug';
-			$query->select($case_when_item_alias);
-		
-			$case_when_category_alias = ' CASE WHEN ';
-			$case_when_category_alias .= $query->charLength('c.alias', '!=', '0');
-			$case_when_category_alias .= ' THEN ';
-			$c_id = $query->castAsChar('c.id');
-			$case_when_category_alias .= $query->concatenate(array($c_id, 'c.alias'), ':');
-			$case_when_category_alias .= ' ELSE ';
-			$case_when_category_alias .= $c_id . ' END as catslug';
-			$query->select($case_when_category_alias)
-		
-			->from('#__«plugin.name» AS a')
-			->join('LEFT', '#__categories AS c ON c.id = a.catid');
-		
-			return $query;
+		    // Check if we can use the supplied SQL query.
+		    $query = $query instanceof JDatabaseQuery ? $query : $db->getQuery(true)
+		        ->select('a.id, a.catid, a.title, a.alias, a.url AS link, a.description AS summary')
+		        ->select('a.metakey, a.metadesc, a.metadata, a.language, a.access, a.ordering')
+		        ->select('a.created_by_alias, a.modified, a.modified_by')
+		        ->select('a.publish_up AS publish_start_date, a.publish_down AS publish_end_date')
+		        ->select('a.state AS state, a.created AS start_date, a.params')
+		        ->select('c.title AS category, c.published AS cat_state, c.access AS cat_access');
+
+		    // Handle the alias CASE WHEN portion of the query.
+		    $case_when_item_alias = ' CASE WHEN ';
+		    $case_when_item_alias .= $query->charLength('a.alias', '!=', '0');
+		    $case_when_item_alias .= ' THEN ';
+		    $a_id = $query->castAsChar('a.id');
+		    $case_when_item_alias .= $query->concatenate(array($a_id, 'a.alias'), ':');
+		    $case_when_item_alias .= ' ELSE ';
+		    $case_when_item_alias .= $a_id . ' END as slug';
+		    $query->select($case_when_item_alias);
+		    $case_when_category_alias = ' CASE WHEN ';
+		    $case_when_category_alias .= $query->charLength('c.alias', '!=', '0');
+		    $case_when_category_alias .= ' THEN ';
+		    $c_id = $query->castAsChar('c.id');
+		    $case_when_category_alias .= $query->concatenate(array($c_id, 'c.alias'), ':');
+		    $case_when_category_alias .= ' ELSE ';
+		    $case_when_category_alias .= $c_id . ' END as catslug';
+		    $query->select($case_when_category_alias)
+		    ->from('#__«plugin.name» AS a')
+		    ->join('LEFT', '#__categories AS c ON c.id = a.catid');
+
+		    return $query;
 		}
 	'''
 	
@@ -608,30 +605,30 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		
 		public function onGetIcons($context)
 		{
-			if ($context != $this->params->get('context', 'mod_quickicon') || !Factory::getUser()->authorise('core.manage', 'com_installer')) {
-				return;
-			}
+		    if ($context != $this->params->get('context', 'mod_quickicon') || !Factory::getUser()->authorise('core.manage', 'com_installer')) {
+		        return;
+		    }
 		
-			HTMLHelper::_('jquery.framework');
-			
-			//TODO: some code here
-			
-			$ajax_url = Uri::base() . 'index.php?option=com_installer&view=update&task=update.ajax';
-			
-			//TODO: some code here
-			
-			HTMLHelper::_('script', 'plg_quickicon_«plugin.name»/«plugin.name»check.js', false, true);
-			
-			return array(
-			array(
-				'link' => '',
-				'image' => '',
-				'icon' => '',
-				'text' => Text::_('PLG_QUICKICON_«plugin.name.toString.toUpperCase»_CHECKING'),
-				'id' => 'plg_quickicon_«plugin.name»',
-				'group' => 'MOD_QUICKICON_MAINTENANCE'
-			)
-			);
+		    HTMLHelper::_('jquery.framework');
+		
+		    //TODO: some code here
+		
+		    $ajax_url = Uri::base() . 'index.php?option=com_installer&view=update&task=update.ajax';
+		
+		    //TODO: some code here
+		
+		    HTMLHelper::_('script', 'plg_quickicon_«plugin.name»/«plugin.name»check.js', false, true);
+		
+		    return array(
+		        array(
+		            'link' => '',
+		            'image' => '',
+		            'icon' => '',
+		            'text' => Text::_('PLG_QUICKICON_«plugin.name.toString.toUpperCase»_CHECKING'),
+		            'id' => 'plg_quickicon_«plugin.name»',
+		            'group' => 'MOD_QUICKICON_MAINTENANCE'
+		        )
+		    );
 		}
 	'''
 	
@@ -653,11 +650,11 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onContentSearchAreas()
 		{
-			static $areas = array(
-				'«plugin.name»' => 'PLG_«plugin.type.toString.toUpperCase»_«plugin.name.toString.toUpperCase»_«plugin.name.toString.toUpperCase»'
-			);
+		    static $areas = array(
+		        '«plugin.name»' => 'PLG_«plugin.type.toString.toUpperCase»_«plugin.name.toString.toUpperCase»_«plugin.name.toString.toUpperCase»'
+		    );
 		
-			return $areas;
+		    return $areas;
 		}
 		
 		/**
@@ -677,122 +674,121 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		 */
 		public function onContentSearch($text, $phrase = '', $ordering = '', $areas = null)
 		{
-			$db = Factory::getDbo();
-			$app = Factory::getApplication();
-			$user = Factory::getUser();
-			$groups = implode(',', $user->getAuthorisedViewLevels());
-			
-			//not always used
-			$searchText = $text;
+		    $db = Factory::getDbo();
+		    $app = Factory::getApplication();
+		    $user = Factory::getUser();
+		    $groups = implode(',', $user->getAuthorisedViewLevels());
+		
+		    //not always used
+		    $searchText = $text;
 		
 		    if (is_array($areas)) {
 		        if (!array_intersect($areas, array_keys($this->onContentSearchAreas()))) {
 		            return array();
 		        }
 		    }
-			
-			$sContent = $this->params->get('search_content', 1);
-			$sArchived = $this->params->get('search_archived', 1);
-			$limit = $this->params->def('search_limit', 50);
-			$state = array();
-			
-			if ($sContent) {
-				$state[] = 1;
-			}
 		
-			if ($sArchived) {
-			    $state[] = 2;
-			}
+		    $sContent = $this->params->get('search_content', 1);
+		    $sArchived = $this->params->get('search_archived', 1);
+		    $limit = $this->params->def('search_limit', 50);
+		    $state = array();
 		
-			if (empty($state)) {
-			    return array();
-			}
+		    if ($sContent) {
+		        $state[] = 1;
+		    }
 		
-			$text = trim($text);
+		    if ($sArchived) {
+		        $state[] = 2;
+		    }
 		
-			if ($text == '') {
-			    return array();
-			}
-			
-			switch ($phrase) {
-				case 'exact':
-					//TODO: place code here
-					break;
+		    if (empty($state)) {
+		        return array();
+		    }
 		
-				case 'all':
-				case 'any':
-				default:
-					//TODO: place code here
-					break;
-			}
+		    $text = trim($text);
 		
-			switch ($ordering) {
-				case 'alpha':
-					//TODO: place code here
-					break;
+		    if ($text == '') {
+		        return array();
+		    }
 		
-				case 'category':
-					//TODO: place code here
-					break;
+		    switch ($phrase) {
+		        case 'exact':
+		            //TODO: place code here
+		            break;
 		
-				case 'oldest':
-					//TODO: place code here
-					break;
-				case 'popular':
-					//TODO: place code here
-					break;
-				case 'newest':
-					//TODO: place code here
-					break;
-				default:
-					//TODO: place code here
-			}
-			
-			$query = $db->getQuery(true);
-			
-			// SQLSRV changes.
-			$case_when = ' CASE WHEN ';
-			$case_when .= $query->charLength('a.alias', '!=', '0');
-			$case_when .= ' THEN ';
-			$a_id = $query->castAsChar('a.id');
-			$case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
-			$case_when .= ' ELSE ';
-			$case_when .= $a_id . ' END as slug';
+		        case 'all':
+		        case 'any':
+		        default:
+		            //TODO: place code here
+		            break;
+		    }
 		
-			$case_when1 = ' CASE WHEN ';
-			$case_when1 .= $query->charLength('c.alias', '!=', '0');
-			$case_when1 .= ' THEN ';
-			$c_id = $query->castAsChar('c.id');
-			$case_when1 .= $query->concatenate(array($c_id, 'c.alias'), ':');
-			$case_when1 .= ' ELSE ';
-			$case_when1 .= $c_id . ' END as catslug';
-			
-			
-			$query->select('/*some code here*/')
-			->from('#__«plugin.name» AS a')
-			//join is not always used
-			->join('INNER', '#__categories as c ON c.id = a.catid')
-			->where('/*some code here*/')
-			->order($order);
-			
-			// Filter by language.
-			if ($app->isSite() && Multilanguage::isEnabled()) {
-			$tag = Factory::getLanguage()->getTag();
-			$query->where('a.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')')
-				->where('c.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')');
-			}
-			
-			$db->setQuery($query, 0, $limit);
-			$rows = $db->loadObjectList();
-			
-			if ($rows) {
-				foreach ($rows as $key => $row)
-				{
-					//TODO: place code here
-				}
-			}
+		    switch ($ordering) {
+		        case 'alpha':
+		            //TODO: place code here
+		            break;
+
+		        case 'category':
+		            //TODO: place code here
+		            break;
 		
-			return $rows;
+		        case 'oldest':
+		            //TODO: place code here
+		            break;
+		        case 'popular':
+		            //TODO: place code here
+		            break;
+		        case 'newest':
+		            //TODO: place code here
+		            break;
+		        default:
+		            //TODO: place code here
+		    }
+		
+		    $query = $db->getQuery(true);
+		
+		    // SQLSRV changes.
+		    $case_when = ' CASE WHEN ';
+		    $case_when .= $query->charLength('a.alias', '!=', '0');
+		    $case_when .= ' THEN ';
+		    $a_id = $query->castAsChar('a.id');
+		    $case_when .= $query->concatenate(array($a_id, 'a.alias'), ':');
+		    $case_when .= ' ELSE ';
+		    $case_when .= $a_id . ' END as slug';
+		
+		    $case_when1 = ' CASE WHEN ';
+		    $case_when1 .= $query->charLength('c.alias', '!=', '0');
+		    $case_when1 .= ' THEN ';
+		    $c_id = $query->castAsChar('c.id');
+		    $case_when1 .= $query->concatenate(array($c_id, 'c.alias'), ':');
+		    $case_when1 .= ' ELSE ';
+		    $case_when1 .= $c_id . ' END as catslug';
+		
+		
+		    $query->select('/*some code here*/')
+		        ->from('#__«plugin.name» AS a')
+		        //join is not always used
+		        ->join('INNER', '#__categories as c ON c.id = a.catid')
+		        ->where('/*some code here*/')
+		        ->order($order);
+		
+		    // Filter by language.
+		    if ($app->isSite() && Multilanguage::isEnabled()) {
+		        $tag = Factory::getLanguage()->getTag();
+		        $query->where('a.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')')
+		            ->where('c.language in (' . $db->quote($tag) . ',' . $db->quote('*') . ')');
+		    }
+		
+		    $db->setQuery($query, 0, $limit);
+		    $rows = $db->loadObjectList();
+		
+		    if ($rows) {
+		        foreach ($rows as $key => $row) {
+		            //TODO: place code here
+		        }
+		    }
+		
+		    return $rows;
 		}
 	'''
 	
@@ -819,36 +815,39 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	def CharSequence xmlContent(Plugin plugin) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<extension version="3.1" type="plugin" group="«plugin.type»">
-			<name>«plugin.name»</name>
-			«Slug.generateAuthors(plugin.manifest.authors)»
-			<creationDate>«if (plugin.manifest.creationdate !== null) {plugin.manifest.creationdate} 
-		else {Calendar::instance.get(Calendar::YEAR)}»</creationDate>
-			<copyright>«if (plugin.manifest.copyright !== null) {plugin.manifest.copyright}
-			else {"Copyright (C) 2005 - 2014 Open Source Matters. All rights reserved."}»</copyright>
-			<license>«if (plugin.manifest.license !== null) {plugin.manifest.license}
-			else {"GPL 2.0"}»</license>
-			<version>«if (plugin.manifest.version !== null) {plugin.manifest.version}
-			else {"3.0.0"}»</version>
-			<description>«if (plugin.manifest.description !== null) {plugin.manifest.description}
-			else {"Place Description here"}»</description>
+		    <name>«plugin.name»</name>
+		    «Slug.generateAuthors(plugin.manifest.authors)»
+		    <creationDate>
+		        «if (plugin.manifest.creationdate !== null) 
+		        {plugin.manifest.creationdate} 
+		        else {Calendar::instance.get(Calendar::YEAR)}»
+		    </creationDate>
+		    <copyright>«if (plugin.manifest.copyright !== null) {plugin.manifest.copyright}
+		    else {"Copyright (C) 2005 - 2014 Open Source Matters. All rights reserved."}»</copyright>
+		    <license>«if (plugin.manifest.license !== null) {plugin.manifest.license}
+		    else {"GPL 2.0"}»</license>
+		    <version>«if (plugin.manifest.version !== null) {plugin.manifest.version}
+		    else {"3.0.0"}»</version>
+		    <description>«if (plugin.manifest.description !== null) {plugin.manifest.description}
+		    else {"Place Description here"}»</description>
 		
-			<files>
-			    <filename plugin="«plugin.name»">«plugin.name».php</filename>
-			</files>
+		    <files>
+		        <filename plugin="«plugin.name»">«plugin.name».php</filename>
+		    </files>
 		
-			<languages folder="language">
-			    «FOR lang:plugin.languages»
-			    «IF !lang.sys»
-			    <language tag="«lang.name»">«lang.name».«plugin.name».ini</language>
-				«ELSE»
-			    <language tag="«lang.name»">«lang.name».plg_«plugin.type»_«plugin.name».sys.ini</language>
-				«ENDIF»
-			    «ENDFOR»
-			</languages>
+		    <languages folder="language">
+		        «FOR lang:plugin.languages»
+		        «IF !lang.sys»
+		        <language tag="«lang.name»">«lang.name».«plugin.name».ini</language>
+		        «ELSE»
+		        <language tag="«lang.name»">«lang.name».plg_«plugin.type»_«plugin.name».sys.ini</language>
+		        «ENDIF»
+		        «ENDFOR»
+		    </languages>
 		
-			<config>
-			    <!-- Config Section-->
-			</config>
+		    <config>
+		        <!-- Config Section-->
+		    </config>
 		</extension>
 	'''
 }

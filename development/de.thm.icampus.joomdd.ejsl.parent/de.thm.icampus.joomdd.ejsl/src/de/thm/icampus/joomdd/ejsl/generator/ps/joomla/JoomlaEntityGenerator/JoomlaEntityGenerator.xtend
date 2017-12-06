@@ -35,7 +35,7 @@ class JoomlaEntityGenerator {
 	}
 	
 	def dogenerate(String path, IFileSystemAccess fileGen) {
-	    if(update){
+	    if (update) {
 	        fileGen.generateFile(path + "/update.sql",generateUpdateScript(extendsionN))
 		    fileGen.generateFile(path + "/install.sql",sqlAdminSqlInstallContent(extendsionN,update))
 		} else {

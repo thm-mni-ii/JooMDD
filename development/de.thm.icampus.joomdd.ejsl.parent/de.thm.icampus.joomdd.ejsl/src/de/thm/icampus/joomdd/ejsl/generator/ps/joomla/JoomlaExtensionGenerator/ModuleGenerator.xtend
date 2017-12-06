@@ -70,148 +70,148 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 		<?xml version="1.0" encoding="utf-8"?>
 		<extension type="module" version="3.8" client="site" method="upgrade">
-			<name>«module.name.toFirstUpper»</name>
-			<creationDate>
-			    «if (module.manifest.creationdate !== null) {
-			        module.manifest.creationdate
-			    } else {
-				    Calendar::instance.get(Calendar.YEAR)
-			    }»
-			</creationDate>
-			<copyright>
-			    «if (module.manifest.copyright !== null) {
-			        module.manifest.copyright
-			    } else {
-				    "Generated with JooMDD by Institute for Information Sciences, THM, Germany"
-			    }»
-			</copyright>
-			<license>
-			    «if (module.manifest.license !== null) {
-			        module.manifest.license
-			    } else {
-			        "GNU General Public License version 2 or later"
-			    }»
-			</license>
-			«Slug.generateAuthors(module.manifest.authors)»
-			<version>
-			    «if (module.manifest.version !== null) {
-			        module.manifest.version
-			    } else {
-				    "1.0.0"
-			    }»
-			</version>
-			<description>
-			    «if (module.manifest.description !== null) {
-			        module.manifest.description
-			    } else {
-			        "Place Description here"
-			    }»
-			</description>
-			<!-- Listing of all files that should be installed for the module -->
-			<files>
-			    <filename module="«name»">«name».php</filename>
-				<filename>helper.php</filename>
-				<folder>
-					<filename>tmpl/default.php</filename>
-				</folder>
-				<folder>language</folder>
-			</files>
-			<dependency>
+		    <name>«module.name.toFirstUpper»</name>
+		    <creationDate>
+		        «if (module.manifest.creationdate !== null) {
+		            module.manifest.creationdate
+		        } else {
+		            Calendar::instance.get(Calendar.YEAR)
+		        }»
+		    </creationDate>
+		    <copyright>
+		        «if (module.manifest.copyright !== null) {
+		            module.manifest.copyright
+		        } else {
+		            "Generated with JooMDD by Institute for Information Sciences, THM, Germany"
+		        }»
+		    </copyright>
+		    <license>
+		        «if (module.manifest.license !== null) {
+		            module.manifest.license
+		        } else {
+		            "GNU General Public License version 2 or later"
+		        }»
+		    </license>
+		    «Slug.generateAuthors(module.manifest.authors)»
+		    <version>
+		        «if (module.manifest.version !== null) {
+		            module.manifest.version
+		        } else {
+		            "1.0.0"
+		        }»
+		    </version>
+		    <description>
+		        «if (module.manifest.description !== null) {
+		            module.manifest.description
+		        } else {
+		            "Place Description here"
+		        }»
+		    </description>
+		    <!-- Listing of all files that should be installed for the module -->
+		    <files>
+		        <filename module="«name»">«name».php</filename>
+		        <filename>helper.php</filename>
+		        <folder>
+		            <filename>tmpl/default.php</filename>
+		        </folder>
+		        <folder>language</folder>
+		    </files>
+		    <dependency>
 
-			</dependency>
-			<!-- All language files shipped with the module -->
-			<languages>
-			    «FOR lang : module.languages»
-			    «IF lang.sys == false»
-			    <language tag="«lang.name»">language/«lang.name»/«lang.name».«name».ini</language>
-			    «ELSE»
-			    <language tag="«lang.name»">language/«lang.name»/«lang.name».«name».sys.ini</language>
-			    «ENDIF»
-			    «ENDFOR»
-			</languages>
-			<!-- Optional parameters -->
-			<config>
-			    <fields name="params">
-			        <fieldset name="basic">
-			            «IF dynpage !== null»
-			            <field name="ordering" type="list"
-			                label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ORDERING"
-			                description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_ORDERING_DESC"
-			                class="inputbox"
-			                default="id">
-			                <option value="id">ID</option>
-			                «FOR ExtendedAttribute attr: dynpage.extendFiltersList»
-			                <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_FORM_LBL_«attr.name.toUpperCase»</option>
-			                «ENDFOR»
-			            </field>
-			            «ENDIF»
-			            <field name="direction" type="list"
-			                label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_DIRECTION"
-		   	                description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_DIRECTION_DESC"
-		   	                class="inputbox"
-		   	                size="1"
-		   	                default="ASC">
-		   	                <option value="ASC">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ASC</option>
-		   	                <option value="DESC">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_DESC</option>
-		   	            </field>
-		   	            <field
-					        name="start"
-					        type="int"
-					        default="0"
-					        label="MOD_«module.name.toUpperCase»_START_LABEL"
-					        description="MOD_«module.name.toUpperCase»_START_DESC" />
-					    <field
-					        name="limit"
-					        type="int"
-					        default="10"
-					        label="MOD_«module.name.toUpperCase»_LIMIT_LABEL"
-					        description="MOD_«module.name.toUpperCase»_LIMIT_DESC" />
-					    <field
-					        name="search"
-					        type="text"
-					        label="MOD_«module.name.toUpperCase»_SEARCH_LABEL"
-					        description="MOD_«module.name.toUpperCase»_SEARCH_DESC" />
-					    <field name="state" type="list"
-			   	            label="MOD_«module.name.toUpperCase»_JSTATUS"
-			   	            description="MOD_«module.name.toUpperCase»_JFIELD_PUBLISHED_DESC"
-			   	            class="inputbox"
-			   	            size="1"
-			   	            default="1">
-			   	            <option value="1">JPUBLISHED</option>
-			   	            <option value="0">JUNPUBLISHED</option>
-			   	            <option value="2">JARCHIVED</option>
-			   	            <option value="-2">JTRASHED</option>
-			   	        </field>
-			   	    </fieldset>
-			   	    «IF com !== null && dynpage !==null»
-			   	    <fieldset name="filter">
-			   	        <field
-			   	            name="created_by"
-			   	            addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
-			   	            type="componentuser"
-			   	            label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
-			   	            description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
-			   	            entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»">
-			   	            <option value="">JOPTION_SELECT_CREATED_BY</option>
-			   	        </field>
-			   	        «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
-			   	        «IF !attr.name.equalsIgnoreCase("params")»
-			   	        <field
-			   	            addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
-			   	            name="«attr.name»"
-			   	            type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
-			   	            label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-			   	            description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-			   	            valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
-			   	            textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
-			   	            <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
-			   	        </field>
-			   	        «ENDIF»
-			   	        «ENDFOR»
-			   	    </fieldset>
-			   	    «ENDIF»
-			    </fields>
-			</config>
+		    </dependency>
+		    <!-- All language files shipped with the module -->
+		    <languages>
+		        «FOR lang : module.languages»
+		        «IF lang.sys == false»
+		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name».ini</language>
+		        «ELSE»
+		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name».sys.ini</language>
+		        «ENDIF»
+		        «ENDFOR»
+		    </languages>
+		    <!-- Optional parameters -->
+		    <config>
+		        <fields name="params">
+		            <fieldset name="basic">
+		                «IF dynpage !== null»
+		                <field name="ordering" type="list"
+		                    label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ORDERING"
+		                    description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_ORDERING_DESC"
+		                    class="inputbox"
+		                    default="id">
+		                    <option value="id">ID</option>
+		                    «FOR ExtendedAttribute attr: dynpage.extendFiltersList»
+		                    <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_FORM_LBL_«attr.name.toUpperCase»</option>
+		                    «ENDFOR»
+		                </field>
+		                «ENDIF»
+		                <field name="direction" type="list"
+		                    label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_DIRECTION"
+		                    description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_DIRECTION_DESC"
+		                    class="inputbox"
+		                    size="1"
+		                    default="ASC">
+		                    <option value="ASC">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ASC</option>
+		                    <option value="DESC">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_DESC</option>
+		                </field>
+		                <field
+		                    name="start"
+		                    type="int"
+		                    default="0"
+		                    label="MOD_«module.name.toUpperCase»_START_LABEL"
+		                    description="MOD_«module.name.toUpperCase»_START_DESC" />
+		                <field
+		                    name="limit"
+		                    type="int"
+		                    default="10"
+		                    label="MOD_«module.name.toUpperCase»_LIMIT_LABEL"
+		                    description="MOD_«module.name.toUpperCase»_LIMIT_DESC" />
+		                <field
+		                    name="search"
+		                    type="text"
+		                    label="MOD_«module.name.toUpperCase»_SEARCH_LABEL"
+		                    description="MOD_«module.name.toUpperCase»_SEARCH_DESC" />
+		                <field name="state" type="list"
+		                    label="MOD_«module.name.toUpperCase»_JSTATUS"
+		                    description="MOD_«module.name.toUpperCase»_JFIELD_PUBLISHED_DESC"
+		                    class="inputbox"
+		                    size="1"
+		                    default="1">
+		                    <option value="1">JPUBLISHED</option>
+		                    <option value="0">JUNPUBLISHED</option>
+		                    <option value="2">JARCHIVED</option>
+		                    <option value="-2">JTRASHED</option>
+		                </field>
+		            </fieldset>
+		            «IF com !== null && dynpage !==null»
+		            <fieldset name="filter">
+		                <field
+		                    name="created_by"
+		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
+		                    type="componentuser"
+		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
+		                    description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
+		                    entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»">
+		                    <option value="">JOPTION_SELECT_CREATED_BY</option>
+		                </field>
+		                «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
+		                «IF !attr.name.equalsIgnoreCase("params")»
+		                <field
+		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
+		                    name="«attr.name»"
+		                    type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
+		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+		                    description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+		                    valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
+		                    textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
+		                    <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
+		                </field>
+		                «ENDIF»
+		                «ENDFOR»
+		            </fieldset>
+		        «ENDIF»
+		        </fields>
+		    </config>
 		</extension>
 		'''
 	}
@@ -264,19 +264,19 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		    <?php foreach ($items as $item) : ?>
 		    <li><div class="«extMod.pageRef.page.name»item">
-			<?php if (empty($item)) : ?>
-			    <?php // itemlist is empty ;?>
-			    <!DOCTYPE html><title></title>
-			«IF !(dynpage.entities.isEmpty)»
-			<?php else : ?>
-			    «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
-			    «IF !attr.name.equalsIgnoreCase("params")»
-			    <?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
-			    <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
-			    «ENDIF»
-			    «ENDFOR»
+		    <?php if (empty($item)) : ?>
+		        <?php // itemlist is empty ;?>
+		        <!DOCTYPE html><title></title>
+		    «IF !(dynpage.entities.isEmpty)»
+		    <?php else : ?>
+		        «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+		        «IF !attr.name.equalsIgnoreCase("params")»
+		        <?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
+		        <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
+		        «ENDIF»
+		        «ENDFOR»
 		    «ENDIF»
-			<?php endif; ?>
+		    <?php endif; ?>
 		    </div></li>
 		    <?php endforeach; ?>
 		</ul>
@@ -289,7 +289,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		return "$" + result;
 		
 		for(Link lk: listLink) {
-            if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {				
+            if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
                 return '''HTMLHelper::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
             }
 		}
@@ -316,7 +316,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		class «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper
 		{
 		    «genGetList»
-			«genGetModel()»
+		    «genGetModel()»
 		}
 		'''
 	}
@@ -332,16 +332,16 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	public static function getModel()
 	{
 	    /**
-		 * placeholder "<>" are to be replaced
-		 */
-		BaseDatabaseModel::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
+	     * placeholder "<>" are to be replaced
+	     */
+	    BaseDatabaseModel::addIncludePath(JPATH_ROOT . «modelPath», «modelOfComponent»);
 
-		«IF (extMod.pageRef.pagescr !== null )»
-		$model = BaseDatabaseModel::getInstance('«extMod.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
-		«ELSE»
-		$model = BaseDatabaseModel::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
-		«ENDIF»
-		return $model;
+	    «IF (extMod.pageRef.pagescr !== null )»
+	    $model = BaseDatabaseModel::getInstance('«extMod.pageRef.page.name»', «modelOfComponent2», array('ignore_request' => true));
+	    «ELSE»
+	    $model = BaseDatabaseModel::getInstance('<type>', <modelOfComponent>, array('ignore_request' => true));
+	    «ENDIF»
+	    return $model;
 	}
 	
 	'''
@@ -351,14 +351,14 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
             var String section =  modul.extendedPageReference.extendedPage.name
             var String compName =  modul.extendedComponentName
             if(section.equalsIgnoreCase('backend')) {
-                modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"    		   					
+                modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"
             } else {
-                modelPath = "'/components/com_" + compName.toLowerCase + "/models'"    		   					
+                modelPath = "'/components/com_" + compName.toLowerCase + "/models'"
             }
             modelOfComponent = ("\"" + compName.toFirstUpper + "\"")
             modelOfComponent2 = ("\"" +compName.toFirstUpper + "Model\"")
-        }		
-    }	
+        }
+    }
 	
 	public def genGetList()'''
 	/**
@@ -371,54 +371,54 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	public static function getList($params_module = null)
 	{
 	    $model = «extMod.name.toFirstUpper»Helper::getModel();
-		$state = $params_module->get('state');
-		if (!empty($state)) {
-		    $model->setState('filter.state', $state);
-		}
+	    $state = $params_module->get('state');
+	    if (!empty($state)) {
+	        $model->setState('filter.state', $state);
+	    }
 
-		$search = $params_module->get('search');
-		if (!empty($search)) {
-		    $model->setState('filter.search', $search);
-		}
+	    $search = $params_module->get('search');
+	    if (!empty($search)) {
+	        $model->setState('filter.search', $search);
+	    }
 
-		$created_by = $params_module->get('created_by');
-		if (!empty($created_by)) {
-		    $model->setState('filter.search',$created_by);
-		}
+	    $created_by = $params_module->get('created_by');
+	    if (!empty($created_by)) {
+	        $model->setState('filter.search',$created_by);
+	    }
 
-		$ordering = $params_module->get('ordering');
-		if (!empty($ordering)) {
-		    $model->setState('list.ordering',$ordering);
-		}
+	    $ordering = $params_module->get('ordering');
+	    if (!empty($ordering)) {
+	        $model->setState('list.ordering',$ordering);
+	    }
 
-		$direction = $params_module->get('direction');
-		if (!empty($direction)) {
-		    $model->setState('list.direction', $direction);
-		}
-		
-		$start = $params_module->get('start');
-		if (!empty($start)) {
-		    $model->setState('list.start', $start);
-		}
+	    $direction = $params_module->get('direction');
+	    if (!empty($direction)) {
+	        $model->setState('list.direction', $direction);
+	    }
+	
+	    $start = $params_module->get('start');
+	    if (!empty($start)) {
+	        $model->setState('list.start', $start);
+	    }
 
-		$limit = $params_module->get('limit');
-		if (!empty($limit)) {
-		    $model->setState('list.limit', $limit);
-		}
+	    $limit = $params_module->get('limit');
+	    if (!empty($limit)) {
+	        $model->setState('list.limit', $limit);
+	    }
 
-		«IF dynpage !== null»
-		«FOR ExtendedAttribute attr: dynpage.extendFiltersList»
-		«IF !attr.name.equalsIgnoreCase("params")»
-		$«attr.name.toLowerCase» = $params_module->get('«attr.name.toLowerCase»');
-		if (!empty($«attr.name.toLowerCase» )) {
-		    $model->setState('filter.«attr.name.toLowerCase»', $«attr.name.toLowerCase» );
-		}
-		«ENDIF»
-		«ENDFOR»
-		«ENDIF»
-		$items = $model->getItems();
+	    «IF dynpage !== null»
+	    «FOR ExtendedAttribute attr: dynpage.extendFiltersList»
+	    «IF !attr.name.equalsIgnoreCase("params")»
+	    $«attr.name.toLowerCase» = $params_module->get('«attr.name.toLowerCase»');
+	    if (!empty($«attr.name.toLowerCase» )) {
+	        $model->setState('filter.«attr.name.toLowerCase»', $«attr.name.toLowerCase» );
+	    }
+	    «ENDIF»
+	    «ENDFOR»
+	    «ENDIF»
+	    $items = $model->getItems();
 
-		return $items;
-	}	
+	    return $items;
+	}
 	'''
 } 

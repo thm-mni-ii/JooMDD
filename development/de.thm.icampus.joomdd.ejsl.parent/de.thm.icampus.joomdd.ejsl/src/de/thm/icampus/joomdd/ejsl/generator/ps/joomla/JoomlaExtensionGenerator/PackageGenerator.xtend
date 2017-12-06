@@ -56,7 +56,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
             rootPath + "/"+ path + "packages/"
         )
         if(success) {
-           	Slug.deleteFolder(rootPath + "/" +path + "packages/tocompress")
+            Slug.deleteFolder(rootPath + "/" +path + "packages/tocompress")
         }
         return ''
 	}
@@ -64,9 +64,9 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 	def boolean compressExtensions( String fromSrc, String toSrc) {
         val byte[] buffer = newByteArrayOfSize(1024)
         for ( ExtendedExtensions ext: pkg.extendedExtensions) {
-           	try {
-           	    var File f = null
-           	    switch(ext.instance) {
+            try {
+                var File f = null
+                switch(ext.instance) {
                     Component: {
                         f = new File (fromSrc + ext.extensionName+ "/new/"+ext.extensionName)
                     } 
@@ -89,45 +89,45 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 	
 	def CharSequence xmlContent(ExtensionPackage pkg) '''
 		<?xml version="1.0" encoding="utf-8"?>
-			<extension type="package" version="3.5.0" method="upgrade">
-			    <name>«pkg.name»</name>
-			    «Slug.generateAuthors(pkg.manifest.authors)»
-			    «IF (pkg.manifest.creationdate !== null)»
-			    <creationDate>«pkg.manifest.creationdate»</creationDate>
-			    «ELSE»
-			    <creationDate>«Calendar::instance.get(Calendar::YEAR)»</creationDate>
-			    «ENDIF»
-			    «IF (pkg.manifest.copyright !== null)»
-			    <copyright>«pkg.manifest.copyright»</copyright>
-			    «ENDIF»
-			    <packagename>«pkg.name»</packagename>
-			    «IF (pkg.manifest.license !== null)»
-			    <license>«pkg.manifest.license»</license>
-			    «ENDIF»
-			    «IF (pkg.manifest.version !== null)»
-			    <version>«pkg.manifest.version»</version>
-			    «ENDIF»
-			    «IF (pkg.manifest.description !== null)»
-			    <description>«pkg.manifest.description»</description>
-			    «ENDIF»
-				<files folder="packages">
-				    «FOR com : pkg.extensions.filter(typeof(Component))»
-				    <file type="component" id="«pkg.name»">«Slug.nameExtensionBind("com",com.name).toLowerCase».zip</file>
-				    «ENDFOR»
-				    «FOR lib : pkg.extensions.filter(typeof(Library))»
-				    <file type="library" id="«pkg.name»">«Slug.nameExtensionBind("lib",lib.name).toLowerCase».zip</file>
-				    «ENDFOR»
-				    «FOR mod : pkg.extensions.filter(typeof(Module))»
-				    <file type="module" id="«pkg.name»" client="site">«Slug.nameExtensionBind("mod",mod.name).toLowerCase».zip</file>
-				    «ENDFOR»
-				    «FOR tpl : pkg.extensions.filter(typeof(Template))»
-				    <file type="template" id="«pkg.name»">«Slug.nameExtensionBind("tpl",tpl.name).toLowerCase».zip</file>
-				    «ENDFOR»
-				    «FOR plg : pkg.extensions.filter(typeof(Plugin))»
-				    <file type="plugin" id="«pkg.name»" group="«plg.type»">«Slug.nameExtensionBind("plg",plg.name).toLowerCase».zip</file>
-	                «ENDFOR»
-				</files>
-			</extension>
+		    <extension type="package" version="3.5.0" method="upgrade">
+		        <name>«pkg.name»</name>
+		        «Slug.generateAuthors(pkg.manifest.authors)»
+		        «IF (pkg.manifest.creationdate !== null)»
+		        <creationDate>«pkg.manifest.creationdate»</creationDate>
+		        «ELSE»
+		        <creationDate>«Calendar::instance.get(Calendar::YEAR)»</creationDate>
+		        «ENDIF»
+		        «IF (pkg.manifest.copyright !== null)»
+		        <copyright>«pkg.manifest.copyright»</copyright>
+		        «ENDIF»
+		        <packagename>«pkg.name»</packagename>
+		        «IF (pkg.manifest.license !== null)»
+		        <license>«pkg.manifest.license»</license>
+		        «ENDIF»
+		        «IF (pkg.manifest.version !== null)»
+		        <version>«pkg.manifest.version»</version>
+		        «ENDIF»
+		        «IF (pkg.manifest.description !== null)»
+		        <description>«pkg.manifest.description»</description>
+		        «ENDIF»
+		        <files folder="packages">
+		            «FOR com : pkg.extensions.filter(typeof(Component))»
+		            <file type="component" id="«pkg.name»">«Slug.nameExtensionBind("com",com.name).toLowerCase».zip</file>
+		            «ENDFOR»
+		            «FOR lib : pkg.extensions.filter(typeof(Library))»
+		            <file type="library" id="«pkg.name»">«Slug.nameExtensionBind("lib",lib.name).toLowerCase».zip</file>
+		            «ENDFOR»
+		            «FOR mod : pkg.extensions.filter(typeof(Module))»
+		            <file type="module" id="«pkg.name»" client="site">«Slug.nameExtensionBind("mod",mod.name).toLowerCase».zip</file>
+		            «ENDFOR»
+		            «FOR tpl : pkg.extensions.filter(typeof(Template))»
+		            <file type="template" id="«pkg.name»">«Slug.nameExtensionBind("tpl",tpl.name).toLowerCase».zip</file>
+		            «ENDFOR»
+		            «FOR plg : pkg.extensions.filter(typeof(Plugin))»
+		            <file type="plugin" id="«pkg.name»" group="«plg.type»">«Slug.nameExtensionBind("plg",plg.name).toLowerCase».zip</file>
+		            «ENDFOR»
+		        </files>
+		    </extension>
 	'''
 	
 	public def void scanDirectory(ZipOutputStream zos, byte[]buffer, String  src, String path) {
@@ -138,15 +138,15 @@ public class PackageGenerator extends AbstractExtensionGenerator {
             if (! f.isDirectory()) {
                 if(path.isEmpty) {
                     putFile(zos, f, buffer, "");
-	           	} else {
-	           		putFile(zos, f, buffer,path);
-	           	}
+	            } else {
+	               putFile(zos, f, buffer,path);
+	            }
             } else {
                 if(path.isEmpty) {
                     scanDirectory(zos,buffer,f.getPath(),f.getName() +"/" );
-                } else {	            	
+                } else {
                     scanDirectory(zos,buffer,f.getPath(),path+f.getName() +"/" );
-                }	
+                }
             }
         }
 	}

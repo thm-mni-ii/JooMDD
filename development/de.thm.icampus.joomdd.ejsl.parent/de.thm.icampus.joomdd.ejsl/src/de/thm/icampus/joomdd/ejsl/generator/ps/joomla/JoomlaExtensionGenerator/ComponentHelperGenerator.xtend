@@ -87,7 +87,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		}
 	'''
 	 /**
-	  *	Content template to save a file on the server
+	  * Content template to save a file on the server
 	  */
     private def genUploadFile()'''
 		/**
@@ -100,31 +100,30 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		public static function uploadFiles($file, $target, $oldname)
 		{
 		    $file['name'] = JFile::makeSafe($file['name']);
-			$file['name'] = str_replace(' ', '_', $file['name']);
-			$file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
-			if (JFile::exists($file['filepath'])) {
-			    $index =1;
-				$file["name"] = $index."_".$file["name"];
-				$file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
-				while(JFile::exists($file['filepath']))
-				{
-				    $index =     $index +1;
-					$file["name"] = $index."_".$file["name"];
-					$file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
-				}
-			}
-			$object_file = new CMSObject($file);
+		    $file['name'] = str_replace(' ', '_', $file['name']);
+		    $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
+		    if (JFile::exists($file['filepath'])) {
+		        $index =1;
+		        $file["name"] = $index."_".$file["name"];
+		        $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
+		        while(JFile::exists($file['filepath'])) {
+		            $index = $index +1;
+		            $file["name"] = $index."_".$file["name"];
+		            $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
+		        }
+		    }
+		    $object_file = new CMSObject($file);
 		
 		    if (!JFile::upload($object_file->tmp_name, $object_file->filepath)) {
-			    return false;
-			}
-			if (!empty($oldname)) {
-			    $pathOfold = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $oldname)));
-				if (JFile::exists($pathOfold)) {
-				    JFile::delete($pathOfold);
-				}
-			}
-			return $file['name'];
+		        return false;
+		    }
+		    if (!empty($oldname)) {
+		        $pathOfold = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $oldname)));
+		        if (JFile::exists($pathOfold)) {
+		            JFile::delete($pathOfold);
+		        }
+		    }
+		    return $file['name'];
 		}
 	'''
 	

@@ -76,7 +76,7 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		 * @subpackage  «this.subpackageName»
 		 *
 		 * @copyright
-		 * @license		
+		 * @license
 		 */
 		
 		defined('_JEXEC') or die();
@@ -96,64 +96,64 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		     * @since  3.3
 		     */
 		    private $«attribute.name»;
-			«ENDFOR»
-					
-			/**
-			 * Returns properties of class
-			 *
-			 * @param   $property  Name of searched property
-			 * 
-			 * @return  mixed      Property of this class
-			 */
-			public function __get($property)
-			{
-			    if (property_exists($this, $property)) {
-				    return $this->$property;
-				}
-			}
+		    «ENDFOR»
+		
+		    /**
+		     * Returns properties of class
+		     *
+		     * @param   $property  Name of searched property
+		     *
+		     * @return  mixed      Property of this class
+		     */
+		    public function __get($property)
+		    {
+		        if (property_exists($this, $property)) {
+		            return $this->$property;
+		        }
+		    }
 
-			/**
-			 * Sets value for property
-			 *
-			 * @param   string  $property  Name of property
-			 * @param   mixed   $value     New value for property
-			 *
-			 * @return  void
-			 */
-			public function __set($property, $value)
-			{
-			    if (property_exists($this, $property)) {
-				    $this->$property = $value;
-				}
-			}
-			
-			/**
-			 * Method to get a single record.
-			 *
-			 * @param   integer  $pk, The id of the primary key.
-			 *
-			 * @return  mixed    Object on success, false on failure.
-			 *
-			 * @since   1.6
-			 */
-			public function getItem($pk = null)
-			{
-			    // TODO: auto-generated method stub
-			}
-			
-			/**
-			 * Method to save the form data.
-			 *
-			 * @param   array    $data, the form data.
-			 *
-			 * @return  boolean  True on success.
-			 *
-			 * @since   3.1
-			 */
-			public function save($data)
-			{
-			// TODO: auto-generated method stub
-			}
+		    /**
+		     * Sets value for property
+		     *
+		     * @param   string  $property  Name of property
+		     * @param   mixed   $value     New value for property
+		     *
+		     * @return  void
+		     */
+		    public function __set($property, $value)
+		    {
+		        if (property_exists($this, $property)) {
+		            $this->$property = $value;
+		        }
+		    }
+
+		    /**
+		     * Method to get a single record.
+		     *
+		     * @param   integer  $pk, The id of the primary key.
+		     *
+		     * @return  mixed    Object on success, false on failure.
+		     *
+		     * @since   1.6
+		     */
+		    public function getItem($pk = null)
+		    {
+		        // TODO: auto-generated method stub
+		    }
+
+		    /**
+		     * Method to save the form data.
+		     *
+		     * @param   array    $data, the form data.
+		     *
+		     * @return  boolean  True on success.
+		     *
+		     * @since   3.1
+		     */
+		    public function save($data)
+		    {
+		    // TODO: auto-generated method stub
+		    }
 		}
 		?>
 		«ENDFOR»
@@ -191,38 +191,38 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		     *
 		     «FOR param : method.methodparameters»
 		     * @param  «switch(param.type.typeName) {
-			    case "string":	{ "string" }
-			    case "bool":	{ "boolean" }
-				case "int":	    { "integer" }
-				case "float":	{ "float" }
-				case "array":	{ "array" }
-				default:		{ "mixed" }
-				}»	$«param.name»  Parameter description 
+		        case "string":  { "string" }
+		        case "bool":    { "boolean" }
+		        case "int":     { "integer" }
+		        case "float":   { "float" }
+		        case "array":   { "array" }
+		        default:        { "mixed" }
+		        }» $  «param.name»Parameter description 
 		     «ENDFOR»
 		     *
 		     * @return  «switch(method.type.typeName) {
-			    case "string":	{ "string	Description" }
-			    case "bool":	{ "boolean	Description" }
-			    case "int":		{ "integer	Description" }
-			    case "float":	{ "float	Description" }
-			    case "array":	{ "array	Description" }
-			    default:		{ "mixed	Description" }
-			 }»
+		        case "string":  { "string   Description" }
+		        case "bool":    { "boolean  Description" }
+		        case "int":     { "integer  Description" }
+		        case "float":   { "float    Description" }
+		        case "array":   { "array    Description" }
+		        default:        { "mixed    Description" }
+		     }»
 		     */
 		    public function «method.name»(«FOR param : method.methodparameters SEPARATOR ", "»$«param.name»«ENDFOR»)
 		    {
 		    // TODO: auto-generated method stub
 		    «switch(method.type.typeName) {
-				case "string":	{ "$" + method.returnvalue + " = '';"  }
-				case "bool":	{ "$" + method.returnvalue + " = false;" }
-				case "int":		{ "$" + method.returnvalue + " = 0;" }
-				case "float":	{ "$" + method.returnvalue + " = 0.0;" }
-				case "array":	{ "$" + method.returnvalue + " = array();" }
-				default:		{ "$" + method.returnvalue + " = null;" }
-			}»
+		        case "string":  { "$" + method.returnvalue + " = '';"  }
+		        case "bool":    { "$" + method.returnvalue + " = false;" }
+		        case "int":     { "$" + method.returnvalue + " = 0;" }
+		        case "float":   { "$" + method.returnvalue + " = 0.0;" }
+		        case "array":   { "$" + method.returnvalue + " = array();" }
+		        default:        { "$" + method.returnvalue + " = null;" }
+		    }»
 		    return $«method.returnvalue»;
 		    }
-			«ENDFOR»
+		    «ENDFOR»
 		}
 		«ENDIF»
 		«ENDFOR»
@@ -259,36 +259,36 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		     * Method description
 		     *
 		     «FOR param : method.methodparameters»
-		     * @param	«switch(param.type.typeName) {
-			 case "string":	{ "string" }
-			 case "bool":	{ "boolean" }
-			 case "int":	{ "integer" }
-			 case "float":	{ "float" }
-			 case "array":	{ "array" }
-			 default:		{ "mixed" }
-			 }»  $«param.name»  Parameter description
-			 «ENDFOR»
+		     * @param  «switch(param.type.typeName) {
+		     case "string": { "string" }
+		     case "bool":   { "boolean" }
+		     case "int":    { "integer" }
+		     case "float":  { "float" }
+		     case "array":  { "array" }
+		     default:       { "mixed" }
+		     }»  $«param.name»  Parameter description
+		     «ENDFOR»
 		     *
-		     * @return	«switch(method.type.typeName) {
-		     case "string":	{ "string	Description" }
-			 case "bool":	{ "boolean	Description" }
-			 case "int":	{ "integer	Description" }
-			 case "float":	{ "float	Description" }
-			 case "array":	{ "array	Description" }
-			 default:		{ "mixed	Description" }
-			 }»
+		     * @return  «switch(method.type.typeName) {
+		     case "string": { "string  Description" }
+		     case "bool":   { "boolean Description" }
+		     case "int":    { "integer Description" }
+		     case "float":  { "float   Description" }
+		     case "array":  { "array   Description" }
+		     default:       { "mixed   Description" }
+		     }»
 		     */
 		    public function «method.name»(«FOR param : method.methodparameters SEPARATOR ", "»$«param.name»«ENDFOR»)
 		    {
 		    // TODO: auto-generated method stub
 		    «switch(method.type.typeName) {
-			case "string":	{ "$" + method.returnvalue + " = '';"  }
-			case "bool":	{ "$" + method.returnvalue + " = false;" }
-			case "int":		{ "$" + method.returnvalue + " = 0;" }
-			case "float":	{ "$" + method.returnvalue + " = 0.0;" }
-			case "array":	{ "$" + method.returnvalue + " = array();" }
-			default:		{ "$" + method.returnvalue + " = null;" }
-			}»
+		    case "string":  { "$" + method.returnvalue + " = '';"  }
+		    case "bool":    { "$" + method.returnvalue + " = false;" }
+		    case "int":     { "$" + method.returnvalue + " = 0;" }
+		    case "float":   { "$" + method.returnvalue + " = 0.0;" }
+		    case "array":   { "$" + method.returnvalue + " = array();" }
+		    default:        { "$" + method.returnvalue + " = null;" }
+		    }»
 		    return $«method.returnvalue»;
 		    }
 		    «ENDFOR»
@@ -341,9 +341,9 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		    «ENDIF»
 		    
 		    <files>
-		    	«FOR packageObj : library.packages»
-		    	<folder>«packageObj.name»</folder>
-		    	«ENDFOR»
+		        «FOR packageObj : library.packages»
+		        <folder>«packageObj.name»</folder>
+		        «ENDFOR»
 		        «FOR classObj : library.classes»
 		        <filename>«classObj.name».php</filename>
 		        «ENDFOR»
@@ -353,9 +353,9 @@ public class LibraryGenerator extends AbstractExtensionGenerator {
 		    </files>
 		    
 		    <languages>
-		    	«FOR lang : library.languages»
-		    	<language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».ini</language>
-		    	«ENDFOR»
+		        «FOR lang : library.languages»
+		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«this.name».ini</language>
+		        «ENDFOR»
 		    </languages>
 		    
 		</extension>

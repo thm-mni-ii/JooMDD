@@ -59,37 +59,37 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		    «Slug.generateAuthors(template.manifest.authors)»
 		    <creationDate>
 		        «if (template.manifest.creationdate !== null) {
-			        template.manifest.creationdate
+		            template.manifest.creationdate
 		        } else {
-			        Calendar::instance.get(Calendar::YEAR)
+		            Calendar::instance.get(Calendar::YEAR)
 		        }»
 		    </creationDate>
 		    <copyright>
 		        «if (template.manifest.copyright !== null) {
-			        template.manifest.copyright
-			    } else {
-			        "All rights reserved by Author."
+		            template.manifest.copyright
+		        } else {
+		            "All rights reserved by Author."
 		        }»
 		    </copyright>
 		    <license>
 		        «if (template.manifest.license !== null) {
-			        template.manifest.license
+		            template.manifest.license
 		        } else {
-			        "GPL 2.0"
+		            "GPL 2.0"
 		        }»
 		    </license>
 		    <version>
 		        «if (template.manifest.version !== null) {
-			        template.manifest.version
+		            template.manifest.version
 		        } else {
-			        "1.0.0"
+		            "1.0.0"
 		        }»
 		    </version>
 		    <description>
 		        «if (template.manifest.description !== null) {
-			        template.manifest.description
+		            template.manifest.description
 		        } else {
-			        "Place Description here"
+		            "Place Description here"
 		        }»
 		    </description>
 		    <!-- Listing of all files that should be installed for the module -->
@@ -170,19 +170,19 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		// no direct access
 		defined('_JEXEC') or die;
 		?>
-	'''	
+	'''
 	}
 
 	def CharSequence cssGeneral(Template template) {
 	'''
 		@charset "utf-8";
 		* { 
-			margin: 0px; 
-			padding: 0px; 
-			border: 0px;
+		    margin: 0px; 
+		    padding: 0px; 
+		    border: 0px;
 		}
 		html { 
-			height: 100.2%;
+		    height: 100.2%;
 		}
 		body { }
 	'''

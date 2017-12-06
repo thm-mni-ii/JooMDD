@@ -92,10 +92,10 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		
 		        $document = Factory::getDocument();
 		        $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
-		       	$document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
-		       	$document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
+		        $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
+		        $document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
 		        $input = Factory::getApplication()->input;
-		        $html []="<div class='img-picker' fieldtype='image' iconpath=' '  name='$this->name' value='$this->value' accept='image/*' file='$file' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
+		        $html []="<div class='img-picker' fieldtype='image' iconpath=' ' name='$this->name' value='$this->value' accept='image/*' file='$file' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
 		        deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
 		        return implode($html);
 		    }

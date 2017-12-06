@@ -68,8 +68,8 @@ class ExtentionScriptGenerator {
 		    );
 		    «FOR ExtendedPage pag: com.allExtendedPage.filter[t | t.extendedDynamicPageInstance!==null && 
 		        t.extendedDynamicPageInstance.isDetailsPage == true && t.extendedDynamicPageInstance.haveFiletoLoad]»
-		    	$params->set('«pag.extendedDynamicPageInstance.name.toLowerCase»_image_path', 'media/«com.extensionName.toLowerCase»/«pag.extendedDynamicPageInstance.name.toLowerCase»/images');
-		    	$params->set('«pag.extendedDynamicPageInstance.name.toLowerCase»_file_path', 'media/«com.extensionName.toLowerCase»/«pag.extendedDynamicPageInstance.name.toLowerCase»/files');
+		    $params->set('«pag.extendedDynamicPageInstance.name.toLowerCase»_image_path', 'media/«com.extensionName.toLowerCase»/«pag.extendedDynamicPageInstance.name.toLowerCase»/images');
+		    $params->set('«pag.extendedDynamicPageInstance.name.toLowerCase»_file_path', 'media/«com.extensionName.toLowerCase»/«pag.extendedDynamicPageInstance.name.toLowerCase»/files');
 		    «ENDFOR»
 		
 		    // Save the parameters
@@ -156,12 +156,12 @@ class ExtentionScriptGenerator {
 		public function install($parent)
 		{
 		    «IF ex instanceof Component»
-		    	if (!$this->setComponentParameter()) {
-		    	    echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_NO_PARAMETER_INSTALLED') . '</p>';
-		    	}
-		    	$parent->getParent()->setRedirectURL('index.php?option=«extName»');
+		    if (!$this->setComponentParameter()) {
+		        echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_NO_PARAMETER_INSTALLED') . '</p>';
+		    }
+		    $parent->getParent()->setRedirectURL('index.php?option=«extName»');
 		    «ELSE»
-		    	echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_TEXT') . '</p>';
+		    echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_TEXT') . '</p>';
 		    «ENDIF»
 		}
 	'''

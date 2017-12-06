@@ -52,35 +52,35 @@ class FieldsGenerator {
 	public def CharSequence genRefrenceField() '''
 		<?php
 		«Slug.generateFileDoc(com)»
-		
+
 		«Slug.generateRestrictedAccess()»
-		
+
 		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
-				
+
 		class JFormField«nameField.toFirstUpper» extends FormField
 		{
-			protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
-				"foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
-			protected $keysAndForeignKeys= array(
-			    «FOR attr : mainRef.extendedAttributes»
-			    «IF attr != mainRef.extendedAttributes.last»
-			    "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
-			    «ELSE»
-			    "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
-			    «ENDIF»
-			    «ENDFOR»);
+		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
+		        "foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
+		    protected $keysAndForeignKeys= array(
+		        «FOR attr : mainRef.extendedAttributes»
+		        «IF attr != mainRef.extendedAttributes.last»
+		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
+		        «ELSE»
+		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
+                «ENDIF»
+		        «ENDFOR»);
 
-			«genGetInput»
+		    «genGetInput»
+
+		    «genGetAllData»
+
+		    «genGetReferencedata»
 		
-			«genGetAllData»
+		    «genGetData_item»
 		
-			«genGetReferencedata»
+		    «genGenerateJsonValue»
 		
-			«genGetData_item»
-		
-			«genGenerateJsonValue»
-		
-			«gengenerateStringValue»
+		    «gengenerateStringValue»
 		}
 	'''
 	public def CharSequence genEmptyField()'''
@@ -94,25 +94,25 @@ class FieldsGenerator {
 	class JFormField«nameField.toFirstUpper» extends JFormField
 	{
 	    protected function getInput()
-		{
-		    $html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
-		    «FOR KeyValuePair kv: field.attributes»
-		    «kv.name» = '«kv.value»'
-			«ENDFOR»
-			/>";
-			return implode($html);
-		}
+	    {
+	        $html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
+	        «FOR KeyValuePair kv: field.attributes»
+	        «kv.name» = '«kv.value»'
+	        «ENDFOR»
+	        />";
+	        return implode($html);
+	    }
 	}
 	'''
     def private genGetData_item()'''
 	protected function getData_item($«entFrom.primaryKey.name»)
 	{
-		$db = Factory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select("*")->from($this->referenceStruct["table"])
-			->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
-		$db->setQuery($query);
-		return $db->loadObject();
+	    $db = Factory::getDbo();
+	    $query = $db->getQuery(true);
+	    $query->select("*")->from($this->referenceStruct["table"])
+	        ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
+	    $db->setQuery($query);
+	    return $db->loadObject();
 	}
 	
 	'''
@@ -125,35 +125,35 @@ class FieldsGenerator {
 		 */
 		protected function getInput()
 		{
-			$html = array();
-			$document = Factory::getDocument();
-			$document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
-			$input = Factory::getApplication()->input;
-			$«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
-			if (empty($«entFrom.primaryKey.name»)) {
-				$alldata = $this->getAllData();
-				$html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select'  class='form-control' >";
-				$html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
-				foreach ($alldata as $data) {
-					$html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
-					. $this->generateStringValue($data) ."</option>";
-				}
-				$html[]="</select>";
-				$html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id . "'/>";
-				return implode($html);
-			}
-			$data = $this->getData_item($«entFrom.primaryKey.name»);
-			$selectData = $this->getReferencedata($data);
-			$html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select' class='form-control' name='" . $this->name. "select'>";
-			$html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
-			foreach ($selectData as $selected) {
-				$html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
-				. $this->generateStringValue($selected) ."</option>";
-			}
-			
-			$html[]="</select>";
-			$html[]="<input type='hidden' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->id. "'/>";
-			return implode($html);
+		    $html = array();
+		    $document = Factory::getDocument();
+		    $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
+		    $input = Factory::getApplication()->input;
+		    $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
+		    if (empty($«entFrom.primaryKey.name»)) {
+		        $alldata = $this->getAllData();
+		        $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select'  class='form-control' >";
+		        $html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
+		        foreach ($alldata as $data) {
+		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
+		            . $this->generateStringValue($data) ."</option>";
+		        }
+		        $html[]="</select>";
+		        $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id . "'/>";
+		        return implode($html);
+		    }
+		    $data = $this->getData_item($«entFrom.primaryKey.name»);
+		    $selectData = $this->getReferencedata($data);
+		    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select' class='form-control' name='" . $this->name. "select'>";
+		    $html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
+		    foreach ($selectData as $selected) {
+		        $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
+		        . $this->generateStringValue($selected) ."</option>";
+		    }
+
+		    $html[]="</select>";
+		    $html[]="<input type='hidden' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->id. "'/>";
+		    return implode($html);
 		}
 	'''
 
@@ -164,62 +164,63 @@ class FieldsGenerator {
 	*/
 	protected function getReferencedata($data)
 	{
-		$db = Factory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select("distinct (case when 
-			«FOR ExtendedAttribute attr: mainRef.referencedExtendedAttributes»
-			«IF attr != mainRef.referencedExtendedAttributes.last»
-			b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»' and 
-			«ELSE»
-			b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»'
-			«ENDIF»
-			«ENDFOR»
-			then 'selected'
-			else ' ' end) as selected");
-		foreach ($this->keysAndForeignKeys as $key =>$value) {
-			$query->select(" b.$value");
-		}
-	
-		$query->from( $this->referenceStruct["foreignTable"] . " as b ")
-			->where("b.state = 1")
-			->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
-		$db->setQuery($query);
-		return $db->loadObjectList();
+	    $db = Factory::getDbo();
+	    $query = $db->getQuery(true);
+	    $query->select("distinct (case when 
+	        «FOR ExtendedAttribute attr: mainRef.referencedExtendedAttributes»
+	        «IF attr != mainRef.referencedExtendedAttributes.last»
+	        b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»' and 
+	        «ELSE»
+	        b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»'
+	        «ENDIF»
+	        «ENDFOR»
+	        then 'selected'
+	        else ' ' end) as selected");
+	    foreach ($this->keysAndForeignKeys as $key =>$value) {
+	        $query->select(" b.$value");
+	    }
+
+	    $query->from( $this->referenceStruct["foreignTable"] . " as b ")
+	        ->where("b.state = 1")
+	        ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
+	    $db->setQuery($query);
+	    return $db->loadObjectList();
 	}
 	'''
 
 	private def CharSequence genGetAllData() '''
 		protected function getAllData()
 		{
-			$db = Factory::getDbo();
-			$query = $db->getQuery(true);
-			$query->select("«Slug.transformAttributeListInString("b.",mainRef.attributerefereced,',')»")
-				->from($this->referenceStruct["foreignTable"] . " as b")
-				->where("b.state = 1")
-				->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
+		    $db = Factory::getDbo();
+		    $query = $db->getQuery(true);
+		    $query->select("«Slug.transformAttributeListInString("b.",mainRef.attributerefereced,',')»")
+		        ->from($this->referenceStruct["foreignTable"] . " as b")
+		        ->where("b.state = 1")
+		        ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
 		    $db->setQuery($query);
 		    return $db->loadObjectList();
 		}
 	'''
 
 	private def CharSequence genGenerateJsonValue() '''
-		public function generateJsonValue($data){
-		          $result  = array();
-		          foreach($this->keysAndForeignKeys as $key=>$value){
-		              $result["jform_$key"] = $data->{$value};
-		          }
-		          return json_encode($result);
-		      }
+		public function generateJsonValue($data)
+		{
+		    $result  = array();
+		    foreach ($this->keysAndForeignKeys as $key=>$value) {
+		        $result["jform_$key"] = $data->{$value};
+		    }
+		    return json_encode($result);
+		}
 	'''
 
 	private def CharSequence gengenerateStringValue() '''
 		public function generateStringValue($data)
 		{
-			$result = array();
-			
-			$result[] = $data->{array_values($this->keysAndForeignKeys)[0]} . " ";
-			
-			return implode($result);
+		    $result = array();
+		
+		    $result[] = $data->{array_values($this->keysAndForeignKeys)[0]} . " ";
+		
+		    return implode($result);
 		}
 	'''
 	
@@ -239,57 +240,57 @@ class FieldsGenerator {
 		    «genGetOptionsForEntity»
 		    
 		    «genGetAllDataForEntity»
-		 }
+		}
 	'''
 	
 	private def genGetOptionsForEntity() '''
 		protected function getOptions()
 		{
-		 	$valueColumn = $this->getAttribute('valueColumn');
-		 	$textColumn = $this->getAttribute('textColumn');
-		 	return  array_merge(parent::getOptions(),$this->getAllData($valueColumn, $textColumn));
+		    $valueColumn = $this->getAttribute('valueColumn');
+		    $textColumn = $this->getAttribute('textColumn');
+		    return  array_merge(parent::getOptions(),$this->getAllData($valueColumn, $textColumn));
 		}
 	'''
 	
 	private def genGetAllDataForEntity() '''
 	protected function getAllData($valueColumn, $textColumn)
 	{
-		$dbo = Factory::getDbo();
-		$query = $dbo->getQuery(true);
-		$query->select("DISTINCT $valueColumn as value, $textColumn as text")
-			->from("$this->table AS «entFrom.name.toLowerCase»")
-			«FOR ExtendedReference ref:entFrom.allExtendedReferences »
-			->join('LEFT', "«Slug.databaseName(com.name,ref.destinationEntity.name)» as  «ref.destinationEntity.name.toLowerCase» ON
-				«FOR ExtendedAttribute attr: ref.extendedAttributes»
-				«IF ref.extendedAttributes.last != attr»
-				«entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
-				«ELSE»
-				«entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
-				«ENDIF»
-				«ENDFOR»
-			")
-			«ENDFOR»
-			->order("$textColumn ASC");
-		$dbo->setQuery($query);
-		$result = $dbo->loadObjectList();
-		return $result;
+	    $dbo = Factory::getDbo();
+	    $query = $dbo->getQuery(true);
+	    $query->select("DISTINCT $valueColumn as value, $textColumn as text")
+	        ->from("$this->table AS «entFrom.name.toLowerCase»")
+	        «FOR ExtendedReference ref:entFrom.allExtendedReferences »
+	        ->join('LEFT', "«Slug.databaseName(com.name,ref.destinationEntity.name)» as  «ref.destinationEntity.name.toLowerCase» ON
+	            «FOR ExtendedAttribute attr: ref.extendedAttributes»
+	            «IF ref.extendedAttributes.last != attr»
+	            «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
+	            «ELSE»
+	            «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
+	            «ENDIF»
+	            «ENDFOR»
+	        ")
+	        «ENDFOR»
+	        ->order("$textColumn ASC");
+	    $dbo->setQuery($query);
+	    $result = $dbo->loadObjectList();
+	    return $result;
 	}
 	'''
 	
-//	private def CharSequence genAllSelectedDataForEntity() '''
-//		protected function getAllSelectedData($«entFrom.primaryKey.name», $valueColumn, $textColumn)
-//		{
-//			$dbo = Factory::getDbo();
-//			$query = $dbo->getQuery(true);
-//			$query->select(" $valueColumn AS value, $textColumn AS text,
-//				CASE WHEN «entFrom.primaryKey.name» = $«entFrom.primaryKey.name» THEN 1
-//				ELSE 0 AS checked
-//				")->from("$this->table")->order("text AS ASC");
-//			$dbo->setQuery($query);
-//			$result = $dbo->loadObjectList();
-//			return $result;
-//		}
-//	'''
+// private def CharSequence genAllSelectedDataForEntity() '''
+//     protected function getAllSelectedData($«entFrom.primaryKey.name», $valueColumn, $textColumn)
+//     {
+//         $dbo = Factory::getDbo();
+//         $query = $dbo->getQuery(true);
+//         $query->select(" $valueColumn AS value, $textColumn AS text,
+//         CASE WHEN «entFrom.primaryKey.name» = $«entFrom.primaryKey.name» THEN 1
+//         ELSE 0 AS checked
+//         ")->from("$this->table")->order("text AS ASC");
+//         $dbo->setQuery($query);
+//         $result = $dbo->loadObjectList();
+//         return $result;
+//     }
+// '''
 	
 	static def CharSequence genFieldsForUserView(ExtendedComponent component)'''
 		<?php
@@ -305,17 +306,17 @@ class FieldsGenerator {
 		    
 		    protected function getOptions()
 		    {
-		    	$entity = $this->getAttribute('entity');
-		    	$table = "#__«component.name.toLowerCase»_" . $entity;
-		    	$dbo = Factory::getDbo();
-		    	$query = $dbo->getQuery(true);
-		    	$query->select("DISTINCT a.created_by AS value, b.name AS text")
-		    		->from("$table AS a ")
-		    		->leftJoin("#__users AS b ON a.created_by = b.id")
-		    		->order("b.name ASC");
-		    	$dbo->setQuery($query);
-		    	$dataList = $dbo->loadObjectList();
-		    	return  array_merge(parent::getOptions(),$dataList);
+		        $entity = $this->getAttribute('entity');
+		        $table = "#__«component.name.toLowerCase»_" . $entity;
+		        $dbo = Factory::getDbo();
+		        $query = $dbo->getQuery(true);
+		        $query->select("DISTINCT a.created_by AS value, b.name AS text")
+		            ->from("$table AS a ")
+		            ->leftJoin("#__users AS b ON a.created_by = b.id")
+		            ->order("b.name ASC");
+		        $dbo->setQuery($query);
+		        $dataList = $dbo->loadObjectList();
+		        return  array_merge(parent::getOptions(),$dataList);
 		    }
 		}
 	'''
