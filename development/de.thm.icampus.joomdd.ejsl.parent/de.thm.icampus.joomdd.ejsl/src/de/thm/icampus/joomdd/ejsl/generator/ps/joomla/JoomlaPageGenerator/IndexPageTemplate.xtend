@@ -61,9 +61,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateSiteController() '''
 	    «generateFileDoc(ipage, com)»
+	    
 	    «Slug.generateRestrictedAccess()»
-	    // No direct access.
-	    defined('_JEXEC') or die;
 	    
 	    require_once JPATH_COMPONENT.'/controller.php';
 	    
@@ -85,7 +84,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''
 	
 	def void generateModel() {
-	    if(sec.compareTo("admin")==0) {
+	    if (sec.compareTo("admin")==0) {
 	        generateFile(path+"/" + pagename + ".php", generateAdminModel())
 	        generateFile(path+"/forms/"+ "filter_" + pagename + ".xml",  generateAdminModelForms())
 	    } else {
@@ -142,7 +141,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateAdminViewLayoutBackend() ''' 
 	    «generateFileDoc(ipage,com)»
+	    
 	    «Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html"))»
+	    
 	    HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
 	    HTMLHelper::_('bootstrap.tooltip');
 	    HTMLHelper::_('behavior.multiselect');
@@ -156,6 +157,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateAdminModel()'''
 	    «generateFileDoc(ipage, com)»
+	    
 	    «Slug.generateRestrictedAccess()»
 
 	    «Slug.generateUses(newArrayList("ModelList", "ComponentHelper", "Factory"))»
@@ -182,6 +184,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateAdminController()'''
 	    «generateFileDoc(ipage, com)»
+	    
 	    «Slug.generateRestrictedAccess()»
 
 	    «Slug.generateUses(newArrayList("ControllerAdmin", "ResponseJson", "Factory"))»
@@ -190,7 +193,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	     * «ipage.name.toFirstUpper» list controller .
 	     * @generated
 	     */
-	    class «com.name.toFirstUpper»Controller«ipage.name.toFirstUpper» extends JControllerAdmin
+	    class «com.name.toFirstUpper»Controller«ipage.name.toFirstUpper» extends AdminController
 	    {
 	        «helperAdmin.genAdminControllerContructer»
 	        «helperAdmin.genAdminControllerSaveOrdering»
@@ -200,6 +203,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateSiteView()'''
 	    «generateFileDoc(ipage.instance,com)»
+	    
 	    «Slug.generateRestrictedAccess()»
 
 	    «Slug.generateUses(newArrayList("ViewLegacy", "Text", "Factory"))»
@@ -207,7 +211,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	    /**
 	     * View to  Show the Data
 	     */
-	    class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLegacy
+	    class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends HtmlView
 	    {
 	        protected $state;
 	        protected $item;

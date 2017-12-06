@@ -78,11 +78,11 @@ class DetailsPageTemplateFrontEndHelper {
 
 	    // Initialise variables.
 	    $app = Factory::getApplication();
-		$model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
-	
+	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
+
 	    // Get the user data.
 	    $data = Factory::getApplication()->input->get('jform', array(), 'array');
-	
+
 	    // Validate the posted data.
 	    $form = $model->getForm();
 	    if (!$form) {
@@ -173,14 +173,14 @@ class DetailsPageTemplateFrontEndHelper {
 	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
 
 	    // Check in the item
-		if ($editId) {
-		    $model->checkin($editId);
-		}
+	    if ($editId) {
+	        $model->checkin($editId);
+	    }
 	
-		$menu = Factory::getApplication()->getMenu();
-		$item = $menu->getActive();
-		$url = (empty($item->link) ? 'index.php?' : $item->link);
-		$this->setRedirect(Route::_($url, false));
+	    $menu = Factory::getApplication()->getMenu();
+	    $item = $menu->getActive();
+	    $url = (empty($item->link) ? 'index.php?' : $item->link);
+	    $this->setRedirect(Route::_($url, false));
 	}
 	'''
 	
@@ -193,47 +193,47 @@ class DetailsPageTemplateFrontEndHelper {
 	public function remove()
 	{
 	    // Initialise variables.
-		$app = Factory::getApplication();
+	    $app = Factory::getApplication();
 	
-		//Checking if the user can remove object
-		$user = Factory::getUser();
-		if ($user->authorise($user->authorise('core.delete', 'com_«com.name.toLowerCase»'))) {
-		    $model = $this->getModel('«dpage.name.toFirstUpper»', '«com.name.toFirstUpper»Model');
+	    //Checking if the user can remove object
+	    $user = Factory::getUser();
+	   if ($user->authorise($user->authorise('core.delete', 'com_«com.name.toLowerCase»'))) {
+	       $model = $this->getModel('«dpage.name.toFirstUpper»', '«com.name.toFirstUpper»Model');
 	
 	        // Get the user data.
-		    $id = $app->input->getInt('«mainEntity.primaryKey.name»', 0);
+	        $id = $app->input->getInt('«mainEntity.primaryKey.name»', 0);
 	
-		    // Attempt to delete the data.
-		    $return = $model->delete($id);
+	        // Attempt to delete the data.
+	        $return = $model->delete($id);
 
-		    // Check for errors.
-		    if ($return === false) {
-		        $this->setMessage(Text::sprintf('Delete failed', $model->getError()), 'warning');
-		    } else {
-		        // Check in the profile.
-		        if ($return) {
-		            $model->checkin($return);
-		        }
+	        // Check for errors.
+	        if ($return === false) {
+	            $this->setMessage(Text::sprintf('Delete failed', $model->getError()), 'warning');
+	        } else {
+	            // Check in the profile.
+	            if ($return) {
+	                $model->checkin($return);
+	            }
 
-		        // Clear the profile id from the session.
-		        $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»', null);
+	            // Clear the profile id from the session.
+	            $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»', null);
 
-		        // Flush the data from the session.
-		        $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».data', null);
-	
-		        $this->setMessage(Text::_('COM_«com.name.toUpperCase»_ITEM_DELETED_SUCCESSFULLY'));
-		    }
+	            // Flush the data from the session.
+	            $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».data', null);
 
-		    // Redirect to the list screen.
-		    $menu = & JSite::getMenu();
-		    $item = $menu->getActive();
-		    $this->setRedirect(Route::_($item->link, false));
-		} else {
-		    throw new Exception(500);
-		}
+	            $this->setMessage(Text::_('COM_«com.name.toUpperCase»_ITEM_DELETED_SUCCESSFULLY'));
+	        }
+
+	        // Redirect to the list screen.
+	        $menu = & JSite::getMenu();
+	        $item = $menu->getActive();
+	        $this->setRedirect(Route::_($item->link, false));
+	    } else {
+	        throw new Exception(500);
+	    }
 	}
 	'''
-	
+
 	def CharSequence generateSiteModelPopulatestate()'''
 	/**
 	 * Method to auto-populate the model state.
@@ -477,21 +477,21 @@ class DetailsPageTemplateFrontEndHelper {
 	        $this->form = $this->get('Form');
 	    }
 		«ENDIF»
-		
+
 		// Check for errors.
 	    if (count($errors = $this->get('Errors'))) {
 	        throw new Exception(implode("\n", $errors));
 	    }
 	    
-		«IF !isedit»
-		if ($this->_layout == 'edit') {
-		    $authorised = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-			
-			if ($authorised !== true) {
-			    throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
-			}
-		}
-		«ENDIF»
+	    «IF !isedit»
+	    if ($this->_layout == 'edit') {
+	        $authorised = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+
+	        if ($authorised !== true) {
+	            throw new Exception(Text::_('JERROR_ALERTNOAUTHOR'));
+	        }
+	    }
+	    «ENDIF»
 	    $this->_prepareDocument();
 	
 	    parent::display($tpl);
@@ -539,35 +539,35 @@ class DetailsPageTemplateFrontEndHelper {
 	     }
 	 }
 	'''
-	
+
 	def generateSiteViewLayoutEditForm(String editPageName) '''
 	<form id="form-«dpage.name.toLowerCase»" action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».save'); ?>" method="post" class="form-validate form-horizontal" enctype="multipart/form-data">
-		<div class="control-group">
-		    <div class="controls">
-		        <button type="submit" class="validate btn btn-primary"><?php echo Text::_('JSUBMIT'); ?></button>
-		        <a class="btn" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».cancel'); ?>" title="<?php echo Text::_('JCANCEL'); ?>"><?php echo Text::_('JCANCEL'); ?></a>
-		    </div>
-		</div>
-		<div class="form-horizontal">
-		    <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
-		    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»', true)); ?>
-		    <div class="row-fluid">
-		        <div class="span10 form-horizontal">
-		            <fieldset class="adminform">
-				        <?php echo $this->form->getInput('«mainEntity.primaryKey.name»'); ?>
-				        <?php echo $this->form->getInput('ordering'); ?>
-				        <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
+	    <div class="control-group">
+	        <div class="controls">
+	            <button type="submit" class="validate btn btn-primary"><?php echo Text::_('JSUBMIT'); ?></button>
+	            <a class="btn" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».cancel'); ?>" title="<?php echo Text::_('JCANCEL'); ?>"><?php echo Text::_('JCANCEL'); ?></a>
+	        </div>
+	    </div>
+	    <div class="form-horizontal">
+	        <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+	        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»', true)); ?>
+	        <div class="row-fluid">
+	            <div class="span10 form-horizontal">
+	                <fieldset class="adminform">
+	                    <?php echo $this->form->getInput('«mainEntity.primaryKey.name»'); ?>
+	                    <?php echo $this->form->getInput('ordering'); ?>
+	                    <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
 				        «IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
 				        <input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
 				        «ENDIF»
-				        <input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)) {
-				        echo $this->item->checked_out;}else{ echo Factory::getUser()->id;} ?>" />
-				        <input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)) {
-				        echo $this->item->checked_out_time;}else{ echo date("Y-m-d H:i:s") ;} ?>" />
+	                    <input type="hidden" name="jform[checked_out]" value="<?php if(isset($this->item->checked_out)) {
+	                    echo $this->item->checked_out;}else{ echo Factory::getUser()->id;} ?>" />
+	                    <input type="hidden" name="jform[checked_out_time]" value="<?php if(isset($this->item->checked_out_time)) {
+	                    echo $this->item->checked_out_time;}else{ echo date("Y-m-d H:i:s") ;} ?>" />
 	                    <?php if(empty($this->item->created_by)): ?>
-		                    <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
+	                        <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
 	                    <?php else: ?>
-		                    <input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
+	                        <input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
 	                    <?php endif; ?>
 	                    «Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
 	                </fieldset>
@@ -582,7 +582,7 @@ class DetailsPageTemplateFrontEndHelper {
 	            <?php echo $this->form->getInput('rules'); ?>
 	            <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 	        <?php endif; ?>
-	    	<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
+	        <?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
 	        <input type="hidden" name="option" value="«Slug.nameExtensionBind("com",com.name).toLowerCase»" />
 	        <input type="hidden" name="task" value="«editPageName».save" />
 	        <?php echo HTMLHelper::_('form.token'); ?>
@@ -597,13 +597,13 @@ class DetailsPageTemplateFrontEndHelper {
 	        <table class="table">
 	            <tr>
 	                <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_STATE'); ?></th>
-		            <td>
-		                <i class="icon-<?php echo ($this->item->state == 1) ? 'publish' : 'unpublish'; ?>"></i>
+	                <td>
+	                    <i class="icon-<?php echo ($this->item->state == 1) ? 'publish' : 'unpublish'; ?>"></i>
 	                </td>
 	            </tr>
 	            <tr>
-		            <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY'); ?></th>
-		            <td><?php echo Factory::getUser($this->item->created_by)->name; ?></td>
+	                <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY'); ?></th>
+	                <td><?php echo Factory::getUser($this->item->created_by)->name; ?></td>
 	            </tr>
 	            «FOR ExtendedAttribute a: dpage.extendedTableColumnList.filter[t | !t.isprimary]»
 	            «attributShowTemplate(a, dpage.entities.get(0) )»
@@ -612,12 +612,12 @@ class DetailsPageTemplateFrontEndHelper {
 	    </div>
 	
 	    <?php if($canEdit && $this->item->checked_out == 0): ?>
-		<a class="btn btn-primary" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«editPageName.toLowerCase»&«mainEntity.primaryKey.name»='.$this->item->«mainEntity.primaryKey.name»); ?>">
-		<?php echo Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
+	    <a class="btn btn-primary" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«editPageName.toLowerCase»&«mainEntity.primaryKey.name»='.$this->item->«mainEntity.primaryKey.name»); ?>">
+	    <?php echo Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
 	    <?php endif; ?>
 	    <?php if(Factory::getUser()->authorise('core.delete','«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$this->item->«mainEntity.primaryKey.name»)):?>
-		<a class="btn btn-danger" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».remove&«mainEntity.primaryKey.name»=' . $this->item->«mainEntity.primaryKey.name»); ?>">
-		<?php echo Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
+	    <a class="btn btn-danger" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».remove&«mainEntity.primaryKey.name»=' . $this->item->«mainEntity.primaryKey.name»); ?>">
+	    <?php echo Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
 	    <?php endif; ?>
 	<?php 
 	else:
@@ -629,13 +629,13 @@ class DetailsPageTemplateFrontEndHelper {
 	def  CharSequence attributShowTemplate(ExtendedAttribute attr, Entity e) '''
 	«switch (attr.htmlType.toLowerCase) {
 		case "image": {
-		 '''
-		 <tr>
-		     <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
-		     <td>
-		         <img id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'src='<?php echo $image_path . '/'. $this->item->«attr.name.toLowerCase»; ?>' />
-		     </td>
-		 </tr>'''
+		'''
+		<tr>
+		    <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+		    <td>
+		        <img id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'src='<?php echo $image_path . '/'. $this->item->«attr.name.toLowerCase»; ?>' />
+		    </td>
+		</tr>'''
 		}
 		case "file": {
 		'''

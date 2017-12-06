@@ -127,6 +127,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    «ENDIF»
 		}
 	'''
+	
 	def CharSequence generateModelLoadFormDataFunction()'''	
 		/**
 		 * Method to get the data that should be injected in the form.
@@ -137,17 +138,17 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 */
 		protected function loadFormData()
 		{
-			// Check the session for previously entered form data.
-			$data = Factory::getApplication()->getUserState('«Slug.nameExtensionBind("com",com.name.toLowerCase)».edit.«dpage.extendedEntityList.get(0).name.toLowerCase».data', array());
-		
-			if (empty($data)) {
-			$data = $this->getItem();
-			}
-		
-			return $data;
+		    // Check the session for previously entered form data.
+		    $data = Factory::getApplication()->getUserState('«Slug.nameExtensionBind("com",com.name.toLowerCase)».edit.«dpage.extendedEntityList.get(0).name.toLowerCase».data', array());
+
+		    if (empty($data)) {
+		        $data = $this->getItem();
+		    }
+
+		    return $data;
 		}
 	'''
-	
+
 	def CharSequence generateModelGetItemFunction() '''
 		/**
 		 * Method to get a single record.
@@ -160,10 +161,10 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 */
 		public function getItem($pk = null)
 		{
-			$app	= Factory::getApplication();
-			$pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
-			$table = $this->getTable();
-			if ($pk > 0) {
+		    $app = Factory::getApplication();
+		    $pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
+		    $table = $this->getTable();
+		    if ($pk > 0) {
 			    try {
 			        // Attempt to load the row.
 			        $table->load($pk);
@@ -171,22 +172,22 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 			        // Check for a table object error.
 			        throw new Exception('Database Failur:  no element Found'. $e );
 			    }
-			}
-			
-			// Convert to the CMSObject before adding other data.
-			$properties = $table->getProperties(1);
-			$item =  ArrayHelper::toObject($properties);
-			
-			if (property_exists($item, 'params')) {
+		    }
+
+		    // Convert to the CMSObject before adding other data.
+		    $properties = $table->getProperties(1);
+		    $item =  ArrayHelper::toObject($properties);
+
+		    if (property_exists($item, 'params')) {
 			    $registry = new Registry;
 			    $registry->loadString($item->params);
 			    $item->params = $registry->toArray();
-			}
-		
-			return $item;
+		    }
+
+		    return $item;
 		}
 	'''
-	
+
 	def CharSequence generateModelGetFormFunction()'''
 		/**
 		 * Method to get the record form.
@@ -200,16 +201,16 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		public function getForm($data = array(), $loadData = true)
 		{
 		    // Get the form.
-			$form = $this->loadForm('«Slug.nameExtensionBind("com",com.name.toLowerCase)».«dpage.name.toLowerCase»', '«dpage.extendedEntityList.get(0).name.toLowerCase»', array('control' => 'jform', 'load_data' => $loadData));
-		
-			if (empty($form)) {
-		        return false;
-			}
-		
-			return $form;
+		    $form = $this->loadForm('«Slug.nameExtensionBind("com",com.name.toLowerCase)».«dpage.name.toLowerCase»', '«dpage.extendedEntityList.get(0).name.toLowerCase»', array('control' => 'jform', 'load_data' => $loadData));
+
+		    if (empty($form)) {
+			    return false;
+		    }
+
+		    return $form;
 		}
 	'''
-	
+
 	def CharSequence generateAdminModel()'''
 		«generateFileDoc(dpage,com)»
 		
@@ -218,28 +219,29 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "ComponentHelper", "Form", "Factory"))»
 		
 		require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
-		
+
 		/**
 		 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
 		 */
 		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends AdminModel
 		{
 		    /**
-			 * @var    string  The prefix to use with controller messages.
-			 * @since  1.6
+		     * @var    string  The prefix to use with controller messages.
+		     * @since  1.6
 			 */
-			protected $text_prefix = '«Slug.nameExtensionBind("com".toUpperCase, com.name.toUpperCase)»';
-			«backHelp.generateAdminModelTableFunction()»
-			«generateModelGetFormFunction()»
-			«generateModelLoadFormDataFunction()»
-			«generateModelGetItemFunction()»
+		    protected $text_prefix = '«Slug.nameExtensionBind("com".toUpperCase, com.name.toUpperCase)»';
+		    «backHelp.generateAdminModelTableFunction()»
+		    «generateModelGetFormFunction()»
+		    «generateModelLoadFormDataFunction()»
+		    «generateModelGetItemFunction()»
 			«IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0 || dpage.haveFiletoLoad»
-				«generateModelAdminSaveData()»
+		    «generateModelAdminSaveData()»
 			«ENDIF»
-			«generateModelReferenceSave()»
-			«backHelp.generateAdminModelprepareTableFunction()»
+		    «generateModelReferenceSave()»
+		    «backHelp.generateAdminModelprepareTableFunction()»
 		}
-		'''
+	'''
+	
 	/**
 	 * Generate the code for the save-methode of a model in backend. 
 	 */
@@ -251,24 +253,24 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    $item = $this->getItem();
 		    if (isset($files) && count($files) > 0) {
 		        $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
-		    	foreach ($files as $keys=>$file) {
-		    	    if (!empty($file)) {
-		    	        if (strpos($file['type'],"image")!==false) {
-		    	            $path = $params->get("«dpage.name.toLowerCase»_image_path");
-		    	        } else {
-		    	            $path = $params->get("«dpage.name.toLowerCase»_file_path");
-		    	        }
-		    	        $data[$keys]=«com.name.toFirstUpper»Helper::uploadFiles($file,$path,$item->$keys);
-		    	    }
-		    	}
+		        foreach ($files as $keys=>$file) {
+		            if (!empty($file)) {
+		                if (strpos($file['type'],"image")!==false) {
+		                    $path = $params->get("«dpage.name.toLowerCase»_image_path");
+		                } else {
+		                    $path = $params->get("«dpage.name.toLowerCase»_file_path");
+		                }
+		                $data[$keys]=«com.name.toFirstUpper»Helper::uploadFiles($file,$path,$item->$keys);
+		            }
+		        }
 		    }
 		    «ENDIF»
 		    «IF mainEntity.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")].size>0»
 		    $inputs = Factory::getApplication()->input->get("jform", array(), 'array');
 		    if (parent::save($data)) {
 		        if (empty($inputs["«mainEntity.primaryKey.name»"]) || $inputs["«mainEntity.primaryKey.name»"] == 0) {
-		    	    $inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
-		    	}
+		            $inputs["«mainEntity.primaryKey.name»"]= $this->getState($this->getName() . ".id");
+		        }
 		    	«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
 		    	«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
 		    	$this->set«ref.entity.name»($inputs);
@@ -285,12 +287,12 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    «ENDIF»
 		}
 	'''
-	
+
 	def CharSequence generateModelReferenceSave()'''
 		«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
 		«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
-		public function set«ref.entity.name»($inputs)
-		{
+	    public function set«ref.entity.name»($inputs)
+	    {
 		    «var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
 		    «FOR Attribute attr : referenceAttr»
 		    $«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
@@ -299,31 +301,31 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    «FOR ExtendedAttribute toAttr: ref.extendedAttributes»
 		    $«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
 		    «ENDFOR»
-
+	
 		    if («Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")») {
-			    if (!empty($«ref.entity.name.toLowerCase»_id)) {
-				    foreach ($«ref.entity.name.toLowerCase»_id as $item) {
-				        if (intval($item) != 0) {
-				            $mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
-				            $mappingTableDelete->delete($item);
-				        }
-				    }
-				}
-				$mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
-				for ($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++) {
-				    $dataToSave = array();
-				    «FOR Attribute attr: referenceAttr»
-				    $dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
-				    «ENDFOR»
-				    «FOR ExtendedAttribute toattr: ref.extendedAttributes»
-				    $dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
-					«ENDFOR»
-					$dataToSave["state"]=1;
-					$mappingTable->save($dataToSave);
-					$mappingTable->reset();
-				}
-			}
-		}
+		        if (!empty($«ref.entity.name.toLowerCase»_id)) {
+		            foreach ($«ref.entity.name.toLowerCase»_id as $item) {
+		                if (intval($item) != 0) {
+		                    $mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
+		                    $mappingTableDelete->delete($item);
+		                }
+		            }
+		        }
+		        $mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
+		        for ($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++) {
+		            $dataToSave = array();
+		            «FOR Attribute attr: referenceAttr»
+		            $dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
+		            «ENDFOR»
+		            «FOR ExtendedAttribute toattr: ref.extendedAttributes»
+		            $dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
+		            «ENDFOR»
+		            $dataToSave["state"]=1;
+		            $mappingTable->save($dataToSave);
+		            $mappingTable->reset();
+		        }
+		    }
+	    }
 		«ENDIF»
 		«ENDFOR»
 	'''
@@ -341,11 +343,11 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		class «com.name.toFirstUpper»View«dpage.name.toFirstUpper» extends HtmlView
 		{
 		    protected $state;
-			protected $item;
-			protected $form;
-			
-			«backHelp.generateAdminViewDisplay()»
-			«backHelp.generateAdminViewAddToolbar()»
+		    protected $item;
+		    protected $form;
+		
+		    «backHelp.generateAdminViewDisplay()»
+		    «backHelp.generateAdminViewAddToolbar()»
 		}
 	'''
 	
@@ -423,14 +425,14 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 */
 		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ItemModel
 		{
-			«frontHelp.generateSiteModelPopulatestate()»
-			«generateModelGetItemFunction»
-			«frontHelp.generateSiteModelCheckin()»
-			«frontHelp.generateSiteModelgetTable»
-			«frontHelp.generateSiteModelCheckout()»
-			«frontHelp.generateSiteModelgetCategory()»
-			«frontHelp.generateSiteModelpublish()»
-			«frontHelp.generateSiteModelDelete()»
+		    «frontHelp.generateSiteModelPopulatestate()»
+		    «generateModelGetItemFunction»
+		    «frontHelp.generateSiteModelCheckin()»
+		    «frontHelp.generateSiteModelgetTable»
+		    «frontHelp.generateSiteModelCheckout()»
+		    «frontHelp.generateSiteModelgetCategory()»
+		    «frontHelp.generateSiteModelpublish()»
+		    «frontHelp.generateSiteModelDelete()»
 		}
 	'''
 	def CharSequence generateSiteModelEdit(String editPageName)'''
@@ -447,17 +449,17 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 */
 		class «com.name.toFirstUpper»Model«editPageName.toFirstUpper» extends FormModel
 		{
-			var $_item = null;
-			«frontHelp.generateSiteModelPopulatestate()»
-			«frontHelp.generateSiteModelCheckin()»
-			«frontHelp.generateSiteModelCheckout()»
-			«frontHelp.generateSiteModelgetTable()»
-			«generateModelGetFormFunction()»
-			«generateModelGetItemFunction()»
-			«generateModelLoadFormDataFunction()»
-			«frontHelp.generateSiteModelSave()»
-			«generateModelReferenceSave()»
-			«frontHelp.generateSiteModelDelete()»
+		    var $_item = null;
+		    «frontHelp.generateSiteModelPopulatestate()»
+		    «frontHelp.generateSiteModelCheckin()»
+		    «frontHelp.generateSiteModelCheckout()»
+		    «frontHelp.generateSiteModelgetTable()»
+		    «generateModelGetFormFunction()»
+		    «generateModelGetItemFunction()»
+		    «generateModelLoadFormDataFunction()»
+		    «frontHelp.generateSiteModelSave()»
+		    «generateModelReferenceSave()»
+		    «frontHelp.generateSiteModelDelete()»
 		}
 	'''
 	
@@ -520,7 +522,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		$iconpath = JURI::root() . 'media/media/images/mime-icon-32/';
 		$canEdit = JFactory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->«mainEntity.primaryKey.name»);
 		if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->«mainEntity.primaryKey.name»)) {
-			$canEdit = JFactory::getUser()->id == $this->item->created_by;
+		    $canEdit = JFactory::getUser()->id == $this->item->created_by;
 		}
 		?>
 		«frontHelp.generateSiteViewLayoutShow(editPageName)»

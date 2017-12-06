@@ -12,11 +12,11 @@ public class ExternalLinkGenerator extends AbstractLinkGenerator {
 	ExternalLink link
     
 	new(ExternalLink link) {
-		this.link = link
+	    this.link = link
 	}
 	
 	override generateLink(String sect, String compname) {
-		return link.target.toString
+	    return link.target.toString
 	}
 	
 }

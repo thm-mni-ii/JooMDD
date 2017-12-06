@@ -101,7 +101,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
             <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«Slug.slugify(page.extendedEntityList.get(0).name).toUpperCase»_«attr.name.toUpperCase»</option>
             «ENDFOR»
         </field>
-	    «ENDIF»
+        «ENDIF»
         <field name="direction" type="list"
             label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_DIRECTION"
             description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_JFIELD_DIRECTION_DESC"
@@ -227,180 +227,180 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	        </fieldset>
 	        «ENDFOR»
 	    </fields>
-		<fields>
-		    <fieldset name="accesscontrol">
-		        <field name="asset_id" type="hidden" filter="unset" />
-		        <field name="rules"
-		            type="rules"
-		            label="JFIELD_RULES_LABEL"
-		            translate_label="false"
-		            filter="rules"
-		            validate="rules"
-		            class="inputbox"
-		            component="«Slug.nameExtensionBind("com",component.name).toLowerCase»"
-		            section="«page.name.toLowerCase»"/>
-		    </fieldset>
-		</fields>
+	    <fields>
+	        <fieldset name="accesscontrol">
+	            <field name="asset_id" type="hidden" filter="unset" />
+	            <field name="rules"
+	                type="rules"
+	                label="JFIELD_RULES_LABEL"
+	                translate_label="false"
+	                filter="rules"
+	                validate="rules"
+	                class="inputbox"
+	                component="«Slug.nameExtensionBind("com",component.name).toLowerCase»"
+	                section="«page.name.toLowerCase»"/>
+	        </fieldset>
+	    </fields>
 	</form>
-   	'''
-   	
-   	/**
-   	 * parse the attribute type and generate the template for the manifest file and create a field, when it don't exist
-   	 * @param ExtendedEntity      entity     contains the instance of a entity
-   	 * @param ExtendedAttribute   attr       contains a attribute of 
-   	 * @param ExtendedComponent   component  conatains the instance of a component
-   	 * @param ExtendedDynamicPage page       contains the instance of a details page	
-   	 * 
-   	 */
-   	def CharSequence writeAttribute(ExtendedEntity entity,ExtendedAttribute attr, ExtendedComponent component, ExtendedDynamicPage page){
-   	    var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(page, attr)
-   	    var EList<KeyValuePair> options = new BasicEList<KeyValuePair>
-   	    if(field !== null) {
-   	        options =field.attributes
-   	    }
-   	    var String type = getHtmlTypeOfAttribute(page,attr,entity,component)
-   	    var StringBuffer result = new StringBuffer
-   	    if(attr.name.equalsIgnoreCase("state")){
-   	        return '''
-   	 	    <field name="state" type="list"
-   	 	        label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS"
-   	 	        description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JFIELD_PUBLISHED_DESC"
-   	 	        class="inputbox"
-   	 	        size="1"
-   	 	        default="1">
-   	 	        <option value="1">JPUBLISHED</option>
-   	 	        <option value="0">JUNPUBLISHED</option>
-   	 	        <option value="2">JARCHIVED</option>
-   	 	        <option value="-2">JTRASHED</option>
-   	 	    </field> 
-   	 	'''
-   	 	}
-   	 	switch(type){
-   	 	    case "multiselect" , case "select", case "list": {
-   	 	        result.append('''
-   	 	        <field name="«attr.name.toLowerCase»"
-   	 	            type="list" 
-   	 	            «IF type.equalsIgnoreCase("multiselect")»
-   	 	            multiple
-   	 	            «ENDIF»
-   	 	            id="«attr.name.toLowerCase»"
-   	 	            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   	 	            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
-   	 	            «FOR KeyValuePair kvpair : options»
-   	 	            «kvpair.name» = "«kvpair.value»"
-   	 	            «ENDFOR»
-   	 	            >
-   	 	            «FOR KeyValuePair kv: field.values»
-   	 	            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
-   	 	            «ENDFOR»
-   	 	        </field> 
-   	 	        ''')
-   	 	    }
-   	 	    case "imagepicker": {
-   	 	        result.append('''
-   	 	        <field name="«attr.name.toLowerCase»"
-   	 	            type ="imageloader"
-   	 	            accept="image/*"
-   	 	            path="«page.name.toLowerCase»_image_path"
-   	 	            id="«attr.name.toLowerCase»"
-   	 	            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   	 	            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
-   	 	            «FOR KeyValuePair kvpair : options»
-   	 	            «kvpair.name» = "«kvpair.value»"
-   	 	            «ENDFOR»
-   	 	            />
-   	 	        ''')
-   	 	    }
-   	 	    case "filepicker": {
-   	 	        result.append('''
-   	 	        <field name="«attr.name.toLowerCase»"
-   	 	            type ="fileloader"
-   	 	            path="«page.name.toLowerCase»_file_path"
-   	 	            id="«attr.name.toLowerCase»"
-   	 	            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   	 	            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
-   	 	            «FOR KeyValuePair kvpair : options»
-   	 	            «kvpair.name» = "«kvpair.value»"
-   	 	            «ENDFOR»
-   	 	            />
-   	 	        ''')
-   	 	    }
-   	 	    case "checkbox": {
-   	 	        result.append(''' 
-   	 	        <field name="«attr.name.toLowerCase»"
-   	 	            type="checkboxes" 
-   	 	            id="«attr.name.toLowerCase»"
-   	 	            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   	 	            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
-   	 	            «FOR KeyValuePair kvpair : options»
-   	 	            «kvpair.name» = "«kvpair.value»"
-   	 	            «ENDFOR»
-   	 	            >
-   	 	            «FOR KeyValuePair kv: field.values»
-   	 	            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
-   	 	            «ENDFOR»
-   	 	        </field> 
-   	 	        ''')
-   	 	    }
-   	 	    case "radiobutton": {
-   	 	        result.append(''' 
-   	 	        <field name="«attr.name.toLowerCase»"
-   	 	            type="radio"
-   	 	            id="«attr.name.toLowerCase»"
-   	 	            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   	 	            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
-   	 	            «FOR KeyValuePair kvpair : options»
-   	 	            «kvpair.name» = "«kvpair.value»"
-   	 	            «ENDFOR»
-   	 	            >
-   	 	            «FOR KeyValuePair kv: field.values»
-   	 	            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
-   	 	            «ENDFOR»
-   	 	        </field> 
-   	 	        ''')
-   	 	    }
-   	 	    case "Yes_No_Buttons": {
-   	 	        result.append(''' 
-   	 	        <field name="«attr.name.toLowerCase»"
-   	 	            type="radio" 
-   	 	            id="«attr.name.toLowerCase»"
-   	 	            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   	 	            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
-   	 	            default="0"
-   	 	            «FOR KeyValuePair kvpair : options»
-   	 	            «kvpair.name» = "«kvpair.value»"
-   	 	            «ENDFOR»
-   	 	            >
-   	 	            <option value="1">JYES</option>
-   	 	            <option value="0">JNO</option>
-   	 	        </field> 
-   	 	        ''')
-   	 	    }
-   	 	    default: {
-   	 	        result.append('''  
-   	 	        <field name="«attr.name.toLowerCase»"
-   	 	            «type»
-   	 	            id="«attr.name.toLowerCase»"
-   	 	            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   	 	            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
-   	 	            «FOR KeyValuePair kvpair : options»
-   	 	            «kvpair.name» = "«kvpair.value»"
-   	 	            «ENDFOR»
-   	 	            />
-   	 	        ''');
-   	 	    }
-   	 	}
-   	 	return result.toString
-   	 }
+	'''
+   
+	/**
+     * parse the attribute type and generate the template for the manifest file and create a field, when it don't exist
+     * @param ExtendedEntity      entity     contains the instance of a entity
+     * @param ExtendedAttribute   attr       contains a attribute of 
+     * @param ExtendedComponent   component  conatains the instance of a component
+     * @param ExtendedDynamicPage page       contains the instance of a details page	
+     * 
+     */
+    def CharSequence writeAttribute(ExtendedEntity entity,ExtendedAttribute attr, ExtendedComponent component, ExtendedDynamicPage page){
+        var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(page, attr)
+        var EList<KeyValuePair> options = new BasicEList<KeyValuePair>
+        if(field !== null) {
+            options =field.attributes
+        }
+        var String type = getHtmlTypeOfAttribute(page,attr,entity,component)
+        var StringBuffer result = new StringBuffer
+        if(attr.name.equalsIgnoreCase("state")){
+            return '''
+            <field name="state" type="list"
+                label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JSTATUS"
+                description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_JFIELD_PUBLISHED_DESC"
+                class="inputbox"
+                size="1"
+                default="1">
+                <option value="1">JPUBLISHED</option>
+                <option value="0">JUNPUBLISHED</option>
+                <option value="2">JARCHIVED</option>
+                <option value="-2">JTRASHED</option>
+            </field> 
+   			'''
+   		}
+   		switch(type){
+   		    case "multiselect" , case "select", case "list": {
+   	        result.append('''
+   		    <field name="«attr.name.toLowerCase»"
+   		            type="list" 
+   		            «IF type.equalsIgnoreCase("multiselect")»
+   		            multiple
+   		            «ENDIF»
+   		            id="«attr.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : options»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            >
+   		            «FOR KeyValuePair kv: field.values»
+   		            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		            «ENDFOR»
+   		        </field> 
+   		        ''')
+   		    }
+   		    case "imagepicker": {
+   		        result.append('''
+   		        <field name="«attr.name.toLowerCase»"
+   		            type ="imageloader"
+   		            accept="image/*"
+   		            path="«page.name.toLowerCase»_image_path"
+   		            id="«attr.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : options»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            />
+   		        ''')
+   		    }
+   		    case "filepicker": {
+   		        result.append('''
+   		        <field name="«attr.name.toLowerCase»"
+   		            type ="fileloader"
+   		            path="«page.name.toLowerCase»_file_path"
+   		            id="«attr.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : options»
+   		            «kvpair.name» = "«kvpair.value»"
+  		            «ENDFOR»
+   		            />
+   		        ''')
+   		    }
+   		    case "checkbox": {
+   		        result.append(''' 
+   		        <field name="«attr.name.toLowerCase»"
+   		            type="checkboxes" 
+   		            id="«attr.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : options»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            >
+   		            «FOR KeyValuePair kv: field.values»
+   		            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		            «ENDFOR»
+   		        </field> 
+   		        ''')
+   		    }
+   		    case "radiobutton": {
+   		        result.append(''' 
+	   		        <field name="«attr.name.toLowerCase»"
+	   		            type="radio"
+	   		            id="«attr.name.toLowerCase»"
+	   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+	   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+	   		            «FOR KeyValuePair kvpair : options»
+	   		            «kvpair.name» = "«kvpair.value»"
+	   		            «ENDFOR»
+	   		            >
+	   		            «FOR KeyValuePair kv: field.values»
+	   		            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+	   		            «ENDFOR»
+	   		        </field> 
+   		        ''')
+   		    }
+   		    case "Yes_No_Buttons": {
+   		        result.append(''' 
+   		        <field name="«attr.name.toLowerCase»"
+   		            type="radio" 
+   		            id="«attr.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            default="0"
+   		            «FOR KeyValuePair kvpair : options»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            >
+   		            <option value="1">JYES</option>
+   		            <option value="0">JNO</option>
+   		        </field> 
+   		        ''')
+   		    }
+   		    default: {
+   		        result.append('''  
+   		        <field name="«attr.name.toLowerCase»"
+   		            «type»
+   		            id="«attr.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : options»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            />
+   		        ''');
+   		    }
+   		}
+   		return result.toString
+   	}
    
     /**
      * return the html type of a attribute
      * for simple attribute type="type"
      * for the attribute of reference type="hidden"
      * for the others only the name of the type
-   	 * @param ExtendedAttribute   attr       contains a attribute of 
-   	 * @param ExtendedComponent   component  conatains the instance of a component
-   	 * @param ExtendedDynamicPage dynP       contains the instance of a details page
+     * @param ExtendedAttribute   attr       contains a attribute of 
+     * @param ExtendedComponent   component  conatains the instance of a component
+     * @param ExtendedDynamicPage dynP       contains the instance of a details page
      * 
      */
     public def String getHtmlTypeOfAttribute(ExtendedDynamicPage dynP,ExtendedAttribute attr, ExtendedEntity en,ExtendedComponent com) {
