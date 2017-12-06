@@ -198,7 +198,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	}
 	
 	def CharSequence fileLangGen( EList<KVPairLanguage>  list) '''
-	    «FOR KVPairLanguage kv: list»
+	   	«FOR KVPairLanguage kv: list»
 	        «kv.generateKVPair»
 	    «ENDFOR»
 	'''

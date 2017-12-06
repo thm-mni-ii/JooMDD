@@ -38,7 +38,7 @@ abstract public class AbstractPageGenerator {
 	}
 
 	def static CharSequence indexHtml() '''
-		<!DOCTYPE html><title></title>
+	    <!DOCTYPE html><title></title>
 	'''
 
 	/**

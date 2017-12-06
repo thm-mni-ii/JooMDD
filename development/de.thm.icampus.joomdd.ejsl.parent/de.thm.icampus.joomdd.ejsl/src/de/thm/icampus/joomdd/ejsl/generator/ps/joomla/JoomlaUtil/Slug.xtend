@@ -306,10 +306,10 @@ public class Slug  {
 			«FOR author : authors»
 				<author>«author.name»</author>
 				«IF author.authoremail !== null»
-					<authorEmail>«author.authoremail»</authorEmail>
+				<authorEmail>«author.authoremail»</authorEmail>
 				«ENDIF»
 				«IF author.authorurl !== null»
-					<authorUrl>«author.authorurl»</authorUrl>
+				<authorUrl>«author.authorurl»</authorUrl>
 				«ENDIF»
 			«ENDFOR»
 		«ENDIF»

@@ -23,9 +23,9 @@ public class ContextLinkGenerator extends AbstractLinkGenerator {
 	«if (sect.isEmpty) '' else sect +"/"»'index.php?option=«Slug.nameExtensionBind("com",compname).toLowerCase»&view=«lk.target.name.toLowerCase»' «genLinkOption(lk.linkparameters)»'''
 	
 	def CharSequence genLinkOption(EList<LinkParameter> params)'''
-		«FOR LinkParameter lp : params»
-			. '&«lp.name»=' . «if(lp.attvalue !== null) valueF + lp.attvalue.name.toLowerCase else lp.value»
-		«ENDFOR»
+	    «FOR LinkParameter lp : params»
+	        . '&«lp.name»=' . «if(lp.attvalue !== null) valueF + lp.attvalue.name.toLowerCase else lp.value»
+	    «ENDFOR»
 	'''
 	
 } // ContextLink

@@ -132,7 +132,7 @@ class IndexPageTemplateSiteHelper {
 	    }
 	}
 	'''
-	
+
 	public def CharSequence genViewTemplateInit()'''
 		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 		HTMLHelper::_('bootstrap.tooltip');
@@ -151,7 +151,7 @@ class IndexPageTemplateSiteHelper {
 		$canDelete = $user->authorise('core.delete', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		?>
 	'''
-	
+
 	public def CharSequence genViewTemplateHead()'''
 	<form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
 	    <?php

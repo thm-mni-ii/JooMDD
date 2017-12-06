@@ -54,7 +54,7 @@ class IndexPageTemplateAdminHelper {
 	public function getModel($name = '«details.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
 	{
 	    $model = parent::getModel($name, $prefix, array('ignore_request' => true));
-		return $model;
+	    return $model;
 	}
 	'''
 	
@@ -207,7 +207,7 @@ class IndexPageTemplateAdminHelper {
 		    return $items;
 		}
 	'''
-	
+
 	def CharSequence genAdminModelSaveOrder()'''
 	    /**
 	     * Function to save the new Order of the Profile
@@ -240,7 +240,7 @@ class IndexPageTemplateAdminHelper {
 	        return false;
 	    }
 	'''
-	
+
 	def CharSequence genAdminViewDisplay()'''
 	    /**
 	     * loads model data into view context
@@ -273,7 +273,7 @@ class IndexPageTemplateAdminHelper {
 	    /**
 	     * Add the page title and toolbar.
 	     *
-	     * @since	1.6
+	     * @since 1.6
 	     * @generated
 	     */
 	    protected function addToolbar()
@@ -367,17 +367,17 @@ class IndexPageTemplateAdminHelper {
             <tbody>
                 <?php foreach ($this->items as $i => $item) :
                 $ordering   = ($listOrder == 'a.ordering');
-                $canCreate	= $user->authorise('core.create',		'«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                $canEdit	= $user->authorise('core.edit',			'«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                $canCheckin	= $user->authorise('core.manage',		'«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                $canChange	= $user->authorise('core.edit.state',	'«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                $canChange  = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                 ?>
                 <tr class="row<?php echo $i % 2; ?>">
                     <?php if (isset($this->items[0]->ordering)): ?>
                     <td class="order nowrap center hidden-phone">
                         <?php if ($canChange) :
                         $disableClassName = '';
-                        $disabledLabel	  = '';
+                        $disabledLabel    = '';
                         if (!$saveOrder) :
                         $disabledLabel    = JText::_('JORDERINGDISABLED');
                         $disableClassName = 'inactive tip-top';
