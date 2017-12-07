@@ -216,7 +216,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "ComponentHelper", "Form", "Factory"))»
+		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "Form", "Factory"))»
 		
 		require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
 
