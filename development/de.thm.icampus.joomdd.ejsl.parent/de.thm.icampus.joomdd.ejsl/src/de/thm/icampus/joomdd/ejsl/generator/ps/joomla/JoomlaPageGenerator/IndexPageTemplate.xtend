@@ -118,8 +118,11 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateViewBackend() '''
 	    «generateFileDoc(ipage, com)»
+	    
 	    «Slug.generateRestrictedAccess()»
+	    
 	    «Slug.generateUses(newArrayList("ViewLegacy", "Text"))»
+	    
 	    /**
 	     * @description «ipage.entities.get(0).name»View for «com.name»
 	     */
@@ -131,7 +134,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	     * @package com_«Slug.slugify(com.name)»."admin"
 	     * @generated
 	     */
-	    class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends JViewLegacy
+	    class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends HtmlView
 	    {
 	        protected $items;
 	        protected $pagination;
