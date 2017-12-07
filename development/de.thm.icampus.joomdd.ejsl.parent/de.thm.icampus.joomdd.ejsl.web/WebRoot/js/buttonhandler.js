@@ -153,7 +153,7 @@ require(["jquery","alert"], function($, alert) {
 		} );
 		});
 
-		$("#joomlaVersion").change(function(){
+		$("#platform").change(function(){
 			var editor = $("#xtext-editor");
 			editor = editor[0];
 			
@@ -174,8 +174,8 @@ require(["jquery","alert"], function($, alert) {
         $("#generateCode").click(function(){
             var editor = $("#xtext-editor");
             alert.showloadmodal();
-            var joomlaVersion = $("#joomlaVersion").val();
-            var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status", "jversion":joomlaVersion});
+            var platform = $("#platform").val();
+            var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status", "platform":platform});
             generatePromise.then( value => {
                 alert.closeloadmodal();
                 treeloader.reload(); // Success!

@@ -24,11 +24,11 @@ class XtextServiceFilter implements Filter {
 		var DatabaseLayer db = DatabaseLayer.instance;   
 		var HttpServletRequest httpRequest = request as HttpServletRequest;
 		var String resourceParameterName = "resource";
-		var String joomlaVersionParameterName = "jversion";
+		var String platformParameterName = "platform";
 		
 		var ServletRequest requestWrapper = new MyHttpServletRequestWrapper(httpRequest);
 		var String resourceName = httpRequest.getParameter(resourceParameterName)
-		var String joomlaVersion = httpRequest.getParameter(joomlaVersionParameterName)
+		var String platform = httpRequest.getParameter(platformParameterName)
 		
         if(resourceName !== null)
         {
@@ -43,9 +43,9 @@ class XtextServiceFilter implements Filter {
 				userPath = user.username
 			}
 			
-			if (joomlaVersion !== null)
+			if (platform !== null)
 			{
-				userConfig.getConfig(userPath).setProperty("jversion", joomlaVersion);
+				userConfig.getConfig(userPath).setProperty("platform", platform);
 			}
 
         	httpRequest.getRequestDispatcher(requestURI + "?" + resourceParameterName + "=" + userPath + resourceName).forward(requestWrapper, response);

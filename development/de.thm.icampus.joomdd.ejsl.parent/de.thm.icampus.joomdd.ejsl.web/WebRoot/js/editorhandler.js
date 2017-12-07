@@ -28,9 +28,9 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
         // Override the generate function to include custom request parameters.
         var originInitServerData = editor.xtextServices.generatorService._initServerData;
         editor.xtextServices.generatorService._initServerData = function(serverData, editorContext, params) {
-																	if (params.jversion)
+																	if (params.platform)
 																	{
-																		serverData.jversion = params.jversion;
+																		serverData.platform = params.platform;
 																	}
 																	originInitServerData(serverData, editorContext, params);
 																} 

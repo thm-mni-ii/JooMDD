@@ -3,7 +3,6 @@ package de.thm.icampus.joomdd.ejsl.generator.ps
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler
 
 /**
  * This class is responsible for calling the platform-specific code generators. 
@@ -17,27 +16,39 @@ class ExtensionGenerator extends AbstractGenerator {
     IFileSystemAccess2 fileGen
     String modelName
     String rootPath
+    String platform
 
     new(EList<Extension> list, 
     	String pathToGenerate, 
     	IFileSystemAccess2 fsa, 
     	String modelName, 
-    	String rootPath
+    	String rootPath,
+    	String platform
     ) {
         extensions = list
         fileGen = fsa
         path = pathToGenerate + modelName + "/"
         this.modelName = modelName
         this.rootPath = rootPath
+        this.platform = platform;
     }
 
-    override dogenerate() {
+    override dogenerate() {    	
         for (ext : extensions) {
-            // Call of Joomla extension generator
-            var ExtensionGeneratorHandler joomlaExtHandler
-            joomlaExtHandler = new ExtensionGeneratorHandler(fileGen, ext, path, rootPath)
-            joomlaExtHandler.generateExtension
-            // -----------------------------------
+        	switch(this.platform)
+        	{
+        		case "j3": {
+        			var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler joomlaExtHandler
+	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler(fileGen, ext, path, rootPath)
+	            	joomlaExtHandler.generateExtension
+        		}
+        		case "j4": {
+        			var de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler joomlaExtHandler
+	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler(fileGen, ext, path, rootPath)
+	            	joomlaExtHandler.generateExtension
+        		}
+        	}
+	        
         }
     }
 }

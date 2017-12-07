@@ -96,6 +96,7 @@ class EJSLGenerator extends AbstractGenerator {
     override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
         genData = new JavaIoFileSystemAccess(registry, encodingProvider)
         var String outputFolder 
+        var String platform;
                 
         if (webConfig.properties.getProperty("serverPath") !== null) {
             var String serverPath = webConfig.properties.getProperty("serverPath").replace("\\", "/"); 
@@ -106,13 +107,14 @@ class EJSLGenerator extends AbstractGenerator {
                 var String[] resourceNameArray = resourcePath.split("/")
                 var sessionID = resourceNameArray.get(0)
         
-       	        var joomlaVersion = userConfig.getConfig(sessionID).getProperty("jversion")
+       	        platform = userConfig.getConfig(sessionID).getProperty("platform")
        	        
-       	        println("Joomla version: " + joomlaVersion)
+       	        println("Platform version: " + platform)
        	        
                 outputFolder = workspacePath + "/" + sessionID + "/src-gen"
             }
         } else {
+        	platform = "j3";
             outputFolder = config.getProperty("outputFolder")
         }
         
@@ -133,7 +135,8 @@ class EJSLGenerator extends AbstractGenerator {
                     	"Extensions/", 
                     	genData, 
                     	domainModel.name, 
-                    	outputFolder)
+                    	outputFolder,
+                    	platform)
                     mainExtensionGen.dogenerate()
                     
                     // ------- Optional entity generator ------------------
