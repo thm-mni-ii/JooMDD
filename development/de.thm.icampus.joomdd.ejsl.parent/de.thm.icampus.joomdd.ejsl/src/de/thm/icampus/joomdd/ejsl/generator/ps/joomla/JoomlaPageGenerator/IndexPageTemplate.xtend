@@ -46,7 +46,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateSiteViewLayoutShow() '''
 	    «generateFileDoc(ipage,com)»
+	    
 	    «Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html"))»
+	    
 	    «frontHelp.genViewTemplateInit»
 	    «frontHelp.genViewTemplateHead»
 	'''	

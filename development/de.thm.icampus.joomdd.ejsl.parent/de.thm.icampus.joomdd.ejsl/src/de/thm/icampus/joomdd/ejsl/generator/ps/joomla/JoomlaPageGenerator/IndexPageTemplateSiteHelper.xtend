@@ -160,17 +160,17 @@ class IndexPageTemplateSiteHelper {
 	    <table class="table table-striped">
 	        <thead>
 	            <tr>
-	                <?php if (isset($this->items[0]->state) && $canEdit ): ?>
+	                <?php if (isset($this->items[0]->state) && $canEdit) : ?>
 	                <th width="1%" class="nowrap center">
 	                    <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 	                </th>
 	                <?php endif; ?>
 	                «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
 	                <th class='left'>
-	                    <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+	                    <?php echo HTMLHelper::_('grid.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 	                </th>
 	                «ENDFOR»
-	                <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit ): ?>
+	                <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit) : ?>
 	                <th width="1%" class="nowrap center hidden-phone">
 	                    <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
 	                </th>
@@ -220,28 +220,28 @@ class IndexPageTemplateSiteHelper {
 	public def CharSequence genViewTemplateBody()'''
 	    <?php foreach ($this->items as $i => $item) : ?>
 	        <?php $canEdit = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»'); ?>
-	        <?php if (!$canEdit && $user->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»')): ?>
+	        <?php if (!$canEdit && $user->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»')) : ?>
 	            <?php $canEdit = Factory::getUser()->id == $item->created_by; ?>
 	        <?php endif; ?>
 	        <tr class="row<?php echo $i % 2; ?>">
 
-	        <?php if (isset($this->items[0]->state)&& $canEdit): ?>
+	        <?php if (isset($this->items[0]->state)&& $canEdit) : ?>
 	            <?php $class = ($canEdit || $canChange) ? 'active' : 'disabled'; ?>
 	            <td class="center">
 	                <a class="btn btn-micro <?php echo $class; ?>"
 	                    «IF details !== null»
-	                    href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state ) : '#'; ?>">
+	                    href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state) : '#'; ?>">
 	                    «ENDIF»
-	                    <?php if ($item->state == 1): ?>
+	                    <?php if ($item->state == 1) : ?>
 	                    <i class="icon-publish"></i>
-	                    <?php else: ?>
+	                    <?php else : ?>
 	                    <i class="icon-unpublish"></i>
 	                    <?php endif; ?>
 	                </a>
 	            </td>
 	        <?php endif; ?>
 	        «genSiteModelAttributeReference(indexpage.extendedTableColumnList, indexpage,com)»
-	        <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)&& $canEdit): ?>
+	        <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit) : ?>
 	            <td class="center hidden-phone">
 	                <?php echo (int)$item->«mainEntity.primaryKey.name»; ?>
 	            </td>
