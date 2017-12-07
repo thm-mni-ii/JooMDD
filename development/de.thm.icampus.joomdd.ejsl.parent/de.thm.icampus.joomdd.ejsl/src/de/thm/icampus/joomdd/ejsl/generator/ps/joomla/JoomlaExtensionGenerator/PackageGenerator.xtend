@@ -19,6 +19,7 @@ import java.util.Calendar
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.LanguageGenerator
 
 /**
  * This class generates a Joomla package.
@@ -59,6 +60,8 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         if(success) {
             Slug.deleteFolder(rootPath + "/" + path + "packages/tocompress")
         }
+        var LanguageGenerator lang = new LanguageGenerator(fsa)
+        lang.genPackageLanguage(pkg, path)
         return ''
 	}
 	
