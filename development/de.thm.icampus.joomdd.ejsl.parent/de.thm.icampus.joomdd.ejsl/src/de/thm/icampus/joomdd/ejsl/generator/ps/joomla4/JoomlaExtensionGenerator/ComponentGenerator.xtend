@@ -175,8 +175,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		    <!-- Site Main File Copy Section -->
 		    <files folder="components/«extendedComp.extensionName»">
-		        <filename>«noPrefixName».php</filename>
-		        <filename>controller.php</filename>
 		        <filename>dispatcher.php</filename>
 		        <!-- Additional Files -->
 		        <folder>View</folder>
@@ -208,8 +206,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <!-- Administration Main File Copy Section -->
 		        <files folder="administrator/components/«extendedComp.extensionName»">
 		            <!-- Admin Main File Copy Section -->
-		            <filename>«noPrefixName».php</filename>
-		            <filename>controller.php</filename>
 		            <filename>dispatcher.php</filename>
 		            <filename>access.xml</filename>
 		            <filename>config.xml</filename>
@@ -246,8 +242,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	private def void generateFrontendSection() {
 		// Generate frontend section
-		generateFile( sitePath + "/" + noPrefixName + ".php", extendedComp.phpSiteContent)
-		generateFile( sitePath + "/controller.php", extendedComp.phpSiteControllerContent)
+		//generateFile( sitePath + "/" + noPrefixName + ".php", extendedComp.phpSiteContent)
+		generateFile( sitePath + "/Controller/DisplayController.php", extendedComp.phpSiteControllerContent)
 		generateFile( sitePath + "/dispatcher.php", extendedComp.phpSiteDispatcherContent)
 		generateFile( sitePath + "/router.php", extendedComp.phpSiteRouterContent)
 		        
@@ -286,7 +282,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			 *
 			 * @var    string
 			 */
-			protected $namespace = '\\';
+			protected $namespace = 'Joomla\\Component\\«component.name»';
 		}
 	'''
 	
@@ -304,9 +300,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
   		}
   		// Generate sql folders
 		
-		generateFile( adminPath + "/" + noPrefixName + ".php", extendedComp.phpAdminContent)
-		generateFile( adminPath + "/controller.php", extendedComp.phpAdminControllerContent)
-		generateFile( sitePath + "/dispatcher.php", extendedComp.phpAdminDispatcherContent)
+		//generateFile( adminPath + "/" + noPrefixName + ".php", extendedComp.phpAdminContent)
+		generateFile( adminPath + "/Controller/DisplayController.php", extendedComp.phpAdminControllerContent)
+		generateFile( adminPath + "/dispatcher.php", extendedComp.phpAdminDispatcherContent)
 		generateFile( adminPath + "/access.xml", extendedComp.xmlAccessContent)
 		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
 		
@@ -358,7 +354,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 			 *
 			 * @var    string
 			 */
-			protected $namespace = '\\';
+			protected $namespace = 'Joomla\\Component\\«component.name»';
 		}
 	'''
 	
@@ -384,7 +380,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      * @return Charsequence
      */
 	def CharSequence phpSiteContent(Component component) '''
-		<?php
+		<?php		
 		«Slug.generateFileDoc(component)»
 		
 		«Slug.generateRestrictedAccess()»
@@ -412,6 +408,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpSiteControllerContent(ExtendedComponent component) '''
 		<?php
+		«Slug.generateNamespace(component.name, "Site", "Controller")»
+		
 		«Slug.generateFileDoc(component)»
 		
 		«Slug.generateRestrictedAccess()»
@@ -421,7 +419,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		/**
 		 * General Controller of «component.name» component
 		 */
-		class «class_name»Controller extends BaseController
+		class DisplayController extends BaseController
 		{
 		    /**
 		     * display task
@@ -475,6 +473,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminControllerContent(ExtendedComponent component) '''
 		<?php
+		«Slug.generateNamespace(component.name, "Administrator", "Controller")»
+		
 		«Slug.generateFileDoc(component)»
 		
 		«Slug.generateRestrictedAccess()»
@@ -484,21 +484,15 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		/**
 		 * General Controller of «class_name» component
 		 */
-		class «class_name»Controller extends BaseController
+		class DisplayController extends BaseController
 		{
-		    /**
-		     * display task
-		     *
-		     * @return  void
-		     */
-		    public function display($cachable = false, $urlparams = array())
-		    {
-		        require_once JPATH_COMPONENT . '/Helper/«component.name.toLowerCase».php';
-		        $view = Factory::getApplication()->input->getCmd('view', '«class_name»s');
-		        Factory::getApplication()->input->set('view', $view);
-		        parent::display($cachable, $urlparams);
-		        return $this;
-		    }
+			/**
+			 * The default view.
+			 *
+			 * @var    string
+			 * @since  1.6
+			 */
+			protected $default_view = '«component.name»';
 		}
 	'''
 
@@ -508,6 +502,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminSimpleModelContent(ExtendedComponent component,ExtendedPage pageref) '''
 		<?php
+		«Slug.generateNamespace(component.name, "Administrator", "Model")»
 		
 		«Slug.generateFileDoc(component)»
 		
@@ -561,6 +556,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminViewContent(ExtendedComponent component) '''
 		<?php
+		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name + "s")»
+		
 		«Slug.generateFileDoc(component)»
 		
 		«Slug.generateRestrictedAccess()»

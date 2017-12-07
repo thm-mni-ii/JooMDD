@@ -28,6 +28,8 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		<?php
 		«Slug.generateFileDoc(com)»
 		
+		«Slug.generateNamespace(com.name, "Administrator", "Field")»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("Text", "ComponentHelper", "Uri", "FormField", "Factory"))»
@@ -66,6 +68,8 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 	 */
 	def CharSequence generateImageloader()'''
 		<?php
+		«Slug.generateNamespace(com.name, "Administrator", "Field")»
+		
 		«Slug.generateFileDoc(com)»
 		
 		«Slug.generateRestrictedAccess()»

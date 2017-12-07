@@ -385,6 +385,10 @@ public class Slug  {
 		 */
 	'''
 	
+	def static CharSequence generateNamespace(String name, String section, String context) '''
+		namespace Joomla\Component\«name»\«section»\«context»;
+	'''
+	
 	def static CharSequence generateRestrictedAccess() '''
 		defined('_JEXEC') or die('Restricted access');
 	'''
