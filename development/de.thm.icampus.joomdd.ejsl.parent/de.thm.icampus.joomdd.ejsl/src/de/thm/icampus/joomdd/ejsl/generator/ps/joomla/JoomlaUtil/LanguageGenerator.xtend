@@ -17,6 +17,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensionPackage
 
 class LanguageGenerator extends AbstractExtensionGenerator {
 	new(IFileSystemAccess2 fileAccess) {
@@ -176,7 +177,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	    throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
-	public def genModuletLanguage(ExtendedModule extmod, String root) {
+	public def genModuleLanguage(ExtendedModule extmod, String root) {
 		var String name = Slug.nameExtensionBind("mod", extmod.name).toLowerCase
 		for (lang : extmod.languages) {
 		    var EList<KVPairLanguage> languagesWords = new BasicEList<KVPairLanguage>()
@@ -196,6 +197,27 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			}
 		}
 	}
+	
+	public def genPackageLanguage(ExtendedExtensionPackage extpkg, String root) {
+        var String name = Slug.nameExtensionBind("pkg", extpkg.name).toLowerCase
+        for (lang : extpkg.languages) {
+            var EList<KVPairLanguage> languagesWords = new BasicEList<KVPairLanguage>()
+            languagePackageFileGen(languagesWords, extpkg)
+            for(keys: lang.keyvaluepairs){
+                if(!keysContains(keys, languagesWords)){
+                    languagesWords.add(new KVPairLanguage(keys) )
+                }
+            }
+            val ldir = lang.name
+            if(lang.sys){
+                fsa.generateFile(root + "/language/" + ldir + "/" + ldir + "." + name + ".sys.ini",
+                fileLangGen(languagesWords))
+            }else{
+                fsa.generateFile(root + "/language/" + ldir + "/" + ldir + "." + name + ".ini",
+                fileLangGen( languagesWords))
+            }
+        }
+    }
 	
 	def CharSequence fileLangGen( EList<KVPairLanguage>  list) '''
 	   	«FOR KVPairLanguage kv: list»
@@ -247,4 +269,28 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			}
 		}
 	}
+	
+	private def void  languagePackageFileGen(EList<KVPairLanguage> languagesWords,ExtendedExtensionPackage extpkg) {
+        languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("pkg", extpkg.name).toUpperCase +"_LABEL",extpkg.name.toFirstUpper))
+        languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("pkg", extpkg.name).toUpperCase+"_DESC",extpkg.name.toFirstUpper + " "+ extpkg.manifest.description))
+        
+        languagesWords.add(new KVPairLanguage("COM_MODULES_FILTER_FIELDSET_LABEL" , "Filter"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_ORDERING","Ordering"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JFIELD_ORDERING_DESC" , "Ordering description"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_DIRECTION", "Direction"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+ "_JFIELD_DIRECTION_DESC" , "Sort the result in a Direction"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_ASC","ASC"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_DESC", "DESC"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_START_LABEL","Start Index"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_START_DESC","The index of First data Item"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_LIMIT_LABEL","Limit"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_LIMIT_DESC","Limit the number of Data in view"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_SEARCH_LABEL","Search"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_SEARCH_DESC","Search Data"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JSTATUS","Status"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JFIELD_PUBLISHED_DESC","Status"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
+        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
+        languagesWords.add(new KVPairLanguage("JOPTION_SELECT_CREATED_BY","select a user"))
+    }
 }

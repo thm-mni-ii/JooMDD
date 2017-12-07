@@ -59,9 +59,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		generateFile(path + name + ".php", this.extMod.phpContent)
 		generateFile(path + "helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage))
 		generateFile(path + "tmpl/default.php", defaultTemplate())
-		generateEmptyDirectory("language")
 		var LanguageGenerator lang = new LanguageGenerator(fsa)
-		lang.genModuletLanguage(extMod, path)
+		lang.genModuleLanguage(extMod, path)
        
 		return ''
 	}

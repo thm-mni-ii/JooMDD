@@ -47,6 +47,7 @@ class EJSLGeneratorTest {
          Assert.assertNotNull(mappingTable);
 	}
 	
+	/*
 	@Test
 	public def checkInstallDataOfComponent(){
 	    var File templateFolder = new File(TemplateLoader.getClassLoader().getResource("").getPath().replace("tests/bin","tests/testdata"))
@@ -82,6 +83,6 @@ class EJSLGeneratorTest {
         }
          Assert.assertTrue(result)
          
-	}
+	}*/
 	
 }

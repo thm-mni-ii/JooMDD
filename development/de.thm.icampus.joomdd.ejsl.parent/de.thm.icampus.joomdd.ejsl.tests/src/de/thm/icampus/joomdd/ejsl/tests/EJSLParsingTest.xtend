@@ -352,8 +352,8 @@ class EJSLParsingTest{
 		
 		//test component values
 		Assert.assertEquals("ExampleShop", cmp.name)
-		Assert.assertEquals("Peter Janauschek", cmp.manifest.authors.get(0).name)
-		Assert.assertEquals("peter.janauschek@mni.thm.de", cmp.manifest.authors.get(0).authoremail)
+		Assert.assertEquals("John Doe", cmp.manifest.authors.get(0).name)
+		Assert.assertEquals("John.Doe@example.de", cmp.manifest.authors.get(0).authoremail)
 		Assert.assertNotNull("Parsing-Error copyright should not be Null", cmp.manifest.copyright)
 		Assert.assertNotNull("Parsing-Error license should not be Null", cmp.manifest.license)
 		Assert.assertNotNull("Parsing-Error version should not be Null", cmp.manifest.version)
