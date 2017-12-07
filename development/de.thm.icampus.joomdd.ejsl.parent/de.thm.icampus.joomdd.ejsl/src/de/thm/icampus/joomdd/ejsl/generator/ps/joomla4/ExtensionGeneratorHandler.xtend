@@ -1,4 +1,4 @@
-package de.thm.icampus.joomdd.ejsl.generator.ps.joomla
+package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.eJSL.Extension
@@ -15,17 +15,17 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedPl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedLibraryImpl
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensionPackage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedExtensionPackageImpl
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.PackageGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.ComponentGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.ModuleGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.PluginGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.LibraryGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.TemplateGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.PackageGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.ComponentGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.ModuleGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.PluginGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.LibraryGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.TemplateGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.AbstractExtensionGenerator
 
 /**
  * This class represents the interface between the JooMDD generator and the Joomla-specific generator templates. 
@@ -40,14 +40,14 @@ public class ExtensionGeneratorHandler {
     Extension ext
     String path
     String rootpath
-    String platformPath = "j3/";
+    String platformPath = "j4/"
 
     new(IFileSystemAccess2 access, Extension extens, String path, String rootPath, Boolean addPlatformPath) {
         fsa = access
         ext = extens
         this.path = path
         this.rootpath = rootPath
-        
+                
         if (addPlatformPath === false)
         {
         	platformPath = ""

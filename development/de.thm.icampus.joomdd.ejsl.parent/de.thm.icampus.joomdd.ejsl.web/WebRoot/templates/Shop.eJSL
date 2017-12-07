@@ -319,9 +319,9 @@ eJSLModel "Shop" {
 			Component ExampleShop {  
 				Manifestation {
 					authors {
-						Author "Peter Janauschek" {
-							authoremail = "peter.janauschek@mni.thm.de"
-							authorurl = "www.test.de"
+						Author "John Doe" {
+							authoremail = "John.Doe@example.de"
+							authorurl = "www.example.de"
 							
 						}
 					}
@@ -366,9 +366,9 @@ eJSLModel "Shop" {
 			Module Customers{   
 				Manifestation { 
 					authors {
-						Author "Peter Janauschek" {
-							authoremail = "peter.janauschek@mni.thm.de"
-							authorurl = "www.test.de"
+						Author "John Doe" {
+							authoremail = "John.Doe@example.de"
+							authorurl = "www.example.de"
 							
 						}
 					}
@@ -383,14 +383,14 @@ eJSLModel "Shop" {
 					Language en-GB {                             
 					}                                    
 				}        
-				*Page :Shop.Customers from :  ExampleShop section .frontend
+				*Page :Shop.Customers from :  ExampleShop data backendDAO
 			}  
-			Extension package Shop{  
+			Extension package Shop {  
 				Manifestation {              
 					authors {     
-						Author "Peter Janauschek" {      
-							authoremail = "peter.janauschek@mni.thm.de"
-							authorurl = "www.test.de"
+						Author "John Doe" {      
+							authoremail = "John.Doe@example.de"
+							authorurl = "www.example.de"
 							
 						}
 					}
@@ -408,9 +408,9 @@ eJSLModel "Shop" {
 					Component ExampleShop {  
 				Manifestation {
 					authors {
-						Author "Peter Janauschek" {
-							authoremail = "peter.janauschek@mni.thm.de"
-							authorurl = "www.test.de"
+						Author "John Doe" {
+							authoremail = "John.Doe@example.de"
+							authorurl = "www.example.de"
 							
 						}
 					}
@@ -455,9 +455,9 @@ eJSLModel "Shop" {
 			Module Customers{  
 				Manifestation { 
 					authors {
-						Author "Peter Janauschek" {
-							authoremail = "peter.janauschek@mni.thm.de"
-							authorurl = "www.test.de"
+						Author "John Doe" {
+							authoremail = "John.Doe@example.de"
+							authorurl = "www.example.de"
 							
 						}     
 					} 
@@ -472,7 +472,7 @@ eJSLModel "Shop" {
 					Language en-GB {     
 					}
 				}
-				*Page :Shop.Customers from : ExampleShop section .frontend
+				*Page :Shop.Customers from : ExampleShop  data backendDAO
 			}
 				}
 			}

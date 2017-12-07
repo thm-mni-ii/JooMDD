@@ -19,7 +19,8 @@ class Config {
    		return Config.instance;
     }
 	
-	new (){
+	// Use getInstance()
+	private new (){
 		if (instance === null)
         {
         	try {

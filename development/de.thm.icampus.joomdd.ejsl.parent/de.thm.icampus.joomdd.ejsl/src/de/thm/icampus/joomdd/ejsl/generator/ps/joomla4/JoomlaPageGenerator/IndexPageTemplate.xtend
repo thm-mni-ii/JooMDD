@@ -1,9 +1,9 @@
-package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator
+package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator
 
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**
@@ -20,6 +20,11 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	private IndexPageTemplateAdminHelper helperAdmin
 	private IndexPageTemplateSiteHelper frontHelp
 	private String path
+	private String modelPath
+	private String viewPath
+	private String tmplPath
+	private String controllerPath
+	private String formPath
 	private String pagename
 
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {
@@ -29,18 +34,23 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		helperAdmin = new IndexPageTemplateAdminHelper(ipage,com,sec)
 		frontHelp = new IndexPageTemplateSiteHelper(ipage,com,sec)
 		this.path = path
+		this.modelPath = path + "/Model"
+		this.viewPath = path + "/View"
+		this.tmplPath = path + "/tmpl"
+		this.controllerPath = path + "/Controller"
+		this.formPath = path + "/forms"
 		pagename = Slug.slugify(dp.name.toLowerCase)
 		this.fsa = fsa
 	}
 	
 	def void generateView() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(path+"/" + pagename +"/"+ "view.html.php", generateViewBackend())
-	        generateFile(path+"/" + pagename+"/" + "tmpl"+"/" + "default.php" , generateAdminViewLayoutBackend())
+	        generateFile(modelPath+"/" + pagename +"/"+ "view.html.php", generateViewBackend())
+	        generateFile(modelPath+"/" + pagename+"/" + "tmpl"+"/" + "default.php" , generateAdminViewLayoutBackend())
 	    } else {
-	        generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView())
-	        generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow())
-	        generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, ipage,com))
+	        generateFile(modelPath+"/" + pagename+"/" + "view.html.php", generateSiteView())
+	        generateFile(modelPath +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow())
+	        generateFile(modelPath +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, ipage,com))
 	    }
 	}
 	
@@ -55,9 +65,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	 
 	def void generateController() {
 	    if(sec.equalsIgnoreCase("admin")){
-	        generateFile(path+"/" + pagename + ".php", generateAdminController())
+	        generateFile(modelPath+"/" + pagename + ".php", generateAdminController())
 	    } else {
-	        generateFile(path+"/" + pagename + ".php", generateSiteController())
+	        generateFile(modelPath+"/" + pagename + ".php", generateSiteController())
 	    }
 	}
 	
@@ -87,10 +97,10 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def void generateModel() {
 	    if (sec.compareTo("admin")==0) {
-	        generateFile(path+"/" + pagename + ".php", generateAdminModel())
-	        generateFile(path+"/forms/"+ "filter_" + pagename + ".xml",  generateAdminModelForms())
+	        generateFile(modelPath + "/" + pagename + ".php", generateAdminModel())
+	        generateFile(path + "/forms/"+ "filter_" + pagename + ".xml",  generateAdminModelForms())
 	    } else {
-	        generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
+	        generateFile(modelPath + "/" + pagename  + ".php", generateSiteModelShow)
 	        generateFile(path + "/forms"+"/" +"filter_" + pagename + ".xml", generateAdminModelForms)
 	    } 
 	}
@@ -149,7 +159,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	    
 	    «Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html"))»
 	    
-	    HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
+	    HTMLHelper::addIncludePath(JPATH_COMPONENT.'/Helper/html');
 	    HTMLHelper::_('bootstrap.tooltip');
 	    HTMLHelper::_('behavior.multiselect');
 	    HTMLHelper::_('formbehavior.chosen', 'select');

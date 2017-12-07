@@ -1,4 +1,4 @@
-package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator
+package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.eJSL.ExtensionPackage
@@ -8,9 +8,9 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
 import de.thm.icampus.joomdd.ejsl.eJSL.Template
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensionPackage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensions
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.AbstractExtensionGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

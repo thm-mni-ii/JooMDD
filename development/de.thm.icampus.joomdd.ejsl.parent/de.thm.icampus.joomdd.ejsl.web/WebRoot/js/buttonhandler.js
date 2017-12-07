@@ -153,11 +153,29 @@ require(["jquery","alert"], function($, alert) {
 		} );
 		});
 
+		$("#platform").change(function(){
+			var editor = $("#xtext-editor");
+			editor = editor[0];
+			
+		    content = editor.env.document.getValue();
+			var contentLength = editor.env.document.getLength();
+			var lastLineContent = editor.env.editor.session.getLine(contentLength-1);
+			if (lastLineContent.trim() === "")
+			{
+				editor.env.document.setValue(content.trim());
+			}
+			else
+			{
+		    	editor.env.document.setValue(content + "\n");
+		    }
+		});
+
 		// Generate Code, based on the model in the editor
         $("#generateCode").click(function(){
             var editor = $("#xtext-editor");
             alert.showloadmodal();
-            var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status"});
+            var platform = $("#platform").val();
+            var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status", "platform":platform});
             generatePromise.then( value => {
                 alert.closeloadmodal();
                 treeloader.reload(); // Success!

@@ -1,9 +1,9 @@
-package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator
+package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
@@ -268,7 +268,7 @@ class DetailsPageTemplateFrontEndHelper {
 	def CharSequence generateSiteModelgetTable()'''
 	public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array())
 	{
-	    $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
+	    $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/Table');
 	    return Table::getInstance($type, $prefix, $config);
 	}
 	'''

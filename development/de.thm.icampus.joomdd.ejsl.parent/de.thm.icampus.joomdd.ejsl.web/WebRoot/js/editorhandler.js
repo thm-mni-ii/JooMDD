@@ -25,6 +25,16 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 			minLines: 25
         });
          
+        // Override the generate function to include custom request parameters.
+        var originInitServerData = editor.xtextServices.generatorService._initServerData;
+        editor.xtextServices.generatorService._initServerData = function(serverData, editorContext, params) {
+																	if (params.platform)
+																	{
+																		serverData.platform = params.platform;
+																	}
+																	originInitServerData(serverData, editorContext, params);
+																} 
+         
         var afterEditorCreation = function() {
         	var jstree = $('#folder_tree').jstree(true);
         	 

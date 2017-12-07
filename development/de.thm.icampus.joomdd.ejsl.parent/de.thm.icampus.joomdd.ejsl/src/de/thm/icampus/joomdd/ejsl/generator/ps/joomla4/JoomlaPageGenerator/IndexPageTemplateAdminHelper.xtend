@@ -1,4 +1,4 @@
-package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator
+package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
@@ -6,7 +6,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 
 /**
@@ -278,7 +278,7 @@ class IndexPageTemplateAdminHelper {
 	     */
 	    protected function addToolbar()
 	    {
-	        require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
+	        require_once JPATH_COMPONENT . '/Helper/«com.name.toLowerCase».php';
 
 	        $state = $this->get('State');
 	        $canDo = «com.name.toFirstUpper»Helper::getActions($state->get('filter.category_id'));
@@ -286,7 +286,7 @@ class IndexPageTemplateAdminHelper {
 	        JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«indexpage.name.toUpperCase»'));
 
 	        //Check if the form exists before showing the add/edit buttons
-	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«  details.toLowerCase»';
+	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/View/«  details.toLowerCase»';
 	        if (file_exists($formPath)) {
 	            if ($canDo->get('core.create')) {
 	                JToolBarHelper::addNew('«details.toLowerCase».add', 'JTOOLBAR_NEW');
