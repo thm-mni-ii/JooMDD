@@ -10,20 +10,25 @@ import javax.servlet.ServletException
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
+import de.thm.icampus.joomdd.ejsl.util.UserConfig
 
 /**
  * @author Wolf Rost
  */
 class XtextServiceFilter implements Filter {
-  	FilterConfig filterConfig;                                     
+  	FilterConfig filterConfig;
+  	UserConfig userConfig = UserConfig.instance;
 
 	override doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		var DatabaseLayer db = DatabaseLayer.instance;   
 		var HttpServletRequest httpRequest = request as HttpServletRequest;
 		var String resourceParameterName = "resource";
+		var String joomlaVersionParameterName = "jversion";
+		
 		var ServletRequest requestWrapper = new MyHttpServletRequestWrapper(httpRequest);
 		var String resourceName = httpRequest.getParameter(resourceParameterName)
+		var String joomlaVersion = httpRequest.getParameter(joomlaVersionParameterName)
 		
         if(resourceName !== null)
         {
@@ -36,6 +41,11 @@ class XtextServiceFilter implements Filter {
 			if (user !== null)
 			{
 				userPath = user.username
+			}
+			
+			if (joomlaVersion !== null)
+			{
+				userConfig.getConfig(userPath).setProperty("jversion", joomlaVersion);
 			}
 
         	httpRequest.getRequestDispatcher(requestURI + "?" + resourceParameterName + "=" + userPath + resourceName).forward(requestWrapper, response);

@@ -24,6 +24,7 @@ import java.util.regex.Pattern
 import java.util.regex.Matcher
 import de.thm.icampus.joomdd.ejsl.util.Config
 import java.io.InputStream
+import de.thm.icampus.joomdd.ejsl.util.UserConfig
 
 /**
  * This is the main class of the code generator of JooMDD. 
@@ -42,7 +43,10 @@ class EJSLGenerator extends AbstractGenerator {
     private IResourceServiceProvider.Registry registry;
 
     Properties config
+    
 	Config webConfig = Config.instance;
+	
+  	UserConfig userConfig = UserConfig.instance;
 
     override beforeGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
         super.beforeGenerate(input, fsa, context)
@@ -92,7 +96,7 @@ class EJSLGenerator extends AbstractGenerator {
     override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
         genData = new JavaIoFileSystemAccess(registry, encodingProvider)
         var String outputFolder 
-        
+                
         if (webConfig.properties.getProperty("serverPath") !== null) {
             var String serverPath = webConfig.properties.getProperty("serverPath").replace("\\", "/"); 
             if (serverPath !== null) {
@@ -101,6 +105,11 @@ class EJSLGenerator extends AbstractGenerator {
                 resourcePath = resourcePath.replace(workspacePath + "/", "")
                 var String[] resourceNameArray = resourcePath.split("/")
                 var sessionID = resourceNameArray.get(0)
+        
+       	        var joomlaVersion = userConfig.getConfig(sessionID).getProperty("jversion")
+       	        
+       	        println("Joomla version: " + joomlaVersion)
+       	        
                 outputFolder = workspacePath + "/" + sessionID + "/src-gen"
             }
         } else {

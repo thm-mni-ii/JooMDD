@@ -153,11 +153,29 @@ require(["jquery","alert"], function($, alert) {
 		} );
 		});
 
+		$("#joomlaVersion").change(function(){
+			var editor = $("#xtext-editor");
+			editor = editor[0];
+			
+		    content = editor.env.document.getValue();
+			var contentLength = editor.env.document.getLength();
+			var lastLineContent = editor.env.editor.session.getLine(contentLength-1);
+			if (lastLineContent.trim() === "")
+			{
+				editor.env.document.setValue(content.trim());
+			}
+			else
+			{
+		    	editor.env.document.setValue(content + "\n");
+		    }
+		});
+
 		// Generate Code, based on the model in the editor
         $("#generateCode").click(function(){
             var editor = $("#xtext-editor");
             alert.showloadmodal();
-            var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status"});
+            var joomlaVersion = $("#joomlaVersion").val();
+            var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status", "jversion":joomlaVersion});
             generatePromise.then( value => {
                 alert.closeloadmodal();
                 treeloader.reload(); // Success!

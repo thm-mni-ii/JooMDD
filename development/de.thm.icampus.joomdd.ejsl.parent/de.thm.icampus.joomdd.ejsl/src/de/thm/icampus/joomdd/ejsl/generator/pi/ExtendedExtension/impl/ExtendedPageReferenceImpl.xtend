@@ -19,7 +19,6 @@ class ExtendedPageReferenceImpl extends PageReferenceImpl implements ExtendedPag
 		extendedPage = new ExtendedPageImpl(page)
 	}
 	
-	
 	override getExtendedPage() {
 		return extendedPage
 	}
