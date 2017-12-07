@@ -492,7 +492,7 @@ class IndexPageTemplateAdminHelper {
          * @param  String  $linkName    containt the name of a Attribute
          * @param  String  $attrvaluen  containt the value of a Row
          *
-         * @return the ID of a Row
+         * @return Integer the ID of a Row
          *
          */
         public function getIdOfReferenceItem($linkName, $attrvalue)

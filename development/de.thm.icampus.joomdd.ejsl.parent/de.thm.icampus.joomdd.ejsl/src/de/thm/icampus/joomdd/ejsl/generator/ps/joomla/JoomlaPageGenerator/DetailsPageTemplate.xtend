@@ -440,7 +440,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelForm", "Factory", "ArrayHelper", "Registry", "Table", "Form"))»
+		«Slug.generateUses(newArrayList("ModelForm", "Factory", "ArrayHelper", "Registry", "Table", "Form", "Text"))»
 		
 		jimport('joomla.event.dispatcher');
 		
@@ -486,7 +486,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateSiteViewLayoutEdit(String editPageName)'''
 		«generateFileDoc(dpage,com)»
 		
-		«Slug.generateUses(newArrayList("Text", "Html", "Factory"))»
+		«Slug.generateUses(newArrayList("Text", "Html", "Factory", "Route"))»
 		
 		HTMLHelper::_('behavior.keepalive');
 		HTMLHelper::_('behavior.tooltip');
