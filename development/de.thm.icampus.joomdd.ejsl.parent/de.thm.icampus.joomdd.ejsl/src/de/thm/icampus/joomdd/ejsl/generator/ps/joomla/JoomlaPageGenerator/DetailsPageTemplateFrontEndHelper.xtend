@@ -353,13 +353,15 @@ class DetailsPageTemplateFrontEndHelper {
 	        $authorised = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) 
 	            || $authorised = $user->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id
 	            );
-	        if ($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1) //The user cannot edit the state of the item. {
+	        if ($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1) {
+	            //The user cannot edit the state of the item.
 	            $data['state'] = 0;
 	        }
 	    } else {
 	        //Check the user can create new items in this section
 	        $authorised = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-	        if ($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1) //The user cannot edit the state of the item. {
+	        if ($user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$id) !== true && $state == 1) {
+	            //The user cannot edit the state of the item.
 	            $data['state'] = 0;
 	        }
 	    }

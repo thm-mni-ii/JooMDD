@@ -394,12 +394,12 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ControllerLegacy", "Text", "Route", "Session", "Factory"))»
+		«Slug.generateUses(newArrayList("Text", "Route", "Session", "Factory"))»
 		
 		/**
 		 * «dpage.name.toFirstUpper» controller class to «if(isedit)  "Edit" else "Show"» a Item .
 		 */
-		class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»BaseController
+		class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»Controller
 		{
 		    «IF isedit»
 			«frontHelp.generateSiteControllerSave»
