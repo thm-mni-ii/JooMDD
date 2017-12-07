@@ -40,12 +40,18 @@ public class ExtensionGeneratorHandler {
     Extension ext
     String path
     String rootpath
+    String platformPath = "j4/"
 
-    new(IFileSystemAccess2 access, Extension extens, String path, String rootPath) {
+    new(IFileSystemAccess2 access, Extension extens, String path, String rootPath, Boolean addPlatformPath) {
         fsa = access
         ext = extens
         this.path = path
         this.rootpath = rootPath
+                
+        if (addPlatformPath === false)
+        {
+        	platformPath = ""
+        }
     }
 
     public def AbstractExtensionGenerator getExtensiongenerator() {
@@ -66,34 +72,34 @@ public class ExtensionGeneratorHandler {
                 var ExtendedExtensionPackage tempext 
                 tempext = new ExtendedExtensionPackageImpl(ext as ExtensionPackage)
                 extensionsgenerator = new PackageGenerator(tempext, fsa,
-                    path + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase + "/j4/", rootpath)
+                    path + platformPath + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase, rootpath)
             }
             Component: {
                 var ExtendedComponent tempext = new ExtendedComponentImpl(ext as Component)
                 extensionsgenerator = new ComponentGenerator(tempext, fsa,
-                    path + Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/j4/new/" +
+                    path + platformPath + Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/new/" +
                         Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/",
-                    path + Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/j4/update/")
+                    path + platformPath + Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/update/")
             }
             Module: {
                 var ExtendedModule tempext = new ExtendedModuleImpl(ext as Module)
                 extensionsgenerator = new ModuleGenerator(tempext, fsa,
-                    path + Slug.nameExtensionBind("mod", tempext.name).toLowerCase + "/j4/")
+                    path + platformPath + Slug.nameExtensionBind("mod", tempext.name).toLowerCase)
             }
             Plugin: {
                 var ExtendedPlugin tempext = new ExtendedPluginImpl(ext as Plugin)
                 extensionsgenerator = new PluginGenerator(tempext, fsa,
-                    path + Slug.nameExtensionBind("plg", tempext.name).toLowerCase + "/j4/")
+                    path + platformPath + Slug.nameExtensionBind("plg", tempext.name).toLowerCase)
             }
             Library: {
                 var ExtendedLibrary tempext = new ExtendedLibraryImpl(ext as Library)
                 extensionsgenerator = new LibraryGenerator(tempext, fsa,
-                    path + Slug.nameExtensionBind("lib", tempext.name).toLowerCase + "/j4/")
+                    path + platformPath + Slug.nameExtensionBind("lib", tempext.name).toLowerCase)
             }
             Template: {
                 var Template tempext = ext as Template
                 extensionsgenerator = new TemplateGenerator(tempext, 
-                	fsa, path + tempext.name.toLowerCase + "/j4/"
+                	fsa, path + platformPath + tempext.name.toLowerCase
                 )
             }
             default: {

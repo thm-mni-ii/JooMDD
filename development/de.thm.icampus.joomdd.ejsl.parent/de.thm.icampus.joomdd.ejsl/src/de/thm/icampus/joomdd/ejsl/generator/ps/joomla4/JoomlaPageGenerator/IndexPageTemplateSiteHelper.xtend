@@ -134,7 +134,7 @@ class IndexPageTemplateSiteHelper {
 	'''
 
 	public def CharSequence genViewTemplateInit()'''
-		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/Helper/html');
 		HTMLHelper::_('bootstrap.tooltip');
 		HTMLHelper::_('behavior.multiselect');
 		HTMLHelper::_('formbehavior.chosen', 'select');

@@ -39,16 +39,15 @@ class ExtensionGenerator extends AbstractGenerator {
         	{
         		case "j3": {
         			var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler joomlaExtHandler
-	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler(fileGen, ext, path, rootPath)
+	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler(fileGen, ext, path, rootPath, true)
 	            	joomlaExtHandler.generateExtension
         		}
         		case "j4": {
         			var de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler joomlaExtHandler
-	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler(fileGen, ext, path, rootPath)
+	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler(fileGen, ext, path, rootPath, true)
 	            	joomlaExtHandler.generateExtension
         		}
         	}
-	        
         }
     }
 }

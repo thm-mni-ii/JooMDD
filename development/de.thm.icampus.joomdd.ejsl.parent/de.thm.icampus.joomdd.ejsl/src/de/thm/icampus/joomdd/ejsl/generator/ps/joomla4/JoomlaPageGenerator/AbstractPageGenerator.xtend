@@ -79,7 +79,7 @@ abstract public class AbstractPageGenerator {
 		    </layout>
 		    <fields
 		        name="request"
-		        addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
+		        addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/Field"
 		    >
 		
 		        «generateParameter(page.extendedGlobalParamater, component)»

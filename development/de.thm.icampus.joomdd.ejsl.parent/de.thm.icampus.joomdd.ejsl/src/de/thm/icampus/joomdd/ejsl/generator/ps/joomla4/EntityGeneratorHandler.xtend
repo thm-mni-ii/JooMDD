@@ -43,32 +43,32 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 	private def generateFields(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(comp, ent)
-			generateFile( path + "models/fields/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
+			generateFile( path + "Field/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
 			for(ExtendedReference ref: ent.allExtendedReferences){
 				switch ref.upper{
 				    case "1":{
 					    var FieldsGenerator fields = new FieldsGenerator(ref,comp, ent)
-						fields.dogenerate(path+ "models/fields/" , fsa)
+						fields.dogenerate(path+ "Field/" , fsa)
 					}
 					case "*" , case "-1":{
 					    var FieldsCardinalityGenerator fields = new FieldsCardinalityGenerator(ref,comp, ent)
-						fields.dogenerate(path+ "models/fields/" , fsa)
+						fields.dogenerate(path+ "Field/" , fsa)
 					}
 				}
 			}
 		}
-		generateFile(path + "models/fields/" + comp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(comp) )
+		generateFile(path + "Field/" + comp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(comp) )
 		if(comp.hasFileToload) {
 		    var fileloader = new FieldsFileloaderGenerator(comp)
-		    generateFile(path + "models/fields/" + "fileloader.php",  fileloader.generateFileloader)
-		    generateFile(path + "models/fields/" + "imageloader.php", fileloader.generateImageloader )
+		    generateFile(path + "Field/" + "fileloader.php",  fileloader.generateFileloader)
+		    generateFile(path + "Field/" + "imageloader.php", fileloader.generateImageloader )
 		}
 		
 	}
 	private def generateTable(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var TableGeneratorTemplate table = new TableGeneratorTemplate(comp, ent)
-			generateFile(path + "tables/"+ent.name.toLowerCase+".php", table.genClassTable)
+			generateFile(path + "Table/"+ent.name.toLowerCase+".php", table.genClassTable)
 		}
 	}
 	

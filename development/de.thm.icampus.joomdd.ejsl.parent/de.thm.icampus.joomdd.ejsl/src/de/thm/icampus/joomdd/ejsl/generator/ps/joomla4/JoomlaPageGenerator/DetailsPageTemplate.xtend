@@ -24,6 +24,11 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	private de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.DetailsPageTemplateBackendHelper backHelp
 	private de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.DetailsPageTemplateFrontEndHelper frontHelp
 	private String path
+	private String modelPath
+	private String viewPath
+	private String tmplPath
+	private String controllerPath
+	private String formPath
 	private String pagename
 	private ExtendedEntity mainEntity
 	
@@ -34,6 +39,11 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		backHelp = new   de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.DetailsPageTemplateBackendHelper(dpage, com, sec)
 		frontHelp = new   de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.DetailsPageTemplateFrontEndHelper(dpage, com, sec)
 		this.path = path
+		this.modelPath = path + "/Model"
+		this.viewPath = path + "/View"
+		this.tmplPath = path + "/tmpl"
+		this.controllerPath = path + "/Controller"
+		this.formPath = path + "/forms"
 		pagename = Slug.slugify(dpage.name.toLowerCase)
 		this.fsa = fsa
 		mainEntity = dp.extendedEntityList.get(0)
@@ -41,8 +51,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	
 	def void generateView() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(path+"/" + pagename +"/"+ "view.html.php", generateAdminViewClass())
-	        generateFile(path+"/" + pagename+"/" + "tmpl"+"/" + "edit.php" , generateAdminViewLayout())
+	        generateFile(viewPath + "/" + Slug.capitalize(pagename) + "/" + "HtmlView.php", generateAdminViewClass())
+	        generateFile(tmplPath + "/" + pagename + "/" + "edit.php" , generateAdminViewLayout())
 		 } else {
 		     if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {
 		         generateFrontEndEditView(pagename+"edit")
@@ -58,41 +68,41 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	}
 	
 	def void generateFrontEndShowView(String editPagename) {
-	    generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView(false, ''))
-	    generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow(editPagename))
-	    generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
+	    generateFile(viewPath + "/" + Slug.capitalize(pagename) + "/" + "HtmlView.php", generateSiteView(false, ''))
+	    generateFile(tmplPath + "/" + pagename + "/" + "default.php" , generateSiteViewLayoutShow(editPagename))
+	    generateFile(tmplPath + "/" + pagename + "/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
 	}
 	
 	def void generateFrontEndEditView(String editPagename) {
-	    generateFile(path+"/" + editPagename+"/"+ "view.html.php", generateSiteView(true,editPagename))
-	    generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.php" , generateSiteViewLayoutEdit(editPagename))
-	    generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(editPagename, dpage, com)) 
+	    generateFile(viewPath + "/" + Slug.capitalize(editPagename) + "/" + "HtmlView.php", generateSiteView(true,editPagename))
+	    generateFile(tmplPath + "/" + editPagename + "/" + "default.php" , generateSiteViewLayoutEdit(editPagename))
+	    generateFile(tmplPath + "/" + editPagename + "/" + "default.xml" , xmlSiteTemplateContent(editPagename, dpage, com)) 
 	}
 	
 	def void generateController() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(path+"/" + pagename + ".php", generateAdminController())
+	        generateFile(controllerPath + "/" + pagename + ".php", generateAdminController())
 	    } else {
-	        generateFile(path+"/" + pagename +"edit" +".php", generateSiteController(true))
-	        generateFile(path+"/" + pagename+ ".php", generateSiteController(false))
+	        generateFile(controllerPath + "/" + pagename +"edit" +".php", generateSiteController(true))
+	        generateFile(controllerPath + "/" + pagename+ ".php", generateSiteController(false))
 	    }
 	}
 	
 	def void generateModel() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(path+"/" + pagename + ".php", generateAdminModel())
-	        generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+	        generateFile(modelPath + "/" + pagename + ".php", generateAdminModel())
+	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 	    } else {
-	        generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 		 	
 		 	if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {	
-		 	    generateFile(path+"/" + pagename+"edit"+ ".php", generateSiteModelEdit(pagename+"edit"))
-		 	    generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)		  
+		 	    generateFile(modelPath + "/" + pagename + "edit" + ".php", generateSiteModelEdit(pagename+"edit"))
+		 	    generateFile(modelPath + "/" + pagename  + ".php", generateSiteModelShow)		  
 		 	} else {
 		 	    if (!dpage.extendedEditedFieldsList.isEmpty) {
-		 	        generateFile(path+"/" + pagename+ ".php", generateSiteModelEdit(pagename))
+		 	        generateFile(modelPath + "/" + pagename+ ".php", generateSiteModelEdit(pagename))
 		 	    } else {
-		 	        generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)		  
+		 	        generateFile(modelPath + "/" + pagename  + ".php", generateSiteModelShow)		  
 		 	    }
 		 	}
 		}
@@ -218,7 +228,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "Form", "Factory"))»
 		
-		require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
+		require_once JPATH_COMPONENT . '/Helper/«com.name.toLowerCase».php';
 
 		/**
 		 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
@@ -356,7 +366,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateUses(newArrayList("Text", "Route", "Factory", "Html"))»
 		
-		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/Helper/html');
 		HTMLHelper::_('behavior.tooltip');
 		HTMLHelper::_('behavior.formvalidation');
 		HTMLHelper::_('formbehavior.chosen', 'select');

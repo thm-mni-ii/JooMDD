@@ -23,7 +23,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			 
 	PageGeneratorHandler pageClient
 	var modelOfComponent = '\'<modelOfComponent>\''
-	var modelPath = '\'/components/com_<nameOfComponent>/models\''
+	var modelPath = '\'/components/com_<nameOfComponent>/Model\''
 	var String modelOfComponent2 = null;
 		
 
@@ -187,7 +187,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		            <fieldset name="filter">
 		                <field
 		                    name="created_by"
-		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
+		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/Field"
 		                    type="componentuser"
 		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
 		                    description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
@@ -197,7 +197,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
 		                «IF !attr.name.equalsIgnoreCase("params")»
 		                <field
-		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
+		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/Field"
 		                    name="«attr.name»"
 		                    type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
 		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
@@ -229,7 +229,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		// Include the «extMod.name» functions only once
 		require_once __DIR__ . '/helper.php';
 		«IF module.pageRef.pagescr !== null»
-		require_once JPATH_ADMINISTRATOR . '/components/com_«module.extendedComponentName.toLowerCase»/helpers/«module.extendedComponentName.toLowerCase».php';
+		require_once JPATH_ADMINISTRATOR . '/components/com_«module.extendedComponentName.toLowerCase»/Helper/«module.extendedComponentName.toLowerCase».php';
 		«ENDIF»
 		// Models, Functions should be implementated here
 		// «module.name.substring(0,1).toUpperCase + module.name.substring(1).toLowerCase»Helper::updateReset();
@@ -255,7 +255,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		/**
 		 * if component helper shall be used
 		 *
-		 * require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php>';
+		 * require_once JPATH_ROOT . '/components/com_<nameOfComponent>/Helper/<nameOfComponentHelper.php>';
 		 * $baseurl = Uri::base();
 		 */
 		?>
@@ -351,9 +351,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
             var String section =  modul.extendedPageReference.extendedPage.name
             var String compName =  modul.extendedComponentName
             if(section.equalsIgnoreCase('backend')) {
-                modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"
+                modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/Model'"
             } else {
-                modelPath = "'/components/com_" + compName.toLowerCase + "/models'"
+                modelPath = "'/components/com_" + compName.toLowerCase + "/Model'"
             }
             modelOfComponent = ("\"" + compName.toFirstUpper + "\"")
             modelOfComponent2 = ("\"" +compName.toFirstUpper + "Model\"")

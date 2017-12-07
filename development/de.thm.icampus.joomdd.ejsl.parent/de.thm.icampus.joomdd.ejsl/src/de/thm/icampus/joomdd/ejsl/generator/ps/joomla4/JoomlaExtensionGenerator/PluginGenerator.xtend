@@ -543,7 +543,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		protected function setup()
 		{
 		    // Load dependent classes.
-		    require_once JPATH_SITE . '/components/com_«plugin.name»/helpers/route.php';
+		    require_once JPATH_SITE . '/components/com_«plugin.name»/Helper/route.php';
 		
 		    return true;
 		}

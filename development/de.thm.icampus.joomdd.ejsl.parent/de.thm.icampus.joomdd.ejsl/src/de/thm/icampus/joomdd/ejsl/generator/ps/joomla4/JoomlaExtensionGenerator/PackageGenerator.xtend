@@ -48,15 +48,16 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         	this.extClient = new ExtensionGeneratorHandler(fsa, 
         	    ext, 
         	    path + "packages/tocompress/", 
-        	    rootPath
+        	    rootPath,
+        	    false
         	)
 			this.extClient.generateExtension
         }
-        var success = compressExtensions(rootPath + "/" +path + "packages/tocompress/", 
-            rootPath + "/"+ path + "packages/"
+        var success = compressExtensions(rootPath + "/" + path + "packages/tocompress/", 
+            rootPath + "/" + path + "packages/"
         )
         if(success) {
-            Slug.deleteFolder(rootPath + "/" +path + "packages/tocompress")
+            Slug.deleteFolder(rootPath + "/" + path + "packages/tocompress")
         }
         return ''
 	}

@@ -66,7 +66,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
      */
     def CharSequence genSettingForDetailsPage(String pagename, ExtendedDynamicPage page, ExtendedComponent component)'''
 	<fieldset name="request"
-	    addfieldpath="/administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields">
+	    addfieldpath="/administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/Field">
 	    <field name="«page.extendedEntityList.get(0).primaryKey.name»" type="«page.extendedEntityList.get(0).name.toLowerCase»"
 	        label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.extendedEntityList.get(0).name.toUpperCase»_«page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name.toUpperCase»"
 	        required="true"
@@ -145,7 +145,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
         label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_FILTER_LABEL">
         <field
             name="created_by"
-            addfieldpath="administrator/components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
+            addfieldpath="administrator/components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/Field"
             type="componentuser"
             label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_CREATED_BY"
             description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_CREATED_BY"
@@ -154,7 +154,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
         </field>
         «FOR ExtendedAttribute attr : page.extendFiltersList»
         <field
-            addfieldpath="administrator/components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
+            addfieldpath="administrator/components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/Field"
             name="«attr.name»"
             type="«page.extendedEntityList.get(0).name.toLowerCase»"
             label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.name.toUpperCase»_«attr.name.toUpperCase»"

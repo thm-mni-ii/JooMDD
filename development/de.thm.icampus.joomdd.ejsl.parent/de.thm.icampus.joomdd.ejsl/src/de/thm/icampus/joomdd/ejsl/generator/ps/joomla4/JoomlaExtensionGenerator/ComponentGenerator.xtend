@@ -178,10 +178,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <filename>«noPrefixName».php</filename>
 		        <filename>controller.php</filename>
 		        <!-- Additional Files -->
-		        <folder>views</folder>
-		        <folder>models</folder>
+		        <folder>View</folder>
+		        <folder>Model</folder>
 		        <folder>language</folder>
-		        <folder>controllers</folder>		       
+		        <folder>Controller</folder>		       
 		    </files>
 		    
 		    <languages>
@@ -214,14 +214,14 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <!-- SQL Files Section -->
 		            <folder>sql</folder>
 		            <!-- Table Files Section -->
-		            <folder>tables</folder>
+		            <folder>Table</folder>
 		            <!-- Model Files Section -->
-		            <folder>models</folder>
+		            <folder>Model</folder>
 		            <!-- View Files Section -->
-		            <folder>views</folder>
+		            <folder>View</folder>
 		            <folder>language</folder>
-		            <folder>controllers</folder>
-		            <folder>helpers</folder>
+		            <folder>Controller</folder>
+		            <folder>Helper</folder>
 		        </files>
 		
 		        <languages>
@@ -283,14 +283,14 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
 		
 		var tempSlug = slug + "s"
-		generateFile(adminPath +"/views/" + tempSlug + "/view.html.php", 
+		generateFile(adminPath +"/View/" + Slug.capitalize(tempSlug) + "/HtmlView.php", 
 		    extendedComp.phpAdminViewContent)
-		generateFile(adminPath +"/views/" + tempSlug + "/tmpl/default.php", 
+		generateFile(adminPath +"/tmpl/" + tempSlug + "/default.php", 
 		    extendedComp.phpAdminTemplateContent
 		)
 		
 		var de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.ComponentHelperGenerator help = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.ComponentHelperGenerator(extendedComp)
-		generateFile( adminPath + "/helpers/" + extendedComp.name.toLowerCase + ".php", 
+		generateFile( adminPath + "/Helper/" + extendedComp.name.toLowerCase + ".php", 
 		    help.generate
 		)
 
@@ -441,7 +441,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    public function display($cachable = false, $urlparams = array())
 		    {
-		        require_once JPATH_COMPONENT . '/helpers/«component.name.toLowerCase».php';
+		        require_once JPATH_COMPONENT . '/Helper/«component.name.toLowerCase».php';
 		        $view = Factory::getApplication()->input->getCmd('view', '«class_name»s');
 		        Factory::getApplication()->input->set('view', $view);
 		        parent::display($cachable, $urlparams);
