@@ -416,7 +416,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelItem", "Factory", "ArrayHelper", "Registry", "Table"))»
+		«Slug.generateUses(newArrayList("ModelItem", "Factory", "ArrayHelper", "Registry", "Table", "Text"))»
 		
 		jimport('joomla.event.dispatcher');
 		
@@ -486,7 +486,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateSiteViewLayoutEdit(String editPageName)'''
 		«generateFileDoc(dpage,com)»
 		
-		«Slug.generateUses(newArrayList("Text", "Html"))»
+		«Slug.generateUses(newArrayList("Text", "Html", "Factory"))»
 		
 		HTMLHelper::_('behavior.keepalive');
 		HTMLHelper::_('behavior.tooltip');
@@ -511,7 +511,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateSiteViewLayoutShow(String editPageName)'''
 		«generateFileDoc(dpage,com)»
 		
-		«Slug.generateUses(newArrayList("Factory", "ComponentHelper", "Uri"))»
+		«Slug.generateUses(newArrayList("Factory", "ComponentHelper", "Uri", "Text", "Route"))»
 		
 		//Load admin language file
 		$lang = Factory::getLanguage();
@@ -519,10 +519,10 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		$params = ComponentHelper::getParams('«com.extensionName»');
 		$image_path = $params->get('«dpage.name»_image_path');
 		$file_path = $params->get('«dpage.name»_file_path');
-		$iconpath = JURI::root() . 'media/media/images/mime-icon-32/';
-		$canEdit = JFactory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->«mainEntity.primaryKey.name»);
-		if (!$canEdit && JFactory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->«mainEntity.primaryKey.name»)) {
-		    $canEdit = JFactory::getUser()->id == $this->item->created_by;
+		$iconpath = Uri::root() . 'media/media/images/mime-icon-32/';
+		$canEdit = Factory::getUser()->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase».' . $this->item->«mainEntity.primaryKey.name»);
+		if (!$canEdit && Factory::getUser()->authorise('core.edit.own', '«Slug.nameExtensionBind("com", com.name).toLowerCase»' . $this->item->«mainEntity.primaryKey.name»)) {
+		    $canEdit = Factory::getUser()->id == $this->item->created_by;
 		}
 		?>
 		«frontHelp.generateSiteViewLayoutShow(editPageName)»
