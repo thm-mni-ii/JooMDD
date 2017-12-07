@@ -21,13 +21,13 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 		staticpage = page
 		comp = component
 		sect = section
-		this.path = path + "/" +path + staticpage.name
+		this.path = path + "/" + path + staticpage.name
 		this.fsa = access
 	}
 	
 	def void generate() {
-		generateFile(path+ "/view.php", generateView())
-		generateFile(path+ "/tmpl/default.php", staticpage.HTMLBody)
+		generateFile(path + "/view.php", generateView())
+		generateFile(path  + "/tmpl/default.php", staticpage.HTMLBody)
 		if(!sect.equalsIgnoreCase("admin")) {
 			generateFile(path+ "/tmpl/default.xml", xmlSiteTemplateContent(staticpage.name, staticpage, comp))
 		}
@@ -45,7 +45,7 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	     * HTML View class for the «comp.name.toFirstUpper» Component
 	     *
 	     */
-	    class «comp.name.toFirstUpper»View«staticpage.name.toFirstUpper» extends HtmlView
+	    class HtmlView extends BaseHtmlView
 	    {
 	        /**
 	         * Display the «staticpage.name.toFirstUpper» view

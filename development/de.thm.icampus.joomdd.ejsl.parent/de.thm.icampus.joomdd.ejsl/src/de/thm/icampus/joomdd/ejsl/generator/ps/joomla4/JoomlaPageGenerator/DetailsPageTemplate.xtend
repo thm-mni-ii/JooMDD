@@ -350,7 +350,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		/**
 		 * View to edit a «dpage.name»
 		 */
-		class «com.name.toFirstUpper»View«dpage.name.toFirstUpper» extends HtmlView
+		class HtmlView extends BaseHtmlView
 		{
 		    protected $state;
 		    protected $item;
@@ -483,7 +483,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		/**
 		 * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»
 		 */
-		class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else dpage.name.toFirstUpper  » extends HtmlView
+		class HtmlView extends BaseHtmlView
 		{
 		    protected $state;
 		    protected $item;

@@ -45,12 +45,12 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def void generateView() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(modelPath+"/" + pagename +"/"+ "view.html.php", generateViewBackend())
-	        generateFile(modelPath+"/" + pagename+"/" + "tmpl"+"/" + "default.php" , generateAdminViewLayoutBackend())
+	        generateFile(viewPath + "/" + Slug.capitalize(pagename) +"/"+ "HtmlView.php", generateViewBackend())
+	        generateFile(tmplPath + "/" + pagename + "/" + "default.php" , generateAdminViewLayoutBackend())
 	    } else {
-	        generateFile(modelPath+"/" + pagename+"/" + "view.html.php", generateSiteView())
-	        generateFile(modelPath +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow())
-	        generateFile(modelPath +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, ipage,com))
+	        generateFile(viewPath + "/" + Slug.capitalize(pagename) + "/" + "HtmlView.php", generateSiteView())
+	        generateFile(tmplPath + "/" + pagename + "/" + "default.php" , generateSiteViewLayoutShow())
+	        generateFile(tmplPath + "/" + pagename + "/" + "default.xml" , xmlSiteTemplateContent(pagename, ipage,com))
 	    }
 	}
 	
@@ -65,9 +65,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	 
 	def void generateController() {
 	    if(sec.equalsIgnoreCase("admin")){
-	        generateFile(modelPath+"/" + pagename + ".php", generateAdminController())
+	        generateFile(controllerPath + "/" + pagename + ".php", generateAdminController())
 	    } else {
-	        generateFile(modelPath+"/" + pagename + ".php", generateSiteController())
+	        generateFile(controllerPath + "/" + pagename + ".php", generateSiteController())
 	    }
 	}
 	
@@ -98,10 +98,10 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def void generateModel() {
 	    if (sec.compareTo("admin")==0) {
 	        generateFile(modelPath + "/" + pagename + ".php", generateAdminModel())
-	        generateFile(path + "/forms/"+ "filter_" + pagename + ".xml",  generateAdminModelForms())
+	        generateFile(formPath + "filter_" + pagename + ".xml",  generateAdminModelForms())
 	    } else {
 	        generateFile(modelPath + "/" + pagename  + ".php", generateSiteModelShow)
-	        generateFile(path + "/forms"+"/" +"filter_" + pagename + ".xml", generateAdminModelForms)
+	        generateFile(formPath + "filter_" + pagename + ".xml", generateAdminModelForms)
 	    } 
 	}
 	
@@ -144,7 +144,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	     * @package com_«Slug.slugify(com.name)»."admin"
 	     * @generated
 	     */
-	    class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends HtmlView
+	    class HtmlView extends BaseHtmlView
 	    {
 	        protected $items;
 	        protected $pagination;
@@ -226,7 +226,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	    /**
 	     * View to  Show the Data
 	     */
-	    class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends HtmlView
+	    class HtmlView extends BaseHtmlView
 	    {
 	        protected $state;
 	        protected $item;

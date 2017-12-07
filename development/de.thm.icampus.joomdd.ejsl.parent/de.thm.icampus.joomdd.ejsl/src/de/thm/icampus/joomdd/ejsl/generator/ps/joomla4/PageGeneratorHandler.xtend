@@ -68,9 +68,8 @@ public class PageGeneratorHandler {
 
 	def void generateExtension(){
 		if (extPage.extendedDynamicPageInstance !== null) {
-			var String viewPath = pathExt + "/View";
 			var ExtendedDynamicPage dynPage = extPage.extendedDynamicPageInstance as ExtendedDynamicPage
-			generateView(dynPage, com, sectionExt, viewPath, fsa)
+			generateView(dynPage, com, sectionExt, pathExt, fsa)
 			var String controllerpath = pathExt + "/Controller"
 			generateController(dynPage, com, sectionExt, controllerpath, fsa)
 			generateModel(dynPage, com, sectionExt, pathExt, fsa)
@@ -84,12 +83,11 @@ public class PageGeneratorHandler {
 	
 	def void generatePages(){
 		if (extPage.extendedDynamicPageInstance !== null && !extPage.extendedDynamicPageInstance.preserve ) {
-			var String viewPath = pathExt + extPage.name+ "/View";
+			pathExt = pathExt + extPage.name;
 			var ExtendedDynamicPage dynPage = extPage.extendedDynamicPageInstance as ExtendedDynamicPage
-			generateView(dynPage, com, sectionExt, viewPath, fsa)
+			generateView(dynPage, com, sectionExt, pathExt, fsa)
 			var String controllerpath = pathExt +extPage.name  + "/Controller" 
 			generateController(dynPage, com, sectionExt, controllerpath, fsa)
-			pathExt = pathExt + extPage.name
 			generateModel(dynPage, com, sectionExt, pathExt, fsa)
 			if(extPage.extendedDynamicPageInstance.isDetailsPage){
 				generateUnknownFields(pathExt + extPage.name)

@@ -428,7 +428,7 @@ public class Slug  {
 				case 'ViewCategories' : { "use Joomla\\CMS\\MVC\\View\\CategoriesView;" }
 				case 'ViewCategory' : { "use Joomla\\CMS\\MVC\\View\\CategoryView;" }
 				case 'ViewCategoryfeed' : { "use Joomla\\CMS\\MVC\\View\\CategoryFeedView;" }
-				case 'ViewLegacy' : { "use Joomla\\CMS\\MVC\\View\\HtmlView;" }
+				case 'ViewLegacy' : { "use Joomla\\CMS\\MVC\\View\\HtmlView as BaseHtmlView;" }
 				case 'ControllerAdmin' : { "use Joomla\\CMS\\MVC\\Controller\\AdminController;" }
 				case 'ControllerLegacy' : { "use Joomla\\CMS\\MVC\\Controller\\BaseController;" }
 				case 'ControllerForm' : { "use Joomla\\CMS\\MVC\\Controller\\FormController;" }

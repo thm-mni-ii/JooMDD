@@ -6,10 +6,10 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.EntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.LanguageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
-import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.PageGenerator
 import java.util.Calendar
 import java.util.List
 import org.eclipse.emf.common.util.BasicEList
@@ -177,6 +177,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    <files folder="components/«extendedComp.extensionName»">
 		        <filename>«noPrefixName».php</filename>
 		        <filename>controller.php</filename>
+		        <filename>dispatcher.php</filename>
 		        <!-- Additional Files -->
 		        <folder>View</folder>
 		        <folder>Model</folder>
@@ -209,6 +210,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <!-- Admin Main File Copy Section -->
 		            <filename>«noPrefixName».php</filename>
 		            <filename>controller.php</filename>
+		            <filename>dispatcher.php</filename>
 		            <filename>access.xml</filename>
 		            <filename>config.xml</filename>
 		            <!-- SQL Files Section -->
@@ -246,6 +248,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		// Generate frontend section
 		generateFile( sitePath + "/" + noPrefixName + ".php", extendedComp.phpSiteContent)
 		generateFile( sitePath + "/controller.php", extendedComp.phpSiteControllerContent)
+		generateFile( sitePath + "/dispatcher.php", extendedComp.phpSiteDispatcherContent)
 		generateFile( sitePath + "/router.php", extendedComp.phpSiteRouterContent)
 		        
         var EntityGenerator entitygen = new EntityGenerator(extendedComp,sitePath + "/",fsa,false)
@@ -263,6 +266,30 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateUpdatePages(tempPageList,"site")
 	}
 	
+	def CharSequence phpSiteDispatcherContent(ExtendedComponent component) '''
+		<?php
+		/**
+		 *
+		 */
+		 
+		«Slug.generateRestrictedAccess»
+		
+		use Joomla\CMS\Dispatcher\Dispatcher;
+		
+		/**
+		 * Dispatcher class
+		 */
+		class «class_name»Dispatcher extends Dispatcher
+		{
+			/**
+			 * The extension namespace
+			 *
+			 * @var    string
+			 */
+			protected $namespace = '\\';
+		}
+	'''
+	
     /**
      * Generates all the folders and files for the frontend of a component.
      * Uses the entity and page generator.
@@ -279,13 +306,14 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		generateFile( adminPath + "/" + noPrefixName + ".php", extendedComp.phpAdminContent)
 		generateFile( adminPath + "/controller.php", extendedComp.phpAdminControllerContent)
+		generateFile( sitePath + "/dispatcher.php", extendedComp.phpAdminDispatcherContent)
 		generateFile( adminPath + "/access.xml", extendedComp.xmlAccessContent)
 		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
 		
 		var tempSlug = slug + "s"
-		generateFile(adminPath +"/View/" + Slug.capitalize(tempSlug) + "/HtmlView.php", 
+		generateFile(adminPath + "/View/" + Slug.capitalize(tempSlug) + "/HtmlView.php", 
 		    extendedComp.phpAdminViewContent)
-		generateFile(adminPath +"/tmpl/" + tempSlug + "/default.php", 
+		generateFile(adminPath + "/tmpl/" + tempSlug + "/default.php", 
 		    extendedComp.phpAdminTemplateContent
 		)
 		
@@ -309,6 +337,30 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateUpdatePages(tempPageList, "admin")
 		
 	}
+	
+	def CharSequence phpAdminDispatcherContent(ExtendedComponent component) '''
+		<?php
+		/**
+		 *
+		 */
+		 
+		«Slug.generateRestrictedAccess»
+		
+		use Joomla\CMS\Dispatcher\Dispatcher;
+		
+		/**
+		 * Dispatcher class
+		 */
+		class «class_name»Dispatcher extends Dispatcher
+		{
+			/**
+			 * The extension namespace
+			 *
+			 * @var    string
+			 */
+			protected $namespace = '\\';
+		}
+	'''
 	
 	/**
 	 * Generates the update part of the component, this contains only the folder which is needed
@@ -519,7 +571,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		/**
 		 * «class_name» View
 		 */
-		class «class_name»View«class_name»s extends HtmlView
+		class HtmlView extends BaseHtmlView
 		{
 		
 		    /** Method to get display
