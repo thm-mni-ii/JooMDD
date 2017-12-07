@@ -72,7 +72,7 @@ public class ExtensionGeneratorHandler {
                 var ExtendedComponent tempext = new ExtendedComponentImpl(ext as Component)
                 extensionsgenerator = new ComponentGenerator(tempext, fsa,
                     path + Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/j3/new/" +
-                        Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/j3/",
+                        Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/",
                     path + Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/j3/update/")
             }
             Module: {
