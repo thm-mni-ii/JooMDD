@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JooMDD
 Bundle-Vendor: Institut für Informationswissenschaften, Technische Hochschule Mittelhessen
-Bundle-Version: 0.6.0
+Bundle-Version: 0.7.0
 Bundle-SymbolicName: de.thm.icampus.joomdd.ejsl.ui; singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: de.thm.icampus.joomdd.ejsl;visibility:=reexport,
