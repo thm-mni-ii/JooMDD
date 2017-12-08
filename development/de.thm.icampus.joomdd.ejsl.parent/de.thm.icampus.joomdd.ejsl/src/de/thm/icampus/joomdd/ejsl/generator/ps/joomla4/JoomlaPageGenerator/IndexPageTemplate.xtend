@@ -98,10 +98,10 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def void generateModel() {
 	    if (sec.compareTo("admin")==0) {
 	        generateFile(modelPath + "/" + pagename + ".php", generateAdminModel())
-	        generateFile(formPath + "filter_" + pagename + ".xml",  generateAdminModelForms())
+	        generateFile(formPath + "/filter_" + pagename + ".xml",  generateAdminModelForms())
 	    } else {
 	        generateFile(modelPath + "/" + pagename  + ".php", generateSiteModelShow)
-	        generateFile(formPath + "filter_" + pagename + ".xml", generateAdminModelForms)
+	        generateFile(formPath + "/filter_" + pagename + ".xml", generateAdminModelForms)
 	    } 
 	}
 	
