@@ -289,45 +289,44 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	'''
 
 	def CharSequence generateModelReferenceSave()'''
-		«FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
-		«IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
+	    «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences»
+	    «IF ref.upper.equalsIgnoreCase("*") || ref.upper.equalsIgnoreCase("-1")»
 	    public function set«ref.entity.name»($inputs)
 	    {
-		    «var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
-		    «FOR Attribute attr : referenceAttr»
-		    $«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
-		    «ENDFOR»
-		    $«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
-		    «FOR ExtendedAttribute toAttr: ref.extendedAttributes»
-		    $«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
-		    «ENDFOR»
-	
-		    if («Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")») {
-		        if (!empty($«ref.entity.name.toLowerCase»_id)) {
-		            foreach ($«ref.entity.name.toLowerCase»_id as $item) {
-		                if (intval($item) != 0) {
-		                    $mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
-		                    $mappingTableDelete->delete($item);
-		                }
-		            }
-		        }
-		        $mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
-		        for ($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++) {
-		            $dataToSave = array();
-		            «FOR Attribute attr: referenceAttr»
-		            $dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
-		            «ENDFOR»
-		            «FOR ExtendedAttribute toattr: ref.extendedAttributes»
-		            $dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
-		            «ENDFOR»
-		            $dataToSave["state"]=1;
-		            $mappingTable->save($dataToSave);
-		            $mappingTable->reset();
-		        }
-		    }
+	        «var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
+	        «FOR Attribute attr : referenceAttr»
+	        $«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
+	        «ENDFOR»
+	        $«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
+	        «FOR ExtendedAttribute toAttr: ref.extendedAttributes»
+	        $«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
+	        «ENDFOR»
+	        if («Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")») {
+	            if (!empty($«ref.entity.name.toLowerCase»_id)) {
+	                foreach ($«ref.entity.name.toLowerCase»_id as $item) {
+	                    if (intval($item) != 0) {
+	                        $mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
+	                        $mappingTableDelete->delete($item);
+	                    }
+	                }
+	            }
+	            $mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
+	            for ($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++) {
+	                $dataToSave = array();
+	                «FOR Attribute attr: referenceAttr»
+	                $dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
+	                «ENDFOR»
+	                «FOR ExtendedAttribute toattr: ref.extendedAttributes»
+	                $dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
+	                «ENDFOR»
+	                $dataToSave["state"]=1;
+	                $mappingTable->save($dataToSave);
+	                $mappingTable->reset();
+	            }
+	        }
 	    }
-		«ENDIF»
-		«ENDFOR»
+	    «ENDIF»
+	    «ENDFOR»
 	'''
 	
 	def generateAdminViewClass()'''
