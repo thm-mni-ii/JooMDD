@@ -180,7 +180,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <folder>View</folder>
 		        <folder>Model</folder>
 		        <folder>language</folder>
-		        <folder>Controller</folder>		       
+		        <folder>Controller</folder>
+		        <folder>tmpl</folder>
+		        <folder>forms</folder>
+		        <folder>Field</folder>
 		    </files>
 		    
 		    <languages>
@@ -220,6 +223,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <folder>language</folder>
 		            <folder>Controller</folder>
 		            <folder>Helper</folder>
+		            <folder>tmpl</folder>
+		            <folder>forms</folder>
+		            <folder>Field</folder>
 		        </files>
 		
 		        <languages>
@@ -587,7 +593,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		        $document = Factory::getDocument();
 		
-		        HTMLHelper::_('tabs.start');
+		        HTMLHelper::_('bootstrap.startTabSet');
 		
 		        $application = Factory::getApplication("administrator");
 		        $this->option = $application->scope;
@@ -606,8 +612,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    private function addToolBar()
 		    {
-		        JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . ': ' . Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'), 'logo');
-		        JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
+		        \JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . ': ' . Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'), 'logo');
+		        \JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
 		    }
 		
 		    /**

@@ -388,7 +388,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		            Joomla.submitform(task, document.getElementById('«dpage.name.toLowerCase»-form'));
 			    } else {
 
-			        if (task != '«dpage.name.toLowerCase».cancel' && document.formvalidator.isValid(document.id('«dpage.name.toLowerCase»-form'))) {
+			        if (task != '«dpage.name.toLowerCase».cancel' && document.formvalidator.isValid(document.getElementById('«dpage.name.toLowerCase»-form'))) {
 			            Joomla.submitform(task, document.getElementById('«dpage.name.toLowerCase»-form'));
 			        } else {
 			            alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
