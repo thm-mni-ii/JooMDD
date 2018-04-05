@@ -51,9 +51,9 @@ class FieldsGenerator {
 
 	public def CharSequence genRefrenceField() '''
 		<?php
-		«Slug.generateNamespace(com.name, "Administrator", "Field")»
-		
 		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateNamespace(com.name, "Administrator", "Field")»
 
 		«Slug.generateRestrictedAccess()»
 
@@ -230,9 +230,9 @@ class FieldsGenerator {
 	
 	public def CharSequence genFieldsForEntity()'''
 		<?php
-		«Slug.generateNamespace(com.name, "Administrator", "Field")»
-		
 		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateNamespace(com.name, "Administrator", "Field")»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -301,6 +301,8 @@ class FieldsGenerator {
 	static def CharSequence genFieldsForUserView(ExtendedComponent component)'''
 		<?php
 		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateNamespace(component.name, "Administrator", "Field")»
 		
 		«Slug.generateRestrictedAccess()»
 		

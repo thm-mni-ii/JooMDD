@@ -111,6 +111,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateAdminController()'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Administrator", "Controller")»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("ControllerForm", "Text", "ComponentHelper", "HelperMedia", "Route", "Factory"))»
@@ -229,11 +231,11 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateAdminModel()'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Administrator", "Model")»
+		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "Form", "Factory"))»
-		
-		require_once JPATH_COMPONENT . '/Helper/«com.name.toLowerCase».php';
+		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "Form", "Factory", "Joomla\\Component\\«com.name.toLowerCase»\\Administrator\\Helper\\«slug.capitalize(com.name.toLowerCase)»Helper"))»
 
 		/**
 		 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
@@ -346,6 +348,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	
 	def generateAdminViewClass()'''
 		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateNamespace(com.name, "Administrator", "View\\" + Slug.capitalize(dpage.name))»
 		
 		«Slug.generateRestrictedAccess()»
 		

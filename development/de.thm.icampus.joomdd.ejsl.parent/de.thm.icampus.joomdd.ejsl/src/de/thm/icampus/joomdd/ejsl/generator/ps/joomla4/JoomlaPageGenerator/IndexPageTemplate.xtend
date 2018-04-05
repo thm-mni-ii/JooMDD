@@ -127,9 +127,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''
 	
 	def CharSequence generateViewBackend() '''
-		«Slug.generateNamespace(com.name, "Administrator", "View\\" + ipage.entities.get(0).name)»
-	
 	    «generateFileDoc(ipage, com)»
+	    
+	    «Slug.generateNamespace(com.name, "Administrator", "View\\" + Slug.capitalize(ipage.entities.get(0).name) + "s")»
 	    
 	    «Slug.generateRestrictedAccess()»
 	    
@@ -173,9 +173,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''
 	
 	def CharSequence generateAdminModel()'''
-	    «Slug.generateNamespace(com.name, "Administrator", "Model")»
-	    
 	    «generateFileDoc(ipage, com)»
+	    
+	    «Slug.generateNamespace(com.name, "Administrator", "Model")»
 	    
 	    «Slug.generateRestrictedAccess()»
 
@@ -202,9 +202,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''
 	
 	def CharSequence generateAdminController()'''
-	    «Slug.generateNamespace(com.name, "Administrator", "Controller")»
-	
 	    «generateFileDoc(ipage, com)»
+	    
+	    «Slug.generateNamespace(com.name, "Administrator", "Controller")»
 	    
 	    «Slug.generateRestrictedAccess()»
 

@@ -22,6 +22,8 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		<?php
 		«Slug.generateFileDoc(extendeComp)»
 		
+		«Slug.generateNamespace(extendeComp.name, "Administrator", "Helper")»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("Text", "Factory", "Object"))»

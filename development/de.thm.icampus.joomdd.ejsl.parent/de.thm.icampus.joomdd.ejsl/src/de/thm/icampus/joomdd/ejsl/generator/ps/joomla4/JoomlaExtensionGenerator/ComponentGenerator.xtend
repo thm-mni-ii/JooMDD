@@ -414,9 +414,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpSiteControllerContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateNamespace(component.name, "Site", "Controller")»
-		
 		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateNamespace(component.name, "Site", "Controller")»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -479,9 +479,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminControllerContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateNamespace(component.name, "Administrator", "Controller")»
-		
 		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateNamespace(component.name, "Administrator", "Controller")»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -562,9 +562,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminViewContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name)»
-		
 		«Slug.generateFileDoc(component)»
+		
+		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name)»
 		
 		«Slug.generateRestrictedAccess()»
 		
