@@ -33,11 +33,11 @@ eJSLModel "Conference" {
                 }
                 references {
                     Reference {
-                        EntityAttribute = speaker
-                        *Entity = Participant
-                        *EntityReference = Participant.name
-                        lower = 1
-                        upper = 1
+ 						EntityAttribute = speaker
+	                    ReferencedEntity = Participant
+	                    ReferencedEntityAttribute = Participant.name
+	                    min = 1
+	                    max = 1
                     }
                 } 
             }
@@ -71,17 +71,17 @@ eJSLModel "Conference" {
                 references {
                     Reference {
                         EntityAttribute = talk
-                        *Entity = Talk
-                        *EntityReference = Talk.title
-                        lower = 0
-                        upper = 1
+                        ReferencedEntity = Talk
+                        ReferencedEntityAttribute = Talk.title
+                        min = 0
+                        max = 1
                     }
                     Reference {
                         EntityAttribute = room
-                        *Entity = Room
-                        *EntityReference = Room.roomname
-                        lower = 1
-                        upper = 1
+                        ReferencedEntity = Room
+                        ReferencedEntityAttribute = Room.roomname
+                        min = 1
+                        max = 1
                     }
                 }
             }
@@ -89,7 +89,7 @@ eJSLModel "Conference" {
         pages {
             IndexPage Participants {
                 *Entities Participant
-                table columns = Participant.name, Participant.address, Participant.affiliation
+                representation columns = Participant.name, Participant.address, Participant.affiliation
                 filters = Participant.name, Participant.affiliation links {
                     InternalcontextLink Details {
                         target = Participant linked attribute = Participant.name
@@ -108,7 +108,7 @@ eJSLModel "Conference" {
             }
             IndexPage Talks {
                 *Entities Talk
-                table columns = Talk.title, Talk.speaker
+                representation columns = Talk.title, Talk.speaker
                 filters = Talk.title, Talk.speaker links {
                     InternalcontextLink Details {
                         target = Talk linked attribute = Talk.title
@@ -127,7 +127,7 @@ eJSLModel "Conference" {
             }
             IndexPage Rooms {
                 *Entities Room
-                table columns = Room.roomname, Room.^position
+                representation columns = Room.roomname, Room.^position
                 filters = Room.roomname, Room.^position links {
                     InternalcontextLink Details {
                         target = Room linked attribute = Room.roomname
@@ -146,7 +146,7 @@ eJSLModel "Conference" {
             }
             IndexPage Programme {
                 *Entities Programme
-                table columns = Programme.room, Programme.talk, Programme.time, Programme.title
+                representation columns = Programme.room, Programme.talk, Programme.time, Programme.title
                 filters = Programme.room, Programme.talk, Programme.time, Programme.title links {
                     InternalcontextLink Details {
                         target = Session linked attribute = Programme.title

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse
 import de.thm.icampus.joomdd.ejsl.util.Config
 import de.thm.icampus.joomdd.ejsl.web.database.DatabaseLayer
 import de.thm.icampus.joomdd.ejsl.web.util.Helper
+import java.net.URLDecoder
 
 /**
  * @author Dieudonne Timma
@@ -136,7 +137,9 @@ class DownloadManager extends HttpServlet {
 		var String name = uri.replace("/download-manager", "");
 		userWorkspacePath += name;
 
-		var File out = new File(userWorkspacePath)
+		var String decodedUserWorkspacePath = URLDecoder.decode(userWorkspacePath, "UTF-8");
+
+		var File out = new File(decodedUserWorkspacePath)
 		if (out.file) {
 			resp.status = HttpServletResponse.SC_OK
 			resp.setHeader('Cache-Control', 'no-cache')
@@ -185,6 +188,7 @@ class DownloadManager extends HttpServlet {
 				}
 
 			} else {
+				println("The given path does not exists.")
 			}
 
 			resp.setHeader("Content-Lengt", length + "");
