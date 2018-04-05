@@ -189,9 +189,14 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    $item =  ArrayHelper::toObject($properties);
 
 		    if (property_exists($item, 'params')) {
-			    $registry = new Registry;
-			    $registry->loadString($item->params);
-			    $item->params = $registry->toArray();
+		        $registry = new Registry;
+		        if($item->params !== null) {
+		            $registry->loadString($item->params);
+		             $item->params = $registry->toArray();
+		        }
+		        else {
+		            $item->params = array();
+		        }
 		    }
 
 		    return $item;
@@ -240,7 +245,6 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		     * @since  1.6
 			 */
 		    protected $text_prefix = '«Slug.nameExtensionBind("com".toUpperCase, com.name.toUpperCase)»';
-		    «backHelp.generateAdminModelTableFunction()»
 		    «generateModelGetFormFunction()»
 		    «generateModelLoadFormDataFunction()»
 		    «generateModelGetItemFunction()»
@@ -438,7 +442,6 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    «frontHelp.generateSiteModelPopulatestate()»
 		    «generateModelGetItemFunction»
 		    «frontHelp.generateSiteModelCheckin()»
-		    «frontHelp.generateSiteModelgetTable»
 		    «frontHelp.generateSiteModelCheckout()»
 		    «frontHelp.generateSiteModelgetCategory()»
 		    «frontHelp.generateSiteModelpublish()»
@@ -463,7 +466,6 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		    «frontHelp.generateSiteModelPopulatestate()»
 		    «frontHelp.generateSiteModelCheckin()»
 		    «frontHelp.generateSiteModelCheckout()»
-		    «frontHelp.generateSiteModelgetTable()»
 		    «generateModelGetFormFunction()»
 		    «generateModelGetItemFunction()»
 		    «generateModelLoadFormDataFunction()»

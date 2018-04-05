@@ -312,7 +312,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile( adminPath + "/access.xml", extendedComp.xmlAccessContent)
 		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
 		
-		var tempSlug = slug + "s"
+		var tempSlug = slug
 		generateFile(adminPath + "/View/" + Slug.capitalize(tempSlug) + "/HtmlView.php", 
 		    extendedComp.phpAdminViewContent)
 		generateFile(adminPath + "/tmpl/" + tempSlug + "/default.php", 
@@ -562,7 +562,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminViewContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name + "s")»
+		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name)»
 		
 		«Slug.generateFileDoc(component)»
 		
