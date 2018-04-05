@@ -489,9 +489,13 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		    $item->setLanguage();
 		
 		    // Initialise the item parameters.
-		    $registry = new Registry;
-		    $registry->loadString($item->params);
-		    $item->params = $registry;
+		    if($item->params !== null) {
+		        $registry->loadString($item->params);
+		        $item->params = $registry->toArray();
+		    }
+		    else {
+		        $item->params = array();
+		    }
 
 		    $registry = new Registry;
 		    $registry->loadString($item->metadata);

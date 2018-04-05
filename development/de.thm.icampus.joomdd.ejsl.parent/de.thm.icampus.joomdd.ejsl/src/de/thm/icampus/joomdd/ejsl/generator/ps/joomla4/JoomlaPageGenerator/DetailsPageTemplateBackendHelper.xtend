@@ -155,24 +155,24 @@ class DetailsPageTemplateBackendHelper {
 		    }
 		    $canDo = «com.name.toFirstUpper»Helper::getActions();
 
-		    JToolBarHelper::title(Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»'), '«dpage.name.toLowerCase».png');
+		    \JToolBarHelper::title(Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»'), '«dpage.name.toLowerCase».png');
 
 		    // If not checked out, allow to save the item.
 		    if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
-		        JToolBarHelper::apply('«dpage.name.toLowerCase».apply', 'JTOOLBAR_APPLY');
-		        JToolBarHelper::save('«dpage.name.toLowerCase».save', 'JTOOLBAR_SAVE');
+		        \JToolBarHelper::apply('«dpage.name.toLowerCase».apply', 'JTOOLBAR_APPLY');
+		        \JToolBarHelper::save('«dpage.name.toLowerCase».save', 'JTOOLBAR_SAVE');
 		    }
 		    if (!$checkedOut && ($canDo->get('core.create'))) {
-		        JToolBarHelper::custom('«dpage.name.toLowerCase».save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+		        \JToolBarHelper::custom('«dpage.name.toLowerCase».save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
 		    }
 		    // If an existing item, can save to a copy.
 		    if (!$isNew && $canDo->get('core.create')) {
-		        JToolBarHelper::custom('«dpage.name.toLowerCase».save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+		        \JToolBarHelper::custom('«dpage.name.toLowerCase».save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
 		    }
 		    if (empty($this->item->id)) {
-		        JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CANCEL');
+		        \JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CANCEL');
 		    } else {
-		        JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CLOSE');
+		        \JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CLOSE');
 		    }
 		}
 	'''
@@ -189,7 +189,7 @@ class DetailsPageTemplateBackendHelper {
 		    $this->form = $this->get('Form');
 
 		    if (count($errors = $this->get('Errors'))) {
-			    throw new Exception(implode("\n", $errors));
+			    throw new \Exception(implode("\n", $errors));
 			}
 
 		    $this->addToolbar();

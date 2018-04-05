@@ -50,7 +50,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		public static function addSubmenu($vName = '')
 		{
 		    «FOR ExtendedPageReference pg : extendeComp.backEndExtendedPagerefence.filter[t| t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage]»
-		    JHtmlSidebar::addEntry(
+		    \JHtmlSidebar::addEntry(
 		        Text::_('«Slug.nameExtensionBind("com",extendeComp.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»'),
 		        'index.php?option=«Slug.nameExtensionBind("com",extendeComp.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»',
 		        $vName == '«pg.extendedPage.name.toLowerCase»');
