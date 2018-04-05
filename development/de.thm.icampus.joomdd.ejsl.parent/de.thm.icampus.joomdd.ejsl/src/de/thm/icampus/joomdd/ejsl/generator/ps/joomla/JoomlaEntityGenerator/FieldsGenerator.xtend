@@ -27,7 +27,7 @@ class FieldsGenerator {
 		mainRef = ref
 		com = component
 		entFrom = from
-		nameField = from.name + "To" + ref.entity.name
+		nameField = from.name + "to" + ref.entity.name
 	}
 
 	public new(ExtendedComponent component, ExtendedEntity from) {
