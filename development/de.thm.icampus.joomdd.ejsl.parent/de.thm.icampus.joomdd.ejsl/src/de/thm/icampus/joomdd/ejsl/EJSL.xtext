@@ -133,10 +133,10 @@ Reference returns Reference:
 	'Reference' (preserve?='@preserve')? 
 	'{'
 		'EntityAttribute =' attribute+=[Attribute|QualifiedName] (',' attribute+=[Attribute|QualifiedName])*
-		'*Entity =' entity=[Entity|QualifiedName]
-		'*EntityReference =' (attributerefereced +=[Attribute|QualifiedName]| id?='ID') (attributerefereced +=[Attribute|QualifiedName])*
-		'lower =' lower=NUMBER
-		'upper =' upper=NUMBER 
+		'ReferencedEntity =' entity=[Entity|QualifiedName]
+		'ReferencedEntityAttribute =' (attributerefereced +=[Attribute|QualifiedName]| id?='ID') (attributerefereced +=[Attribute|QualifiedName])*
+		'min =' lower=NUMBER
+		'max =' upper=NUMBER 
 	'}'
 ;
 
@@ -172,7 +172,7 @@ IndexPage returns IndexPage:
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
 		('pageactions' '{' (pageactions+=PageAction)* '}')?
-		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
+		('representation columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
 		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')? 
 	'}'

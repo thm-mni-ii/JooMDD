@@ -77,9 +77,10 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	         * Proxy for getModel.
 	         * @since	1.6
 	         */
-	        public function &getModel($name = '«ipage.name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
+	        public function getModel($name = '«ipage.name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
 	        {
 	            $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+
 	            return $model;
 	        }
 	    }
