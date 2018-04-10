@@ -320,7 +320,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		)
 		
 		var de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.ComponentHelperGenerator help = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.ComponentHelperGenerator(extendedComp)
-		generateFile( adminPath + "/Helper/" + extendedComp.name.toLowerCase + ".php", 
+		generateFile( adminPath + "/Helper/" + Slug.capitalize(extendedComp.name.toLowerCase) + "Helper.php", 
 		    help.generate
 		)
 
@@ -516,7 +516,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateUses(newArrayList("ModelAdmin"))»
 		
-		class «component.name.toFirstUpper»Model«pageref.name.toFirstUpper» extends AdminModel
+		class «pageref.name.toFirstUpper»Model extends AdminModel
 		{
 		}
 	'''

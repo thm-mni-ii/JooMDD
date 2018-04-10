@@ -81,28 +81,28 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	
 	def void generateController() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(controllerPath + "/" + pagename + ".php", generateAdminController())
+	        generateFile(controllerPath + "/" + Slug.capitalize(pagename) + "Controller.php", generateAdminController())
 	    } else {
-	        generateFile(controllerPath + "/" + pagename +"edit" +".php", generateSiteController(true))
-	        generateFile(controllerPath + "/" + pagename+ ".php", generateSiteController(false))
+	        generateFile(controllerPath + "/" + Slug.capitalize(pagename) +"edit" +"Controller.php", generateSiteController(true))
+	        generateFile(controllerPath + "/" + Slug.capitalize(pagename)+ "Controller.php", generateSiteController(false))
 	    }
 	}
 	
 	def void generateModel() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(modelPath + "/" + pagename + ".php", generateAdminModel())
+	        generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateAdminModel())
 	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 	    } else {
 	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 		 	
 		 	if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {	
-		 	    generateFile(modelPath + "/" + pagename + "edit" + ".php", generateSiteModelEdit(pagename+"edit"))
-		 	    generateFile(modelPath + "/" + pagename  + ".php", generateSiteModelShow)		  
+		 	    generateFile(modelPath + "/" + pagename.toFirstUpper + "edit" + "Model.php", generateSiteModelEdit(pagename+"edit"))
+		 	    generateFile(modelPath + "/" + pagename.toFirstUpper  + "Model.php", generateSiteModelShow)		  
 		 	} else {
 		 	    if (!dpage.extendedEditedFieldsList.isEmpty) {
-		 	        generateFile(modelPath + "/" + pagename+ ".php", generateSiteModelEdit(pagename))
+		 	        generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateSiteModelEdit(pagename))
 		 	    } else {
-		 	        generateFile(modelPath + "/" + pagename  + ".php", generateSiteModelShow)		  
+		 	        generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateSiteModelShow)		  
 		 	    }
 		 	}
 		}
@@ -115,16 +115,16 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ControllerForm", "Text", "ComponentHelper", "HelperMedia", "Route", "Factory"))»
+		«Slug.generateUses(newArrayList("ControllerForm", "Text", "ComponentHelper", "HelperMedia", "Route", "Factory", "MVCFactoryInterface"))»
 
 		jimport('joomla.filesystem.file');
 		/**
 		 * «dpage.name.toFirstUpper» controller class.
 		 * @generated
 		 */
-		class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends FormController
+		class «dpage.name.toFirstUpper»Controller extends FormController
 		{
-		    public function __construct()
+		    public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
 		    {
 		        «var IndexPage inPage = Slug.getPageForAll(dpage, com) »
 		        «IF inPage !== null»
@@ -132,7 +132,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		        «ELSE»
 		        $this->view_list = '<Put the View Name>';
 		        «ENDIF»
-		        parent::__construct();
+		        parent::__construct($config, $factory, $app, $input);
 		    }
 		    «IF dpage.haveFiletoLoad»
 		    «backHelp.genAdminControllerSave()»
@@ -235,18 +235,20 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "Form", "Factory", "Joomla\\Component\\«com.name.toLowerCase»\\Administrator\\Helper\\«slug.capitalize(com.name.toLowerCase)»Helper"))»
+		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "Form", "Factory"))»
+		use Joomla\Component\«com.name.toLowerCase»\Administrator\Helper\«Slug.capitalize(com.name.toLowerCase)»Helper;
 
 		/**
 		 * The Model To schow the Details of a «dpage.name.toFirstUpper»  
 		 */
-		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends AdminModel
+		class «dpage.name.toFirstUpper»Model extends AdminModel
 		{
 		    /**
 		     * @var    string  The prefix to use with controller messages.
 		     * @since  1.6
 			 */
 		    protected $text_prefix = '«Slug.nameExtensionBind("com".toUpperCase, com.name.toUpperCase)»';
+		    «backHelp.generateAdminModelTableFunction()»
 		    «generateModelGetFormFunction()»
 		    «generateModelLoadFormDataFunction()»
 		    «generateModelGetItemFunction()»
@@ -481,6 +483,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	
 	def CharSequence generateSiteView(Boolean isedit, String editPageName)'''
 		«generateFileDoc(dpage,com)»
+		
+		«Slug.generateNamespace(com.name, "Site", "View\\" + Slug.capitalize(dpage.name))»
 		
 		«Slug.generateRestrictedAccess()»
 		

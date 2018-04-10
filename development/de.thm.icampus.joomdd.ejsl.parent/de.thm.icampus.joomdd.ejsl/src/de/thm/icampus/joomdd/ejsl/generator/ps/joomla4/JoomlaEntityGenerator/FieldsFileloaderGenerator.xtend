@@ -39,7 +39,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class JFormFieldFileloader extends FormField
+		class Fileloaderfield extends FormField
 		{
 		    protected function getInput()
 		    {
@@ -81,7 +81,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class JFormFieldImageloader extends FormField
+		class ImageloaderField extends FormField
 		{
 		    protected function getInput()
 		    {

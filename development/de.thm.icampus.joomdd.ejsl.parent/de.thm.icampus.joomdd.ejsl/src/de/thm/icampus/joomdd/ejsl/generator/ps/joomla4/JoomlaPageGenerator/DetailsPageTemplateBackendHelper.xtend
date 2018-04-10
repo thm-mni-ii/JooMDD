@@ -122,6 +122,22 @@ class DetailsPageTemplateBackendHelper {
 		}
 	'''
 	
+	def generateAdminModelTableFunction()'''
+		/**
+		 * Returns a reference to the a Table object, always creating it.
+		 *
+		 * @param	type	The table type to instantiate
+		 * @param	string	A prefix for the table class name. Optional.
+		 * @param	array	Configuration array for model. Optional.
+		 * @return	Table	A database object
+		 * @since	1.6
+		 */
+		public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = 'Administrator', $config = array())
+		{
+		    return parent::getTable($type, $prefix, $config);
+		}
+	'''
+	
 	def generateAdminViewAddToolbar() '''
 		/**
 		 * Add the page title and toolbar.
@@ -137,7 +153,7 @@ class DetailsPageTemplateBackendHelper {
 		    } else {
 		        $checkedOut = false;
 		    }
-		    $canDo = «com.name.toFirstUpper»Helper::getActions();
+		    $canDo = \Joomla\Component\«com.name.toLowerCase»\Administrator\Helper\«com.name.toFirstUpper»Helper::getActions();
 
 		    \JToolBarHelper::title(Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»'), '«dpage.name.toLowerCase».png');
 

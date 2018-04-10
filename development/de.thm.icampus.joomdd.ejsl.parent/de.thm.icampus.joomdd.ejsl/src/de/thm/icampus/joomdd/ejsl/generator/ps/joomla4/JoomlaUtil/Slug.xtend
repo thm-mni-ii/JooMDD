@@ -811,6 +811,8 @@ public class Slug  {
 				
 				case 'Html' : { "use Joomla\\CMS\\HTML\\HTMLHelper;" }
 				
+				case 'MVCFactoryInterface' : { "use Joomla\\CMS\\MVC\\Factory\\MVCFactoryInterface;"}
+				
 				default: { "use " + className + ";"}
 			}»
 		«ENDFOR»

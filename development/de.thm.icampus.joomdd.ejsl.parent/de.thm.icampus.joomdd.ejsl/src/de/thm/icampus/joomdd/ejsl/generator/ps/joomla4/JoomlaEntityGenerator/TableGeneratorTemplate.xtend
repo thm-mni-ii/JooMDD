@@ -35,7 +35,7 @@ class TableGeneratorTemplate {
 		/**
 		 * «tName.toFirstUpper» Table class
 		 */
-		class «com.name.toFirstUpper»Table«tName.toFirstUpper» extends Table
+		class «tName.toFirstUpper»Table extends Table
 		{
 		    public $foreigntableOption = array();
 		
@@ -281,6 +281,6 @@ class TableGeneratorTemplate {
 	'''
 	
 	def dogenerate(String path, IFileSystemAccess access) {
-		access.generateFile(path + "/" + this.ent.name + ".php", genClassTable)
+		access.generateFile(path + "/" + this.ent.name.toFirstUpper + "Table.php", genClassTable)
 	}
 }

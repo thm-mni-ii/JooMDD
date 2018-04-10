@@ -186,7 +186,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	 */
 	def CharSequence xmlAdminFields(ExtendedDynamicPage page, ExtendedComponent component, String name) '''
 	<?xml version="1.0" encoding="utf-8"?>
-	<form>
+	<form addfieldprefix="Joomla\Component\«component.name»\Administrator\Field">
 	    <field name="«page.extendedEntityList.get(0).primaryKey.name»" type="hidden" default="0" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID"
 	        readonly="true" class="readonly"
 	        description="JGLOBAL_FIELD_ID_DESC" /> 

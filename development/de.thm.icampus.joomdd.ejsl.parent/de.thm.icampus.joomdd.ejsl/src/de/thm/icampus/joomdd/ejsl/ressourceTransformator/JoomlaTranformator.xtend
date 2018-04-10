@@ -138,6 +138,7 @@ class JoomlaTranformator {
 			var StandardTypes type_checked_out = EJSLFactory.eINSTANCE.createStandardTypes
 			type_checked_out.type =  StandardTypeKinds.INTEGER
 			type_checked_out.notnull = true
+			type_checked_out.^default = "0"
 			checked_out.type = type_checked_out
 			ent.attributes.add(checked_out)
 		}	
@@ -147,6 +148,7 @@ class JoomlaTranformator {
 			var StandardTypes type_created_by = EJSLFactory.eINSTANCE.createStandardTypes
 			type_created_by.type =  StandardTypeKinds.INTEGER
 			type_created_by.notnull = true
+			type_created_by.^default = "0"
 			created_by.type = type_created_by
 			ent.attributes.add(created_by)
 		}

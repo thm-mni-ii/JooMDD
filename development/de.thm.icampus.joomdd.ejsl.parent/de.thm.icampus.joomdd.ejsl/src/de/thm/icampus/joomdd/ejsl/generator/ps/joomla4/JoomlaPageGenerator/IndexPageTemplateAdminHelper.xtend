@@ -51,7 +51,7 @@ class IndexPageTemplateAdminHelper {
 	 * Overwrite the  getModel.
 	 * @since	1.6
 	 */
-	public function getModel($name = '«details.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
+	public function getModel($name = '«details.toFirstUpper»', $prefix = 'Administrator', $config = array())
 	{
 	    $model = parent::getModel($name, $prefix, array('ignore_request' => true));
 	    return $model;
@@ -86,7 +86,7 @@ class IndexPageTemplateAdminHelper {
     	 * @since    1.6
     	 * @generated
     	 */
-    	public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
+    	public function __construct($config = array())
     	{
     	    if (empty($config['filter_fields'])) {
     	        $config['filter_fields'] = array(
@@ -99,7 +99,7 @@ class IndexPageTemplateAdminHelper {
     	            ,'«attr.name.toLowerCase»', '«attr.entity.name.toLowerCase».«attr.name.toLowerCase»'
     	            «ENDFOR»
     	        );}
-    	    parent::__construct($config, $factory, $app, $input);
+    	    parent::__construct($config);
     	}
 	'''
 	
@@ -262,7 +262,7 @@ class IndexPageTemplateAdminHelper {
 	        if (count($errors = $this->get('Errors'))) {
 	            throw new \Exception(implode("\n", $errors));
 	        }
-	         «com.name.toFirstUpper»Helper::addSubmenu('«indexpage.name.toLowerCase»');
+	        \Joomla\Component\«com.name.toLowerCase»\Administrator\Helper\«com.name.toFirstUpper»Helper::addSubmenu('«indexpage.name.toLowerCase»');
 	        $this->addToolbar();
 	        $this->sidebar = \JHtmlSidebar::render();
 	        parent::display($tpl);
@@ -278,15 +278,13 @@ class IndexPageTemplateAdminHelper {
 	     */
 	    protected function addToolbar()
 	    {
-	        require_once JPATH_COMPONENT . '/Helper/«com.name.toLowerCase».php';
-
 	        $state = $this->get('State');
-	        $canDo = «com.name.toFirstUpper»Helper::getActions($state->get('filter.category_id'));
+	        $canDo = \Joomla\Component\«com.name.toLowerCase»\Administrator\Helper\«com.name.toFirstUpper»Helper::getActions($state->get('filter.category_id'));
 
 	        \JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«indexpage.name.toUpperCase»'));
 
 	        //Check if the form exists before showing the add/edit buttons
-	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/View/«  details.toLowerCase»';
+	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/View/«  details.toLowerCase.toFirstUpper»';
 	        if (file_exists($formPath)) {
 	            if ($canDo->get('core.create')) {
 	                \JToolBarHelper::addNew('«details.toLowerCase».add', 'JTOOLBAR_NEW');

@@ -10,6 +10,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.Fie
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsCardinalityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsFileloaderGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.TableGeneratorTemplate
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 
 /**
  * This class represents the interface between the JooMDD generator and the Joomla-specific entity generator templates. 
@@ -43,7 +44,7 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 	private def generateFields(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(comp, ent)
-			generateFile( path + "Field/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
+			generateFile( path + "Field/" + Slug.capitalize(ent.name.toLowerCase) + "Field.php",fieldEntity.genFieldsForEntity)
 			for(ExtendedReference ref: ent.allExtendedReferences){
 				switch ref.upper{
 				    case "1":{
@@ -57,18 +58,18 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 				}
 			}
 		}
-		generateFile(path + "Field/" + comp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(comp) )
+		generateFile(path + "Field/" + comp.name.toLowerCase.toFirstUpper+"userField.php", FieldsGenerator.genFieldsForUserView(comp) )
 		if(comp.hasFileToload) {
 		    var fileloader = new FieldsFileloaderGenerator(comp)
-		    generateFile(path + "Field/" + "fileloader.php",  fileloader.generateFileloader)
-		    generateFile(path + "Field/" + "imageloader.php", fileloader.generateImageloader )
+		    generateFile(path + "Field/" + "FileloaderField.php",  fileloader.generateFileloader)
+		    generateFile(path + "Field/" + "ImageloaderField.php", fileloader.generateImageloader )
 		}
 		
 	}
 	private def generateTable(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var TableGeneratorTemplate table = new TableGeneratorTemplate(comp, ent)
-			generateFile(path + "Table/"+ent.name.toLowerCase+".php", table.genClassTable)
+			generateFile(path + "Table/"+ent.name.toLowerCase.toFirstUpper+"Table.php", table.genClassTable)
 		}
 	}
 	

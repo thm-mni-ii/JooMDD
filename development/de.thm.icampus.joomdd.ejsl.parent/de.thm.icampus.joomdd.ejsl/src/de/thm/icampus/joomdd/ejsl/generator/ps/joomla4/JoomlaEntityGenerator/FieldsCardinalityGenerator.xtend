@@ -34,7 +34,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		
 		«Slug.generateUses(newArrayList("Text", "Uri", "FormField", "Factory"))»
 		
-		class JFormField«nameField.toFirstUpper» extends FormField
+		class «nameField.toFirstUpper»Field extends FormField
 		{
 		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 		        "mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",

@@ -59,7 +59,7 @@ class FieldsGenerator {
 
 		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
 
-		class JFormField«nameField.toFirstUpper» extends FormField
+		class «nameField.toFirstUpper»Field extends FormField
 		{
 		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 		        "foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
@@ -240,7 +240,7 @@ class FieldsGenerator {
 		
 		FormHelper::loadFieldClass('list');
 		
-		class JFormField«entFrom.name.toFirstLower» extends JFormFieldList{
+		class «entFrom.name.toFirstUpper»Field extends \JFormFieldList{
 		    protected $table = "«Slug.databaseName(com.name, entFrom.name)»";
 		    
 		    «genGetOptionsForEntity»
@@ -310,7 +310,8 @@ class FieldsGenerator {
 		
 		FormHelper::loadFieldClass('list');
 		
-		class JFormFieldComponentuser extends JFormFieldList{
+		class ComponentuserField extends \JFormFieldList
+		{
 		    
 		    protected function getOptions()
 		    {
@@ -330,14 +331,14 @@ class FieldsGenerator {
 	'''
 	def public dogenerate(String path, IFileSystemAccess access) {
 		if(this.mainRef !== null)
-			access.generateFile(path+ "/"+getnameField +".php", genRefrenceField)
-		var File fieldEntity = new File (path+ "/"+entFrom.name +".php")
+			access.generateFile(path+ "/"+Slug.capitalize(getnameField) +"Field.php", genRefrenceField)
+		var File fieldEntity = new File (path+ "/"+Slug.capitalize(entFrom.name) +"Field.php")
 		if(!fieldEntity.exists){
-			access.generateFile(path+ "/"+entFrom.name +".php", genFieldsForEntity)
+			access.generateFile(path+ "/"+Slug.capitalize(entFrom.name) +"Field.php", genFieldsForEntity)
 		}
-		var File fieldUser = new File (path+ "/componentuser.php")
+		var File fieldUser = new File (path+ "/ComponentuserField.php")
 		if(!fieldUser.exists){
-			access.generateFile(path+ "/componentuser.php", FieldsGenerator.genFieldsForUserView(com))
+			access.generateFile(path+ "/ComponentuserField.php", FieldsGenerator.genFieldsForUserView(com))
 		}
 	}
 
