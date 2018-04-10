@@ -14,17 +14,17 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 
 		editor = xtext_ace.createEditor({
 			baseUrl: baseUrl ,
-			syntaxDefinition: "xtext-resources/generated/mode-eJSL",
+			syntaxDefinition: "js/folding-mode-eJSL",
 			theme: "ace/theme/github",
 			resourceId: "/src/" + resourceID
 		});
-		
+				
 		$("#modelname").text(resourceID)
 		editor.setOptions({
 			fontSize: "14px",
 			minLines: 25
         });
-         
+                 
         // Override the generate function to include custom request parameters.
         var originInitServerData = editor.xtextServices.generatorService._initServerData;
         editor.xtextServices.generatorService._initServerData = function(serverData, editorContext, params) {
