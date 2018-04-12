@@ -25,7 +25,7 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 	
 	public def generateJoomlaComponenteElements(ExtendedComponent comp, String path, boolean isBackendSection){
 		 
-		generateFields( comp,  path)
+		generateFields( comp,  path, isBackendSection)
 		if(isBackendSection) {
 		    generateTable( comp,  path)
 		    generateSQL( comp,  path)
@@ -41,10 +41,15 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''',entgen.generateUpdateScript(comp.name))
 	}
 	
-	private def generateFields(ExtendedComponent comp, String path){
+	private def generateFields(ExtendedComponent comp, String path, boolean isBackendSection){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(comp, ent)
-			generateFile( path + "Field/" + Slug.capitalize(ent.name.toLowerCase) + "Field.php",fieldEntity.genFieldsForEntity)
+			if (isBackendSection) {
+				generateFile( path + "Field/" + Slug.capitalize(ent.name.toLowerCase) + "Field.php",fieldEntity.genAdministratorFieldsForEntity)
+			}
+			else {
+				generateFile( path + "Field/" + Slug.capitalize(ent.name.toLowerCase) + "Field.php",fieldEntity.genSiteFieldsForEntity)
+			}
 			for(ExtendedReference ref: ent.allExtendedReferences){
 				switch ref.upper{
 				    case "1":{
@@ -58,7 +63,10 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 				}
 			}
 		}
-		generateFile(path + "Field/" + comp.name.toLowerCase.toFirstUpper+"userField.php", FieldsGenerator.genFieldsForUserView(comp) )
+		/*if (isBackendSection)
+			generateFile(path + "Field/" + comp.name.toLowerCase.toFirstUpper+"userField.php", FieldsGenerator.genAdministratorFieldsForUserView(comp) )
+		else
+			generateFile(path + "Field/" + comp.name.toLowerCase.toFirstUpper+"userField.php", FieldsGenerator.genSiteFieldsForUserView(comp) )*/
 		if(comp.hasFileToload) {
 		    var fileloader = new FieldsFileloaderGenerator(comp)
 		    generateFile(path + "Field/" + "FileloaderField.php",  fileloader.generateFileloader)

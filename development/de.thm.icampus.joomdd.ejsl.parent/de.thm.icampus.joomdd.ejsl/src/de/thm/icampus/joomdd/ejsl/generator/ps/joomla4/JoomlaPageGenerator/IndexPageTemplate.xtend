@@ -87,7 +87,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		     * Proxy for getModel.
 		     * @since	1.6
 		     */
-		    public function &getModel($name = '«ipage.name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
+		    public function &getModel($name = '«ipage.name.toFirstUpper»', $prefix = 'Site', $config = array())
 		    {
 		        $model = parent::getModel($name, $prefix, array('ignore_request' => true));
 		        return $model;
@@ -101,7 +101,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 			generateFile(formPath + "/filter_" + pagename + ".xml", generateAdminModelForms())
 		} else {
 			generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateSiteModelShow)
-			generateFile(formPath + "/filter_" + pagename + ".xml", generateAdminModelForms)
+			generateFile(formPath + "/filter_" + pagename + ".xml", generateSiteModelForms)
 		}
 	}
 
@@ -207,11 +207,11 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateAdminController() '''
 		«generateFileDoc(ipage, com)»
 		
-		c
+		«Slug.generateNamespace(com.name, "Administrator", "Controller")»
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ControllerAdmin", "ResponseJson", "Factory"))»
+		«Slug.generateUses(newArrayList("ControllerAdmin", "MVCFactoryInterface", "ResponseJson", "Factory"))»
 		
 		/**
 		 * «ipage.name.toFirstUpper» list controller .
@@ -251,6 +251,55 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateAdminModelForms() '''
 		<?xml version="1.0" encoding="utf-8"?>
 		    <form addfieldprefix="Joomla\Component\«com.name»\Administrator\Field">
+		        <fields name="filter">
+		            <field
+		                name="search"
+		                type="text"
+		                label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_DESC"
+		                description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_DESC"
+		                hint="JSEARCH_FILTER"
+		            />
+		            <field
+		                name="state"
+		                type="status"
+		                label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED"
+		                description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED_DESC"
+		                onchange="this.form.submit();">
+		                <option value="">JOPTION_SELECT_PUBLISHED</option>
+		            </field>
+		            <field
+		                name="created_by"
+		                type="componentuser"
+		                label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
+		                description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
+		                entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
+		                onchange="this.form.submit();">
+		                <option value="">JOPTION_SELECT_CREATED_BY</option>
+		            </field>
+		            «FOR ExtendedAttribute attr : ipage.extendFiltersList»
+		            	<field
+		            	    name="«attr.name»"
+		            	    type="«ipage.extendedEntityList.get(0).name.toLowerCase»"
+		            	    label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+		            	    description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+		            	    valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
+		            	    textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
+		            	    onchange="this.form.submit();">
+		            	    <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
+		            	</field>
+		            «ENDFOR»
+		        </fields>
+		        <fields name="list">
+		            <field name="limit" id="limit" class="input-medium" default="25" onchange="this.form.submit();" type="limitbox" >
+		            <option value="">JOPTION_SELECT_LIMIT</option>
+		        </field>
+		    </fields>
+		</form>
+	'''
+	
+	def CharSequence generateSiteModelForms() '''
+		<?xml version="1.0" encoding="utf-8"?>
+		    <form addfieldprefix="Joomla\Component\«com.name»\Site\Field">
 		        <fields name="filter">
 		            <field
 		                name="search"

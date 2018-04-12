@@ -39,7 +39,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class Fileloaderfield extends FormField
+		class FileloaderField extends FormField
 		{
 		    protected function getInput()
 		    {

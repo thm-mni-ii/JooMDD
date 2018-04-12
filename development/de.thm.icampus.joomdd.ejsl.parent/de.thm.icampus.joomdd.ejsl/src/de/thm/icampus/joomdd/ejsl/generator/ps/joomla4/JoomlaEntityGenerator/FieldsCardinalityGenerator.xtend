@@ -24,9 +24,59 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		foreignReference = (mainRef.entity.references.filter[t | t.entity.name != entFrom.instance.name]).get(0)
 	}
 	
-	public override CharSequence genRefrenceField()'''
+	public override CharSequence genAdministratorRefrenceField()'''
 		<?php
 		«Slug.generateNamespace(com.name, "Administrator", "Field")»
+		
+		«Slug.generateFileDoc(com)»
+		
+		«Slug.generateRestrictedAccess()»
+		
+		«Slug.generateUses(newArrayList("Text", "Uri", "FormField", "Factory"))»
+		
+		class «nameField.toFirstUpper»Field extends FormField
+		{
+		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
+		        "mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
+		        "foreignTable"=> "«Slug.databaseName(com.name,foreignReference.entity.name)»");
+		    protected $keysAndForeignKeys= array( "table" => array(
+		        «FOR attr : mainRef.extendedAttributes»
+		        «IF attr != mainRef.extendedAttributes.last»
+		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
+		        «ELSE»
+		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
+		        «ENDIF»
+		        «ENDFOR»
+		    ),"foreignTable" => array(
+		        «FOR attr : foreignReference.attribute»
+		        «IF attr != foreignReference.attribute.last»
+		        "«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»",
+		        «ELSE»
+		        "«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»"
+                «ENDIF»
+                «ENDFOR»
+		    ));
+		
+		    «genGetInput»
+		
+		    «genGetAllData»
+		
+		    «genAttributValue»
+		
+		    «genGetData_item»
+		
+		    «getAllReferenceData»
+		
+		    «genGenerateJsonValue»
+		
+		    «gengenerateStringValue»
+		
+		}
+	'''
+	
+	public override CharSequence genSiteRefrenceField()'''
+		<?php
+		«Slug.generateNamespace(com.name, "Site", "Field")»
 		
 		«Slug.generateFileDoc(com)»
 		

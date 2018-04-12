@@ -181,6 +181,8 @@ eJSLModel "Conference" {
                     }
                     Language en-GB {
                     }
+                    Language system en-GB {
+                    }
                 }
                 sections {
                     Frontend section {

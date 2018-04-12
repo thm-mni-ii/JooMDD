@@ -113,6 +113,8 @@ eJSLModel "name of the model" {
 	   			}
 				Language en-GB {
 				}
+				Language system en-GB {
+                }
 			}
 			sections {
 				Frontend section{ 
@@ -197,9 +199,11 @@ eJSLModel "name of the model" {
 			}
 			languages {
 				Language de-DE {
-	   			}
+				}
 				Language en-GB {
 				}
+				Language system en-GB {
+                }
 			}
 				sections {
 				Frontend section {

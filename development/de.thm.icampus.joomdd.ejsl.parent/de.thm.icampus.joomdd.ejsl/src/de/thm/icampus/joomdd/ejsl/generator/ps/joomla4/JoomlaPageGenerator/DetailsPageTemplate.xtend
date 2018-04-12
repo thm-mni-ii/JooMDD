@@ -93,7 +93,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	        generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateAdminModel())
 	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 	    } else {
-	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlSiteFields(dpage,com,com.name))
 		 	
 		 	if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {	
 		 	    generateFile(modelPath + "/" + pagename.toFirstUpper + "edit" + "Model.php", generateSiteModelEdit(pagename+"edit"))

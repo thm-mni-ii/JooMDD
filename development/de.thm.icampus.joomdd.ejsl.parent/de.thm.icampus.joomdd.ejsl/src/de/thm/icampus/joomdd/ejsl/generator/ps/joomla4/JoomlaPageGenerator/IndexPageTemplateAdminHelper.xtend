@@ -329,7 +329,8 @@ class IndexPageTemplateAdminHelper {
 
 	def private CharSequence genAdminViewLayoutFilters()'''
 	    <?php
-	        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+	    // Search tools bar
+	    echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	    ?>
 	'''
     
@@ -338,30 +339,37 @@ class IndexPageTemplateAdminHelper {
             <thead>
                 <tr>
                     <?php if (isset($this->items[0]->ordering)): ?>
-                    <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo HTMLHelper::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+                    <th style="width:1%" class="nowrap text-center d-none d-md-table-cell">
+                        <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
                     </th>
                     <?php endif; ?>
-                    <th width="1%" class="hidden-phone">
-                        <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
-                    </th>
+                    <th style="width:1%" class="text-center">
+                        <?php echo JHtml::_('grid.checkall'); ?>
+                   	</th>
                     <?php if (isset($this->items[0]->state)): ?>
-                    <th width="1%" class="nowrap center">
-                        <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                    <th style="width:1%" class="nowrap text-center">
+                        <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                     «FOR ExtendedAttribute attr : column»
-                    <th class='left'>
-                        <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+                    <th class='text-left'>
+                        <?php echo JHtml::_('searchtools.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
                     </th>
                     «ENDFOR»
                     <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
-                    <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
+                    <th style="width:5%" class="nowrap d-none d-md-table-cell text-center">
+                        <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                 </tr>
             </thead>
+            <tfoot>
+                <tr>
+                    <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
+                    	<?php echo $this->pagination->getListFooter(); ?>
+                	</td>
+            	</tr>
+            </tfoot>
             <tbody>
                 <?php foreach ($this->items as $i => $item) :
                 $ordering   = ($listOrder == 'a.ordering');
@@ -372,7 +380,7 @@ class IndexPageTemplateAdminHelper {
                 ?>
                 <tr class="row<?php echo $i % 2; ?>">
                     <?php if (isset($this->items[0]->ordering)): ?>
-                    <td class="order nowrap center hidden-phone">
+                    <td class="order nowrap text-center d-none d-md-table-cell">
                         <?php if ($canChange) :
                         $disableClassName = '';
                         $disabledLabel    = '';
@@ -381,62 +389,61 @@ class IndexPageTemplateAdminHelper {
                         $disableClassName = 'inactive tip-top';
                         endif; ?>
                         <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
-                            <i class="icon-menu"></i>
+                            <span class="icon-menu" aria-hidden="true"></span>
                         </span>
                         <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
                         <?php else : ?>
                         <span class="sortable-handler inactive" >
-                            <i class="icon-menu"></i>
+                            <span class="icon-menu" aria-hidden="true"></span>
                         </span>
                         <?php endif; ?>
                     </td>
                     <?php endif; ?>
-                    <td class="center hidden-phone">
-                        <?php echo HTMLHelper::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
+                    <td class="text-center">
+                        <?php echo JHtml::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
                     </td>
                     <?php if (isset($this->items[0]->state)): ?>
-                    <td class="center">
-                        <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
+                    <td class="text-center">
+                            <div class="btn-group">
+                                <?php echo JHtml::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
+                            </div>
                     </td>
                     <?php endif; ?>
                     «genAdminModelAttributeReference(column, indexpage, com)»
                     <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
-                    <td class="center hidden-phone">
+                    <td class="text-center">
                         <?php echo (int) $item->«mainEntity.primaryKey.name»; ?>
                     </td>
                     <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
-                        <?php echo $this->pagination->getListFooter(); ?>
-                    </td>
-                </tr>
-            </tfoot>
         </table>
     '''
     
-    def  CharSequence genAdminViewLayoutForm()''' 
-        <form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
-            <?php if(!empty($this->sidebar)): ?>
-            <div id="j-sidebar-container" class="span2">
-                <?php echo $this->sidebar; ?>
-            </div>
-            <div id="j-main-container" class="span10">
-            <?php else : ?>
-            <div id="j-main-container">
-            <?php endif;?>
-                «genAdminViewLayoutFilters»
-                «genAdminViewLayoutData(indexpage.extendedTableColumnList)»
-                <input type="hidden" name="task" value="" />
-                <input type="hidden" name="boxchecked" value="0" />
-                <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-                <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-                <?php echo HTMLHelper::_('form.token'); ?>
-            </div>
-        </form>
+    def  CharSequence genAdminViewLayoutForm()'''	
+     	<form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
+     		<div class="row">
+     			<?php if(!empty($this->sidebar)): ?>
+     			<div id="j-sidebar-container" class="col-md-2">
+     				<?php echo $this->sidebar; ?>
+     			</div>
+     			<div class="col-md-10">
+     				<div id="j-main-container" class="j-main-container">
+     				<?php else : ?>
+     				<div id="j-main-container">
+     				<?php endif;?>
+     	        	«genAdminViewLayoutFilters»
+     	       		«genAdminViewLayoutData(indexpage.extendedTableColumnList)»
+     	        	<input type="hidden" name="task" value="" />
+     	        	<input type="hidden" name="boxchecked" value="0" />
+     	        	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+     	        	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+     	        	<?php echo JHtml::_('form.token'); ?>
+     	            </div>
+     	        </div>
+     	    </div>
+     	</form>
     '''
 
     def CharSequence genAdminViewLayoutHeader()'''

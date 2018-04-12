@@ -259,12 +259,12 @@ eJSLModel "Brueckenkurs"{
 						}
 					}
 				}languages {
-					Language de-DE{
-						
+					Language de-DE {
 					}
-					Language en-EN{
-						
+					Language en-GB {
 					}
+					Language system en-GB {
+                    }
 				}
 				sections {
 					Backend section {
