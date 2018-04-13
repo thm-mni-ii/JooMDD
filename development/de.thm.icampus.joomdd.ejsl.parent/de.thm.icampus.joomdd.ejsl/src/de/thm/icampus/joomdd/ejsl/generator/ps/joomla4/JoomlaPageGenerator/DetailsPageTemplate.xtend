@@ -175,14 +175,14 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		{
 		    $app = Factory::getApplication();
 		    $pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
-		    $table = $this->getTable();
+		    $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»', 'Administrator');
 		    if ($pk > 0) {
 			    try {
 			        // Attempt to load the row.
 			        $table->load($pk);
 			    } catch (Exception $e) {
 			        // Check for a table object error.
-			        throw new Exception('Database Failur:  no element Found'. $e );
+			        throw new Exception('Database Failure: No element was found'. $e );
 			    }
 		    }
 
@@ -461,6 +461,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateSiteModelEdit(String editPageName)'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Site", "Model")»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("ModelForm", "Factory", "ArrayHelper", "Registry", "Table", "Form", "Text"))»
@@ -470,7 +472,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		/**
 		 * Model to Edit  a Dataitem
 		 */
-		class «com.name.toFirstUpper»Model«editPageName.toFirstUpper» extends FormModel
+		class «editPageName.toFirstUpper»Model extends FormModel
 		{
 		    var $_item = null;
 		    «frontHelp.generateSiteModelPopulatestate()»
@@ -488,7 +490,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateSiteView(Boolean isedit, String editPageName)'''
 		«generateFileDoc(dpage,com)»
 		
-		«Slug.generateNamespace(com.name, "Site", "View\\" + Slug.capitalize(dpage.name))»
+		«Slug.generateNamespace(com.name, "Site", "View\\" + if(isedit) editPageName.toFirstUpper else Slug.capitalize(dpage.name))»
 		
 		«Slug.generateRestrictedAccess()»
 		

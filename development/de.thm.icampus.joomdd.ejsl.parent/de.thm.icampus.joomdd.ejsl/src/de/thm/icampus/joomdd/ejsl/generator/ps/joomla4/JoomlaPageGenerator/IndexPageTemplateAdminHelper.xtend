@@ -340,25 +340,25 @@ class IndexPageTemplateAdminHelper {
                 <tr>
                     <?php if (isset($this->items[0]->ordering)): ?>
                     <th style="width:1%" class="nowrap text-center d-none d-md-table-cell">
-                        <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
                     </th>
                     <?php endif; ?>
                     <th style="width:1%" class="text-center">
-                        <?php echo JHtml::_('grid.checkall'); ?>
+                        <?php echo HTMLHelper::_('grid.checkall'); ?>
                    	</th>
                     <?php if (isset($this->items[0]->state)): ?>
                     <th style="width:1%" class="nowrap text-center">
-                        <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                     «FOR ExtendedAttribute attr : column»
                     <th class='text-left'>
-                        <?php echo JHtml::_('searchtools.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
                     </th>
                     «ENDFOR»
                     <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
                     <th style="width:5%" class="nowrap d-none d-md-table-cell text-center">
-                        <?php echo JHtml::_('searchtools.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                 </tr>
@@ -400,12 +400,12 @@ class IndexPageTemplateAdminHelper {
                     </td>
                     <?php endif; ?>
                     <td class="text-center">
-                        <?php echo JHtml::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
+                        <?php echo HTMLHelper::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
                     </td>
                     <?php if (isset($this->items[0]->state)): ?>
                     <td class="text-center">
                             <div class="btn-group">
-                                <?php echo JHtml::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
+                                <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
                             </div>
                     </td>
                     <?php endif; ?>
@@ -434,12 +434,16 @@ class IndexPageTemplateAdminHelper {
      				<div id="j-main-container">
      				<?php endif;?>
      	        	«genAdminViewLayoutFilters»
+     	        	<?php if (empty($this->items)) : ?>
+     	        	    <joomla-alert type="warning"><?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?></joomla-alert>
+     	        	<?php else : ?>
      	       		«genAdminViewLayoutData(indexpage.extendedTableColumnList)»
+     	       		<?php endif; ?>
      	        	<input type="hidden" name="task" value="" />
      	        	<input type="hidden" name="boxchecked" value="0" />
      	        	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
      	        	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-     	        	<?php echo JHtml::_('form.token'); ?>
+     	        	<?php echo HTMLHelper::_('form.token'); ?>
      	            </div>
      	        </div>
      	    </div>
@@ -459,19 +463,6 @@ class IndexPageTemplateAdminHelper {
             HTMLHelper::_('sortablelist.sortable', '«indexpage.name.toFirstUpper»List', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
         }
         ?>
-        <script type="text/javascript">
-            Joomla.orderTable = function() {
-                table = document.getElementById("sortTable");
-                direction = document.getElementById("directionTable");
-                order = table.options[table.selectedIndex].value;
-                if (order != '<?php echo $listOrder; ?>') {
-                    dirn = 'asc';
-                } else {
-                    dirn = direction.options[direction.selectedIndex].value;
-                }
-                Joomla.tableOrdering(order, dirn, '');
-             }
-        </script>
     '''
  
     public def CharSequence genAdminModelPopulateState()'''

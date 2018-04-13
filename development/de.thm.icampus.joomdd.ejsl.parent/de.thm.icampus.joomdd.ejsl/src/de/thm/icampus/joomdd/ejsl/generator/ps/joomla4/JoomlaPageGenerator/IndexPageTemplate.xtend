@@ -290,11 +290,23 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		            «ENDFOR»
 		        </fields>
 		        <fields name="list">
+		        	<field
+		        	    name="fullordering"
+		        	    type="list"
+		        	    onchange="this.form.submit();"
+		        	    default="a.name DESC"
+		        	>
+		        	    <option value="">JGLOBAL_SORT_BY</option>
+		        	    «FOR ExtendedAttribute attr : ipage.extendedTableColumnList»
+		        	    <option value="a.«attr.name» ASC">«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«attr.entity.name.toUpperCase»_«attr.name.toUpperCase»_ASC</option>
+		        	    <option value="a.«attr.name» DESC">«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«attr.entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC</option>
+		        	    «ENDFOR»
+		        	    </field>
 		            <field name="limit" id="limit" class="input-medium" default="25" onchange="this.form.submit();" type="limitbox" >
-		            <option value="">JOPTION_SELECT_LIMIT</option>
-		        </field>
-		    </fields>
-		</form>
+		                <option value="">JOPTION_SELECT_LIMIT</option>
+		            </field>
+		        </fields>
+		    </form>
 	'''
 	
 	def CharSequence generateSiteModelForms() '''

@@ -203,7 +203,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	        type ="«e.name.toLowerCase»To«ref.entity.name.toLowerCase»"
 	        id="«ref.entity.name.toLowerCase»_id"
 	        label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»"
-	        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"/>
+	        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESCRIPTION"/>
 	    «FOR Attribute attr: Slug.getOtherAttribute(ref)»
 	    <field name="«attr.name.toLowerCase»"
 	        type ="hidden"
@@ -270,7 +270,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	        type ="«e.name.toLowerCase»To«ref.entity.name.toLowerCase»"
 	        id="«ref.entity.name.toLowerCase»_id"
 	        label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»"
-	        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"/>
+	        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESCRIPTION"/>
 	    «FOR Attribute attr: Slug.getOtherAttribute(ref)»
 	    <field name="«attr.name.toLowerCase»"
 	        type ="hidden"
@@ -352,7 +352,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		            «ENDIF»
    		            id="«attr.name.toLowerCase»"
    		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESCRIPTION"
    		            «FOR KeyValuePair kvpair : options»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
@@ -371,7 +371,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		            path="«page.name.toLowerCase»_image_path"
    		            id="«attr.name.toLowerCase»"
    		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESCRIPTION"
    		            «FOR KeyValuePair kvpair : options»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
@@ -385,7 +385,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		            path="«page.name.toLowerCase»_file_path"
    		            id="«attr.name.toLowerCase»"
    		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESCRIPTION"
    		            «FOR KeyValuePair kvpair : options»
    		            «kvpair.name» = "«kvpair.value»"
   		            «ENDFOR»
@@ -398,7 +398,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		            type="checkboxes" 
    		            id="«attr.name.toLowerCase»"
    		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESCRIPTION"
    		            «FOR KeyValuePair kvpair : options»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
@@ -415,7 +415,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	   		            type="radio"
 	   		            id="«attr.name.toLowerCase»"
 	   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-	   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+	   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESCRIPTION"
 	   		            «FOR KeyValuePair kvpair : options»
 	   		            «kvpair.name» = "«kvpair.value»"
 	   		            «ENDFOR»
@@ -432,7 +432,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		            type="radio" 
    		            id="«attr.name.toLowerCase»"
    		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESCRIPTION"
    		            default="0"
    		            «FOR KeyValuePair kvpair : options»
    		            «kvpair.name» = "«kvpair.value»"
@@ -449,7 +449,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		            «type»
    		            id="«attr.name.toLowerCase»"
    		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»_DESCRIPTION"
    		            «FOR KeyValuePair kvpair : options»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»

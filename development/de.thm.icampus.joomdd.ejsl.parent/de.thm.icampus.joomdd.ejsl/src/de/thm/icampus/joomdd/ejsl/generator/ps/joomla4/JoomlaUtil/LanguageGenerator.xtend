@@ -72,7 +72,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 		EList<ExtendedPageReference> pagerefList) {
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LABEL",com.name.toFirstUpper))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DESC",com.manifest.description))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_UPDATE_TEXT","The update is succesfull"))
+		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_UPDATE_TEXT","The update to %s was successful."))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase,com.name.toFirstUpper))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_HOME","Home"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_ID","ID"))
@@ -86,10 +86,10 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_EDIT_ITEM","Edit"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DELETE_ITEM","Delete"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ADD_ITEM","Add"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ITEM_SAVED_SUCCESSFULLY","The data are saved sucessfully"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ITEM_DELETED_SUCCESSFULLY","The data are deleted sucessfully"))
+		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ITEM_SAVED_SUCCESSFULLY","The data are saved successfully"))
+		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ITEM_DELETED_SUCCESSFULLY","The data are deleted successfully"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DELETE_MESSAGE","Do you want to delete the Data?"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_N_ITEMS_PUBLISHED","The data are published sucessfully"))
+		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_N_ITEMS_PUBLISHED","The data are published successfully"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_TEMPLATE_LAYOUT","Template Layout"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_TEMPLATE_LAYOUT_DESC","Choice a Layout for the Indexpage"))
 		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DIRECTION","Direction"))
@@ -145,7 +145,9 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				for(ExtendedAttribute attr: ent.allExtendedAttributes){
 					var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) 
 					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+ Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
-					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_DESC","Description of " + Slug.slugify(attr.name).toFirstUpper))
+					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_DESCRIPTION","Description of " + Slug.slugify(attr.name).toFirstUpper))
+					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_ASC", Slug.slugify(attr.name).toFirstUpper + " ascending"))
+					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_DESC", Slug.slugify(attr.name).toFirstUpper + " descending"))
 					if( field !== null && field.values !== null){
 						for( KeyValuePair kv: field.values){
 							languagesWords.add(new KVPairLanguage(dtPage.name.toUpperCase+"_"+attr.name.toUpperCase+"_"+kv.name.toUpperCase+"_OPTION",kv.name))

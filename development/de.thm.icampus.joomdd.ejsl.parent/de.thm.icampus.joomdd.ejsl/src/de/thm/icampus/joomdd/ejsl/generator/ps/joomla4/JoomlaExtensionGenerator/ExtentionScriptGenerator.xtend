@@ -132,7 +132,7 @@ class ExtentionScriptGenerator {
 		 */
 		public function update($parent)
 		{
-		    echo '<p>' . Text::sprintf('«extName.toUpperCase»_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
+		    echo '<p>' . Text::sprintf('«extName.toUpperCase»_UPDATE_TEXT', $parent->getManifest()->version) . '</p>';
 		}
 	'''
 	def CharSequence genUnsinstall() '''
