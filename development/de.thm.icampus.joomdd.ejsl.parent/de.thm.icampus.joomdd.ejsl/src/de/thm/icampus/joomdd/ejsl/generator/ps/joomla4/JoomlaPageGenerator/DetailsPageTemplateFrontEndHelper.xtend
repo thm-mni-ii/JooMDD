@@ -78,7 +78,7 @@ class DetailsPageTemplateFrontEndHelper {
 
 	    // Initialise variables.
 	    $app = Factory::getApplication();
-	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
+	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit');
 
 	    // Get the user data.
 	    $data = Factory::getApplication()->input->get('jform', array(), 'array');
@@ -170,7 +170,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    $editId = (int) $app->getUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»');
 	
 	    // Get the model.
-	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
+	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit');
 
 	    // Check in the item
 	    if ($editId) {
@@ -198,7 +198,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    //Checking if the user can remove object
 	    $user = Factory::getUser();
 	   if ($user->authorise($user->authorise('core.delete', 'com_«com.name.toLowerCase»'))) {
-	       $model = $this->getModel('«dpage.name.toFirstUpper»', '«com.name.toFirstUpper»Model');
+	       $model = $this->getModel('«dpage.name.toFirstUpper»');
 	
 	        // Get the user data.
 	        $id = $app->input->getInt('«mainEntity.primaryKey.name»', 0);
@@ -225,7 +225,7 @@ class DetailsPageTemplateFrontEndHelper {
 	        }
 
 	        // Redirect to the list screen.
-	        $menu = & JSite::getMenu();
+	        $menu = Factory::getApplication()->getMenu();
 	        $item = $menu->getActive();
 	        $this->setRedirect(Route::_($item->link, false));
 	    } else {
@@ -280,7 +280,7 @@ class DetailsPageTemplateFrontEndHelper {
 
 	    if ($id) {
 	        // Initialise the table
-	        $table = $this->getTable();
+	        $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»', 'Administrator');
 
 	        // Attempt to check the row in.
 	        if (method_exists($table, 'checkin')) {
@@ -309,7 +309,7 @@ class DetailsPageTemplateFrontEndHelper {
 	
 	    if ($id) {
 	        // Initialise the table
-	        $table = $this->getTable();
+	        $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»', 'Administrator');
 	
 	        // Get the current user object.
 	        $user = Factory::getUser();
@@ -364,7 +364,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    }
 	    $inputs = Factory::getApplication()->input->get("jform", array(), 'array');
 	
-	    $table = $this->getTable();
+	    $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»', 'Administrator');
 	    if ($table->save($data) === true) {
 	        if (empty($inputs['«mainEntity.primaryKey.name»']) || $inputs['«mainEntity.primaryKey.name»'] == 0 ) {
 	            $inputs['patid']=$table->«mainEntity.primaryKey.name»;
@@ -394,7 +394,7 @@ class DetailsPageTemplateFrontEndHelper {
 	        JError::raiseError(403, Text::_('JERROR_ALERTNOAUTHOR'));
 	        return false;
 	    }
-	    $table = $this->getTable();
+	    $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»', 'Administrator');
 	    if ($table->delete($data) === true) {
 	        return $id;
 	    } else {
@@ -433,7 +433,7 @@ class DetailsPageTemplateFrontEndHelper {
 	 */ 
 	public function publish($id, $state)
 	{
-	    $table = $this->getTable();
+	    $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»', 'Administrator');
 	    $table->load($id);
 	    $table->state = $state;
 	    return $table->store();

@@ -737,7 +737,7 @@ public class Slug  {
 				case 'FormRuleTel' : { "use Joomla\\CMS\\Form\\Rule\\TelRule;" }
 				case 'FormRuleUrl' : { "use Joomla\\CMS\\Form\\Rule\\UrlRule;" }
 				case 'FormRuleUsername' : { "use Joomla\\CMS\\Form\\Rule\\UsernameRule;" }
-				
+				case 'FormController' : { "use Joomla\\CMS\\MVC\\Controller\\FormController;"}
 				case 'Microdata' : { "use Joomla\\CMS\\Microdata\\Microdata;" }
 				
 				case 'Factory' : { "use Joomla\\CMS\\Factory;" }

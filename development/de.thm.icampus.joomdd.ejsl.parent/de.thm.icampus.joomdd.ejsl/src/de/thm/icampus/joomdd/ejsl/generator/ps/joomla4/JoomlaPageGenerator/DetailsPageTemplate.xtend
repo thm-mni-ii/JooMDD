@@ -421,7 +421,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		/**
 		 * «dpage.name.toFirstUpper» controller class to «if(isedit)  "Edit" else "Show"» a Item .
 		 */
-		class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»Controller
+		class «if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper»Controller extends DisplayController
 		{
 		    «IF isedit»
 			«frontHelp.generateSiteControllerSave»
