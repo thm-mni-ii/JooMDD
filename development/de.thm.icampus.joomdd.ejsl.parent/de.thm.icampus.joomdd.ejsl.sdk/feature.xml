@@ -2,7 +2,7 @@
 <feature
       id="de.thm.icampus.joomdd.ejsl.sdk"
       label="eJSL"
-      version="0.7.0">
+      version="0.8.0">
 
    <description url="http://icampus.thm.de/JooMDD/eJSL">
       Modeling language for Joomla extensions. 
@@ -106,21 +106,21 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="de.thm.icampus.joomdd.ejsl"
          download-size="0"
          install-size="0"
-         version="0.7.0"
+         version="0.8.0"
          unpack="false"/>
 
    <plugin
          id="de.thm.icampus.joomdd.ejsl.ide"
          download-size="0"
          install-size="0"
-         version="0.7.0"
+         version="0.8.0"
          unpack="false"/>
 
    <plugin
          id="de.thm.icampus.joomdd.ejsl.ui"
          download-size="0"
          install-size="0"
-         version="0.7.0"
+         version="0.8.0"
          unpack="false"/>
 
 </feature>

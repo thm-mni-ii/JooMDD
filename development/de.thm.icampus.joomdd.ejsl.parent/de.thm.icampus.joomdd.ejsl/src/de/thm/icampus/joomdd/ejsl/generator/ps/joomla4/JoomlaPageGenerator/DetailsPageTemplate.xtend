@@ -412,6 +412,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateSiteController(Boolean isedit)'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Site", "Controller")»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("Text", "Route", "Session", "Factory"))»
@@ -434,6 +436,8 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	def CharSequence generateSiteModelShow()'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Site", "Model")»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("ModelItem", "Factory", "ArrayHelper", "Registry", "Table", "Text"))»
@@ -443,7 +447,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		/**
 		 * Model to show a Dataitem
 		 */
-		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ItemModel
+		class «dpage.name.toFirstUpper»Model extends ItemModel
 		{
 		    «frontHelp.generateSiteModelPopulatestate()»
 		    «generateModelGetItemFunction»

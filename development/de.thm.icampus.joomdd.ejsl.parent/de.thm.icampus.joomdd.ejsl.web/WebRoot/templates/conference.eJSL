@@ -90,9 +90,11 @@ eJSLModel "Conference" {
             IndexPage Participants {
                 *Entities Participant
                 representation columns = Participant.name, Participant.address, Participant.affiliation
-                filters = Participant.name, Participant.affiliation links {
+                filters = Participant.name, Participant.affiliation 
+                links {
                     InternalcontextLink Details {
-                        target = Participant linked attribute = Participant.name
+                        target = Participant 
+                        linked attribute = Participant.name
                         linkparameters {
                             Parameter name = *Attribute  "Participant.name"
                         }
@@ -100,18 +102,22 @@ eJSLModel "Conference" {
                 }
             }
             DetailsPage Participant {
-                *Entities Participant links {
+                *Entities Participant 
+                links {
                     InternalLink Index {
-                        target = Participants linked attribute = name
+                        target = Participants 
+                        linked attribute = name
                     }
                 }
             }
             IndexPage Talks {
                 *Entities Talk
                 representation columns = Talk.title, Talk.speaker
-                filters = Talk.title, Talk.speaker links {
+                filters = Talk.title, Talk.speaker 
+                links {
                     InternalcontextLink Details {
-                        target = Talk linked attribute = Talk.title
+                        target = Talk 
+                        linked attribute = Talk.title
                         linkparameters {
                             Parameter title = *Attribute  "Talk.title"
                         }
@@ -119,18 +125,22 @@ eJSLModel "Conference" {
                 }
             }
             DetailsPage Talk {
-                *Entities Talk links {
+                *Entities Talk 
+                links {
                     InternalLink Index {
-                        target = Talks linked attribute = title
+                        target = Talks 
+                        linked attribute = title
                     }
                 }
             }
             IndexPage Rooms {
                 *Entities Room
                 representation columns = Room.roomname, Room.^position
-                filters = Room.roomname, Room.^position links {
+                filters = Room.roomname, Room.^position 
+                links {
                     InternalcontextLink Details {
-                        target = Room linked attribute = Room.roomname
+                        target = Room 
+                        linked attribute = Room.roomname
                         linkparameters {
                             Parameter roomname = *Attribute  "Room.roomname"
                         }
@@ -138,18 +148,22 @@ eJSLModel "Conference" {
                 }
             }
             DetailsPage Room {
-                *Entities Room links {
+                *Entities Room 
+                links {
                     InternalLink Index {
-                        target = Rooms linked attribute = roomname
+                        target = Rooms 
+                        linked attribute = roomname
                     }
                 }
             }
             IndexPage Programme {
                 *Entities Programme
                 representation columns = Programme.room, Programme.talk, Programme.time, Programme.title
-                filters = Programme.room, Programme.talk, Programme.time, Programme.title links {
+                filters = Programme.room, Programme.talk, Programme.time, Programme.title 
+                links {
                     InternalcontextLink Details {
-                        target = Session linked attribute = Programme.title
+                        target = Session 
+                        linked attribute = Programme.title
                         linkparameters {
                             Parameter title = *Attribute  "Programme.title"
                         }
@@ -157,9 +171,11 @@ eJSLModel "Conference" {
                 }
             }
             DetailsPage Session {
-                *Entities Programme links {
+                *Entities Programme 
+                links {
                     InternalLink Index {
-                        target = Programme linked attribute = Programme.title
+                        target = Programme 
+                        linked attribute = Programme.title
                     }
                 }
             }
@@ -172,23 +188,27 @@ eJSLModel "Conference" {
                             authoremail = "john.doe@example.org"
                         }
                     }
-                    copyright = "Copyright (C) 2017 All right reserved."
+                    copyright = "Copyright (C) 2018 All right reserved."
                     license = "GNU General Public License"
                     version = "1.0.1"
                 }
                 languages {
-                    Language de-DE {
-                    }
-                    Language en-GB {
-                    }
+                    Language de-DE {}
+                    Language system de-DE {}
+                    Language en-GB {}
+                    Language system en-GB {}
                 }
                 sections {
                     Frontend section {
                         *Pages {
                             *Page : Participants
+                            *Page : Participant
                             *Page : Talks
+                            *Page : Talk
                             *Page : Rooms
+                            *Page : Room
                             *Page : Programme
+                            *Page : Session
                         }
                     }
                     Backend section {
