@@ -18,6 +18,10 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensionPackage
+import org.eclipse.xtext.EcoreUtil2
+import de.thm.icampus.joomdd.ejsl.eJSL.EJSLPackage
+import de.thm.icampus.joomdd.ejsl.services.EJSLGrammarAccess
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 class LanguageGenerator extends AbstractExtensionGenerator {
 	new(IFileSystemAccess2 fileAccess) {
@@ -25,6 +29,14 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	}
 
 	def genComponentLanguage(ExtendedComponent component, String root) {
+	    if (component.languages.empty) {
+            var Language lang = EcoreUtil2.create(EJSLPackage.Literals.LANGUAGE) as Language
+            lang.name = "en-GB"
+            lang.sys = false
+	        component.languages.add(EcoreUtil2.copy(lang))
+	        lang.sys = true
+	        component.languages.add(EcoreUtil2.copy(lang))
+	    }
 		for (lang : component.languages) {
 			val ldir = lang.name
 			var EList<KVPairLanguage> languagesWordsFront = new BasicEList<KVPairLanguage>()
