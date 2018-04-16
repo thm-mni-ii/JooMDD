@@ -162,12 +162,12 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateAdminViewLayoutBackend() ''' 
 		«generateFileDoc(ipage,com)»
 		
-		«Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html"))»
+		«Slug.generateUses(newArrayList("Text", "LayoutHelper", "Route", "Factory", "Html"))»
 		
 		HTMLHelper::addIncludePath(JPATH_COMPONENT.'/Helper/html');
 		HTMLHelper::_('bootstrap.tooltip');
 		HTMLHelper::_('behavior.multiselect');
-		HTMLHelper::_('formbehavior.chosen', 'select');
+		HTMLHelper::_('formbehavior.chosen');
 		
 		// Import CSS
 		$document = Factory::getDocument();
@@ -294,12 +294,12 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		        	    name="fullordering"
 		        	    type="list"
 		        	    onchange="this.form.submit();"
-		        	    default="a.name DESC"
+		        	    default="«ipage.entities.get(0).name».name DESC"
 		        	>
 		        	    <option value="">JGLOBAL_SORT_BY</option>
 		        	    «FOR ExtendedAttribute attr : ipage.extendedTableColumnList»
-		        	    <option value="a.«attr.name» ASC">«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«attr.entity.name.toUpperCase»_«attr.name.toUpperCase»_ASC</option>
-		        	    <option value="a.«attr.name» DESC">«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«attr.entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC</option>
+		        	    <option value="«ipage.entities.get(0).name».«attr.name» ASC">«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«attr.entity.name.toUpperCase»_«attr.name.toUpperCase»_ASC</option>
+		        	    <option value="«ipage.entities.get(0).name».«attr.name» DESC">«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«attr.entity.name.toUpperCase»_«attr.name.toUpperCase»_DESC</option>
 		        	    «ENDFOR»
 		        	    </field>
 		            <field name="limit" id="limit" class="input-medium" default="25" onchange="this.form.submit();" type="limitbox" >

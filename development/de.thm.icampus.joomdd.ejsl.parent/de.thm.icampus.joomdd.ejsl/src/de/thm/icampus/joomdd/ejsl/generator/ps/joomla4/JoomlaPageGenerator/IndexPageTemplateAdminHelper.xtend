@@ -340,7 +340,7 @@ class IndexPageTemplateAdminHelper {
                 <tr>
                     <?php if (isset($this->items[0]->ordering)): ?>
                     <th style="width:1%" class="nowrap text-center d-none d-md-table-cell">
-                        <?php echo HTMLHelper::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', '', '«mainEntity.name».ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
                     </th>
                     <?php endif; ?>
                     <th style="width:1%" class="text-center">
@@ -348,17 +348,17 @@ class IndexPageTemplateAdminHelper {
                    	</th>
                     <?php if (isset($this->items[0]->state)): ?>
                     <th style="width:1%" class="nowrap text-center">
-                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JSTATUS', '«mainEntity.name».state', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                     «FOR ExtendedAttribute attr : column»
                     <th class='text-left'>
-                        <?php echo HTMLHelper::_('searchtools.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', '«mainEntity.name».«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
                     </th>
                     «ENDFOR»
                     <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
                     <th style="width:5%" class="nowrap d-none d-md-table-cell text-center">
-                        <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', '«mainEntity.name».«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                 </tr>
@@ -372,7 +372,7 @@ class IndexPageTemplateAdminHelper {
             </tfoot>
             <tbody>
                 <?php foreach ($this->items as $i => $item) :
-                $ordering   = ($listOrder == 'a.ordering');
+                $ordering   = ($listOrder == '«mainEntity.name».ordering');
                 $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                 $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                 $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
@@ -385,7 +385,7 @@ class IndexPageTemplateAdminHelper {
                         $disableClassName = '';
                         $disabledLabel    = '';
                         if (!$saveOrder) :
-                        $disabledLabel    = JText::_('JORDERINGDISABLED');
+                        $disabledLabel    = Text::_('JORDERINGDISABLED');
                         $disableClassName = 'inactive tip-top';
                         endif; ?>
                         <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
@@ -422,7 +422,7 @@ class IndexPageTemplateAdminHelper {
     '''
     
     def  CharSequence genAdminViewLayoutForm()'''	
-     	<form action="<?php echo JRoute::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
+     	<form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
      		<div class="row">
      			<?php if(!empty($this->sidebar)): ?>
      			<div id="j-sidebar-container" class="col-md-2">
@@ -435,14 +435,12 @@ class IndexPageTemplateAdminHelper {
      				<?php endif;?>
      	        	«genAdminViewLayoutFilters»
      	        	<?php if (empty($this->items)) : ?>
-     	        	    <joomla-alert type="warning"><?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?></joomla-alert>
+     	        	    <joomla-alert type="warning"><?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?></joomla-alert>
      	        	<?php else : ?>
      	       		«genAdminViewLayoutData(indexpage.extendedTableColumnList)»
      	       		<?php endif; ?>
      	        	<input type="hidden" name="task" value="" />
      	        	<input type="hidden" name="boxchecked" value="0" />
-     	        	<input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-     	        	<input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
      	        	<?php echo HTMLHelper::_('form.token'); ?>
      	            </div>
      	        </div>
@@ -456,7 +454,7 @@ class IndexPageTemplateAdminHelper {
         $listOrder = $this->state->get('list.ordering');
         $listDirn = $this->state->get('list.direction');
         $canOrder = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-        $saveOrder = $listOrder == 'a.ordering';
+        $saveOrder = $listOrder == '«mainEntity.name».ordering';
         $model = $this->getModel();
         if ($saveOrder) {
             $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
@@ -515,7 +513,7 @@ class IndexPageTemplateAdminHelper {
         «IF Slug.isAttributeLinked(attr, indexpage)»
         <td>
         <?php if ($canEdit) : ?>
-            <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->")»); ?>">
+            <a href="<?php echo Route::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->")»); ?>">
                 <?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
             </a>
         <?php else : ?>
