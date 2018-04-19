@@ -5,26 +5,19 @@ package de.thm.icampus.joomdd.ejsl.web
 
 import com.google.inject.Guice
 import com.google.inject.Injector
-import com.google.inject.Provider
-import com.google.inject.util.Modules
 import de.thm.icampus.joomdd.ejsl.EJSLRuntimeModule
 import de.thm.icampus.joomdd.ejsl.EJSLStandaloneSetup
-import java.util.concurrent.ExecutorService
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
+import org.eclipse.xtext.util.Modules2
+import de.thm.icampus.joomdd.ejsl.ide.EJSLIdeModule
 
 /**
  * Initialization support for running Xtext languages in web applications.
  */
-@FinalFieldsConstructor
 class EJSLWebSetup extends EJSLStandaloneSetup { 
 	
-	val Provider<ExecutorService> executorServiceProvider;
-	
 	override Injector createInjector() {
-		val runtimeModule = new EJSLRuntimeModule()
-		val webModule = new EJSLWebModule(executorServiceProvider)
-		var Injector injector = Guice.createInjector(Modules.override(runtimeModule).with(webModule));
-		return injector;
+		return Guice.createInjector(Modules2.mixin(new EJSLRuntimeModule, new EJSLIdeModule, new EJSLWebModule))
 	}
 	
 }
