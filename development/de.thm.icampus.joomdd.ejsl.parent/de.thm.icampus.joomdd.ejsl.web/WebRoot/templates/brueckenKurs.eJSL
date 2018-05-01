@@ -20,7 +20,7 @@ eJSLModel "Brueckenkurs"{
 					 } 
 				}   
 				references {
-					Reference { EntityAttribute = kursgruppe *Entity = Kurstermin *EntityReference = Kurstermin.Gruppename  lower =0 upper = 1}
+					Reference { EntityAttribute = kursgruppe ReferencedEntity = Kurstermin ReferencedEntityAttribute =Kurstermin.Gruppename  min =0 max = 1}
 				}
 				
 			}  
@@ -56,7 +56,7 @@ eJSLModel "Brueckenkurs"{
 					}
 				}
 				references {
-					Reference { EntityAttribute = kurs *Entity = Kurstermin *EntityReference = Kurstermin.Gruppename lower = 0 upper = 1 }
+					Reference { EntityAttribute = kurs ReferencedEntity = Kurstermin ReferencedEntityAttribute =Kurstermin.Gruppename min = 0 max = 1 }
 				}
 			}
 			Entity Kurstermin {
@@ -80,7 +80,7 @@ eJSLModel "Brueckenkurs"{
 				}
 				references {
 					Reference {
-						EntityAttribute = kurs *Entity = Kurs *EntityReference = Kurs.titel lower = 0 upper = 1
+						EntityAttribute = kurs ReferencedEntity = Kurs ReferencedEntityAttribute =Kurs.titel min = 0 max = 1
 					}
 					
 				}
@@ -89,7 +89,7 @@ eJSLModel "Brueckenkurs"{
 		pages {
 			IndexPage Teilnehmerlistsadmin{
 				*Entities Teilnehemer
-				table columns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe
+				representation columns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe
 				filters = Teilnehemer.name , Teilnehemer.kursgruppe
 				links{
 					InternalcontextLink teilnehemer{
@@ -111,17 +111,22 @@ eJSLModel "Brueckenkurs"{
 				
 				editFields { 
 					Teilnehemer.name {
-					type = Text_Field },
+						type =  Text_Field },
 					Teilnehemer.vorname {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Teilnehemer.kursgruppe {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Teilnehemer.geburtsdatum {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Teilnehemer.adresse {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Teilnehemer.kursgruppe{
-					type = Text_Field }
+						type =  Text_Field 
+						}
 				}
 				pageactions {     
 					PageAction zurueck {
@@ -137,7 +142,7 @@ eJSLModel "Brueckenkurs"{
 			} 
 			IndexPage Kurslistsadmin{ 
 				*Entities Kurs
-				table columns = Kurs.titel,Kurs.creditpoint
+				representation columns = Kurs.titel,Kurs.creditpoint
 				filters = Kurs.titel,Kurs.creditpoint
 				links{
 					InternalcontextLink teilnehemer{
@@ -153,11 +158,14 @@ eJSLModel "Brueckenkurs"{
 				
 				editFields {
 					Kurs.titel {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Kurs.creditpoint {
-					type = Integer },
+						type =  Integer 
+						},
 					Kurs.kurzfassung {
-					type = Editor }
+						type =  Editor 
+						}
 				}
 				
 				pageactions {
@@ -174,7 +182,7 @@ eJSLModel "Brueckenkurs"{
 			} 
 			IndexPage Tutoradmin{
 				*Entities Tutor
-				table columns = Tutor.name,Tutor.vorname, Tutor.kurs
+				representation columns = Tutor.name,Tutor.vorname, Tutor.kurs
 				filters = Tutor.name,Tutor.vorname, Tutor.kurs
 				links{
 					InternalcontextLink tutor{
@@ -195,17 +203,21 @@ eJSLModel "Brueckenkurs"{
 				
 				editFields {
 					Tutor.name {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Tutor.vorname {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Tutor.kurs {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Tutor.geburtsdatum {
-					type = Datepicker },
-					Tutor.geschlecht {
-					type = Select
-					values {Key Keins = "keins" , Key maennlich = "mann" , Key weiblich = "weiblich" }
-					}
+						type =  Text_Field 
+						},
+					Tutor.geschlecht{
+						type =  Select 
+						values { Key Keins = "keins" , Key maennlich = "mann" , Key weiblich = "weiblich"}
+						} 
 				}
 				
 				pageactions {
@@ -222,7 +234,7 @@ eJSLModel "Brueckenkurs"{
 			}
 			IndexPage Kursterminadmin{
 				*Entities Kurstermin
-				table columns = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
+				representation columns = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
 				filters = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
 				links{
 					InternalcontextLink tutor{
@@ -244,15 +256,23 @@ eJSLModel "Brueckenkurs"{
 				
 				editFields {
 					Kurstermin.Gruppename {
-					type = Text_Field },
+						type = Text_Field
+						},
 					Kurstermin.kurs {
-					type = Text_Field },
+						type =  Text_Field 
+						},
 					Kurstermin.Raum {
-					type = Text_Field },
-					Kurstermin.date {
-					type = Datepicker },
+						type =  Text_Field 
+						},
+					Kurstermin.date{
+						type =  Datepicker 
+						},
 					Kurstermin.tag {
-					type = Text_Field }
+						type =  Text_Field 
+						field attributes {
+							Key format = "'%a %d %b %Y"
+						}
+						}
 				}
 				pageactions {
 					PageAction zurueck {
