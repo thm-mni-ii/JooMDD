@@ -20,7 +20,7 @@ eJSLModel "Brueckenkurs"{
 					 } 
 				}   
 				references {
-					Reference { EntityAttribute = kursgruppe *Entity = Kurstermin *EntityReference = Kurstermin.Gruppename  lower =0 upper = 1}
+					Reference { EntityAttribute = kursgruppe ReferencedEntity = Kurstermin ReferencedEntityAttribute =Kurstermin.Gruppename  min =0 max = 1}
 				}
 				
 			}  
@@ -56,7 +56,7 @@ eJSLModel "Brueckenkurs"{
 					}
 				}
 				references {
-					Reference { EntityAttribute = kurs *Entity = Kurstermin *EntityReference = Kurstermin.Gruppename lower = 0 upper = 1 }
+					Reference { EntityAttribute = kurs ReferencedEntity = Kurstermin ReferencedEntityAttribute =Kurstermin.Gruppename min = 0 max = 1 }
 				}
 			}
 			Entity Kurstermin {
@@ -80,7 +80,7 @@ eJSLModel "Brueckenkurs"{
 				}
 				references {
 					Reference {
-						EntityAttribute = kurs *Entity = Kurs *EntityReference = Kurs.titel lower = 0 upper = 1
+						EntityAttribute = kurs ReferencedEntity = Kurs ReferencedEntityAttribute =Kurs.titel min = 0 max = 1
 					}
 					
 				}
@@ -89,7 +89,7 @@ eJSLModel "Brueckenkurs"{
 		pages {
 			IndexPage Teilnehmerlistsadmin{
 				*Entities Teilnehemer
-				table columns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe
+				representation columns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe
 				filters = Teilnehemer.name , Teilnehemer.kursgruppe
 				links{
 					InternalcontextLink teilnehemer{
@@ -142,7 +142,7 @@ eJSLModel "Brueckenkurs"{
 			} 
 			IndexPage Kurslistsadmin{ 
 				*Entities Kurs
-				table columns = Kurs.titel,Kurs.creditpoint
+				representation columns = Kurs.titel,Kurs.creditpoint
 				filters = Kurs.titel,Kurs.creditpoint
 				links{
 					InternalcontextLink teilnehemer{
@@ -182,7 +182,7 @@ eJSLModel "Brueckenkurs"{
 			} 
 			IndexPage Tutoradmin{
 				*Entities Tutor
-				table columns = Tutor.name,Tutor.vorname, Tutor.kurs
+				representation columns = Tutor.name,Tutor.vorname, Tutor.kurs
 				filters = Tutor.name,Tutor.vorname, Tutor.kurs
 				links{
 					InternalcontextLink tutor{
@@ -234,7 +234,7 @@ eJSLModel "Brueckenkurs"{
 			}
 			IndexPage Kursterminadmin{
 				*Entities Kurstermin
-				table columns = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
+				representation columns = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
 				filters = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
 				links{
 					InternalcontextLink tutor{

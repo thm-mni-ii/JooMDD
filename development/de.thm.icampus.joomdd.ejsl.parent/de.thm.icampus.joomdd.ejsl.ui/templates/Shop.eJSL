@@ -45,18 +45,18 @@ eJSLModel "Shop" {
 				references {  
 					Reference {
 						EntityAttribute = porder 
-						*Entity =  Prodorder
-						*EntityReference = Prodorder.ordNr    
-						lower = 1
-						upper = -1
+						ReferencedEntity =  Prodorder
+						ReferencedEntityAttribute = Prodorder.ordNr    
+						min = 1
+						max = -1
 						  
 					}   
 					Reference {
 						EntityAttribute = supplier
-						*Entity = supplier
-						*EntityReference = supplier.name
-						lower = 1
-						upper = -1
+						ReferencedEntity = supplier
+						ReferencedEntityAttribute = supplier.name
+						min = 1
+						max = -1
 					}
 				}       
 			}
@@ -83,17 +83,17 @@ eJSLModel "Shop" {
 				references {
 					Reference {
 						EntityAttribute = product
-						*Entity = Product
-						*EntityReference = Product.name
-						lower = 1
-						upper = -1
+						ReferencedEntity = Product
+						ReferencedEntityAttribute = Product.name
+						min = 1
+						max = -1
 					}
 					Reference {
 						EntityAttribute = customer 
-						*Entity = customer
-						*EntityReference = customer.lName
-						lower = 1
-						upper = -1
+						ReferencedEntity = customer
+						ReferencedEntityAttribute = customer.lName
+						min = 1
+						max = -1
 					}
 				}
 			}
@@ -133,24 +133,24 @@ eJSLModel "Shop" {
 				references {
 					Reference {
 						EntityAttribute = bank
-						*Entity = creditInstitute
-						*EntityReference = creditInstitute.name
-						lower = 1
-						upper = 1
+						ReferencedEntity = creditInstitute
+						ReferencedEntityAttribute = creditInstitute.name
+						min = 1
+						max = 1
 					}  
 					Reference {
 						EntityAttribute = location
-						*Entity = location
-						*EntityReference = location.postCode
-						lower = 1
-						upper = 1 
+						ReferencedEntity = location
+						ReferencedEntityAttribute = location.postCode
+						min = 1
+						max = 1 
 					}
 					Reference {
 						EntityAttribute = product
-						*Entity = Product
-						*EntityReference = Product.name
-						lower = 1
-						upper = -1
+						ReferencedEntity = Product
+						ReferencedEntityAttribute = Product.name
+						min = 1
+						max = -1
 					}
 				}
 			}
@@ -182,17 +182,17 @@ eJSLModel "Shop" {
 				references {
 					Reference {
 						EntityAttribute = bank
-						*Entity = creditInstitute
-						*EntityReference = creditInstitute.name
-						lower = 1
-						upper = 1
+						ReferencedEntity = creditInstitute
+						ReferencedEntityAttribute = creditInstitute.name
+						min = 1
+						max = 1
 					}
 					Reference {
 						EntityAttribute = prodorder 
-						*Entity = Prodorder
-						*EntityReference = Prodorder.ordNr
-						lower = 1
-						upper = -1
+						ReferencedEntity = Prodorder
+						ReferencedEntityAttribute = Prodorder.ordNr
+						min = 1
+						max = -1
 					}
 				
 				}
@@ -201,7 +201,7 @@ eJSLModel "Shop" {
 		pages {
 			IndexPage Customers {  
 				*Entities customer
-				table columns = customer.sName, customer.lName, customer.adress
+				representation columns = customer.sName, customer.lName, customer.adress
 				filters = customer.lName, customer.adress links {
 					InternalcontextLink Details {
 						target = Customer linked attribute = customer.lName
@@ -220,7 +220,7 @@ eJSLModel "Shop" {
 			}
 			IndexPage Products {
 				*Entities Product
-				table columns = Product.name, Product.price, Product.desc
+				representation columns = Product.name, Product.price, Product.desc
 				filters = Product.name, Product.price links {
 					InternalcontextLink Details { 
 						target = product linked attribute = Product.name
@@ -239,7 +239,7 @@ eJSLModel "Shop" {
 			}
 			IndexPage CreditInstitutes {
 				*Entities creditInstitute
-				table columns = creditInstitute.name, creditInstitute.adress, creditInstitute.iBan
+				representation columns = creditInstitute.name, creditInstitute.adress, creditInstitute.iBan
 				filters = creditInstitute.name, creditInstitute.adress, creditInstitute.iBan links {
 					InternalcontextLink Details {
 						target = CreditInstitute linked attribute = creditInstitute.name
@@ -258,7 +258,7 @@ eJSLModel "Shop" {
 			}
 			IndexPage Prodorders {                  
 				*Entities Prodorder
-				table columns = Prodorder.ordNr, Prodorder.date 
+				representation columns = Prodorder.ordNr, Prodorder.date 
 				filters = Prodorder.ordNr, Prodorder.date, Prodorder.customer
 				links { 
 					InternalcontextLink Details {
@@ -278,7 +278,7 @@ eJSLModel "Shop" {
 			}
 			IndexPage Locations {
 				*Entities location
-				table columns = location.postCode, location.name
+				representation columns = location.postCode, location.name
 				filters = location.postCode, location.name links {
 					InternalcontextLink Details {
 						target = Location linked attribute = location.name
@@ -297,7 +297,7 @@ eJSLModel "Shop" {
 			}
 			IndexPage Suppliers {
 				*Entities supplier
-				table columns = supplier.name, supplier.adress, supplier.location
+				representation columns = supplier.name, supplier.adress, supplier.location
 				filters = supplier.name, supplier.adress, supplier.location links {
 					InternalcontextLink Details {
 						target = Supplier linked attribute = supplier.name
@@ -472,7 +472,7 @@ eJSLModel "Shop" {
 					Language en-GB {     
 					}
 				}
-				*Page :Shop.Customers from : ExampleShop section .frontend
+				*Page :Shop.Customers from : ExampleShop data frontendDAO
 			}
 				}
 			}
