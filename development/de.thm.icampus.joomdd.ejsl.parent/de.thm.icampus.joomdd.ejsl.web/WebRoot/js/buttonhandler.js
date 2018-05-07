@@ -147,6 +147,7 @@ require(["jquery","alert"], function($, alert) {
 		var editor = $("#xtext-editor");
 		var save = editor[0].env.editor.xtextServices.saveResource();
 		save.then( value => {
+			window.onbeforeunload = null;
 			alert.showSuccess("Model has been saved successfully.")
 		}, reason => {
             alert.showError("Model cannot be saved.")

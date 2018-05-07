@@ -16,7 +16,9 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 			baseUrl: baseUrl ,
 			syntaxDefinition: "js/folding-mode-eJSL",
 			theme: "ace/theme/github",
-			resourceId: "/src/" + resourceID
+			resourceId: "/src/" + resourceID,
+			dirtyElement: "dirty",
+			dirtyStatusClass: "visible"
 		});
 				
 		$("#modelname").text(resourceID)
@@ -51,6 +53,13 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 		};
 		
 		editor.xtextServices.successListeners.push(afterEditorCreation);
+		
+		editor.on('change', function() {
+	        if (editor.session.$modified) {
+	        	window.onbeforeunload = function() { return "You have unsaved changes"; };
+	        }
+	    });
+		
         return editor;
 	 };
 	 
