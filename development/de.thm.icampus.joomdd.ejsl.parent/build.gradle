@@ -12,7 +12,7 @@ subprojects {
 		
 	if(!(project.name == 'ProjectWizard' )) // excluding ProjectWizard for the standard xtext configuration
 	{
-		ext.xtextVersion = '2.10.0'
+		ext.xtextVersion = '2.13.0'
 		repositories {
 			jcenter()
 		}
