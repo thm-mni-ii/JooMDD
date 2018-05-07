@@ -27,7 +27,7 @@ class ExtensionGenerator extends AbstractGenerator {
     ) {
         extensions = list
         fileGen = fsa
-        path = pathToGenerate + modelName + "/"
+        path = pathToGenerate + "/"
         this.modelName = modelName
         this.rootPath = rootPath
         this.platform = platform;
@@ -39,12 +39,12 @@ class ExtensionGenerator extends AbstractGenerator {
         	{
         		case "j3": {
         			var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler joomlaExtHandler
-	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler(fileGen, ext, path, rootPath, true)
+	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.ExtensionGeneratorHandler(fileGen, ext, path, rootPath, this.modelName, true)
 	            	joomlaExtHandler.generateExtension
         		}
         		case "j4": {
         			var de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler joomlaExtHandler
-	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler(fileGen, ext, path, rootPath, true)
+	            	joomlaExtHandler = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.ExtensionGeneratorHandler(fileGen, ext, path, rootPath, this.modelName, true)
 	            	joomlaExtHandler.generateExtension
         		}
         	}
