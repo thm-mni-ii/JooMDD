@@ -104,4 +104,11 @@ interface ExtendedEntity extends Entity {
 	 */
 	def ExtendedAttribute getPrimaryKey()
 	
+	/**
+	 * Returns the first  unique key attribute of this
+	 * 
+	 * @return the unique  ExtendedAttribute
+	 */
+	def ExtendedAttribute getFirstUniqueKey()
+	
 }

@@ -15,7 +15,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.E
 abstract public class AbstractExtensionGenerator  {
 
 	@Accessors IFileSystemAccess2 fsa
-	@Accessors String name
+	@Accessors String name 
 	@Accessors String path = ""
 	public Extension ext
 

@@ -83,106 +83,116 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 
 	private def void  languageFileContent(EList<KVPairLanguage> languagesWords, ExtendedComponent com, Language language,
 		EList<ExtendedPageReference> pagerefList) {
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LABEL",com.name.toFirstUpper))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DESC",com.manifest.description))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_UPDATE_TEXT","The update is succesfull"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase,com.name.toFirstUpper))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_HOME","Home"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_ID","ID"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_CHECKED_OUT","Checked out"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_CHECKED_OUT_TIME","Checked out Time"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_ORDERING","Ordering"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_CREATED_BY","Created By"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_STATE","state"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_JSTATUS","state"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_JFIELD_PUBLISHED_DESC","State Description"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_EDIT_ITEM","Edit"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DELETE_ITEM","Delete"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ADD_ITEM","Add"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ITEM_SAVED_SUCCESSFULLY","The data are saved sucessfully"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ITEM_DELETED_SUCCESSFULLY","The data are deleted sucessfully"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DELETE_MESSAGE","Do you want to delete the Data?"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_N_ITEMS_PUBLISHED","The data are published sucessfully"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_TEMPLATE_LAYOUT","Template Layout"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_TEMPLATE_LAYOUT_DESC","Choice a Layout for the Indexpage"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DIRECTION","Direction"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DIRECTION_ASC","ASC"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DIRECTION_DESC" ,"DESC"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_JFIELD_DIRECTION_DESC" ,"Direction"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_START_LABEL","Start"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_START_LABEL_DESC","Begin index for Data"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LIMIT_LABEL" ,"Limit"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LIMIT_LABEL_DESC" ,"The number of Dataitem in the View"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_SEARCH_LABEL" ,"Search"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_SEARCH_LABEL_DESC" ,"Search Data"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FILTER_CREATED_BY","Created By"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ORDERING","Ordering"))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ORDERING_DESC" ,"Ordering description"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LABEL",com.name.toFirstUpper))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DESC",com.manifest.description))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_UPDATE_TEXT","The update is succesfull"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase,com.name.toFirstUpper))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_HOME","Home"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_ID","ID"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_CHECKED_OUT","Checked out"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_CHECKED_OUT_TIME","Checked out Time"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_ORDERING","Ordering"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_CREATED_BY","Created By"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FORM_LBL_NONE_STATE","state"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_JSTATUS","state"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_JFIELD_PUBLISHED_DESC","State Description"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_EDIT_ITEM","Edit"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DELETE_ITEM","Delete"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ADD_ITEM","Add"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ITEM_SAVED_SUCCESSFULLY","The data are saved sucessfully"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ITEM_DELETED_SUCCESSFULLY","The data are deleted sucessfully"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DELETE_MESSAGE","Do you want to delete the Data?"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_N_ITEMS_PUBLISHED","The data are published sucessfully"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_TEMPLATE_LAYOUT","Template Layout"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_TEMPLATE_LAYOUT_DESC","Choice a Layout for the Indexpage"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DIRECTION","Direction"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DIRECTION_ASC","ASC"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DIRECTION_DESC" ,"DESC"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_JFIELD_DIRECTION_DESC" ,"Direction"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_START_LABEL","Start"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_START_LABEL_DESC","Begin index for Data"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LIMIT_LABEL" ,"Limit"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LIMIT_LABEL_DESC" ,"The number of Dataitem in the View"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_SEARCH_LABEL" ,"Search"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_SEARCH_LABEL_DESC" ,"Search Data"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_FILTER_CREATED_BY","Created By"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ORDERING","Ordering"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_ORDERING_DESC" ,"Ordering description"))
 			
 		
-		languagesWords.add(new KVPairLanguage("JTEMPLATE_LAYOUT_LIST","List Layout"))
-		languagesWords.add(new KVPairLanguage("JTEMPLATE_LAYOUT_TABLE","Table layout"))
-		languagesWords.add(new KVPairLanguage("JOPTION_SELECT_LIMIT","limit"))
-		languagesWords.add(new KVPairLanguage("JPUBLISHED","published"))
-		languagesWords.add(new KVPairLanguage("JUNPUBLISHED","unpublished"))
-		languagesWords.add(new KVPairLanguage("JGLOBAL_ACTION_PERMISSIONS_LABEL","Permission"))
-		languagesWords.add(new KVPairLanguage("JARCHIVED","archived"))
-		languagesWords.add(new KVPairLanguage("JTRASHED","trashed"))
-		languagesWords.add(new KVPairLanguage("JOPTION_SELECT_CREATED_BY", "Select a user"))
-		languagesWords.add(new KVPairLanguage("JFIELD_RULES_LABEL","Rules"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JTEMPLATE_LAYOUT_LIST","List Layout"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JTEMPLATE_LAYOUT_TABLE","Table layout"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JOPTION_SELECT_LIMIT","limit"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JPUBLISHED","published"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JUNPUBLISHED","unpublished"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JGLOBAL_ACTION_PERMISSIONS_LABEL","Permission"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JARCHIVED","archived"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JTRASHED","trashed"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JOPTION_SELECT_CREATED_BY", "Select a user"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JFIELD_RULES_LABEL","Rules"))
 		for( ExtendedPageReference pag : pagerefList){
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase + "_TITLE_" + Slug.slugify(pag.page.name).toUpperCase ,pag.page.name.toFirstUpper))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase + "_VIEW_" + Slug.slugify(pag.page.name).toUpperCase+"_TITLE",pag.page.name.toFirstUpper))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_" + Slug.slugify(pag.page.name).toUpperCase + "_DESC",pag.page.name.toFirstUpper+" description"))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase + "_ALIAS_" +pag.page.name.toUpperCase,pag.page.name.toFirstUpper))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ pag.page.name.toUpperCase +"_PARAMS_LOCAL__LABEL" , "Local Parameter"))
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_" + pag.page.name.toUpperCase + "_PARAMS_GLOBAL__LABEL", "Global Parameter"))
+			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase + "_TITLE_" + Slug.slugify(pag.page.name).toUpperCase ,pag.page.name.toFirstUpper))
+			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase + "_VIEW_" + Slug.slugify(pag.page.name).toUpperCase+"_TITLE",pag.page.name.toFirstUpper))
+			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_" + Slug.slugify(pag.page.name).toUpperCase + "_DESC",pag.page.name.toFirstUpper+" description"))
+			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase + "_ALIAS_" +pag.page.name.toUpperCase,pag.page.name.toFirstUpper))
+			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ pag.page.name.toUpperCase +"_PARAMS_LOCAL__LABEL" , "Local Parameter"))
+			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_" + pag.page.name.toUpperCase + "_PARAMS_GLOBAL__LABEL", "Global Parameter"))
 			
 			if( pag.extendedPage.intance instanceof DetailsPage){
-    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_TITLE_" + Slug.slugify(pag.page.name).toUpperCase +"EDIT",pag.page.name.toFirstUpper+"edit"))
-    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_"+ Slug.slugify(pag.page.name).toUpperCase+"EDIT_TITLE",pag.page.name.toFirstUpper+"edit"))
-    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_" + Slug.slugify(pag.page.name).toUpperCase+"EDIT_DESC",pag.page.name.toFirstUpper+"edit description"))
-    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_ALIAS_"+pag.page.name.toUpperCase + "EDIT",pag.page.name.toFirstUpper+"edit"))
-    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+pag.page.name.toUpperCase+"EDIT_PARAMS_LOCAL__LABEL" ,"Local Parameter"))
-    			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ pag.page.name.toUpperCase +"EDIT_PARAMS_GLOBAL__LABEL", "Global Parameter"))
+    			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_TITLE_" + Slug.slugify(pag.page.name).toUpperCase +"EDIT",pag.page.name.toFirstUpper+"edit"))
+    			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_"+ Slug.slugify(pag.page.name).toUpperCase+"EDIT_TITLE",pag.page.name.toFirstUpper+"edit"))
+    			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_VIEW_" + Slug.slugify(pag.page.name).toUpperCase+"EDIT_DESC",pag.page.name.toFirstUpper+"edit description"))
+    			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_ALIAS_"+pag.page.name.toUpperCase + "EDIT",pag.page.name.toFirstUpper+"edit"))
+    			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+pag.page.name.toUpperCase+"EDIT_PARAMS_LOCAL__LABEL" ,"Local Parameter"))
+    			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ pag.page.name.toUpperCase +"EDIT_PARAMS_GLOBAL__LABEL", "Global Parameter"))
 			}
 		}
-			
-		for(ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance !== null]){
+			var EList<ExtendedPageReference> temp = new BasicEList<ExtendedPageReference>();
+			temp.addAll(pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance !== null])
+		for(ExtendedPageReference dynamicPagereference : temp){
 			var ExtendedDynamicPage dtPage = dynamicPagereference.extendedPage.extendedDynamicPageInstance as ExtendedDynamicPage
 			for( ExtendedEntity ent: dtPage.extendedEntityList) {
-				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ent.name.toUpperCase,ent.name.toFirstUpper))
-				languagesWords.add(new KVPairLanguage("JGRID_HEADING_" + ent.primaryKey.name.toUpperCase,ent.primaryKey.name))
+				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+ent.name.toUpperCase,ent.name.toFirstUpper))
+				languagesWords.addsLanguageKeys(new KVPairLanguage("JGRID_HEADING_" + ent.primaryKey.name.toUpperCase,ent.primaryKey.name))
 				
-				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_SELECT_"+ ent.name.toUpperCase, "Select a " + ent.name.toFirstUpper))
+				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_SELECT_"+ ent.name.toUpperCase, "Select a " + ent.name.toFirstUpper))
 				for(ExtendedAttribute attr: ent.allExtendedAttributes){
 					var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) 
-					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+ Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
-					languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_DESC","Description of " + Slug.slugify(attr.name).toFirstUpper))
+					languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+ Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
+					languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_DESC","Description of " + Slug.slugify(attr.name).toFirstUpper))
 					if( field !== null && field.values !== null){
 						for( KeyValuePair kv: field.values){
-							languagesWords.add(new KVPairLanguage(dtPage.name.toUpperCase+"_"+attr.name.toUpperCase+"_"+kv.name.toUpperCase+"_OPTION",kv.name))
+							languagesWords.addsLanguageKeys(new KVPairLanguage(dtPage.name.toUpperCase+"_"+attr.name.toUpperCase+"_"+kv.name.toUpperCase+"_OPTION",kv.name))
 						}
 					}
 				}
     			for( ExtendedReference ref: ent.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")]){
     			    var Entity refEntity = Slug.getOtherEntityToMapping(ref)
-    			    languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+Slug.slugify(ent.name).toUpperCase+"_"+refEntity.name.toUpperCase,refEntity.name.toFirstUpper))
+    			    languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+Slug.slugify(ent.name).toUpperCase+"_"+refEntity.name.toUpperCase,refEntity.name.toFirstUpper))
     			}
 			}
 		}
 		for(ExtendedPageReference dynamicPagereference : pagerefList.filter[t | t.extendedPage.extendedDynamicPageInstance !== null]){
 		    if( dynamicPagereference.extendedPage.extendedDynamicPageInstance.instance instanceof IndexPage){
-			    languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase+"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_ORDERING_LABEL" , "Ordering"))
-			    languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_FILTER_LABEL" , "Filter"))
+			    languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase+"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_ORDERING_LABEL" , "Ordering"))
+			    languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_FILTER_LABEL" , "Filter"))
 			}
 			for( ExtendedAttribute attr: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendFiltersList){
-			    languagesWords.add(new KVPairLanguage("JOPTION_SELECT_"+ Slug.slugify(attr.name).toUpperCase, "Select a "+Slug.slugify(attr.name).toFirstUpper))
-				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
-				languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase+"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
+			    languagesWords.addsLanguageKeys(new KVPairLanguage("JOPTION_SELECT_"+ Slug.slugify(attr.name).toUpperCase, "Select a "+Slug.slugify(attr.name).toFirstUpper))
+				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
+				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase+"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
 			}
-			languagesWords.add(new KVPairLanguage(com.extensionName.toUpperCase +"_"+dynamicPagereference.extendedPage.name.toUpperCase+"_ACTIONS","Actions"))
+			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+dynamicPagereference.extendedPage.name.toUpperCase+"_ACTIONS","Actions"))
 		}		
+	}
+	
+	def void addsLanguageKeys(EList<KVPairLanguage> list, KVPairLanguage language){
+		for(KVPairLanguage g : list){
+			if(g.kv.name == language.kv.name){
+				return;
+			}
+		}
+		list.add(language);
 	}
 
 	override generate() {
@@ -196,7 +206,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			languageModuleFileGen(languagesWords, extmod)
 			for(keys: lang.keyvaluepairs){
 				if(!keysContains(keys, languagesWords)){
-					languagesWords.add(new KVPairLanguage(keys) )
+					languagesWords.addsLanguageKeys(new KVPairLanguage(keys) )
 				}
 			}
 			val ldir = lang.name
@@ -217,7 +227,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
             languagePackageFileGen(languagesWords, extpkg)
             for(keys: lang.keyvaluepairs){
                 if(!keysContains(keys, languagesWords)){
-                    languagesWords.add(new KVPairLanguage(keys) )
+                    languagesWords.addsLanguageKeys(new KVPairLanguage(keys) )
                 }
             }
             val ldir = lang.name
@@ -246,63 +256,63 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	}
 
 	private def void  languageModuleFileGen(EList<KVPairLanguage> languagesWords,ExtendedModule extmod) {
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("mod", extmod.name).toUpperCase +"_LABEL",extmod.name.toFirstUpper))
-		languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("mod", extmod.name).toUpperCase+"_DESC",extmod.name.toFirstUpper + " "+ extmod.manifest.description))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("mod", extmod.name).toUpperCase +"_LABEL",extmod.name.toFirstUpper))
+		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("mod", extmod.name).toUpperCase+"_DESC",extmod.name.toFirstUpper + " "+ extmod.manifest.description))
 		
-		languagesWords.add(new KVPairLanguage("COM_MODULES_FILTER_FIELDSET_LABEL" , "Filter"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_ORDERING","Ordering"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_JFIELD_ORDERING_DESC" , "Ordering description"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_DIRECTION", "Direction"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+ "_JFIELD_DIRECTION_DESC" , "Sort the result in a Direction"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_ASC","ASC"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_DESC", "DESC"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_START_LABEL","Start Index"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_START_DESC","The index of First data Item"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_LIMIT_LABEL","Limit"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_LIMIT_DESC","Limit the number of Data in view"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_SEARCH_LABEL","Search"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_SEARCH_DESC","Search Data"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_JSTATUS","Status"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_JFIELD_PUBLISHED_DESC","Status"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
-		languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
-		languagesWords.add(new KVPairLanguage("JOPTION_SELECT_CREATED_BY","select a user"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("COM_MODULES_FILTER_FIELDSET_LABEL" , "Filter"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_ORDERING","Ordering"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_JFIELD_ORDERING_DESC" , "Ordering description"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_DIRECTION", "Direction"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+ "_JFIELD_DIRECTION_DESC" , "Sort the result in a Direction"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_ASC","ASC"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_DESC", "DESC"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_START_LABEL","Start Index"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_START_DESC","The index of First data Item"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_LIMIT_LABEL","Limit"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_LIMIT_DESC","Limit the number of Data in view"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_SEARCH_LABEL","Search"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_SEARCH_DESC","Search Data"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_JSTATUS","Status"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_JFIELD_PUBLISHED_DESC","Status"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
+		languagesWords.addsLanguageKeys(new KVPairLanguage("JOPTION_SELECT_CREATED_BY","select a user"))
 		var ExtendedDynamicPage dtPage = extmod.extendedPageReference.extendedPage.extendedDynamicPageInstance 
 		for(ExtendedAttribute attr : extmod.extendedPageReference.extendedPage.extendedDynamicPageInstance.extendFiltersList) {
 			var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(dtPage, attr) 
-			languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FORM_LBL_"+ attr.name.toUpperCase, attr.name.toFirstUpper))
-			languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_" + attr.name.toUpperCase, attr.name.toFirstUpper))
-			languagesWords.add(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_"+ attr.name.toUpperCase+"_DESC ", attr.name.toFirstUpper))
-			languagesWords.add(new KVPairLanguage("JOPTION_SELECT_" +  attr.name.toUpperCase,"Select a "+ attr.name))
+			languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FORM_LBL_"+ attr.name.toUpperCase, attr.name.toFirstUpper))
+			languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_" + attr.name.toUpperCase, attr.name.toFirstUpper))
+			languagesWords.addsLanguageKeys(new KVPairLanguage("MOD_" + extmod.name.toUpperCase+"_FILTER_"+ attr.name.toUpperCase+"_DESC ", attr.name.toFirstUpper))
+			languagesWords.addsLanguageKeys(new KVPairLanguage("JOPTION_SELECT_" +  attr.name.toUpperCase,"Select a "+ attr.name))
 			if(field !== null){
 				for(KeyValuePair kv: field.values){
-					languagesWords.add(new KVPairLanguage( dtPage.name.toUpperCase + "_"+attr.name.toUpperCase+ "_"+kv.name.toUpperCase+"_OPTION",kv.name))
+					languagesWords.addsLanguageKeys(new KVPairLanguage( dtPage.name.toUpperCase + "_"+attr.name.toUpperCase+ "_"+kv.name.toUpperCase+"_OPTION",kv.name))
 			    }
 			}
 		}
 	}
 	
 	private def void  languagePackageFileGen(EList<KVPairLanguage> languagesWords,ExtendedExtensionPackage extpkg) {
-        languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("pkg", extpkg.name).toUpperCase +"_LABEL",extpkg.name.toFirstUpper))
-        languagesWords.add(new KVPairLanguage(Slug.nameExtensionBind("pkg", extpkg.name).toUpperCase+"_DESC",extpkg.name.toFirstUpper + " "+ extpkg.manifest.description))
+        languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("pkg", extpkg.name).toUpperCase +"_LABEL",extpkg.name.toFirstUpper))
+        languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("pkg", extpkg.name).toUpperCase+"_DESC",extpkg.name.toFirstUpper + " "+ extpkg.manifest.description))
         
-        languagesWords.add(new KVPairLanguage("COM_MODULES_FILTER_FIELDSET_LABEL" , "Filter"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_ORDERING","Ordering"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JFIELD_ORDERING_DESC" , "Ordering description"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_DIRECTION", "Direction"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+ "_JFIELD_DIRECTION_DESC" , "Sort the result in a Direction"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_ASC","ASC"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_DESC", "DESC"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_START_LABEL","Start Index"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_START_DESC","The index of First data Item"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_LIMIT_LABEL","Limit"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_LIMIT_DESC","Limit the number of Data in view"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_SEARCH_LABEL","Search"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_SEARCH_DESC","Search Data"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JSTATUS","Status"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JFIELD_PUBLISHED_DESC","Status"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
-        languagesWords.add(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
-        languagesWords.add(new KVPairLanguage("JOPTION_SELECT_CREATED_BY","select a user"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("COM_MODULES_FILTER_FIELDSET_LABEL" , "Filter"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_ORDERING","Ordering"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JFIELD_ORDERING_DESC" , "Ordering description"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_DIRECTION", "Direction"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+ "_JFIELD_DIRECTION_DESC" , "Sort the result in a Direction"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_ASC","ASC"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_DESC", "DESC"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_START_LABEL","Start Index"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_START_DESC","The index of First data Item"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_LIMIT_LABEL","Limit"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_LIMIT_DESC","Limit the number of Data in view"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_SEARCH_LABEL","Search"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_SEARCH_DESC","Search Data"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JSTATUS","Status"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_JFIELD_PUBLISHED_DESC","Status"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("PKG_" + extpkg.name.toUpperCase+"_FILTER_CREATED_BY","Created by"))
+        languagesWords.addsLanguageKeys(new KVPairLanguage("JOPTION_SELECT_CREATED_BY","select a user"))
     }
 }
