@@ -161,5 +161,13 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	override getPrimaryKey() {
 		return primaryAttribute
 	}
+	
+	override getFirstUniqueKey() {
+		return ownExtendedAttributes.filter[t | t.isIsunique].get(0);
+	}
+	
+
+	
+
 
 }
