@@ -40,13 +40,15 @@ public class ExtensionGeneratorHandler {
     Extension ext
     String path
     String rootpath
-    String platformPath = "j3/";
+    String platformPath = "j3/"
+    String modelName
 
-    new(IFileSystemAccess2 access, Extension extens, String path, String rootPath, Boolean addPlatformPath) {
+    new(IFileSystemAccess2 access, Extension extens, String path, String rootPath, String modelName, Boolean addPlatformPath) {
         fsa = access
         ext = extens
         this.path = path
         this.rootpath = rootPath
+        this.modelName = modelName
         
         if (addPlatformPath === false)
         {
@@ -77,9 +79,10 @@ public class ExtensionGeneratorHandler {
             Component: {
                 var ExtendedComponent tempext = new ExtendedComponentImpl(ext as Component)
                 extensionsgenerator = new ComponentGenerator(tempext, fsa,
-                    path + platformPath + Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/new/" +
+                    path + platformPath + this.modelName + "/new/" +
                         Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/",
-                    path + platformPath + Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/update/")
+                    path + platformPath + this.modelName + "/update/" +
+                        Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/")
             }
             Module: {
                 var ExtendedModule tempext = new ExtendedModuleImpl(ext as Module)

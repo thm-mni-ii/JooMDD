@@ -29,31 +29,38 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
      * @param ExtendedDynamicPage page		 contains the extended instance of a dynamicpage
      * @param ExtendedComponent   component contains the compoenent name
      */   
-    def CharSequence xmlSiteTemplateContent(String pagename, ExtendedDynamicPage page, ExtendedComponent component) '''
-    <?xml version="1.0" encoding="utf-8"?>
-    <metadata>
-        <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
-            <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_DESC]]></message>
-        </layout>
-        <fields name="params">
-            «IF page.instance instanceof IndexPage»
-            «genSettingForIndexPage(pagename,page,component)»
-            «ELSE»
-            «genSettingForDetailsPage(pagename,page,component)»
-            «ENDIF»
-            <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL_LABEL">
-                «generateParameter(page.extendedLocalParametersListe, component)»
-            </fieldset>
-            <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL_LABEL">
-                «generateParameter(page.extendedGlobalParametersListe, component)»
-            </fieldset>
-            «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe »
-            <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
-                «generateParameter(e.extendedParameterList, component)»
-            </fieldset>
-            «ENDFOR»
-        </fields>
-    </metadata>
+     def CharSequence xmlSiteTemplateContent(String pagename, ExtendedDynamicPage page, ExtendedComponent component) '''
+		<?xml version="1.0" encoding="utf-8"?>
+		<metadata>
+		    <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
+		        <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_DESC]]></message>
+		    </layout>	
+			 «IF page.instance instanceof IndexPage»
+			 <fields name="params">
+		    «genSettingForIndexPage(pagename,page,component)»
+		    «ELSE»
+			 <fields name="request">
+			 «genSettingForDetailsPage(pagename,page,component)»
+			 </fields>
+			 <fields name="params">
+		    «ENDIF»
+		«IF page.extendedLocalParametersListe.length>0»
+		    <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL_LABEL">
+		        «generateParameter(page.extendedLocalParametersListe, component)»
+		    </fieldset>
+		    «ENDIF»
+		    «IF page.extendedGlobalParametersListe.length>0»
+		    <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL_LABEL">
+		        «generateParameter(page.extendedGlobalParametersListe, component)»
+		    </fieldset>
+		    «ENDIF»
+		    «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe »
+		    <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»"> 
+		        «generateParameter(e.extendedParameterList, component)»
+		    </fieldset>
+		    «ENDFOR»
+		 	</fields>
+		 </metadata>
     '''
     
     /**

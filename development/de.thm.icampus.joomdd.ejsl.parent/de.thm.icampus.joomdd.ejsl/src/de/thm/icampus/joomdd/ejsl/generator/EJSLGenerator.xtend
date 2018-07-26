@@ -132,7 +132,7 @@ class EJSLGenerator extends AbstractGenerator {
 
                     var ExtensionGenerator mainExtensionGen = new ExtensionGenerator (
                     	extensionPart.extensions, 
-                    	"Extensions/", 
+                    	"", 
                     	genData, 
                     	domainModel.name, 
                     	outputFolder,

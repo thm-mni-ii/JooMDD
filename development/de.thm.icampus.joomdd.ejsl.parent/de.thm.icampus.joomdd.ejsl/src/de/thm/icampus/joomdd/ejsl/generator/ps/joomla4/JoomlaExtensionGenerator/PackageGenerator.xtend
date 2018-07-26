@@ -49,6 +49,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         	    ext, 
         	    path + "packages/tocompress/", 
         	    rootPath,
+        	    "",
         	    false
         	)
 			this.extClient.generateExtension
