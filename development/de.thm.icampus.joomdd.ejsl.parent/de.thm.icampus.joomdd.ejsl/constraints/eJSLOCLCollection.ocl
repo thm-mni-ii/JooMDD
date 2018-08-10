@@ -1,0 +1,27 @@
+import 'EJSL.ecore'
+
+package eJSL
+
+context EJSLModel
+--
+-- example invariant with a custom error message to verify that
+-- the 'name' property of all 'eJSL::EJSLModel' instances is non-null
+--
+inv NonNull_name('The \'name\' property of "' + self.toString() + '" is null'):
+    name <> null
+
+context Entity
+
+-- Check if attribute identifiers are unique
+inv uniqueAttributes:
+self.attributes -> forAll(e1, e2| e1 <> e2 implies e1.name <> e2.name)
+
+-- Check if entity does not extend itself
+inv entityDoesNotExtendItself: 
+self.supertype -> excludes(self)
+
+-- Check if at least one unique (primary) attribute exists
+inv primaryAttributeExists:
+self.attributes -> exists(isunique)
+
+endpackage

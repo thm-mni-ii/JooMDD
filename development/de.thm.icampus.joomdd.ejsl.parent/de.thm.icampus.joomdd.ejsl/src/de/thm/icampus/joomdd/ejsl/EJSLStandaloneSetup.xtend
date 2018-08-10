@@ -3,7 +3,6 @@
  */
 package de.thm.icampus.joomdd.ejsl
 
-
 /**
  * Initialization support for running Xtext languages without Equinox extension registry.
  */

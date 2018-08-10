@@ -20,6 +20,10 @@ import java.util.Set
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.ComposedChecks
+import org.eclipse.xtext.validation.EValidatorRegistrar
+import org.eclipse.emf.common.util.URI
+import org.eclipse.ocl.xtext.completeocl.validation.CompleteOCLEObjectValidator
+import java.io.IOException
 
 /**
  * This class contains custom validation rules. 
@@ -38,6 +42,18 @@ class EJSLValidator extends AbstractEJSLValidator {
 	public static val EXTPACKAGE_CONTAINS_EXTPACKAGE = 'extPackageContainsExtPackage'
 	public static val FORBIDDEN_UNDERSCORE_EXTENSIONNAME = 'forbiddenUnderscoreExtensionname'
 	
+	
+	/**
+	 * Register the OCL file to use it in the eJSL text editor. However, it doesn't work
+	 * 
+	 */
+    override register(EValidatorRegistrar registrar) {
+      super.register(registrar);
+      val EJSLPackage ePackage = EJSLPackage.eINSTANCE;
+      val URI oclURI = URI.createPlatformResourceURI("/de.thm.icampus.joomdd.ejsl/model/generated/eJSLOCLCollection.ocl", true);
+      registrar.register(ePackage, new CompleteOCLEObjectValidator(ePackage, oclURI, org.eclipse.ocl.pivot.utilities.OCL.newInstance().getEnvironmentFactory()));
+      
+  }
 
 	/**
 	 * Validates if the defined Datatypes of the model have different/unique names
@@ -160,24 +176,25 @@ class EJSLValidator extends AbstractEJSLValidator {
 		}
 	}
 
-	/**
-	 * Check if the existing extensions don't contain another extensions.
-	 */
-	@Check
-	def checkExtensionPackagesDoNotContainExtensionPackages(ExtensionPackage extPackage) {
-		var i = 0
-		for (ext : extPackage.extensions) {
-			if (ext instanceof ExtensionPackage) {
-				error(
-					'Extension package must not contain more extension packages.',
-					EJSLPackage.Literals.EXTENSION_PACKAGE__EXTENSIONS,
-					i,
-					EXTPACKAGE_CONTAINS_EXTPACKAGE
-				)
-			}
-			i++
-		}
-	}
+//  Why is that constraint defined. This is actually a feature of the eJSL langugae
+//	/**
+//	 * Check if the existing extensions don't contain another extensions.
+//	 */
+//	@Check
+//	def checkExtensionPackagesDoNotContainExtensionPackages(ExtensionPackage extPackage) {
+//		var i = 0
+//		for (ext : extPackage.extensions) {
+//			if (ext instanceof ExtensionPackage) {
+//				error(
+//					'Extension package must not contain more extension packages.',
+//					EJSLPackage.Literals.EXTENSION_PACKAGE__EXTENSIONS,
+//					i,
+//					EXTPACKAGE_CONTAINS_EXTPACKAGE
+//				)
+//			}
+//			i++
+//		}
+//	}
 	
 //	/**
 //	 * Checks if the name of a extension contains a underscore

@@ -95,7 +95,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 	
 	/**
 	 * Check if the entity in the filter is declared in the page
- 	*/
+ 	 */
 	@Check
     def nonDeclaredFilterAttribute(DynamicPage p){ 
         for(filt : p.filters){
@@ -113,7 +113,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 
 	/**
 	 * Check if the entity in the table column is declared in the page
- 	*/
+ 	 */
     @Check
     def nonDeclaredColumnAttribute(DynamicPage p){   
         for(column : p.tablecolumns){
