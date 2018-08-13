@@ -46,7 +46,7 @@ class EJSLValidator extends AbstractEJSLValidator {
 	/**
 	 * Register the OCL file to use it in the eJSL text editor. However, it doesn't work
 	 * 
-	 */
+	
     override register(EValidatorRegistrar registrar) {
       super.register(registrar);
       val EJSLPackage ePackage = EJSLPackage.eINSTANCE;
@@ -54,7 +54,7 @@ class EJSLValidator extends AbstractEJSLValidator {
       registrar.register(ePackage, new CompleteOCLEObjectValidator(ePackage, oclURI, org.eclipse.ocl.pivot.utilities.OCL.newInstance().getEnvironmentFactory()));
       
   }
-
+*/
 	/**
 	 * Validates if the defined Datatypes of the model have different/unique names
 	 */

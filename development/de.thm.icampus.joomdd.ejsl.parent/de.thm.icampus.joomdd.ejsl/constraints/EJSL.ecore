@@ -73,12 +73,14 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Entity">
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
-      <details key="constraints" value="uniqueAttributes entitydoesNotExtendItself uniqueAttributeExists"/>
+      <details key="constraints" value="uniqueEntity uniqueAttributeIdentifier entitydoesNotExtendItself uniqueAttributeExists noGeneralizationCycles"/>
     </eAnnotations>
     <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
-      <details key="uniqueAttributes" value="&#xA;            self.attributes -> forAll(e1, e2| e1 &lt;> e2 implies e1.name &lt;> e2.name)"/>
+      <details key="uniqueEntity" value="&#xA;            Entity.allInstances()->forAll(e1, e2| e1 &lt;> e2 implies e1.name &lt;> e2.name and e1.name &lt;> '^' + e2.name)"/>
+      <details key="uniqueAttributeIdentifier" value="&#xA;            self.attributes -> forAll(a1, a2| a1 &lt;> a2 implies a1.name &lt;> a2.name and a1.name &lt;> '^' + a2.name)"/>
       <details key="entitydoesNotExtendItself" value="&#xA;            self.supertype -> excludes(self)"/>
-      <details key="uniqueAttributeExists" value="&#xA;            self.attributes -> exists(isunique)"/>
+      <details key="uniqueAttributeExists" value="&#xA;            -- To do: Check if entity does not extend another one, if so, check if extended entity has a unique attribute&#xA;            self.attributes -> exists(isunique)"/>
+      <details key="noGeneralizationCycles" value="&#xA;            self.supertype->closure(supertype)->excludes(self)"/>
     </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="supertype" eType="#//Entity"/>

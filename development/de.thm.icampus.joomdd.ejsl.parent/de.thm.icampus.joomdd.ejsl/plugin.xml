@@ -7,4 +7,5 @@
 			class = "de.thm.icampus.joomdd.ejsl.eJSL.EJSLPackage"
 			genModel = "model/generated/EJSL.genmodel" />
 	</extension>
+
 </plugin>
