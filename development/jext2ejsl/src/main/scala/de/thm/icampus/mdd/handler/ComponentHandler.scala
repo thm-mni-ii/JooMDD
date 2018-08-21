@@ -6,10 +6,14 @@ import java.io.File
 import de.thm.icampus.mdd.implicits.Conversions._
 import de.thm.icampus.mdd.implicits.OptionUtils._
 import de.thm.icampus.mdd.parser.SQLParser
+import de.thm.mni.ii.phpparser.PHPParser
+import de.thm.mni.ii.phpparser.ast.Statements.{ClassDecl, CompoundStmnt, MethodDecl}
 
 import scala.collection.JavaConversions._
 import de.thm.icampus.mdd.model.{Language, Manifest}
 import de.thm.icampus.mdd.model.extensions._
+import de.thm.mni.ii.phpparser.ast.Expressions.{MemberCallPropertyAcc, MemberCallStaticAcc, SimpleAssignmentExp}
+import de.thm.mni.ii.phpparser.ast.Statements.ExpressionStmnt
 
 import scala.io.{Codec, Source}
 import scala.xml.{Elem, XML}
@@ -78,26 +82,89 @@ object ComponentHandler extends Handler {
 
     if (!frontendSuffix.isEmpty && Files.exists(frontendPath)) { // Handle frontendSection
       val viewsPath = frontendPath + "views"
+      val modelpath = frontendPath + "models"
+
       Files.newDirectoryStream(viewsPath).foreach {
         case viewFolder: Path if Files.isDirectory(viewFolder) ⇒ {
-          val fileName = viewFolder.getFileName.toString
+          val pageName: String = viewFolder.getFileName.toString
+          val modelFilename = pageName + ".php"
+          if (Files.exists(modelpath + modelFilename)) {
+            val ts = Source.fromFile(modelpath + modelFilename).mkString
+            val fileResult = PHPParser.parse(ts)
+            val fileClass = DetailsPageHandler.searchClass(fileResult)
+                val bodyClass = fileClass.body
+               val className =  (fileClass.name match {
+                case Some(e) => e.name
+                    }).toString
+                val parentName =  (fileClass.extend match {
+                  case Some(e) => e.name.name
+                }).toString
+                parentName match {
+                 case "ListModel" | "JModelList" =>{
 
-          var pageGroupParamNames = Set.empty[String]
-          val paramsPath = viewFolder + "tmpl/default.xml"
-          if (Files.exists(paramsPath)) {
-            val pageParams = readParams(paramsPath)
-            pageGroupParamNames = pageParams.map(p ⇒ p.name)
-            paramGroups = paramGroups ++ pageParams
+                  }
+                   case "FormModel" | "JModelAdmin"=>{
+
+                  }
+                   case "ItemModel" | "JModelAdmin" =>{
+                     var tableName = ""
+                      val getItemFunk = DetailsPageHandler.searchMethod("getItem",bodyClass)
+                     if(getItemFunk != null){
+
+                       val allStmts = getItemFunk.body match {  case Some(e) => e
+                       }
+                       val statement = DetailsPageHandler.searchStatment("getTable",allStmts.stmnts,true)
+                       if(statement != null){
+                          val assStat = statement.asInstanceOf[ExpressionStmnt]
+                         val expm =assStat.exp.asInstanceOf[SimpleAssignmentExp]
+                         val call = expm.exp.asInstanceOf[MemberCallPropertyAcc]
+                         if(call.args.size != 0){
+                           tableName = DetailsPageHandler.readMemberCallStaticAccAttr(call.from,call.member,call.args,getItemFunk,"this","getTable",0)
+                         }
+
+                       }
+
+                     }
+                    if(tableName ==""){
+                      val getTableFunc = DetailsPageHandler.searchMethod("getTable",bodyClass)
+                     if(getTableFunc != null){
+                       tableName = DetailsPageHandler.searchTableInMeth(getTableFunc)
+                       println(tableName)
+                     }
+                    }
+                   }
+                 }
+
+
+
+
+            /** val model = PHPParser2.parseFile(modelpath+modelFilename)
+              * val classSchema = model.get(0).asInstanceOf[Clazz];
+              * val className = classSchema.name
+              * val classParent = classSchema.superClass match {
+              * case Some(e) => e
+              * }
+
+              **
+              *} */
+
+            var pageGroupParamNames = Set.empty[String]
+            val paramsPath = viewFolder + "tmpl/default.xml"
+            if (Files.exists(paramsPath)) {
+              val pageParams = readParams(paramsPath)
+              pageGroupParamNames = pageParams.map(p ⇒ p.name)
+              paramGroups = paramGroups ++ pageParams
+            }
+
+            if (!pageName.startsWith(extensionName)) {
+              frontEndPages = frontEndPages + createPage(frontendPath, pageName, pageGroupParamNames)
+            }
+
           }
-
-          if (!fileName.startsWith(extensionName)){
-            frontEndPages = frontEndPages + createPage(frontendPath, fileName, pageGroupParamNames)
-          }
-
         }
-        case ignored: Path ⇒ println("Ignore File: " + ignored)
+          case ignored: Path ⇒ println("Ignore File: " + ignored)
+        }
       }
-    }
 
 
 

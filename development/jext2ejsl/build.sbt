@@ -2,7 +2,7 @@ name := "jext2ejsl"
 
 version := "1.0"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.12.2"
 
 libraryDependencies ++= Seq(
   "com.github.jsqlparser" % "jsqlparser" % "1.0",
