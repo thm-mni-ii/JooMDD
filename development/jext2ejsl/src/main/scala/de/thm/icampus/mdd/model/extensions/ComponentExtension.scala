@@ -9,11 +9,11 @@ case class Frontend(pages: Set[Page])
 
 abstract class Page {
   def name: String
-  def globalParamNames: Set[String]
+  def globalParamNames: Set[JParamGroup]
 }
 
 abstract class DynamicPage extends Page
 
-case class IndexPage(name: String, entity: String, globalParamNames: Set[String] = Set.empty[String]) extends DynamicPage
-case class DetailsPage(name: String, entity: String, globalParamNames: Set[String] = Set.empty[String]) extends DynamicPage
-case class CustomPage(name: String, globalParamNames: Set[String] = Set.empty[String]) extends DynamicPage
+case class IndexPage(name: String, entity: String, globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup],representationColumns: Set[String] = Set.empty[String],filters: Set[String] = Set.empty[String]) extends DynamicPage
+case class DetailsPage(name: String, entity: String, globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup],representationColumns: Set[String] = Set.empty[String],editAttribute: Set[DetailsPageAttribute] = Set.empty[DetailsPageAttribute]) extends DynamicPage
+case class CustomPage(name: String, globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]) extends DynamicPage
