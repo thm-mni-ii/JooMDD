@@ -19,7 +19,7 @@ import de.thm.icampus.mdd.implicits.OptionUtils._
 
 import scala.io.{Codec, Source}
 import scala.xml.XML
-
+//tim
 object IndexPageHandler {
   val toIgnoreFilter = List("search","state","created_by","id","limit")
 

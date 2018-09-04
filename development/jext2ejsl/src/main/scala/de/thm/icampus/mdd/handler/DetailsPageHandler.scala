@@ -15,7 +15,7 @@ import de.thm.icampus.mdd.model.extensions._
 
 import scala.io.Source
 import scala.xml.{Node, XML}
-
+//tim
 object DetailsPageHandler {
   val toIgnoreAttribute = List("state","created_by","ordering","checked_out_time","checked_out","published","params","asset_id","rules")
   val toIgnoreFiedlAttr= List("label","description","type","name")

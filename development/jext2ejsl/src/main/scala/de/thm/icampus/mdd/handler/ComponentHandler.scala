@@ -12,6 +12,7 @@ import de.thm.mni.ii.phpparser.ast.Statements.{ClassDecl, CompoundStmnt, MethodD
 import scala.collection.JavaConversions._
 import de.thm.icampus.mdd.model.{Language, Manifest}
 import de.thm.icampus.mdd.model.extensions._
+import de.thm.icampus.mdd.model.sql.Table
 import de.thm.mni.ii.phpparser.ast.Expressions.{MemberCallPropertyAcc, MemberCallStaticAcc, SimpleAssignmentExp}
 import de.thm.mni.ii.phpparser.ast.Expressions.SimpleNameVar
 import de.thm.mni.ii.phpparser.ast.Statements.ExpressionStmnt
@@ -86,10 +87,17 @@ object ComponentHandler extends Handler {
       val viewsPath = backendPath + "views"
       val modelpath = backendPath + "models"
       // Read Sql Create Statements and create entities
-      val sqlInstallPathString = (xmlManifest \ "install" \ "sql" \ "file").last.text
-      val sqlInstallPath = backendPath + sqlInstallPathString
-
-      val sqlTables = SQLParser.parseFile(sqlInstallPath)
+      var sqlTables = List.empty[Table]
+      var sqlFileList = List.empty[String]
+      val sqlInstallPathString = (xmlManifest \ "install" \ "sql" \ "file").foreach(
+       er =>{
+         if(!sqlFileList.contains(er.text)){
+         val sqlInstallPath = backendPath + er.text
+         sqlTables = sqlTables.++(SQLParser.parseFile(sqlInstallPath))
+           sqlFileList = sqlFileList.:+(er.text)
+         }
+       }
+      )
 
        entities = sqlTables.map(t => {
         var newName = if(t.name.startsWith(extensionName + "_")) t.name.substring(extensionName.length + 1) else t.name

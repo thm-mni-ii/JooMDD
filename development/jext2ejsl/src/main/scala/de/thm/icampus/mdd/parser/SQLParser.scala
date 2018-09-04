@@ -33,6 +33,7 @@ object SQLParser {
 class SQLParser {
   val lineBreakRE = "[\\n\\r]"
   val tabOrSpaceRE = "([\\t]|\\s)"
+  val comment = "(--[^\\r\\n]*)|(\\/\\*\\*[\\w\\W]*\\*\\/)"
   // used to remove the "...if not exists... "
   val createTableRE = s"$tabOrSpaceRE?create$tabOrSpaceRE+table$tabOrSpaceRE+(if$tabOrSpaceRE+not$tabOrSpaceRE+exists$tabOrSpaceRE+)?([^\\(]*)$tabOrSpaceRE?\\([^;]*;$$"
   // important! do not combine this expressions! one run with replaceAll required per exp, otherwise you'll burn your CPU ;-)
@@ -47,7 +48,8 @@ class SQLParser {
   def parseFile(path: Path): List[Table] = {
     var tables: mutable.MutableList[Table] = mutable.MutableList()
     val sqlAsString = Source.fromFile(path).mkString
-    val sqlAsStringWithoutJoomlaPlaceholder = sqlAsString.replaceAll("#__", "").replaceAll("ON DELETE CASCADE", "").replaceAll("ON UPDATE CASCADE", "")
+    val noCommentContent = sqlAsString.replaceAll(comment,"")
+    val sqlAsStringWithoutJoomlaPlaceholder = noCommentContent.replaceAll("#__", "").replaceAll("ON DELETE CASCADE", "").replaceAll("ON UPDATE CASCADE", "")
 
     val statements: List[String] = extractStatements(sqlAsStringWithoutJoomlaPlaceholder)
     val parser: CCJSqlParserManager = new CCJSqlParserManager
