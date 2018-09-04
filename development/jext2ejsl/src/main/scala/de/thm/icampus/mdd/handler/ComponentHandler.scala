@@ -54,22 +54,26 @@ object ComponentHandler extends Handler {
             val ts = Source.fromFile(modelpath + modelFilename).mkString
             val fileResult = PHPParser.parse(ts)
             val fileClass = DetailsPageHandler.searchClass(fileResult)
-                val bodyClass = fileClass.body
-               val className =  (fileClass.name match {
-                case Some(e) => e.name
-                    }).toString
-                val parentName =  (fileClass.extend match {
-                  case Some(e) => e.name.name
-                }).toString
-                parentName match {
-                 case "ListModel" | "JModelList" =>{
-                   frontEndPages = frontEndPages.+(IndexPageHandler.createIndexpage(bodyClass,pageName,modelpath,viewFolder))
-                  }
-                   case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem"=>{
+            val bodyClass = fileClass.body
+            val className = (fileClass.name match {
+              case Some(e) => e.name
+            }).toString
+            val parentName = (fileClass.extend match {
+              case Some(e) => e.name.name
+            }).toString
+            parentName match {
+              case "ListModel" | "JModelList" => {
+                frontEndPages = frontEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
+              }
+              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem" => {
+                if(parentName == "ItemModel" || parentName == "JModelItem" )
+                frontEndPages = frontEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,false,modelpath,backendPath,modelFilename,pageName, viewFolder))
+                else
+                  frontEndPages = frontEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,true,modelpath,backendPath,modelFilename,pageName, viewFolder))
 
-
-
-
+              }
+              case _ =>  frontEndPages = frontEndPages.+(new CustomPage(className))
+            }
           }
         }
           case ignored: Path ⇒ println("Ignore File: " + ignored)
@@ -77,49 +81,64 @@ object ComponentHandler extends Handler {
       }
 
 
-
+    var entities = List.empty[JEntity]
     if (!backendSuffix.isEmpty && Files.exists(backendPath)) { // Handle backendSection
       val viewsPath = backendPath + "views"
+      val modelpath = backendPath + "models"
+      // Read Sql Create Statements and create entities
+      val sqlInstallPathString = (xmlManifest \ "install" \ "sql" \ "file").last.text
+      val sqlInstallPath = backendPath + sqlInstallPathString
+
+      val sqlTables = SQLParser.parseFile(sqlInstallPath)
+
+       entities = sqlTables.map(t => {
+        var newName = if(t.name.startsWith(extensionName + "_")) t.name.substring(extensionName.length + 1) else t.name
+        newName = if(newName.endsWith("s")) newName.dropRight(1) else newName
+        JEntity("^" + newName, t.columns.map(c ⇒ Attribute(c.name, c.dataType, c.isprimary)))
+      })
 
       Files.newDirectoryStream(viewsPath).foreach{
         case viewFolder: Path if Files.isDirectory(viewFolder) ⇒ {
-          val fileName = viewFolder.getFileName.toString
+          val pageName: String = viewFolder.getFileName.toString
+          val modelFilename = pageName + ".php"
+          if (Files.exists(modelpath + modelFilename)) {
+            val ts = Source.fromFile(modelpath + modelFilename).mkString
+            val fileResult = PHPParser.parse(ts)
+            val fileClass = DetailsPageHandler.searchClass(fileResult)
+            val bodyClass = fileClass.body
+            val className = (fileClass.name match {
+              case Some(e) => e.name
+            }).toString
+            val parentName = (fileClass.extend match {
+              case Some(e) => e.name.name
+            }).toString
+            parentName match {
+              case "ListModel" | "JModelList" => {
+                backEndPages = backEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
+              }
+              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem" | "AdminModel"=> {
+                if(parentName == "ItemModel" || parentName == "JModelItem" )
+                  backEndPages = backEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,false,modelpath,backendPath,modelFilename,pageName, viewFolder))
+                else
+                  backEndPages = backEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,true,modelpath,backendPath,modelFilename,pageName, viewFolder))
 
-          var pageGroupParamNames = Set.empty[String]
-          val paramsPath = viewFolder + "tmpl/default.xml"
-          if (Files.exists(paramsPath)) {
-            val pageParams = readParams(paramsPath)
-            pageGroupParamNames = pageParams.map(p ⇒ p.name)
-            paramGroups = paramGroups ++ pageParams
-          }
-
-          if (!fileName.startsWith(extensionName)){
-            backEndPages = backEndPages + createPage(backendPath, fileName, pageGroupParamNames)
+              }
+              case _=> backEndPages = backEndPages.+(new CustomPage(className))
+            }
           }
         }
         case ignored: Path ⇒ println("Ignore File: " + ignored)
       }
     }
 
-    // Read Sql Create Statements and create entities
-    val sqlInstallPathString = (xmlManifest \ "install" \ "sql" \ "file").text
-    val sqlInstallPath = backendPath + sqlInstallPathString
-
-    val sqlTables = SQLParser.parseFile(sqlInstallPath)
-
-    val entities = sqlTables.map(t => {
-      var newName = if(t.name.startsWith(extensionName + "_")) t.name.substring(extensionName.length + 1) else t.name
-      newName = if(newName.endsWith("s")) newName.dropRight(1) else newName
-      JEntity("^" + newName, t.columns.map(c ⇒ Attribute(c.name, c.dataType, c.isprimary)))
-    })
 
     val backendConfigPath = backendPath + "config.xml"
     if (Files.exists(backendConfigPath)) {
-      paramGroups = paramGroups ++ readParams(backendConfigPath)
+      paramGroups = paramGroups ++ IndexPageHandler.readParams(backendConfigPath)
     }
     val frontendConfigPath = frontendPath + "config.xml"
     if (Files.exists(frontendConfigPath)) {
-      paramGroups = paramGroups ++ readParams(frontendConfigPath)
+      paramGroups = paramGroups ++ IndexPageHandler.readParams(frontendConfigPath)
     }
 
     /*

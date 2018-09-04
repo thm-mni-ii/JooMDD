@@ -14,15 +14,14 @@ import de.thm.mni.ii.phpparser.ast.Basic
 import java.nio.file.Files
 import java.io.File
 
-import de.thm.icampus.mdd.model.extensions.{IndexPage, JParam, JParamGroup}
+import de.thm.icampus.mdd.model.extensions._
 import de.thm.icampus.mdd.implicits.OptionUtils._
-
 
 import scala.io.{Codec, Source}
 import scala.xml.XML
 
 object IndexPageHandler {
-  val toIgnoreFilter = List("search","state","created_by","id")
+  val toIgnoreFilter = List("search","state","created_by","id","limit")
 
   def readMemberFromMemberPropertyAcc(sd: Statement): String = {
     sd match{
@@ -45,19 +44,25 @@ object IndexPageHandler {
   def searchAttribute(path: Path): Seq[String] ={
    if(Files.exists(path)){
      val configAsXMLString = Source.fromFile(path.toFile).mkString
+      var allValueString = Seq.empty[String]
      PHPParser.parse(configAsXMLString) match {
        case s: PHPParser.Success => {
          val default = s.script.s
-         val forStmntAll = default.filter( t => t.isInstanceOf[ForeachStmnt])
+         val forStmntAll = searchStatmentAfterType("ForeachStmnt",default)
          if(!forStmntAll.isEmpty){
-           val forStmnt = forStmntAll.last.asInstanceOf[ForeachStmnt]
-           val value = readVaraibleName(forStmnt.value)
-           val allValueUse = searchStatmentAfterVariable(value,forStmnt.stmnts,true)
-           val allValueString = allValueUse.map(sd =>{
-             readMemberFromMemberPropertyAcc(sd)
-           }).toSeq
-          /** var allRouteObjeckt = searchStatmentAfterMember("Route","_",forStmnt.stmnts,true)
-           var allroute = allRouteObjeckt.map(g => readLink(g)).toSeq*/
+           for(stmnt <- forStmntAll) {
+             var forStmnt = stmnt.asInstanceOf[ForeachStmnt]
+             val value = readVaraibleName(forStmnt.value)
+             val allValueUse = searchStatmentAfterVariable(value, forStmnt.stmnts, true)
+            allValueString = allValueString.++ (allValueUse.map(sd => {
+               readMemberFromMemberPropertyAcc(sd)
+             }).toSeq  )
+
+           }
+               /** var allRouteObjeckt = searchStatmentAfterMember("Route","_",forStmnt.stmnts,true)
+                 * if(allRouteObjeckt)
+                 * allRouteObjeckt = searchStatmentAfterMember("JRoute","_",forStmnt.stmnts,true)
+                var allroute = allRouteObjeckt.map(g => readLink(g)).toSeq*/
            return allValueString
          }
 
@@ -73,6 +78,48 @@ object IndexPageHandler {
 
 
   return Seq.empty[String]
+  }
+  def searchStatmentAfterType(typeName:String,statements:Seq[Statement]):  Seq[Statement]={
+    var result = Seq.empty[Statement]
+    for(item <-statements){
+      if(item.getClass.getSimpleName == typeName)   {
+        result = result .:+(item)
+      }
+      else{
+      if(item.isInstanceOf[CompoundStmnt]){
+        result = result .++(searchStatmentAfterType(typeName,(item.asInstanceOf[CompoundStmnt]).stmnts))
+
+      }else{
+        item.getClass.getSimpleName match {
+          case "TryStmnt"=>{
+             var trystm = item.asInstanceOf[TryStmnt]
+            result =  result.++(searchStatmentAfterType(typeName,trystm.stmnt.stmnts))
+
+
+          }
+          case "IfStmnt"=>{
+
+            val ifstm = item.asInstanceOf[IfStmnt]
+              var tempvarValue = searchStatmentAfterType(typeName,ifstm.stmnts)
+              if(ifstm.elseStmnts != null && !ifstm.elseStmnts.isEmpty){
+                ifstm.elseStmnts match {
+                  case Some(elseItems)=>{
+                    tempvarValue = tempvarValue .++(searchStatmentAfterType(typeName,elseItems) )
+                  }
+                }
+
+              result =  result.++(tempvarValue)
+            }
+          }
+          case _=>
+        }
+
+      }
+      }
+
+    }
+
+    return result
   }
 
 
@@ -334,7 +381,7 @@ object IndexPageHandler {
 
     return result
   }
- def createIndexpage(bodyClass:Seq[Statements.MemberDecl],pageName:String,modelpath:Path,viewFolder:Path): IndexPage ={
+ def createIndexpage(bodyClass:Seq[Statements.MemberDecl],pageName:String,modelpath:Path,viewFolder:Path): Page ={
     var dbName:String =""
     val getListItemFunkDT  = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
     if(getListItemFunkDT != null){
@@ -368,7 +415,7 @@ object IndexPageHandler {
                       case _=>
                     }
                     var result = Seq.empty[ExpressionStmnt]
-                    val attrRegex = s"$tableAs\\.[a-zA-Z0-9_]*".r
+                    val attrRegex = s"$tableAs\\.[a-zA-Z0-9_]+".r
                     val allqueryFilterObject = IndexPageHandler.searchStatmentAfterMember(queryVar,"where",fd._2,true)
                     var allqueryFilterString = allqueryFilterObject.map(f => {
                       if(f.exp.isInstanceOf[MemberCallPropertyAcc]){
@@ -377,16 +424,17 @@ object IndexPageHandler {
                         if(res != null  && !res.isEmpty){
                           attrRegex.findFirstMatchIn(res)match{
                             case Some(value)=> value.matched.split("\\.").last
-                            case _=>"."
+                            case _=>
                           }
                         }
                       }
                     })
                     allqueryFilterString =  allqueryFilterString.distinct
-                    allqueryFilterString =  allqueryFilterString.filter( t => !toIgnoreFilter.contains(t))
+                    allqueryFilterString =  allqueryFilterString.filter( t => !toIgnoreFilter.contains(t)).toSeq
                     val filterName = "filter_"+ pageName +".xml"
-                    val filterPath = new File (modelpath + "forms"+filterName)
+                    val filterPath = new File (modelpath + "/forms/"+filterName)
                     var filters: Seq[String] = Seq.empty[String]
+                    allqueryFilterString.foreach(f => filters = filters.:+(f.toString))
                     var colums =  Seq.empty[String]
                     if(Files.exists(filterPath.toPath)){
                       val configAsXMLString = Source.fromFile(filterPath).mkString
@@ -396,10 +444,12 @@ object IndexPageHandler {
                       val fields = fieldsSet \\ "field"
                       filters = fields.map(r => r \@ "name").toSeq
                     }
-                    val kl = new File(viewFolder.toString + "tmpl/default.php")
+                    filters.distinct
+                    filters = filters.filter(t => !toIgnoreFilter.contains(t))
+                    val kl = new File(viewFolder.toString + "/tmpl/default.php")
                     colums = IndexPageHandler.searchAttribute(kl.toPath)
                     var pageGroupParamNames = Set.empty[String]
-                    val paramsPath = new File(viewFolder.toString + "tmpl/default.xml")
+                    val paramsPath = new File(viewFolder.toString + "/tmpl/default.xml")
                     var pageParams = Set.empty[JParamGroup]
                     if (Files.exists(paramsPath.toPath)) {
                        pageParams = readParams(paramsPath.toPath)
@@ -416,9 +466,9 @@ object IndexPageHandler {
       }
 
     }
-   return null
+   return new CustomPage(pageName)
   }
-  private def readParams(configPath: Path): Set[JParamGroup] = {
+   def readParams(configPath: Path): Set[JParamGroup] = {
     val configAsXMLString = Source.fromFile(configPath.toString).mkString
     val configAsXML = XML.loadString(configAsXMLString)
 

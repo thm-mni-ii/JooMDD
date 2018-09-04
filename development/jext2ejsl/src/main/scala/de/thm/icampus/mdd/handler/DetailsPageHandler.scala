@@ -2,6 +2,8 @@ package de.thm.icampus.mdd.handler
 
 import java.nio.file.{Files, Path}
 import java.io.File
+
+import de.thm.icampus.mdd.handler.IndexPageHandler.readParams
 import de.thm.mni.ii.phpparser.PHPParser
 import de.thm.mni.ii.phpparser.PHPParser.Result
 import de.thm.mni.ii.phpparser.ast.Basic.{DQStringElement, DQStringLiteral, QualifiedName, SQStringLiteral}
@@ -9,12 +11,14 @@ import de.thm.mni.ii.phpparser.ast.{Expressions, Statements}
 import de.thm.mni.ii.phpparser.ast.Statements._
 import de.thm.mni.ii.phpparser.ast.Expressions._
 import de.thm.mni.ii.phpparser.ast.Basic
-import de.thm.icampus.mdd.model.extensions.DetailsPage
+import de.thm.icampus.mdd.model.extensions._
 
 import scala.io.Source
+import scala.xml.{Node, XML}
 
 object DetailsPageHandler {
-
+  val toIgnoreAttribute = List("state","created_by","ordering","checked_out_time","checked_out","published","params","asset_id","rules")
+  val toIgnoreFiedlAttr= List("label","description","type","name")
   def searchExpressionAfterFrom(fromName: String, from: Expression): Expression = {
 
     from match {
@@ -361,14 +365,19 @@ object DetailsPageHandler {
         val varVal = searchLastValueInBody(s.name, allStmts.stmnts, false)
         varVal match {
           case MemberCallStaticAcc(from, member, args) => {
-            return readMemberCallStaticAccAttr(from, member, args, geTabelMeth, "Table", "getInstance", 0)
+            var tableStr= readMemberCallStaticAccAttr(from, member, args, geTabelMeth, "Table", "getInstance", 0)
+            if(tableStr =="" || tableStr ==null)
+              return readMemberCallStaticAccAttr(from, member, args, geTabelMeth, "JTable", "getInstance", 0)
+           else return tableStr
           }
           case _ =>
         }
       }
       case MemberCallStaticAcc(from, member, args) => {
-
-        return readMemberCallStaticAccAttr(from, member, args, geTabelMeth, "Table", "getInstance", 0)
+        var tableStr =readMemberCallStaticAccAttr(from, member, args, geTabelMeth, "Table", "getInstance", 0)
+        if(tableStr ==""  || tableStr ==null)
+        return readMemberCallStaticAccAttr(from, member, args, geTabelMeth, "JTable", "getInstance", 0)
+        else return tableStr
       }
       case _ =>
     }
@@ -395,6 +404,7 @@ object DetailsPageHandler {
           }
 
         }
+
         case _ => return literalToString(typeTable)
       }
 
@@ -425,6 +435,9 @@ object DetailsPageHandler {
       case SubExp(exp1, exp2) => {
         return literalToString(exp1) + literalToString(exp2)
       }
+      case MemberCallPropertyAcc(from,mem,args) =>{
+        return (args.map(h => literalToString(h.exp))).mkString
+      }
       case _ =>
         return ""
     }
@@ -447,7 +460,53 @@ object DetailsPageHandler {
     return ""
   }
 
-  def createDetailsPage(bodyClass: Seq[Statements.MemberDecl],modelPath:Path, backendPath: Path, modelFilename: String,pageName:String,viewFolder:Path): DetailsPage = {
+  def createAttribut(tg: Node):DetailsPageAttribute  = {
+    val name = tg \@ "name"
+    if(!toIgnoreAttribute.contains(name)){
+      val htmlType = tg \@ "type"
+      var attr = Map.empty[String,String]
+     for(hv <- tg.attributes){
+       if(!toIgnoreFiedlAttr.contains(hv.key))
+         attr = attr.+(hv.key->hv.value.toString())
+     }
+      val option = tg \\"option"
+      var valueK = Map.empty[String,String]
+      if(option !=null && !option.isEmpty){
+        for(opt <-option){
+          valueK = valueK.+ (opt.text -> opt \@ "value")
+        }
+      }
+      return new DetailsPageAttribute(name,htmlType,valueK,attr)
+    }
+    return null
+  }
+
+  def readAttribute(formPath: File): Set[DetailsPageAttribute] = {
+    if(formPath.exists()){
+      var allattr = Set.empty[DetailsPageAttribute]
+      val attrAsXMLString = Source.fromFile(formPath.toString).mkString
+      val attrAsXML = XML.loadString(attrAsXMLString)
+      val attrSet = attrAsXML \\"field"
+      allattr=  allattr.++(attrSet.map(tg => {
+        createAttribut(tg)
+      }).toSet)
+      val setAttr = attrAsXML \\"fieldset"
+    var f = setAttr.map(t =>{
+        var sAttr = t \\ "field"
+      allattr=  allattr.++(sAttr.map(tg => {
+        createAttribut(tg)
+      }))
+      })
+      return allattr
+
+    }
+
+    return Set.empty[DetailsPageAttribute]
+
+
+  }
+
+  def createDetailsPage(bodyClass: Seq[Statements.MemberDecl],isEdit:Boolean, modelPath:Path, backendPath: Path, modelFilename: String, pageName:String, viewFolder:Path): Page = {
     var tableName = ""
     var dbName = ""
     val getItemFunk = DetailsPageHandler.searchMethod("getItem", bodyClass)
@@ -466,37 +525,37 @@ object DetailsPageHandler {
         }
       }
     }
-    if (tableName == "" || tableName == null) {
-      val getSave = DetailsPageHandler.searchMethod("save", bodyClass)
+    if (tableName == "" ) {
+      val getSave = searchMethod("save", bodyClass)
       if (getSave != null) {
         val allStmtsSave = getSave.body match {
           case Some(e) => e
         }
-        val statement = DetailsPageHandler.searchStatmentAfterMember("this", "getTable", allStmtsSave.stmnts, true)
+        val statement = searchStatmentAfterMember("this", "getTable", allStmtsSave.stmnts, true)
         if (statement != null) {
           val expm = statement._1.exp.asInstanceOf[SimpleAssignmentExp]
           val call = expm.exp.asInstanceOf[MemberCallPropertyAcc]
           if (call.args.size != 0) {
-            tableName = DetailsPageHandler.readMemberCallStaticAccAttr(call.from, call.member, call.args, getSave, "this", "getTable", 0)
+            tableName = readMemberCallStaticAccAttr(call.from, call.member, call.args, getSave, "this", "getTable", 0)
           }
         }
       }
     }
-    if (tableName == "" || tableName == null) {
-      val getTableFunc = DetailsPageHandler.searchMethod("getTable", bodyClass)
+    if (tableName == "" ) {
+      val getTableFunc = searchMethod("getTable", bodyClass)
       if (getTableFunc != null) {
-        tableName = DetailsPageHandler.searchTableInMeth(getTableFunc)
+        tableName = searchTableInMeth(getTableFunc)
         // println(tableName)
       }
     }
-    if (tableName == "" || tableName == null) {
+    if (tableName == "") {
       var tempTablePAth = new File (backendPath.toString + "tables" + modelFilename)
       if (tempTablePAth.exists()) {
         tableName = pageName
       }
     }
-    if (tableName != "" && tableName != null) {
-      val tablePath = new File (backendPath.toString + "tables" + (tableName.toLowerCase + ".php"))
+    if (tableName != "" ) {
+      val tablePath = new File (backendPath.toString + "/tables/" + (tableName.toLowerCase + ".php"))
       if (tablePath.exists()) {
         val tableContentText = Source.fromFile(tablePath).mkString
         val tableContentParsed = PHPParser.parse(tableContentText)
@@ -550,13 +609,57 @@ object DetailsPageHandler {
         }
       }
     }
-
     println(dbName)
     val sqlParse = "#[a-zA-Z0-9\\_]*".r
     val dbTable = sqlParse.findFirstMatchIn(dbName) match {
-      case Some(value) => value
+      case Some(value) => value.matched
       case _ =>
     }
-    return null
+    if(dbName != "" && dbName != null){
+      var formPath = new File (modelPath.toString + "/forms/" +pageName +".xml")
+      if(!formPath.exists()){
+        formPath = new File (backendPath.toString + "/models/forms/" +pageName +".xml")
+      }
+      var formAttributes = Set.empty[DetailsPageAttribute]
+      var column = Set.empty[String]
+      var pageParams = Set.empty[JParamGroup]
+      var formName = pageName
+      if(!formPath.exists()){
+        formName = null
+        val formMeth = searchMethod("getForm",bodyClass)
+        if(formMeth != null){
+          val allStmts = formMeth.body match {
+            case Some(e) => e
+          }
+          val loadFormVarStmt = searchStatmentAfterMember("this","loadForm",allStmts.stmnts,true)
+          if (loadFormVarStmt != null) {
+            val expm = loadFormVarStmt._1.exp.asInstanceOf[SimpleAssignmentExp]
+            val call = expm.exp.asInstanceOf[MemberCallPropertyAcc]
+            if (call.args.size != 0) {
+               formName = readMemberCallStaticAccAttr(call.from, call.member, call.args, formMeth, "this", "loadForm", 1)
+            }
+          }
+        }
+
+
+      }
+      if(formName != null && formName != ""){
+        formPath = new File (modelPath.toString + "/forms/" +formName +".xml")
+        if(!formPath.exists()){
+          formPath = new File (backendPath.toString + "/models/forms/" +formName +".xml")
+        }
+        formAttributes = readAttribute(formPath)
+        formAttributes = formAttributes.filter(d => d != null)
+        column = formAttributes.map(r => r.name).toSet
+      }
+      val paramsPath = new File(viewFolder.toString + "/tmpl/default.xml")
+      if (Files.exists(paramsPath.toPath)) {
+        pageParams = readParams(paramsPath.toPath)
+      }
+      return new DetailsPage(pageName,dbTable.toString.split("_").last,isEdit,pageParams,column,formAttributes)
+    }
+
+
+    return new CustomPage(pageName)
   }
 }
