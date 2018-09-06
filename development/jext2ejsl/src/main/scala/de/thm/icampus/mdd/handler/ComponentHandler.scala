@@ -25,6 +25,22 @@ object ComponentHandler extends Handler {
     }
   }
 
+  def searchGloSet(allParamsSet: List[List[String]]):List[String] ={
+
+    var diffSet = List.empty[String]
+    var unionSet = List.empty[String]
+    for(s <-allParamsSet){
+     for(e <- s) {
+       if (unionSet.contains(e)) {
+         diffSet = diffSet.::(e)
+       } else {
+         unionSet = unionSet.::(e)
+       }
+     }
+    }
+    return diffSet
+  }
+
   def handle(extensionRoot: Path, xmlManifest: Elem)(implicit codec: Codec = Codec.UTF8): ComponentExtension = {
     val manifest: Manifest = Manifest.fromXml(xmlManifest)
     val languages: Set[Language] = Language.fromXmlManifest(xmlManifest, extensionRoot)
@@ -166,8 +182,11 @@ object ComponentHandler extends Handler {
    frontEndPages.forEach(e => setEntity(e,entities))
     if(!backEndPages.isEmpty)
     backEndPages.foreach(d=> setEntity(d,entities))
-    val allParamsSet = frontEndPages.map(p=> p.globalParamNames.map(x => x.name))
-    val allParams = allParamsSet.foldLeft(Set.empty[String])((k,v) =>(k.&~(v)))
+    val allParamsSet = frontEndPages.map(p=> p.globalParamNames.map(x => x.name).toList).toList
+    val globalSet = searchGloSet(allParamsSet)
+    //val allParamssObject = frontEndPages.map(p=> p.globalParamNames.map(x => )).toList
+
+
     ComponentExtension(
        extensionName,
       manifest,
