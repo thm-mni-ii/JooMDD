@@ -1,6 +1,7 @@
 package de.thm.icampus.mdd.templates
 
-import de.thm.icampus.mdd.model.extensions.{Attribute, JEntity}
+import de.thm.icampus.mdd.model.sql.{Entity}
+import de.thm.icampus.mdd.model.sql.Attribute
 import de.thm.icampus.mdd.templates.basic.BasicTemplate
 
 /**
@@ -8,7 +9,7 @@ import de.thm.icampus.mdd.templates.basic.BasicTemplate
   */
 trait EntityTemplate extends BasicTemplate{
 
-  def entityPartial(entity: JEntity, newline: Boolean = true, indent: Int = 0) = {
+  def entityPartial(entity: Entity, newline: Boolean = true, indent: Int = 0) = {
     toTemplate(
       s"""
          |Entity ${entity.name} {
@@ -17,7 +18,7 @@ trait EntityTemplate extends BasicTemplate{
   }
 
   def attributePartial(attribute: Attribute, newline: Boolean = true, indent: Int = 0) = {
-    val isPrimaryOpt = ?(attribute.isPrimary,
+    val isPrimaryOpt = ?(attribute.isprimary,
       s"""
          |Unique attribute
          |Primary attribute"""

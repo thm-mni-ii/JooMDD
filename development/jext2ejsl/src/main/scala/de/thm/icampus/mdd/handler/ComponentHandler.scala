@@ -1,29 +1,29 @@
 package de.thm.icampus.mdd.handler
 
 import java.nio.file.{Files, Path}
-import java.io.File
 
 import de.thm.icampus.mdd.implicits.Conversions._
-import de.thm.icampus.mdd.implicits.OptionUtils._
 import de.thm.icampus.mdd.parser.SQLParser
 import de.thm.mni.ii.phpparser.PHPParser
-import de.thm.mni.ii.phpparser.ast.Statements.{ClassDecl, CompoundStmnt, MethodDecl}
 
 import scala.collection.JavaConversions._
 import de.thm.icampus.mdd.model.{Language, Manifest}
 import de.thm.icampus.mdd.model.extensions._
 import de.thm.icampus.mdd.model.sql.Table
-import de.thm.mni.ii.phpparser.ast.Expressions.{MemberCallPropertyAcc, MemberCallStaticAcc, SimpleAssignmentExp}
-import de.thm.mni.ii.phpparser.ast.Expressions.SimpleNameVar
-import de.thm.mni.ii.phpparser.ast.Statements.ExpressionStmnt
-
+import de.thm.icampus.mdd.model.sql.Entity
 import scala.io.{Codec, Source}
 import scala.xml.{Elem, XML}
 
 object ComponentHandler extends Handler {
 
 
-
+  def setEntity(e: Page, entities: List[Entity]): Unit = {
+    e match{
+      case d :DetailsPage => d.setEntityOb(entities)
+      case i :IndexPage => i.setEntityOb(entities)
+      case _=>
+    }
+  }
 
   def handle(extensionRoot: Path, xmlManifest: Elem)(implicit codec: Codec = Codec.UTF8): ComponentExtension = {
     val manifest: Manifest = Manifest.fromXml(xmlManifest)
@@ -82,7 +82,7 @@ object ComponentHandler extends Handler {
       }
 
 
-    var entities = List.empty[JEntity]
+    var entities = List.empty[Entity]
     if (!backendSuffix.isEmpty && Files.exists(backendPath)) { // Handle backendSection
       val viewsPath = backendPath + "views"
       val modelpath = backendPath + "models"
@@ -93,17 +93,12 @@ object ComponentHandler extends Handler {
        er =>{
          if(!sqlFileList.contains(er.text)){
          val sqlInstallPath = backendPath + er.text
-         sqlTables = sqlTables.++(SQLParser.parseFile(sqlInstallPath))
+           entities = entities.++(SQLParser.parseFile(sqlInstallPath))
            sqlFileList = sqlFileList.:+(er.text)
          }
        }
       )
 
-       entities = sqlTables.map(t => {
-        var newName = if(t.name.startsWith(extensionName + "_")) t.name.substring(extensionName.length + 1) else t.name
-        newName = if(newName.endsWith("s")) newName.dropRight(1) else newName
-        JEntity("^" + newName, t.columns.map(c ⇒ Attribute(c.name, c.dataType, c.isprimary)))
-      })
 
       Files.newDirectoryStream(viewsPath).foreach{
         case viewFolder: Path if Files.isDirectory(viewFolder) ⇒ {
@@ -166,9 +161,15 @@ object ComponentHandler extends Handler {
             println(s"Ignore html entity in '$entityPath' reason 'not found' ")
           }
         })*/
-
+    entities.foreach(s=> s.setExtentionName(extensionName))
+   if(!frontEndPages.isEmpty)
+   frontEndPages.forEach(e => setEntity(e,entities))
+    if(!backEndPages.isEmpty)
+    backEndPages.foreach(d=> setEntity(d,entities))
+    val allParamsSet = frontEndPages.map(p=> p.globalParamNames.map(x => x.name))
+    val allParams = allParamsSet.foldLeft(Set.empty[String])((k,v) =>(k.&~(v)))
     ComponentExtension(
-      "^" + extensionName,
+       extensionName,
       manifest,
       languages,
       Frontend(frontEndPages),

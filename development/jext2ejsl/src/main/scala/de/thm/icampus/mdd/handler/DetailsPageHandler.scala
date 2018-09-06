@@ -491,12 +491,12 @@ object DetailsPageHandler {
         createAttribut(tg)
       }).toSet)
       val setAttr = attrAsXML \\"fieldset"
-    var f = setAttr.map(t =>{
+    /**var f = setAttr.map(t =>{
         var sAttr = t \\ "field"
       allattr=  allattr.++(sAttr.map(tg => {
         createAttribut(tg)
       }))
-      })
+      })*/
       return allattr
 
     }

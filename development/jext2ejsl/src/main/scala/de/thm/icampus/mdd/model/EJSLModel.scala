@@ -1,21 +1,21 @@
 package de.thm.icampus.mdd.model
 
 import de.thm.icampus.mdd.model.extensions._
-
+import de.thm.icampus.mdd.model.sql.{Entity}
 
 object EJSLModel {
   def apply(name: String, extensions: List[Extension]) = {
     var datatypes = Set.empty[(String,String)]
     var pages = Set.empty[Page]
-    var entities = Set.empty[JEntity]
+    var entities = Set.empty[Entity]
     var params = Set.empty[JParam]
     var paramGroups = Set.empty[JParamGroup]
 
     extensions.foreach {
       case c: ComponentExtension ⇒ {
         c.entities.foreach(e ⇒ e.attributes.foreach(a ⇒ {
-          datatypes = datatypes + (("^" + a.dbtype.replace(" (","_").replace(")",""),a.dbtype))
-          datatypes = datatypes + (("^" + a.htmltype.replace(" (","_").replace(")",""),a.htmltype))
+          datatypes = datatypes + ((a.dataType.replace(" (","_").replace(")",""),a.dataType))
+
         }))
 
         pages = mergePages (c.backend.pages, c.frontend.pages)
@@ -59,4 +59,4 @@ object EJSLModel {
   }
 }
 
-case class EJSLModel(name: String, datatypes: Set[(String,String)], pages: Set[Page], entities: Set[JEntity], globalParams: Set[JParam], paramGroups: Set[JParamGroup], extensions: List[Extension])
+case class EJSLModel(name: String, datatypes: Set[(String,String)], pages: Set[Page], entities: Set[Entity], globalParams: Set[JParam], paramGroups: Set[JParamGroup], extensions: List[Extension])

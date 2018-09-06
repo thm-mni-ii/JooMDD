@@ -478,7 +478,7 @@ object IndexPageHandler {
       val fields = fieldSet \\ "field"
 
       val params = fields.map(field ⇒ {
-        val name = "^" + (field \@ "name")
+        val name =  (field \@ "name")
         val htmltype = field \@ "type"
         val default = (field \@ "default") asOpt
         val label = field \@ "label"
