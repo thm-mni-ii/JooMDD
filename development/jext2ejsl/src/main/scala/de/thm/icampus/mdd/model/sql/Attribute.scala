@@ -17,9 +17,13 @@ class Attribute {
     this()
     this.name = name
     this.isprimary = isprimary
-    this.isUnique =isUnique
+    if(!isprimary){
+      this.isUnique =isUnique
+      this.withAttr = withAttr
+    }
+
     this.dataType = mappingDBType(dataType)
-    this.withAttr = withAttr
+
 
   }
   def mappingDBType(sqlType: String): String ={

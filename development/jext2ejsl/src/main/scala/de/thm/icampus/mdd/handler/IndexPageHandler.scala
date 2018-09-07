@@ -485,7 +485,7 @@ object IndexPageHandler {
         val description = field \@ "description"
         val size = ((field \@ "size") asOpt).?[Option[Int]] (e ⇒ Option(Integer.parseInt(e)))(None)
 
-        JParam(name, ("^" + htmltype.replace(" (","_").replace(")",""),htmltype), label, description, default, size)
+        JParam(name, ( htmltype.replace(" (","_").replace(")",""),htmltype), label, description, default, size)
       }).toSet
 
       val fieldSetName = fieldSet \@ "name"

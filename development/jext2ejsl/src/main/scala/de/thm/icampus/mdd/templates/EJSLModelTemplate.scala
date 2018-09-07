@@ -28,7 +28,7 @@ object EJSLModelTemplate extends BasicTemplate with ParamTemplate with ParamGrou
          |    extensions ${rep(model.extensions, extensionPartial)}
          |  }
          |}""", newline, indent)
-    return ""
+
   }
 
   def datatypePartial(datatype: (String,String), newline: Boolean = true, indent: Int = 0) = {

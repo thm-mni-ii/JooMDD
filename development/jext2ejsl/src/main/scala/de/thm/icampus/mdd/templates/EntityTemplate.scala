@@ -1,7 +1,6 @@
 package de.thm.icampus.mdd.templates
 
-import de.thm.icampus.mdd.model.sql.{Entity}
-import de.thm.icampus.mdd.model.sql.Attribute
+import de.thm.icampus.mdd.model.sql.{Attribute, Entity, Reference}
 import de.thm.icampus.mdd.templates.basic.BasicTemplate
 
 /**
@@ -10,26 +9,50 @@ import de.thm.icampus.mdd.templates.basic.BasicTemplate
 trait EntityTemplate extends BasicTemplate{
 
   def entityPartial(entity: Entity, newline: Boolean = true, indent: Int = 0) = {
+    val ref = ?(!entity.reference.isEmpty,
+      s"""
+         |    references ${rep(entity.reference, referencePartial)}
+       """)
     toTemplate(
       s"""
          |Entity ${entity.name} {
          |    attributes ${rep(entity.attributes, attributePartial)}
+         |    $ref
          |}""", newline, indent)
   }
-
+  def referencePartial(ref: Reference, newline: Boolean = true, indent: Int = 0) = {
+    toTemplate(
+      s"""
+         |Reference {
+         |   EntityAttribute = ${ref.attribute.mkString(",")}
+         |   ReferencedEntity = ${ref.entity}
+         |   ReferencedEntityAttribute = ${ref.reference.mkString(",")}
+         |   min = ${ref.lower}
+         |   max = ${ref.upper} }
+       """
+    , newline, indent)
+  }
   def attributePartial(attribute: Attribute, newline: Boolean = true, indent: Int = 0) = {
     val isPrimaryOpt = ?(attribute.isprimary,
       s"""
-         |Unique attribute
          |Primary attribute"""
     )
-
+    val isunique = ?(attribute.isUnique,
+      s"""
+         |Unique attribute
+       """)
+    val uniquewith = ?(attribute.withAttr != "",
+      s"""
+         |with ${attribute.withAttr}
+       """)
     toTemplate(
       s"""
          |Attribute ${attribute.name} {
-         |    type = Text
-         |    $isPrimaryOpt
+         |    type = ${attribute.dataType}
+         |    $isunique $uniquewith $isPrimaryOpt
          |}""", newline, indent)
   }
+
+
 
 }

@@ -1,6 +1,7 @@
 package de.thm.icampus.mdd.templates.pages
 
 import de.thm.icampus.mdd.model.extensions.IndexPage
+import de.thm.icampus.mdd.templates.EJSLModelTemplate.paramGroupPartial
 import de.thm.icampus.mdd.templates.basic.BasicTemplate
 
 /**
@@ -11,7 +12,7 @@ trait IndexPageTemplate extends BasicTemplate {
   def indexPagePartial(indexPage: IndexPage, newline: Boolean = true, indent: Int = 0) = {
     val paramGroupOpt = ?(indexPage.globalParamNames.nonEmpty,
       s"""
-         |*ParameterGroups ${rep(indexPage.globalParamNames, simpleParamGroupPartial)}"""
+         |*ParameterGroups ${rep(indexPage.globalParamNames, paramGroupPartial)}"""
     )
 
     toTemplate(
