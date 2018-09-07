@@ -4,6 +4,7 @@ import de.thm.icampus.mdd.model.extensions._
 import de.thm.icampus.mdd.model.sql.{Entity}
 
 object EJSLModel {
+  var attrType =Set("Integer","Boolean", "Short_Text","Text","Integer","Text_Field","Textarea","Select","Datepicker")
   def apply(name: String, extensions: List[Extension]) = {
     var datatypes = Set.empty[(String,String)]
     var pages = Set.empty[Page]
@@ -13,12 +14,35 @@ object EJSLModel {
 
     extensions.foreach {
       case c: ComponentExtension ⇒ {
+        var unknowType = Set.empty[String]
         c.entities.foreach(e ⇒ e.attributes.foreach(a ⇒ {
-          datatypes = datatypes + ((a.dataType.replace(" (","_").replace(")",""),a.dataType))
-
+          if(!attrType.contains(a.dataType))
+          unknowType = unknowType .+(a.dataType)
         }))
+        c.backend.pages.foreach(pg =>{
+          pg match{
+            case d : DetailsPage =>{
+              d.editAttribute.foreach(
+                edit =>{
+                  if(!attrType.contains(edit.typeName))
+                    unknowType = unknowType .+(edit.typeName)
+                }
+              )
+            }
+            case _ =>
+          }
+        })
 
-        pages = mergePages (c.backend.pages, c.frontend.pages)
+       if(!unknowType.isEmpty){
+         unknowType.foreach(f =>{
+           var typeId = f.split(" ")
+           if(typeId.length>1)
+             datatypes += (typeId(0)->f)
+           else datatypes += (f.trim().replaceAll("[()]","")->f)
+
+         })
+       }
+        pages = (c.backend.pages.--(c.frontend.pages)).toSet
         entities = entities ++ c.entities
         params = params ++ c.params.flatMap(paramGroup ⇒ paramGroup.params)
         paramGroups = paramGroups ++ c.params
@@ -31,7 +55,7 @@ object EJSLModel {
     new EJSLModel(name.drop(1), datatypes, pages, entities, params, paramGroups, extensions)
   }
 
-  private def mergePages(a: Set[Page], b: Set[Page]): Set[Page] = {
+ /** private def mergePages(a: Set[Page], b: Set[Page]): Set[Page] = {
     var result = a.intersect(b)
     val nA = a.diff(result)
     val nB = b.diff(result)
@@ -56,7 +80,7 @@ object EJSLModel {
     val nnB = nB diff removeFromB
 
     result ++ (nnA ++ nnB)
-  }
+  }*/
 }
 
 case class EJSLModel(name: String, datatypes: Set[(String,String)], pages: Set[Page], entities: Set[Entity], globalParams: Set[JParam], paramGroups: Set[JParamGroup], extensions: List[Extension])

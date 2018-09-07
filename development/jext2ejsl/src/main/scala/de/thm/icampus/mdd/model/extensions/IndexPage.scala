@@ -25,6 +25,20 @@ class IndexPage extends DynamicPage {
     this.representationColumns =  this.representationColumns.filter(t => attr.contains(t))
     this.filters = this.filters.filter(t => attr.contains(t))
   }
+  override def equals (obj:Any): Boolean={
+    obj match{
+      case f : DetailsPage =>{
+        if(f.name == this.name){
+          if(f.entity != this.entity)
+            f.name = f.name + 1
+          return true
+        }
+
+      }
+      case _ =>
+    }
+    return false
+  }
 
   def setEntityOb(entities:List[Entity]): Unit ={
     for(r <- entities){

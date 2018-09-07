@@ -18,4 +18,4 @@ abstract class DynamicPage extends Page{
   def setEntityOb(entities:List[Entity])
 }
 
-case class CustomPage(name: String, globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]) extends Page
+

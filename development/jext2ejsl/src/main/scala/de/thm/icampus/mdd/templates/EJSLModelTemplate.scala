@@ -11,7 +11,7 @@ import de.thm.icampus.mdd.templates.pages.PageTemplate
 object EJSLModelTemplate extends BasicTemplate with ParamTemplate with ParamGroupTemplate with EntityTemplate with PageTemplate with ExtensionTemplate {
 
   def ejslModelPartial(model: EJSLModel, newline: Boolean = true, indent: Int = 0) : String = {
-   /** toTemplate(
+    toTemplate(
       s"""
          |eJSLModel "${model.name}" {
          |  eJSL part: CMS Extension {
@@ -27,7 +27,7 @@ object EJSLModelTemplate extends BasicTemplate with ParamTemplate with ParamGrou
          |
          |    extensions ${rep(model.extensions, extensionPartial)}
          |  }
-         |}""", newline, indent)*/
+         |}""", newline, indent)
     return ""
   }
 

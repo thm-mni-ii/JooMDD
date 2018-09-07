@@ -1,4 +1,7 @@
 package de.thm.icampus.mdd.model.sql
+
+import com.sun.xml.internal.fastinfoset.tools.SAXEventSerializer.AttributeValueHolder
+
 /**
  * Created by alexheinz1110 on 14.08.15.
  */
@@ -24,9 +27,21 @@ class Attribute {
       case text: String if text.contains("int") ⇒ "Integer"
       case text: String if   text.contains("tinyint")⇒ "Boolean"
       case text: String if text.contains("varchar") ⇒ "Short_Text"
+      case text: String if text.contains("text") ⇒ "Text"
       case text: String if text.contains("bit") ⇒ "Integer"
       case text: String if text.contains("date") || text.contains("time") || text.contains("datetime") ⇒ "Short_Text"
-      case _: String ⇒ "Text"
+      case _: String ⇒ sqlType
+    }
+  }
+  override def equals(obj: Any):Boolean={
+    obj match{
+      case d : Attribute =>{
+        if(d.name == this.name && d.dataType == this.dataType)
+          return true
+        else
+          return true
+      }
+      case _ => false
     }
   }
 

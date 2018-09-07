@@ -15,6 +15,16 @@ class Entity{
     this.reference = reference
   }
 
+  override def equals(obj:Any): Boolean ={
+    obj match{
+      case f :Entity =>{
+        if(f.name == this.name && f.attributes == this.attributes)
+          return true
+      }
+      case _ => false
+    }
+    return false
+  }
   def getAllAttribute():List[String]={
     if(!this.attributes.isEmpty)
       this.attributes.map(r=> r.name).toList

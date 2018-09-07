@@ -6,6 +6,7 @@ class DetailsPage extends DynamicPage {
   var globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]
   var representationColumns: Set[String] = Set.empty[String]
   var  editAttribute: Set[DetailsPageAttribute] = Set.empty[DetailsPageAttribute]
+  var isEdit:Boolean = false
   var entityObjekt :Entity = null
   def this (name: String, entity: String, isEdit:Boolean,globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup],
             representationColumns: Set[String] = Set.empty[String],editAttribute: Set[DetailsPageAttribute] = Set.empty[DetailsPageAttribute]){
@@ -15,8 +16,36 @@ class DetailsPage extends DynamicPage {
     this.globalParamNames = globalParamNames
     this.representationColumns = representationColumns
     this.editAttribute = editAttribute
+    this.isEdit = isEdit
 
+  }
+  override def equals (obj:Any): Boolean={
+   obj match{
+     case f : DetailsPage =>{
+       if(f.name == this.name){
+         if(f.entity != this.entity)
+           f.name = f.name + 1
+         return true
+       }
+       if(f.entity == this.entity && this.isEdit != f.isEdit){
+         if(f.name.diff(this.name)=="edit" || this.name.diff(f.name)=="edit"  ){
+           this.editAttribute = f.editAttribute.|(this.editAttribute)
+           this.representationColumns = f.representationColumns.|(this.representationColumns)
+           this.globalParamNames = f.globalParamNames.|(this.globalParamNames)
+           f.globalParamNames = this.globalParamNames
+           f.representationColumns = this.representationColumns
+           f.editAttribute = this.editAttribute
+           if(f.name.contains("edit"))
+             f.name = f.name.replace("edit","")
+           else this.name = this.name.replace("edit","")
+           return true
+         }
 
+       }
+     }
+     case _ =>
+   }
+    return false
   }
 
   def verifiedField() = {

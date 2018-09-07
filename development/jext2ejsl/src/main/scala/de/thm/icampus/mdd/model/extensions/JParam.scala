@@ -3,6 +3,7 @@ package de.thm.icampus.mdd.model.extensions
 
 case class JParamGroup(name: String, params: Set[JParam])
 case class JParam(name: String, htmltype: (String,String), label: String, description: String, default: Option[String] = None, size: Option[Int] = None)
+
  class DetailsPageAttribute{
    var value:Map[String,String] = Map.empty[String,String]
    var attribute:Map[String,String] = Map.empty[String,String]
@@ -12,10 +13,11 @@ case class JParam(name: String, htmltype: (String,String), label: String, descri
    def mapAttribute(typeName: String): String = {
      typeName match{
        case "number" => return "Integer"
-       case "text" => return "Text_Field"
+       case "text" | "image" | "button" | "submit"=> return "Text_Field"
        case "textarea" | "editor" => return "Textarea"
-       case "list" => return "Select"
-       case "calendar" => return "Datepicker"
+       case "list"  |"color"|"radio" => return "Select"
+       case "checkbox" => return "Yes_No_Buttons "
+       case "calendar" | "date"| "datetime"|"time"=> return "Datepicker"
        case _=> return typeName
      }
    }

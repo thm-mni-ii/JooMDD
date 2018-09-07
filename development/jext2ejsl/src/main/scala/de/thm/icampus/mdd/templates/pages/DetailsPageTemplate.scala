@@ -8,7 +8,7 @@ import de.thm.icampus.mdd.templates.basic.BasicTemplate
   */
 trait DetailsPageTemplate extends BasicTemplate {
 
-  /**def detailsPagePartial(detailsPage: DetailsPage, newline: Boolean = true, indent: Int = 0) = {
+  def detailsPagePartial(detailsPage: DetailsPage, newline: Boolean = true, indent: Int = 0) = {
     val paramGroupOpt = ?(detailsPage.globalParamNames.nonEmpty,
       s"""
          |*ParameterGroups ${rep(detailsPage.globalParamNames, simpleParamGroupPartial)}"""
@@ -26,6 +26,6 @@ trait DetailsPageTemplate extends BasicTemplate {
     toTemplate(
       s"""
          |$paramGroup""", newline, indent)
-  }*/
+  }
 
 }
