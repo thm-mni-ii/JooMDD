@@ -26,7 +26,7 @@ trait EntityTemplate extends BasicTemplate{
          |Reference {
          |   EntityAttribute = ${ref.attribute.mkString(",")}
          |   ReferencedEntity = ${ref.entity}
-         |   ReferencedEntityAttribute = ${ref.reference.mkString(",")}
+         |   ReferencedEntityAttribute = ${ref.reference.mkString(" ")}
          |   min = ${ref.lower}
          |   max = ${ref.upper} }
        """
@@ -34,9 +34,11 @@ trait EntityTemplate extends BasicTemplate{
   }
   def attributePartial(attribute: Attribute, newline: Boolean = true, indent: Int = 0) = {
     val isPrimaryOpt = ?(attribute.isprimary,
-      s"""
-         |Primary attribute"""
+      s""" Primary attribute"""
     )
+    val notNullOpt = ? (attribute.istnotNul,s"""  Not Null""")
+    val defaultOpt = ? (attribute.default != "" && attribute.default.length>0,s"""  Default = ${attribute.default}""")
+    val autoIntOpt = ? (attribute.autoInc,s"""  Auto Increment""")
     val isunique = ?(attribute.isUnique,
       s"""
          |Unique attribute
@@ -49,7 +51,11 @@ trait EntityTemplate extends BasicTemplate{
       s"""
          |Attribute ${attribute.name} {
          |    type = ${attribute.dataType}
-         |    $isunique $uniquewith $isPrimaryOpt
+         |    $notNullOpt
+         |    $defaultOpt
+         |    $autoIntOpt
+         |    $isunique $uniquewith
+         |    $isPrimaryOpt
          |}""", newline, indent)
   }
 

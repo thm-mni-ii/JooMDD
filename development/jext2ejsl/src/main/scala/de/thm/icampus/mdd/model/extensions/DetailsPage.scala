@@ -23,8 +23,10 @@ class DetailsPage extends DynamicPage {
    obj match{
      case f : DetailsPage =>{
        if(f.name == this.name){
-         if(f.entity != this.entity)
+         if(f.entity != this.entity){
            f.name = f.name + 1
+          return false
+         }
          return true
        }
        if(f.entity == this.entity && this.isEdit != f.isEdit){
@@ -35,15 +37,16 @@ class DetailsPage extends DynamicPage {
            f.globalParamNames = this.globalParamNames
            f.representationColumns = this.representationColumns
            f.editAttribute = this.editAttribute
+           this.isEdit = f.isEdit
            if(f.name.contains("edit"))
-             f.name = f.name.replace("edit","")
-           else this.name = this.name.replace("edit","")
+             f.name = this.name
+           else this.name = f.name
            return true
          }
 
        }
      }
-     case _ =>
+     case _ => return false
    }
     return false
   }
@@ -52,6 +55,7 @@ class DetailsPage extends DynamicPage {
     val attr = this.entityObjekt.getAllAttribute()
     this.representationColumns =  this.representationColumns.filter(t => attr.contains(t))
     this.editAttribute = this.editAttribute.filter(t => attr.contains(t.name))
+    this.editAttribute.foreach(f => f.setEntity(this.entity))
   }
 
   def setEntityOb(entities:List[Entity]): Unit ={
@@ -62,5 +66,9 @@ class DetailsPage extends DynamicPage {
         return
       }
     }
+  }
+  override def hashCode: Int = {
+    val prime = this.getClass.hashCode()
+    prime  * this.name.hashCode + this.entity.hashCode +this.representationColumns.hashCode() +this.editAttribute.hashCode()
   }
 }

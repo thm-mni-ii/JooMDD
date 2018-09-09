@@ -27,15 +27,24 @@ class IndexPage extends DynamicPage {
   }
   override def equals (obj:Any): Boolean={
     obj match{
-      case f : DetailsPage =>{
+      case f : IndexPage =>{
         if(f.name == this.name){
-          if(f.entity != this.entity)
+          if(f.entity != this.entity){
             f.name = f.name + 1
+            return false
+          }
+          this.filters = f.filters.|(this.filters)
+          this.representationColumns = f.representationColumns.|(this.representationColumns)
+          this.globalParamNames = f.globalParamNames.|(this.globalParamNames)
+          f.globalParamNames = this.globalParamNames
+          f.representationColumns = this.representationColumns
+          f.filters = this.filters
+
           return true
         }
 
       }
-      case _ =>
+      case _ => return false
     }
     return false
   }
@@ -48,5 +57,9 @@ class IndexPage extends DynamicPage {
         return
       }
     }
+  }
+  override def hashCode: Int = {
+    val prime = this.getClass.hashCode()
+    prime  * this.name.hashCode + this.entity.hashCode  + this.filters.hashCode()
   }
 }

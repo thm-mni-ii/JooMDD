@@ -33,7 +33,12 @@ class Entity{
   }
   def setExtentionName(extName:String):Unit={
    this.extentionName = extName
-    if(this.name != extName)
+    if(this.name != extName){
       this.name = this.name.replaceFirst(extName+"_","")
+      this.reference.foreach(r => r.setEntityName(extName))
+    }
+
   }
+  override def hashCode = (41 * this.name.hashCode) + this.attributes.hashCode()
+
 }

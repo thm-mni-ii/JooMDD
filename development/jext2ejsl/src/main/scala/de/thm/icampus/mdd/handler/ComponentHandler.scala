@@ -41,6 +41,14 @@ object ComponentHandler extends Handler {
     return diffSet
   }
 
+  def jgroupExist(frontPageParams: Set[JParamGroup], df: JParamGroup): Boolean ={
+    frontPageParams.foreach(t=>{
+      if(t.name == df.name)
+        return true
+    })
+    return false
+  }
+
   def handle(extensionRoot: Path, xmlManifest: Elem)(implicit codec: Codec = Codec.UTF8): ComponentExtension = {
     val manifest: Manifest = Manifest.fromXml(xmlManifest)
     val languages: Set[Language] = Language.fromXmlManifest(xmlManifest, extensionRoot)
@@ -182,10 +190,12 @@ object ComponentHandler extends Handler {
    frontEndPages.forEach(e => setEntity(e,entities))
     if(!backEndPages.isEmpty)
     backEndPages.foreach(d=> setEntity(d,entities))
-    val allParamsSet = frontEndPages.map(p=> p.globalParamNames.map(x => x.name).toList).toList
-    val globalSet = searchGloSet(allParamsSet)
+    //val allParamsSet = frontEndPages.map(p=> p.globalParamNames.map(x => x.name).toList).toList
+    //val globalSet = searchGloSet(allParamsSet)
     //val allParamssObject = frontEndPages.map(p=> p.globalParamNames.map(x => )).toList
-
+    //var frontPageParams : Set[JParamGroup] = Set.empty[JParamGroup]
+   //frontEndPages.foreach(f => (f.globalParamNames.foreach(df=>if(!jgroupExist(frontPageParams,df))frontPageParams = frontPageParams .+(df))))
+    //val genParam = backEndPages.filter(d => frontPageParams.contains(d))
 
     ComponentExtension(
        extensionName,
@@ -197,4 +207,5 @@ object ComponentHandler extends Handler {
       paramGroups
     )
   }
+
 }

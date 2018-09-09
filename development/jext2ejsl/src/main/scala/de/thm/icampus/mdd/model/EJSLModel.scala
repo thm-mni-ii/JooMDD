@@ -14,73 +14,71 @@ object EJSLModel {
 
     extensions.foreach {
       case c: ComponentExtension ⇒ {
-        var unknowType = Set.empty[String]
-        c.entities.foreach(e ⇒ e.attributes.foreach(a ⇒ {
-          if(!attrType.contains(a.dataType))
-          unknowType = unknowType .+(a.dataType)
-        }))
-        c.backend.pages.foreach(pg =>{
-          pg match{
-            case d : DetailsPage =>{
-              d.editAttribute.foreach(
-                edit =>{
-                  if(!attrType.contains(edit.typeName))
-                    unknowType = unknowType .+(edit.typeName)
-                }
-              )
-            }
-            case _ =>
-          }
-        })
 
-       if(!unknowType.isEmpty){
-         unknowType.foreach(f =>{
-           var typeId = f.split(" ")
-           if(typeId.length>1)
-             datatypes += (typeId(0)->f)
-           else datatypes += (f.trim().replaceAll("[()]","")->f)
 
-         })
-       }
-        pages = (c.backend.pages.--(c.frontend.pages)).toSet
+        pages = (c.backend.pages.++(c.frontend.pages)).toSet[Page]
+
         entities = entities ++ c.entities
         params = params ++ c.params.flatMap(paramGroup ⇒ paramGroup.params)
         paramGroups = paramGroups ++ c.params
+
+        c.backend.pages = c.backend.pages.filter(f => pages.contains(f)).toSet
+        c.frontend.pages = c.frontend.pages.filter(f => pages.contains(f)).toSet
       }
       case e: Extension ⇒
     }
 
-    params.foreach(param ⇒ datatypes = datatypes + param.htmltype)
+    //params.foreach(param ⇒ datatypes = datatypes + param.htmltype)
+    var unknowType = Set.empty[String]
+    entities.foreach(e ⇒ e.attributes.foreach(a ⇒ {
+      if(!attrType.contains(a.dataType))
+        unknowType = unknowType .+(a.dataType)
+    }))
+    if(!params.isEmpty ){
+      params.foreach(prg=>{
+        if(!attrType.contains(prg.htmltype))
+          unknowType = unknowType .+(prg.htmltype)
+      })
+    }
+    pages.foreach(p =>{
+      paramGroups ++= p.globalParamNames
+      p.globalParamNames.foreach(fg =>{
+        fg.params.foreach(par =>{
+          if(!attrType.contains(par.htmltype))
+            unknowType = unknowType .+(par.htmltype)
+        })
 
+      })
+    })
+    if(!unknowType.isEmpty) {
+      unknowType.foreach(f => {
+        var typeId = f.split(" ")
+        if (typeId.length > 1)
+          datatypes += (typeId(0) -> f)
+        else datatypes += (f.trim().replaceAll("[()]", "") -> f)
+
+      })
+    }
+    paramGroups.foreach(f =>{
+      paramGroups.foreach(h =>{
+        if(f.params!=h.params && f.name ==h.name)
+          h.name = h.name+"_1"
+      })
+    })
+   val h = pages.foreach(pg =>{
+      pages.foreach(gh=>{
+        if( pg.hashCode() != gh.hashCode() && pg.name ==gh.name ){
+          pages -= gh
+        }
+      })
+    })
+
+    pages = pages.toSet
+    paramGroups =paramGroups.toSet
     new EJSLModel(name, datatypes, pages, entities, params, paramGroups, extensions)
   }
 
- /** private def mergePages(a: Set[Page], b: Set[Page]): Set[Page] = {
-    var result = a.intersect(b)
-    val nA = a.diff(result)
-    val nB = b.diff(result)
 
-    var removeFromA = Set.empty[Page]
-    var removeFromB = Set.empty[Page]
-    nA.foreach(pA ⇒ {
-      val page = nB.find(p ⇒ p.name.equals(pA.name))
-      if (page.isDefined && pA.getClass.equals(page.get.getClass) && (pA.globalParamNames.nonEmpty || page.get.globalParamNames.nonEmpty)) {
-        val mergedPage = pA.getClass.getConstructors()(0).newInstance(pA.name, pA.globalParamNames ++ page.get.globalParamNames).asInstanceOf[Page]
-
-        result = result + mergedPage
-
-      } else {
-        result = result + pA
-      }
-      removeFromA = removeFromA + pA
-      if (page.isDefined) removeFromB = removeFromB + page.get
-    })
-
-    val nnA = nA diff removeFromA
-    val nnB = nB diff removeFromB
-
-    result ++ (nnA ++ nnB)
-  }*/
 }
 
 case class EJSLModel(name: String, datatypes: Set[(String,String)], pages: Set[Page], entities: Set[Entity], globalParams: Set[JParam], paramGroups: Set[JParamGroup], extensions: List[Extension])

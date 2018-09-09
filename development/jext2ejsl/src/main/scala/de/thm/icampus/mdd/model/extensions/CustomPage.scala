@@ -21,4 +21,8 @@ class CustomPage extends Page {
     }
     return false
   }
+  override def hashCode: Int = {
+    val prime = this.getClass.hashCode()
+    prime  * this.name.hashCode
+  }
 }

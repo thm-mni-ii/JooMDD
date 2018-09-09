@@ -3,7 +3,7 @@ package de.thm.icampus.mdd.handler
 import java.nio.file.Path
 
 import de.thm.icampus.mdd.handler
-import de.thm.icampus.mdd.handler.DetailsPageHandler.{readVaraibleName, searchExpressionAfterFrom}
+import de.thm.icampus.mdd.handler.DetailsPageHandler.{readVaraibleName, toIgnoreAttribute}
 import de.thm.mni.ii.phpparser.PHPParser
 import de.thm.mni.ii.phpparser.PHPParser.Result
 import de.thm.mni.ii.phpparser.ast.Basic.{DQStringElement, DQStringLiteral, QualifiedName, SQStringLiteral}
@@ -18,7 +18,7 @@ import de.thm.icampus.mdd.model.extensions._
 import de.thm.icampus.mdd.implicits.OptionUtils._
 
 import scala.io.{Codec, Source}
-import scala.xml.XML
+import scala.xml.{Node, XML}
 //tim
 object IndexPageHandler {
   val toIgnoreFilter = List("search","state","created_by","id","limit")
@@ -468,6 +468,30 @@ object IndexPageHandler {
     }
    return new CustomPage(pageName)
   }
+  val toIgnoreFiedlAttr= List("label","description","type","name")
+  def createParam(tg: Node):JParam  = {
+    val name = tg \@ "name"
+    if(!toIgnoreAttribute.contains(name)) {
+
+      val htmlType = tg \@ "type"
+      val desc = tg \@ "description"
+      val label = tg \@ "label"
+      var attr = Map.empty[String, String]
+      for (hv <- tg.attributes) {
+        if (!toIgnoreFiedlAttr.contains(hv.key))
+          attr = attr.+(hv.key -> hv.value.toString())
+      }
+      val option = tg \\ "option"
+      var valueK = Map.empty[String, String]
+      if (option != null && !option.isEmpty) {
+        for (opt <- option) {
+          valueK = valueK.+(opt.text -> opt \@ "value")
+        }
+      }
+      return new JParam(name, htmlType, label, desc, valueK, attr)
+    }
+    return null
+  }
    def readParams(configPath: Path): Set[JParamGroup] = {
     val configAsXMLString = Source.fromFile(configPath.toString).mkString
     val configAsXML = XML.loadString(configAsXMLString)
@@ -478,18 +502,11 @@ object IndexPageHandler {
       val fields = fieldSet \\ "field"
 
       val params = fields.map(field ⇒ {
-        val name =  (field \@ "name")
-        val htmltype = field \@ "type"
-        val default = (field \@ "default") asOpt
-        val label = field \@ "label"
-        val description = field \@ "description"
-        val size = ((field \@ "size") asOpt).?[Option[Int]] (e ⇒ Option(Integer.parseInt(e)))(None)
-
-        JParam(name, ( htmltype.replace(" (","_").replace(")",""),htmltype), label, description, default, size)
+        createParam(field)
       }).toSet
 
       val fieldSetName = fieldSet \@ "name"
-      JParamGroup(fieldSetName, params)
+     new  JParamGroup(fieldSetName, params)
     }).toSet
   }
 }

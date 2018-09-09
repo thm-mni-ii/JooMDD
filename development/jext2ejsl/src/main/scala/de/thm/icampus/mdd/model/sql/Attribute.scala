@@ -12,8 +12,27 @@ class Attribute {
   var isprimary: Boolean = false
   var isUnique:Boolean = false
   var withAttr:String=""
+  var istnotNul :Boolean = false
+  var default:String = ""
+  var autoInc = false
 
-  def this(name: String, dataType: String, isprimary: Boolean = false,isUnique:Boolean = false,withAttr:String=""){
+  def setAttributeSpec(spec: List[String]) = {
+    if(!spec.isEmpty){
+      var notIn = spec.indexOf("not")
+      if(notIn != -1 && notIn < spec.size-1  && spec(notIn +1) == "null"){
+        this.istnotNul = true
+      }
+      var defaultInd = spec.indexOf("default")
+      if(defaultInd != -1 && defaultInd < spec.size-1 ){
+        this.default = spec(defaultInd+1)
+      }
+      if(spec.contains("auto_increment") || spec.contains("AUTO_INCREMENT") ){
+        this.autoInc = true
+      }
+    }
+  }
+
+  def this(name: String, dataType: String, isprimary: Boolean = false, isUnique:Boolean = false, withAttr:String="", spec:List[String] = List.empty[String]){
     this()
     this.name = name
     this.isprimary = isprimary
@@ -21,6 +40,7 @@ class Attribute {
       this.isUnique =isUnique
       this.withAttr = withAttr
     }
+    setAttributeSpec(spec.map(d=> d.toLowerCase).toList)
 
     this.dataType = mappingDBType(dataType)
 
@@ -28,7 +48,7 @@ class Attribute {
   }
   def mappingDBType(sqlType: String): String ={
     sqlType.toLowerCase match {
-      case text: String if text.contains("int") ⇒ "Integer"
+      case text: String if text.contains("int") || text.contains("float") ⇒ "Integer"
       case text: String if   text.contains("tinyint")⇒ "Boolean"
       case text: String if text.contains("varchar") ⇒ "Short_Text"
       case text: String if text.contains("text") ⇒ "Text"
@@ -48,5 +68,6 @@ class Attribute {
       case _ => false
     }
   }
+  override def hashCode = (41 * this.name.hashCode) + this.dataType.hashCode()
 
 }

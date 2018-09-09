@@ -14,11 +14,21 @@ trait IndexPageTemplate extends BasicTemplate {
       s"""
          |*ParameterGroups ${rep(indexPage.globalParamNames, paramGroupPartial)}"""
     )
+    val columnpOpt = ?(indexPage.representationColumns.nonEmpty,
+      s"""
+         | representation columns = ${indexPage.representationColumns.map(d=>indexPage.entity +"."+d).toList.mkString(",")}"""
+    )
+    val filterOpt = ?(indexPage.filters.nonEmpty,
+      s"""
+         | filters = ${indexPage.filters.map(d=>indexPage.entity +"."+d).toList.mkString(",")}"""
+    )
 
     toTemplate(
       s"""
          |IndexPage ${indexPage.name} {
          |    *Entities ${indexPage.entity}
+         |    ${columnpOpt}
+         |    ${filterOpt}
          |    $paramGroupOpt
          |}""", newline, indent)
   }

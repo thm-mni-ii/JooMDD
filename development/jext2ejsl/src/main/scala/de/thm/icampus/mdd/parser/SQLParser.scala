@@ -35,8 +35,7 @@ class SQLParser {
   val toIgnore = List("asset_id","state","ordering","checked_out_time","checked_out","created_by","published","params")
   val lineBreakRE = "[\\n\\r]"
   val tabOrSpaceRE = "([\\t]|\\s)"
-  val descRegex = "`desc`"
-  val nextRegex = "`next`"
+
   val comment = "(--[^\\r\\n]*)|(\\/\\*\\*[\\w\\W]*\\*\\/)"
   // used to remove the "...if not exists... "
   val createTableRE = s"$tabOrSpaceRE?create$tabOrSpaceRE+table$tabOrSpaceRE+(if$tabOrSpaceRE+not$tabOrSpaceRE+exists$tabOrSpaceRE+)?([^\\(]*)$tabOrSpaceRE?\\([^;]*;$$"
@@ -76,7 +75,7 @@ class SQLParser {
   def parseFile(path: Path): List[Entity] = {
     var tables: List[Entity] = List.empty[Entity]
     val sqlAsString = Source.fromFile(path).mkString
-    val noCommentContent = sqlAsString.replaceAll(comment,"")//.replaceAll(descRegex,"`#_desc`").replaceAll(nextRegex,"`#_next`")
+    val noCommentContent = sqlAsString.replaceAll(comment,"")
     val sqlAsStringWithoutJoomlaPlaceholder = noCommentContent.replaceAll("#__", "").replaceAll("ON DELETE CASCADE", "").replaceAll("ON UPDATE CASCADE", "")
 
     val statements: List[String] = extractStatements(sqlAsStringWithoutJoomlaPlaceholder)
@@ -136,22 +135,24 @@ class SQLParser {
       val indexes = if (jIndexes.isDefined) jIndexes.get.toList else List.empty[Index]
 
       val primaryKey = getPrimaryKey(indexes)
-      val uniQueList = indexes.filter(f=>f.isInstanceOf[NamedConstraint])
-      val refConstList = indexes.filter(f=>f.isInstanceOf[ForeignKeyIndex])
+      val uniQueList = stm.getIndexes.filter(f=>f.isInstanceOf[NamedConstraint]).toList
+      val refConstList = stm.getIndexes.filter(f=>f.isInstanceOf[ForeignKeyIndex])
 
 
       ctStatement.getColumnDefinitions.foreach(cd => {
         val uniProperties = checkUniqProperties(cd,uniQueList)
+        var gb = List.empty[String]
+        if(cd.getColumnSpecStrings != null)
+          gb = gb.++(cd.getColumnSpecStrings)
         columns +=  new Attribute(
            (cd.getColumnName.replaceAll("##_","")),
-          cd.getColDataType.toString, primaryKey == (cd.getColumnName),uniProperties._1,uniProperties._2
-
+          cd.getColDataType.toString, primaryKey == (cd.getColumnName),uniProperties._1,uniProperties._2,gb
         )
       })
       reference = reference.++(refConstList.map(r => {
         val foreign = r.asInstanceOf[ForeignKeyIndex]
         val foreignTable = foreign.getTable.getName.replace("`", "")
-         Reference(foreign.getColumnsNames.toList,foreignTable,foreign.getReferencedColumnNames.toList)
+         new Reference(foreign.getColumnsNames.toList,foreignTable,foreign.getReferencedColumnNames.toList)
       }))
       new Entity(tableName, columns.filter(r=> !toIgnore.contains(r.name)).toList,reference)
     }

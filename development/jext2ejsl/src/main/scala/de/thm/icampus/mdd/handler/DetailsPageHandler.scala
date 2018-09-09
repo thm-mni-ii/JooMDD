@@ -17,7 +17,7 @@ import scala.io.Source
 import scala.xml.{Node, XML}
 //tim
 object DetailsPageHandler {
-  val toIgnoreAttribute = List("state","created_by","ordering","checked_out_time","checked_out","published","params","asset_id","rules")
+  val toIgnoreAttribute = List("state","created_by","ordering","checked_out_time","checked_out","published","params","asset_id","rules","filter")
   val toIgnoreFiedlAttr= List("label","description","type","name")
   def searchExpressionAfterFrom(fromName: String, from: Expression): Expression = {
 

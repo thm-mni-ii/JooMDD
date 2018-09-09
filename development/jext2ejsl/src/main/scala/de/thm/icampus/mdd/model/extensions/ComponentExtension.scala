@@ -5,12 +5,14 @@ import de.thm.icampus.mdd.model.sql.{Entity}
 
 case class ComponentExtension(name: String, manifest: Manifest, languages: Set[Language], frontend: Frontend, backend: Backend, entities: List[Entity], params: Set[JParamGroup] = Set.empty[JParamGroup]) extends Extension
 
-case class Backend(pages: Set[Page])
-case class Frontend(pages: Set[Page])
+case class Backend(var pages: Set[Page])
+case class Frontend(var pages: Set[Page])
 
 abstract class Page {
-  def name: String
-  def globalParamNames: Set[JParamGroup]
+   var name: String
+  var globalParamNames: Set[JParamGroup]
+
+  override def toString: String = this.name
 
 }
 

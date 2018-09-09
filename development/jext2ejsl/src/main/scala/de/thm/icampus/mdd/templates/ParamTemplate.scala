@@ -9,23 +9,13 @@ import de.thm.icampus.mdd.templates.basic.BasicTemplate
 trait ParamTemplate extends BasicTemplate {
 
   def paramPartial(param: JParam, newline: Boolean = true, indent: Int = 0) = {
-    val definedOpt = ?(param.default.isDefined,
-      s"""
-         |defaultvalue = "${param.default.get}""""
-    )
 
-    val sizeOpt = ?(param.size.isDefined,
-      s"""
-         |size = ${param.size.get}"""
-    )
 
     toTemplate(
       s"""
          |Parameter ${param.name} {
-         |    type = ${param.htmltype._1}
-         |    $definedOpt
+         |    type = ${param.htmltype}
          |    label = "${param.label}"
-         |    $sizeOpt
          |    description = "${param.description}"
          |}""", newline, indent)
   }
