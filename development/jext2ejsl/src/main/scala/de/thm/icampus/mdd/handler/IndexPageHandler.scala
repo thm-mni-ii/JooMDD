@@ -383,19 +383,30 @@ object IndexPageHandler {
   }
  def createIndexpage(bodyClass:Seq[Statements.MemberDecl],pageName:String,modelpath:Path,viewFolder:Path): Page ={
     var dbName:String =""
+   var nodbo = true
     val getListItemFunkDT  = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
     if(getListItemFunkDT != null){
       val allStmtsItem = getListItemFunkDT.body match {  case Some(e) => e
       }
       var dbstatement = DetailsPageHandler.searchStatmentAfterMember("this","getDbo",allStmtsItem.stmnts,true)
+      if(dbstatement == null){
+        dbstatement = DetailsPageHandler.searchStatmentAfterMember("this","db",allStmtsItem.stmnts,true)
+        nodbo = false
+      }
       if(dbstatement != null){
-        val dbexp = dbstatement._1.exp.asInstanceOf[SimpleAssignmentExp]
-        val dbVarName = dbexp.variable.asInstanceOf[SimpleNameVar].name.name
-        val fd = DetailsPageHandler.searchStatmentAfterVariable(dbVarName,dbstatement._2,true)
+        var fd:(ExpressionStmnt, Seq[Statement]) = null
+        var dbVarName = ""
+        if(nodbo){
+          val dbexp = dbstatement._1.exp.asInstanceOf[SimpleAssignmentExp]
+           dbVarName = dbexp.variable.asInstanceOf[SimpleNameVar].name.name
+         fd = DetailsPageHandler.searchStatmentAfterMember(dbVarName,"getQuery",dbstatement._2,true)
+        }else{
+          fd = dbstatement
+        }
         if(fd != null){
-          val expm = fd._1.exp.asInstanceOf[SimpleAssignmentExp]
+          var expm = fd._1.exp.asInstanceOf[SimpleAssignmentExp]
           val queryVar = DetailsPageHandler.readVaraibleName(expm.variable)
-          val from = DetailsPageHandler.searchStatmentAfterMember(queryVar,"from",fd._2,true)
+          val from = DetailsPageHandler.searchStatmentAfterMember(queryVar,"from",dbstatement._2,true)
           if(from != null){
             from._1 match{
               case ExpressionStmnt(ept) =>{
@@ -405,10 +416,10 @@ object IndexPageHandler {
                     dbName = DetailsPageHandler.readMemberCallStaticAccAttr(r.from,r.member,r.args,getListItemFunkDT,queryVar,"from",0).toLowerCase
 
                     val sqlParsew = "#[a-zA-Z0-9\\_]*".r
-                    val tableAsArr = dbName.split("as")
+                    val tableAsArr = dbName.split(" ")
                     var tableAs :String =""
                     if(tableAsArr.length >1)
-                      tableAs = tableAsArr(1).trim
+                      tableAs = tableAsArr.last
 
                     val dbTablew = sqlParsew.findFirstMatchIn(dbName) match{
                       case Some(value)=> value.matched
@@ -416,7 +427,7 @@ object IndexPageHandler {
                     }
                     var result = Seq.empty[ExpressionStmnt]
                     val attrRegex = s"$tableAs\\.[a-zA-Z0-9_]+".r
-                    val allqueryFilterObject = IndexPageHandler.searchStatmentAfterMember(queryVar,"where",fd._2,true)
+                    val allqueryFilterObject = IndexPageHandler.searchStatmentAfterMember(queryVar,"where",dbstatement ._2,true)
                     var allqueryFilterString = allqueryFilterObject.map(f => {
                       if(f.exp.isInstanceOf[MemberCallPropertyAcc]){
                         val h = f.exp.asInstanceOf[MemberCallPropertyAcc];
@@ -471,7 +482,7 @@ object IndexPageHandler {
   val toIgnoreFiedlAttr= List("label","description","type","name")
   def createParam(tg: Node):JParam  = {
     val name = tg \@ "name"
-    if(!toIgnoreAttribute.contains(name)) {
+    if(name != "" && !name.toString.isEmpty && !toIgnoreAttribute.contains(name) ) {
 
       val htmlType = tg \@ "type"
       val desc = tg \@ "description"
@@ -488,7 +499,7 @@ object IndexPageHandler {
           valueK = valueK.+(opt.text -> opt \@ "value")
         }
       }
-      return new JParam(name, htmlType, label, desc, valueK, attr)
+      return new JParam(name.trim, htmlType, label, desc, valueK, attr)
     }
     return null
   }

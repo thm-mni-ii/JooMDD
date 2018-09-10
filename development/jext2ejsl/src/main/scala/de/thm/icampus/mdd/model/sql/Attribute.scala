@@ -50,7 +50,7 @@ class Attribute {
     sqlType.toLowerCase match {
       case text: String if text.contains("int") || text.contains("float") ⇒ "Integer"
       case text: String if   text.contains("tinyint")⇒ "Boolean"
-      case text: String if text.contains("varchar") ⇒ "Short_Text"
+      case text: String if text.contains("varchar") || text.contains("char")⇒ "Short_Text"
       case text: String if text.contains("text") ⇒ "Text"
       case text: String if text.contains("bit") ⇒ "Integer"
       case text: String if text.contains("date") || text.contains("time") || text.contains("datetime") ⇒ "Short_Text"

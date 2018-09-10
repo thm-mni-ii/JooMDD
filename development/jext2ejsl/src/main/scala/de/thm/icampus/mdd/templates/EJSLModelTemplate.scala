@@ -11,16 +11,24 @@ import de.thm.icampus.mdd.templates.pages.PageTemplate
 object EJSLModelTemplate extends BasicTemplate with ParamTemplate with ParamGroupTemplate with EntityTemplate with PageTemplate with ExtensionTemplate {
 
   def ejslModelPartial(model: EJSLModel, newline: Boolean = true, indent: Int = 0) : String = {
+    val globalParamOpt = ? (model.globalParams.nonEmpty,
+      s"""
+         |globalparameters ${rep(model.globalParams,paramPartial, sep="\n")}""")
+    val dataTypeOpt = ? (model.datatypes.nonEmpty,
+      s"""
+         |datatypes ${rep(model.datatypes,datatypePartial, sep=",\n")}""")
+    val paramGrouOPt = ?(model.paramGroups.nonEmpty,
+      s"""
+             |parametergroups ${rep(model.paramGroups, paramGroupPartial)}
+              """)
+
     toTemplate(
       s"""
          |eJSLModel "${model.name}" {
          |  eJSL part: CMS Extension {
-         |    datatypes ${rep(model.datatypes, datatypePartial, sep=",\n")}
-         |
-         |    globalparameters ${rep(model.globalParams, paramPartial)}
-         |
-         |    parametergroups ${rep(model.paramGroups, paramGroupPartial)}
-         |
+         |    ${dataTypeOpt}
+         |    ${globalParamOpt}
+         |    ${paramGrouOPt}
          |    entities ${rep(model.entities, entityPartial)}
          |
          |    pages ${rep(model.pages, pagePartial)}

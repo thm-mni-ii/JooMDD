@@ -11,13 +11,31 @@ trait ParamTemplate extends BasicTemplate {
   def paramPartial(param: JParam, newline: Boolean = true, indent: Int = 0) = {
 
 
+    val labelOpt  = ?(param.label !="" && !param.label.isEmpty ,
+      s""" label = "${param.label}"
+       """)
+    val descOpt  = ?(param.description !="" && !param.description.isEmpty,
+      s""" description ="${param.description}"
+       """)
+    val valuOpt = ?(param.valueslist.nonEmpty,
+      s"""
+         |  values {
+         |  ${param.valueslist.map(d => s""" Key ${d._1} = "${d._2}"""").toList.mkString(",\n")} }"""
+    )
+    val fieldOpt = ?(param.attrlist.nonEmpty,
+      s"""
+         |  field attributes {
+         |  ${param.attrlist.map(d => s"""Key ${d._1} = "${d._2}" """).toList.mkString(",\n")} }"""
+    )
     toTemplate(
       s"""
-         |Parameter ${param.name} {
-         |    type = ${param.htmltype}
-         |    label = "${param.label}"
-         |    description = "${param.description}"
-         |}""", newline, indent)
+         |Parameter ${param.name}{
+         |  type = ${param.htmltype}
+         |  ${labelOpt}
+         |  ${descOpt}
+         |  ${valuOpt}
+         |  ${fieldOpt}
+         | }""", newline, indent)
   }
 
 }

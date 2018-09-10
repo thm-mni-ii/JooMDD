@@ -10,7 +10,7 @@ class DetailsPageAttribute{
   def mapAttribute(typeName: String): String = {
     typeName.toLowerCase match{
       case "number"|"float"|"int"=> return "Integer"
-      case "text"|"image"|"button"|"submit"|"title"|"email"=> return "Text_Field"
+      case "text"|"image"|"button"|"submit"|"title"|"email"|"char"=> return "Text_Field"
       case "textarea" | "editor" => return "Textarea"
       case "list"|"color"|"radio" => return "Select"
       case "checkbox" => return "Yes_No_Buttons "

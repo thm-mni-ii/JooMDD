@@ -3,6 +3,7 @@ package de.thm.icampus.mdd.handler
 import java.nio.file.{Files, Path}
 import java.io.File
 
+import de.thm.icampus.mdd.handler.DetailsPageHandler.readVaraibleName
 import de.thm.icampus.mdd.handler.IndexPageHandler.readParams
 import de.thm.mni.ii.phpparser.PHPParser
 import de.thm.mni.ii.phpparser.PHPParser.Result
@@ -72,6 +73,27 @@ object DetailsPageHandler {
 
         }
 
+      }
+      case v: MemberPropertyAcc => {
+        if ((v.member.asInstanceOf[NameMember]).name.name == memberName && readVaraibleName(v.from) == fromVarName) {
+          return from
+        }
+        else {
+          if ((v.member.asInstanceOf[NameMember]).name.name == memberName) {
+            return searchExpressionAfterFrom(memberName, v.from)
+          } else {
+            return searchExpressionAfterFromAndMember(fromVarName, memberName, v.from)
+          }
+
+        }
+
+      }
+      case v: MemberCallPropertyAcc => {
+        if ((v.member.asInstanceOf[NameMember]).name.name == memberName) {
+          return searchExpressionAfterFrom(memberName, v.from)
+        } else {
+          return searchExpressionAfterFromAndMember(fromVarName, memberName, v.from)
+        }
       }
       case f: MemberCallStaticAcc => {
         if ((f.member.asInstanceOf[NameMember]).name.name == memberName && readVaraibleName(f.from) == fromVarName) {
@@ -225,7 +247,7 @@ object DetailsPageHandler {
                       if (h != null)
                         return (item.asInstanceOf[ExpressionStmnt], statements);
                     }
-                    if (member.isInstanceOf[NameMember] && (member.asInstanceOf[NameMember]).name.name == memberName && readVaraibleName(from) == fromVarName) {
+                    if (member.isInstanceOf[NameMember] && (member.asInstanceOf[NameMember]).name.name == memberName && searchExpressionAfterFrom(fromVarName,from) != null) {
                       return (item.asInstanceOf[ExpressionStmnt], statements);
                     }
                   }
@@ -238,13 +260,24 @@ object DetailsPageHandler {
                   if (h != null)
                     return (item.asInstanceOf[ExpressionStmnt], statements);
                 }
-                if (v.member.isInstanceOf[NameMember] && (v.member.asInstanceOf[NameMember]).name.name == memberName && readVaraibleName(v.from) == fromVarName) {
+                if (v.member.isInstanceOf[NameMember] && (v.member.asInstanceOf[NameMember]).name.name == memberName && searchExpressionAfterFrom(fromVarName,v.from) != null) {
                   return (item.asInstanceOf[ExpressionStmnt], statements);
                 }
               }
+              case v: MemberPropertyAcc => {
+                if (!v.from.isInstanceOf[SimpleNameVar]) {
+                  val h = searchExpressionAfterFromAndMember(fromVarName, memberName, v.from)
+                  if (h != null)
+                    return (item.asInstanceOf[ExpressionStmnt], statements);
+                }
+                if (v.member.isInstanceOf[NameMember] && (v.member.asInstanceOf[NameMember]).name.name == memberName && searchExpressionAfterFrom(fromVarName,v.from) != null) {
+                  return (item.asInstanceOf[ExpressionStmnt], statements);
+                }
+
+              }
 
               case f: MemberCallStaticAcc => {
-                if (f.member.isInstanceOf[NameMember] && (f.member.asInstanceOf[NameMember]).name.name == memberName && readVaraibleName(f.from) == fromVarName) {
+                if (f.member.isInstanceOf[NameMember] && (f.member.asInstanceOf[NameMember]).name.name == memberName && searchExpressionAfterFrom(fromVarName,f.from) != null) {
                   return (item.asInstanceOf[ExpressionStmnt], statements);
                 }
               }
@@ -389,7 +422,6 @@ object DetailsPageHandler {
     val allStmts = geTabelMeth.body match {
       case Some(e) => e
     }
-
     var className = readVaraibleName(from)
     val memberVal = (member.asInstanceOf[NameMember]).name.name
     if (className == fromName && memberVal == memberName) {
@@ -408,10 +440,21 @@ object DetailsPageHandler {
         case _ => return literalToString(typeTable)
       }
 
+    }else{
+      from match {
+        case v: MemberCallPropertyAcc => {
+          return readMemberCallStaticAccAttr(v.from,v.member,v.args,geTabelMeth,fromName,memberName,argsindex)
+        }
+
+        case f: MemberCallStaticAcc => {
+          return readMemberCallStaticAccAttr(f.from,f.member,f.args,geTabelMeth,fromName,memberName,argsindex)
+        }
+        case _=>
+      }
     }
 
 
-    return null
+    return ""
   }
 
   def literalToString(exp: Expression): String = {
@@ -422,7 +465,7 @@ object DetailsPageHandler {
         val l = value.map(x => {
           x match {
             case c: DQStringElement => {
-              res = res + c.s
+              res = res +" " + c.s
             }
             case _ =>
           }
@@ -436,7 +479,8 @@ object DetailsPageHandler {
         return literalToString(exp1) + literalToString(exp2)
       }
       case MemberCallPropertyAcc(from,mem,args) =>{
-        return (args.map(h => literalToString(h.exp))).mkString
+
+        return (args.map(h => literalToString(h.exp))).toList.mkString(" ")
       }
       case _ =>
         return ""
@@ -446,6 +490,20 @@ object DetailsPageHandler {
   def readVaraibleName(exp: Expression): String = {
 
     exp match {
+      case v: MemberCallPropertyAcc => {
+        val g = readVaraibleName(v.from)
+        if (g != null)
+          return g
+
+      }
+      case f: MemberPropertyAcc => {
+        return readVaraibleName(f.from)
+      }
+      case f: MemberCallStaticAcc => {
+        val g = readVaraibleName(f.from)
+        if (g != null)
+          return g
+      }
       case c: QualifiedNameVar => {
         return c.name.name.name
       }
@@ -549,7 +607,7 @@ object DetailsPageHandler {
       }
     }
     if (tableName == "") {
-      var tempTablePAth = new File (backendPath.toString + "tables" + modelFilename)
+      var tempTablePAth = new File (backendPath.toString + "/tables/" + modelFilename)
       if (tempTablePAth.exists()) {
         tableName = pageName
       }
@@ -583,11 +641,22 @@ object DetailsPageHandler {
         val allStmtsItem = getItemFunk.body match {
           case Some(e) => e
         }
-        var dbstatement = DetailsPageHandler.searchStatmentAfterMember("this", "getDbo", allStmtsItem.stmnts, true)
+        var nodbo = true
+        var dbstatement = DetailsPageHandler.searchStatmentAfterMember("this","getDbo",allStmtsItem.stmnts,true)
+        if(dbstatement == null){
+          dbstatement = DetailsPageHandler.searchStatmentAfterMember("this","db",allStmtsItem.stmnts,true)
+          nodbo = false
+        }
         if (dbstatement != null) {
-          val dbexp = dbstatement._1.exp.asInstanceOf[SimpleAssignmentExp]
-          val dbVarName = dbexp.variable.asInstanceOf[SimpleNameVar].name.name
-          val fd = DetailsPageHandler.searchStatmentAfterVariable(dbVarName, dbstatement._2, true)
+          var fd:(ExpressionStmnt, Seq[Statement]) = null
+          var dbVarName = ""
+          if(nodbo){
+            val dbexp = dbstatement._1.exp.asInstanceOf[SimpleAssignmentExp]
+            dbVarName = dbexp.variable.asInstanceOf[SimpleNameVar].name.name
+            fd = DetailsPageHandler.searchStatmentAfterMember(dbVarName,"getQuery",dbstatement._2,true)
+          }else{
+            fd = dbstatement
+          }
           if (fd != null) {
             val expm = fd._1.exp.asInstanceOf[SimpleAssignmentExp]
             val queryVar = DetailsPageHandler.readVaraibleName(expm.variable)

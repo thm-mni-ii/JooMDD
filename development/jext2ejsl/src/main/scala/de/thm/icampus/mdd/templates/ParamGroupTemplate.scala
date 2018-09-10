@@ -9,19 +9,32 @@ import de.thm.icampus.mdd.templates.basic.BasicTemplate
 trait ParamGroupTemplate extends BasicTemplate {
 
   def paramGroupPartial(paramGroup: JParamGroup, newline: Boolean = true, indent: Int = 0) = {
+    val paramOpt = ? (paramGroup.params.nonEmpty,
+      s"""
+         |Parameters ${rep(paramGroup.params,simpleParamPartial, sep="\n")}""")
+    val paramNameOpt = ? (paramGroup.params.nonEmpty,
+      s"""
+         | ParameterGroup ${paramGroup.name} {""")
+    val paramTerOpt = ? (paramGroup.params.nonEmpty,
+      s"""
+         | }""")
+    val labelOpt = ? (paramGroup.params.nonEmpty,
+      s"""
+         |label = "${paramGroup.name}"
+         |""")
     toTemplate(
       s"""
-         | ParameterGroup pg {
-         |  label = "${paramGroup.name}"
-         |  Parameters ${rep(paramGroup.params,simpleParamPartial, sep="\n")}
-         |}""", newline, indent)
+         |  ${paramNameOpt}
+         |  $labelOpt
+         |  ${paramOpt} }
+         |  """, newline, indent)
   }
 
   private def simpleParamPartial(param: JParam, newline: Boolean = true, indent: Int = 0) = {
-    val labelOpt  = ?(param.label !="",
+    val labelOpt  = ?(param.label !=""  && !param.label.isEmpty ,
       s""" label = "${param.label}"
        """)
-    val descOpt  = ?(param.description !="",
+    val descOpt  = ?(param.description !=""  && !param.description.isEmpty ,
       s""" description ="${param.description}"
        """)
     val valuOpt = ?(param.valueslist.nonEmpty,
@@ -44,5 +57,6 @@ trait ParamGroupTemplate extends BasicTemplate {
          |  ${fieldOpt}
          | }""", newline, indent)
   }
+
 
 }

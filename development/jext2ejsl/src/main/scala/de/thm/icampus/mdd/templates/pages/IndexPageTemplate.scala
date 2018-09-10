@@ -1,6 +1,6 @@
 package de.thm.icampus.mdd.templates.pages
 
-import de.thm.icampus.mdd.model.extensions.IndexPage
+import de.thm.icampus.mdd.model.extensions.{IndexPage, JParamGroup}
 import de.thm.icampus.mdd.templates.EJSLModelTemplate.paramGroupPartial
 import de.thm.icampus.mdd.templates.basic.BasicTemplate
 
@@ -12,7 +12,7 @@ trait IndexPageTemplate extends BasicTemplate {
   def indexPagePartial(indexPage: IndexPage, newline: Boolean = true, indent: Int = 0) = {
     val paramGroupOpt = ?(indexPage.globalParamNames.nonEmpty,
       s"""
-         |*ParameterGroups ${rep(indexPage.globalParamNames, paramGroupPartial)}"""
+         |*ParameterGroups ${indexPage.globalParamNames.filter(d => d.params.nonEmpty).map(f => f.name).toList.mkString(", ")}"""
     )
     val columnpOpt = ?(indexPage.representationColumns.nonEmpty,
       s"""
@@ -27,16 +27,20 @@ trait IndexPageTemplate extends BasicTemplate {
       s"""
          |IndexPage ${indexPage.name} {
          |    *Entities ${indexPage.entity}
+         |    $paramGroupOpt
          |    ${columnpOpt}
          |    ${filterOpt}
-         |    $paramGroupOpt
          |}""", newline, indent)
   }
 
-  private def simpleParamGroupPartial(paramGroup: String, newline: Boolean = true, indent: Int = 0) = {
+  private def simpleParamGroupNamePartial(paramGroup:JParamGroup , newline: Boolean = true, indent: Int = 0) = {
+    val fieldOpt = ?(paramGroup.params.nonEmpty,
+      s"""
+         |  ${paramGroup.name}"""
+    )
     toTemplate(
       s"""
-         |$paramGroup""", newline, indent)
+         |${fieldOpt}""", newline, indent)
   }
 
 }

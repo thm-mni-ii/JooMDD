@@ -54,10 +54,10 @@ class SQLParser {
 
     } catch {
       case e: JSQLParserException => {
-        //println(e.printStackTrace())
+        println(e.printStackTrace())
         println("-----------------------------------------")
         println(s"Ignoring table definition in file: $path due to malformed statement:")
-      //  println("JSQLParserException caught: " + e.getCause)
+         println("JSQLParserException caught: " + e.getCause)
         println("-----------------------------------------")
         if(e.getCause.isInstanceOf[ParseException]){
           val token = (e.getCause.asInstanceOf[ParseException]).currentToken.next.image
@@ -84,14 +84,16 @@ class SQLParser {
 
     for (statementString <- preparedStatements) {
       try {
-        tables = tables .:+ (parseStatement(parser.parse(new StringReader(statementString)) ))
+        val stmtString = statementString.replaceAll("(UNIQUE INDEX)|(unique index)","UNIQUE KEY")
+          .replaceAll(s"""(INDEX|index)$tabOrSpaceRE*\\(""","UNIQUE KEY (")
+        tables = tables .:+ (parseStatement(parser.parse(new StringReader(stmtString)) ))
 
       } catch {
         case e: JSQLParserException => {
           //println(e.printStackTrace())
           println("-----------------------------------------")
           println(s"Ignoring table definition in file: $path due to malformed statement:")
-         // println("JSQLParserException caught: " + e.getCause)
+          println("JSQLParserException caught: " + e.getCause)
           println("-----------------------------------------")
           if(e.getCause.isInstanceOf[ParseException]){
             val token = (e.getCause.asInstanceOf[ParseException]).currentToken.next.image
@@ -239,6 +241,5 @@ class SQLParser {
     */
   def prepareStatement(statement: String) : String = {
     statement.replace("`", "").replace("\"", "'")
-      .lines.filter(s => !(s.trim.matches(s"(?i)(unique$tabOrSpaceRE+)?index.*"))).mkString("\n")
   }
 }

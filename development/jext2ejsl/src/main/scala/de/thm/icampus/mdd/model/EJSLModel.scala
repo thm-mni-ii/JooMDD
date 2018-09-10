@@ -20,7 +20,7 @@ object EJSLModel {
 
         entities = entities ++ c.entities
         params = params ++ c.params.flatMap(paramGroup ⇒ paramGroup.params)
-        paramGroups = paramGroups ++ c.params
+        paramGroups = paramGroups ++ c.params.filter(df => !df.params.isEmpty)
 
         c.backend.pages = c.backend.pages.filter(f => pages.contains(f)).toSet
         c.frontend.pages = c.frontend.pages.filter(f => pages.contains(f)).toSet
@@ -50,15 +50,7 @@ object EJSLModel {
 
       })
     })
-    if(!unknowType.isEmpty) {
-      unknowType.foreach(f => {
-        var typeId = f.split(" ")
-        if (typeId.length > 1)
-          datatypes += (typeId(0) -> f)
-        else datatypes += (f.trim().replaceAll("[()]", "") -> f)
 
-      })
-    }
     paramGroups.foreach(f =>{
       paramGroups.foreach(h =>{
         if(f.params!=h.params && f.name ==h.name)
@@ -75,6 +67,29 @@ object EJSLModel {
 
     pages = pages.toSet
     paramGroups =paramGroups.toSet
+    if(!pages.isEmpty ){
+      pages.foreach(prg=>{
+        prg match{
+          case d : DetailsPage=>{
+            d.editAttribute.foreach(gh=>{
+              if(!attrType.contains(gh.typeName))
+                unknowType = unknowType .+(gh.typeName)
+            })
+          }
+          case _=>
+        }
+
+      })
+    }
+    if(!unknowType.isEmpty) {
+      unknowType.foreach(f => {
+        var typeId = f.split(" ")
+        if (typeId.length > 1)
+          datatypes += (typeId(0) -> f)
+        else datatypes += (f.trim().replaceAll("[()]", "") -> f)
+
+      })
+    }
     new EJSLModel(name, datatypes, pages, entities, params, paramGroups, extensions)
   }
 

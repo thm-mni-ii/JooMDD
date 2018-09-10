@@ -90,7 +90,7 @@ object ComponentHandler extends Handler {
               case "ListModel" | "JModelList" => {
                 frontEndPages = frontEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
               }
-              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem" => {
+              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem"| "JModelLegacy" => {
                 if(parentName == "ItemModel" || parentName == "JModelItem" )
                 frontEndPages = frontEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,false,modelpath,backendPath,modelFilename,pageName, viewFolder))
                 else
@@ -143,7 +143,7 @@ object ComponentHandler extends Handler {
               case "ListModel" | "JModelList" => {
                 backEndPages = backEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
               }
-              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem" | "AdminModel"=> {
+              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem" | "AdminModel" | "JModelLegacy"=> {
                 if(parentName == "ItemModel" || parentName == "JModelItem" )
                   backEndPages = backEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,false,modelpath,backendPath,modelFilename,pageName, viewFolder))
                 else
