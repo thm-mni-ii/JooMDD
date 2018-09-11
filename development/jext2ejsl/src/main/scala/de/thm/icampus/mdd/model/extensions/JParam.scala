@@ -6,7 +6,7 @@ class JParamGroup extends Comparable[JParamGroup]{
   var params: Set[JParam] = Set.empty[JParam]
   def this(name: String, params: Set[JParam] = Set.empty[JParam]){
     this()
-    this.name = name
+    this.name = ParseName.parse(name)
     this.params = params.filter(f=> f!=null)
   }
 
@@ -47,12 +47,12 @@ class JParam extends {
   def this(name: String, htmltype:String, label: String, description: String, attrlist: Map[String,String] = Map.empty[String,String]
            , valueslist: Map[String,String] = Map.empty[String,String] ){
     this()
-    this.name = name
+    this.name = ParseName.parse(name)
     this.htmltype = mapAttribute(htmltype)
     this.label = label
     this.description = description
-    this.attrlist = attrlist
-    this.valueslist = valueslist
+    this.attrlist = attrlist.map(k => (ParseName.parse(k._1)->k._2)).toMap[String,String]
+    this.valueslist = valueslist.map(k => (ParseName.parse(k._1)->k._2)).toMap[String,String]
   }
 
   override def toString: String = this.name + "< " + this.htmltype + " >"
@@ -79,7 +79,7 @@ class JParam extends {
       case "list"|"color"|"radio" => return "Select"
       case "checkbox" => return "Yes_No_Buttons "
       case "calendar" | "date"| "datetime"|"time"=> return "Datepicker"
-      case _=> return typeName
+      case _=> return ParseName.parse(typeName)
     }
   }
 

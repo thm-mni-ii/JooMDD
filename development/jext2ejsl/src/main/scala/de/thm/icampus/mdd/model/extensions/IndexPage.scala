@@ -11,11 +11,11 @@ class IndexPage extends DynamicPage {
   def this (name: String, entity: String, globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup],
             representationColumns: Set[String] = Set.empty[String],filters: Set[String] = Set.empty[String]){
     this()
-    this.name = name
-    this.entity = entity
+    this.name = ParseName.parse(name)
+    this.entity = ParseName.parse(entity)
     this.globalParamNames = globalParamNames
-    this.representationColumns = representationColumns
-    this.filters = filters
+    this.representationColumns = representationColumns.map(d => ParseName.parse(d)).toSet
+    this.filters = filters.map(d => ParseName.parse(d)).toSet
 
 
   }

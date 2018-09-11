@@ -1,5 +1,7 @@
 package de.thm.icampus.mdd.model.sql
 
+import de.thm.icampus.mdd.model.extensions.ParseName
+
 /**
  * Created by alexheinz1110 on 14.08.15.
  */
@@ -10,7 +12,7 @@ class Entity{
   var extentionName:String =""
   def this(name: String, attributes: List[Attribute], reference :List[Reference] = List.empty[Reference]){
     this()
-    this.name = name
+    this.name = ParseName.parse(name)
     this.attributes = attributes
     this.reference = reference
   }
@@ -34,7 +36,7 @@ class Entity{
   def setExtentionName(extName:String):Unit={
    this.extentionName = extName
     if(this.name != extName){
-      this.name = this.name.replaceFirst(extName+"_","")
+      this.name = ParseName.parse(this.name.replaceFirst(extName+"_",""))
       this.reference.foreach(r => r.setEntityName(extName))
     }
 

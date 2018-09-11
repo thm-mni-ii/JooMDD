@@ -1,6 +1,7 @@
 package de.thm.icampus.mdd.model.sql
 
 import com.sun.xml.internal.fastinfoset.tools.SAXEventSerializer.AttributeValueHolder
+import de.thm.icampus.mdd.model.extensions.ParseName
 
 /**
  * Created by alexheinz1110 on 14.08.15.
@@ -34,11 +35,14 @@ class Attribute {
 
   def this(name: String, dataType: String, isprimary: Boolean = false, isUnique:Boolean = false, withAttr:String="", spec:List[String] = List.empty[String]){
     this()
-    this.name = name
+    this.name = ParseName.parse(name)
     this.isprimary = isprimary
     if(!isprimary){
       this.isUnique =isUnique
       this.withAttr = withAttr
+    }else{
+      this.isUnique =true
+
     }
     setAttributeSpec(spec.map(d=> d.toLowerCase).toList)
 
@@ -54,7 +58,7 @@ class Attribute {
       case text: String if text.contains("text") ⇒ "Text"
       case text: String if text.contains("bit") ⇒ "Integer"
       case text: String if text.contains("date") || text.contains("time") || text.contains("datetime") ⇒ "Short_Text"
-      case _: String ⇒ sqlType
+      case _: String ⇒ ParseName.parse(sqlType)
     }
   }
   override def equals(obj: Any):Boolean={

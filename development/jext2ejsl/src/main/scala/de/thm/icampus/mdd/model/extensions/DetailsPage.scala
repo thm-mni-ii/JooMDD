@@ -13,10 +13,10 @@ class DetailsPage extends DynamicPage {
   def this (name: String, entity: String, isEdit:Boolean,globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup],
             representationColumns: Set[String] = Set.empty[String],editAttribute: Set[DetailsPageAttribute] = Set.empty[DetailsPageAttribute]){
     this()
-    this.name = name
-    this.entity = entity
+    this.name = ParseName.parse(name)
+    this.entity = ParseName.parse(entity)
     this.globalParamNames = globalParamNames
-    this.representationColumns = representationColumns
+    this.representationColumns = representationColumns.map(d => ParseName.parse(d)).toSet
     this.editAttribute = editAttribute
     this.isEdit = isEdit
 
@@ -31,7 +31,7 @@ class DetailsPage extends DynamicPage {
          }
          return true
        }
-       if(f.entity == this.entity && this.isEdit != f.isEdit){
+     /**  if(f.entity == this.entity ){
          if(f.name.diff(this.name)=="edit" || this.name.diff(f.name)=="edit"  ){
            this.editAttribute = f.editAttribute.|(this.editAttribute)
            this.representationColumns = f.representationColumns.|(this.representationColumns)
@@ -40,13 +40,13 @@ class DetailsPage extends DynamicPage {
            f.representationColumns = this.representationColumns
            f.editAttribute = this.editAttribute
            this.isEdit = f.isEdit
-           if(f.name.contains("edit"))
-             f.name = this.name
-           else this.name = f.name
+           if(f.name.diff(this.name)=="edit")
+             this.name = f.name
+           else  f.name = this.name
            return true
          }
 
-       }
+       }*/
      }
      case _ => return false
    }

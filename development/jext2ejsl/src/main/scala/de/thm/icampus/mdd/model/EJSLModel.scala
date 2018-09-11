@@ -16,7 +16,7 @@ object EJSLModel {
       case c: ComponentExtension ⇒ {
 
 
-        pages = (c.backend.pages.++(c.frontend.pages)).toSet[Page]
+        pages = (c.backend.pages.|(c.frontend.pages)).toSet[Page]
 
         entities = entities ++ c.entities
         params = params ++ c.params.flatMap(paramGroup ⇒ paramGroup.params)

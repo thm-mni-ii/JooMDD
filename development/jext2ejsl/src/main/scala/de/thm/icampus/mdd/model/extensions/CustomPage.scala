@@ -6,7 +6,7 @@ class CustomPage extends Page {
   var globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]
   def this(name: String, globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]){
     this()
-    this.name = name
+    this.name =  ParseName.parse(name)
     this.globalParamNames = globalParamNames
   }
 

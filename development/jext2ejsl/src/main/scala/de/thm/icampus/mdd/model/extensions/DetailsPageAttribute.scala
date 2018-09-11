@@ -15,7 +15,7 @@ class DetailsPageAttribute{
       case "list"|"color"|"radio" => return "Select"
       case "checkbox" => return "Yes_No_Buttons "
       case "calendar" | "date"| "datetime"|"time"=> return "Datepicker"
-      case _=> return typeName
+      case _=> return ParseName.parse(typeName)
     }
   }
   def setEntity(entity:String): Unit ={
@@ -23,10 +23,10 @@ class DetailsPageAttribute{
   }
   def this(name:String,typeName:String, value:Map[String,String], attribute:Map[String,String]){
     this()
-    this.value = value
-    this.attribute = attribute
+    this.value = value.map(k => (ParseName.parse(k._1)->k._2)).toMap[String,String]
+    this.attribute = attribute.map(k => (ParseName.parse(k._1)->k._2)).toMap[String,String]
     this.typeName = mapAttribute(typeName)
-    this.name = name;
+    this.name = ParseName.parse(name)
 
   }
   override def toString: String = this.name + "< " + this.typeName + " >"

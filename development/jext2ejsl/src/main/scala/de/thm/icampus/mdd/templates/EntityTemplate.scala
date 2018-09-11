@@ -37,7 +37,7 @@ trait EntityTemplate extends BasicTemplate{
       s""" Primary attribute"""
     )
     val notNullOpt = ? (attribute.istnotNul,s"""  Not Null""")
-    val defaultOpt = ? (attribute.default != "" && attribute.default.length>0,s"""  Default = ${attribute.default}""")
+    val defaultOpt = ? (attribute.default != "" && attribute.default.length>0,s"""  Default = "${attribute.default}" """)
     val autoIntOpt = ? (attribute.autoInc,s"""  Auto Increment""")
     val isunique = ?(attribute.isUnique,
       s"""
