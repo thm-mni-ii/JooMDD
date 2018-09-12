@@ -584,7 +584,9 @@ object DetailsPageHandler {
       }
     }
     if (tableName == "" ) {
-      val getSave = searchMethod("save", bodyClass)
+      var getSave = searchMethod("save", bodyClass)
+      if(getSave == null)
+        getSave = searchMethod("store", bodyClass)
       if (getSave != null) {
         val allStmtsSave = getSave.body match {
           case Some(e) => e

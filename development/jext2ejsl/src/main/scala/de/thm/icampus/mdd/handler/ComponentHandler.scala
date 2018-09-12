@@ -90,12 +90,21 @@ object ComponentHandler extends Handler {
               case "ListModel" | "JModelList" => {
                 frontEndPages = frontEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
               }
-              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem"| "JModelLegacy" => {
+              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem" => {
                 if(parentName == "ItemModel" || parentName == "JModelItem" )
                 frontEndPages = frontEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,false,modelpath,backendPath,modelFilename,pageName, viewFolder))
                 else
                   frontEndPages = frontEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,true,modelpath,backendPath,modelFilename,pageName, viewFolder))
 
+              }
+              case "JModelLegacy" =>{
+                var litsQ = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
+                var buildQ = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
+                if(litsQ != null | buildQ != null){
+                  frontEndPages = frontEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
+                }else{
+                  frontEndPages = frontEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,true,modelpath,backendPath,modelFilename,pageName, viewFolder))
+                }
               }
               case _ =>  frontEndPages = frontEndPages.+(new CustomPage(className))
             }
@@ -143,12 +152,21 @@ object ComponentHandler extends Handler {
               case "ListModel" | "JModelList" => {
                 backEndPages = backEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
               }
-              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem" | "AdminModel" | "JModelLegacy"=> {
+              case "ItemModel" | "JModelAdmin" | "FormModel" | "JModelItem" | "AdminModel"=> {
                 if(parentName == "ItemModel" || parentName == "JModelItem" )
                   backEndPages = backEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,false,modelpath,backendPath,modelFilename,pageName, viewFolder))
                 else
                   backEndPages = backEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,true,modelpath,backendPath,modelFilename,pageName, viewFolder))
 
+              }
+              case "JModelLegacy" =>{
+                var litsQ = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
+                var buildQ = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
+                if(litsQ != null | buildQ != null){
+                  backEndPages = backEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
+                }else{
+                  backEndPages = backEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,true,modelpath,backendPath,modelFilename,pageName, viewFolder))
+                }
               }
               case _=> backEndPages = backEndPages.+(new CustomPage(className))
             }
@@ -197,11 +215,21 @@ object ComponentHandler extends Handler {
    //frontEndPages.foreach(f => (f.globalParamNames.foreach(df=>if(!jgroupExist(frontPageParams,df))frontPageParams = frontPageParams .+(df))))
     //val genParam = backEndPages.filter(d => frontPageParams.contains(d))
 
+    var frontEndPagesEnd = Set.empty[Page]
+    val d = frontEndPages.foreach(pg =>{
+      frontEndPages.foreach(gh=>{
+        if(pg ==gh && !frontEndPagesEnd.contains(pg)){
+          frontEndPages = frontEndPages.-(gh)
+          frontEndPagesEnd += pg
+        }
+      })
+    })
+
     ComponentExtension(
        extensionName,
       manifest,
       languages,
-      Frontend(frontEndPages),
+      Frontend(frontEndPagesEnd),
       Backend(backEndPages),
       entities,
       paramGroups

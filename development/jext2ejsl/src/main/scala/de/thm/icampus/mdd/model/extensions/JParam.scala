@@ -51,8 +51,8 @@ class JParam extends {
     this.htmltype = mapAttribute(htmltype)
     this.label = label
     this.description = description
-    this.attrlist = attrlist.map(k => (ParseName.parse(k._1)->k._2)).toMap[String,String]
-    this.valueslist = valueslist.map(k => (ParseName.parse(k._1)->k._2)).toMap[String,String]
+    this.attrlist = attrlist.map(k => (ParseName.parse(k._1)->ParseName.parseValue(k._2))).toMap[String,String]
+    this.valueslist = valueslist.map(k => (ParseName.parse(k._1)->ParseName.parseValue(k._2))).toMap[String,String]
   }
 
   override def toString: String = this.name + "< " + this.htmltype + " >"

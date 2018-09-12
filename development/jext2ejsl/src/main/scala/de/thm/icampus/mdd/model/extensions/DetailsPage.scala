@@ -29,9 +29,17 @@ class DetailsPage extends DynamicPage {
            f.name = f.name + 1
           return false
          }
+         this.editAttribute = f.editAttribute.|(this.editAttribute)
+         this.representationColumns = f.representationColumns.|(this.representationColumns)
+         this.globalParamNames = f.globalParamNames.|(this.globalParamNames)
+         f.globalParamNames = this.globalParamNames
+         f.representationColumns = this.representationColumns
+         f.editAttribute = this.editAttribute
+         this.isEdit = f.isEdit
+         this.name = f.name
          return true
        }
-     /**  if(f.entity == this.entity ){
+       if(f.entity == this.entity ){
          if(f.name.diff(this.name)=="edit" || this.name.diff(f.name)=="edit"  ){
            this.editAttribute = f.editAttribute.|(this.editAttribute)
            this.representationColumns = f.representationColumns.|(this.representationColumns)
@@ -41,12 +49,12 @@ class DetailsPage extends DynamicPage {
            f.editAttribute = this.editAttribute
            this.isEdit = f.isEdit
            if(f.name.diff(this.name)=="edit")
-             this.name = f.name
-           else  f.name = this.name
+             f.name = this.name
+           else  this.name = f.name
            return true
          }
 
-       }*/
+       }
      }
      case _ => return false
    }

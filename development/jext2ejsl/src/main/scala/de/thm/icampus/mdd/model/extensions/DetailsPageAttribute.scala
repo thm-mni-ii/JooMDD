@@ -23,8 +23,8 @@ class DetailsPageAttribute{
   }
   def this(name:String,typeName:String, value:Map[String,String], attribute:Map[String,String]){
     this()
-    this.value = value.map(k => (ParseName.parse(k._1)->k._2)).toMap[String,String]
-    this.attribute = attribute.map(k => (ParseName.parse(k._1)->k._2)).toMap[String,String]
+    this.value = value.map(k => (ParseName.parse(k._1)->ParseName.parseValue(k._2))).toMap[String,String]
+    this.attribute = attribute.map(k => (ParseName.parse(k._1)->ParseName.parseValue(k._2))).toMap[String,String]
     this.typeName = mapAttribute(typeName)
     this.name = ParseName.parse(name)
 

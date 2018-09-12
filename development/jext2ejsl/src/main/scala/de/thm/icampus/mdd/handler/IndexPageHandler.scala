@@ -384,7 +384,10 @@ object IndexPageHandler {
  def createIndexpage(bodyClass:Seq[Statements.MemberDecl],pageName:String,modelpath:Path,viewFolder:Path): Page ={
     var dbName:String =""
    var nodbo = true
-    val getListItemFunkDT  = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
+    var getListItemFunkDT  = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
+   if(getListItemFunkDT == null){
+     getListItemFunkDT  = DetailsPageHandler.searchMethod("buildQuery",bodyClass)
+   }
     if(getListItemFunkDT != null){
       val allStmtsItem = getListItemFunkDT.body match {  case Some(e) => e
       }

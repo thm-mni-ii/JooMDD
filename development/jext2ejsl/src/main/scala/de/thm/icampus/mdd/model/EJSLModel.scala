@@ -57,18 +57,21 @@ object EJSLModel {
           h.name = h.name+"_1"
       })
     })
-   val h = pages.foreach(pg =>{
+    var pagesMerge = Set.empty[Page]
+    val d = pages.foreach(pg =>{
       pages.foreach(gh=>{
-        if( pg.hashCode() != gh.hashCode() && pg.name ==gh.name ){
-          pages -= gh
+        if(pg ==gh && !pagesMerge.contains(pg)){
+          pages = pages.-(gh)
+          pagesMerge += pg
         }
       })
     })
 
-    pages = pages.toSet
+
+   // pages = pages.toSet
     paramGroups =paramGroups.toSet
-    if(!pages.isEmpty ){
-      pages.foreach(prg=>{
+    if(!pagesMerge.isEmpty ){
+      pagesMerge.foreach(prg=>{
         prg match{
           case d : DetailsPage=>{
             d.editAttribute.foreach(gh=>{
@@ -90,7 +93,8 @@ object EJSLModel {
 
       })
     }
-    new EJSLModel(name, datatypes, pages, entities, params, paramGroups, extensions)
+
+    new EJSLModel(name, datatypes, pagesMerge, entities, params, paramGroups, extensions)
   }
 
 

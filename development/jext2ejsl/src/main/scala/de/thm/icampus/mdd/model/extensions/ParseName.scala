@@ -10,15 +10,22 @@ object ParseName {
       return ""
    var resul = name.trim
     if(resul.equals("filters")){
-      resul
+      resul = "^"+resul
     }
 
     if(excludeWords.contains(resul.toLowerCase.trim))
       resul = "^"+name.trim
     if(resul.contains(".") || resul.contains("(")|| resul.contains(":") || resul.contains(")")|| resul.contains("<")|| resul.contains(">")
-      ||resul.charAt(0).toString.matches("[0-9]")||resul.matches("[\\s\\t]")){
-     return resul.replaceAll("[.\\(\\)<:>[0-9]//\\s\\t]","_").trim
+      ||resul.charAt(0).toString.matches("[0-9]")||resul.matches("""[\\s\\t]""")||resul.contains("'")||resul.contains("'")){
+     return resul.replaceAll("[.\\(\\)<:>[0-9]//\\s\\t,']","_unexc_").trim
     }
     return resul.trim
+  }
+  def parseValue(valString:String): String={
+    var resul = valString.trim
+    if(resul.contains("""\""")){
+      resul = resul.replaceAll("""\\""","""\\\\""")
+    }
+    return resul
   }
 }
