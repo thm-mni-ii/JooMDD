@@ -48,22 +48,23 @@ class SQLParser {
 
   val shortCreateTable = s"create([\\t]|\\s)table.*;"
 
-  def parseTableNew(statment: String,parser: CCJSqlParserManager,path:Path ): Entity={
+  def parseTableNew(statment: String,parser: CCJSqlParserManager,path:Path,count:Integer ): Entity={
     try {
+      if(count < 100)
       return parseStatement(parser.parse(new StringReader(statment)) )
 
     } catch {
       case e: JSQLParserException => {
-        println(e.printStackTrace())
-        println("-----------------------------------------")
-        println(s"Ignoring table definition in file: $path due to malformed statement:")
-         println("JSQLParserException caught: " + e.getCause)
-        println("-----------------------------------------")
-        if(e.getCause.isInstanceOf[ParseException]){
+        //println(e.printStackTrace())
+        //println("-----------------------------------------")
+        //println(s"Ignoring table definition in file: $path due to malformed statement:")
+         //println("JSQLParserException caught: " + e.getCause)
+       // println("-----------------------------------------")
+        if(e.getCause.isInstanceOf[ParseException] && count <100){
           val token = (e.getCause.asInstanceOf[ParseException]).currentToken.next.image
           if(token.length >1){
             val tempparser: CCJSqlParserManager = new CCJSqlParserManager
-        return  parseTableNew(statment.replaceAll(token, "##_"+token),tempparser,path)
+        return  parseTableNew(statment.replaceAll(token, "##_"+token),tempparser,path,count+1)
           }
         }
 
@@ -91,15 +92,21 @@ class SQLParser {
       } catch {
         case e: JSQLParserException => {
           //println(e.printStackTrace())
-          println("-----------------------------------------")
-          println(s"Ignoring table definition in file: $path due to malformed statement:")
-          println("JSQLParserException caught: " + e.getCause)
-          println("-----------------------------------------")
+
           if(e.getCause.isInstanceOf[ParseException]){
             val token = (e.getCause.asInstanceOf[ParseException]).currentToken.next.image
             if(token.length >1){
               val tempparser: CCJSqlParserManager = new CCJSqlParserManager
-              tables = tables .:+(parseTableNew(statementString.replaceAll(token, "##_"+token),tempparser,path))
+              var tab = parseTableNew(statementString.replaceAll(token, "##_"+token),tempparser,path,1)
+                if(tab != null){
+                  tables = tables .:+(tab)
+
+                }else{
+                  println("-----------------------------------------")
+                  println(s"Ignoring table definition in file: $path due to malformed statement:")
+                  println("JSQLParserException caught: " + e.getCause)
+                  println("-----------------------------------------")
+                }
             }
 
           }
@@ -154,7 +161,8 @@ class SQLParser {
       reference = reference.++(refConstList.map(r => {
         val foreign = r.asInstanceOf[ForeignKeyIndex]
         val foreignTable = foreign.getTable.getName.replace("`", "")
-         new Reference(foreign.getColumnsNames.toList,foreignTable,foreign.getReferencedColumnNames.toList)
+         new Reference(foreign.getColumnsNames.map(d=> d.replaceAll("##_","")).toList,foreignTable,
+           foreign.getReferencedColumnNames.map(d=> d.replaceAll("##_","")).toList)
       }))
       new Entity(tableName, columns.filter(r=> !toIgnore.contains(r.name)).toList,reference)
     }

@@ -3,15 +3,13 @@ package de.thm.icampus.mdd.handler
 import java.nio.file.{Files, Path}
 import java.io.File
 
-import de.thm.icampus.mdd.handler.DetailsPageHandler.readVaraibleName
 import de.thm.icampus.mdd.handler.IndexPageHandler.readParams
 import de.thm.mni.ii.phpparser.PHPParser
 import de.thm.mni.ii.phpparser.PHPParser.Result
-import de.thm.mni.ii.phpparser.ast.Basic.{DQStringElement, DQStringLiteral, QualifiedName, SQStringLiteral}
+import de.thm.mni.ii.phpparser.ast.Basic.{DQStringElement, DQStringLiteral, SQStringLiteral}
 import de.thm.mni.ii.phpparser.ast.{Expressions, Statements}
 import de.thm.mni.ii.phpparser.ast.Statements._
 import de.thm.mni.ii.phpparser.ast.Expressions._
-import de.thm.mni.ii.phpparser.ast.Basic
 import de.thm.icampus.mdd.model.extensions._
 
 import scala.io.Source
@@ -680,7 +678,7 @@ object DetailsPageHandler {
         }
       }
     }
-    println(dbName)
+    //println(dbName)
     val sqlParse = "#[a-zA-Z0-9\\_]*".r
     val dbTable = sqlParse.findFirstMatchIn(dbName) match {
       case Some(value) => value.matched
