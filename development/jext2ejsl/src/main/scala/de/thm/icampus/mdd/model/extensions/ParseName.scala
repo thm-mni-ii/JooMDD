@@ -3,7 +3,7 @@ package de.thm.icampus.mdd.model.extensions
 object ParseName {
 
   var excludeWords = List("search","size","version","min","max","type","description",
-    "filter","filters","captcha","user","list","detail","details","component","event","events")
+    "filter","filters","captcha","user","list","detail","details","component","event","events","position")
 
   def parse(name:String): String ={
     if(name.size==0)
