@@ -1,24 +1,20 @@
 package de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl
 
-import de.thm.icampus.joomdd.ejsl.eJSL.impl.DynamicPageImpl
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
-import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
-import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
-import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
+import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
+import de.thm.icampus.joomdd.ejsl.eJSL.impl.DynamicPageImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttributeImpl
-import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
-import de.thm.icampus.joomdd.ejsl.eJSL.Reference
-import de.thm.icampus.joomdd.ejsl.eJSL.Entity
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.common.util.EList
 
 class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamicPage {
 	
@@ -138,6 +134,13 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 	
 	override haveFiletoLoad() {
 		return haveFile
+	}
+	override containsParamertergroup(String paramenterGroupName){
+		for(ExtendedParameterGroup d : extendedParameterGroupList){
+			if(d.name.equalsIgnoreCase(paramenterGroupName))
+			return true
+		}
+		return false
 	}
 	
 }

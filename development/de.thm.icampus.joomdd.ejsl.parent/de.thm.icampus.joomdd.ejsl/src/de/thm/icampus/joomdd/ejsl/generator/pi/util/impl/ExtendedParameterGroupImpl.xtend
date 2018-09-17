@@ -14,8 +14,8 @@ class ExtendedParameterGroupImpl extends ParameterGroupImpl implements ExtendedP
 	EList<ExtendedParameter> extendedParameterList
 	new(ParameterGroup group){
 		instance = group
-		this.name = PlattformUtil.slugify(group.name)
-		this.label = group.label
+		this.name = PlattformUtil.slugify(group.name).replaceAll("_1","")
+		this.label = PlattformUtil.slugify(group.label)
 		this.globalparameters =group.globalparameters
 		initListen()
 	}

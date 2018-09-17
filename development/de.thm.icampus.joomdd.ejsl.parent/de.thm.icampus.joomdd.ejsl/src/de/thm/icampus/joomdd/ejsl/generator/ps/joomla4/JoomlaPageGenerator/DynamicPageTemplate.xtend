@@ -35,7 +35,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 		    <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
 		        <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_DESC]]></message>
 		    </layout>	
-			 «IF page.instance instanceof IndexPage»
+			 «IF !page.containsParamertergroup("params") »
 			 <fields name="params">
 		    «genSettingForIndexPage(pagename,page,component)»
 		    «ELSE»
@@ -44,12 +44,12 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 			 </fields>
 			 <fields name="params">
 		    «ENDIF»
-		«IF page.extendedLocalParametersListe.length>0»
+		«IF page.extendedLocalParametersListe.length>0 && !page.containsParamertergroup("local") »
 		    <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL_LABEL">
 		        «generateParameter(page.extendedLocalParametersListe, component)»
 		    </fieldset>
 		    «ENDIF»
-		    «IF page.extendedGlobalParametersListe.length>0»
+		    «IF page.extendedGlobalParametersListe.length>0 &&  !page.containsParamertergroup("global")»
 		    <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL_LABEL">
 		        «generateParameter(page.extendedGlobalParametersListe, component)»
 		    </fieldset>
@@ -218,9 +218,6 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	    «ENDFOR»
 	    «ENDFOR»
 	    «ENDFOR»
-	    <field name="published" type="hidden" filter="unset" />
-	    <field name="checked_out" type="hidden" filter="unset" />
-	    <field name="checked_out_time" type="hidden" filter="unset" />
 	    <fields name="params">
 	        <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL__LABEL">
 	            «generateParameter(page.extendedLocalParametersListe, component)»
