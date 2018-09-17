@@ -84,9 +84,10 @@ class SQLParser {
     val preparedStatements = statements.map(prepareStatement)
 
     for (statementString <- preparedStatements) {
+      val stmtString = statementString.replaceAll("(UNIQUE INDEX)|(unique index)","UNIQUE KEY")
+        .replaceAll(s"""INDEX$tabOrSpaceRE*\\(""","UNIQUE KEY (")
       try {
-        val stmtString = statementString.replaceAll("(UNIQUE INDEX)|(unique index)","UNIQUE KEY")
-          .replaceAll(s"""(INDEX|index)$tabOrSpaceRE*\\(""","UNIQUE KEY (")
+
         tables = tables .:+ (parseStatement(parser.parse(new StringReader(stmtString)) ))
 
       } catch {
@@ -97,7 +98,7 @@ class SQLParser {
             val token = (e.getCause.asInstanceOf[ParseException]).currentToken.next.image
             if(token.length >1){
               val tempparser: CCJSqlParserManager = new CCJSqlParserManager
-              var tab = parseTableNew(statementString.replaceAll(token, "##_"+token),tempparser,path,1)
+              var tab = parseTableNew(stmtString.replaceAll(token, "##_"+token),tempparser,path,1)
                 if(tab != null){
                   tables = tables .:+(tab)
 
