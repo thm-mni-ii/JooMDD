@@ -62,6 +62,10 @@ interface ExtendedDynamicPage extends DynamicPage {
 	 * return the Dynamicpage instance
 	 */
 	def DynamicPage getInstance()
+	/**
+	 * return the true if the parameter group exist in Page
+	 */
+	def Boolean containsParamertergroup(String paramenterGroupName)
 	
 	
 }
