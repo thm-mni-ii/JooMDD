@@ -16,7 +16,7 @@ import de.thm.icampus.mdd.model.extensions.ParseName
   var reference: List[String]= List.empty[String]
   var lower: String  ="0"
   var upper: String = "-1"
-  def this (attribute: List[String], entity: String, reference: List[String], lower: String  ="0", upper: String = "-1"){
+  def this (attribute: List[String], entity: String, reference: List[String], lower: String  ="-1", upper: String = "0"){
     this()
     this.attribute = attribute.map(d => ParseName.parse(d)).toList
     this.entity = ParseName.parse(entity)
