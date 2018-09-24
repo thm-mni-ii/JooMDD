@@ -54,11 +54,11 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         	)
 			this.extClient.generateExtension
         }
-        var success = compressExtensions(rootPath + "/" + path + "packages/tocompress/", 
-            rootPath + "/" + path + "packages/"
+        var success = compressExtensions(rootPath + path + "packages/tocompress/", 
+            rootPath + path + "packages/"
         )
         if(success) {
-            Slug.deleteFolder(rootPath + "/" + path + "packages/tocompress")
+            Slug.deleteFolder(rootPath + path + "packages/tocompress")
         }
         return ''
 	}
@@ -136,21 +136,24 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         var File dir = new File(src);
         var  File[] files = dir.listFiles();
         
-        for (File f : files) {
-            if (! f.isDirectory()) {
-                if(path.isEmpty) {
-                    putFile(zos, f, buffer, "");
-	            } else {
-	               putFile(zos, f, buffer,path);
-	            }
-            } else {
-                if(path.isEmpty) {
-                    scanDirectory(zos,buffer,f.getPath(),f.getName() +"/" );
-                } else {
-                    scanDirectory(zos,buffer,f.getPath(),path+f.getName() +"/" );
-                }
-            }
-        }
+	if (files !== null) 
+	{
+		for (File f : files) {
+		    if (! f.isDirectory()) {
+			if(path.isEmpty) {
+			    putFile(zos, f, buffer, "");
+			    } else {
+			       putFile(zos, f, buffer,path);
+			    }
+		    } else {
+			if(path.isEmpty) {
+			    scanDirectory(zos,buffer,f.getPath(),f.getName() +"/" );
+			} else {
+			    scanDirectory(zos,buffer,f.getPath(),path+f.getName() +"/" );
+			}
+		    }
+		}
+	    }
 	}
 	
 	public def void putFile( ZipOutputStream zos, File file,byte[] buffer, String root) {
