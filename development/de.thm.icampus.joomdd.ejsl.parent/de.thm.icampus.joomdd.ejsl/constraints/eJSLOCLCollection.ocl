@@ -10,46 +10,93 @@ context EJSLModel
 inv NonNull_name('The \'name\' property of "' + self.toString() + '" is null'):
     name <> null
 
+-- Entities:
 context Entity
 
 -- Check if entity names are unique
-inv uniqueEntity:
+inv uniqueEntityIdentifier:
 Entity.allInstances()->forAll(e1, e2| e1 <> e2 implies e1.name <> e2.name and e1.name <> '^' + e2.name)
             
 -- Check if attribute identifiers are unique
 inv uniqueAttributeIdentifier:
 self.attributes -> forAll(a1, a2| a1 <> a2 implies a1.name <> a2.name and a1.name <> '^' + a2.name)
 
+/* The noGeneralizationCycles constraint includes this one
 -- Check if entity does not extend itself
 inv entityDoesNotExtendItself: 
 self.supertype -> excludes(self)
+*/
 
--- Check if at least one unique (primary) attribute exists
+/*
+ * Check if at least one unique (primary) attribute exists if entity does not extend another one. 
+ * If so, check if closure of parent entities has a unique attribute
+ */ 
 inv primaryAttributeExists:
--- To do: Check if entity does not extend another one, if so, check if extended entity has a unique attribute
-self.attributes -> exists(isunique)
+self.attributes -> exists(isunique) or self.supertype->closure(supertype).attributes-> exists(isunique)
 
 -- Check if no generalization cycle exists (transitive closure)    
 inv noGeneralizationCycles: 
 self.supertype->closure(supertype)->excludes(self)
 
--- To do: Check if reference multiplicities are consistent (min <= max)
--- To do: Check if referenced entity exists
--- To do: Check if references have no cycles
--- To do: Check if AutoIncrement is used for suitable types
--- To do: Check if attribute types are consistent in references
+-- Check for identifiers which are not allowed (e.g. ordering, description)
+
+context StandardTypes
+-- Check if AutoIncrement is used for suitable types
+inv autoIncrementForInteger:
+self.type=StandardTypeKinds::Integer implies self.autoincrement
 
 context Reference
--- To do: Check if min/max values are -1, 0, and 1
+-- Check if min/max values are -1, 0, and 1
 inv allowedMinValues:
 Set{'0','1','-1'} -> includes(self.lower)
 
--- To do: Check if min/max values are -1, 0, and 1
+-- Check if min/max values are -1, 0, and 1
 inv allowedMaxValues:
 Set{'0','1','-1'} -> includes(self.upper)
 
--- To do: Check if referencedEntity and referencedEntityAttribute are consistent
--- To do: Check for identifiers which are not allowed (e.g. ordering, description)
--- To do: Check if reference is a primary (unique) attribute
+-- Check if reference multiplicities are consistent (min <= max)
+inv consistentMultiplicities:
+self.upper <> '0' and (self.lower <> '-1' or self.lower = self.upper)
+
+-- Check if referenced entity exists
+inv referencedEntityExists:
+Entity.allInstances().name->includes(self.entity.name)
+
+-- Check if references have no cycles
+inv noReferenceCycles:
+self.entity.references 
+    -> closure(entity.references) 
+    -> forAll(r|r.attributerefereced <> self.attribute)
+    
+-- Check if attribute types are consistent in references
+-- inv consistentAttributeTypes:
+
+
+-- Check if reference is a primary (unique) attribute
+
+-- Check if referencedEntity and referencedEntityAttribute are consistent
+
+-- Pages:
+--context Page
+-- Check if page uses an entity only once
+-- Check if DetailsPageField is consistent to attribute type of entity
+-- Check if linked attribute is consistent to entity in IndexPage
+-- Check if table columns and filters are used only once in a page
+-- Check if filters are a subset of representation columns in IndexPage
+-- Check if entities and attributes are defined, if filters are using them
+-- Representation columns and filters must be consistent to *Entity in IdexPage
+-- If a page uses more than one Entity, the entities must have references to each other
+
+-- Extensions:
+--context Extension
+-- Check if language keys are unique for one language definition
+-- Check URL and eMail pattern
+-- Unique extension names
+-- Check for valid data mapping for modules and components (is component existing...)
+-- Check if not more than one backend and frontend is defined
+-- Check if *Entity is required in Plugin (PluginKind: not every Plugin requires an entity)
+-- Check if library classes are unique
+-- Check if class method names are unique in libraries
+
 
 endpackage

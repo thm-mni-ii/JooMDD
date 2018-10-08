@@ -22,7 +22,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.ComposedChecks
 import org.eclipse.xtext.validation.EValidatorRegistrar
 import org.eclipse.emf.common.util.URI
-import org.eclipse.ocl.xtext.completeocl.validation.CompleteOCLEObjectValidator
 import java.io.IOException
 
 /**
@@ -43,18 +42,6 @@ class EJSLValidator extends AbstractEJSLValidator {
 	public static val FORBIDDEN_UNDERSCORE_EXTENSIONNAME = 'forbiddenUnderscoreExtensionname'
 	
 	
-	/**
-	 * Register the OCL file to use it in the eJSL text editor. However, it doesn't work
-	 * 
-	
-    override register(EValidatorRegistrar registrar) {
-      super.register(registrar);
-      val EJSLPackage ePackage = EJSLPackage.eINSTANCE;
-      val URI oclURI = URI.createPlatformResourceURI("/de.thm.icampus.joomdd.ejsl/model/generated/eJSLOCLCollection.ocl", true);
-      registrar.register(ePackage, new CompleteOCLEObjectValidator(ePackage, oclURI, org.eclipse.ocl.pivot.utilities.OCL.newInstance().getEnvironmentFactory()));
-      
-  }
-*/
 	/**
 	 * Validates if the defined Datatypes of the model have different/unique names
 	 */

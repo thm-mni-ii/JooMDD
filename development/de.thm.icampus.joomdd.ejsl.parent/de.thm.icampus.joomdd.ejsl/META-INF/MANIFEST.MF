@@ -28,14 +28,6 @@ Export-Package: de.thm.icampus.joomdd.ejsl.eJSL.util,
  de.thm.icampus.joomdd.ejsl.ressourceTransformator,
  de.thm.icampus.joomdd.ejsl.generator.ps,
  de.thm.icampus.joomdd.ejsl.generator.pi,
-  de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension,
-   de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage,
-    de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity,
- de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaEntityGenerator,
- de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaExtensionGenerator,
- de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaPageGenerator,
- de.thm.icampus.joomdd.ejsl.generator.ps.JoomlaUtil,
- de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity,
  de.thm.icampus.joomdd.ejsl.parser.antlr,
  de.thm.icampus.joomdd.ejsl.eJSL,
  de.thm.icampus.joomdd.ejsl.parser.antlr.internal,
@@ -45,6 +37,5 @@ Export-Package: de.thm.icampus.joomdd.ejsl.eJSL.util,
  de.thm.icampus.joomdd.ejsl.validation,
   de.thm.icampus.joomdd.ejsl.validation.elements,
  de.thm.icampus.joomdd.ejsl.formatting2
-Import-Package: org.apache.log4j,
- org.eclipse.ocl,
- org.eclipse.ocl.xtext.completeocl.validation
+Import-Package: org.apache.log4j
+Automatic-Module-Name: de.thm.icampus.joomdd.ejsl
