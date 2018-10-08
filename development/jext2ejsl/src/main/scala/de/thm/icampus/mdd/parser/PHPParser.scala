@@ -17,8 +17,8 @@ import scala.io.Source
  *
  * Should be replaced with a real parser.
  */
-object PHPParser {
-  val default: PHPParser = new PHPParser
+object PHPParser2 {
+  val default: PHPParser2 = new PHPParser2
 
   def parseFile(path: Path): List[Struct] = default.parseFile(path)
 }
@@ -30,7 +30,7 @@ object PHPParser {
  *
  * Should be replaced with a real parser.
  */
-class PHPParser {
+class PHPParser2 {
   val tabRE = "[\\t]"
   val spaceRE = "\\s"
   val tabOrSpaceRE = s"($tabRE|$spaceRE)"

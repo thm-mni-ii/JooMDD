@@ -8,7 +8,7 @@ import java.nio.file.Files
 import de.thm.icampus.mdd.model._
 import de.thm.icampus.mdd.model.extensions.LibraryExtension
 import de.thm.icampus.mdd.model.oo.{Folder, Struct, Clazz}
-import de.thm.icampus.mdd.parser.PHPParser
+import de.thm.icampus.mdd.parser.{PHPParser2=> PHPParser}
 
 import scala.collection.JavaConversions._
 

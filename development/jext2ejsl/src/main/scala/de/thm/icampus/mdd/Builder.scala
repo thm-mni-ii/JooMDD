@@ -7,9 +7,10 @@ import de.thm.icampus.mdd.implicits.Conversions._
 import de.thm.icampus.mdd.model.EJSLModel
 import de.thm.icampus.mdd.model.extensions.Extension
 import de.thm.icampus.mdd.model.extensions.PackageExtension
+import de.thm.icampus.mdd.templates.EJSLModelTemplate
 
-import scala.io.{Source, Codec}
-import scala.xml.{XML, Elem}
+import scala.io.{Codec, Source}
+import scala.xml.{Elem, XML}
 
 /**
  * eJSL Model Builder and Extensions Dispatcher.
@@ -21,7 +22,7 @@ object Builder {
    * @param model The EJSLModel to print
    */
   implicit class EJSLModelFunctionWrapper(val model: EJSLModel) extends AnyVal {
-    def asText: String = txt.ejslmodel(model).toString()
+    def toTemplate: String = EJSLModelTemplate.ejslModelPartial(model)
   }
 
   implicit val codec: Codec = Codec.UTF8
