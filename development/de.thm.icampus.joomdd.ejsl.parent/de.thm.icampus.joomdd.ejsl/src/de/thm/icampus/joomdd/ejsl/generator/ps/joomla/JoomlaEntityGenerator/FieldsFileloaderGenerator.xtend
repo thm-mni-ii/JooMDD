@@ -50,14 +50,14 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		            $file=  Uri::root()  .$path . '/'. $this->value;
 		        }
 		
-		        $document = Factory::getDocument();
-		        $iconpath = Uri::root() . 'media/media/images/mime-icon-32/';
-		        $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
-		        $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
-		        $document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
-		        $html []="<div class='img-picker' fieldtype='file' name='$this->name' value='$this->value' accept='$format' file='$file' iconpath='$iconpath' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
-		        deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
-		        return implode($html);
+		       $document = Factory::getDocument();
+			   $iconpath = Uri::root() . 'media/media/images/mime-icon-32/';
+			   $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
+			   $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
+			   $document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
+			   $html []="<div class='img-picker' fieldtype='file' name='" . $this->name . "'  value='" . $this->value . "'  accept='" . $format . ""' file='" . $file . "' iconpath='" . $iconpath . "' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
+			   deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
+			return implode($html);
 		    }
 		}
 	'''
@@ -89,13 +89,11 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		        if (!empty($this->value)) {
 		            $file=  Uri::root()  .$path . '/'. $this->value;
 		        }
-		
 		        $document = Factory::getDocument();
 		        $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
 		        $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
 		        $document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
-		        $input = Factory::getApplication()->input;
-		        $html []="<div class='img-picker' fieldtype='image' iconpath=' ' name='$this->name' value='$this->value' accept='image/*' file='$file' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
+		        $html []="<div class='img-picker' fieldtype='image' iconpath=' '  name='$this->name' value='" . $this->value . "' accept='image/*' file='" . $file. "' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
 		        deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
 		        return implode($html);
 		    }
