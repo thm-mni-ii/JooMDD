@@ -55,7 +55,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 			   $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
 			   $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
 			   $document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
-			   $html []="<div class='img-picker' fieldtype='file' name='" . $this->name . "'  value='" . $this->value . "'  accept='" . $format . ""' file='" . $file . "' iconpath='" . $iconpath . "' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
+			   $html []="<div class='img-picker' fieldtype='file' name='" . $this->name . "'  value='" . $this->value . "'  accept='" . $format . "' file='" . $file . "' iconpath='" . $iconpath . "' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
 			   deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
 			return implode($html);
 		    }
