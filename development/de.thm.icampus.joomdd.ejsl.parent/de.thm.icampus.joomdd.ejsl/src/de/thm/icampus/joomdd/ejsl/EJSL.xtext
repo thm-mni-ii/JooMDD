@@ -505,7 +505,7 @@ enum PageActionPositionKind:
 	top | center | bottom
 ;
 enum StandardTypeKinds:
-	Integer | Boolean | Text | Short_Text | Time | Date | Datetime | Link | Image | File | Label | Encrypted_Text
+	Integer | Boolean | Text | Short_Text | Time | Date | Datetime | Link | Image | File
 ;
 enum DataAccessKinds:
 	backendDAO='backendDAO' | frontendDAO='frontendDAO' | database='database' | webservice='webservice'
@@ -514,10 +514,10 @@ enum PageKinds:
 	list | details | custom
 ;
 enum SimpleHTMLTypeKinds:
-	Integer | Yes_No_Buttons | Textarea | Text_Field | Link |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	
+	Integer | Yes_No_Buttons | Textarea | Text_Field | Link |Datepicker | Imagepicker | Filepicker | Text_Field_NE | Editor	 
 ;
 enum ComplexHTMLTypeKinds:
-	Select| Multiselect | Checkbox | Radiobutton
+	Select| Multiselect | Checkbox | Radiobutton | Encrypted_Text | Hidden
 ;
 enum CoreComponent:
 	User | Menu | Content
