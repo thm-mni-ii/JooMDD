@@ -1,16 +1,25 @@
-<img src="releases/img/Logo_b.png" alt="JooMDDLogo" height="300" style="max-width:100%;float:right;">
+<img src="img/Logo_new.jpg" alt="JooMDDLogo" style="max-width:100%;float:right;">
 
 **JooMDD** provides a set of plugins for a model-driven development of Joomla! extension 
 packages. 
 The current version of JooMDD can be used within ***Eclipse***, 
 ***IntelliJ IDEA***, and ***PhpStorm***.
 
+
+## Reverse Engineering ##
 In addition, we provide **jext2eJSL** to create eJSL-based models based on existing Joomla 3.x extension packages.
 We are currently working on the documentation of jext2eJSL. If you are interested in using the tool, see the current (german) 
 documentation [here](https://wiki.thm.de/Reverse-Engineering_(Joomla-Code_zu_eJSL-Instanzmodell)).
+Instead of executing the .jar file and using the GUI it is also possible to execute the application via CLI using the following arguments: 
+**-m &lt;path to manifest file&gt; -o &lt;output path&gt; -no-gui**
+
+## Web Editor ##
+Find the new prototype of our tools as web editor here: https://tinyurl.com/joomdd-web
+
+**Attention: Since this editor ist just a prototype, we do not guarantee that your created models and code will stay on the server. Therefore we recommend to download your model after each session.**
 
 ***
-## Installation of JooMDD ##
+## Installation of JooMDD into your IDE ##
 Please follow this installation guide to use JooMDD within Eclipse, IntelliJ, and PhpStorm. 
 
 ### Eclipse ###
@@ -32,7 +41,7 @@ JooMDD update site (IntelliJ IDEA): <https://raw.githubusercontent.com/icampus/J
 3. Restart IntelliJ.
 <br/><br/>
 
-### PhpStorm 10###
+### PhpStorm 10 ###
 Due to the fact, that the PhpStorm support is in a kind of beta state, you need some more effort for the installation. But don't 
 be scared, it's just copy&paste of some files ;-). Please ensure, that you have the latest version of PhpStorm installed. We tested 
 the following instructions with version 10.0.3.
@@ -48,19 +57,17 @@ JooMDD update site (PhpStorm): <https://raw.githubusercontent.com/icampus/JooMDD
 5. Restart PhpStorm.
 <br/><br/>
 
-### PhpStorm 16###
-We tested the following instructions with version 16.2.
+### PhpStorm 16/17 ###
+We tested the following instructions with version 16.2. and 17.1.
 #### Installation steps: ####
-1. Download *[xtext.idea-2.9.2withdependencies2016.1.2-.zip (Xtext IDEA Core with IntelliJ dependencies)](https://github.com/icampus/JooMDD/raw/master/PhpStorm/xtext_plugin/PhpStorm16/Xtext.idea-2.10.0WithDependencies2016.1.2-.zip)* from our repository (the files are within the *PhpStorm* folder).
-3. Install *Xtext IDEA Core* in PhpStorm via *"Install plugin from disk..."*.
-4. Install the JooMDD plugin from our repository using the following JooMDD update site (alternatively you can download the plugins from this repository and install them manually into your IDE):
+1. Install the *Xtext IDEA Core* and JooMDD plugin from our repository using the following JooMDD update site (alternatively you can download the plugins from this repository and install them manually into your IDE):
 JooMDD update site (PhpStorm): <https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/updatePlugins.xml>.
-5. Restart PhpStorm.
+2. Restart PhpStorm.
 
 ***
 ## Getting Started ##
-### The eJSL language###
- <img src="releases/img/eJSL_Logo_trans.png" alt="eJSLLogo" height="100" style="max-width:100%;float:right;">
+### The eJSL language ###
+ <img src="img/eJSL_Logo_trans.png" alt="eJSLLogo" height="100" style="max-width:100%;float:right;">
  
 The **eJSL** plugin can be used to create extensions for the Joomla CMS in a model-driven way. 
 Through the creation of eJSL-specific models a tremendous amount of code becomes generated automatically. 
@@ -82,41 +89,41 @@ Instead of creating an eJSL project manually, you can get started easier, using 
 ##### Eclipse #####
 Create a new project and within the "new Project" dialogue open the folder eJSL Wizard. 
 
-<img src="releases/img/eclipse_pw_1.png" alt="Eclipse Project Wizard" height="300" style="max-width:100%;float:right;">
-<img src="releases/img/eclipse_pw_2.png" alt="Eclipse Project Wizard 2" height="300" style="max-width:100%;float:right;">
-<img src="releases/img/eclipse_pw_3.png" alt="Eclipse Project Wizard 3" height="300" style="max-width:100%;float:right;">
+<img src="img/eclipse_pw_1.png" alt="Eclipse Project Wizard" height="300" style="max-width:100%;float:right;">
+<img src="img/eclipse_pw_2.png" alt="Eclipse Project Wizard 2" height="300" style="max-width:100%;float:right;">
+<img src="img/eclipse_pw_3.png" alt="Eclipse Project Wizard 3" height="300" style="max-width:100%;float:right;">
 
 Within this folder you should see *"EJSL Project"*. Give your project a name and select a model example template.
 Through a click on the Finish-Button the required project structure becomes generated containing source folders 
 for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
 is created within the src folder which can be used for a straightforward introduction.
 
-<img src="releases/img/eclipse_pw_4.png" alt="Eclipse Project Wizard 4" height="300" style="max-width:100%;float:right;">
+<img src="img/eclipse_pw_4.png" alt="Eclipse Project Wizard 4" height="300" style="max-width:100%;float:right;">
 
 ##### IntelliJ #####
 Create a new project and within the "new Project" dialogue click on the *eJSL* section. 
 
-<img src="releases/img/ij_pw_1.png" alt="IntelliJ IDEA Project Wizard" height="300" style="max-width:100%;float:right;">
-<img src="releases/img/ij_pw_2.png" alt="IntelliJ IDEA Project Wizard 2" height="300" style="max-width:100%;float:right;">
+<img src="img/ij_pw_1.png" alt="IntelliJ IDEA Project Wizard" height="300" style="max-width:100%;float:right;">
+<img src="img/ij_pw_2.png" alt="IntelliJ IDEA Project Wizard 2" height="300" style="max-width:100%;float:right;">
 
 Select a model example template and subsequently give you project a name.
 Through a click on the Finish-Button the required project structure becomes generated containing source folders 
 for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
 is created within the src folder which can be used for a straightforward introduction.
 
-<img src="releases/img/ij_pw_3.png" alt="IntelliJ IDEA Wizard 3" height="300" style="max-width:100%;float:right;">
+<img src="img/ij_pw_3.png" alt="IntelliJ IDEA Wizard 3" height="300" style="max-width:100%;float:right;">
 
 ##### PhpStorm #####
 Create a new project and within the "new Project" dialogue click on the *eJSL* section.
 
-<img src="releases/img/php_pw_1.png" alt="PhpStorm Project Wizard" height="300" style="max-width:100%;float:right;">
+<img src="img/php_pw_1.png" alt="PhpStorm Project Wizard" height="300" style="max-width:100%;float:right;">
 
 Select a model example template and subsequently give you project a name.
 Through a click on the create-Button the required project structure becomes generated containing source folders 
 for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
 is created within the src folder which can be used for a straightforward introduction.
 
-<img src="releases/img/php_pw_2.png" alt="PhpStorm Project Wizard 2" height="300" style="max-width:100%;float:right;">
+<img src="img/php_pw_2.png" alt="PhpStorm Project Wizard 2" height="300" style="max-width:100%;float:right;">
 
 
 ### 2. Create a model ###
@@ -141,10 +148,10 @@ versioning tool like git to store your individual added code.
 
 ***
 ## Copyright ##
-Copyright (C) 2013 - 2016, [iCampus](http://icampus.thm.de) - [Technische Hochschule Mittelhessen](http://www.thm.de). 
+Copyright (C) 2013 - 2018, [iCampus](http://icampus.thm.de) - [Technische Hochschule Mittelhessen](http://www.thm.de). 
 All rights reserved.
 This project is distributed under the GPL (GNU General Public License) version 2. For further information see 
 the [License details](https://git.thm.de/JooMDD/joomdd_repo/blob/master/LICENSE).
 
 ***
-Please feel free to [contact](icampu@lists.thm.de) us, if you find some bugs or if you like to contribute to the project.
+Please feel free to [contact](mailto:icampus@lists.thm.de) us, if you find some bugs or if you like to contribute to the project.
