@@ -100,7 +100,7 @@ public class Slug  {
 		        result='''type="number" min="0"  '''
 			} 
 			case "Yes_No_Buttons":{
-				result='''Yes_No_Buttons'''
+				result='''type="Yes_No_Buttons"'''
 			}
 			case "Textarea":{
 			    result='''type="textarea" rows="10" cols="5" '''
@@ -112,10 +112,10 @@ public class Slug  {
 			    result='''type="calendar" '''
 			} 
 			case "Imagepicker":{
-			    result="imagepicker"
+			    result='''type="imagepicker"'''
 			} 
 			case "Filepicker":{
-			    result="filepicker"
+			    result='''type="filepicker"'''
 			}
 			case "Text_Field_NE":{
 			    result='''type="text" '''
@@ -124,19 +124,19 @@ public class Slug  {
 			    result='''type="editor" '''
 			}
 			case "Select":{
-			    result="select"
+			    result='''type="select"'''
 			}
 			case "Multiselect":{
-			    result="multiselect"
+			    result='''type="multiselect"'''
 			}
 			case "Checkbox":{
-			    result="checkbox"
+			    result='''type="checkbox"'''
 			}
 			case "Radiobutton":{
-			    result="radiobutton"
+			    result='''type="radiobutton"'''
 			}
 			case "hidden":{
-			    result="hidden"
+			    result='''type="hidden"'''
 			}
 			default : {
 			    result = '''type="«type»"'''
@@ -1007,7 +1007,7 @@ public class Slug  {
 		ExtendedParameter param) '''
 		<field
 		name="«param.name»"
-		type="«Slug.getTypeName(param)»"
+		«Slug.getTypeName(param)»
 		default="«param.defaultvalue»"
 		label="«param.label»"
 		description="«param.descripton»"

@@ -48,7 +48,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         for (ext : this.pkg.extensions) {
         	this.extClient = new ExtensionGeneratorHandler(fsa, 
         	    ext, 
-        	    path + "packages/tocompress/", 
+        	    path + "packages/tocompress/" + ext.name.toLowerCase +"/", 
         	    rootPath,
         	    "",
         	    false
@@ -73,10 +73,10 @@ public class PackageGenerator extends AbstractExtensionGenerator {
                 var File f = null
                 switch(ext.instance) {
                     Component: {
-                        f = new File (fromSrc + ext.extensionName+ "/new/"+ext.extensionName)
+                        f = new File (fromSrc + ext.name.toLowerCase+ "/new/"+ext.extensionName)
                     } 
                     default: {
-                        f = new File (fromSrc + ext.extensionName)
+                        f = new File (fromSrc + ext.name.toLowerCase)
                     }
                 }
                 var String  zipFilepath = toSrc + f.name + ".zip";

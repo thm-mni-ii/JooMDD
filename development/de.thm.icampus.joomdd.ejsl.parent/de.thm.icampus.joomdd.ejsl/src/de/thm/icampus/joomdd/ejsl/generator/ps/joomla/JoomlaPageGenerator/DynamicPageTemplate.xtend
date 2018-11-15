@@ -218,9 +218,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	    «ENDFOR»
 	    «ENDFOR»
 	    «ENDFOR»
-	    <field name="published" type="hidden" filter="unset" />
-	    <field name="checked_out" type="hidden" filter="unset" />
-	    <field name="checked_out_time" type="hidden" filter="unset" />
+	   
 	    <fields name="params">
 	        <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL__LABEL">
 	            «generateParameter(page.extendedLocalParametersListe, component)»
@@ -282,7 +280,10 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
             </field> 
    			'''
    		}
-   		switch(type){
+   		val String[] type_temp_array = type.split('''"'''.toString())
+   		val String type_temp = type_temp_array.get(1)
+   		
+   		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
    	        result.append('''
    		    <field name="«attr.name.toLowerCase»"
