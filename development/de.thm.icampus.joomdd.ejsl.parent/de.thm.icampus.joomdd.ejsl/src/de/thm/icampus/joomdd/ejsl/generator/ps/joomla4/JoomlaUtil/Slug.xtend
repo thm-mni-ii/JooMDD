@@ -36,6 +36,7 @@ import java.util.GregorianCalendar
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.LinkGeneratorHandler
 import java.util.ArrayList
+import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -1009,16 +1010,127 @@ def static String getTypeName(String type) {
 		return ""
 	}
 
-    static def CharSequence writeParameter(
-		ExtendedParameter param) '''
-		<field
-		name="«param.name»"
-		«Slug.getTypeName(param)»
-		default="«param.defaultvalue»"
-		label="«param.label»"
-		description="«param.descripton»"
-		>
-	'''
+      static def CharSequence writeParameter(
+		ExtendedParameter param, ExtendedComponent component) {
+			    var String type = getTypeName(param)
+				val String[] type_temp_array = type.split('''"'''.toString())
+   		val String type_temp = type_temp_array.get(1)
+   		
+   		switch(type_temp){
+   		    case "multiselect" , case "select", case "list": {
+   	        return '''
+   		    <field name="«param.name.toLowerCase»"
+   		            type="list" 
+   		            «IF type.equalsIgnoreCase("multiselect")»
+   		            multiple
+   		            «ENDIF»
+   		            id="«param.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : param.attributes»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            >
+   		            «FOR KeyValuePair kv: param.values»
+   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		            «ENDFOR»
+   		        </field> 
+   		        '''
+   		    }
+   		    case "imagepicker": {
+   		        return '''
+   		        <field name="«param.name.toLowerCase»"
+   		            type ="imageloader"
+   		            accept="image/*"
+   		            id="«param.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_«param.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : param.attributes»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            />
+   		        '''
+   		    }
+   		    case "filepicker": {
+   		        return '''
+   		        <field name="«param.name.toLowerCase»"
+   		            type ="fileloader"
+   		            id="«param.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : param.attributes»
+   		            «kvpair.name» = "«kvpair.value»"
+  		            «ENDFOR»
+   		            />
+   		        '''
+   		    }
+   		    case "checkbox": {
+   		       return ''' 
+   		        <field name="«param.name.toLowerCase»"
+   		            type="checkboxes" 
+   		            id="«param.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : param.attributes»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            >
+   		            «FOR KeyValuePair kv: param.values»
+   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		            «ENDFOR»
+   		        </field> 
+   		        '''
+   		    }
+   		    case "radiobutton": {
+   		        return ''' 
+	   		        <field name="«param.name.toLowerCase»"
+	   		            type="radio"
+	   		            id="«param.name.toLowerCase»"
+	   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
+	   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+	   		            «FOR KeyValuePair kvpair : param.attributes»
+	   		            «kvpair.name» = "«kvpair.value»"
+	   		            «ENDFOR»
+	   		            >
+	   		            «FOR KeyValuePair kv: param.values»
+	   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+	   		            «ENDFOR»
+	   		        </field> 
+   		        '''
+   		    }
+   		    case "Yes_No_Buttons": {
+   		        return ''' 
+   		        <field name="«param.name.toLowerCase»"
+   		            type="radio" 
+   		            id="«param.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            default="0"
+   		            «FOR KeyValuePair kvpair : param.attributes»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            >
+   		            <option value="1">JYES</option>
+   		            <option value="0">JNO</option>
+   		        </field> 
+   		        '''
+   		    }
+   		    default: {
+   		        return '''  
+   		        <field name="«param.name.toLowerCase»"
+   		            «type»
+   		            id="«param.name.toLowerCase»"
+   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
+   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            «FOR KeyValuePair kvpair : param.attributes»
+   		            «kvpair.name» = "«kvpair.value»"
+   		            «ENDFOR»
+   		            />
+   		        '''
+   		    }
+   		}
+   	
+   	}
 	
     static def ExtendedDetailPageField getEditedFieldsForattribute(ExtendedDynamicPage dynPage, ExtendedAttribute attr){
 		for (ExtendedDetailPageField field:dynPage.extendedEditedFieldsList ) {

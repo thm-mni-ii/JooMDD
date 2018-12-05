@@ -47,44 +47,48 @@ class ExtendedParameterImpl extends ParameterImpl implements ExtendedParameter {
 	
 	def String parsingType(StandardTypes types) {
 		
-		    var String value = "";
+		    
 		switch (types.type.getName()){
 			case "Integer" :{
-				value = "Integer"
+				return "Integer"
 			}
 			case "Boolean" :{
-			value = "Yes_No_Buttons"
+			return "Yes_No_Buttons"
 				
 			}
 			case "Textarea" :{
-				value = "Textarea"
+				return "Textarea"
 			}
 			case "Textfield" :{
-				value = "Text_Field"
+				return "Text_Field"
 			} 
 			case "Time":{
-				value = "Datepicker"
+				return "Datepicker"
 			}
 			case "Date":{
-				value = "Datepicker"
+				return "Datepicker"
 			}
 			case "Datetime" :{
-				value = "Datepicker"
+				return "Datepicker"
 				}
 			case "Link" :{
-				value = "Text_Field"
+				return "Text_Field"
 			}
 			case "Image":{
-				value = "Imagepicker"
+				return "Imagepicker"
 			}
 			case "File" :{
-				value = "Filepicker"
+				return "Filepicker"
 			}
 			case "Label":{
-				value = "Text_Field_NE"
+				return "Text_Field_NE"
+			}
+			default: {
+				return types.type.getName()
 			}
 			
 		}
+		
 	}
 	
 	override generatorType() {

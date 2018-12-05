@@ -714,7 +714,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    «FOR g : component.extendedParameterGroupList»
 		    <fieldset name="«g.name.toLowerCase»" label="«g.name.toUpperCase»_LABEL" description="«g.name.toUpperCase»_DESC">
 		        «FOR p:g.extendedParameterList»
-		        «Slug.writeParameter(p)»
+		        «Slug.writeParameter(p,component)»
 		        «ENDFOR»
 		    </fieldset>
 		    «ENDFOR»
