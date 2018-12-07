@@ -9,6 +9,7 @@
 **/workspace/
 **/.gradle/
 **/.idea/
+**/.metadata/
 
 !*/.gitkeep
 # Don't ignore .gitignore
@@ -16,6 +17,7 @@
 
 *.xml_gen
 *.plugin_gen.xml
+plugin.properties
 
 .metadata/*
 */.settings/*
@@ -26,4 +28,4 @@
 *.xtendbin
 *._trace
 
-*.project
+.project
