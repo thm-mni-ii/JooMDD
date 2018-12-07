@@ -1,4 +1,5 @@
-<img src="releases/img/Logo_new.jpg" alt="JooMDDLogo" style="max-width:100%;float:right;">
+<img src="img/Logo_new.jpg" alt="JooMDDLogo" style="max-width:100%;float:right;">
+
 
 **JooMDD** provides a set of plugins for a model-driven development of Joomla! extension 
 packages. 
