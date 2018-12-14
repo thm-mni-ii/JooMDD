@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 <img src="img/Logo_new.jpg" alt="JooMDDLogo" style="max-width:100%;float:right;">
 
-$~$
+<br><br>
 
 [![Build Status](https://travis-ci.com/priefyou/JooMDD.svg?token=e6pz6A4yhPBsVY7Ye4rR&branch=master)](https://travis-ci.com/priefyou/JooMDD)
 [![Licence](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/priefyou/JooMDD/blob/master/LICENSE)
