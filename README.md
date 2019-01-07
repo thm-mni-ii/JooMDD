@@ -1,8 +1,6 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
 <img src="img/Logo_new.jpg" alt="JooMDDLogo" style="max-width:100%;float:right;">
 
-<br><br>
-
 [![Build Status](https://travis-ci.com/priefyou/JooMDD.svg?token=e6pz6A4yhPBsVY7Ye4rR&branch=master)](https://travis-ci.com/priefyou/JooMDD)
 [![Licence](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/priefyou/JooMDD/blob/master/LICENSE)
 
@@ -47,7 +45,7 @@ Latest versions of JooMDD plugins can be found in the [releases](#) section.
 # License
 
 This project is distributed under the GPL (GNU General Public License) version 3. For further information see 
-the [License details](https://git.thm.de/JooMDD/joomdd_repo/blob/master/LICENSE).
+the [License details](https://github.com/priefyou/JooMDD/blob/master/LICENSE).
 
 ***
 [![II Logo](https://mni.thm.de/images/MNI_content/Forschung/Logos_Institute/ii-01.png)]((https://mni.thm.de/forschung/institute-a-gruppen/ii/ii-ueberblick))
