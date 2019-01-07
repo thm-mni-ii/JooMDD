@@ -62,26 +62,111 @@ self.upper <> '0' and (self.lower <> '-1' or self.lower = self.upper)
 inv referencedEntityExists:
 Entity.allInstances().name->includes(self.entity.name)
 
+-- Check if referencedEntity and referencedEntityAttribute are consistent
+inv consistentEntityAttribute:
+self.entity.attributes.name->includes(attributerefereced.name->first())
+
 -- Check if references have no cycles
 inv noReferenceCycles:
 self.entity.references 
     -> closure(entity.references) 
     -> forAll(r|r.attributerefereced <> self.attribute)
-    
+  
 -- Check if attribute types are consistent in references
--- inv consistentAttributeTypes:
-
+inv consistentAttributeTypes:
+self.attribute.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds) = 
+self.attributerefereced.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds)
 
 -- Check if reference is a primary (unique) attribute
-
--- Check if referencedEntity and referencedEntityAttribute are consistent
+inv referenceIsPrimary:
+self.attributerefereced -> exists(isunique) or self.attributerefereced -> exists(isprimary)
 
 -- Pages:
---context Page
+-- context Page (Feature)
+context Feature
 -- Check if page uses an entity only once
--- Check if DetailsPageField is consistent to attribute type of entity
+inv useEntityOnlyOnce:
+self.entities->forAll(e| self.entities->count(e) = 1)
+
+context DetailsPage
+-- Check if DetailsPageFields are consistent to attribute type of entity
+
+--- Check if Short_Text and Link mapped to Text_Field
+inv detailsPageFieldText_Field:
+let attrType : Sequence =
+	self.editfields.attribute.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds)
+	in attrType = StandardTypeKinds::Short_Text->asSequence()
+	or
+	attrType = StandardTypeKinds::Link->asSequence()
+implies
+	self.editfields.htmltype.oclAsType(HTMLTypes).oclAsType(SimpleHTMLTypes).htmltype.oclAsType(SimpleHTMLTypeKinds) = 
+	SimpleHTMLTypeKinds::Text_Field->asSequence()
+
+--- Check if Text mapped to Textarea
+inv detailsPageFieldTextarea:
+self.editfields.attribute.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds) = 
+	StandardTypeKinds::Text->asSequence()
+implies
+	self.editfields.htmltype.oclAsType(HTMLTypes).oclAsType(SimpleHTMLTypes).htmltype.oclAsType(SimpleHTMLTypeKinds) = 
+	SimpleHTMLTypeKinds::Textarea->asSequence()
+
+--- Check if Boolean mapped to Yes-No-Buttons
+inv detailsPageFieldBoolean:
+self.editfields.attribute.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds) = 
+	StandardTypeKinds::Boolean->asSequence()
+implies
+	self.editfields.htmltype.oclAsType(HTMLTypes).oclAsType(SimpleHTMLTypes).htmltype.oclAsType(SimpleHTMLTypeKinds) = 
+	SimpleHTMLTypeKinds::Yes_No_Buttons->asSequence()
+
+--- Check if Integer mapped to Input Integer
+inv detailsPageFieldInteger:
+self.editfields.attribute.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds) = 
+	StandardTypeKinds::Integer->asSequence()
+implies
+	self.editfields.htmltype.oclAsType(HTMLTypes).oclAsType(SimpleHTMLTypes).htmltype.oclAsType(SimpleHTMLTypeKinds) = 
+	SimpleHTMLTypeKinds::Integer->asSequence()
+
+--- Check if Time, Date and Datetime mapped to Datepicker
+inv detailsPageFieldDatepicker:
+let attrType : Sequence = 
+self.editfields.attribute.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds)
+	in attrType = StandardTypeKinds::Time->asSequence() 
+	or
+	attrType = StandardTypeKinds::Date->asSequence() 
+	or
+	attrType = StandardTypeKinds::Datetime->asSequence()
+implies
+	self.editfields.htmltype.oclAsType(HTMLTypes).oclAsType(SimpleHTMLTypes).htmltype.oclAsType(SimpleHTMLTypeKinds) = 
+	SimpleHTMLTypeKinds::Datepicker->asSequence()
+	
+--- Check if Image mapped to Imagepicker
+inv detailsPageFieldImagepicker:
+self.editfields.attribute.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds) = 
+	StandardTypeKinds::Image->asSequence()
+implies
+	self.editfields.htmltype.oclAsType(HTMLTypes).oclAsType(SimpleHTMLTypes).htmltype.oclAsType(SimpleHTMLTypeKinds) = 
+	SimpleHTMLTypeKinds::Imagepicker->asSequence()
+
+--- Check if File mapped to Filepicker
+inv detailsPageFieldFilepicker:
+self.editfields.attribute.type.oclAsType(StandardTypes).type.oclAsType(StandardTypeKinds) = 
+	StandardTypeKinds::File->asSequence()
+implies
+	self.editfields.htmltype.oclAsType(HTMLTypes).oclAsType(SimpleHTMLTypes).htmltype.oclAsType(SimpleHTMLTypeKinds) = 
+	SimpleHTMLTypeKinds::Filepicker->asSequence()
+
+--- TODO:
+--- Check if Label mapped to Text_Field NE
+--- Check if Individual mapped to Text_Field
+
+context IndexPage
 -- Check if linked attribute is consistent to entity in IndexPage
+inv linkedIndexAttributeConsistent:
+self.links->forAll(l | self.entities.attributes.name->includes(l.linkedAttribute.name) and self.tablecolumns.name->includes(l.linkedAttribute.name))
+
 -- Check if table columns and filters are used only once in a page
+-- inv tableColumnsOncePerPage:
+
 -- Check if filters are a subset of representation columns in IndexPage
 -- Check if entities and attributes are defined, if filters are using them
 -- Representation columns and filters must be consistent to *Entity in IdexPage
