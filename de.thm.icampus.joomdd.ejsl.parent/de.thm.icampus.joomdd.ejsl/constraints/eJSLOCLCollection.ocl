@@ -165,12 +165,27 @@ inv linkedIndexAttributeConsistent:
 self.links->forAll(l | self.entities.attributes.name->includes(l.linkedAttribute.name) and self.tablecolumns.name->includes(l.linkedAttribute.name))
 
 -- Check if table columns and filters are used only once in a page
--- inv tableColumnsOncePerPage:
+inv tableColumnsFiltersOncePerPage:
+self.filters->forAll(f | self.filters->count(f) = 1) and self.tablecolumns->forAll(tc| self.tablecolumns->count(tc) = 1)
 
 -- Check if filters are a subset of representation columns in IndexPage
+inv filtersIncludedInTableColumns:
+self.filters->forAll(f | self.tablecolumns->includes(f))
+
 -- Check if entities and attributes are defined, if filters are using them
+inv FilterAttributesAndEntitiesDefined:
+self.filters->forAll(f| Entity.allInstances()->includes(f.oclContainer()) and f.oclContainer().oclAsType(Entity).attributes->includes(f))
+
 -- Representation columns and filters must be consistent to *Entity in IdexPage
+inv RepColsandFiltersConsistent:
+self.tablecolumns->forAll(tc | self.entities->includes(tc.oclContainer()) and tc.oclContainer().oclAsType(Entity).attributes->includes(tc)) 
+and self.filters->forAll(f | self.entities->includes(f.oclContainer()) and f.oclContainer().oclAsType(Entity).attributes->includes(f))
+
 -- If a page uses more than one Entity, the entities must have references to each other
+-- inv MultiplePageEntityReferences:
+-- self
+
+
 
 -- Extensions:
 --context Extension
