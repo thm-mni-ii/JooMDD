@@ -39,7 +39,7 @@ jobs:
         file_glob: true
         skip_cleanup: true
         api_key:
-          secure: t6CSX3oonE+ieggFrkIQnMCMxx+a5zameQepFNNvO82nNBJOmoIWqrC7W5robi6fpRqh47xJVQR1r7pM529kNP4gsrYrc98TxAR5i69GfDEoArUuzV0TEzQ78RS3/U7gnyWy5Ow4f1iQufj+KxKpprTpD097s9dMeZv9oeGMS7GbhW8JUEe7U7qunh5bCIP3BZEgNKJQrgAA/EqepzQp99JMaTMWoiCnh/7RZ6YtqYw/QqGum3MZcHv6w53DD2tjw1kOdI9PMvLQqn1Kabrz1JbOjULHYsUpmKGLu8F5nAsXEECtzm/QK3GlWqFcDk0u6+1GBk6QLk2loyC3BHOmolE5+DgXPiyTDqkjlcQnOjHhIJipfQXq4uEaQfeXbmiVmkWAOgJHVvir+CWHvScxsws+7G/LXOU/Vvbr0JM6MA3ANKi2cUP5wEKlu4nhKtWvNthPoVwvOraGsFCzFRhYcmWe5zNgNf2Q0OTWFSEHQMgg5ifaGGh4kKkKP+zZTmlxJBFfR410/9L7U79Xmump3z23gTXlfzZe5E3dbrmeI5hWrVFOhV55XO+JDfhtIK8heyZNNcCHmCsWxMD9hsz8cRJfCzOiWS2tK7URmMjgjuCM4x72iA/ALjEUPZw1tAY+TNU9LHfIX+Z6f7357+CQw4KStfjXFHS2nn6B1a79rp8=
+          secure: $api_token
         file: $TRAVIS_BUILD_DIR/de.thm.icampus.joomdd.ejsl.parent/de.thm.icampus.joomdd.ejsl.web/build/libs/*
         on:
           tags: true
