@@ -19,14 +19,15 @@ import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.Assert
+import org.junit.jupiter.api.Test
+import static org.junit.jupiter.api.Assertions.*
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
+import org.eclipse.xtext.testing.extensions.InjectionExtension
+import org.eclipse.xtext.testing.InjectWith
+import org.junit.runner.RunWith
+import org.junit.jupiter.api.^extension.ExtendWith
 
-@RunWith(XtextRunner)
+@ExtendWith(InjectionExtension)
 @InjectWith(EJSLInjectorProvider)
 
 class EJSLGeneratorTest {
@@ -44,7 +45,7 @@ class EJSLGeneratorTest {
           if(e.name.equalsIgnoreCase("usersgroups"))
              mappingTable = e
 		 
-         Assert.assertNotNull(mappingTable);
+         assertNotNull(mappingTable);
 	}
 	
 	/*

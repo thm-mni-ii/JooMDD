@@ -428,7 +428,7 @@ task updateEJSLUpdateSiteVersion{
 	group ('JooMDD_Help_Task')
 	
 	doLast{	
-		def xmlFile = file ('../../releases/Eclipse/JooMDDUpdateSite/site.xml') ///de.thm.icampus.joomdd.ejsl.ui/pom.xml
+		def xmlFile = file ('../releases/Eclipse/JooMDDUpdateSite/site.xml') ///de.thm.icampus.joomdd.ejsl.ui/pom.xml
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)

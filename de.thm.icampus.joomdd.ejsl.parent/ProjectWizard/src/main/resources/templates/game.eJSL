@@ -32,10 +32,10 @@ eJSLModel "GameModel"{
 				references{
 					Reference{
 						EntityAttribute = category
-						*Entity = Category
-						*EntityReference = Category.name
-						lower = 1
-						upper = 1
+						EntityAttribute = Category
+						ReferencedEntityAttribute = Category.name
+						min = 1
+						max = 1
 					}
 				}
 			}
@@ -43,7 +43,7 @@ eJSLModel "GameModel"{
 		pages{
 			IndexPage Games{
 				*Entities Game
-				table columns = Game.name, Game.category
+				representation columns = Game.name, Game.category
 				filters = Game.name, Game.category
 				links{
 					InternalcontextLink Details{
@@ -65,7 +65,7 @@ eJSLModel "GameModel"{
 			}
 			IndexPage Categories{
 				*Entities Category
-				table columns = Category.name
+				representation columns = Category.name
 				filters = Category.name
 				links{
 					InternalcontextLink Details{
