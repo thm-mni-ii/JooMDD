@@ -6,7 +6,7 @@ buildscript {
 
 
 plugins {
-    id "org.jetbrains.intellij" version "0.1.10"
+    id "org.jetbrains.intellij" version "0.4.2"
 }
 
 apply plugin: 'org.jetbrains.intellij'
@@ -28,10 +28,10 @@ sourceSets {
 
 intellij{
     //version '143.116.4'			// old IntelliJ
-    version  'IC-2016.3' 			// new IntelliJ distribution
+    version  '2018.3.3' 			// new IntelliJ distribution
 	//alternativeIdePath "C:\\Program Files\\JetBrains\\PhpStorm 2017.2.4" //Local PhpStorm IDE
 	//alternativeIdePath "C:\\Program Files\\JetBrains\\PhpStorm 2017.1.4" //Local PhpStorm IDE
-	alternativeIdePath "C:\\Users\\Dennis\\AppData\\Local\\JetBrains\\Toolbox\\apps\\PhpStorm\\ch-0\\173.3942.13" //Local PhpStorm IDE
+	//alternativeIdePath "C:\\Users\\Dennis\\AppData\\Local\\JetBrains\\Toolbox\\apps\\PhpStorm\\ch-0\\173.3942.13" //Local PhpStorm IDE
 	//alternativeIdePath "C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2017.2.5" //Local IntelliJ IDE
     updateSinceUntilBuild false		// assumption of old plugin.xml build
 }
