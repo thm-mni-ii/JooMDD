@@ -22,8 +22,7 @@ jobs:
       name: "Test Execution"
       jdk: oraclejdk8
       script:
-##       - ./gradlew test
-        - echo "Do test execution here!"
+        - ./gradlew test
     - stage: "buildWar"
       name: "Build War File"
       jdk: oraclejdk8
