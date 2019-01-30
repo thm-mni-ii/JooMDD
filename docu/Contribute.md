@@ -1,6 +1,6 @@
 # JooMDD Development Guides#
 
-### Setup Development Environment
+### Setup Development Environment ###
 
 1. <img src="img/eclipse_import_dialog.png" alt="Eclipse Open Import Dialog">
 
@@ -25,6 +25,8 @@
 11. <img src="img/eclipse_selected_repository_directory.PNG" alt="Eclipse select repository directory">
 
 12. <img src="img/eclipse_select_all_folders.PNG" alt="Eclipse select repository directory">
+
+##eJSL ##
 ### Language Development ###
 The eJSL Language can be used to implement both a CMS ***core*** and CMS ***extensions***. Both consist of two main parts (features): ***entities*** and ***pages***. 
 The core part should also consist of the feature section. Which should be used to model the backend and the frontend of a CMS.
