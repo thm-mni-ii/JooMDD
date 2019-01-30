@@ -1,18 +1,18 @@
 # JooMDD Development Guides#
 
-##Setup Development Environment
+### Setup Development Environment
 
-1 <img src="img/eclipse_import_git_project.PNG" alt="Import the git Project into Eclipse">
+1. <img src="img/eclipse_import_git_project.PNG" alt="Import the git Project into Eclipse">
  
-2 <img src="img/eclipse_import_dialog.PNG" alt="Eclipse open import-dialog">
+2. <img src="img/eclipse_import_dialog.PNG" alt="Eclipse open import-dialog">
 
-3 <img src="img/eclipse_import_ejsl.parent.PNG" alt="Eclipse import ejsl-parent dialog">
+3. <img src="img/eclipse_import_ejsl.parent.PNG" alt="Eclipse import ejsl-parent dialog">
 
-4 <img src="img/eclipse_select_repository_directory.PNG" alt="Eclipse select repository directory">
+4. <img src="img/eclipse_select_repository_directory.PNG" alt="Eclipse select repository directory">
 
-5 <img src="img/eclipse_selected_repository_directory.PNG" alt="Eclipse select repository directory">
+5.<img src="img/eclipse_selected_repository_directory.PNG" alt="Eclipse select repository directory">
 
-6 <img src="img/eclipse_select_all_folders.PNG" alt="Eclipse select repository directory">
+6. <img src="img/eclipse_select_all_folders.PNG" alt="Eclipse select repository directory">
 ### Language Development ###
 The eJSL Language can be used to implement both a CMS ***core*** and CMS ***extensions***. Both consist of two main parts (features): ***entities*** and ***pages***. 
 The core part should also consist of the feature section. Which should be used to model the backend and the frontend of a CMS.
