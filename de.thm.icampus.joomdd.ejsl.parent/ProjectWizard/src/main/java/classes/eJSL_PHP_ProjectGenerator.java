@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.platform.ProjectGeneratorPeer;
 import com.intellij.util.PathUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -126,7 +127,7 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
 
     @NotNull
     @Override
-    public GeneratorPeer createPeer() {
+    public ProjectGeneratorPeer<Object> createPeer() {
         return new eJSL_PHP_Wizard_Step();
     }
 
