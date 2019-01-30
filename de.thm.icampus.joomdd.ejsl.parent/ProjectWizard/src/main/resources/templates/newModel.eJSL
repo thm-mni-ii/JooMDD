@@ -57,11 +57,11 @@ eJSLModel "AgendaModel"
 			}
 			references{
 				Reference {
-					EntityAttribute =  raum *Entity = Raum *EntityReference =  Raum.identification lower = 1 upper = 1
+					EntityAttribute =  raum ReferencedEntity = Raum ReferencedEntityAttribute =  Raum.identification min = 1 max = 1
 				}
 				
 				Reference {
-					EntityAttribute = referent *Entity = Referent *EntityReference = Referent.name lower = 1 upper = 1
+					EntityAttribute = referent ReferencedEntity = Referent ReferencedEntityAttribute = Referent.name min = 1 max = 1
 				}
 				
 				
@@ -79,7 +79,7 @@ eJSLModel "AgendaModel"
 					position = top
 				}
 			}
-			table columns = Referent.name , Referent.vorname , Referent.herkunftland
+			representation columns = Referent.name , Referent.vorname , Referent.herkunftland
 			filters = Referent.name , Referent.geburtdatum
 			
 			links{
@@ -105,7 +105,7 @@ eJSLModel "AgendaModel"
 					position = top
 				}
 			}
-			table columns = Referent.name , Referent.vorname , Referent.herkunftland
+			representation columns = Referent.name , Referent.vorname , Referent.herkunftland
 			filters = Referent.name , Referent.geburtdatum
 			links{
 				InternalcontextLink DetailsReferent{
@@ -182,7 +182,7 @@ eJSLModel "AgendaModel"
 		}
 		IndexPage Raums {
 			*Entities Raum
-			table columns = Raum.identification , Raum.gebaeude , Raum.adresse
+			representation columns = Raum.identification , Raum.gebaeude , Raum.adresse
 			filters = Raum.gebaeude , Raum.identification
 			links{
 				InternalcontextLink DetailsRaum{
@@ -196,7 +196,7 @@ eJSLModel "AgendaModel"
 		}
 		IndexPage Raumsadmin {
 			*Entities Raum
-			table columns = Raum.identification , Raum.gebaeude , Raum.adresse
+			representation columns = Raum.identification , Raum.gebaeude , Raum.adresse
 			filters = Raum.gebaeude , Raum.identification
 			links{
 				InternalcontextLink DetailsRaum{
@@ -264,7 +264,7 @@ eJSLModel "AgendaModel"
 		}
 		IndexPage Conferences {
 			*Entities Conference
-			table columns = Conference.titel , Conference.date, Conference.referent , Conference.raum
+			representation columns = Conference.titel , Conference.date, Conference.referent , Conference.raum
 			filters = Conference.titel , Conference.date, Conference.referent , Conference.raum
 			links{
 				InternalcontextLink DetailsConference{
@@ -290,7 +290,7 @@ eJSLModel "AgendaModel"
 		}
 		IndexPage Conferencesadmin {
 			*Entities Conference
-			table columns = Conference.titel , Conference.date, Conference.referent , Conference.raum
+			representation columns = Conference.titel , Conference.date, Conference.referent , Conference.raum
 			filters = Conference.titel , Conference.date, Conference.referent , Conference.raum
 			links{
 				InternalcontextLink DetailsConference{
@@ -376,7 +376,7 @@ eJSLModel "AgendaModel"
 					Author "Dieudonne Timma"
 					{
 						authoremail = "dieudonnetimma@yahoo.fr"
-						authorurl = "http://www.goosgle.com"
+						authorurl = "http://www.google.com"
 					}	
 				}
 				copyright = "GNU 3"

@@ -3,8 +3,8 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath 'org.xtext:xtext-gradle-plugin:1.0.12'
-		classpath 'org.xtext:xtext-idea-gradle-plugin:1.0.2'      
+		classpath 'org.xtext:xtext-gradle-plugin:2.0.2'
+		classpath 'org.xtext:xtext-idea-gradle-plugin:2.0.2'      
     }
 }
 
@@ -12,7 +12,7 @@ subprojects {
 		
 	if(!(project.name == 'ProjectWizard' )) // excluding ProjectWizard for the standard xtext configuration
 	{
-		ext.xtextVersion = '2.13.0'
+		ext.xtextVersion = '2.16.0'
 		repositories {
 			jcenter()
 		}
@@ -42,6 +42,10 @@ subprojects {
 			exclude group: 'asm'
 		}
 	}
+	
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
 }
 
 
@@ -428,7 +432,7 @@ task updateEJSLUpdateSiteVersion{
 	group ('JooMDD_Help_Task')
 	
 	doLast{	
-		def xmlFile = file ('../../releases/Eclipse/JooMDDUpdateSite/site.xml') ///de.thm.icampus.joomdd.ejsl.ui/pom.xml
+		def xmlFile = file ('../releases/Eclipse/JooMDDUpdateSite/site.xml') ///de.thm.icampus.joomdd.ejsl.ui/pom.xml
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
@@ -592,14 +596,14 @@ task regenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript','regene
 	JooMDD Deploy
 */
 
-task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", ":ProjectWizard:createIntelliJWizardPluginSource","JooMDDDeployEclipse" ,":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
+task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", ":ProjectWizard:createIntelliJWizardPluginSource","JooMDDDeployEclipse" ,"de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
 	group ('joomdd')
     description "Create all deployment resources (JetBrains IDE) , prepare Eclipse Deploy "
 
-	task('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	":ProjectWizard:createIntelliJWizardPluginSource"
-    task(":ProjectWizard:createIntelliJWizardPluginSource").mustRunAfter		task(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
-    cleanEJSLUpdateSite.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
-    JooMDDDeployEclipse.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
+	tasks.getByPath('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	tasks.getByPath(":ProjectWizard:createIntelliJWizardPluginSource")
+    tasks.getByPath(":ProjectWizard:createIntelliJWizardPluginSource").mustRunAfter			tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+    cleanEJSLUpdateSite.mustRunAfter														tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+    JooMDDDeployEclipse.mustRunAfter														tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
 	doLast{
 		println "Deployment finished"
 	}

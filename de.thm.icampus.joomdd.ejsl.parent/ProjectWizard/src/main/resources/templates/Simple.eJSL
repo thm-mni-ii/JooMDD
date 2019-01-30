@@ -40,17 +40,17 @@ eJSLModel "Simple" {
 				references {
 					Reference {
 						EntityAttribute = category
-						*Entity = Category
-						*EntityReference = Category.name
-						lower = 1
-						upper = 1
+						ReferencedEntity = Category
+						ReferencedEntityAttribute = Category.name
+						min = 1
+						max = 1
 					}
 					Reference {
 						EntityAttribute = score
-						*Entity = Score
-						*EntityReference = Score.value
-						lower = 1
-						upper = 1
+						ReferencedEntity = Score
+						ReferencedEntityAttribute = Score.value
+						min = 1
+						max = 1
 					}
 				}	
 			}
@@ -58,7 +58,7 @@ eJSLModel "Simple" {
 		pages {
 			IndexPage Games {
 				*Entities Game
-				table columns = Game.name, Game.category, Game.score
+				representation columns = Game.name, Game.category, Game.score
 				filters = Game.name, Game.category, Game.score
 					links {
 						InternalcontextLink Details {
@@ -78,7 +78,7 @@ eJSLModel "Simple" {
 			}
 			IndexPage Scores {
 				*Entities Score
-				table columns = Score.value
+				representation columns = Score.value
 				filters = Score.value
 					links {
 						InternalcontextLink Details {
@@ -98,7 +98,7 @@ eJSLModel "Simple" {
 			}
 			IndexPage Categories {
 				*Entities Category
-				table columns = Category.name
+				representation columns = Category.name
 				filters = Category.name
 					links {
 						InternalcontextLink Details {

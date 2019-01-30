@@ -20,52 +20,54 @@
     <!-- Custom styles for this template -->
     <link href="css/landing-page.css" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="xtext/2.13.0/xtext-ace.css" />
+    <link rel="stylesheet" type="text/css" href="xtext/2.16.0/xtext-ace.css" />
 
 
     <link rel="stylesheet" type="text/css" href="css/jtree.min.css" />
     <!-- https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css -->
-
-
-    <script type="text/javascript">
-        var require = {
-            callback: function() {
-                var baseUrl = window.location.pathname;
-                var fileIndex = baseUrl.indexOf("editor.html");
-                if (fileIndex > 0)
-                    baseUrl = baseUrl.slice(0, fileIndex);
-                require.config({
-                    baseUrl: baseUrl,
-                    "shim": {
-				        "bootstrap":  ["jquery"],
-				        "jquery-easing":  ["jquery"],
-                        "scrolling-nav": ["jquery","bootstrap","jquery-easing"]
-				    },
-                    paths: {
-                        "ace/ace": "webjars/ace/1.2.8/src/ace",
-                        "jquery": "vendor/jquery/jquery.min",
-                        "ace/ext/language_tools": "webjars/ace/1.2.8/src/ext-language_tools",
-                        "xtext/xtext-ace": "xtext/2.13.0/xtext-ace",
-                        "jstree": "js/jstree",
-                        "bootstrap": "vendor/bootstrap/js/bootstrap.bundle.min",
-                        "jquery-easing": "vendor/jquery-easing/jquery.easing.min",
-                        "scrolling-nav": "js/scrolling-nav"
-                    }
-                });
-            }
-        };
-
-    </script>
+    
     <script type="text/javascript" src="webjars/requirejs/2.3.5/require.min.js"></script>
 
-    <script type="text/javascript" src="js/alert.js"></script>
-    <script type="text/javascript" src="js/treeloader.js"></script>
-    <script type="text/javascript" src="js/editorhandler.js"></script>
-    <script type="text/javascript" src="js/initialise.js"></script>
-    <script type="text/javascript" src="js/settings.js"></script>
-    <script type="text/javascript" src="js/buttonhandler.js"></script>
-    <script type="text/javascript" src="js/themes.js"></script>
+    <script type="text/javascript">
+        var baseUrl = window.location.pathname;
+        var fileIndex = baseUrl.indexOf("editor.html");
+        if (fileIndex > 0)
+            baseUrl = baseUrl.slice(0, fileIndex);
+        require.config({
+            baseUrl: baseUrl,
+            "shim": {
+			    "bootstrap":  ["jquery"],
+			    "jquery-easing":  ["jquery"],
+			    "scrolling-nav": ["jquery","bootstrap","jquery-easing"]
+			},
+            paths: {
+                "ace/ace": "webjars/ace/1.2.8/src/ace",
+                "jquery": "vendor/jquery/jquery.min",
+                "ace/ext/language_tools": "webjars/ace/1.2.8/src/ext-language_tools",
+                "xtext/xtext-ace": "xtext/2.16.0/xtext-ace",
+                "jstree": "js/jstree",
+                "bootstrap": "vendor/bootstrap/js/bootstrap.bundle.min",
+                "jquery-easing": "vendor/jquery-easing/jquery.easing.min",
+                "scrolling-nav": "js/scrolling-nav",
+                "alert": "js/alert",
+                "treeloader": "js/treeloader",
+                "editorhandler": "js/editorhandler",
+                "initialise": "js/initialise",
+                "settings": "js/settings",
+                "buttonhandler": "js/buttonhandler",
+                "themes": "js/themes"
+            }
+        });
+        
+        require(["ace/ace"], function() {
+			require(["xtext/xtext-ace"], function(xtext) {
+				require(["initialise", "buttonhandler"], function(initialise) {
+					console.log("Initialised");
+				});
+			});
+		});
 
+    </script>
   </head>
 
   <body>

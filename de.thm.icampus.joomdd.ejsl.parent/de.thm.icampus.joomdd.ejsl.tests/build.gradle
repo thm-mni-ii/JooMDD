@@ -1,7 +1,9 @@
 dependencies {
 	compile project(':de.thm.icampus.joomdd.ejsl')
-	testCompile "org.eclipse.xtext:org.eclipse.xtext.junit4:${xtextVersion}"
-	testCompile "org.eclipse.xtext:org.eclipse.xtext.xbase.junit:${xtextVersion}"
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.3.1"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.3.1"
+    testCompile "org.eclipse.xtext:org.eclipse.xtext.testing:${xtextVersion}"
+    testCompile "org.eclipse.xtext:org.eclipse.xtext.xbase.testing:${xtextVersion}"
 }
 //this is an eclipse plugin project
 eclipseClasspath.enabled=false

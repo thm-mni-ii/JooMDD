@@ -18,14 +18,14 @@ import de.thm.icampus.joomdd.ejsl.eJSL.FrontendSection
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.Link
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.junit.Assert
-import org.junit.Test
-import org.junit.runner.RunWith
+import static org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.eclipse.xtext.testing.extensions.InjectionExtension
+import org.junit.jupiter.api.^extension.ExtendWith
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.util.ParseHelper
 
-@RunWith(XtextRunner)
+@ExtendWith(InjectionExtension)
 @InjectWith(EJSLInjectorProvider)
 class EJSLParsingTest{
 	
@@ -43,7 +43,7 @@ class EJSLParsingTest{
 	@Test
 	def void ejslModelParsingTest() {
 		for (model : models) {
-			Assert.assertNotNull(parseHelper.parse(model).name)
+			assertNotNull(parseHelper.parse(model).name)
 		}
 	}
 	
@@ -66,7 +66,7 @@ class EJSLParsingTest{
 		for (i : 0 ..< instance.ejslPart.feature.entities.get(0).attributes.size){
 			attributes.add(instance.ejslPart.feature.entities.get(0).attributes.get(i).name)
 			types.add(instance.ejslPart.feature.entities.get(0).attributes.get(i).type)
-			Assert.assertNotNull("Error, Type should not be Null", instance.ejslPart.feature.entities.get(0).attributes.get(i).type)
+			assertNotNull(instance.ejslPart.feature.entities.get(0).attributes.get(i).type, "Error, Type should not be Null")
 			unique.add(instance.ejslPart.feature.entities.get(0).attributes.get(i).isIsunique)
 			primary.add(instance.ejslPart.feature.entities.get(0).attributes.get(i).isIsprimary)
 		}
@@ -78,13 +78,13 @@ class EJSLParsingTest{
 		val actualPri = Joiner.on(", ").join(primary)
 	
 		//test attribute names
-		Assert.assertEquals("name, adress, iBan, bic", actualAttr);
+		assertEquals("name, adress, iBan, bic", actualAttr);
 		//test attribute is unique
-		Assert.assertEquals("true, false, false, false", actualUniq);
+		assertEquals("true, false, false, false", actualUniq);
 		//test attribute is primary
-		Assert.assertEquals("false, false, false, false", actualPri);
+		assertEquals("false, false, false, false", actualPri);
 		//test attribute types
-		/**Assert.assertEquals(
+		/**assertEquals(
 			"de.thm.icampus.joomdd.ejsl.eJSL.impl.StandardTypesImpl@487db668 (type: Short_Text, notnull: false, default: null, autoincrement: false), de.thm.icampus.joomdd.ejsl.eJSL.impl.StandardTypesImpl@46944ca9 (type: Short_Text, notnull: false, default: null, autoincrement: false), de.thm.icampus.joomdd.ejsl.eJSL.impl.StandardTypesImpl@22bac7bc (type: Text, notnull: false, default: null, autoincrement: false), de.thm.icampus.joomdd.ejsl.eJSL.impl.StandardTypesImpl@63798ca7 (type: Text, notnull: false, default: null, autoincrement: false)",
 			actualType
 		);**/
@@ -95,8 +95,7 @@ class EJSLParsingTest{
 		
 		//parse the reference model
 		val instance = parseHelper.parse(reference)
-		
-		Assert.assertNotNull("Parsing-Error expected part is NULL", instance.ejslPart)
+		assertNotNull(instance.ejslPart, "Parsing-Error expected part is NULL")
 	}
 	
 	@Test
@@ -105,7 +104,7 @@ class EJSLParsingTest{
 		//parse the reference model
 		val instance = parseHelper.parse(reference)
 		
-		Assert.assertNotNull("Parsing-Error expected feature is NULL", instance.ejslPart.feature)
+		assertNotNull(instance.ejslPart.feature, "Parsing-Error expected feature is NULL")
 	}
 	
 	@Test
@@ -114,9 +113,9 @@ class EJSLParsingTest{
 		//parse the reference model
 		val instance = parseHelper.parse(reference)
 		
-		Assert.assertNotNull("Parsing-Error eJSL feature-Object is NULL", instance.ejslPart.feature.entities)
+		assertNotNull(instance.ejslPart.feature.entities, "Parsing-Error eJSL feature-Object is NULL")
 		for (i : 0 ..< instance.ejslPart.feature.entities.size){
-			Assert.assertNotNull("Parsing-Error expected entity is NULL", instance.ejslPart.feature.entities.get(i))
+			assertNotNull(instance.ejslPart.feature.entities.get(i), "Parsing-Error expected entity is NULL")
 		}
 		
 	}
@@ -127,9 +126,9 @@ class EJSLParsingTest{
 		//parse the reference model
 		val instance = parseHelper.parse(reference)
 		
-		Assert.assertNotNull("Parsing-Error expected reference is NULL", instance.ejslPart.feature.entities.get(1).references)
+		assertNotNull(instance.ejslPart.feature.entities.get(1).references, "Parsing-Error expected reference is NULL")
 		for (i : 0 ..< instance.ejslPart.feature.entities.get(1).references.size){
-			Assert.assertNotNull("Parsing-Error expected entity is NULL", instance.ejslPart.feature.entities.get(1).references.get(i))
+			assertNotNull(instance.ejslPart.feature.entities.get(1).references.get(i), "Parsing-Error expected entity is NULL")
 		}
 	}
 	
@@ -166,16 +165,16 @@ class EJSLParsingTest{
 		val actualRel = Joiner.on(", ").join(relations)
 		
 		//check object reference
-		Assert.assertSame("Failure: Reference to Entity failed", referencedEntity.get(0), instance.ejslPart.feature.entities.get(2))
-		Assert.assertSame("Failure: Reference to Entity failed", referencedEntity.get(1), instance.ejslPart.feature.entities.get(4))
+		assertSame(referencedEntity.get(0), instance.ejslPart.feature.entities.get(2), "Failure: Reference to Entity failed")
+		assertSame(referencedEntity.get(1), instance.ejslPart.feature.entities.get(4), "Failure: Reference to Entity failed")
 		
 		//check values
-		Assert.assertEquals("name, price, desc, value, porder, supplier", actualAttr);
-		Assert.assertEquals(
+		assertEquals("name, price, desc, value, porder, supplier", actualAttr);
+		assertEquals(
 			"EntityAttribute = porder *EntityReference = Prodorder.ordNr, EntityAttribute = supplier *EntityReference = supplier.name",
 			 actualRef
 		);
-		Assert.assertEquals("1 -1, 1 -1", actualRel);
+		assertEquals("1 -1, 1 -1", actualRel);
 	}
 	
 	@Test
@@ -186,9 +185,9 @@ class EJSLParsingTest{
 		val expectedSize = 12
 		
 		//pages exist
-		Assert.assertNotNull("Parsing-Error expected page is NULL", instance.ejslPart.feature.pages)
+		assertNotNull(instance.ejslPart.feature.pages, "Parsing-Error expected page is NULL")
 		//amount of pages is correct
-		Assert.assertEquals(instance.ejslPart.feature.pages.size, expectedSize)
+		assertEquals(instance.ejslPart.feature.pages.size, expectedSize)
 	}
 	
 	@Test
@@ -197,7 +196,7 @@ class EJSLParsingTest{
 		//parse the reference model
 		val instance = parseHelper.parse(reference)
 		
-		Assert.assertNotNull("Parsing-Error expected index page is NULL", instance.ejslPart.feature.pages.get(0))
+		assertNotNull(instance.ejslPart.feature.pages.get(0), "Parsing-Error expected index page is NULL")
 	}
 	
 	@Test
@@ -207,9 +206,9 @@ class EJSLParsingTest{
 		val instance = parseHelper.parse(reference)
 		
 		//check page exists
-		Assert.assertNotNull("Parsing-Error expected details page is NULL", instance.ejslPart.feature.pages.get(1))
+		assertNotNull(instance.ejslPart.feature.pages.get(1), "Parsing-Error expected details page is NULL")
 		//check type
-		Assert.assertTrue((instance.ejslPart.feature.pages.get(1) as DynamicPage) as DetailsPage != null)
+		assertTrue((instance.ejslPart.feature.pages.get(1) as DynamicPage) as DetailsPage !== null)
 	}
 	
 	@Test
@@ -219,10 +218,10 @@ class EJSLParsingTest{
 		val instance = parseHelper.parse(reference)
 		
 		//check name and creation of multiple pages
-		Assert.assertEquals("Customers", instance.ejslPart.feature.pages.get(0).name)
-		Assert.assertEquals("Customer", instance.ejslPart.feature.pages.get(1).name)
-		Assert.assertEquals("Products", instance.ejslPart.feature.pages.get(2).name)
-		Assert.assertEquals("product", instance.ejslPart.feature.pages.get(3).name)
+		assertEquals("Customers", instance.ejslPart.feature.pages.get(0).name)
+		assertEquals("Customer", instance.ejslPart.feature.pages.get(1).name)
+		assertEquals("Products", instance.ejslPart.feature.pages.get(2).name)
+		assertEquals("product", instance.ejslPart.feature.pages.get(3).name)
 		
 		//check referenced *Entities, filters and table columns are as expected
 		val page = ((instance.ejslPart.feature.pages.get(0) as DynamicPage) as IndexPage)
@@ -240,10 +239,10 @@ class EJSLParsingTest{
 		val actualFilters = Joiner.on(", ").join(filters)
 		val actualTableCols = Joiner.on(", ").join(tableCols)
 		
-		Assert.assertEquals("lName", instance.ejslPart.feature.pages.get(0).links.get(0).linkedAttribute.name)
-		Assert.assertEquals("customer", entityReferenced)
-		Assert.assertEquals("sName, lName, adress", actualTableCols)
-		Assert.assertEquals("lName, adress", actualFilters)
+		assertEquals("lName", instance.ejslPart.feature.pages.get(0).links.get(0).linkedAttribute.name)
+		assertEquals("customer", entityReferenced)
+		assertEquals("sName, lName, adress", actualTableCols)
+		assertEquals("lName, adress", actualFilters)
 	}
 	
 	@Test
@@ -254,8 +253,8 @@ class EJSLParsingTest{
 		
 		val pageName = instance.ejslPart.feature.pages.get(1).name
 		val linkedAttr = instance.ejslPart.feature.pages.get(1).links.get(0).linkedAttribute.name
-		Assert.assertEquals("Customer", pageName);
-		Assert.assertEquals("lName", linkedAttr);
+		assertEquals("Customer", pageName);
+		assertEquals("lName", linkedAttr);
 	}
 	
 	@Test
@@ -270,20 +269,20 @@ class EJSLParsingTest{
 		
 		//check values of index page
 		val pageIndexLink = ((pageIndex.links.get(0) as Link) as InternalLink) as ContextLink
-		Assert.assertEquals("Details", pageIndexLink.name)
-		Assert.assertEquals("Customer", pageIndexLink.target.name)
-		Assert.assertEquals("lName", pageIndexLink.linkedAttribute.name)
-		Assert.assertEquals("lName", pageIndexLink.linkparameters.get(0).attvalue.name)
+		assertEquals("Details", pageIndexLink.name)
+		assertEquals("Customer", pageIndexLink.target.name)
+		assertEquals("lName", pageIndexLink.linkedAttribute.name)
+		assertEquals("lName", pageIndexLink.linkparameters.get(0).attvalue.name)
 		
 		//check reference
-		Assert.assertSame("Failure: Reference to DetailsPage failed", pageIndexLink.target, pageDetails)
-		Assert.assertSame("Failure: Reference to IndexPage failed", ((pageDetails.links.get(0) as Link) as InternalLink).target, pageIndex)
+		assertSame(pageIndexLink.target, pageDetails, "Failure: Reference to DetailsPage failed")
+		assertSame(((pageDetails.links.get(0) as Link) as InternalLink).target, pageIndex, "Failure: Reference to IndexPage failed")
 		
 		//check values of Details page
 		val pageDetailsLink = ((pageDetails.links.get(0) as Link) as InternalLink)
-		Assert.assertEquals("Customer", pageDetails.name)
-		Assert.assertEquals("Customers", pageDetailsLink.target.name)
-		Assert.assertEquals("customer", pageDetails.entities.get(0).name)
+		assertEquals("Customer", pageDetails.name)
+		assertEquals("Customers", pageDetailsLink.target.name)
+		assertEquals("customer", pageDetails.entities.get(0).name)
 	}
 	
 	@Test
@@ -294,7 +293,7 @@ class EJSLParsingTest{
 		
 		//get extension
 		val ext = (instance.ejslPart as CMSExtension)
-		Assert.assertNotNull("Parsing-Error expected extensions are Null ", ext)
+		assertNotNull(ext, "Parsing-Error expected extensions are Null ")
 	}
 	
 	@Test
@@ -305,7 +304,7 @@ class EJSLParsingTest{
 		
 		//get extension
 		val cmp = ((((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension) as Component)
-		Assert.assertNotNull("Parsing-Error expected component is Null", cmp)
+		assertNotNull(cmp, "Parsing-Error expected component is Null")
 	}
 	
 	@Test
@@ -316,7 +315,7 @@ class EJSLParsingTest{
 		
 		//get extension
 		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension)
-		Assert.assertNotNull("Parsing-Error expected manifest is Null", cmp.manifest)
+		assertNotNull(cmp.manifest, "Parsing-Error expected manifest is Null")
 	}
 	
 	@Test
@@ -327,7 +326,7 @@ class EJSLParsingTest{
 		
 		//get extension
 		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension)
-		Assert.assertNotNull("Parsing-Error expected languages are Null", cmp.languages)
+		assertNotNull(cmp.languages, "Parsing-Error expected languages are Null")
 	}
 	
 	@Test
@@ -338,7 +337,7 @@ class EJSLParsingTest{
 		
 		//get extension
 		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension) as Component
-		Assert.assertNotNull("Parsing-Error expected sections are Null", cmp.sections)
+		assertNotNull(cmp.sections, "Parsing-Error expected sections are Null")
 	}
 	
 	@Test
@@ -351,18 +350,18 @@ class EJSLParsingTest{
 		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension) as Component
 		
 		//test component values
-		Assert.assertEquals("ExampleShop", cmp.name)
-		Assert.assertEquals("John Doe", cmp.manifest.authors.get(0).name)
-		Assert.assertEquals("John.Doe@example.de", cmp.manifest.authors.get(0).authoremail)
-		Assert.assertNotNull("Parsing-Error copyright should not be Null", cmp.manifest.copyright)
-		Assert.assertNotNull("Parsing-Error license should not be Null", cmp.manifest.license)
-		Assert.assertNotNull("Parsing-Error version should not be Null", cmp.manifest.version)
-		Assert.assertEquals("de-DE", cmp.languages.get(0).name)
-		Assert.assertEquals("en-GB", cmp.languages.get(1).name)
-		Assert.assertEquals("Customer", (cmp.sections.get(0) as FrontendSection).pageRef.get(0).page.name)
-		Assert.assertEquals("Products", (cmp.sections.get(0) as FrontendSection).pageRef.get(1).page.name)
-		Assert.assertEquals("Customers", (cmp.sections.get(1) as BackendSection).pageRef.get(0).page.name)
-		Assert.assertEquals("Customer", (cmp.sections.get(1) as BackendSection).pageRef.get(1).page.name)
+		assertEquals("ExampleShop", cmp.name)
+		assertEquals("John Doe", cmp.manifest.authors.get(0).name)
+		assertEquals("John.Doe@example.de", cmp.manifest.authors.get(0).authoremail)
+		assertNotNull("Parsing-Error copyright should not be Null", cmp.manifest.copyright)
+		assertNotNull("Parsing-Error license should not be Null", cmp.manifest.license)
+		assertNotNull("Parsing-Error version should not be Null", cmp.manifest.version)
+		assertEquals("de-DE", cmp.languages.get(0).name)
+		assertEquals("en-GB", cmp.languages.get(1).name)
+		assertEquals("Customer", (cmp.sections.get(0) as FrontendSection).pageRef.get(0).page.name)
+		assertEquals("Products", (cmp.sections.get(0) as FrontendSection).pageRef.get(1).page.name)
+		assertEquals("Customers", (cmp.sections.get(1) as BackendSection).pageRef.get(0).page.name)
+		assertEquals("Customer", (cmp.sections.get(1) as BackendSection).pageRef.get(1).page.name)
 		
 	}
 }

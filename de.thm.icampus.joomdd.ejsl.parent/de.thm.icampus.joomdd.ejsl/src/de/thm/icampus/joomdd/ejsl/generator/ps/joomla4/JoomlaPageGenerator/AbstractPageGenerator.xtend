@@ -98,7 +98,7 @@ abstract public class AbstractPageGenerator {
 	
 	def CharSequence generateParameter(EList<ExtendedParameter>listParams, ExtendedComponent component)'''
 	    «FOR param : listParams»
-		    «Slug.writeParameter(param)»
+		    «Slug.writeParameter(param,component)»
 		«ENDFOR»
 	'''
 		

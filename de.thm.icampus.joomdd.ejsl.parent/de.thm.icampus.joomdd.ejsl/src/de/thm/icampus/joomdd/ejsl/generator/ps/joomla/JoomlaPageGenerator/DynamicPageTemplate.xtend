@@ -180,7 +180,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	
 	override CharSequence generateParameter(EList<ExtendedParameter>listParams, ExtendedComponent component)'''
 	«FOR param : listParams»
-	«Slug.writeParameter(param)»
+	 «Slug.writeParameter(param,component)»
 	«ENDFOR»
 	'''
 	

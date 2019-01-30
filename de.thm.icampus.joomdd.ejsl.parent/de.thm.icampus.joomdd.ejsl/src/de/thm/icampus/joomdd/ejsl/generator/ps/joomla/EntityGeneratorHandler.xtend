@@ -38,7 +38,7 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 		generateFile(path + "sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(comp.name))
 		entgen.update = true
 		// generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''', entgen.generateUpdateScript(comp.name))
-		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''', entgen.dogenerate)
+		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''', entgen.generateUpdateScript(comp.name))
 	}
 	
 	private def generateFields(ExtendedComponent comp, String path){

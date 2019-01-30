@@ -25,6 +25,7 @@ plugin.properties
 *.prefs
 *.class
 *.classpath
+*.settings
 *.xtendbin
 *._trace
 
