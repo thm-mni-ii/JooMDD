@@ -1,4 +1,4 @@
-## Installation of JooMDD into your IDE ##
+## Installation of JooMDD##
 Please follow this installation guide to use JooMDD within Eclipse, IntelliJ, and PhpStorm. 
 
 ### Eclipse ###
