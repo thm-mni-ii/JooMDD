@@ -4,7 +4,7 @@
 
 1. <img src="img/eclipse_import_git_project.PNG" alt="Import the git Project into Eclipse">
  
-2. <img src="img/eclipse_import_dialog.PNG" alt="Eclipse open import-dialog">
+2. <img src="img/eclipse_import_dialog.png" alt="Eclipse open import-dialog">
 
 3. <img src="img/eclipse_import_ejsl.parent.PNG" alt="Eclipse import ejsl-parent dialog">
 
