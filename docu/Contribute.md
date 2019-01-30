@@ -2,17 +2,29 @@
 
 ### Setup Development Environment
 
-1. <img src="img/eclipse_import_git_project.PNG" alt="Import the git Project into Eclipse">
+1. <img src="img/eclipse_import_dialog.png" alt="Eclipse Open Import Dialog">
+
+2. <img src="img/eclipse_clone_repository.png" alt="Eclipse Select Import from Git">
+
+3. <img src="img/eclipse_select_to_clone_repository.png" alt="Eclipse select Clone URL">
+
+4. <img src="img/eclipse_select_source_and_authentification.png" alt="Eclipse Select Source Git and your Login Credits">
+
+5. <img src="img/eclipse_select_local_destination.png" alt="Eclipse Select a local Destination for the Project">
+
+6. <img src="img/eclipse_select_branches.png" alt="Eclipse Select all Branches">
+
+7. <img src="img/eclipse_import_git_project.PNG" alt="Import the git Project into Eclipse">
  
-2. <img src="img/eclipse_import_dialog.png" alt="Eclipse open import-dialog">
+8. <img src="img/eclipse_import_dialog.png" alt="Eclipse open import-dialog">
 
-3. <img src="img/eclipse_import_ejsl.parent.PNG" alt="Eclipse import ejsl-parent dialog">
+9. <img src="img/eclipse_import_ejsl.parent.PNG" alt="Eclipse import ejsl-parent dialog">
 
-4. <img src="img/eclipse_select_repository_directory.PNG" alt="Eclipse select repository directory">
+10. <img src="img/eclipse_select_repository_directory.PNG" alt="Eclipse select repository directory">
 
-5.<img src="img/eclipse_selected_repository_directory.PNG" alt="Eclipse select repository directory">
+11. <img src="img/eclipse_selected_repository_directory.PNG" alt="Eclipse select repository directory">
 
-6. <img src="img/eclipse_select_all_folders.PNG" alt="Eclipse select repository directory">
+12. <img src="img/eclipse_select_all_folders.PNG" alt="Eclipse select repository directory">
 ### Language Development ###
 The eJSL Language can be used to implement both a CMS ***core*** and CMS ***extensions***. Both consist of two main parts (features): ***entities*** and ***pages***. 
 The core part should also consist of the feature section. Which should be used to model the backend and the frontend of a CMS.
