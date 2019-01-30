@@ -42,6 +42,10 @@ subprojects {
 			exclude group: 'asm'
 		}
 	}
+	
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
 }
 
 
@@ -592,14 +596,14 @@ task regenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript','regene
 	JooMDD Deploy
 */
 
-task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", ":ProjectWizard:createIntelliJWizardPluginSource","JooMDDDeployEclipse" ,":de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
+task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", ":ProjectWizard:createIntelliJWizardPluginSource","JooMDDDeployEclipse" ,"de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
 	group ('joomdd')
     description "Create all deployment resources (JetBrains IDE) , prepare Eclipse Deploy "
 
-	task('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	":ProjectWizard:createIntelliJWizardPluginSource"
-    task(":ProjectWizard:createIntelliJWizardPluginSource").mustRunAfter		task(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
-    cleanEJSLUpdateSite.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
-    JooMDDDeployEclipse.mustRunAfter											":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest"
+	tasks.getByPath('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	tasks.getByPath(":ProjectWizard:createIntelliJWizardPluginSource")
+    tasks.getByPath(":ProjectWizard:createIntelliJWizardPluginSource").mustRunAfter			tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+    cleanEJSLUpdateSite.mustRunAfter														tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+    JooMDDDeployEclipse.mustRunAfter														tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
 	doLast{
 		println "Deployment finished"
 	}
