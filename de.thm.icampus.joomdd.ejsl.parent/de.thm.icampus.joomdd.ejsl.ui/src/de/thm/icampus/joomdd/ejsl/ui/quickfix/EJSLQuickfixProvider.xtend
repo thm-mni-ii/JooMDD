@@ -268,18 +268,6 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 	}
 	
 	/**
-	 * Delete a extension package which is included in another extension package
-	 */
-	@Fix(EJSLValidator::EXTPACKAGE_CONTAINS_EXTPACKAGE)
-	def extpackageContainsExtpackage(Issue issue, IssueResolutionAcceptor acceptor){
-				acceptor.accept(issue, 'Remove this Extension package', 'Delete this Extension package.', '') [
-			context |
-			val doc = context.xtextDocument
-			doc.replace((issue.offset), (issue.length), " " )
-			]
-	}
-	
-	/**
 	 * Add an ID to a double defined local parameter 
 	 */
 	@Fix(PageValidator::PAGE_LOCALPARAMETER_AMBIGOUS)
