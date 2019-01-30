@@ -1,4 +1,4 @@
-<img src="img/logo.svg" alt="JooMDDLogo" style="max-width:100%;float:right;">
+<img src="docu/img/logo.svg" alt="JooMDDLogo" style="max-width:100%;float:right;">
 
 [![Build Status](https://travis-ci.com/priefyou/JooMDD.svg?token=e6pz6A4yhPBsVY7Ye4rR&branch=master)](https://travis-ci.com/priefyou/JooMDD)
 [![Licence](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/priefyou/JooMDD/blob/master/LICENSE)
