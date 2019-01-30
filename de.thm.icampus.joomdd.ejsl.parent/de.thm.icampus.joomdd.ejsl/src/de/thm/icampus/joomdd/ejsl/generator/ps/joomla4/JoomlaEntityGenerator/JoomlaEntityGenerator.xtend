@@ -122,12 +122,12 @@ class JoomlaEntityGenerator {
 	    return result
 	}
 	
-    public def CharSequence generateUpdateScript(String extensionName)'''
+   public def CharSequence generateUpdateScript(String extensionName)'''
         «FOR ExtendedEntity en: entities.filter[t | !t.preserve] »
         ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`
         «FOR ExtendedAttribute attr: en.refactoryAttribute»
         «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
-        ADD COLUMN `«attr.name»`  «attr.generatorType»
+        ADD COLUMN `«attr.name»`  «attr.generatorType» «if(attr.isprimary) " PRIMARY KEY"»
         «var ExtendedAttribute after = getAfterAttribute(attr,en)»
         «IF after !== null»
         AFTER «after.name»,
@@ -144,16 +144,13 @@ class JoomlaEntityGenerator {
         «ENDFOR»
         ;
         
-        ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  
         «FOR ExtendedAttribute attr: en.refactoryAttribute.filter[t | t.isunique && !t.preserve]»
-        «IF attr.name != (en.refactoryAttribute.filter[t | t.isunique && !t.preserve]).getMylastAttribute.name»
-        ADD INDEX KEY (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»`'''»),
-        «ELSE»
-        ADD INDEX KEY (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»` '''»)
-        «ENDIF»
+        CREATE UNIQUE INDEX `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibih_«attr.name»«if(attr.withattribute !== null) "_" + attr.withattribute.name»` ON `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»`'''»);
         «ENDFOR»
-        ;
-        ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  
+        
+       «IF !en.references.isEmpty»
+        ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`
+        «ENDIF»
         «FOR Reference ref: en.refactoryReference.filter[t | !t.preserve && t.upper.equalsIgnoreCase("1")]»
         «IF ref !=  (en.refactoryReference.filter[t | !t.preserve]).getMylastReference»
         ADD CONSTRAINT `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibfk_«en.refactoryReference.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
@@ -167,7 +164,9 @@ class JoomlaEntityGenerator {
         «ENDFOR»
         ;
         «ENDFOR»
+        
     '''
+    
     
 	def ExtendedAttribute getMylastAttribute(Iterable<ExtendedAttribute> list) {
 		return list.get(list.size-1)
