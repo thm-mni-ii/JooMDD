@@ -154,13 +154,13 @@ class IndexPageTemplateAdminHelper {
 	        // Filter by User 
 	        $created_by = $this->getState('filter.created_by');
 	        if (!empty($created_by)) {
-	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '$created_by'");
+	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '" . $db->escape($created_by) . "'");
 	        }
 	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
 	        // Filter by «attr.name» 
 	        $«attr.name» = $this->getState('filter.«attr.name»');
 	        if (!empty($«attr.name»)) {
-	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '$«attr.name»'");
+	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '" . $db->escape($«attr.name») . "'");
 	        }
             «ENDFOR»
 	        // Filter by search in attribute
@@ -341,7 +341,7 @@ class IndexPageTemplateAdminHelper {
                 <tr>
                     <?php if (isset($this->items[0]->ordering)): ?>
                     <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo HTMLHelper::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+                        <?php echo HTMLHelper::_('grid.sort', '<i class="icon-menu-2"></i>', '«this.mainEntity.name.toLowerCase».ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
                     </th>
                     <?php endif; ?>
                     <th width="1%" class="hidden-phone">
@@ -349,24 +349,24 @@ class IndexPageTemplateAdminHelper {
                     </th>
                     <?php if (isset($this->items[0]->state)): ?>
                     <th width="1%" class="nowrap center">
-                        <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', '«this.mainEntity.name.toLowerCase».state', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                     «FOR ExtendedAttribute attr : column»
                     <th class='left'>
-                        <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
                     </th>
                     «ENDFOR»
                     <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
                     <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
+                        <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
                     </th>
                     <?php endif; ?>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($this->items as $i => $item) :
-                $ordering   = ($listOrder == 'a.ordering');
+                $ordering   = ($listOrder == '«this.mainEntity.name.toLowerCase».ordering');
                 $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                 $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                 $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
@@ -447,7 +447,7 @@ class IndexPageTemplateAdminHelper {
         $listOrder = $this->state->get('list.ordering');
         $listDirn = $this->state->get('list.direction');
         $canOrder = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-        $saveOrder = $listOrder == 'a.ordering';
+        $saveOrder = $listOrder == '«this.mainEntity.name.toLowerCase».ordering';
         $model = $this->getModel();
         if ($saveOrder) {
             $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';

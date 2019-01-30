@@ -302,7 +302,7 @@ class FieldsGenerator {
 		
 		FormHelper::loadFieldClass('list');
 		
-		class JFormFieldComponentuser extends JFormFieldList{
+		class JFormField«component.name.toFirstUpper»user extends JFormFieldList{
 		    
 		    protected function getOptions()
 		    {
@@ -327,9 +327,9 @@ class FieldsGenerator {
 		if(!fieldEntity.exists){
 			access.generateFile(path+ "/"+entFrom.name +".php", genFieldsForEntity)
 		}
-		var File fieldUser = new File (path+ "/componentuser.php")
+		var File fieldUser = new File (path+ '''/«com.name.toLowerCase»user.php''')
 		if(!fieldUser.exists){
-			access.generateFile(path+ "/componentuser.php", FieldsGenerator.genFieldsForUserView(com))
+			access.generateFile(path+ '''/«com.name.toLowerCase»user.php''', FieldsGenerator.genFieldsForUserView(com))
 		}
 	}
 
