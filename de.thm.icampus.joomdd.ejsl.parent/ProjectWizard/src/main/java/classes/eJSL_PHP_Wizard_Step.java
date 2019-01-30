@@ -3,6 +3,7 @@ package classes;
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.IconLoader;
+import com.intellij.platform.ProjectGeneratorPeer;
 import com.intellij.platform.WebProjectGenerator;
 import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.JBCheckBox;
@@ -24,7 +25,7 @@ import java.io.FileReader;
 /**
  * Created by Max on 09.03.2016.
  */
-public class eJSL_PHP_Wizard_Step implements WebProjectGenerator.GeneratorPeer {
+public class eJSL_PHP_Wizard_Step implements ProjectGeneratorPeer<Object> {
     private static String option = "";
 
     public static String getOption(){
