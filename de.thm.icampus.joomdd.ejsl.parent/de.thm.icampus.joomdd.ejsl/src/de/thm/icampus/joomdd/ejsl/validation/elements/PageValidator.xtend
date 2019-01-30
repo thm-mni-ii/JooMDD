@@ -1,6 +1,7 @@
 package de.thm.icampus.joomdd.ejsl.validation.elements
 
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
+import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLModel
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLPackage
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
@@ -10,6 +11,9 @@ import java.util.HashSet
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
+import de.thm.icampus.joomdd.ejsl.validation.util.HTMLTypeMappings
+import de.thm.icampus.joomdd.ejsl.eJSL.SimpleHTMLTypeKinds
+import de.thm.icampus.joomdd.ejsl.eJSL.HTMLTypes
 
 /**
  * This class contains custom validation rules about Pages
@@ -27,6 +31,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 	public static val PAGE_LOCALPARAMETER_AMBIGOUS = 'ambiguousLocalparam'
 	public static val PAGE_GLOBALPARAMETER_AMBIGUOUS = 'ambiguousGlobalparam'
 	public static val PAGE_ENTITY_USED_MULTIPLE_TIMES = 'entityUsedMultipleTimes'
+	public static val PAGE_EDITFIELDS_WRONG_HTML_TYPE = 'wrongHTMLType'
     
     public override register(EValidatorRegistrar registrar) {}
 	
@@ -166,6 +171,29 @@ class PageValidator extends AbstractDeclarativeValidator {
 			}	
 		}
 	}
+	
+	/**
+	 * Check if details page fields are mapped to suitable HTML types
+	 */
+	 @Check
+	 def checkDetailsPageFieldHTMLTypes(DetailsPage p){
+	 	for (editfield : p.editfields){
+	 		// get HTML type
+	 	   val String x = editfield.htmltype.toString();
+	 	   val String htmltype = x.substring(x.lastIndexOf(': ') + 2, x.length-1);
+	 	    // get attribute type
+	 	   val String y = editfield.attribute.type.toString();
+	 	   val String attrType = y.substring(y.lastIndexOf('type: ') + 6, y.indexOf(','));
+	 		if (!HTMLTypeMappings.HTMLTYPEMAP.get(htmltype).contains(attrType)) {
+	 			error(
+                        'Edit fields have to be mapped to a suitable HTML type',
+                        editfield,
+                        EJSLPackage.Literals.DETAILS_PAGE__EDITFIELDS.EOpposite,
+                        de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_EDITFIELDS_WRONG_HTML_TYPE
+                    )
+	 		}
+	 	}
+	 }
 	
 //	/**
 //	 * Checks if the name of a page contains a underscore
