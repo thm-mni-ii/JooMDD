@@ -1,12 +1,22 @@
 # Getting Started with the Web Editor #
 
 Contents:
+- [Getting Started with the Web Editor](#getting-started-with-the-web-editor)
+  - [Become familiar with the editor](#become-familiar-with-the-editor)
+  - [Create a conference component](#create-a-conference-component)
+    - [1. Load the conference example model](#1-load-the-conference-example-model)
+    - [2. Save the model](#2-save-the-model)
+    - [3. Select Joomla 3 as target platform](#3-select-joomla-3-as-target-platform)
+    - [4. Generate the conference component](#4-generate-the-conference-component)
+    - [5. Download the generated component as installable package](#5-download-the-generated-component-as-installable-package)
+  - [Create a module for an existing component](#create-a-module-for-an-existing-component)
+    - [1. Upload of an extension package](#1-upload-of-an-extension-package)
+    - [2. Model extraction](#2-model-extraction)
+    - [3. Augmentation of the legacy model](#3-augmentation-of-the-legacy-model)
+    - [4. Augmentation of the legacy model](#4-augmentation-of-the-legacy-model)
+    - [5. Generation of the new module](#5-generation-of-the-new-module)
 
-1. Become familiar with the editor 
-2. Create a conference component
-3. Create a module for an existing component
-
-## 1. Become familiar with the editor ##
+##  Become familiar with the editor ##
 Go to: https://icampus.thm.de:9443/editor.html to open the JooMDD web editor.
 
 <img src="img/web_editor.png" alt="JooMDD Web Editor" style="max-width:100%">
@@ -29,12 +39,12 @@ To get an installable extension package, you should select the root folder of th
 
 All nodes can also be removed by clicking on *Remove* in the context menu.
 
-## 2. Create a conference component ##
+## Create a conference component ##
 
 The easiest way to start a project with the JooMDD web editor is to use an example model and change it to your needs. In this guide, we create a Joomla 3 and Joomla 4 component for a conference management, which will look like this in the backend of a Joomla 3 site:
 <img src="img/conference_J3.png" alt="J3 Conference Component" style="max-width:100%">
 
-### 1. Load the conference example ###
+### 1. Load the conference example model ###
 ### 2. Save the model ###
 ### 3. Select Joomla 3 as target platform ###
 ### 4. Generate the conference component ###
@@ -45,13 +55,21 @@ But beware: All the code within the src-gen folder becomes COMPLETELY overwritte
 and save it. Therefore we recommend to copy generated extensions to another folder within your project, where 
 you can extend them without loosing them after a new code generation. Another and cleaner option is using a 
 versioning tool like git to store your individual added code.
-### 5. Donwload the generated component as installable package ###
+### 5. Download the generated component as installable package ###
 
-## 3. Create a module for an existing component ##
+## Create a module for an existing component ##
 
-### Reverse Engineering ###
+### 1. Upload of an extension package ###
+
+### 2. Model extraction ###
 In addition, we provide **jext2eJSL** to create eJSL-based models based on existing Joomla 3.x extension packages.
 We are currently working on the documentation of jext2eJSL. If you are interested in using the tool, see the current (german) 
 documentation [here](https://wiki.thm.de/Reverse-Engineering_(Joomla-Code_zu_eJSL-Instanzmodell)).
 Instead of executing the .jar file and using the GUI it is also possible to execute the application via CLI using the following arguments: 
 **-m &lt;path to manifest file&gt; -o &lt;output path&gt; -no-gui**
+
+### 3. Augmentation of the legacy model ###
+
+### 4. Augmentation of the legacy model ###
+
+### 5. Generation of the new module ###

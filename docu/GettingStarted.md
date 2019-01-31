@@ -1,4 +1,4 @@
-## Getting Started ##
+# Getting Started #
 ### The eJSL language ###
  <img src="img/eJSL_Logo_trans.png" alt="eJSLLogo" height="100" style="max-width:100%;float:right;">
  

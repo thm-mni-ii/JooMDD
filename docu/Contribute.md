@@ -1,6 +1,6 @@
-# JooMDD Development Guides#
+# JooMDD Development Guide #
 
-### Setup Development Environment ###
+## Setup Development Environment ##
 
 1. <img src="img/eclipse_import_dialog.png" alt="Eclipse Open Import Dialog">
 
