@@ -109,17 +109,7 @@ class RessourceTransformer {
 	}
 	
 	private def completeTableColumnAndEditedFields(DetailsPage page) {
-//		if(page.editfields.empty && !page.tablecolumns.empty){
-//			for(Attribute attr: page.tablecolumns){
-//				page.editfields.add(parseAttributeType(attr))
-//			}
-//		}
-//		if(!page.editfields.empty && page.tablecolumns.empty){
-//			
-//			for( DetailPageField editedAttr: page.editfields){
-//				page.tablecolumns.add(editedAttr.attribute)
-//			}
-//		}
+
 		if(page.editfields.empty && page.tablecolumns.empty){
 			for(Attribute attr: page.entities.get(0).attributes){
 				page.tablecolumns.add(attr)

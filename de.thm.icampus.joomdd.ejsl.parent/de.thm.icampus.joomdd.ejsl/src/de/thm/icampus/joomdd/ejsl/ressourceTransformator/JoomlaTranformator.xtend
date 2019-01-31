@@ -185,6 +185,7 @@ class JoomlaTranformator {
 			if(e.name.equalsIgnoreCase("id") || e.name.equalsIgnoreCase("^id") || e.isIsprimary)
 			return e
 		}
+		return null
 	}
 	/** 
 	 * Check if the entity have a primary keys
@@ -218,19 +219,36 @@ class JoomlaTranformator {
 	private def void  completeReferenceOfEntity(Entity ent) {
 		
 		for(Reference ref : ent.references){
+			
+			for(Attribute refatt : ref.attributerefereced){
+				if(!refatt.isprimary && !refatt.isunique && refatt.withattribute === null && !refatt.id){
+					var Attribute idref = this.searchIdAttribute(ref.entity);
+					refatt.isunique = true;
+					refatt.id = true;
+					if(idref=== null){
+						refatt.id= true;
+						
+					}else{
+						refatt.withattribute = idref
+					}
+					
+				}
+			}
 			if(ref.id){
 				var Attribute id = ref.entity.searchIdAttribute
-				if( id != null){
+				if( id !== null){
 				ref.attributerefereced.add(id)
 				ref.id=false
 				if(	ref.attributerefereced.size > 1){
-					if(getAttributeReference(ent, ref.entity, id ) == null){
+					if(getAttributeReference(ent, ref.entity, id ) === null){
 						ref.attribute.add(setNewGenAttribute(ent,ref, id))
 					}
 				}
 				
 				}
 			}
+			
+			
 		}
 	}
 	/**
@@ -253,10 +271,13 @@ class JoomlaTranformator {
 			var EList<Attribute> newReferenceArttibute = new BasicEList<Attribute>
 			for(Attribute attrRef: ref.attributerefereced){
 				var Attribute uniqWith = attrRef.withattribute
-				if(uniqWith != null ){
+				if(uniqWith !== null ){
 					var Attribute attr = getAttributeReference(ent, referenceEntity,uniqWith)
-					if(attr==null){
-					setNewGenAttribute(ent, ref, uniqWith)
+					if(attr === null){
+					 var Attribute refAttrEnt = setNewGenAttribute(ent, ref, uniqWith)
+					 var Attribute hereAttr = ref.attribute.get(ref.attributerefereced.indexOf(attrRef))
+					 hereAttr.isunique = true;
+					 hereAttr.withattribute = refAttrEnt
 					newReferenceArttibute.add(uniqWith)
 					}else{
 						newReferenceArttibute.add(uniqWith)
@@ -280,7 +301,8 @@ class JoomlaTranformator {
 					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name.toLowerCase
 					newAttribute.type =  Util.copyType(attrRef.type)
 					ent.attributes.add(newAttribute)
-					ref.attribute.add(newAttribute)					
+					ref.attribute.add(newAttribute)
+										
 					return newAttribute
 	}
 	
