@@ -201,7 +201,7 @@ require(["jquery","alert"], function($, alert) {
 				$.ajax({
 					  url: '/reverse-loader/',
 					  type: 'POST',
-					  data: {manifest:data[0],model:modelName},
+					  data: {manifest: encodeURI(data[0]), model:modelName},
 					  success: function(data) {
 						  alert.closeloadmodal();
 					    if(data){
