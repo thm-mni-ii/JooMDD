@@ -142,9 +142,26 @@ nav {
   padding: 0 0 0 8px;
 }
 
-.nav-item:last-child > .btn.btn-primary {
+.btn.btn-joomdd {
   color: #fff;
   background-color: #4b9a98;
+  border-color: #4b9a98;
+}
+
+.btn.btn-joomdd:hover {
+  color: #fff;
+  background-color: #3c7b79;
+  border-color: #4b9a98;
+}
+.btn.btn-joomdd:focus {
+  box-shadow: 0 0 0 0.2rem rgba(75,154,152,.5);
+}
+
+.btn.btn-joomdd:active {
+  color: #fff;
+  background-color: #3c7b79;
+  border-color: #4b9a98;
+  box-shadow: 0 0 0 0.2rem rgba(75,154,152,.5);
 }
 
 @media(max-width:1199px) {
