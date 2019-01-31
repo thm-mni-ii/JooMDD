@@ -29,8 +29,7 @@ nav {
 
 .intro-message {
   position: relative;
-  padding-top: 20%;
-  padding-bottom:20%;
+  padding: 16% 0;
 }
 
 .intro-message-editor {
@@ -133,6 +132,19 @@ nav {
 .banner-social-buttons {
   float: right;
   margin-top: 0;
+}
+
+.image-shadow {
+  box-shadow: 5px 10px 20px -10px black;
+}
+
+.nav-item:last-child {
+  padding: 0 0 0 8px;
+}
+
+.nav-item:last-child > .btn.btn-primary {
+  color: #fff;
+  background-color: #4b9a98;
 }
 
 @media(max-width:1199px) {
