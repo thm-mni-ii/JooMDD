@@ -23,8 +23,8 @@ plugin.properties
 */.settings/*
 *.iml
 *.prefs
-*.class
-*.classpath
+**/.class
+**/.classpath
 *.settings
 *.xtendbin
 *._trace

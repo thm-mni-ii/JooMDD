@@ -172,6 +172,8 @@ IndexPage returns IndexPage:
 		('*Globalparameters' globalparameters+=[Parameter] (',' globalparameters+=[Parameter])*)?
 		('localparameters' '{' (localparameters+=Parameter)* '}')?
 		('pageactions' '{' (pageactions+=PageAction)* '}')?
+		('status support')?
+		('ordering support')?
 		('representation columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
 		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
 		('links' '{' (links+=Link)* '}')? 
@@ -345,8 +347,8 @@ Plugin returns Plugin:
 	'Plugin' name=MYID 
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
-		'Plugintype =' type=PluginKinds
 		('languages' '{' (languages+=Language)* '}')?
+		'Plugintype =' type=PluginKinds
 		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
 		('parameters' '{' (localparameters+=Parameter)* '}')?
 	'}'	
