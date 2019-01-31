@@ -14,6 +14,10 @@ body, h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
+nav {
+  box-shadow: 0 -10px 20px 0 black;
+}
+
 .intro-header {
   padding-top: 0px;
   padding-bottom: 0px;
@@ -164,7 +168,7 @@ p.copyright {
 }
 
 .logo {
-  max-width: 40%;
+  height: 45px;
 }
 
 #xtext-editor {
@@ -172,6 +176,10 @@ p.copyright {
   max-height: 400px;
   margin-top: 10px;
   margin-right: 20px;
+}
+
+#feedback {
+  padding: 5vh 0;
 }
 
 .loader {
