@@ -162,26 +162,6 @@ class EJSLValidator extends AbstractEJSLValidator {
 			}
 		}
 	}
-
-//  Why is that constraint defined. This is actually a feature of the eJSL langugae
-//	/**
-//	 * Check if the existing extensions don't contain another extensions.
-//	 */
-//	@Check
-//	def checkExtensionPackagesDoNotContainExtensionPackages(ExtensionPackage extPackage) {
-//		var i = 0
-//		for (ext : extPackage.extensions) {
-//			if (ext instanceof ExtensionPackage) {
-//				error(
-//					'Extension package must not contain more extension packages.',
-//					EJSLPackage.Literals.EXTENSION_PACKAGE__EXTENSIONS,
-//					i,
-//					EXTPACKAGE_CONTAINS_EXTPACKAGE
-//				)
-//			}
-//			i++
-//		}
-//	}
 	
 //	/**
 //	 * Checks if the name of a extension contains a underscore
