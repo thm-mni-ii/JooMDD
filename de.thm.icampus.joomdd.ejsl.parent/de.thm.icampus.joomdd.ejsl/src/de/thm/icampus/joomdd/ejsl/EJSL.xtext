@@ -452,7 +452,7 @@ terminal LANGUAGE_CODE:
 
 KeyValuePair returns KeyValuePair:
 	{KeyValuePair}
-	'Key' name=ID '=' value=STRING
+	name=ID '=' value=STRING
 ;
 
 Position returns Position:

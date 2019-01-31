@@ -189,7 +189,7 @@ eJSLModel "Brueckenkurs"{
 					Tutor.vorname : Text_Field
 					Tutor.kurs : Text_Field
 					Tutor.geburtsdatum : Datepicker
-					Tutor.geschlecht : Select Options (Key Keins = "keins" , Key maennlich = "mann" , Key weiblich = "weiblich" )
+					Tutor.geschlecht : Select Options (Keins = "keins" , maennlich = "mann" , weiblich = "weiblich" )
 				}
 				
 				pageactions {
