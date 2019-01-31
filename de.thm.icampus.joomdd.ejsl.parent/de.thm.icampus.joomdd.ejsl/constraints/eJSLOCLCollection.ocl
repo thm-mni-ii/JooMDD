@@ -48,15 +48,11 @@ self.type=StandardTypeKinds::Integer implies self.autoincrement
 context Reference
 -- Check if min/max values are -1, 0, and 1
 inv allowedMinValues:
-Set{'0','1','-1'} -> includes(self.lower)
+Set{'0','1'} -> includes(self.lower)
 
 -- Check if min/max values are -1, 0, and 1
 inv allowedMaxValues:
-Set{'0','1','-1'} -> includes(self.upper)
-
--- Check if reference multiplicities are consistent (min <= max)
-inv consistentMultiplicities:
-self.upper <> '0' and (self.lower <> '-1' or self.lower = self.upper)
+Set{'1','-1'} -> includes(self.upper)
 
 -- Check if referenced entity exists
 inv referencedEntityExists:

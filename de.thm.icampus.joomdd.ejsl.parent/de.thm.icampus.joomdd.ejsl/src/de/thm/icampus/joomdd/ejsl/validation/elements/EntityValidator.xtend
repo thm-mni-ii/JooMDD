@@ -9,6 +9,7 @@ import java.util.HashSet
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
+import java.util.Arrays
 
 /**
  * This class contains validation rules about entities.
@@ -24,6 +25,15 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	public static val ENTITY_MISSING_REFERENCE = 'missingReference'
 	public static val ENTITY_REFERENCE_ATTRIBUTE_NOT_PRIMARY = 'notPrimaryReference'
 	public static val ENTITY_MISSING_PRIMARY_ATTRIBUTE = 'missingPrimaryAttribute'
+	public static val ENTITY_REFERENCE_LOWER_WRONG_VALUE = 'wrongValueForLower'
+	public static val ENTITY_REFERENCE_UPPER_WRONG_VALUE = 'wrongValueForUpper'
+	
+	public static final HashSet<String> MAXVALUES = {
+		return new HashSet(Arrays.asList('1', '-1'));
+	}
+	public static final HashSet<String> MINVALUES = {
+		return new HashSet(Arrays.asList('0', '1'));
+	}
 	
     public override register(EValidatorRegistrar registrar) {}
 	
@@ -189,7 +199,7 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	}
 	
 	/**
-	 * Validates if the reference to an attribute leads on a primary attribtue
+	 * Validates if the reference to an attribute leads on a primary attribute
 	 */	
 	@Check
 	def refToAttributeMustBePrimary(Reference reference){
@@ -204,6 +214,35 @@ class EntityValidator extends AbstractDeclarativeValidator {
 			}
 		}
 	}
+	
+	/**
+	 * Validates that min values are valid
+	 */
+	 @Check
+	 def validateMinValues(Reference reference){
+	 	if(!MINVALUES.contains(reference.lower)){
+	 		error(
+					'The value for min has to be 0 or 1',
+					reference,
+					EJSLPackage.Literals.REFERENCE__LOWER,
+					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_LOWER_WRONG_VALUE
+				)
+	 	}
+	 }
+	 
+	 /**
+	  * Validates that max values are valid
+	  */
+	  def validateMaxValues(Reference reference){
+	  	if(!MAXVALUES.contains(reference.upper)){
+	 		error(
+					'The value for min has to be 1 or -1',
+					reference,
+					EJSLPackage.Literals.REFERENCE__UPPER,
+					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_UPPER_WRONG_VALUE
+				)
+	 	}
+	  }
 	
 	/**
 	 * Checks if at least one Primary attribute exists in the attributes of an entity
