@@ -153,7 +153,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
         <field
             name="created_by"
             addfieldpath="components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
-            type="componentuser"
+            type="«component.name.toLowerCase»user"
             label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_CREATED_BY"
             description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_CREATED_BY"
             entity = "«page.extendedEntityList.get(0).name.toLowerCase»">
