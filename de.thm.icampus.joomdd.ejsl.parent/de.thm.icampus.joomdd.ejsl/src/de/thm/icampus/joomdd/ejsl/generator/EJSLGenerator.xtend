@@ -18,7 +18,6 @@ import org.eclipse.xtext.generator.JavaIoFileSystemAccess
 import org.eclipse.xtext.generator.OutputConfiguration
 import org.eclipse.xtext.parser.IEncodingProvider
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import de.thm.icampus.joomdd.ejsl.gui.ConfigGUI
 import java.awt.EventQueue
 import java.util.regex.Pattern
 import java.util.regex.Matcher
@@ -58,27 +57,7 @@ class EJSLGenerator extends AbstractGenerator {
         if (fsa.isFile("generator.properties")) {
             var InputStream is = fsa.readBinaryFile("generator.properties")
             config.load(is)
-        } else {
-            defaultSettings(fsa)
         }
-    }
-
-    def defaultSettings(IFileSystemAccess2 fsa) {
-        val ConfigGUI conf = new ConfigGUI
-        EventQueue.invokeLater(new Runnable() {
-            public override void run() {
-                try {
-
-                    conf.frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        while (conf.configList.empty) {
-        }
-        config = conf.configList
-        fsa.generateFile("generator.properties", getWriteProperties)
     }
 
     def CharSequence getWriteProperties() '''
