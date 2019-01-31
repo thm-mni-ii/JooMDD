@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import de.thm.icampus.joomdd.ejsl.web.util.Helper
+import java.net.URLDecoder
 
 /**
  * @author Dieudonne Timma
@@ -32,6 +33,8 @@ class ReverseLoader extends HttpServlet {
 		var workspaceUserPath = Helper.getWorkspaceUserPath(sessionID)
 		
 		var String manifest = workspaceUserPath + req.getParameter("manifest").replace("download-manager", "")
+		manifest = URLDecoder.decode(manifest, "UTF-8");
+		
 		var String model = req.getParameter("model")
 		
 		var String target = workspaceUserPath + "/src/" + model
@@ -40,7 +43,7 @@ class ReverseLoader extends HttpServlet {
 
 		var String rootPath = context.getRealPath("/") + "/jar";
 		var String jarPath = rootPath + "/jext2ejsl.jar"
-		var String cmd = "java -jar " + jarPath + " -m " + manifest + " -o " + target + " -no-gui"
+		var String cmd = '''java -jar "«jarPath»" -m "«manifest»" -o "«target»" -no-gui'''
 
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
