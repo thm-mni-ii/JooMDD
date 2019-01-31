@@ -253,9 +253,7 @@ class EntityValidator extends AbstractDeclarativeValidator {
 		
 		if (entity.attributes.size != 0) {
 			for (attribute : entity.attributes) {
-    			if(attribute.isunique){
-    				hasPrimary = true;
-    			}
+    			hasPrimary = true;
     		}
     		if(!hasPrimary){	// if no primary attribute is found
     			error(
