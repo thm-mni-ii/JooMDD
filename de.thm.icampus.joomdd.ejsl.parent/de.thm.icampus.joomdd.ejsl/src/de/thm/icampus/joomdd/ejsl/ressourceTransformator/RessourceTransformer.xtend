@@ -417,9 +417,6 @@ class RessourceTransformer {
 			case "File" :{
 				result.htmltype = SimpleHTMLTypeKinds.get( "Filepicker")
 			}
-			case "Label":{
-				result.htmltype = SimpleHTMLTypeKinds.get( "Text_Field_NE")
-			}
 			
 		}
          editField.htmltype = result

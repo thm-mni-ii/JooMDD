@@ -138,9 +138,6 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 			case "File": {
 				value = "text "
 			}
-			case "Label": {
-				value = "varchar(255) "
-			}
 			default:{
 				value = "int(11)"
 			}

@@ -80,9 +80,6 @@ class ExtendedParameterImpl extends ParameterImpl implements ExtendedParameter {
 			case "File" :{
 				return "Filepicker"
 			}
-			case "Label":{
-				return "Text_Field_NE"
-			}
 			default: {
 				return types.type.getName()
 			}
