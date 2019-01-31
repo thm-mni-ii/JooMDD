@@ -216,7 +216,7 @@ eJSLModel "Brueckenkurs"{
 						},
 					Tutor.geschlecht{
 						type =  Select 
-						values { Key Keins = "keins" , Key maennlich = "mann" , Key weiblich = "weiblich"}
+						values { Keins = "keins" , maennlich = "mann" , weiblich = "weiblich"}
 						} 
 				}
 				
@@ -270,7 +270,7 @@ eJSLModel "Brueckenkurs"{
 					Kurstermin.tag {
 						type =  Text_Field 
 						field attributes {
-							Key format = "'%a %d %b %Y"
+							format = "'%a %d %b %Y"
 						}
 						}
 				}
