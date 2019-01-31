@@ -349,7 +349,7 @@ Plugin returns Plugin:
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
 		'Plugintype =' type=PluginKinds
-		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('parameters' '{' (localparameters+=Parameter)* '}')?
 	'}'	
 ;
@@ -360,7 +360,7 @@ Library returns Library:
 	'{'
 		'Manifestation' '{' (manifest=Manifestation) '}'
 		('languages' '{' (languages+=Language)* '}')?
-		('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+		('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('classes' '{' (classes+=Class)* '}')?
 		('packages' '{' (packages+=Package)* '}')?
 	'}'
@@ -380,7 +380,7 @@ Class returns Class:
     'Class' name=MYID ('extends' supertype=[Class|QualifiedName])?
     '{'
     	('*Class references' references+=[Class|QualifiedName] (',' references+=[Class|QualifiedName])*)?
-    	('*Entities' entities+=[Entity|STRING] (',' entities+=[Entity|STRING])*)?
+    	('*Entities' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
         ('methods' '{' (methods+=Method)* '}')?
     '}'
 ;
