@@ -3,26 +3,40 @@
 Contents:
 
 - [eJSL Guide](#ejsl-guide)
-  - [Main concepts](#main-concepts)
+  - [Main concepts: The conference example](#main-concepts-the-conference-example)
+    - [Data modelling](#data-modelling)
+    - [Interaction modelling](#interaction-modelling)
+    - [Extension modelling](#extension-modelling)
+    - [Generated code](#generated-code)
   - [Use the language](#use-the-language)
     - [General conventions](#general-conventions)
-    - [Data modelling](#data-modelling)
+    - [Data modelling](#data-modelling-1)
       - [Entities](#entities)
       - [Attributes](#attributes)
       - [Types](#types)
       - [References](#references)
-    - [Interaction modelling](#interaction-modelling)
+    - [Interaction modelling](#interaction-modelling-1)
       - [StaticPage](#staticpage)
       - [IndexPage](#indexpage)
       - [DetailsPage](#detailspage)
       - [CustomPage](#custompage)
-    - [Extension modelling](#extension-modelling)
+    - [Extension modelling](#extension-modelling-1)
+      - [Manifestation](#manifestation)
+      - [Language support](#language-support)
+      - [Extension types](#extension-types)
+        - [Packages](#packages)
+        - [Components](#components)
+        - [Modules](#modules)
+        - [Plugins](#plugins)
+        - [Templates #####](#templates)
+        - [Libraries](#libraries)
+      - [Extension interaction](#extension-interaction)
   - [Example models](#example-models)
     - [Conference](#conference)
     - [Shop](#shop)
     - [Generic example model](#generic-example-model)
 
-##  Main concepts ##
+##  Main concepts: The conference example ##
 
 The eJSL language is a textual modelling language which is based on three main modelling parts - data, interaction, and extension modelling. Within the next sections, we will illustrate the language features by using the conference eJSL model. This model can be used as example model in the IDE plugins and the web editor to generate a conference component on the fly without any manual refinements. 
 
@@ -47,7 +61,7 @@ eJSLModel "Conference" {
 
 In order to generate a deployable Joomla extension, all model parts have to be defined. The entity section contains the whole data modelling of your project. It allows the definition of data entites with typed attributes and references to attributes of other entities.
 
-***
+### Data modelling ###
 
 The entities part of the conference model consits of data entities which are required for a simple conference:
 
@@ -105,7 +119,7 @@ Entity Talk {
         
 <img src="img/conferenceModel.png" alt="Conference Model" style="max-width:100%">
 
-***
+### Interaction modelling ###
 
 The **pages** section represents an abstraction layer for the MVC structure of Joomla components. I.e. an explicit definition of models, views, and controllers is not required. 
 
@@ -174,54 +188,74 @@ The specification of a `DetailsPage` is more frugal - particularly if they are u
 
 In addition to the `IndexPage` and `DetailsPage` page types, the eJSL language provides further page definitions. For further information see the [Interaction modelling](#interaction-modelling) section below.
 
-***
+### Extension modelling ###
 
-
+Within the extension section of an eJSL model, the modelled pages and entities can be integrated into extension-specific structures. In combination wit meta information like authors or copyright, and language assignment, extensions can be specified. Supported extension types are **packages**, **components**, **modules**, **plugins**, **templates**, and **libraries**. In the conference model, a component as the most sophisticated extension type is modelled. How to use other extension types is explained in the [extension modelling](#extension-modelling) section below.
 ```
 extensions {
     Component MyConference {
-        Manifestation {
-            authors {
-                Author "John Doe" {
-                    authoremail = "john.doe@example.org"
-                }
-            }
-            copyright = "Copyright (C) 2019 All right reserved."
-            license = "GNU General Public License"
-            version = "1.0.1"
-        }
-        languages {
-            Language de-DE {
-            }
-            Language en-GB {
-            }
-        }
-        sections {
-            Frontend section {
-                *Pages {
-                    *Page : Participants
-                    *Page : Talks
-                    *Page : Rooms
-                    *Page : Programme
-                }
-            }
-            Backend section {
-                *Pages {
-                    *Page : Participants
-                    *Page : Participant
-                    *Page : Talks
-                    *Page : Talk
-                    *Page : Rooms
-                    *Page : Room
-                    *Page : Programme
-                    *Page : Session
-                }
-            }
-        }
+        Manifestation {...}
+        languages {...}
+        sections {...}
     }
 }   
 ```
+In the conference example, a component is modelled. A `Component` model requires meta information which will mainly feed into the manifest of a component. This model part is similar for all extension types which are supported by the eJSL language. In addition, the supported languages can be specified. However, the main information for the code generator is specified in the `sections` part. This part contains the references to existing `pages` which in turn will result in MVC code within the componenten.
+```
+Manifestation {
+    authors {
+        Author "John Doe" {
+            authoremail = "john.doe@example.org"
+        }
+    }
+    copyright = "Copyright (C) 2019 All right reserved."
+    license = "GNU General Public License"
+    version = "1.0.1"
+}  
+```
+The manifestation part of the conference is very straight forward. Besides `authors`, meta information like `copyright`, `license`, or `version` can be specified.
+```
+languages {
+    Language de-DE {}   // Create language files for german language
+    Language en-GB {}   // Create language files for british english language
+}
+```
+Specifying languages enables multi language support in an extension. All you need to do is to specify the language key (e.g. `en-GB`). The generator then creates the respective language files filled with the used language key and english(!) values. Therefore, you have to translate the values after the code generation process. However, to avoid a manual refinement in the generated code, you can specify key-value pairs within the respective language definition. For further information see the extensive [language](#language-support) description below.
+```
+sections {
+    Frontend section {              // Here you specify the pages which will be used as frontend views
+        *Pages {
+            *Page : Participants
+            *Page : Talks
+            *Page : Rooms
+            *Page : Programme
+        }
+    }
+    Backend section {               // Here you specify the pages which will be used as backend views
+        *Pages {
+            *Page : Participants
+            *Page : Participant
+            *Page : Talks
+            *Page : Talk
+            *Page : Rooms
+            *Page : Room
+            *Page : Programme
+            *Page : Session
+        }
+    }
+}
+```
+The core part of a component specification is placed within the `section` definition. Here you can specify which pages you will use in which part (frontend/backend) of the component. In the example, all defined pages are referenced in the backend section, whereas the `IndexPages` are also referenced in the frontend section. This information is sufficient for a sophisticated code generation of both section with all required files. Based on presented example, all further generated views will have their own model and controller file. However, it is also possible to specify a reuse of models - e.g. if the frontend view shall use the backend model. For further information of possible dependency modelling see the [Extension interaction(#extension-interaction)] section of this site.
 
+### Generated code ###
+<img src="img/conference_file_structure.png" alt="Conference file structure" style="max-width:100%; float:right;">
+
+Based on the example conference model, a component can be generated which can directly installed to a running Joomla instance. 
+
+The generated structure complies to the file structure of installed extension in a Joomla-based site. This allows copy&paste of new code after a new generation step (e.g. after model refinements).
+
+
+<img src="img/conference_file_structure_admin.png" alt="Conference file structure" style="max-width:100%">
 
 ## Use the language ##
 ### General conventions ###
@@ -240,7 +274,16 @@ extensions {
 #### DetailsPage ####
 #### CustomPage ####
 ### Extension modelling ###
-
+#### Manifestation ####
+#### Language support ####
+#### Extension types ####
+##### Packages #####
+##### Components #####
+##### Modules #####
+##### Plugins #####
+##### Templates ##### 
+##### Libraries #####
+#### Extension interaction ####
 ## Example models ##
 ### Conference ###
 ### Shop ###
