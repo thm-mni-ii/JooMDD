@@ -21,13 +21,13 @@ Installable extension packages for Joomla 3.x and Joomla 4.
 To do: Plugin sites
 
 # Documentation
-- [Installation Guide](InstallationGuide.md)
-- [IDE plugin - Gettting started](GettingStarted.md)
-- [Web editor - Getting Started](WebEditorGettingStarted.md)
-- [How to use the modelling language](eJSLGuide.md)
+- [Installation Guide](docu/InstallationGuide.md)
+- [IDE plugin - Gettting started](docu/GettingStarted.md)
+- [Web editor - Getting Started](docu/WebEditorGettingStarted.md)
+- [How to use the modelling language](docu/eJSLGuide.md)
 
 # Contribution
-Please visit our [contribution guide](Contribute.md) and feel free to open [new issues]().
+Please visit our [contribution guide](docu/Contribute.md) and feel free to open [new issues]().
 
 A hard requirement for contribution as infrastructure developer is the willingness to work with the Eclipse IDE and at least understand the [Xtend](https://www.eclipse.org/xtend/) language, which is a Java-based dialect. In addition, knowledge in grammar definitions with [Xtext](https://www.eclipse.org/Xtext/) and constraint implementation with the [Object Constraint Language (OCL)](https://www.omg.org/spec/OCL/) is very helpful for contributing to the project.
 
