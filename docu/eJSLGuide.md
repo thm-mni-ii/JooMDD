@@ -37,19 +37,19 @@ To understand the main concept of the language we take a partial look at the con
 ```
 eJSLModel "Conference" {
     eJSL part: CMS Extension {
-        entities {...}    // data modelling
-        pages {...}       // interaction modelling
-        extensions {...}  //extension modelling 
+        entities {...}    // Data modelling
+        pages {...}       // Interaction modelling
+        extensions {...}  // Extension modelling 
     }
 }
 
 ```
 
-In order to generate a deployable Joomla extension, all model parts have to be defined. The entity section contains the whole data modelling of your project. It allows the definition of data entites with typed attributes and references to attributes of other entities.
+In order to generate a deployable Joomla extension, all model parts have to be defined. The entity section contains the whole data modelling of your project. It allows the definition of data entities with typed attributes and references to attributes of the other entities.
 
 ***
 
-The entities part of the conference model consits of data entities which are required for a simple conference:
+The entities part of the conference model consists of data entities which are required for a simple conference:
 
 ```
 entities {
@@ -59,7 +59,7 @@ entities {
     Entity Programme {...}
 }
 ```
-All **entities** must have unique identifiers to allow cross-references within the model file. For each entitiy, **attributes** can be added. These attributes must be defined with a **type**. The language provides a set of type abstractions like Text, Short_Text, Boolean, Integer, Date, or File. For these types, a sophisticated type mapping is processed during code generation. However, it is also possible to define own types, which can be assigned during an attribute definition. For further reading, see the [type documentation](#types) below.
+All **entities** must have unique identifiers to allow cross-references within the model file. For each entity, **attributes** can be added. These attributes must be defined with a **type**. The language provides a set of type abstractions like Text, Short_Text, Boolean, Integer, Date, or File. For these types, a sophisticated type mapping is processed during code generation. However, it is also possible to define own types, which can be assigned during an attribute definition. For further reading, see the [type documentation](#types) below.
 
 ```
 Entity Participant {                 // Entity definition with identifier
@@ -96,7 +96,7 @@ Entity Talk {
             ReferencedEntity = Participant                   // Identifier of the referenced entity
             ReferencedEntityAttribute = Participant.name     // Referenced attribute
             min = 1                                          // Reference multiplicity (lower)
-            max = 1                                         // multiplicity (upper)
+            max = 1                                          // Multiplicity (upper)
         }
     }  
 }
@@ -109,7 +109,7 @@ Entity Talk {
 
 The **pages** section represents an abstraction layer for the MVC structure of Joomla components. I.e. an explicit definition of models, views, and controllers is not required. 
 
-If you don't want to change much in the generated code and use the views as they are, we reccomend to make use of the two dynamic page types `IndexPage` and `DetailsPage`. 
+If you don't want to change much in the generated code and use the views as they are, we recommend to make use of the two dynamic page types `IndexPage` and `DetailsPage`. 
 
 ```
 pages {
@@ -123,7 +123,7 @@ pages {
     DetailsPage Session {...}
 }
 ```
-Index pages can be used to define the rpresentation of one or more entity attributes in a tabular list view. If a page is then referenced by a component (in the extension modelling part), all the requiredm MVC code will be generated. If you want to reuse the page for frontend and backend of your component, you can reference it several times in the extension definition. Additionally, you can refer the same page by a module to use it for the module representation. This is one of the biggest strengths of JooMDD in contrast to other code generators. 
+Index pages can be used to define the representation of one or more entity attributes in a tabular list view. If a page is then referenced by a component (in the extension modelling part), all the required MVC code will be generated. If you want to reuse the page for frontend and backend of your component, you can reference it several times in the extension definition. Additionally, you can refer the same page by a module to use it for the module representation. This is one of the biggest strengths of JooMDD in contrast to other code generators. 
 
 <img src="img/conference_J3_backend_page.png" alt="Conference backend list" style="max-width:100%">
 
@@ -133,7 +133,7 @@ IndexPage Participants {                // Will be interpreted as list view
     representation columns = Participant.name, Participant.address, Participant.affiliation             // (optional) selection of list columns
     filters = Participant.name, Participant.affiliation     // Filters for Search tools support
     links {                             // Link definition to enable interaction between views
-        InternalcontextLink Details {   //
+        InternalcontextLink Details {   
             target = Participant                                    // Link to details page
             linked attribute = Participant.name                     // Attribute which is used as link
             linkparameters {
@@ -143,7 +143,7 @@ IndexPage Participants {                // Will be interpreted as list view
     }
 }
 ```
-Pages require at least one entity as reference, which will then be represented in the view. If desired, the table `representatin columns` of the view can be specified. However, this step is optional - If no columns specified, all entity attributes will be shown as columns. If required, you can specify `filters` for the fields, which later can be used as part of the Seach Tools (filters).
+Pages require at least one entity as reference, which will then be represented in the view. If desired, the table `representation columns` of the view can be specified. However, this step is optional - If no columns specified, all entity attributes will be shown as columns. If required, you can specify `filters` for the fields, which later can be used as part of the Seach Tools (filters).
 
 To enable interaction between views, `links` can be specified. All you need is to specify the target page and the field which will act as link. In the example above, the participant's `Name` field is used as link to the `Participant` page, which is a details page (see below). The eJSL language provides static and context links, whereas context links allow the definition of request parameters. In the example above the participants name is specified as request parameter for the link. So, it will be used as GET parameter for the link(additionally to an autogenerated ID parameter).
 
@@ -170,7 +170,7 @@ DetailsPage Pattern {
     }
 }
 ```
-The specification of a `DetailsPage` is more frugal - particularly if they are used together with IndexPages. All they need is the entity ahich is represented and a link back to an IndexPage to support actions like **Close** and **Save & Close** in a generated component.
+The specification of a `DetailsPage` is more frugal - particularly if they are used together with IndexPages. All they need is the entity which is represented and a link back to an IndexPage to support actions like **Close** and **Save & Close** in a generated component.
 
 In addition to the `IndexPage` and `DetailsPage` page types, the eJSL language provides further page definitions. For further information see the [Interaction modelling](#interaction-modelling) section below.
 
@@ -228,7 +228,7 @@ extensions {
 - **Some keywords are reserved in the language**. In this case, the validator throws an validation error, if they are used as identifier. However, you can **use the caret operator (^) as prefix** to allow their usage. The generator then removes the prefix during code compilation to ensure clean identifiers in the generated extension code. <br><br>
   `Attribute template` -> Validation Error <br>
   `Attribute ^template` -> Valid model
-- 
+
 ### Data modelling ###
 #### Entities ####
 #### Attributes ####
