@@ -26,7 +26,7 @@ To do: Links to the respective wiki sites
 # Contribution
 Please read through our [contribution guidelines](#) and feel free to open [new issues]().
 
-A hard requirement for contribution as infrastructure developer is the willingness to work with the Eclipse IDE and at least understand the [Xtend](https://www.eclipse.org/xtend/) language, which is a Java-based dialect. In addition, knowledge in grammar definitions with [Xtext](https://www.eclipse.org/Xtext/) and constraint implementation with the [Object Constraint Language (OCL)](https://www.omg.org/spec/OCL/) is very helpful for contributing the project.
+A hard requirement for contribution as infrastructure developer is the willingness to work with the Eclipse IDE and at least understand the [Xtend](https://www.eclipse.org/xtend/) language, which is a Java-based dialect. In addition, knowledge in grammar definitions with [Xtext](https://www.eclipse.org/Xtext/) and constraint implementation with the [Object Constraint Language (OCL)](https://www.omg.org/spec/OCL/) is very helpful for contributing to the project.
 
 # Versioning
 In this project, we follow the [Semantic Versioning Guidelines](https://semver.org/). I.e. we use major, minor, and patch increments in the form MAJOR.MINOR.PATCH for our plugin versions.
