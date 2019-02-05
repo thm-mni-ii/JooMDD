@@ -200,7 +200,7 @@ DetailPageField returns DetailPageField:
 	{DetailPageField}
 	attribute = [Attribute|QualifiedName] 
 	'{'
-		'type =' (htmltype = HTMLTypes)
+		(('html type =' (htmltype = HTMLTypes)) | ('field type =' (fieldtype = [Attribute|QualifiedName])))
 		 ('values' '{' values+=KeyValuePair (',' values+=KeyValuePair)* '}')?
 		('field attributes' '{' (attributes+=KeyValuePair (',' attributes+=KeyValuePair)*)? '}')?
 	'}'
