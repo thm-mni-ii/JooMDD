@@ -87,7 +87,7 @@ Please visit the [eJSL language guide](eJSLGuide.md) for an overview of the lang
 ## 3. Code generation ##
 When you save your model, the code generator creates your modelled Joomla extensions within the project's `src-gen` folder. The extensions are installable within **Joomla 3.x** web sites and don't need any additional line of code. However, if you know what you do, you can extend the generated code through individual features. 
 
-**CautionBut beware**: All the code within the `src-gen` folder becomes **completely overwritten**, when you change your model and save it. Therefore, we recommend to copy generated extensions to another folder within your project, where you can extend them without loosing them after a new code generation. Another and cleaner option is using a 
+**Caution**: All the code within the `src-gen` folder becomes **completely overwritten**, when you change your model and save it. Therefore, we recommend to copy generated extensions to another folder within your project, where you can extend them without loosing them after a new code generation. Another and cleaner option is using a 
 versioning tool like git to store your individual added code.
 
 The generated code is split into two parts.  To do: Further explanation.
