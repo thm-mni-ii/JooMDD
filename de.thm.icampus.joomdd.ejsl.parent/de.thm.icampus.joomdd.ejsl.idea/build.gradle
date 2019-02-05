@@ -70,16 +70,16 @@ task parsePhpStormUpdatePluginsXml{
 		def xmlText = xmlFile.getText()
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
-		
+		def xml = '''name>JooMDD</name>'''
 		list.plugin[0].replaceNode{	
-			plugin(name:"JooMDD", 
+			plugin(
 				id:"de.thm.icampus.joomdd.ejsl.phpstorm", 
 				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/"
 				 + "PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"
 				 + version +".zip",
 				version: version){}
 		}
-		
+		list.plugin[0].appendNode(xml)
 		def writer = new FileWriter(xmlFile)
 		
 		def printer = new XmlNodePrinter(new PrintWriter(writer))
@@ -97,14 +97,14 @@ task parseIntelliJUpdatePluginsXml{
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
-
+		def xml = '''name>JooMDD</name>'''
 		list.plugin[0].replaceNode{	
-			plugin(name:"JooMDD", 
+			plugin(
 				id:"de.thm.icampus.joomdd.ejsl.idea", 
 				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+ version +".zip",
 				version: version ){}
 		}
-
+		list.plugin[0].appendNode(xml)
 		def writer = new FileWriter(xmlFile)
 
 		def printer = new XmlNodePrinter(new PrintWriter(writer))
