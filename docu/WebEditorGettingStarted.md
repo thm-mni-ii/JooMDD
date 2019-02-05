@@ -2,6 +2,7 @@
 
 Contents:
 - [Getting Started with the Web Editor](#getting-started-with-the-web-editor)
+  - [The eJSL language](#the-ejsl-language)
   - [Become familiar with the editor](#become-familiar-with-the-editor)
   - [Create a conference component](#create-a-conference-component)
     - [1. Load the conference example model](#1-load-the-conference-example-model)
@@ -15,6 +16,13 @@ Contents:
     - [3. Augmentation of the legacy model](#3-augmentation-of-the-legacy-model)
     - [4. Augmentation of the legacy model](#4-augmentation-of-the-legacy-model)
     - [5. Generation of the new module](#5-generation-of-the-new-module)
+
+## The eJSL language ##
+ <img src="img/eJSL_Logo_trans.png" alt="eJSLLogo" height="100" style="max-width:100%;float:right;">
+ 
+The **eJSL** language is the key component of the JooMDD infrastructure. It can be used to create semantic extension models for the Joomla CMS which can be used e.g. for automatic code generation.
+
+eJSL supports the definition of several Joomla extension types like components, modules, plugins, and libraries. Please visit the [eJSL language guide](eJSLGuide.md) for an overview of the language and how to use it for extension modelling. 
 
 ##  Become familiar with the editor ##
 Go to: https://icampus.thm.de:9443/editor.html to open the JooMDD web editor.
