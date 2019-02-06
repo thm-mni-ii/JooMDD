@@ -2,6 +2,8 @@
 
 ## Setup Development Environment ##
 
+TODO: Window -> Preferences -> General -> Workspace: Text file encoding: UTF-8; New text file line delimiter: Unix
+
 1. <img src="img/eclipse_import_dialog.png" alt="Eclipse Open Import Dialog">
 
 2. <img src="img/eclipse_clone_repository.png" alt="Eclipse Select Import from Git">
