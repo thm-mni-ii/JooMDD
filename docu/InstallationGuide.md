@@ -1,12 +1,11 @@
 # Installation of JooMDD #
-Please follow this installation guide to use JooMDD within [Eclipse](#eclipse) and [PhpStorm](#PhpStorm). 
+Please follow this installation guide to use JooMDD within [Eclipse](#eclipse), [PhpStorm](#PhpStorm), and [IntelliJ IDEA](#intellij-idea). 
 
 Contents:
 - [Installation of JooMDD](#installation-of-joomdd)
   - [Eclipse](#eclipse)
-  - [IntelliJ IDEA](#intellij-idea)
   - [PhpStorm](#phpstorm)
-      - [Installation steps:](#installation-steps)
+  - [IntelliJ IDEA](#intellij-idea)
 
 ## Eclipse ##
 Install the JooMDD tools through the use of the following update site within the Eclipse update manager.
@@ -39,17 +38,12 @@ Install the JooMDD tools through the use of the following update site within the
 
 7. After the restart, the plugin can be used to create your Joomla extension. Please see the [Getting started](GettingStarted.md) and [eJSL guide](eJSLGuide.md) documentation.
 
-## IntelliJ IDEA ##
-Install the JooMDD tools through the use of the following update site within IntelliJ's plugin manager. As a precondition you have to install
-the Xtext IDEA Core from the IntelliJ repositories.
-
-<img src="img/ph" alt="" height="300" style="max-width:100%;float:right;">
-
 ## PhpStorm ##
-Install the JooMDD tools through the use of the following update site within PhpStorm's plugin manager. 
-
-<img src="img/ph" alt="" height="300" style="max-width:100%;float:right;">
-#### Installation steps: ####
 1. Install the *Xtext IDEA Core* and JooMDD plugin from our repository using the following JooMDD update site (alternatively you can download the plugins from this repository and install them manually into your IDE):
 JooMDD update site (PhpStorm): <https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/updatePlugins.xml>.
 2. Restart PhpStorm.
+
+## IntelliJ IDEA ##
+1. Install the *Xtext IDEA Core* and JooMDD plugin from our repository using the following JooMDD update site (alternatively you can download the plugins from this repository and install them manually into your IDE):
+JooMDD update site (IntelliJ IDEA): <https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJIDEA/ideaRepository/updatePlugins.xml>.
+2. Restart IntelliJ.
