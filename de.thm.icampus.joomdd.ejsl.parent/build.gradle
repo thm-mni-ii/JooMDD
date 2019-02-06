@@ -432,14 +432,14 @@ task updateEJSLUpdateSiteVersion{
 	group ('JooMDD_Help_Task')
 	
 	doLast{	
-		def xmlFile = file ('../releases/Eclipse/JooMDDUpdateSite/site.xml') ///de.thm.icampus.joomdd.ejsl.ui/pom.xml
+		def xmlFile = file ('../updateSites/Eclipse/site.xml') ///de.thm.icampus.joomdd.ejsl.ui/pom.xml
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
 		
 		list.feature[0].replaceNode{
 			feature(
-				url:"features/de.thm.icampus.joomdd.ejsl.sdk_"+version+".jar",
+				url:"features/de.thm.icampus.joomdd.ejsl.sdk-"+version+".jar",
 				id:"de.thm.icampus.joomdd.ejsl.sdk",
 				version : version,
 			){
@@ -497,11 +497,11 @@ task cleanEJSLUpdateSite(type: Delete){
 	description 'delete the old plugin of the JooMDDUpdateSite'
 	group ('JooMDD_Help_Task')
 	
-	delete('../../releases/Eclipse/JooMDDUpdateSite/features/')
-	delete('../../releases/Eclipse/JooMDDUpdateSite/plugins/')
+	delete('../updateSites/Eclipse/features/')
+	delete('../updateSites/Eclipse/plugins/')
 	
-	delete('../../releases/Eclipse/JooMDDUpdateSite/content.jar')
-	delete('../../releases/Eclipse/JooMDDUpdateSite/artifacts.jar')
+	//delete('../updateSites/Eclipse/content.jar')
+	//delete('../updateSites/Eclipse/artifacts.jar')
 }
 
 
@@ -521,20 +521,103 @@ task copyEclPluginToUpdateSite(type: Copy){
 	
 	from('./de.thm.icampus.joomdd.ejsl.repository/target/repository/')	
 	
-	into('../../releases/Eclipse/JooMDDUpdateSite/')
+	into('../updateSites/Eclipse/')
 }
 
 
+task copyEclPluginToReleasesTMP(){
+	copy {
+       from './de.thm.icampus.joomdd.ejsl.ide/build/libs/'
+       into '../updateSites/Eclipse/plugins/'
+    }
+	
+	copy {
+       from './de.thm.icampus.joomdd.ejsl.ide/build/libs/'
+       into '../updateSites/Eclipse/plugins/'
+    }
+       
+	copy {
+       from './de.thm.icampus.joomdd.ejsl/build/libs/'
+       into '../updateSites/Eclipse/plugins/'
+    }
+    
+    copy {
+       from './de.thm.icampus.joomdd.ejsl.ui/img'
+       into '../updateSites/tmp/img'
+    }
+    
+    copy {
+       from './de.thm.icampus.joomdd.ejsl.ui/templates'
+       into '../updateSites/tmp/templates'
+    }
+    
+    copy {
+       from './de.thm.icampus.joomdd.ejsl.ui/plugin.xml'
+       into '../updateSites/tmp'
+    }
+    
+    copy {
+       from './de.thm.icampus.joomdd.ejsl.ui/target/classes/'
+       into '../updateSites/tmp'
+    }
+    
+    copy {
+       from './de.thm.icampus.joomdd.ejsl.ui/META-INF'
+       into '../updateSites/tmp/META-INF'
+    }
+}
+
+//create a single Jar with all dependencies
+task createPluginUIJar(type: Jar) {
+	def xmlFile = file ('pom.xml')
+	def xmlText = xmlFile.getText()	
+	def parser = new XmlParser()	
+	def list = parser.parseText(xmlText)
+
+	def lastversion = list.version[0].text()	
+
+	destinationDir = file("../updateSites/Eclipse/plugins")
+    baseName = 'de.thm.icampus.joomdd.ejsl.ui'
+    version = lastversion
+    from "../updateSites/tmp"
+}
 
 
-task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions","antBuildEclipse", "copyEclPluginToUpdateSite"]){
+//create a single Jar with all dependencies
+task createFeatureSDKJar(type: Jar) {
+	def xmlFile = file ('pom.xml')
+	def xmlText = xmlFile.getText()	
+	def parser = new XmlParser()	
+	def list = parser.parseText(xmlText)
+
+	def lastversion = list.version[0].text()	
+
+	destinationDir = file("../updateSites/Eclipse/features")
+    baseName = 'de.thm.icampus.joomdd.ejsl.sdk'
+    version = lastversion
+    from "./de.thm.icampus.joomdd.ejsl.sdk/feature.xml"
+}
+
+task createEclPluginToReleases(dependsOn:["copyEclPluginToReleasesTMP", "createPluginUIJar", "createFeatureSDKJar"]) {
+	description ''
+	group ('JooMDD_Help_Task')
+	
+	createPluginUIJar.mustRunAfter copyEclPluginToReleasesTMP
+	
+	doLast {
+		delete('../updateSites/tmp/')
+	}
+}
+
+task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions","antBuildEclipse", "copyEclPluginToUpdateSite", "createEclPluginToReleases"]){
 	description 'Run All Eclipse Tasks'
 	group ('JooMDD_Help_Task')
 	
 	
 	cleanEJSLUpdateSite.mustRunAfter		updateAllVersions
-	antBuildEclipse.mustRunAfter			updateAllVersions	
-	copyEclPluginToUpdateSite.mustRunAfter	antBuildEclipse
+	antBuildEclipse.mustRunAfter			updateAllVersions		
+	copyEclPluginToUpdateSite.mustRunAfter	antBuildEclipse	
+	createEclPluginToReleases.mustRunAfter	antBuildEclipse
 	
 	doLast {
         println 'Eclipse plugins created '

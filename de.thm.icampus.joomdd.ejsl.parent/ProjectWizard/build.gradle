@@ -46,10 +46,10 @@ def version =  list.version[0].text() //version of Project
 def buildPath = "build/"
 def pluginSandbox = "build/idea-sandbox/plugins/"
 def ideabuildpath = "../de.thm.icampus.joomdd.ejsl.idea/build/distributions/de.thm.icampus.joomdd.ejsl.idea-"+version+".zip"
-def xtextIntelliJSource = "../../../releases/IntelliJ/Xtext.idea-2.16.0.zip"
-def xtextPhpStormSource = "../../../releases/PhpStorm/Xtext.idea-2.16.0.zip"
-def phpStormeJSLPlugin = "../../../releases/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+version+".zip"
-def intelliJeJSLPlugin = "../../../releases/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+version+".zip"
+def xtextIntelliJSource = "../../updateSites/IntelliJ/Xtext.idea-2.16.0.zip"
+def xtextPhpStormSource = "../../updateSites/PhpStorm/Xtext.idea-2.16.0.zip"
+def phpStormeJSLPlugin = "../../updateSites/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+version+".zip"
+def intelliJeJSLPlugin = "../../updateSites/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+version+".zip"
 def templatePath = "../de.thm.icampus.joomdd.ejsl.ui/templates/"
 
 task cleanXtextPlugin(type: Delete){
