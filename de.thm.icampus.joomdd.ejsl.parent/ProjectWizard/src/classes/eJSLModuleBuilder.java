@@ -24,7 +24,6 @@ public class eJSLModuleBuilder extends ModuleBuilder {
         return eJSLModuleType.getInstance();
     }
 
-
     @Override
     public ModuleWizardStep getCustomOptionsStep(final WizardContext context, final Disposable parentDisposable) {
         return new eJSLWizardStep();

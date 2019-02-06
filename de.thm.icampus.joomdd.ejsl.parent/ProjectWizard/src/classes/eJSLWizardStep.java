@@ -40,7 +40,6 @@ public class eJSLWizardStep extends ModuleWizardStep {
         outputPath = path;
     }
 
-
     public String getPreviewFromFile(String filename){
 
         StringBuilder preview = new StringBuilder();
