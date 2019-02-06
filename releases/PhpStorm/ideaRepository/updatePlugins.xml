@@ -1,5 +1,5 @@
 <plugins>
-  <plugin id="de.thm.icampus.joomdd.ejsl.phpstorm" url="https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-0.9.1.zip" version="0.9.1">
+  <plugin id="de.thm.icampus.joomdd.ejsl.phpstorm" url="https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-0.10.1.zip" version="0.10.1">
     <name>JooMDD</name>/>
   </plugin>
   <plugin id="org.eclipse.xtext.idea" url="https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/Xtext.idea-2.16.0.zip" version="2.16.0">

@@ -1,5 +1,5 @@
 <site>
-  <feature url="features/de.thm.icampus.joomdd.ejsl.sdk_0.9.1.jar" id="de.thm.icampus.joomdd.ejsl.sdk" version="0.9.1">
+  <feature url="features/de.thm.icampus.joomdd.ejsl.sdk_0.10.1.jar" id="de.thm.icampus.joomdd.ejsl.sdk" version="0.10.1">
     <category name="JooMDD"/>
   </feature>
   <category-def name="JooMDD" label="Model Driven Development of Joomla Extensions">

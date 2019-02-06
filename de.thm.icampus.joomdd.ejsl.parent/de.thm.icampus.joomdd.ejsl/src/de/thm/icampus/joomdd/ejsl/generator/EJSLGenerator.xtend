@@ -24,6 +24,7 @@ import java.util.regex.Matcher
 import de.thm.icampus.joomdd.ejsl.util.Config
 import java.io.InputStream
 import de.thm.icampus.joomdd.ejsl.util.UserConfig
+import java.io.IOException
 
 /**
  * This is the main class of the code generator of JooMDD. 
@@ -55,8 +56,20 @@ class EJSLGenerator extends AbstractGenerator {
             return
         }
         if (fsa.isFile("generator.properties")) {
-            var InputStream is = fsa.readBinaryFile("generator.properties")
-            config.load(is)
+        	var InputStream is = null
+        	try
+        	{
+	            is = fsa.readBinaryFile("generator.properties")
+	            config.load(is)
+	        }
+	        catch (IOException e) {
+	        	e.printStackTrace
+	        }
+	        finally {
+	        	if (is !== null) {
+            		is.close();
+	        	}
+	        }
         }
     }
 
@@ -144,11 +157,11 @@ class EJSLGenerator extends AbstractGenerator {
         fsa.generateFile("status", "Code successfully generated.")
     }
 
-    override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
-        super.afterGenerate(input, fsa, context)
-        fsa.generateFile("generator.properties", getWriteProperties)
-        config = new Properties()
-    }
+//    override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
+//        super.afterGenerate(input, fsa, context)
+//        fsa.generateFile("generator.properties", getWriteProperties)
+//        config = new Properties()
+//    }
 
     def Map<String, OutputConfiguration> mapOutputConfigurations(String path) {
         var OutputConfiguration defaultOutput;
