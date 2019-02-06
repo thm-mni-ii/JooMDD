@@ -1,0 +1,125 @@
+eJSLModel "GameModel"{
+	eJSL part: CMS Extension{
+		entities{
+			Entity Category{
+				attributes{
+					Attribute name{
+						type = Short_Text
+      Unique attribute with ID
+					}
+					Attribute game{
+						type = Short_Text
+					}
+				}
+				
+			}
+			Entity Game{
+				attributes{
+					Attribute name{
+						type = Short_Text
+      Unique attribute with ID
+					}
+					Attribute rezension{
+						type = Text
+					}
+					Attribute averagePrice{
+						type = Short_Text
+					}
+					Attribute category{
+						type = Short_Text
+					}
+				}
+				references{
+					Reference{
+						EntityAttribute = category
+						EntityAttribute = Category
+						ReferencedEntityAttribute = Category.name
+						min = 1
+						max = 1
+					}
+				}
+			}
+		}
+		pages{
+			IndexPage Games{
+				*Entities Game
+				representation columns = Game.name, Game.category
+				filters = Game.name, Game.category
+				links{
+					InternalcontextLink Details{
+						target = GameDetails 
+      linked attribute = Game.name
+						linkparameters{
+							Parameter name = *Attribute "Game.name"
+						}
+					}
+				}
+			}
+			DetailsPage GameDetails{
+				*Entities Game
+				links{
+					InternalLink Index{
+						target = Games linked attribute = Game.name
+					}
+				}
+			}
+			IndexPage Categories{
+				*Entities Category
+				representation columns = Category.name
+				filters = Category.name
+				links{
+					InternalcontextLink Details{
+						target = CategoryDetails linked attribute = Category.name
+						linkparameters{
+							Parameter name = *Attribute "Category.name"
+						}
+					}
+				}
+			}
+			DetailsPage CategoryDetails{
+				*Entities Category
+				links{
+					InternalLink Index{
+						target = Categories linked attribute = Category.name
+					}
+				}
+			}
+		}
+		extensions{
+			Component GameRanking{
+				Manifestation{
+					authors{
+						Author "Peter Janauschek"{
+							authoremail = "peter.janauschek@mni.thm.de"
+						}
+					}
+     copyright = "Copyright (C) 2005 - 2016 Open Source Matters, Inc. All right reserved."
+     license = "GNU General Public License version 2 or later; see LICENSE.txt"
+     version = "1.0.1"
+				}
+				languages{
+					Language de-DE{
+					}
+					Language en-GB{
+					}
+				}
+				sections{
+					Frontend section{
+						*Pages{
+							*Page : Games
+							*Page : GameDetails
+						}
+					}
+					Backend section{
+						*Pages{
+							*Page : Games
+							*Page : GameDetails
+							*Page : Categories
+							*Page : CategoryDetails
+						}
+					}
+				}
+			}
+		}
+	}
+}

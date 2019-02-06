@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<templateList xmlns="http://www.example.org/TemplateList">
+    <template>
+        <name>Empty</name>
+        <description>Start all new</description>
+        <src>empty.ejsl</src>
+    </template>
+    <template>
+        <name>Conference</name>
+        <description>Conference Model consisting of participants, talks, rooms, and agendaitems.</description>
+        <src>conference.eJSL</src>
+    </template>
+    
+    <template>
+    	<name> Simple Model</name>
+    	<description>Abstract model for simple start.</description>
+    	<src>Model.eJSL</src>
+    </template>
+     <template>
+    	<name>Game Model</name>
+    	<description>Abstract model for simple start.</description>
+    	<src>Simple.eJSL</src>
+    </template>
+     <template>
+        <name>Shop</name>
+        <description>This is a complex example, this Model is a Shop System with Product, Order, supplier, customer and more... </description>
+        <src>Shop.eJSL</src>
+    </template>
+     <template>
+        <name>Course Planning</name>
+        <description>This is a complex example, this Model is a course planning in german with student, lessons and more .. </description>
+        <src>brueckenKurs.eJSL</src>
+    </template>
+    <!-- <template>
+    	<name>Weblinks</name>
+    	<description>Model of Joomla's Weblinks extensions</description>
+    	<src>Weblinks.eJSL</src>
+    </template>
+    <template>
+    	<name>New example model</name>
+    	<description>A new example model template </description>
+    	<src>newModel.eJSL</src>
+    </template>  -->
+</templateList>

@@ -16,10 +16,11 @@ apply plugin: 'eclipse'
 sourceSets {
     main {
         java {
-            srcDirs = ['src/main/java']
+            srcDirs = ['src']
+            outputDir = file('build/classes')            
         }
         resources {
-            srcDirs = ['src/main/resources']
+            srcDirs = ['resources']   
         }
 		
     }
@@ -45,8 +46,8 @@ def version =  list.version[0].text() //version of Project
 def buildPath = "build/"
 def pluginSandbox = "build/idea-sandbox/plugins/"
 def ideabuildpath = "../de.thm.icampus.joomdd.ejsl.idea/build/distributions/de.thm.icampus.joomdd.ejsl.idea-"+version+".zip"
-def xtextIntelliJSource = "../../../releases/IntelliJ/org.eclipse.xtext.idea-2.10.0.zip"
-def xtextPhpStormSource = "../../../releases/PhpStorm/xtext_plugin/PhpStorm16/Xtext.idea-2.10.0WithDependencies2016.1.2-.zip"
+def xtextIntelliJSource = "../../../releases/IntelliJ/Xtext.idea-2.16.0.zip"
+def xtextPhpStormSource = "../../../releases/PhpStorm/Xtext.idea-2.16.0.zip"
 def phpStormeJSLPlugin = "../../../releases/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+version+".zip"
 def intelliJeJSLPlugin = "../../../releases/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+version+".zip"
 def templatePath = "../de.thm.icampus.joomdd.ejsl.ui/templates/"
@@ -107,7 +108,7 @@ task deleteTemplates(type: Delete){
 	description 'delete old Templates'
 	group ('JetBrains_Wizard_Help_Task')
 	
-	delete "src/main/resources/templates/"
+	delete "resources/templates/"
 	
 }
 
@@ -116,7 +117,7 @@ task copyNewTemplates(type: Copy, dependsOn:'deleteTemplates'){
 	group ('JetBrains_Wizard_Help_Task')
 	
 	from templatePath
-	into "src/main/resources/templates/"	
+	into "resources/templates/"	
 }
 
 task createIntelliJWizardPluginSource(type: Copy, dependsOn:['copyNewTemplates','buildPlugin','deleteOldWizardPlugin']){
@@ -126,7 +127,7 @@ task createIntelliJWizardPluginSource(type: Copy, dependsOn:['copyNewTemplates',
 	compileJava.mustRunAfter	copyNewTemplates
 
     from buildPath + 'resources/main'
-    from buildPath + 'classes/main'
+    from buildPath + 'classes'
 	into buildPath + 'wizardSources'
 }
 
