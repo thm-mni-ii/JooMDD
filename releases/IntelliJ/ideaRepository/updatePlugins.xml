@@ -2,4 +2,7 @@
   <plugin id="de.thm.icampus.joomdd.ejsl.idea" url="https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-0.9.1.zip" version="0.9.1">
     <name>JooMDD</name>/>
   </plugin>
+  <plugin id="org.eclipse.xtext.idea" url="https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJ/Xtext.idea-2.16.0.zip" version="2.16.0">
+    <name>Xtext IDEA Core</name>
+  </plugin>
 </plugins>
