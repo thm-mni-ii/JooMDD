@@ -27,13 +27,7 @@ subprojects {
 		
 		group = 'de.thm.icampus.joomdd.ejsl'
 	
-		// Load version from pom.xml file
-		def xmlFile = file ('../pom.xml')
-		def xmlText = xmlFile.getText()
-		def parser = new XmlParser()
-		def list = parser.parseText(xmlText)
-	
-		version =  list.version[0].text()	
+		version = getLastVersion()
 	
 		sourceCompatibility = '1.8'
 		targetCompatibility = '1.8'
@@ -53,12 +47,12 @@ task incrementPatchLevelVersionParent{
 	description 'Increment the Patch level Version for the Project'
 	group ('JooMDD_Help_Task')
 
-	doLast{	
-		def xmlFile = file ('pom.xml')
-		def xmlText = xmlFile.getText()	
-		def parser = new XmlParser()	
+	doLast{		
+		def xmlFile = file('pom.xml')
+		def xmlText = xmlFile.getText()
+		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
-
+				
 		def lastversion = list.version[0].text()		
 		
 		def a = 0
@@ -102,12 +96,12 @@ task incrementMinorVersionParent{
 	description 'Increment the Minor Version for the Project in parent pom'
 	group ('JooMDD_Help_Task')
 
-	doLast{	
-		def xmlFile = file ('pom.xml')
-		def xmlText = xmlFile.getText()	
-		def parser = new XmlParser()	
+	doLast{
+		def xmlFile = file('pom.xml')
+		def xmlText = xmlFile.getText()
+		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
-
+				
 		def lastversion = list.version[0].text()
 		
 		def a = 0
@@ -151,11 +145,11 @@ task incrementMajorVersionParent{
 	group ('JooMDD_Help_Task')
 
 	doLast{
-		def xmlFile = file ('pom.xml')
+		def xmlFile = file('pom.xml')
 		def xmlText = xmlFile.getText()
-		def parser = new XmlParser()	
+		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
-
+				
 		def lastversion = list.version[0].text()	
 		
 		def a = 0
@@ -263,12 +257,7 @@ task loadVersion{
 	description 'Update the Version for the Project ejsl'
 	group ('JooMDD_Help_Task')
 	
-	def xmlFile = file ('pom.xml')
-	def xmlText = xmlFile.getText()
-	def parser = new XmlParser()
-	def list = parser.parseText(xmlText)
-
-	version =  list.version[0].text()	
+	version = getLastVersion()
 
 }
 
@@ -515,66 +504,38 @@ task runAntBuild(dependsOn: "antBuildEclipse"){
 	
 }
 
-task copyEclPluginToUpdateSite(type: Copy){
-	description 'Update the Version for the Project'
-	group ('JooMDD_Help_Task')
-	
-	from('./de.thm.icampus.joomdd.ejsl.repository/target/repository/')	
-	
-	into('../updateSites/Eclipse/')
+task copyEclPluginToReleasesTMP(type: Copy, dependsOn:['copyUIImgTMP', 'copyUITemplatesTMP', 'copyUIMetaInfTMP', 'copyEclPluginToPlugin']){
+    from './de.thm.icampus.joomdd.ejsl.ui/plugin.xml'
+    from './de.thm.icampus.joomdd.ejsl.ui/target/classes/'
+    into '../updateSites/tmp'
 }
 
+task copyEclPluginToPlugin(type: Copy){
+	def version = getLastVersion()
+	from './de.thm.icampus.joomdd.ejsl.ide/build/libs/'
+   	from './de.thm.icampus.joomdd.ejsl/build/libs/'
+   	include '*' + version + '*.jar*'
+   	into '../updateSites/Eclipse/plugins'
+}
 
-task copyEclPluginToReleasesTMP(){
-	copy {
-       from './de.thm.icampus.joomdd.ejsl.ide/build/libs/'
-       into '../updateSites/Eclipse/plugins/'
-    }
-	
-	copy {
-       from './de.thm.icampus.joomdd.ejsl.ide/build/libs/'
-       into '../updateSites/Eclipse/plugins/'
-    }
-       
-	copy {
-       from './de.thm.icampus.joomdd.ejsl/build/libs/'
-       into '../updateSites/Eclipse/plugins/'
-    }
-    
-    copy {
-       from './de.thm.icampus.joomdd.ejsl.ui/img'
-       into '../updateSites/tmp/img'
-    }
-    
-    copy {
+task copyUIImgTMP(type: Copy){
+	from './de.thm.icampus.joomdd.ejsl.ui/img'
+    into '../updateSites/tmp/img'
+}
+
+task copyUITemplatesTMP(type: Copy){
        from './de.thm.icampus.joomdd.ejsl.ui/templates'
        into '../updateSites/tmp/templates'
-    }
-    
-    copy {
-       from './de.thm.icampus.joomdd.ejsl.ui/plugin.xml'
-       into '../updateSites/tmp'
-    }
-    
-    copy {
-       from './de.thm.icampus.joomdd.ejsl.ui/target/classes/'
-       into '../updateSites/tmp'
-    }
-    
-    copy {
+}
+
+task copyUIMetaInfTMP(type: Copy){
        from './de.thm.icampus.joomdd.ejsl.ui/META-INF'
        into '../updateSites/tmp/META-INF'
-    }
 }
 
 //create a single Jar with all dependencies
 task createPluginUIJar(type: Jar) {
-	def xmlFile = file ('pom.xml')
-	def xmlText = xmlFile.getText()	
-	def parser = new XmlParser()	
-	def list = parser.parseText(xmlText)
-
-	def lastversion = list.version[0].text()	
+	def lastversion = getLastVersion()
 
 	destinationDir = file("../updateSites/Eclipse/plugins")
     baseName = 'de.thm.icampus.joomdd.ejsl.ui'
@@ -585,12 +546,7 @@ task createPluginUIJar(type: Jar) {
 
 //create a single Jar with all dependencies
 task createFeatureSDKJar(type: Jar) {
-	def xmlFile = file ('pom.xml')
-	def xmlText = xmlFile.getText()	
-	def parser = new XmlParser()	
-	def list = parser.parseText(xmlText)
-
-	def lastversion = list.version[0].text()	
+	def lastversion = getLastVersion()	
 
 	destinationDir = file("../updateSites/Eclipse/features")
     baseName = 'de.thm.icampus.joomdd.ejsl.sdk'
@@ -609,15 +565,13 @@ task createEclPluginToReleases(dependsOn:["copyEclPluginToReleasesTMP", "createP
 	}
 }
 
-task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions","antBuildEclipse", "copyEclPluginToUpdateSite", "createEclPluginToReleases"]){
+task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions","antBuildEclipse"]){
 	description 'Run All Eclipse Tasks'
 	group ('JooMDD_Help_Task')
 	
 	
 	cleanEJSLUpdateSite.mustRunAfter		updateAllVersions
-	antBuildEclipse.mustRunAfter			updateAllVersions		
-	copyEclPluginToUpdateSite.mustRunAfter	antBuildEclipse	
-	createEclPluginToReleases.mustRunAfter	antBuildEclipse
+	antBuildEclipse.mustRunAfter			updateAllVersions
 	
 	doLast {
         println 'Eclipse plugins created '
@@ -679,14 +633,16 @@ task regenerateXtendGenFolder(dependsOn:['deleteXtendGen','runAntScript','regene
 	JooMDD Deploy
 */
 
-task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", ":ProjectWizard:createIntelliJWizardPluginSource","JooMDDDeployEclipse" ,"de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains"]){
+task JooMDDDeploy(dependsOn:[":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest", ":ProjectWizard:createIntelliJWizardPluginSource","JooMDDDeployEclipse" ,"de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains", "createEclPluginToReleases"]){
 	group ('joomdd')
     description "Create all deployment resources (JetBrains IDE) , prepare Eclipse Deploy "
 
 	tasks.getByPath('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains').mustRunAfter	tasks.getByPath(":ProjectWizard:createIntelliJWizardPluginSource")
     tasks.getByPath(":ProjectWizard:createIntelliJWizardPluginSource").mustRunAfter			tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
-    cleanEJSLUpdateSite.mustRunAfter														tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
     JooMDDDeployEclipse.mustRunAfter														tasks.getByPath(":de.thm.icampus.joomdd.ejsl.tests:runJUnitTest")
+    createEclPluginToReleases.mustRunAfter													JooMDDDeployEclipse
+    createEclPluginToReleases.mustRunAfter													tasks.getByPath('de.thm.icampus.joomdd.ejsl.idea:JooMDDDeployJetBrains')
+    
 	doLast{
 		println "Deployment finished"
 	}
@@ -716,4 +672,15 @@ JetBrainsIDEWithAllPlugins.dependsOn JetBrainsIDEWithAllPlugins2
 task IntelliJWitheJSL(dependsOn:(":de.thm.icampus.joomdd.ejsl.idea:runIdea")){
 	group('joomdd_Live')
 	description 'Create eJSL, add Xtext and run IntelliJ IDEA'
+}
+
+def getLastVersion(){
+	def xmlFile = file('pom.xml')
+	def xmlText = xmlFile.getText()
+	def parser = new XmlParser()
+	def list = parser.parseText(xmlText)
+
+	version =  list.version[0].text()
+
+	return version	
 }
