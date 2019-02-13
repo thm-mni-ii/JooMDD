@@ -1,6 +1,8 @@
-# JooMDD Development Guides#
+# JooMDD Development Guide #
 
-### Setup Development Environment ###
+## Setup Development Environment ##
+
+TODO: Window -> Preferences -> General -> Workspace: Text file encoding: UTF-8; New text file line delimiter: Unix
 
 1. <img src="img/eclipse_import_dialog.png" alt="Eclipse Open Import Dialog">
 

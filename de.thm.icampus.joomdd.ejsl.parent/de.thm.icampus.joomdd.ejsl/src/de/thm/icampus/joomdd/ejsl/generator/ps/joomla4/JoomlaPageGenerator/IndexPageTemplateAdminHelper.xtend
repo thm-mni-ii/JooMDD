@@ -154,13 +154,13 @@ class IndexPageTemplateAdminHelper {
 	        // Filter by User 
 	        $created_by = $this->getState('filter.created_by');
 	        if (!empty($created_by)) {
-	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '$created_by'");
+	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '".$db->escape($created_by)."'");
 	        }
 	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
 	        // Filter by «attr.name» 
 	        $«attr.name» = $this->getState('filter.«attr.name»');
 	        if (!empty($«attr.name»)) {
-	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '$«attr.name»'");
+	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '".$db->escape($«attr.name»)."'");
 	        }
             «ENDFOR»
 	        // Filter by search in attribute

@@ -242,29 +242,5 @@ class EntityValidator extends AbstractDeclarativeValidator {
 					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_UPPER_WRONG_VALUE
 				)
 	 	}
-	  }
-	
-	/**
-	 * Checks if at least one Primary attribute exists in the attributes of an entity
-	 */	
-	@Check
-	def checkPrimaryAttributeExist(Entity entity) {
-		var hasPrimary = false;
-		
-		if (entity.attributes.size != 0) {
-			for (attribute : entity.attributes) {
-    			if(attribute.isunique){
-    				hasPrimary = true;
-    			}
-    		}
-    		if(!hasPrimary){	// if no primary attribute is found
-    			error(
-    					'Attributes must have a primary attribute.',
-    					entity.attributes.get(0),
-    					EJSLPackage.Literals.ATTRIBUTE__NAME,
-    					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_MISSING_PRIMARY_ATTRIBUTE
-    			)
-    		}
-		}	
 	}
 }

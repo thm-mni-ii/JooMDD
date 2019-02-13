@@ -21,25 +21,32 @@ Installable extension packages for Joomla 3.x and Joomla 4.
 To do: Plugin sites
 
 # Documentation
-To do: Links to the respective wiki sites
+- [Installation Guide](docu/InstallationGuide.md)
+- [IDE plugin - Gettting started](docu/GettingStarted.md)
+- [Web editor - Getting Started](docu/WebEditorGettingStarted.md)
+- [How to use the modelling language](docu/eJSLGuide.md)
 
 # Contribution
-Please read through our [contribution guidelines](#) and feel free to open [new issues]().
+Please visit our [contribution guide](docu/Contribute.md) and feel free to open [new issues]().
 
-A hard requirement for contribution as infrastructure developer is the willingness to work with the Eclipse IDE and at least understand the [Xtend](https://www.eclipse.org/xtend/) language, which is a Java-based dialect. In addition, knowledge in grammar definitions with [Xtext](https://www.eclipse.org/Xtext/) and constraint implementation with the [Object Constraint Language (OCL)](https://www.omg.org/spec/OCL/) is very helpful for contributing the project.
+A hard requirement for contribution as infrastructure developer is the willingness to work with the Eclipse IDE and at least understand the [Xtend](https://www.eclipse.org/xtend/) language, which is a Java-based dialect. In addition, knowledge in grammar definitions with [Xtext](https://www.eclipse.org/Xtext/) and constraint implementation with the [Object Constraint Language (OCL)](https://www.omg.org/spec/OCL/) is very helpful for contributing to the project.
 
 # Versioning
 In this project, we follow the [Semantic Versioning Guidelines](https://semver.org/). I.e. we use major, minor, and patch increments in the form MAJOR.MINOR.PATCH for our plugin versions.
 
-Latest versions of JooMDD plugins can be found in the [releases](#) section.
+Latest versions of JooMDD plugins can be found in the [releases](https://github.com/priefyou/JooMDD/releases) section.
 
 # Creators
-**Dennis Priefer:**
-[<i class="fab fa-twitter"></i>](https://twitter.com/Priefyou) [<i class="fab fa-github"></i>](https://github.com/priefyou)
+**Dennis Priefer**
+- [Twitter](https://twitter.com/Priefyou)
+- [Github](https://github.com/priefyou)
 
-**Dieudonne Timma Meyatchie:**
+**Dieudonne Timma Meyatchie**
+- [Github](https://github.com/dieudonnetimma)
 
-**Wolf Rost:**
+**Wolf Rost**
+- [Twitter](https://twitter.com/rost_wolf)
+- [Github](https://github.com/Wolf-Rost)
 
 # License
 

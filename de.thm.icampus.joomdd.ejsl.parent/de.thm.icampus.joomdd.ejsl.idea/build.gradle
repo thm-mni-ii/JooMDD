@@ -66,20 +66,20 @@ task parsePhpStormUpdatePluginsXml{
 	description 'Parse updatePlugins.xml for the new version'
 	group ('JooMDD_Help_Task')
 	doLast{
-		def xmlFile = file ('../../releases/PhpStorm/ideaRepository/updatePlugins.xml')
+		def xmlFile = file ('../../updateSites/PhpStorm/ideaRepository/updatePlugins.xml')
 		def xmlText = xmlFile.getText()
 		def parser = new XmlParser()
 		def list = parser.parseText(xmlText)
-		
+		def xml = '''name>JooMDD</name>'''
 		list.plugin[0].replaceNode{	
-			plugin(name:"JooMDD", 
+			plugin(
 				id:"de.thm.icampus.joomdd.ejsl.phpstorm", 
 				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/"
 				 + "PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"
 				 + version +".zip",
 				version: version){}
 		}
-		
+		list.plugin[0].appendNode(xml)
 		def writer = new FileWriter(xmlFile)
 		
 		def printer = new XmlNodePrinter(new PrintWriter(writer))
@@ -93,18 +93,18 @@ task parseIntelliJUpdatePluginsXml{
 	group ('JooMDD_Help_Task')
 
 	doLast{
-		def xmlFile = file ('../../releases/IntelliJ/ideaRepository/updatePlugins.xml')
+		def xmlFile = file ('../../updateSites/IntelliJ/ideaRepository/updatePlugins.xml')
 		def xmlText = xmlFile.getText()	
 		def parser = new XmlParser()	
 		def list = parser.parseText(xmlText)
-
+		def xml = '''name>JooMDD</name>'''
 		list.plugin[0].replaceNode{	
-			plugin(name:"JooMDD", 
+			plugin(
 				id:"de.thm.icampus.joomdd.ejsl.idea", 
 				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+ version +".zip",
 				version: version ){}
 		}
-
+		list.plugin[0].appendNode(xml)
 		def writer = new FileWriter(xmlFile)
 
 		def printer = new XmlNodePrinter(new PrintWriter(writer))
@@ -164,23 +164,23 @@ task changeVersion{
 
 
 task zipIntelliJ(type: Zip){
-	description 'Zip and copy IDEA Plugin to releases'
+	description 'Zip and copy IDEA Plugin to updateSites'
 	group ('JooMDD_Help_Task')
 
 	from '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/'	
-	destinationDir file("../../releases/IntelliJ/ideaRepository")
+	destinationDir file("../../updateSites/IntelliJ/ideaRepository")
 	doLast{
-		println "Plugin created in path: joomdd_repo/releases/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+ version +'.zip'
+		println "Plugin created in path: joomdd_repo/updateSites/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+ version +'.zip'
 	}
 }
 
 
 task zipPhpStorm(type: Zip){
-	description 'Zip and copy PhpStorm Plugin to releases'
+	description 'Zip and copy PhpStorm Plugin to updateSites'
 	group ('JooMDD_Help_Task')
 	
 	from '../de.thm.icampus.joomdd.ejsl.idea/build/unpackedNewestDistribution/'	
-	destinationDir file('../../releases/PhpStorm/ideaRepository/')
+	destinationDir file('../../updateSites/PhpStorm/ideaRepository/')
 }
 
 
@@ -189,8 +189,8 @@ task renamePhpStormPlugin(type: Copy){
 	group ('JooMDD_Help_Task')
 	
 	
-	from "../../releases/PhpStorm/ideaRepository/"
-	into "../../releases/PhpStorm/ideaRepository/"
+	from "../../updateSites/PhpStorm/ideaRepository/"
+	into "../../updateSites/PhpStorm/ideaRepository/"
 	def file = 'de.thm.icampus.joomdd.ejsl.idea-'+ version +'.zip'
 	def newfile = 'de.thm.icampus.joomdd.ejsl.phpstorm-'+ version +'.zip'
 	
@@ -199,7 +199,7 @@ task renamePhpStormPlugin(type: Copy){
 	rename (file , newfile)
 	
 	doLast{
-		println "Plugin created in path: joomdd_repo/releases/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+ version +'.zip'
+		println "Plugin created in path: joomdd_repo/updateSites/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"+ version +'.zip'
 	}	
 }
 
@@ -207,7 +207,7 @@ task renamePhpStormPlugin(type: Copy){
 task deleteOldIdeaPlugin(type: Delete){
 	description 'delete old Plugin'
 	group ('JooMDD_Help_Task')
-	delete '../../releases/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-'+ version +'.zip'
+	delete '../../updateSites/PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-'+ version +'.zip'
 }
 
 /*
