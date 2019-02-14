@@ -35,8 +35,6 @@ import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
-import com.google.common.io.Files;
-
 public class MyWizard extends Wizard implements INewWizard, IExecutableExtension {
 
 	private static final String PAGE_NAME_1 = "Custom Plug-in Project Wizard 1"; //$NON-NLS-1$
@@ -70,6 +68,9 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 		 _pageOne = new WizardNewProjectCreationPage(PAGE_NAME_1);
 		 _pageTwo = new TemplateSelectionPage(PAGE_NAME_2, true);
 		 _pageTree = new TemplateConfigurationPage(PAGE_NAME_3, "");
+		 
+		 _pageTree.setPreviousPage(_pageTwo);
+		 _pageTwo.setPreviousPage(_pageOne);
 		 
 		 try {
 			imgFolder = FileLocator.resolve(FileLocator.find(Platform.getBundle("de.thm.icampus.joomdd.ejsl.ui"), new Path("img"), null));
@@ -119,18 +120,17 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 		
 		File workspace = _pageOne.getLocationPath().toFile();
 		File project = new File(workspace, _pageOne.getProjectName());
+		
 		try {	
 			File src = new File(project, "src");
 			src.mkdir();
-			File src_gen = new File(project, "src-gen");
-			src_gen.mkdir();
 			FileWriter fw = new FileWriter(new File(project, ".classpath"));
 			fw.write(epi.classpathFile());
 			fw.close();
 			String srcname = src.getAbsolutePath() +"/" +_pageTwo.getFileName();
 			File srcFile = new File (srcname);
 			FileWizard.copyFiles(_pageTwo.getSelectedTemplate(),srcFile);
-			_pageTree.saveConfig(src, src_gen);
+			_pageTree.saveConfig(src, project);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e){
