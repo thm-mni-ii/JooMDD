@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.HashMap;
 
 /**
  * Created by Max on 09.03.2016.
@@ -34,16 +35,16 @@ public class eJSL_PHP_Wizard_Step implements ProjectGeneratorPeer<Object> {
     }
     public static void setOption(String newoption) {option = newoption;}
 
-    public static String gereratorProperties ;
+    public static HashMap<String, String> gereratorProperties ;
     public static String outputPath;
 
     public static String getOutputPath() {return outputPath;}
 
-    public static void setOutputPath(String path) {
+	public static void setOutputPath(String path) {
         outputPath = path;
     }
 
-    public static String getGereratorProperties() {return gereratorProperties;}
+    public static HashMap<String, String> getGereratorProperties() {return gereratorProperties;}
 
     public String getPreviewFromFile(String filename){
 
@@ -75,10 +76,10 @@ public class eJSL_PHP_Wizard_Step implements ProjectGeneratorPeer<Object> {
     }
 
 
-    public static void createGeneratorProperties(boolean page, boolean enteties, boolean joomla, boolean wordpress , Boolean PHPUnit ,Boolean UpdateFolder,
+    public static void createGeneratorProperties(Boolean page, Boolean enteties, Boolean joomla, Boolean wordpress , Boolean PHPUnit ,Boolean UpdateFolder,
                                           Boolean Codeception, String Host, String Port, String AdminName, String AdminPasswort, Boolean Chrome,
                                           Boolean IE, Boolean Firefox, String Path, String DBUSerName, String DBUserPwd, String Serverpath){
-        StringBuilder properties = new StringBuilder();
+        HashMap<String, String> properties = new HashMap();
 
         String browser = "";
         if(Firefox) {
@@ -89,49 +90,21 @@ public class eJSL_PHP_Wizard_Step implements ProjectGeneratorPeer<Object> {
             browser = "chrome";
         }
 
+        properties.put("serverUrl", Host);
+        properties.put("browser", browser);
+        properties.put("entities", page.toString());
+        properties.put("wordpress", wordpress.toString());
+        properties.put("updateFolder", page.toString());
+        properties.put("rootpath", page.toString());
+        properties.put("page", page.toString());
+        properties.put("test", page.toString());
+        properties.put("serverpath", Serverpath);
+        properties.put("portconfig", Port);
+        properties.put("adminpass", AdminPasswort);
+        properties.put("joomla", joomla.toString());
+        properties.put("adminname", AdminName);
 
-
-
-        properties.append("#---JooMDD---\n");
-        properties.append("serverUrl="+Host+"\n");
-        properties.append("browser="+browser+"\n");
-        properties.append("entities="+page+"\n");
-        properties.append("wordpress="+wordpress+"\n");
-        properties.append("updateFolder="+page+"\n");
-        properties.append("rootpath="+page+"\n");
-        properties.append("page="+page+"\n");
-        properties.append("test="+page+"\n");
-        properties.append("serverpath="+Serverpath+"\n");
-        properties.append("portconfig="+Port+"\n");
-        properties.append("adminpass="+AdminPasswort+"\n");
-        properties.append("joomla="+joomla+"\n");
-       // outputFolder will append at project creation
-        properties.append("adminname="+AdminName+"\n");
-
-/*      old structure
-        properties.append("enteties="+enteties+"\n");
-        properties.append("joomla="+joomla+"\n");
-        properties.append("wordpress="+wordpress+"\n");
-        properties.append("PHPUnit="+PHPUnit+"\n");
-        properties.append("outputFolder="+UpdateFolder+"\n");
-        properties.append("Codeceptio="+Codeception+"\n");
-        properties.append("Host="+Host+"\n");
-        properties.append("Port="+Port+"\n");
-        properties.append("AdminName="+AdminName+"\n");
-        properties.append("AdminPasswort="+AdminPasswort+"\n");
-        properties.append("Chrome="+Chrome+"\n");
-        properties.append("IE="+IE+"\n");
-        properties.append("Firefox="+Firefox+"\n");
-        properties.append("Path="+Path+"\n");
-        properties.append("DBUSerName="+DBUSerName+"\n");
-        properties.append("DBUserPwd="+DBUserPwd+"\n");
-        properties.append("Serverpath="+Serverpath+"\n");
-
-
-        //properties.append("")+;
-*/
-        //properties.append("folderstructure="+folderstructure+"\n");
-        gereratorProperties = properties.toString();
+        gereratorProperties = properties;
     }
     @NotNull
     @Override
@@ -164,7 +137,7 @@ public class eJSL_PHP_Wizard_Step implements ProjectGeneratorPeer<Object> {
         JPanel previewPanel = new JPanel((new BorderLayout()));
 
         JLabel joomddlogo = new JLabel(IconLoader.getIcon("/icons/Logo_b_php_small.png"));
-
+        
         JLabel autosaveWarning = new JLabel(IconLoader.getIcon("/icons/Infomation.png"));
         autosaveWarning.setText(
                 "<html><br> We suggest you to disable the Autosave-Function.<br>" +
