@@ -26,6 +26,16 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 			fontSize: "14px",
 			minLines: 25
         });
+		
+		editor.xtextServices.errorListeners.push((serviceType, severity, message, requestData) => {
+			if (typeof(requestData) !== 'undefined') {
+				console.log(requestData.responseText);
+			}
+			else
+			{
+				console.log("Could not get the response text.");
+			}
+		});
                  
         // Override the generate function to include custom request parameters.
         var originInitServerData = editor.xtextServices.generatorService._initServerData;
