@@ -177,16 +177,17 @@ require(["jquery","alert"], function($, alert) {
             alert.showloadmodal();
             var platform = $("#platform").val();
             var generatePromise = editor[0].env.editor.xtextServices.generate({"artifactId":"status", "platform":platform});
-            generatePromise.then( value => {
+            generatePromise.then( (value) => {
                 alert.closeloadmodal();
                 treeloader.reload(); // Success!
                 //location.reload();
                 alert.showSuccess("Code successful generated.")
-            }, reason => {
+            }, (reason) => {
                 alert.closeloadmodal();
                 alert.showError("Code generation failed. The model cannot be read."); // Error!
-            } );
+            });
         });
+        
         $("#download").click(function(){
             treeloader.downloadAll();
         });
