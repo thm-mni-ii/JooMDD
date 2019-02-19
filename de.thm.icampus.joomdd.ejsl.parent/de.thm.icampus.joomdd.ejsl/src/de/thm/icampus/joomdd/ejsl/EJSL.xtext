@@ -270,7 +270,7 @@ ContextLink returns ContextLink:
 
 LinkParameter returns LinkParameter:
 	{LinkParameter}
-	'Parameter' name=MYID '=' ('*Attribute '(attvalue=[Attribute|STRING]| id?='ID') | value=STRING)
+	'Parameter' name=MYID '=' ('*Attribute '(attvalue=[Attribute|ID]| id?='ID') | value=STRING)
 ;
 
 // extension model
