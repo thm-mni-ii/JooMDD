@@ -37,6 +37,29 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	        lang.sys = true
 	        component.languages.add(EcoreUtil2.copy(lang))
 	    }
+	    
+	    val languages = component.languages.filter[ language | 
+	    	language.sys === false
+	    ]
+	    
+	    val sysLanguages = component.languages.filter[ language | 
+	    	language.sys
+	    ]
+	    
+	    var filteredLanguages = languages.filter[ language | 
+	    	sysLanguages.exists[ sysLanguage | 
+	    		sysLanguage.name.equals(language.name)
+	    	] === false
+	    ]
+	    
+	    var synteticSysLanguages = filteredLanguages.map[ language |
+	    	var tmpLanguage = EcoreUtil2.copy(language)
+	    	tmpLanguage.sys = true
+	    	tmpLanguage
+	    ]
+	    
+	    component.languages.addAll(synteticSysLanguages.toList)
+	    
 		for (lang : component.languages) {
 			val ldir = lang.name
 			var EList<KVPairLanguage> languagesWordsFront = new BasicEList<KVPairLanguage>()
@@ -54,24 +77,27 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			
 			if(!lang.sys) {
 				fsa.generateFile(
-				root +"/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+					root +"/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
-				fileLangGen(languagesWordsFront))
+					fileLangGen(languagesWordsFront)
+				)
 				fsa.generateFile(
-				root + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
-					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
-					fileLangGen(languagesWordsBack))
+					root + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+						Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
+					fileLangGen(languagesWordsBack)
+				)
 			} else {
-			
-			fsa.generateFile(
-				root +"/components/"+ component.extensionName+ "/language/" + ldir + "/" + ldir + "." + 
-					Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
-				fileLangGen(languagesWordsFront))
-			
-			fsa.generateFile(
-				root  + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
-					Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
-					fileLangGen(languagesWordsBack))
+				fsa.generateFile(
+					root +"/components/"+ component.extensionName+ "/language/" + ldir + "/" + ldir + "." + 
+						Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
+					fileLangGen(languagesWordsFront)
+				)
+				
+				fsa.generateFile(
+					root  + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+						Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
+					fileLangGen(languagesWordsBack)
+				)
 			}
 		}
 	}
