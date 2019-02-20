@@ -199,6 +199,15 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	}
 	
 	/**
+	 * Validates that an entity attribute has no reference to an attribute of another entity 
+	 * that has in return a reference to the first entity. No cycles.
+	 */
+	 @Check
+	 def noEntityRefCycles(Entity entity){
+	 	//TODO
+	 }
+	
+	/**
 	 * Validates if the reference to an attribute leads on a primary attribute
 	 */	
 	@Check
