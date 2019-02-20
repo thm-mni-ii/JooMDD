@@ -395,6 +395,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 		
 		def CharSequence writeFieldType(ExtendedDetailPageField field, ExtendedEntity entity, ExtendedComponent component, ExtendedDynamicPage page){
 			var Attribute refAttr = field.fieldtype
+			var String type = getHtmlTypeOfAttribute(page,field.extendedAttribute,entity,component)
 			var Entity refEntity = field.fieldtype.eContainer as Entity
 			var ExtendedReference ref = entity.searchRefWithAttr(field.attribute,refEntity)
 			if(field.extendedAttribute.theBaseElementOfUniquePair){
@@ -432,6 +433,15 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 						case "*" ,case  "-1": {
 							var Entity foreign = Slug.getOtherEntityToMapping(ref)
 					return ''' 
+					<field name="«field.attribute.name»"
+								«type»
+								id="«field.attribute.name.toLowerCase»"
+								label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
+								description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
+						        «FOR KeyValuePair kvpair : field.attributes»
+						        «kvpair.name» = "«kvpair.value»"
+						        «ENDFOR»
+								/>
 					      <field name="«ref.entity.name.toLowerCase»_id"
 					        type ="«entity.name.toLowerCase»To«ref.entity.name.toLowerCase»"
 					        id="«ref.entity.name.toLowerCase»_id"

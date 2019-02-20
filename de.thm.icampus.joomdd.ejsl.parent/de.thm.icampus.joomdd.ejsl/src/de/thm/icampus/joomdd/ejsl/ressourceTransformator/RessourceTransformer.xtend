@@ -738,11 +738,11 @@ class RessourceTransformer {
 				var Attribute ref = containsInrefrence(attribute,ent); 
 				if(ref !==null && !attribute.isIsprimary){
 					editField.fieldtype = ref
-				}else{
-					var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
-					result.htmltype = SimpleHTMLTypeKinds.get("Text_Field")
-					editField.htmltype = result	
 				}
+				var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
+				result.htmltype = SimpleHTMLTypeKinds.get("Text_Field")
+				editField.htmltype = result	
+				
 				editField.attribute = attribute
 				return editField
 			}
