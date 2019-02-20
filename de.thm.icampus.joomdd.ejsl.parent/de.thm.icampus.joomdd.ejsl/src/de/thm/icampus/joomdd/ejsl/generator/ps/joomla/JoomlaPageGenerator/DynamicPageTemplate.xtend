@@ -291,7 +291,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		            «ENDFOR»
    		            >
    		            «FOR KeyValuePair kv: field.values»
-   		            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		              <option value="«kv.name»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.value.toUpperCase»_OPTION</option>
    		            «ENDFOR»
    		        </field> 
    		        ''')
@@ -337,7 +337,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		            «ENDFOR»
    		            >
    		            «FOR KeyValuePair kv: field.values»
-   		            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+	   		            <option value="«kv.name»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.value.toUpperCase»_OPTION</option>
    		            «ENDFOR»
    		        </field> 
    		        ''')
@@ -354,7 +354,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	   		            «ENDFOR»
 	   		            >
 	   		            «FOR KeyValuePair kv: field.values»
-	   		            <option value="«kv.value»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+	   		            <option value="«kv.name»">«page.name.toUpperCase»_«attr.name.toUpperCase»_«kv.value.toUpperCase»_OPTION</option>
 	   		            «ENDFOR»
 	   		        </field> 
    		        ''')
@@ -397,23 +397,36 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 			var Attribute refAttr = field.fieldtype
 			var Entity refEntity = field.fieldtype.eContainer as Entity
 			var ExtendedReference ref = entity.searchRefWithAttr(field.attribute,refEntity)
-			
+			if(field.extendedAttribute.theBaseElementOfUniquePair){
+			return '''
+			<field name="«field.attribute.name»"
+			type="hidden"
+			id="«field.attribute.name.toLowerCase»"
+			label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
+			description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
+	        «FOR KeyValuePair kvpair : field.attributes»
+	        «kvpair.name» = "«kvpair.value»"
+	        «ENDFOR»
+			/>
+			'''
+			}
 			if(ref !== null){
 				switch (ref.upper) {
 					case "1": {
 						return '''
-							<field name="«field.attribute.name»"
-							type="«component.name.toLowerCase»reference"
-							id="«field.attribute.name.toLowerCase»"
-							label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
-							description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
-							 tables="{'table':'#__«component.name.toLowerCase»_«entity.name.toLowerCase»', 'foreignTable':'#__«component.name.toLowerCase»_«component.name.toLowerCase»'}"
-				            referenced_keys ="{«writeRefrence(ref)» }"
-				            «FOR KeyValuePair kvpair : field.attributes»
-				            «kvpair.name» = "«kvpair.value»"
-				            «ENDFOR»
-							/>
-							'''
+					<field name="«field.attribute.name»"
+					type="«component.name.toLowerCase»reference"
+					id="«field.attribute.name.toLowerCase»"
+					label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
+					description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
+					 tables="{'table':'#__«component.name.toLowerCase»_«entity.name.toLowerCase»', 'foreignTable':'#__«component.name.toLowerCase»_«ref.entity.name.toLowerCase»'}"
+					referenced_keys ="{«writeRefrence(ref)» }"
+					primary_key_name="«entity.primaryKey.name»"
+		            «FOR KeyValuePair kvpair : field.attributes»
+		            «kvpair.name» = "«kvpair.value»"
+		            «ENDFOR»
+					/>
+					'''
 						
 						}
 						case "*" ,case  "-1": {
@@ -447,13 +460,13 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 			
 			for(var i =0; i < reference.attribute.size; i++){
 				if(i < reference.attribute.size -1)
-				result += ''' '«i»':{ 'key': '«reference.attribute.get(i)»', 'ref': '«reference.attributerefereced.get(i)»'}, '''
+			result += ''' '«i»':{ 'key': '«reference.attribute.get(i).name.toLowerCase»', 'ref': '«reference.attributerefereced.get(i).name.toLowerCase»'}, '''
 				else
-				result += ''' '«i»':{ 'key': '«reference.attribute.get(i)»', 'ref': '«reference.attributerefereced.get(i)»'} '''
+			result += ''' '«i»':{ 'key': '«reference.attribute.get(i).name.toLowerCase»', 'ref': '«reference.attributerefereced.get(i).name.toLowerCase»'} '''
 				
 			}
 			
-			return result
+			return result.toString
 		}
    
     /**

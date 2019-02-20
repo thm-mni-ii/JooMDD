@@ -18,6 +18,7 @@ class ExtendedDetailPageFieldImpl extends DetailPageFieldImpl implements Extende
 		instance = field
 		this.attribute = field.attribute
 		this.htmltype = field.htmltype
+		this.fieldtype = field.fieldtype
 		extendedAttribute = new ExtendedAttributeImpl(this.attribute)
 		this.attributes = field.attributes
 		this.values = field.values

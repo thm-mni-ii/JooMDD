@@ -31,6 +31,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.LinkParameter
 import java.util.List
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLPackage
 import org.eclipse.emf.ecore.EStructuralFeature
+import de.thm.icampus.joomdd.ejsl.eJSL.ComplexHTMLTypeKinds
+import de.thm.icampus.joomdd.ejsl.eJSL.ComplexHTMLTypes
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -54,14 +56,14 @@ class RessourceTransformer {
 		featurs.entities.forEach[t | t.name = Util.slugify(t.name)]
 		featurs.pages.forEach[t | t.name = Util.slugify(t.name)]
 		for(Entity ent: featurs.entities){
-			completeAttributeOfEntity(ent)
+			this.completeAttributeOfEntity(ent)
 		}
 		for(Entity ent: featurs.entities){
     		completeReferenceOfEntity(ent)
     		setReferenceAttribute(ent)
     	}
     	
-    	
+    	createSimple1ToNReference(featurs.entities)
 		createMappingsTable(featurs.entities)
 		formatEntitiesAttribute(featurs.entities)
 		completeDetailsPage();
@@ -418,7 +420,63 @@ class RessourceTransformer {
 		}
 	}
 	
-	
+	def void createSimple1ToNReference(EList<Entity> entitiesList){
+		for(Entity ent: entitiesList){
+			var EList<Reference> toDeleteReference = new BasicEList<Reference>()
+			var EList<Reference>toAddReference = new BasicEList<Reference>()
+			var EList<Attribute>toDeleteAttribute = new BasicEList<Attribute>()
+			for(Reference ref: ent.references){
+				var Reference referenced = ref.entity.getReferencedTo(ent,ref.upper)
+				   if(ref.upper.equalsIgnoreCase("-1") && referenced !== null && referenced.upper.equalsIgnoreCase("1")){
+				   	
+				   		for(Attribute attr: ref.attribute){
+				   			if(attr.withattribute !== null){
+				   				ent.attributes.remove(attr.withattribute)
+				   				attr.isunique = false
+				   			}
+				   		}
+				 		toDeleteReference.add(ref)
+				 	}
+			 else if(ref.upper.equalsIgnoreCase("-1") && referenced === null){
+				 		var Attribute primaryKey = this.searchPKAttribute(ent)
+				 		var EList<Attribute> getAttributeList = new BasicEList<Attribute>
+				 		if(primaryKey !== null){
+				 			getAttributeList.addAll( this.searchUniqueAttribute(ent).filter[t | !ref.attribute.contains(t) && !t.isIsprimary])
+				 			getAttributeList.add(primaryKey)
+				 			var EList<Attribute> copiedAttribute = copyAttribute(ent, getAttributeList)
+				 			var int size = copiedAttribute.size / 2;
+				 			for(var i =0; i < copiedAttribute.size; i++){
+				 				var int index = i + size
+				 				if(index < copiedAttribute.size)
+				 				copiedAttribute.get(i).withattribute  = copiedAttribute.get(index)
+				 				
+				 			}
+				 			for(var i =0; i < copiedAttribute.size; i++){
+				 				copiedAttribute.get(i).isunique  = false
+				 				
+				 			}
+				 			ref.entity.attributes.addAll(copiedAttribute)
+				 			var Reference newRef = EJSLFactory.eINSTANCE.createReference
+				 			newRef.attribute.addAll(copiedAttribute)
+				 			newRef.entity = ent
+				 			newRef.lower = "0"
+				 			newRef.upper =  "1"
+				 			newRef.attributerefereced.addAll(getAttributeList)
+				 			ref.entity.references.add(newRef);
+				 			for(Attribute attr: ref.attribute){
+				   			if(attr.withattribute !== null){
+				   				ent.attributes.remove(attr.withattribute)
+				   				attr.isunique = false
+				   			}
+				   			}
+				 			toDeleteReference.add(ref);
+				 			
+				 			
+				 		}
+				 	}
+				 	}
+				 	}
+	}
 	
    
 	def void createMappingsTable(EList<Entity> entitiesList){ 
@@ -468,47 +526,8 @@ class RessourceTransformer {
 				 		featurs.pages.add(pageDetails)
 				 	}
 				 }else{
-				 	var Reference referenced = ref.entity.getReferencedTo(ent,ref.upper)
-				   if(ref.upper.equalsIgnoreCase("-1") && referenced !== null && referenced.upper.equalsIgnoreCase("1")){
-				   	
-				   		for(Attribute attr: ref.attribute){
-				   			if(attr.withattribute !== null){
-				   				ent.attributes.remove(attr.withattribute)
-				   				attr.isunique = false
-				   			}
-				   		}
-				 		toDeleteReference.add(ref)
-				 	}
-				 	else if(ref.upper.equalsIgnoreCase("-1") && referenced === null){
-				 		var Attribute primaryKey = this.searchPKAttribute(ent)
-				 		var EList<Attribute> getAttributeList = new BasicEList<Attribute>
-				 		if(primaryKey !== null){
-				 			getAttributeList.addAll( this.searchUniqueAttribute(ent).filter[t | !ref.attribute.contains(t) && !t.isIsprimary])
-				 			getAttributeList.add(primaryKey)
-				 			var EList<Attribute> copiedAttribute = copyAttribute(ent, getAttributeList)
-				 			for(var i =0; i < copiedAttribute.size; i++){
-				 				copiedAttribute.get(i).isunique  = false
-				 				
-				 			}
-				 			ref.entity.attributes.addAll(copiedAttribute)
-				 			var Reference newRef = EJSLFactory.eINSTANCE.createReference
-				 			newRef.attribute.addAll(copiedAttribute)
-				 			newRef.entity = ent
-				 			newRef.lower = "0"
-				 			newRef.upper =  "1"
-				 			newRef.attributerefereced.addAll(getAttributeList)
-				 			ref.entity.references.add(newRef);
-				 			for(Attribute attr: ref.attribute){
-				   			if(attr.withattribute !== null){
-				   				ent.attributes.remove(attr.withattribute)
-				   				attr.isunique = false
-				   			}
-				   			}
-				 			toDeleteReference.add(ref);
-				 			
-				 			
-				 		}
-				 	}
+				 	
+				 	
 				 	
 				 }
 			}
@@ -728,7 +747,7 @@ class RessourceTransformer {
 				return editField
 			}
 			StandardTypes:{
-				return parsingType(attribute)
+				return parsingType(attribute, ent)
 			}
 		}
 	}
@@ -741,16 +760,32 @@ class RessourceTransformer {
 		return null
 	}
 	
-	private def DetailPageField  parsingType(Attribute attribute) {
+	private def DetailPageField  parsingType(Attribute attribute, Entity ent) {
 		var StandardTypes temptyp = attribute.type as StandardTypes
+		if(attribute.isIsprimary){
+			var ComplexHTMLTypes result = EJSLFactory.eINSTANCE.createComplexHTMLTypes
+			result.htmltype = ComplexHTMLTypeKinds.get("Hidden")
+			var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
+			editField.attribute = attribute
+			editField.htmltype = result
+			return editField
+			}
 		var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
 		var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
 		editField.attribute = attribute
 			//	result.htmltype = SimpleHTMLTypeKinds.get(parsingType(temptyp))
-		 
+		var Attribute ref = containsInrefrence(attribute,ent); 
+		if(ref !==null && !attribute.isIsprimary){
+			editField.fieldtype = ref
+		 }
+		 	
+		
 		switch (temptyp.type.getName()){
 			case "Integer" :{
+				
 				result.htmltype = SimpleHTMLTypeKinds.get("Integer")
+				
+				
 			}
 			case "Boolean" :{
 			result.htmltype = SimpleHTMLTypeKinds.get("Yes_No_Buttons")
@@ -797,6 +832,8 @@ class RessourceTransformer {
 			
 		}
          editField.htmltype = result
+         
+         
 		return editField
 	}
 	private def DetailsPage createNewExtendedDetailsPageForExtensions(Entity entity) {

@@ -59,9 +59,11 @@ class FieldsGenerator {
 
 		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
 
-		class JFormField«com.name.toFirstUpper»refrence extends FormField
+		class JFormField«com.name.toFirstUpper»reference extends FormField
 		{
-		    
+		     public $referenceStruct = array();
+		     public $keysAndForeignKeys = array();
+		     public $primary_key ="id";
 
 		    «genGetInput»
 
@@ -103,7 +105,7 @@ class FieldsGenerator {
 	   $db = JFactory::getDbo();
 		$query = $db->getQuery(true);
 		$query->select("*")->from($this->referenceStruct->table)
-	        ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
+	         ->where($this->primary_key . " = " . $id);
 	    $db->setQuery($query);
 	    return $db->loadObject();
 	}
@@ -126,11 +128,13 @@ class FieldsGenerator {
 		    $document = Factory::getDocument();
 		    $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
 		    $input = Factory::getApplication()->input;
-		    $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
+		    
+		     $this->primary_key = $this->getAttribute("primary_key_name");
+		     $id = intval($input->get($this->primary_key));
 		    if (empty($«entFrom.primaryKey.name»)) {
 		        $alldata = $this->getAllData();
-		        $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select'  class='form-control' >";
-		        $html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
+		        $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' >";
+		        $html[] = "<option>". Text::_("JOPTION_SELECT_ATTRIBUTE"). "</option>";
 		        foreach ($alldata as $data) {
 		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 		            . $this->generateStringValue($data) ."</option>";
@@ -139,10 +143,10 @@ class FieldsGenerator {
 		        $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id . "'/>";
 		        return implode($html);
 		    }
-		    $data = $this->getData_item($«entFrom.primaryKey.name»);
+		    $data = $this->getData_item($id);
 		    $selectData = $this->getReferencedata($data);
-		    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select' class='form-control' name='" . $this->name. "select'>";
-		    $html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
+		    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id. "select' class='form-control' name='" . $this->name. "select'>";
+		    $html[] = "<option>". Text::_("JOPTION_SELECT_ATTRIBUTE"). "</option>";
 		    foreach ($selectData as $selected) {
 		        $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
 		        . $this->generateStringValue($selected) ."</option>";
@@ -163,8 +167,9 @@ class FieldsGenerator {
 	{
 				$caseCheck = "";
 				foreach ($this->keysAndForeignKeys as $k=>$v){
-					$caseCheck .= " b." . $v["ref"] . " = '" .$data->$v["key"] . "' and";
-				}
+	    			    $fk =  $v["key"];
+	    				$caseCheck .= " b." . $v["ref"] . " = '" .$data->$fk . "' and";
+	    			}
 				$caseCheck = rtrim($caseCheck,"and");
 				$db = JFactory::getDbo();
 				$query = $db->getQuery(true);

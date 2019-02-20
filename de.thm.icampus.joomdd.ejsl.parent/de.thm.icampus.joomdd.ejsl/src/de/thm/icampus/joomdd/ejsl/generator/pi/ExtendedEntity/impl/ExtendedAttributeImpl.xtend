@@ -65,7 +65,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	def initAttributeProperties() {
 		
 		for(Attribute att: this.entity.attributes ){
-			if(att.withattribute !== null && att.withattribute.name === this.name)
+			if(att.withattribute !== null && att.withattribute.name.compareTo(this.name)==0 )
 			this.isTheBaseElement = true
 		}
 			for(Reference ref: entity.references.filter[t | !t.upper.equalsIgnoreCase("1")]){
