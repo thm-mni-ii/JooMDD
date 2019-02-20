@@ -159,7 +159,14 @@ class EJSLGenerator extends AbstractGenerator {
                 }
             }
         }
-        genData.generateFile("status", "Code successfully generated.")
+        
+        if (webConfig.properties.getProperty("serverPath") !== null) {
+        	fsa.generateFile("status", "Code successfully generated.")
+        }
+        else
+        {
+        	genData.generateFile("status", "Code successfully generated.")
+        }
     }
 
 //    override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {
