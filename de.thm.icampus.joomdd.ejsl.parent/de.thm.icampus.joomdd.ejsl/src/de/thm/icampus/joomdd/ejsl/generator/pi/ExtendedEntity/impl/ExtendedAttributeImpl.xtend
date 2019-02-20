@@ -16,6 +16,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	Attribute instance
 	String htmlType
 	boolean isReferenced = false
+	boolean isTheBaseElement = false
 
 	new(Attribute attr) {
 		attr.name = PlattformUtil.slugify(attr.name).toLowerCase
@@ -50,7 +51,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	def Entity searchEntity(Entity entity) {
 		var Entity ent = instance.eContainer as Entity
 		
-		if(ent == null){
+		if(ent === null){
 			var Reference ref = (entity.references.filter[t | t.entity.attributes.contains(instance)]).get(0)
 			return ref.entity
 		}
@@ -63,10 +64,17 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	
 	def initAttributeProperties() {
 		
+		for(Attribute att: this.entity.attributes ){
+			if(att.withattribute !== null && att.withattribute.name === this.name)
+			this.isTheBaseElement = true
+		}
 			for(Reference ref: entity.references.filter[t | !t.upper.equalsIgnoreCase("1")]){
 				for(Attribute refAttr: ref.attribute)
-				if(this.name.equalsIgnoreCase(refAttr.name))
-				    this.isReferenced = true
+				if(this.name.equalsIgnoreCase(refAttr.name)){
+					this.isReferenced = true
+					
+				}
+				    
 			}
 		
 	}
@@ -173,6 +181,11 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	
 	override setIsReferenced(boolean value) {
 		this.isReferenced = value
+	}
+
+	
+	override isTheBaseElementOfUniquePair() {
+		return isTheBaseElement
 	}
 
 }

@@ -69,7 +69,7 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		if(instance instanceof DetailsPage){
 			this.isDetailsPage = true
 			var DetailsPage dpg = instance as DetailsPage
-			extendedEditFieldsList.addAll(dpg.editfields.map[t| new ExtendedDetailsPageFieldImpl(t)])
+			extendedEditFieldsList.addAll(dpg.editfields.map[t| new ExtendedDetailPageFieldImpl(t)])
 		}
 		 extendedGlobalParameterList = new BasicEList<ExtendedParameter>
 		 extendedGlobalParameterList.addAll(this.globalparameters.map[t| new ExtendedParameterImpl(t)])

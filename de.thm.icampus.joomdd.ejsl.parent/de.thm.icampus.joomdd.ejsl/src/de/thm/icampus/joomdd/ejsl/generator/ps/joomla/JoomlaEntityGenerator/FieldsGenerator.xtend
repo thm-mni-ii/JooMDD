@@ -9,6 +9,8 @@ import java.io.File
 import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * This class contains the templates to generate the view fields.
@@ -57,18 +59,9 @@ class FieldsGenerator {
 
 		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
 
-		class JFormField«nameField.toFirstUpper» extends FormField
+		class JFormField«com.name.toFirstUpper»refrence extends FormField
 		{
-		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
-		        "foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
-		    protected $keysAndForeignKeys= array(
-		        «FOR attr : mainRef.extendedAttributes»
-		        «IF attr != mainRef.extendedAttributes.last»
-		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
-		        «ELSE»
-		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
-                «ENDIF»
-		        «ENDFOR»);
+		    
 
 		    «genGetInput»
 
@@ -107,9 +100,9 @@ class FieldsGenerator {
     def private genGetData_item()'''
 	protected function getData_item($«entFrom.primaryKey.name»)
 	{
-	    $db = Factory::getDbo();
-	    $query = $db->getQuery(true);
-	    $query->select("*")->from($this->referenceStruct["table"])
+	   $db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select("*")->from($this->referenceStruct->table)
 	        ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
 	    $db->setQuery($query);
 	    return $db->loadObject();
@@ -125,6 +118,10 @@ class FieldsGenerator {
 		 */
 		protected function getInput()
 		{
+			$tempsTable = str_replace("'","\"",$this->getAttribute("tables"));
+			$tempsAttr = str_replace("'","\"",$this->getAttribute("referenced_keys"));
+			$this->referenceStruct = json_decode( $tempsTable);
+			$this->keysAndForeignKeys = json_decode($tempsAttr,true);
 		    $html = array();
 		    $document = Factory::getDocument();
 		    $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
@@ -164,52 +161,53 @@ class FieldsGenerator {
 	*/
 	protected function getReferencedata($data)
 	{
-	    $db = Factory::getDbo();
-	    $query = $db->getQuery(true);
-	    $query->select("distinct (case when 
-	        «FOR ExtendedAttribute attr: mainRef.referencedExtendedAttributes»
-	        «IF attr != mainRef.referencedExtendedAttributes.last»
-	        b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»' and 
-	        «ELSE»
-	        b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»'
-	        «ENDIF»
-	        «ENDFOR»
-	        then 'selected'
-	        else ' ' end) as selected");
-	    foreach ($this->keysAndForeignKeys as $key =>$value) {
-	        $query->select(" b.$value");
-	    }
-
-	    $query->from( $this->referenceStruct["foreignTable"] . " as b ")
-	        ->where("b.state = 1")
-	        ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
-	    $db->setQuery($query);
-	    return $db->loadObjectList();
-	}
+				$caseCheck = "";
+				foreach ($this->keysAndForeignKeys as $k=>$v){
+					$caseCheck .= " b." . $v["ref"] . " = '" .$data->$v["key"] . "' and";
+				}
+				$caseCheck = rtrim($caseCheck,"and");
+				$db = JFactory::getDbo();
+				$query = $db->getQuery(true);
+				$query->select("distinct (case when"
+					. $caseCheck .
+					"then 'selected'
+					else ' ' end) as selected");
+				foreach($this->keysAndForeignKeys as $key =>$value)
+				{
+					$query->select(" b." . $value["ref"]);
+				}
+				$query->from( $this->referenceStruct->foreignTable . " as b ")
+					->where("b.state = 1")
+					->order( "b." . $this->keysAndForeignKeys[0]["ref"]. " ASC");
+				$db->setQuery($query);
+				return $db->loadObjectList();
+			}
 	'''
 
 	private def CharSequence genGetAllData() '''
 		protected function getAllData()
 		{
-		    $db = Factory::getDbo();
-		    $query = $db->getQuery(true);
-		    $query->select("«Slug.transformAttributeListInString("b.",mainRef.attributerefereced,',')»")
-		        ->from($this->referenceStruct["foreignTable"] . " as b")
-		        ->where("b.state = 1")
-		        ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
-		    $db->setQuery($query);
-		    return $db->loadObjectList();
+			$db = JFactory::getDbo();
+			$query = $db->getQuery(true);
+			foreach ($this->keysAndForeignKeys as $k=>$v){
+			$query->select("b." . $v["ref"]);
+			}
+			$query->from($this->referenceStruct->foreignTable . " as b")
+			->where("b.state = 1")
+			->order("b." . $this->keysAndForeignKeys[0]["ref"] . " ASC");
+			$db->setQuery($query);
+			return $db->loadObjectList();
 		}
 	'''
 
 	private def CharSequence genGenerateJsonValue() '''
 		public function generateJsonValue($data)
 		{
-		    $result  = array();
-		    foreach ($this->keysAndForeignKeys as $key=>$value) {
-		        $result["jform_$key"] = $data->{$value};
-		    }
-		    return json_encode($result);
+			$result  = array();
+			foreach($this->keysAndForeignKeys as $key=>$value){
+				$result["jform_" .  $value["key"]] = $data->{$value["ref"]};
+				}
+			return json_encode($result);
 		}
 	'''
 
@@ -217,9 +215,7 @@ class FieldsGenerator {
 		public function generateStringValue($data)
 		{
 		    $result = array();
-		
-		    $result[] = $data->{array_values($this->keysAndForeignKeys)[0]} . " ";
-		
+		   $result[] = $data->{$this->keysAndForeignKeys[0]["ref"]} . " ";
 		    return implode($result);
 		}
 	'''
@@ -320,17 +316,23 @@ class FieldsGenerator {
 		    }
 		}
 	'''
-	def public dogenerate(String path, IFileSystemAccess access) {
-		if(this.mainRef !== null)
-			access.generateFile(path+ "/"+getnameField +".php", genRefrenceField)
-		var File fieldEntity = new File (path+ "/"+entFrom.name +".php")
-		if(!fieldEntity.exists){
-			access.generateFile(path+ "/"+entFrom.name +".php", genFieldsForEntity)
+
+	def dogenerate(String path, IFileSystemAccess access) {
+		if (this.mainRef !== null) {
+			var File field = new File(path + '''/«com.name.toLowerCase»reference.php''')
+			if (!field.exists) {
+				access.generateFile(path + '''/«com.name.toLowerCase»reference.php''', genRefrenceField)
+
+			}
+
 		}
-		var File fieldUser = new File (path+ '''/«com.name.toLowerCase»user.php''')
-		if(!fieldUser.exists){
-			access.generateFile(path+ '''/«com.name.toLowerCase»user.php''', FieldsGenerator.genFieldsForUserView(com))
+		var File fieldEntity = new File(path + "/" + entFrom.name + ".php")
+		if (!fieldEntity.exists) {
+			access.generateFile(path + "/" + entFrom.name + ".php", genFieldsForEntity)
+		}
+		var File fieldUser = new File(path + '''/«com.name.toLowerCase»user.php''')
+		if (!fieldUser.exists) {
+			access.generateFile(path + '''/«com.name.toLowerCase»user.php''', FieldsGenerator.genFieldsForUserView(com))
 		}
 	}
-
 }

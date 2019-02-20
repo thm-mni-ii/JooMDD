@@ -15,6 +15,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 
 /**
  * This class contains the templates to generate the necessary code for views.
@@ -204,19 +205,6 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	    «FOR ExtendedAttribute attr : e.ownExtendedAttributes.filter[t | !t.isIsprimary]»
 	    «writeAttribute(e,attr,component,page)»
 	    «ENDFOR»
-	    «FOR ExtendedReference ref : e.allExtendedReferences.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
-	    «var Entity foreign = Slug.getOtherEntityToMapping(ref)»
-	    <field name="«ref.entity.name.toLowerCase»_id"
-	        type ="«e.name.toLowerCase»To«ref.entity.name.toLowerCase»"
-	        id="«ref.entity.name.toLowerCase»_id"
-	        label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»"
-	        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"/>
-	    «FOR Attribute attr: Slug.getOtherAttribute(ref)»
-	    <field name="«attr.name.toLowerCase»"
-	        type ="hidden"
-	        id="«attr.name.toLowerCase»"/>
-	    «ENDFOR»
-	    «ENDFOR»
 	    «ENDFOR»
 	   
 	    <fields name="params">
@@ -262,6 +250,9 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
         var EList<KeyValuePair> options = new BasicEList<KeyValuePair>
         if(field !== null) {
             options =field.attributes
+            if(field.fieldtype !== null){
+   			return writeFieldType(field, entity, component,page)
+   		}
         }
         var String type = getHtmlTypeOfAttribute(page,attr,entity,component)
         var StringBuffer result = new StringBuffer
@@ -282,6 +273,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		}
    		val String[] type_temp_array = type.split('''"'''.toString())
    		val String type_temp = type_temp_array.get(1)
+   		
    		
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
@@ -400,6 +392,69 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		}
    		return result.toString
    	}
+		
+		def CharSequence writeFieldType(ExtendedDetailPageField field, ExtendedEntity entity, ExtendedComponent component, ExtendedDynamicPage page){
+			var Attribute refAttr = field.fieldtype
+			var Entity refEntity = field.fieldtype.eContainer as Entity
+			var ExtendedReference ref = entity.searchRefWithAttr(field.attribute,refEntity)
+			
+			if(ref !== null){
+				switch (ref.upper) {
+					case "1": {
+						return '''
+							<field name="«field.attribute.name»"
+							type="«component.name.toLowerCase»reference"
+							id="«field.attribute.name.toLowerCase»"
+							label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
+							description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
+							 tables="{'table':'#__«component.name.toLowerCase»_«entity.name.toLowerCase»', 'foreignTable':'#__«component.name.toLowerCase»_«component.name.toLowerCase»'}"
+				            referenced_keys ="{«writeRefrence(ref)» }"
+				            «FOR KeyValuePair kvpair : field.attributes»
+				            «kvpair.name» = "«kvpair.value»"
+				            «ENDFOR»
+							/>
+							'''
+						
+						}
+						case "*" ,case  "-1": {
+							var Entity foreign = Slug.getOtherEntityToMapping(ref)
+					return ''' 
+					      <field name="«ref.entity.name.toLowerCase»_id"
+					        type ="«entity.name.toLowerCase»To«ref.entity.name.toLowerCase»"
+					        id="«ref.entity.name.toLowerCase»_id"
+					        label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«foreign.name.toUpperCase»"
+					        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"/>
+					    «FOR Attribute attr: Slug.getOtherAttribute(ref)»
+					    <field name="«attr.name.toLowerCase»"
+					        type ="hidden"
+					        id="«attr.name.toLowerCase»"/>
+					    «ENDFOR»'''
+						}
+					default: {  
+						
+					}
+				}
+			}
+			
+			
+			
+			
+			return ""
+		}
+		
+		def String writeRefrence(Reference reference){
+			var String result = "";
+			
+			for(var i =0; i < reference.attribute.size; i++){
+				if(i < reference.attribute.size -1)
+				result += ''' '«i»':{ 'key': '«reference.attribute.get(i)»', 'ref': '«reference.attributerefereced.get(i)»'}, '''
+				else
+				result += ''' '«i»':{ 'key': '«reference.attribute.get(i)»', 'ref': '«reference.attributerefereced.get(i)»'} '''
+				
+			}
+			
+			return result
+		}
    
     /**
      * return the html type of a attribute
