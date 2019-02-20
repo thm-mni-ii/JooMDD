@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * Created by Max on 09.03.2016.
@@ -80,7 +82,6 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
             src.mkdir();
             src_gen.mkdir();
             FileWriter fw = new FileWriter(project.getBasePath() + "/src/Model.eJSL");
-            FileWriter fwproperties = new FileWriter(project.getBasePath() + "/src-gen/generator.properties");      
 
             InputStream fileIS = this.getClass().getClassLoader().getResourceAsStream("templates/"+eJSL_PHP_Wizard_Step.getOption());
             BufferedReader br =  new BufferedReader(new InputStreamReader(fileIS, "UTF-8"));
@@ -92,34 +93,26 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
 
             model.createNewFile();
             BufferedWriter bw = new BufferedWriter(fw);
-            BufferedWriter bwproperties = new BufferedWriter(fwproperties);
 
-            StringBuilder genproperties = new StringBuilder(eJSL_PHP_Wizard_Step.getGereratorProperties());
+            Properties config = new Properties();
+            HashMap<String, String> genproperties = eJSL_PHP_Wizard_Step.getGereratorProperties();
+            config.putAll(genproperties);
+            config.setProperty("outputFolder", src_gen.getPath());
+            FileWriter configWriter = new FileWriter(project.getBasePath() + "/generator.properties");
+            config.store(configWriter, "Generator configuration");
 
-            if (eJSL_PHP_Wizard_Step.getOutputPath().equals("/src-gen/")){
-                genproperties.append("outputFolder="+project.getBasePath()+eJSL_PHP_Wizard_Step.getOutputPath());
-            }else{
-                genproperties.append("outputFolder="+eJSL_PHP_Wizard_Step.getOutputPath());
-            }
-
-           // genproperties.append("\nProject_Path="+project.getBasePath());
-
-            bwproperties.write(genproperties.toString());
             bw.write(example.toString());
-
 
             br.close();
             bw.close();
-            bwproperties.close();
             fw.close();
-            fwproperties.close();
+            configWriter.close();
 
             project.getBaseDir().refresh(false,true);
 
             FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
             VirtualFile vf = LocalFileSystem.getInstance().findFileByPath(project.getBasePath()+"/src/Model.eJSL");
             fileEditorManager.openFile(vf, true, true);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,6 +123,4 @@ public class eJSL_PHP_ProjectGenerator extends WebProjectTemplate {
     public ProjectGeneratorPeer<Object> createPeer() {
         return new eJSL_PHP_Wizard_Step();
     }
-
-
 }

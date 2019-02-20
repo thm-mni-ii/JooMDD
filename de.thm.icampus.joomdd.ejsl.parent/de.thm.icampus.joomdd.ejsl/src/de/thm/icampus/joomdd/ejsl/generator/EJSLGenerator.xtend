@@ -33,14 +33,14 @@ import java.io.IOException
  * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 class EJSLGenerator extends AbstractGenerator {
-    private JavaIoFileSystemAccess genData;
+    JavaIoFileSystemAccess genData;
     public final static String DEFAULT_OUTPUT_ONCE = "DEFAULT_OUTPUT_ONCE";
 
     @Inject
-    private IEncodingProvider encodingProvider;
+    IEncodingProvider encodingProvider;
 
     @Inject
-    private IResourceServiceProvider.Registry registry;
+    IResourceServiceProvider.Registry registry;
 
     Properties config
     
@@ -55,11 +55,12 @@ class EJSLGenerator extends AbstractGenerator {
             println("Server started...")
             return
         }
-        if (fsa.isFile("generator.properties")) {
+
+        if (fsa.isFile("../generator.properties")) {
         	var InputStream is = null
         	try
         	{
-	            is = fsa.readBinaryFile("generator.properties")
+	            is = fsa.readBinaryFile("../generator.properties")
 	            config.load(is)
 	        }
 	        catch (IOException e) {
@@ -70,6 +71,10 @@ class EJSLGenerator extends AbstractGenerator {
             		is.close();
 	        	}
 	        }
+        }
+        else
+        {
+        	println("Could not find generator.properties.")
         }
     }
 
@@ -88,7 +93,7 @@ class EJSLGenerator extends AbstractGenerator {
     override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
         genData = new JavaIoFileSystemAccess(registry, encodingProvider)
         var String outputFolder 
-        var String platform;
+        var String platform; 
                 
         if (webConfig.properties.getProperty("serverPath") !== null) {
             var String serverPath = webConfig.properties.getProperty("serverPath").replace("\\", "/"); 
@@ -154,7 +159,14 @@ class EJSLGenerator extends AbstractGenerator {
                 }
             }
         }
-        fsa.generateFile("status", "Code successfully generated.")
+        
+        if (webConfig.properties.getProperty("serverPath") !== null) {
+        	fsa.generateFile("status", "Code successfully generated.")
+        }
+        else
+        {
+        	genData.generateFile("status", "Code successfully generated.")
+        }
     }
 
 //    override afterGenerate(Resource input, IFileSystemAccess2 fsa, IGeneratorContext context) {

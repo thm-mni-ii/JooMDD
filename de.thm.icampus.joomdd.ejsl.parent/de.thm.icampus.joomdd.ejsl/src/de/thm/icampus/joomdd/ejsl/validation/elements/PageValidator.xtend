@@ -154,7 +154,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 				if (!p.entities.contains(enti)) {
 					error(
 						'Entity for the filter attribute must be declared before.',
-						p,
+						filt,
 						EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
 						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_AMBIGUOUS
 					)
@@ -163,7 +163,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 			else {
 				error(
 						'May trying to referencing a non existing entity for a filter.',
-						p,
+						filt,
 						EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
 						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_AMBIGUOUS
 					)
@@ -182,7 +182,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 				if (!p.entities.contains(enti)) {
 					error(
 						'Entity for the table column attribute must be declared before.',
-						p,
+						column,
 						EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
 						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_TABLE_COLUMN_AMBIGUOUS
 					)
@@ -191,7 +191,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 			else {
 				error(
 						'May trying to referencing a non existent Entity for a column.',
-						p,
+						column,
 						EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
 						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_TABLE_COLUMN_AMBIGUOUS
 				)
@@ -211,7 +211,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 				if (!enticolumns.add(enti.name + column.name)) {
 					error(
 						'table column used multiple times in this Page.',
-						p,
+						column,
 						EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
 						PAGE_COLUMNS_USED_MULTIPLE_TIMES
 					)
@@ -220,7 +220,7 @@ class PageValidator extends AbstractDeclarativeValidator {
 			else {
 				error(
 						'May trying to referencing to a non existing entity for a column.',
-						p,
+						column,
 						EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
 						PAGE_COLUMNS_USED_MULTIPLE_TIMES
 					)

@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.channels.FileLock;
+import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * Created by Leon on 21.01.16.
@@ -67,19 +69,20 @@ public class InitalSettings implements ProjectComponent {
                 e.printStackTrace();
             }
 
-            File src = new File(project.getBasePath() + "/src");
-            File src_gen = new File(project.getBasePath() + "/src-gen");
-            File model = new File(project.getBasePath() + "/src/Model.eJSL");
+            String projectBasePath = project.getBasePath();
+            File src = new File(projectBasePath + "/src");
+            File src_gen = new File(projectBasePath + "/src-gen");
+            File model = new File(projectBasePath + "/src/Model.eJSL");
 
             StringBuilder example = new StringBuilder();
 
             try {
                 src.mkdir();
                 src_gen.mkdir();
-                FileWriter fw = new FileWriter(project.getBasePath() + "/src/Model.eJSL");
-                FileWriter fwproperties = new FileWriter(project.getBasePath() + "/src-gen/generator.properties");
+                FileWriter fw = new FileWriter(projectBasePath + "/src/Model.eJSL");
+                String option = eJSLWizardStep.getOption();
 
-                InputStream templateIS = this.getClass().getClassLoader().getResourceAsStream("templates/" + eJSLWizardStep.getOption());
+                InputStream templateIS = this.getClass().getClassLoader().getResourceAsStream("templates/" + option);
                 BufferedReader br =  new BufferedReader(new InputStreamReader(templateIS, "UTF-8"));
 
                 String buffer = "";
@@ -90,26 +93,19 @@ public class InitalSettings implements ProjectComponent {
                 model.createNewFile();
                 BufferedWriter bw = new BufferedWriter(fw);
 
-                BufferedWriter bwproperties = new BufferedWriter(fwproperties);
-
-
-                StringBuilder genproperties = new StringBuilder(eJSL_PHP_Wizard_Step.getGereratorProperties());
-
-                if (eJSLWizardStep.getOutputPath().equals("/src-gen/")) {
-                    genproperties.append("outputFolder="+project.getBasePath()+eJSLWizardStep.getOutputPath());
-                }else {
-                    genproperties.append("outputFolder="+eJSLWizardStep.getOutputPath());
-                }
-
-                bwproperties.write(genproperties.toString());
+                Properties config = new Properties();
+                HashMap<String, String> genproperties = eJSL_PHP_Wizard_Step.getGereratorProperties();
+                config.putAll(genproperties);
+                config.setProperty("outputFolder", src_gen.getPath());
+                FileWriter configWriter = new FileWriter(projectBasePath + "/generator.properties");
+                config.store(configWriter, "Generator configuration");
 
                 bw.write(example.toString());
 
                 br.close();
                 bw.close();
-                bwproperties.close();
                 fw.close();
-                fwproperties.close();
+                configWriter.close();
 
             } catch (Exception e) {
                 e.printStackTrace();

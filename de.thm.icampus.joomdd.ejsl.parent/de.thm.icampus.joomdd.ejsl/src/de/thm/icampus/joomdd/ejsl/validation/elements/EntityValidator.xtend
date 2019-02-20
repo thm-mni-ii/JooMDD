@@ -96,15 +96,7 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	 */	
 	@Check
 	def checkAttributename(Entity entity) {
-		for (attribute : entity.attributes) {			
-//			if (attribute.name == "id") {				
-//				error(
-//					'\"id\" is not a valid attribute name!',
-//					attribute,
-//					EJSLPackage.Literals.ATTRIBUTE__NAME,
-//					AMBIGUOUS_ATTRIBUTE_NAME
-//				)
-//			}			
+		for (attribute : entity.attributes) {					
 			if(attribute.name == "ordering"||attribute.name =="state"||attribute.name =="checked_out" ||
 				attribute.name == "checked_out_time" ||attribute.name == "created_by"){ 				
 				warning("Attribute name should not be: " + attribute.name +"!",
@@ -115,23 +107,6 @@ class EntityValidator extends AbstractDeclarativeValidator {
 			}
 		}
 	}
-	
-//	/**
-//	 * Checks if the name of a entity contains a underscore
-//	 */
-//	@Check
-//	def checkNoUnderscoreInEntityName(EJSLModel model) {
-//		for (entity : model.getEjslPart.getFeature.getEntities) {
-//			if (entity.name.contains('_')) {
-//				error(
-//					'Entity name ' + entity.name + ' contains a underscore',
-//								entity,
-//								EJSLPackage.Literals.ENTITY__NAME,
-//								de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_FORBIDDEN_UNDERSCORE
-//				)
-//			}
-//		}
-//	}
 	
 	/**
 	 * Check entity name does not match a Xtext keyword
@@ -206,23 +181,7 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	 def noEntityRefCycles(Entity entity){
 	 	//TODO
 	 }
-	
-	/**
-	 * Validates if the reference to an attribute leads on a primary attribute
-	 */	
-	@Check
-	def refToAttributeMustBePrimary(Reference reference){
-		for (attribute : reference.attributerefereced) {
-			if(!attribute.isunique && !attribute.isprimary){
-				error(
-					'The referenced attribute has to be a unique attribute.',
-					reference,
-					EJSLPackage.Literals.REFERENCE__ATTRIBUTEREFERECED,
-					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_ATTRIBUTE_NOT_PRIMARY
-				)
-			}
-		}
-	}
+
 	
 	/**
 	 * Validates that min values are valid

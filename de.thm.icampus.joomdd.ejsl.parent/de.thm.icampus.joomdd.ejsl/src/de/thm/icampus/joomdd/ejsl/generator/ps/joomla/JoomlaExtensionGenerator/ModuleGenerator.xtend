@@ -13,6 +13,12 @@ import java.util.Calendar
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.PageGeneratorHandler
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
+import de.thm.icampus.joomdd.ejsl.eJSL.DataAccessKinds
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import org.apache.log4j.Logger
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla module.
@@ -25,11 +31,13 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	var modelOfComponent = '\'<modelOfComponent>\''
 	var modelPath = '\'/components/com_<nameOfComponent>/models\''
 	var String modelOfComponent2 = null;
-		
-
+	
+    Logger logger = Logger.getLogger(ModuleGenerator);
+	
 	ExtendedModule extMod
 	ExtendedDynamicPage dynpage
 	String com
+	String helperClassName
 
 	new(ExtendedModule module, IFileSystemAccess2 fsa, String path) {
 		this.fsa = fsa
@@ -40,6 +48,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		this.ComponentInformation(module)
 		this.extMod.formatName
 		this.path = path
+		this.helperClassName = '''«module.name.toFirstUpper»Helper'''
 	}
 	
 	def void formatName(Module module) {
@@ -137,8 +146,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ORDERING"
 		                    description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_ORDERING_DESC"
 		                    class="inputbox"
-		                    default="id">
-		                    <option value="id">ID</option>
+		                    default="«dynpage.extendFiltersList.get(0).name.toLowerCase»">
 		                    «FOR ExtendedAttribute attr: dynpage.extendFiltersList»
 		                    <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_FORM_LBL_«attr.name.toUpperCase»</option>
 		                    «ENDFOR»
@@ -217,26 +225,26 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
     // ToDo: Check if parameter is necessary. The module is already given as member of the class....
 	def CharSequence phpContent(ExtendedModule module) {
-	'''
-		<?php
-		«Slug.generateFileDoc(extMod)»
-		
-		«Slug.generateRestrictedAccess()»
-		
-		«Slug.generateUses(newArrayList("ModuleHelper"))»
-		
-		// Include the «extMod.name» functions only once
-		require_once __DIR__ . '/helper.php';
-		«IF module.pageRef.pagescr !== null»
-		require_once JPATH_ADMINISTRATOR . '/components/com_«module.extendedComponentName.toLowerCase»/helpers/«module.extendedComponentName.toLowerCase».php';
-		«ENDIF»
-		// Models, Functions should be implementated here
-		// «module.name.substring(0,1).toUpperCase + module.name.substring(1).toLowerCase»Helper::updateReset();
-		$items = «module.name.toFirstUpper»Helper::getList($params);
-		$model = «module.name.toFirstUpper»Helper::getModel();
-		$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-		require ModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
-	'''
+		var section =  module.extendedPageReference.sect
+		'''
+			<?php
+			«Slug.generateFileDoc(extMod)»
+			
+			«Slug.generateRestrictedAccess()»
+			
+			«Slug.generateUses(newArrayList("ModuleHelper"))»
+			
+			// Include the «extMod.name» functions only once
+			require_once __DIR__ . '/helper.php';
+			// Models, Functions should be implementated here
+			// «helperClassName»::updateReset();
+			$items = «helperClassName»::getList($params);
+			«IF section === DataAccessKinds.BACKEND_DAO || section === DataAccessKinds.FRONTEND_DAO»
+			$model = «helperClassName»::getModel();
+			«ENDIF»
+			$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+			require ModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
+		'''
 	}
 	
 	 def CharSequence defaultTemplate() {
@@ -259,13 +267,13 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 */
 		?>
 		
+		<?php if (count($items) !== 1) : ?>
 		<ul class="«extMod.name»<?php echo $moduleclass_sfx; ?>">
 		
 		    <?php foreach ($items as $item) : ?>
 		    <li><div class="«extMod.pageRef.page.name»item">
 		    <?php if (empty($item)) : ?>
 		        <?php // itemlist is empty ;?>
-		        <!DOCTYPE html><title></title>
 		    «IF !(dynpage.entities.isEmpty)»
 		    <?php else : ?>
 		        «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
@@ -279,6 +287,17 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    </div></li>
 		    <?php endforeach; ?>
 		</ul>
+		<?php else : 
+		    $item = array_shift($items); ?>
+		    <div class="«extMod.pageRef.page.name»item">
+		        «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+		        «IF !attr.name.equalsIgnoreCase("params")»
+		        <?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
+		        <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
+		        «ENDIF»
+		        «ENDFOR»
+		    </div>
+		<?php endif; ?>
 		'''
 	}
 	
@@ -302,7 +321,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelLegacy"))»
+		«Slug.generateUses(newArrayList("ModelLegacy", "Factory"))»
 		
 		/**
 		 * Helper for «extMod.name»
@@ -312,7 +331,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 * @since
 		 *
 		 */
-		class «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper
+		class «helperClassName»
 		{
 		    «genGetList»
 		    «genGetModel()»
@@ -347,19 +366,164 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	
     def ComponentInformation (ExtendedModule modul) {
         if( modul.pageRef.pagescr !== null) {
-            var String section =  modul.extendedPageReference.extendedPage.name
+            var section =  modul.extendedPageReference.sect
             var String compName =  modul.extendedComponentName
-            if(section.equalsIgnoreCase('backend')) {
-                modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"
-            } else {
-                modelPath = "'/components/com_" + compName.toLowerCase + "/models'"
+            
+            switch (section) {
+            	case BACKEND_DAO: {
+                	modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"
+            	}
+				case FRONTEND_DAO: {
+                	modelPath = "'/components/com_" + compName.toLowerCase + "/models'"
+				}
+				default: {
+					logger.warn('''This should not happen. :/''')
+				}
             }
+            
             modelOfComponent = ("\"" + compName.toFirstUpper + "\"")
             modelOfComponent2 = ("\"" +compName.toFirstUpper + "Model\"")
         }
     }
 	
-	public def genGetList()'''
+	public def genGetList() {
+        if( extMod.pageRef.pagescr !== null) {
+            var section =  extMod.extendedPageReference.sect
+            switch (section) {
+            	case BACKEND_DAO: {
+                	genModel
+            	}
+            	case DATABASE: {
+            		genQuery
+            	}
+				case FRONTEND_DAO: {
+                	genModel
+				}
+				case WEBSERVICE: {
+					''''''
+				}
+            }
+        }
+		
+	}
+	
+	def genQuery() {
+		var extendedComponent = new ExtendedComponentImpl(extMod.pageRef.pagescr.ref)
+		var extendedDynamicPage = extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance
+		var indexpage = extendedDynamicPage
+		var ExtendedEntity mainEntity = extendedDynamicPage.extendedEntityList.get(0)
+		var name = extendedComponent.name
+
+		return '''
+		/**
+		 * @param
+		 *
+		 * @return
+		 *
+		 * @since
+		 **/
+		public static function getList($params_module = null)
+		{
+		    $db = Factory::getDbo();
+		    $start = $params_module->get('start');
+		    $limit = $params_module->get('limit');
+		    
+		    $query = «helperClassName»::getListQuery($params_module);
+		    $db->setQuery($query, $start, $limit);
+		    
+		    $items = $db->loadObjectList();
+		    return $items;
+		}
+		
+		«genAdminModelGetListQuery(indexpage, mainEntity, name, extendedDynamicPage.filters)»
+		'''
+	}
+	
+	def CharSequence genAdminModelGetListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, String name, EList<Attribute>filters)'''
+	    /**
+	     * Build an SQL query to load the list data.
+	     *
+	     * @return	JDatabaseQuery
+	     * @since	1.6
+	     * @generated
+	     */
+	    private static function getListQuery($params_module = null)
+	    {
+	        // Create a new query object.
+	        $db = Factory::getDbo();
+	        $query = $db->getQuery(true);
+
+	        // Select the required fields from the table.
+	        $query->select("distinct «indexpage.entities.get(0).name.toLowerCase».*");
+	        $query->from('`#__«name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»` AS «indexpage.entities.get(0).name.toLowerCase»');
+	        // Join over the users for the checked out user
+	        $query->select("uc.name AS editor");
+	        $query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name.toLowerCase».checked_out");
+	        // Join over the user field 'created_by'
+	        $query->select('created_by.name AS created_by');
+	        $query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name.toLowerCase».created_by');
+	        // Join over the user field 'user'
+	        $query->select('user.name AS user');
+	        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name.toLowerCase».created_by');
+	        «FOR ExtendedReference ref:indexpage.extendedEntityList.get(0).allExtendedReferences »
+	        $query->join('LEFT', "«Slug.databaseName(name,ref.destinationEntity.name)»  AS «ref.destinationEntity.name.toLowerCase» ON
+	        «FOR ExtendedAttribute attr: ref.extendedAttributes»
+	        «IF ref.extendedAttributes.last != attr»
+	        «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
+	        «ELSE»
+	        «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
+	        «ENDIF»
+	        «ENDFOR»
+	        ");
+	        «ENDFOR»
+	        // Filter by published state
+	        $published = $params_module->get('state');
+	        if (is_numeric($published)) {
+	            $query->where('«indexpage.entities.get(0).name.toLowerCase».state = ' . (int) $published);
+	        } elseif ($published === '') {
+	            $query->where('(«indexpage.entities.get(0).name.toLowerCase».state IN (0, 1))');
+	        }
+	        // Filter by User 
+	        $created_by = $params_module->get('created_by');
+	        if (!empty($created_by)) {
+	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '" . $db->escape($created_by) . "'");
+	        }
+	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
+	        // Filter by «attr.name» 
+	        $«attr.name» = $params_module->get('«attr.name»');
+	        if (!empty($«attr.name»)) {
+	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '" . $db->escape($«attr.name») . "'");
+	        }
+            «ENDFOR»
+	        // Filter by search in attribute
+	        $search = $params_module->get('search');
+	        if (!empty($search)) {
+	            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
+	                $query->where('«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
+	            } else {
+	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
+	                «IF !filters.empty»
+	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE '.$search. 
+	                «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
+	                «IF filters.indexOf(attr) > 0»
+	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE '.$search.
+	                «ENDIF»
+	                «ENDFOR»
+	                ')');
+	                «ENDIF»
+	            }
+	        }
+	        // Add the list ordering clause.
+	        $orderCol = $params_module->get('ordering');
+	        $orderDirn = $params_module->get('direction');
+	        if ($orderCol && $orderDirn) {
+	            $query->order($db->escape($orderCol . ' ' . $orderDirn));
+	        }
+	        return $query;
+	    }
+    '''
+	
+	def genModel() '''
 	/**
 	 * @param
 	 *
