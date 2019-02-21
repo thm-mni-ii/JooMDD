@@ -628,9 +628,9 @@ class RessourceTransformer {
 			typ.notnull = false
 		}
 		newAttr.id = attribute.id
-		newAttr.isunique = attribute.isunique
+		//newAttr.isunique = attribute.isunique
 		if(attribute.isIsprimary)
-		newAttr.isunique = true
+		//newAttr.isunique = true
 		newAttr.preserve = attribute.preserve
 		if(!this.containsAttribute(newAttr,result)){
 		result.add(newAttr)
