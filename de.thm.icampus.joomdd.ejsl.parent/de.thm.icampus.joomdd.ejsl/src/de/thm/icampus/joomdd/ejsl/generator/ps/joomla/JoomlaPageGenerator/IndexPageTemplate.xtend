@@ -249,7 +249,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     </field>
                     <field
                         name="created_by"
-                        type="componentuser"
+                        type="«com.name.toLowerCase»user"
                         label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
                         description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
                         entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
