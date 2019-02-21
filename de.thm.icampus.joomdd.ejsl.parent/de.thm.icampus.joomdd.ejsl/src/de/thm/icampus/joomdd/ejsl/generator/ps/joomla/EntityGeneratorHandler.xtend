@@ -52,8 +52,8 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 						fields.dogenerate(path+ "models/fields/" , fsa)
 					}
 					case "*" , case "-1":{
-					    var FieldsCardinalityGenerator fields = new FieldsCardinalityGenerator(ref,comp, ent)
-						fields.dogenerate(path+ "models/fields/" , fsa)
+					    var FieldsCardinalityGenerator fieldCs = new FieldsCardinalityGenerator(ref,comp, ent)
+						fieldCs.dogenerate(path+ "models/fields/" , fsa)
 					}
 				}
 			}

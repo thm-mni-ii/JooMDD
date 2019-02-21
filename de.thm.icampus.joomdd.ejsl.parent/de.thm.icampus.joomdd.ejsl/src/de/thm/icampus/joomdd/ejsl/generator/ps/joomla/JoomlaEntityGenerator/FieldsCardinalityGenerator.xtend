@@ -5,6 +5,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import org.eclipse.xtext.generator.IFileSystemAccess
+import java.io.File
 
 /**
  * This class contains the templates to generate the fiel cardinalities.
@@ -202,4 +204,9 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    return implode($result);
 		}
 	'''
+	override dogenerate(String path, IFileSystemAccess access) {
+		if(this.mainRef !== null)
+			access.generateFile(path+ "/"+getnameField +".php", genRefrenceField)
+		
+	}
 }
