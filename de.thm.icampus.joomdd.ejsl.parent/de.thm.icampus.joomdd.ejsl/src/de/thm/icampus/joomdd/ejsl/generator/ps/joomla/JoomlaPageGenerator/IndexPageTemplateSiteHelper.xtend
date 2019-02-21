@@ -149,7 +149,7 @@ class IndexPageTemplateSiteHelper {
 		$canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		$canChange = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		$canDelete = $user->authorise('core.delete', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
-		$column = «extendedTableColumnListSize»;
+		$columns = «extendedTableColumnListSize»;
 		?>
 	'''
 
@@ -169,7 +169,7 @@ class IndexPageTemplateSiteHelper {
 	                <th width="1%" class="nowrap center">
 	                    <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 	                </th>
-	                <?php $column++;?>
+	                <?php $columns++;?>
 	                <?php endif; ?>
 	                «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
 	                <th class='left'>
@@ -180,7 +180,7 @@ class IndexPageTemplateSiteHelper {
 	                <th width="1%" class="nowrap center hidden-phone">
 	                    <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
 	                </th>
-	                <?php $column++;?>
+	                <?php $columns++;?>
 	                <?php endif; ?>
 	            </tr>
 	        </thead>
@@ -189,7 +189,7 @@ class IndexPageTemplateSiteHelper {
 	        </tbody>
 	        <tfoot>
 	            <tr>
-	                <td colspan="<?php echo $column;?>">
+	                <td colspan="<?php echo $columns;?>">
 	                    <?php echo $this->pagination->getListFooter(); ?>
 	                </td>
 	            </tr>
