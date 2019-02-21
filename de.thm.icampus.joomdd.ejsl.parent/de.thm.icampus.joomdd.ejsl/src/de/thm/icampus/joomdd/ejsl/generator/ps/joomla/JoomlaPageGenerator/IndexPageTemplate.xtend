@@ -157,6 +157,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 
 	    // Import CSS
 	    $document = Factory::getDocument();
+	    $columns = «helperAdmin.getextendedTableColumnListSize + 1»;
 	    «helperAdmin.genAdminViewLayoutHeader»
 	    «helperAdmin.genAdminViewLayoutForm»
 	'''
