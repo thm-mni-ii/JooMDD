@@ -149,8 +149,13 @@ class IndexPageTemplateSiteHelper {
 		$canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		$canChange = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		$canDelete = $user->authorise('core.delete', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+		$column = «extendedTableColumnListSize»;
 		?>
 	'''
+
+	def getExtendedTableColumnListSize() {
+		return indexpage.extendedTableColumnList.size;
+	}
 
 	public def CharSequence genViewTemplateHead()'''
 	<form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
@@ -160,20 +165,22 @@ class IndexPageTemplateSiteHelper {
 	    <table class="table table-striped">
 	        <thead>
 	            <tr>
-	                <?php if (isset($this->items[0]->state) && $canEdit) : ?>
+	                <?php if ((isset($this->items[0]) && property_exists($this->items[0], 'state')) && $canEdit) : ?>
 	                <th width="1%" class="nowrap center">
 	                    <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
 	                </th>
+	                <?php $column++;?>
 	                <?php endif; ?>
 	                «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
 	                <th class='left'>
 	                    <?php echo HTMLHelper::_('grid.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
 	                </th>
 	                «ENDFOR»
-	                <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit) : ?>
+	                <?php if ((isset($this->items[0]) && property_exists($this->items[0], '«mainEntity.primaryKey.name»')) && $canEdit) : ?>
 	                <th width="1%" class="nowrap center hidden-phone">
 	                    <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
 	                </th>
+	                <?php $column++;?>
 	                <?php endif; ?>
 	            </tr>
 	        </thead>
@@ -182,7 +189,7 @@ class IndexPageTemplateSiteHelper {
 	        </tbody>
 	        <tfoot>
 	            <tr>
-	                <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
+	                <td colspan="<?php echo $column;?>">
 	                    <?php echo $this->pagination->getListFooter(); ?>
 	                </td>
 	            </tr>
