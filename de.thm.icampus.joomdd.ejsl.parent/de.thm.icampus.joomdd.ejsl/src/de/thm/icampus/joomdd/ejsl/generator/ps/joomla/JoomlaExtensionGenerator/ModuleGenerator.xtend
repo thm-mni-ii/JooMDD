@@ -195,7 +195,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                <field
 		                    name="created_by"
 		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
-		                    type="componentuser"
+		                    type="«module.name.toLowerCase»user"
 		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
 		                    description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
 		                    entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»">
@@ -334,7 +334,6 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		class «helperClassName»
 		{
 		    «genGetList»
-		    «genGetModel()»
 		}
 		'''
 	}
@@ -583,5 +582,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
 	    return $items;
 	}
+	
+	«genGetModel»
 	'''
 } 

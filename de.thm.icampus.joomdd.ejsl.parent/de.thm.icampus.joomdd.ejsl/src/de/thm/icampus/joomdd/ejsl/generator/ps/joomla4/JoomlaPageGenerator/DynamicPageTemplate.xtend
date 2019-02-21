@@ -140,7 +140,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
             description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_JFIELD_PUBLISHED_DESC"
             class="inputbox"
             size="1"
-            default="1">
+            default="">
+            <option value="">JSELECT</option>
             <option value="1">JPUBLISHED</option>
             <option value="0">JUNPUBLISHED</option>
             <option value="2">JARCHIVED</option>
@@ -157,7 +158,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
             label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_CREATED_BY"
             description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_CREATED_BY"
             entity = "«page.extendedEntityList.get(0).name.toLowerCase»">
-            <option value="">JOPTION_SELECT_CREATED_BY</option>
+            <option value="">JSELECT</option>
         </field>
         «FOR ExtendedAttribute attr : page.extendFiltersList»
         <field
@@ -168,7 +169,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
             description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FILTER_«page.name.toUpperCase»_«attr.name.toUpperCase»"
             valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
             textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
-            <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
+            <option value="">JSELECT</option>
         </field>
         «ENDFOR»
     </fieldset>
