@@ -207,7 +207,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <folder>controllers</folder>		       
 		    </files>
 		    
-		    «componentManifestLanguages(component)»
+		    «componentManifestLanguages(component, false)»
 		
 		    <administration>
 		        <!-- Administration Menu Section -->
@@ -239,18 +239,18 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <folder>helpers</folder>
 		        </files>
 		
-		        «componentManifestLanguages(component)»
+		        «componentManifestLanguages(component, true)»
 		    </administration>
 		</extension>
 	'''
 
-	private def componentManifestLanguages(ExtendedComponent component) '''
+	private def componentManifestLanguages(ExtendedComponent component, boolean admin) '''
 	<languages>
 	«FOR lang : component.languages»
 	«IF !lang.sys»
-		<language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
+		<language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
 	«ELSE»
-	    <language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
 	«ENDIF»
 	«ENDFOR»
 	</languages>
