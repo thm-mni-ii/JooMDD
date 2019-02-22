@@ -38,35 +38,10 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	        component.languages.add(EcoreUtil2.copy(lang))
 	    }
 	    
-	    val languages = component.languages.filter[ language | 
-	    	language.sys === false
-	    ]
-	    
-	    val sysLanguages = component.languages.filter[ language | 
-	    	language.sys
-	    ]
-	    
-	    var filteredLanguages = languages.filter[ language | 
-	    	sysLanguages.exists[ sysLanguage | 
-	    		sysLanguage.name.equals(language.name)
-	    	] === false
-	    ]
-	    
-	    var synteticSysLanguages = filteredLanguages.map[ language |
-	    	var tmpLanguage = EcoreUtil2.copy(language)
-	    	tmpLanguage.sys = true
-	    	tmpLanguage
-	    ]
-	    
-	    component.languages.addAll(synteticSysLanguages.toList)
-	    
 		for (lang : component.languages) {
 			val ldir = lang.name
-			var EList<KVPairLanguage> languagesWordsFront = new BasicEList<KVPairLanguage>()
-			var EList<KVPairLanguage> languagesWordsBack = new BasicEList<KVPairLanguage>()
-			
-			languageFileContent(languagesWordsFront, component,lang, component.frontEndExtendedPagerefence)
-			languageFileContent(languagesWordsBack, component,lang, component.backEndExtendedPagerefence)
+			var EList<KVPairLanguage> languagesWordsFront = languageFileContent(component,lang, component.frontEndExtendedPagerefence)
+			var EList<KVPairLanguage> languagesWordsBack = languageFileContent(component,lang, component.backEndExtendedPagerefence)
 			
 			for(keys: lang.keyvaluepairs){
 				if(!keysContains(keys, languagesWordsFront)){
@@ -74,6 +49,15 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 					languagesWordsBack.add(new KVPairLanguage(keys) )
 				}
 			}
+			
+			val languagesWordsBackOrigin = languagesWordsBack.clone
+			
+			var languagesWordsFrontAdds = languagesWordsFront.filter[ l | 
+				languagesWordsBackOrigin.contains(l) === false
+			].toList
+			
+			languagesWordsBack.addAll(languagesWordsFrontAdds)
+			
 			
 			if(!lang.sys) {
 				fsa.generateFile(
@@ -101,14 +85,11 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			}
 		}
 	}
-	
-	def languageFileContent(ExtendedComponent component, Language language, EList<ExtendedPageReference> list) {
-	
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
 
-	private def void  languageFileContent(EList<KVPairLanguage> languagesWords, ExtendedComponent com, Language language,
+	private def EList<KVPairLanguage> languageFileContent(ExtendedComponent com, Language language,
 		EList<ExtendedPageReference> pagerefList) {
+		
+		var EList<KVPairLanguage> languagesWords = new BasicEList<KVPairLanguage>()
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LABEL",com.name.toFirstUpper))
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DESC",com.manifest.description))
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_UPDATE_TEXT","The update is succesfull"))
@@ -209,7 +190,9 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase+"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
 			}
 			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+dynamicPagereference.extendedPage.name.toUpperCase+"_ACTIONS","Actions"))
-		}		
+		}
+		
+		return languagesWords
 	}
 	
 	def void addsLanguageKeys(EList<KVPairLanguage> list, KVPairLanguage language){

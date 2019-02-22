@@ -24,4 +24,10 @@ public class KVPairLanguage extends KVPairInterface {
 		return '''«kv.name.toUpperCase»="«kv.value»"'''
 	}
 	
+	override equals(Object o) {
+		if (o instanceof KVPairLanguage) {
+			return this.kv.name.equals(o.kv.name)
+		}
+		return false
+	}	
 }
