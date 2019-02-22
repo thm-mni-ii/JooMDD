@@ -375,9 +375,6 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 				case FRONTEND_DAO: {
                 	modelPath = "'/components/com_" + compName.toLowerCase + "/models'"
 				}
-				default: {
-					logger.warn('''This should not happen. :/''')
-				}
             }
             
             modelOfComponent = ("\"" + compName.toFirstUpper + "\"")
