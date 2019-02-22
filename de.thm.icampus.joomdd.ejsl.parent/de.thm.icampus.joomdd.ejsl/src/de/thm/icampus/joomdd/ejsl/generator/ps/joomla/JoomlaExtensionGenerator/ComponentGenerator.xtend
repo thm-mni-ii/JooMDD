@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import java.util.LinkedList
+import org.eclipse.xtext.EcoreUtil2
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla component.
@@ -71,6 +72,28 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
                 indexPages.add(ext.extendedPage.extendedDynamicPageInstance)  
             } 
   		}
+
+	    val languages = extendedComp.languages.filter[ language | 
+	    	language.sys === false
+	    ]
+	    
+	    val sysLanguages = extendedComp.languages.filter[ language | 
+	    	language.sys
+	    ]
+	    
+	    var filteredLanguages = languages.filter[ language | 
+	    	sysLanguages.exists[ sysLanguage | 
+	    		sysLanguage.name.equals(language.name)
+	    	] === false
+	    ]
+	    
+	    var synteticSysLanguages = filteredLanguages.map[ language |
+	    	var tmpLanguage = EcoreUtil2.copy(language)
+	    	tmpLanguage.sys = true
+	    	tmpLanguage
+	    ]
+	    
+	    extendedComp.languages.addAll(synteticSysLanguages.toList)
 
         // Generate the the installation path for a compoenent
 		generateFile(path + name + ".xml", extendedComp.xmlContent(indexPages))
@@ -184,15 +207,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        <folder>controllers</folder>		       
 		    </files>
 		    
-		    <languages>
-		        «FOR lang : component.languages»
-		        «IF !lang.sys»
-		        <language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
-		        «ELSE»
-		        <language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
-		        «ENDIF»
-		        «ENDFOR»
-		    </languages>
+		    «componentManifestLanguages(component)»
 		
 		    <administration>
 		        <!-- Administration Menu Section -->
@@ -224,17 +239,21 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            <folder>helpers</folder>
 		        </files>
 		
-		        <languages>
-		            «FOR lang : component.languages»
-		            «IF !lang.sys»
-		            <language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
-		            «ELSE»
-		            <language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
-		            «ENDIF»
-		            «ENDFOR»
-		        </languages>
+		        «componentManifestLanguages(component)»
 		    </administration>
 		</extension>
+	'''
+
+	private def componentManifestLanguages(ExtendedComponent component) '''
+	<languages>
+	«FOR lang : component.languages»
+	«IF !lang.sys»
+		<language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
+	«ELSE»
+	    <language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+	«ENDIF»
+	«ENDFOR»
+	</languages>
 	'''
 
     /**
