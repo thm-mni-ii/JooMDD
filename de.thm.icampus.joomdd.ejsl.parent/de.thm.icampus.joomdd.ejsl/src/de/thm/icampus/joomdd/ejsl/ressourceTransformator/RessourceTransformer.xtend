@@ -196,7 +196,7 @@ class RessourceTransformer {
 					if(attr === null){
 					 var Attribute refAttrEnt = setNewGenAttribute(ent, ref, uniqWith)
 					 var Attribute hereAttr = ref.attribute.get(ref.attributerefereced.indexOf(attrRef))
-					 hereAttr.isunique = true;
+					 //hereAttr.isunique = true;
 					 hereAttr.withattribute = refAttrEnt
 					 
 					newReferenceArttibute.add(uniqWith)
