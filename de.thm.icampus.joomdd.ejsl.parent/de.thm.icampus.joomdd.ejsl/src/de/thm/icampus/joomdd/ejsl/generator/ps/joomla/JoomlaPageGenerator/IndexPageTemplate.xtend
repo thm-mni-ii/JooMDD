@@ -236,8 +236,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     <field
                         name="search"
                         type="text"
-                        label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_DESC"
-                        description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_DESC"
+                        label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_«ipage.name.toUpperCase»_DESC"
+                        description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_«ipage.name.toUpperCase»_DESC"
                         hint="JSEARCH_FILTER"
                     />
                     <field
