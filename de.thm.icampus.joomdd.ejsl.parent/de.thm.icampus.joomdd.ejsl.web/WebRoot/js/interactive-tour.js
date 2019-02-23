@@ -39,10 +39,12 @@
                 $this.css('z-index', opts.curtainZIndex+1);
             }
 
-            /*$this.popover({
+            $this.popover({
                 content: intel,
                 template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
-            });*/
+            });
+
+            $this.popover('show');
         });
 
         $curtain.stop().animate({opacity: options.darkness}, options.fadeInDuration, callback);
