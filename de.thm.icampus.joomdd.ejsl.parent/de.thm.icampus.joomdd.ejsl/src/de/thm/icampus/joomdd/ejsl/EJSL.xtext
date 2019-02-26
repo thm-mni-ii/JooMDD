@@ -54,7 +54,7 @@ Type:
 ;
 
 DatatypeReference:
-	type=[Datatype]
+	type=[Datatype|QualifiedName]
 ;
 
 StandardTypes:
