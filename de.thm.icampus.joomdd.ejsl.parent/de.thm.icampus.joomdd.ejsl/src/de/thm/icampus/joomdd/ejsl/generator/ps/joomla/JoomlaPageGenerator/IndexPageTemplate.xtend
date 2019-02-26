@@ -157,6 +157,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 
 	    // Import CSS
 	    $document = Factory::getDocument();
+	    $columns = «helperAdmin.getextendedTableColumnListSize + 1»;
 	    «helperAdmin.genAdminViewLayoutHeader»
 	    «helperAdmin.genAdminViewLayoutForm»
 	'''
@@ -235,8 +236,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     <field
                         name="search"
                         type="text"
-                        label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_DESC"
-                        description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_DESC"
+                        label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_«ipage.name.toUpperCase»_DESC"
+                        description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_«ipage.name.toUpperCase»_DESC"
                         hint="JSEARCH_FILTER"
                     />
                     <field
@@ -249,7 +250,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     </field>
                     <field
                         name="created_by"
-                        type="componentuser"
+                        type="«com.name.toLowerCase»user"
                         label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
                         description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
                         entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"

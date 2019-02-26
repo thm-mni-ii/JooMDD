@@ -166,6 +166,14 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		return ownExtendedAttributes.filter[t | t.isIsunique].get(0);
 	}
 	
+	override searchRefWithAttr(Attribute attribute, Entity entity) {
+		for(ExtendedReference ref : this.extendedReferences){
+			if(ref.attribute.contains(attribute) && ref.entity === entity)
+			return ref
+		}
+		return null
+	}
+	
 
 	
 

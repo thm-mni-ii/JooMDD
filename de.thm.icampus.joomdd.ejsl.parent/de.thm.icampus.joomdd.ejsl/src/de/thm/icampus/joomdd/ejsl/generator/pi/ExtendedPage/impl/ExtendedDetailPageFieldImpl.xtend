@@ -9,7 +9,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedAttri
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
 import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 
-class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements ExtendedDetailPageField {
+class ExtendedDetailPageFieldImpl extends DetailPageFieldImpl implements ExtendedDetailPageField {
 	
 	String type
 	ExtendedAttribute extendedAttribute
@@ -18,6 +18,7 @@ class ExtendedDetailsPageFieldImpl extends DetailPageFieldImpl implements Extend
 		instance = field
 		this.attribute = field.attribute
 		this.htmltype = field.htmltype
+		this.fieldtype = field.fieldtype
 		extendedAttribute = new ExtendedAttributeImpl(this.attribute)
 		this.attributes = field.attributes
 		this.values = field.values

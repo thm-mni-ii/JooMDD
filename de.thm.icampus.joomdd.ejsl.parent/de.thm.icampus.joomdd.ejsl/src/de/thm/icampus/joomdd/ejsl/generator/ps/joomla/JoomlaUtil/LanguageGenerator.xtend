@@ -37,13 +37,11 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	        lang.sys = true
 	        component.languages.add(EcoreUtil2.copy(lang))
 	    }
+	    
 		for (lang : component.languages) {
 			val ldir = lang.name
-			var EList<KVPairLanguage> languagesWordsFront = new BasicEList<KVPairLanguage>()
-			var EList<KVPairLanguage> languagesWordsBack = new BasicEList<KVPairLanguage>()
-			
-			languageFileContent(languagesWordsFront, component,lang, component.frontEndExtendedPagerefence)
-			languageFileContent(languagesWordsBack, component,lang, component.backEndExtendedPagerefence)
+			var EList<KVPairLanguage> languagesWordsFront = languageFileContent(component,lang, component.frontEndExtendedPagerefence)
+			var EList<KVPairLanguage> languagesWordsBack = languageFileContent(component,lang, component.backEndExtendedPagerefence)
 			
 			for(keys: lang.keyvaluepairs){
 				if(!keysContains(keys, languagesWordsFront)){
@@ -52,37 +50,46 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				}
 			}
 			
+			val languagesWordsBackOrigin = languagesWordsBack.clone
+			
+			var languagesWordsFrontAdds = languagesWordsFront.filter[ l | 
+				languagesWordsBackOrigin.contains(l) === false
+			].toList
+			
+			languagesWordsBack.addAll(languagesWordsFrontAdds)
+			
+			
 			if(!lang.sys) {
 				fsa.generateFile(
-				root +"/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+					root +"/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
 					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
-				fileLangGen(languagesWordsFront))
+					fileLangGen(languagesWordsFront)
+				)
 				fsa.generateFile(
-				root + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
-					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
-					fileLangGen(languagesWordsBack))
+					root + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+						Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
+					fileLangGen(languagesWordsBack)
+				)
 			} else {
-			
-			fsa.generateFile(
-				root +"/components/"+ component.extensionName+ "/language/" + ldir + "/" + ldir + "." + 
-					Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
-				fileLangGen(languagesWordsFront))
-			
-			fsa.generateFile(
-				root  + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
-					Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
-					fileLangGen(languagesWordsBack))
+				fsa.generateFile(
+					root +"/components/"+ component.extensionName+ "/language/" + ldir + "/" + ldir + "." + 
+						Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
+					fileLangGen(languagesWordsFront)
+				)
+				
+				fsa.generateFile(
+					root  + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+						Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
+					fileLangGen(languagesWordsBack)
+				)
 			}
 		}
 	}
-	
-	def languageFileContent(ExtendedComponent component, Language language, EList<ExtendedPageReference> list) {
-	
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
 
-	private def void  languageFileContent(EList<KVPairLanguage> languagesWords, ExtendedComponent com, Language language,
+	private def EList<KVPairLanguage> languageFileContent(ExtendedComponent com, Language language,
 		EList<ExtendedPageReference> pagerefList) {
+		
+		var EList<KVPairLanguage> languagesWords = new BasicEList<KVPairLanguage>()
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LABEL",com.name.toFirstUpper))
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DESC",com.manifest.description))
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_UPDATE_TEXT","The update is succesfull"))
@@ -177,13 +184,23 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			    languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase+"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_ORDERING_LABEL" , "Ordering"))
 			    languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_FILTER_LABEL" , "Filter"))
 			}
+			
+			var searchDestriptionAttributes = newArrayList			
 			for( ExtendedAttribute attr: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendFiltersList){
 			    languagesWords.addsLanguageKeys(new KVPairLanguage("JOPTION_SELECT_"+ Slug.slugify(attr.name).toUpperCase, "Select a "+Slug.slugify(attr.name).toFirstUpper))
 				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
-				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase+"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
+				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
+				searchDestriptionAttributes.add(Slug.slugify(attr.name).toFirstUpper)
 			}
+			
+			var lastElement = searchDestriptionAttributes.last
+			searchDestriptionAttributes.remove(lastElement)
+			var searchDestription = '''Search in «searchDestriptionAttributes.join(", ")»«IF searchDestriptionAttributes.size > 0» and «ENDIF»«lastElement».'''
+			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_SEARCH_"+dynamicPagereference.extendedPage.name.toUpperCase+"_DESC", searchDestription))
 			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+dynamicPagereference.extendedPage.name.toUpperCase+"_ACTIONS","Actions"))
-		}		
+		}
+		
+		return languagesWords
 	}
 	
 	def void addsLanguageKeys(EList<KVPairLanguage> list, KVPairLanguage language){

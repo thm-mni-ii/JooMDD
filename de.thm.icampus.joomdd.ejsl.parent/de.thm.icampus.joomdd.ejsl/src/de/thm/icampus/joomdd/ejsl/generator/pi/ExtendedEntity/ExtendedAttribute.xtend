@@ -52,4 +52,13 @@ interface ExtendedAttribute extends Attribute {
 	 */
 	def String htmlType()
 	
+	
+	
+	/**
+	 * Returns true if the Attribute is the base of unique pair
+	 * 
+	 * @return boolean
+	 */
+	def boolean isTheBaseElementOfUniquePair()
+	
 }

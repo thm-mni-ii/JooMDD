@@ -3,6 +3,7 @@ package de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 
 /**
  * This interface defines methods, which are needed to access further information on an Entity.
@@ -110,5 +111,7 @@ interface ExtendedEntity extends Entity {
 	 * @return the unique  ExtendedAttribute
 	 */
 	def ExtendedAttribute getFirstUniqueKey()
+	
+	def ExtendedReference searchRefWithAttr(Attribute attribute, Entity entity)
 	
 }
