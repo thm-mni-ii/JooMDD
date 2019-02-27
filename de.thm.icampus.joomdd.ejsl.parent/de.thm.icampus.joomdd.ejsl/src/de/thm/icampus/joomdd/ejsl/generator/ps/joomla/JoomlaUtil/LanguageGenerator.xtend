@@ -169,7 +169,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 					languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_" + Slug.slugify(ent.name).toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase+"_DESC","Description of " + Slug.slugify(attr.name).toFirstUpper))
 					if( field !== null && field.values !== null){
 						for( KeyValuePair kv: field.values){
-							languagesWords.addsLanguageKeys(new KVPairLanguage(dtPage.name.toUpperCase+"_"+attr.name.toUpperCase+"_"+kv.name.toUpperCase+"_OPTION",kv.name))
+							languagesWords.addsLanguageKeys(new KVPairLanguage(dtPage.name.toUpperCase+"_"+attr.name.toUpperCase+"_"+kv.value.toUpperCase+"_OPTION",kv.value))
 						}
 					}
 				}

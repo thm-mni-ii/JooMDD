@@ -113,7 +113,6 @@ class TableGeneratorTemplate {
 		    }
 		
 		    //Support for file field: file
-		    $input = Factory::getApplication()->input;
 		
 		    if (isset($array['params']) && is_array($array['params'])) {
 		        $registry = new Registry();

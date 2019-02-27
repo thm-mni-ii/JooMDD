@@ -376,7 +376,7 @@ class RessourceTransformer {
 	
 	def completeDetailsPage(){
 		
-		for(Page page: featurs.pages.filter[t | t instanceof DetailsPage && (t as DetailsPage).tablecolumns.empty && (t as DetailsPage).editfields.empty]){
+		for(Page page: featurs.pages.filter[t | t instanceof DetailsPage ]){
 			var DetailsPage dp = page as DetailsPage
 			completeTableColumnAndEditedFields(dp)
 			for(DetailPageField field: dp.editfields){
@@ -391,14 +391,64 @@ class RessourceTransformer {
 	
 	private def completeTableColumnAndEditedFields(DetailsPage page) {
 
-		if(page.editfields.empty && page.tablecolumns.empty){
+	
 			for(Attribute attr: page.entities.get(0).attributes){
-				page.tablecolumns.add(attr)
+				if(!page.tablecolumns.contains(attr)){
+					page.tablecolumns.add(attr)
+					
+				}
+				var DetailPageField df = existingAlreadyFieldWithAttr(page.editfields, attr)
+				if(df !== null){
+					completeDetailageField(df)
+				}else{
+					page.editfields.add(parseAttributeType(attr))
+				}
 				
-				page.editfields.add(parseAttributeType(attr))
+			}
+		
+	}
+	//@todo
+	def completeDetailageField(DetailPageField field) {
+		
+		var Attribute attr = field.attribute
+		if( attr !== null ){
+			var Entity ent = field.attribute.eContainer as Entity
+			var Reference ref = ent.searchRefrenceOfAttribute(field.attribute)
+			if(ref !== null){
+				field.fieldtype = ref.attributerefereced.get(ref.attribute.indexOf(attr))
+			}
+			else{
+				if(field.fieldtype !== null){
+					field.fieldtype = null
+					var ComplexHTMLTypes result = EJSLFactory.eINSTANCE.createComplexHTMLTypes
+					result.htmltype = ComplexHTMLTypeKinds.get("Hidden")
+					field.htmltype =  result
+				}
 			}
 		}
+		if(field.fieldtype !== null && field.htmltype === null){
+			field.htmltype = this.ParsingHTMlTypeFromAttr( field.attribute)
+			
+		}
 	}
+	
+	def Reference searchRefrenceOfAttribute(Entity entity, Attribute attribute){
+		for(Reference ref : entity.references){
+			if(ref.attribute.contains(attribute)){
+				return ref
+			}
+		}
+		return null
+	}
+	
+	def DetailPageField existingAlreadyFieldWithAttr(EList<DetailPageField> list, Attribute attribute) {
+		for(DetailPageField df: list){
+			if(df.attribute.name == attribute.name)
+			return df
+		}
+		return null
+	}
+	
 	private def completeColUmnAndFilterList(IndexPage page) {		
 		if(page.filters.empty && !page.tablecolumns.empty){
 			for(Attribute attr: page.tablecolumns){
@@ -747,7 +797,7 @@ class RessourceTransformer {
 				return editField
 			}
 			StandardTypes:{
-				return parsingType(attribute, ent)
+				return generateDetailsPAgeFields(attribute, ent)
 			}
 		}
 	}
@@ -760,7 +810,7 @@ class RessourceTransformer {
 		return null
 	}
 	
-	private def DetailPageField  parsingType(Attribute attribute, Entity ent) {
+	private def DetailPageField  generateDetailsPAgeFields(Attribute attribute, Entity ent) {
 		var StandardTypes temptyp = attribute.type as StandardTypes
 		if(attribute.isIsprimary){
 			var ComplexHTMLTypes result = EJSLFactory.eINSTANCE.createComplexHTMLTypes
@@ -778,9 +828,42 @@ class RessourceTransformer {
 		if(ref !==null && !attribute.isIsprimary){
 			editField.fieldtype = ref
 		 }
-		 	
+		 	result =  this.ParsingHTMlTypeFromAttr(attribute)
+			switch (temptyp.type.getName()){ 
+			case "Time":{
+			    var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
+			    format.name = "format"
+			    format.value = "%H:%M:%S"
+			  editField.attributes.add(format);
+			    
+				
+			}
+			case "Date":{
+				 var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
+			    format.name = "format"
+			    format.value = "%d-%m-%Y"
+			    editField.attributes.add(format);
+			}
+			case "Datetime" :{
+			   var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
+			    format.name = "format"
+			    format.value = "%y-%m-%d %H:%M:%S"
+			    editField.attributes.add(format);
+				}
 		
-		switch (temptyp.type.getName()){
+			
+		}
+	
+         editField.htmltype =result
+         
+         
+		return editField
+		
+	}
+	def SimpleHTMLTypes ParsingHTMlTypeFromAttr(Attribute attr){
+		var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
+		var StandardTypes temptyp = attr.type as StandardTypes
+			switch (temptyp.type.getName()){
 			case "Integer" :{
 				
 				result.htmltype = SimpleHTMLTypeKinds.get("Integer")
@@ -799,26 +882,15 @@ class RessourceTransformer {
 			} 
 			case "Time":{
 				result.htmltype = SimpleHTMLTypeKinds.get( "Datepicker")
-			    var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
-			    format.name = "format"
-			    format.value = "%H:%M:%S"
-			  editField.attributes.add(format);
-			    
-				
+			  
 			}
 			case "Date":{
 				result.htmltype = SimpleHTMLTypeKinds.get( "Datepicker")
-				 var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
-			    format.name = "format"
-			    format.value = "%d-%m-%Y"
-			    editField.attributes.add(format);
+				 
 			}
 			case "Datetime" :{
 				result.htmltype = SimpleHTMLTypeKinds.get( "Datepicker")
-					 var KeyValuePair format = EJSLFactory.eINSTANCE.createKeyValuePair
-			    format.name = "format"
-			    format.value = "%y-%m-%d %H:%M:%S"
-			    editField.attributes.add(format);
+			    
 				}
 			case "Link" :{
 				result.htmltype = SimpleHTMLTypeKinds.get( "Link")
@@ -831,10 +903,8 @@ class RessourceTransformer {
 			}
 			
 		}
-         editField.htmltype = result
-         
-         
-		return editField
+		return result
+		
 	}
 	private def DetailsPage createNewExtendedDetailsPageForExtensions(Entity entity) {
 		var DetailsPage detailsPage = EJSLFactory.eINSTANCE.createDetailsPage
