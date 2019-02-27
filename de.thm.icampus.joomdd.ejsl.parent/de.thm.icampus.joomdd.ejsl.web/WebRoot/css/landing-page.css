@@ -142,6 +142,18 @@ nav {
   padding: 0 0 0 8px;
 }
 
+.page-link {
+  color: #3c7b79;
+}
+
+.page-link:hover, .page-link:active {
+  color: #4b9a98;
+}
+
+.jstree-clicked {
+  background-color: #3c7b79;
+}
+
 .btn.btn-joomdd {
   color: #fff;
   background-color: #4b9a98;

@@ -1,18 +1,153 @@
-require(["jquery"], function($) {
+require(["jquery"], function ($) {
+
+    class TourPoint {
+        get description() {
+            return this._description;
+        }
+
+        get objects() {
+            return this._objects;
+        }
+
+        constructor(objects, description) {
+            this._objects = objects;
+            this._description = description;
+        }
+    }
+
+    class InteractiveTour {
+
+        /* TODO: Add tour points accordingly */
+        tourPoints = [
+            new TourPoint($('#saveModel'), `This is the save button. Press this button to save your model.`),
+            new TourPoint($('#generateCode'), `This is the generate button. Use this button to start the 
+            generation of your excellent MDD'd Joomla! component`)
+        ];
+        position = 0;
+        isActive = false;
+
+        createPagination() {
+            const paginationNav = $(`<nav aria-label="Page navigation example"></nav>`);
+            const paginationList = $(`<ul class="pagination justify-content-center"></ul>`);
+            const previousButton = $(`<li class="page-item">
+                                          <a class="page-link" tabindex="-1" href="#">Previous</a>
+                                        </li>`);
+            const nextButton = $(`<li class="page-item">
+                                      <a class="page-link" href="#">Next</a>
+                                    </li>`);
+            const stopButton = $(`<li class="page-item">
+                                      <a class="page-link" href="#">Stop tour</a>
+                                    </li>`);
+
+            previousButton.on('click', (event) => {
+                event.stopPropagation();
+                this.previousTourPoint();
+            });
+            nextButton.on('click', (event) => {
+                event.stopPropagation();
+                this.nextTourPoint();
+            });
+            stopButton.on('click', (event) => {
+                event.stopPropagation();
+                this.endTour();
+            });
+
+            paginationList.append(previousButton);
+            this.tourPoints.forEach((tourPoint, index) => {
+                const listEntry = $(`<li class="page-item"><a class="page-link" href="#">${index + 1}</a></li>`);
+                listEntry.on('click', (event) => {
+                    event.stopPropagation();
+                    this.showTourPoint(index);
+                });
+                paginationList.append(listEntry);
+            });
+            paginationList.append(nextButton);
+            paginationList.append(stopButton);
+
+            paginationNav.append(paginationList);
+
+            return paginationNav;
+        }
+
+        showTourPoint(index) {
+            if (this.isActive) {
+                this.hideTourPoints();
+            }
+            this.tourPoints[typeof index === "undefined" ? this.position : index].objects.dimBackground(
+                {},
+                () => {
+                    $('.dimbackground-curtain').append(this.createPagination());
+                },
+                this.tourPoints[typeof index === "undefined" ? this.position : index].description
+            );
+            this.isActive = true;
+        }
+
+        hideTourPoints() {
+            this.tourPoints.forEach((tourPoint) => {
+                tourPoint.objects.undim();
+            });
+            this.isActive = false;
+
+            return self;
+        }
+
+        startTour() {
+            if (this.tourPoints.length > 0) {
+                this.position = 0;
+                this.showTourPoint();
+            }
+        }
+
+        nextTourPoint() {
+
+            if (this.tourPoints.length === 1) {
+                console.log(`That's it! Tour finished`);
+                this.endTour();
+                return;
+            }
+            if (this.position + 1 === this.tourPoints.length) {
+                this.position = 0;
+                this.showTourPoint();
+            } else {
+                ++this.position;
+                this.showTourPoint();
+            }
+        }
+
+        previousTourPoint() {
+            if (this.position === 0) {
+                this.position = this.tourPoints.length - 1;
+                this.showTourPoint()
+            } else {
+                this.position--;
+                this.showTourPoint();
+            }
+        }
+
+        endTour() {
+            this.hideTourPoints();
+        }
+
+    }
+
+    const interactiveTour = new InteractiveTour();
+
+    // Dimming and popover as jQuery extension
     (function ($) {
         'use strict';
 
-        var dimmedNodes = [];
+        let dimmedNodes = [];
 
         $.fn.dimBackground = function (options, callback, intel) {
-            var params = parseParams(options, callback, intel);
+            const params = parseParams(options, callback, intel);
             options = params.options;
             callback = params.callback;
-            intel = params.intel
+            intel = params.intel;
 
             options = $.extend({}, $.fn.dimBackground.defaults, options);
 
-            var $curtain = $('<div class="dimbackground-curtain"></div>');
+            const $curtain = $(`<div class="dimbackground-curtain"></div>`);
             $curtain.css({
                 position: 'fixed',
                 left: 0,
@@ -21,28 +156,39 @@ require(["jquery"], function($) {
                 height: '100%',
                 background: 'black',
                 opacity: 0,
-                zIndex: options.curtainZIndex
+                zIndex: options.curtainZIndex,
+                display: 'flex',
+                flexDirection: 'column-reverse'
+            });
+            $curtain.on('click', (event) => {
+                if (event.target.classList.contains('dimbackground-curtain')) {
+                    interactiveTour.endTour();
+                }
             });
             $('body').append($curtain);
 
             this.each(function () {
-                var $this = $(this);
-                var opts = $.meta ? $.extend({}, options, $this.data()) : options;
+                const $this = $(this);
+                const opts = $.meta ? $.extend({}, options, $this.data()) : options;
 
                 this._$curtain = $curtain;
                 this._originalPosition = $this.css('position').toLowerCase();
-                if (this._originalPosition != "absolute" && this._originalPosition != "fixed") {
+                if (this._originalPosition !== "absolute" && this._originalPosition !== "fixed") {
                     $this.css('position', 'relative');
                 }
 
                 this._originalZIndex = $this.css('z-index');
-                if (this._originalZIndex == "auto" || this._originalZIndex <= opts.curtainZIndex) {
+                if (this._originalZIndex === "auto" || this._originalZIndex <= opts.curtainZIndex) {
                     $this.css('z-index', opts.curtainZIndex + 1);
                 }
 
                 $this.popover({
                     content: intel,
-                    template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'
+                    template: `<div class="popover" role="tooltip">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-header"></h3>
+                                    <div class="popover-body"></div>
+                                </div>`
                 });
 
                 $this.popover('show');
@@ -54,16 +200,16 @@ require(["jquery"], function($) {
         };
 
         $.fn.undim = function (options, callback) {
-            var params = parseParams(options, callback);
+            let params = parseParams(options, callback);
             options = params.options;
             callback = params.callback;
             options = $.extend({}, $.fn.dimBackground.defaults, options);
 
-            var $curtain;
-            var nodeZIndexMap = [];
+            let $curtain;
+            const nodeZIndexMap = [];
             this.each(function () {
-                var $this = $(this);
-                var opts = $.meta ? $.extend({}, options, $this.data()) : options;
+                let $this = $(this);
+                let opts = $.meta ? $.extend({}, options, $this.data()) : options;
 
                 if (this._$curtain) {
                     if (!$curtain) {
@@ -82,8 +228,8 @@ require(["jquery"], function($) {
 
             if ($curtain) {
                 $curtain.animate({opacity: 0}, options.fadeOutDuration, function () {
-                    for (var i = 0; i < nodeZIndexMap.length; i++) {
-                        var node = nodeZIndexMap[i][0],
+                    for (let i = 0; i < nodeZIndexMap.length; i++) {
+                        const node = nodeZIndexMap[i][0],
                             position = nodeZIndexMap[i][1],
                             zIndex = nodeZIndexMap[i][2];
                         $(node).css({
@@ -95,31 +241,31 @@ require(["jquery"], function($) {
                     callback();
                 });
 
-                var match;
-                for (var i = 0; i < dimmedNodes.length; i++) {
-                    var entry = dimmedNodes[i];
+                let match;
+                for (let i = 0; i < dimmedNodes.length; i++) {
+                    const entry = dimmedNodes[i];
                     if (entry.$curtain == $curtain) {
                         match = i;
                         break;
                     }
                 }
                 if (match) {
-                    dimmedNodes = dimmedNodes.slice(0, i).concat(dimmedNodes.slice(i + 1));
+                    dimmedNodes = dimmedNodes.slice(0, match).concat(dimmedNodes.slice(match + 1));
                 }
             }
             return this;
         };
 
         $.undim = function (options, callback) {
-            var params = parseParams(options, callback);
+            const params = parseParams(options, callback);
             options = params.options;
             callback = params.callback;
             options = $.extend({}, $.fn.dimBackground.defaults, options);
 
-            var _dimmedNodes = dimmedNodes.slice();
+            const _dimmedNodes = dimmedNodes.slice();
 
-            var completed = 0, total = _dimmedNodes.length;
-            for (var i = 0; i < dimmedNodes.length; i++) {
+            let completed = 0, total = _dimmedNodes.length;
+            for (let i = 0; i < dimmedNodes.length; i++) {
                 _dimmedNodes[i].$nodes.undim(options, done);
             }
 
@@ -129,7 +275,7 @@ require(["jquery"], function($) {
 
             function done() {
                 completed++;
-                if (completed == total) {
+                if (completed === total) {
                     callback();
                 }
             }
@@ -162,16 +308,14 @@ require(["jquery"], function($) {
 
     $(() => {
 
-        setTimeout(() => {
-            // Dim the background except the selected element(s)
-            $('#saveModel').dimBackground({}, () => {
-            }, 'Das ist der Speichern Button');
-        }, 1000);
+        /*if (!isLoggedIn()) {
+            interactiveTour.startTour();
+        }*/
 
+        /* TODO Remove if check is implemented*/
         setTimeout(() => {
-            // Un-dim all the elements, reset the selected element's values for zIndex and position
-            $('#saveModel').undim();
-        }, 5000);
+            interactiveTour.startTour();
+        }, 1000);
 
     });
 });
