@@ -14,6 +14,10 @@ body, h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
+nav {
+  box-shadow: 0 -10px 20px 0 black;
+}
+
 .intro-header {
   padding-top: 0px;
   padding-bottom: 0px;
@@ -25,8 +29,7 @@ body, h1, h2, h3, h4, h5, h6 {
 
 .intro-message {
   position: relative;
-  padding-top: 20%;
-  padding-bottom:20%;
+  padding: 16% 0;
 }
 
 .intro-message-editor {
@@ -131,9 +134,54 @@ body, h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
 }
 
+.image-shadow {
+  box-shadow: 5px 10px 20px -10px black;
+}
+
+.nav-item:last-child {
+  padding: 0 0 0 8px;
+}
+
+.page-link {
+  color: #3c7b79;
+}
+
+.page-link:hover, .page-link:active {
+  color: #4b9a98;
+}
+
+.jstree-clicked {
+  background-color: #3c7b79;
+}
+
+.btn.btn-joomdd {
+  color: #fff;
+  background-color: #4b9a98;
+  border-color: #4b9a98;
+}
+
+.btn.btn-joomdd:hover {
+  color: #fff;
+  background-color: #3c7b79;
+  border-color: #4b9a98;
+}
+.btn.btn-joomdd:focus {
+  box-shadow: 0 0 0 0.2rem rgba(75,154,152,.5);
+}
+
+.btn.btn-joomdd:active {
+  color: #fff;
+  background-color: #3c7b79;
+  border-color: #4b9a98;
+  box-shadow: 0 0 0 0.2rem rgba(75,154,152,.5);
+}
+
 @media(max-width:1199px) {
   ul.banner-social-buttons {
     float: left;
+    margin-top: 15px;
+  }
+  ul.banner-social-buttons>li:last-child {
     margin-top: 15px;
   }
 }
@@ -154,6 +202,12 @@ body, h1, h2, h3, h4, h5, h6 {
   }
 }
 
+@media(max-width:454px) {
+  .btn {
+    white-space: normal;
+  }
+}
+
 footer {
   padding: 50px 0;
   background-color: #f8f8f8;
@@ -164,7 +218,7 @@ p.copyright {
 }
 
 .logo {
-  max-width: 40%;
+  height: 45px;
 }
 
 #xtext-editor {
@@ -172,6 +226,10 @@ p.copyright {
   max-height: 400px;
   margin-top: 10px;
   margin-right: 20px;
+}
+
+#feedback {
+  padding: 5vh 0;
 }
 
 .loader {
