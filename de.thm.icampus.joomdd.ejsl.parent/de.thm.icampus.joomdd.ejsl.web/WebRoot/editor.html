@@ -14,7 +14,7 @@
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template -->
@@ -25,8 +25,13 @@
 
     <link rel="stylesheet" type="text/css" href="css/jtree.min.css" />
     <!-- https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css -->
-    
+
     <script type="text/javascript" src="webjars/requirejs/2.3.5/require.min.js"></script>
+
+      <script type="application/javascript" src="js/interactive-tour.js"></script>
+
+      <!-- Custom styles for this template -->
+      <link href="css/landing-page.css" rel="stylesheet">
 
     <script type="text/javascript">
         var baseUrl = window.location.pathname;
@@ -58,7 +63,7 @@
                 "themes": "js/themes"
             }
         });
-        
+
         require(["ace/ace"], function() {
 			require(["xtext/xtext-ace"], function(xtext) {
 				require(["initialise", "buttonhandler"], function(initialise) {
@@ -75,11 +80,11 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="index.html"><img class="logo" src="img/Logo_b.png"></a>
+        <a class="navbar-brand js-scroll-trigger" href="index.html"><img class="logo" alt="JooMDD Logo" src="img/logo.svg" /></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
- 
+
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
@@ -88,7 +93,7 @@
             <li class="nav-item btn-group">
               <div id="loginMenuDropdown" class="btn-group">
                 <button id="loginMenuBtn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-spinner fa-pulse fa-fw"></i> LogIn
+                  <i class="fas fa-spinner fa-pulse fa-fw"></i> LogIn
                 </button>
                 <div id="dropdownLogin" class="dropdown-menu">
                   <form id="login-form" class="px-4 py-3" role="form">
@@ -114,7 +119,7 @@
             </li>
             <li>
               <button id="logoutMenuBtn" type="button" class="btn btn-secondary d-none">
-                <i class="fa fa-user-o fa-fw"></i> LogOut
+                <i class="fas fa-user fa-fw"></i> LogOut
               </button>
             </li>
           </ul>
@@ -144,14 +149,14 @@
                       id="saveModel"
                       class="btn btn-light btn-lg"
                       title="Save your model code in the editor to the selected model in the tree.">
-                <i class="fa fa-save fa-fw"></i>
+                <i class="fas fa-save fa-fw"></i>
                 <span>Save Model</span>
               </button>
               <button
                       id="generateCode"
                       class="btn btn-light btn-lg"
                       title="Generate Joomla! code for the selected model.">
-                <i class="fa fa-caret-square-o-right fa-fw"></i>
+                <i class="fas fa-caret-right fa-fw"></i>
                 <span>Generate Code</span>
               </button>
               <select id="platform" class="custom-select">
@@ -177,10 +182,10 @@
             </div>
             <h4 class=""><span id="modelname" class="align-middle">ModelName</span><span id="dirty" style="visibility: hidden">*</span><span class="loader"></span>
             	<button id="editorFullscreen" type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#fullscreenModal">
-	            	<i class="fa fa-arrows-alt fa-fw"></i>
+	            	<i class="fas fa-expand fa-fw"></i>
 	          	</button>
-	        </h4> 
-	          
+	        </h4>
+
             <div id="editorContainer">
             <div id="xtext-editor" data-editor-xtext-lang="eJSL"
                  class="jumbotron jumbotron-fluid"></div>
@@ -189,7 +194,7 @@
           <div class="col-lg-4 mr-auto">
             <div>
               <button class="btn btn-light btn-lg" data-toggle="modal" data-target="#addModelModal">
-                <i class="fa fa-plus fa-fw"></i>
+                <i class="fas fa-plus fa-fw"></i>
                 <span>Add Model</span>
               </button>
               <!-- Modal to add a new model-->
@@ -222,15 +227,15 @@
                       id="download"
                       class="btn btn-light btn-lg"
                       title="You can download (.zip) all models and sub-trees by selecting them/their parent node and click this button.">
-                <i class="fa fa-download fa-fw"></i>
+                <i class="fas fa-download fa-fw"></i>
                 <span>Download Node</span>
               </button>
               <button id="loadModel" class="btn btn-light btn-lg">
-                <i class="fa fa-arrow-left fa-fw"></i>
+                <i class="fas fa-arrow-left fa-fw"></i>
                 <span>Load Model to Editor</span>
               </button>
               <button class="btn btn-light btn-lg"  data-toggle="modal" data-target="#uploadExtensionModal">
-                <i class="fa fa-upload fa-fw"></i>
+                <i class="fas fa-upload fa-fw"></i>
                 <span>Upload Joomla! Extension</span>
               </button>
               <div class="modal fade" id="uploadExtensionModal">
@@ -261,7 +266,7 @@
                       id="extractModel"
                       class="btn btn-light btn-lg"
                       title="Select a valid manifest file in the tree (in uploaded the folder) and click this button.">
-                <i class="fa fa-file fa-fw"></i>
+                  <i class="fas fa-file"></i>
                 <span>Extract Extension Information</span>
               </button>
             </div>
@@ -277,16 +282,20 @@
 
 	<section id="feedback">
 		<div class="container">
-			<h2>We love to hear your ideas!</h2>
-			<div>What would you like that would make us better?</div>
-			<a target="_blank" href="https://github.com/thm-mni-ii/JooMDD/issues">Submit feedback</a>
+            <div class="row">
+                <div class="col">
+                    <h2>We love to hear your ideas!</h2>
+                    <div>What would you like that would make us better?</div>
+                    <a target="_blank" href="https://github.com/thm-mni-ii/JooMDD/issues">Submit feedback</a>
+                </div>
+            </div>
 		</div>
 	</section>
 
     <!-- Footer -->
     <footer>
       <div id="contact" class="container">
-        <p class="copyright text-muted small">Copyright &copy; Institute for Information Sciences 2018. All Rights Reserved</p>
+        <p class="copyright text-muted small">Copyright &copy; Institute for Information Sciences 2017-2019. All Rights Reserved</p>
       </div>
     </footer>
 
@@ -312,7 +321,7 @@
 						            <div class="col-md-8">
 						                <div class="form-group">
 						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-						                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-user"></i></div>
+						                        <div class="input-group-addon" style="width: 2.6rem"><i class="fas fa-user"></i></div>
 						                        <input type="text" name="username" class="form-control" id="registrationUsername"
 						                               placeholder="John Doe" required autofocus>
 						                    </div>
@@ -326,7 +335,7 @@
 						            <div class="col-md-8">
 						                <div class="form-group has-danger">
 						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-						                        <div class="input-group-addon" style="width: 2.6rem"><i class="fa fa-key"></i></div>
+						                        <div class="input-group-addon" style="width: 2.6rem"><i class="fas fa-key"></i></i></div>
 						                        <input type="password" name="password" class="form-control" id="registrationPassword"
 						                               placeholder="Password" required>
 						                    </div>
@@ -341,7 +350,7 @@
 						                <div class="form-group">
 						                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
 						                        <div class="input-group-addon" style="width: 2.6rem">
-						                            <i class="fa fa-repeat"></i>
+                                                    <i class="fas fa-redo"></i>
 						                        </div>
 						                        <input type="password" name="password-confirmation" class="form-control"
 						                               id="registrationPasswordConfirm" placeholder="Password" required>
@@ -365,14 +374,14 @@
                     <div class="modal-footer">
 				        <div class="row">
 				            <div class="col-md-6">
-				                <button id="registerBtn" class="btn btn-success"><i class="fa fa-user-plus"></i> Register</button>
+				                <button id="registerBtn" class="btn btn-success"><i class="fas fa-user-plus"></i> Register</button>
 				            </div>
 				        </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal to add a new model-->
               <div class="modal fade" id="fullscreenModal">
                 <div class="modal-dialog modal-xl">
@@ -386,7 +395,7 @@
 
                     <!-- Modal body -->
                     <div id="fullscreenModalBody" class="modal-body">
-					
+
                     </div>
 
                     <!-- Modal footer -->
@@ -396,7 +405,7 @@
                   </div>
                 </div>
               </div>
-        
+
   </body>
 
 </html>

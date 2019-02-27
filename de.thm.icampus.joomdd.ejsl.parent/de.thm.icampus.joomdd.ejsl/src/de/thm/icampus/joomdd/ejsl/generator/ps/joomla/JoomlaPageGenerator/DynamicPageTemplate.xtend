@@ -281,8 +281,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    	        result.append('''
    		    <field name="«attr.name.toLowerCase»"
    		            type="list" 
-   		            «IF type.equalsIgnoreCase("multiselect")»
-   		            multiple
+   		            «IF type.contains("multiselect")»
+   		            multiple ="true"
    		            «ENDIF»
    		            id="«attr.name.toLowerCase»"
    		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«attr.name.toUpperCase»"
