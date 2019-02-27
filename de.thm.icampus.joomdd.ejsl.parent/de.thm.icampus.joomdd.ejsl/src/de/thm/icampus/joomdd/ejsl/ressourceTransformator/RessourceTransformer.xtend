@@ -18,21 +18,27 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.eJSL.Type
-import java.util.Iterator
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypeKinds
-import de.thm.icampus.joomdd.ejsl.eJSL.HTMLTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 import de.thm.icampus.joomdd.ejsl.eJSL.StaticPage
 import de.thm.icampus.joomdd.ejsl.eJSL.Link
 import de.thm.icampus.joomdd.ejsl.eJSL.ContextLink
 import de.thm.icampus.joomdd.ejsl.eJSL.LinkParameter
-import java.util.List
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLPackage
-import org.eclipse.emf.ecore.EStructuralFeature
 import de.thm.icampus.joomdd.ejsl.eJSL.ComplexHTMLTypeKinds
 import de.thm.icampus.joomdd.ejsl.eJSL.ComplexHTMLTypes
+import de.thm.icampus.joomdd.ejsl.eJSL.ExtensionPackage
+import de.thm.icampus.joomdd.ejsl.eJSL.Component
+import de.thm.icampus.joomdd.ejsl.eJSL.Module
+import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
+import de.thm.icampus.joomdd.ejsl.eJSL.Library
+import de.thm.icampus.joomdd.ejsl.eJSL.Template
+import de.thm.icampus.joomdd.ejsl.eJSL.Language
+import org.eclipse.xtext.EcoreUtil2
+import java.util.ArrayList
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -44,36 +50,194 @@ import de.thm.icampus.joomdd.ejsl.eJSL.ComplexHTMLTypes
 class RessourceTransformer {
 	EJSLModel modelInstance
 	CMSExtension cmsextension
-	Feature featurs
+	Feature feature
 	new (EJSLModel model){
 		modelInstance = model
 		
 		cmsextension = model.ejslPart as CMSExtension
-		featurs = cmsextension.feature
+		feature = cmsextension.feature
 		
 	}
 	def dotransformation(){
-		featurs.entities.forEach[t | t.name = Util.slugify(t.name)]
-		featurs.pages.forEach[t | t.name = Util.slugify(t.name)]
-		for(Entity ent: featurs.entities){
+		feature.entities.forEach[t | t.name = Util.slugify(t.name)]
+		feature.pages.forEach[t | t.name = Util.slugify(t.name)]
+		for(Entity ent: feature.entities){
 			this.completeAttributeOfEntity(ent)
 		}
-		for(Entity ent: featurs.entities){
+		for(Entity ent: feature.entities){
     		completeReferenceOfEntity(ent)
     		setReferenceAttribute(ent)
     	}
     	
-    	createSimple1ToNReference(featurs.entities)
-		createMappingsTable(featurs.entities)
-		formatEntitiesAttribute(featurs.entities)
+    	createDefaultLanguageIfNoLanguageIsPresent("en-GB")
+        createNtoMLanguage()
+    	createSimple1ToNReference(feature.entities)
+		createMappingsTable(feature.entities)
+		formatEntitiesAttribute(feature.entities)
 		completeDetailsPage();
 		completeIndexPage();
 		
 		var JoomlaTranformator jt = new JoomlaTranformator(modelInstance)
 		jt.completeCMSExtension
-		completePage(featurs.pages)
+		completePage(feature.pages)
 		
 	}
+	
+	def createDefaultLanguageIfNoLanguageIsPresent(String defaultLanguage) {
+        cmsextension.extensions.forEach[ cmsextension | 
+            switch cmsextension {
+                ExtensionPackage: {
+                    //TODO                    
+                }   
+                
+                Component: {
+                    var component = cmsextension
+                    if (component.languages.empty) {
+                        addLanguage(component.languages, defaultLanguage)
+                    }
+                }
+                
+                Module: {
+                    var module = cmsextension
+                    if (module.languages.empty) {
+                        addLanguage(module.languages, defaultLanguage)
+                    }
+                }
+                
+                Plugin: {
+                    //TODO                    
+                }
+                
+                Library: {
+                    //TODO
+                }
+                
+                Template: {
+                    //TODO
+                } 
+            }
+        ]
+    }
+    
+    private def addLanguage(EList<Language> languages, String language) {
+        var Language lang = EcoreUtil2.create(EJSLPackage.Literals.LANGUAGE) as Language
+        lang.name = language
+        lang.sys = false
+        languages.add(EcoreUtil2.copy(lang))
+        lang.sys = true
+        languages.add(EcoreUtil2.copy(lang)) 
+    }
+    
+    private def createNtoMLanguage() {
+        cmsextension.extensions.forEach[ cmsextension | 
+            switch cmsextension {
+                ExtensionPackage: {
+                    //TODO                    
+                }   
+                
+                Component: {
+                    var component = cmsextension
+                    
+                    for (section : component.sections){
+                        for (pageRef : section.pageRef){
+                            var page = pageRef.page 
+                            var ArrayList<KeyValuePair> keyValuePairList = getNtoMLanguageForPage(page, Slug.nameExtensionBind("com", component.name))
+                            
+                            for (language : component.languages){
+                                language.keyvaluepairs.addUniqueKeyValuePair(keyValuePairList)
+                            }
+                        }
+                    }
+                }
+                
+                Module: {
+                    var module = cmsextension
+                    var page = module.pageRef.page
+                    var keyValuePairList = getNtoMLanguageForPage(page, Slug.nameExtensionBind("mod", module.name))
+                    
+                    for (language : module.languages){
+                        language.keyvaluepairs.addUniqueKeyValuePair(keyValuePairList)
+                    }
+                }
+                
+                Plugin: {
+                    //TODO                    
+                }
+                
+                Library: {
+                    //TODO
+                }
+                
+                Template: {
+                    //TODO
+                } 
+            }
+        ]
+    }
+    
+    private def addUniqueKeyValuePair(EList<KeyValuePair> keyValuePairList, ArrayList<KeyValuePair> additionKeyValuePairList){
+        var keyValuePairElementListToAdd = additionKeyValuePairList.filter[ addKeyValuePair |
+            keyValuePairList.exists[ keyValuePair | 
+                keyValuePair.name.equals(addKeyValuePair.name)
+            ] === false
+        ]
+        
+        for ( keyValuePair : keyValuePairElementListToAdd)
+        {
+            keyValuePairList.add(EcoreUtil2.copy(keyValuePair))
+        }
+    }
+    
+    private def ArrayList<KeyValuePair> getNtoMLanguageForPage(Page page, String extensionName) {
+        var ArrayList<KeyValuePair> keyValuePairList = newArrayList()
+        
+        if (page instanceof DynamicPage){
+            for (entity : page.entities){
+                if (entity.references !== null) {
+                    for (reference : entity.references){ 
+                        if (reference.upper.equals("-1")){
+                            // TODO: Multiple attributes are possible but right now we only consider the first.
+                            var key = newArrayList(
+                                extensionName,
+                                "FORM",
+                                "LBL",
+                                entity.name,
+                                reference.entity.name,
+                                reference.attributerefereced.get(0).name
+                            ).join("_")
+                            
+                            key = Slug.slugify(key).toUpperCase
+                            
+                            var value = reference.attribute.get(0).name
+                            
+                            var KeyValuePair keyValuePair = EcoreUtil2.create(EJSLPackage.Literals.KEY_VALUE_PAIR) as KeyValuePair
+                            keyValuePair.name = key
+                            keyValuePair.value = value
+                            
+                            keyValuePairList.add(EcoreUtil2.copy(keyValuePair))
+                            
+                            var filterKey = newArrayList(
+                                "JOPTION",
+                                "SELECT",
+                                reference.entity.name,
+                                reference.attributerefereced.get(0).name
+                            ).join("_")
+                            
+                            filterKey = Slug.slugify(filterKey).toUpperCase
+                            var KeyValuePair filterKeyValuePair = EcoreUtil2.create(EJSLPackage.Literals.KEY_VALUE_PAIR) as KeyValuePair
+                            filterKeyValuePair.name = filterKey
+                            filterKeyValuePair.value = '''Select a «value»'''
+                            
+                            keyValuePairList.add(EcoreUtil2.copy(filterKeyValuePair))
+                        }
+                    }
+                }
+            }
+        }
+        
+        return keyValuePairList
+    }
+    
 	/**
 	 * Create a primary attribute, when it is not exist,
 	 * replace the id symbol with the primary keys,
@@ -368,7 +532,7 @@ class RessourceTransformer {
 	}
 	
 	def completeIndexPage() {
-			for(Page page: featurs.pages.filter[t | t instanceof IndexPage]){
+			for(Page page: feature.pages.filter[t | t instanceof IndexPage]){
 			var IndexPage dp = page as IndexPage
 			completeColUmnAndFilterList(dp)
 		}
@@ -376,7 +540,7 @@ class RessourceTransformer {
 	
 	def completeDetailsPage(){
 		
-		for(Page page: featurs.pages.filter[t | t instanceof DetailsPage ]){
+		for(Page page: feature.pages.filter[t | t instanceof DetailsPage ]){
 			var DetailsPage dp = page as DetailsPage
 			completeTableColumnAndEditedFields(dp)
 			for(DetailPageField field: dp.editfields){
@@ -572,8 +736,8 @@ class RessourceTransformer {
 				 		var IndexPage pageList = createNewExtendedIndexPageForExtensions(mappingEntity)
 				 		var DetailsPage pageDetails = createNewExtendedDetailsPageForExtensions(mappingEntity)
 				 		createLinktoPage(pageList,pageDetails)
-				 		featurs.pages.add(pageList)
-				 		featurs.pages.add(pageDetails)
+				 		feature.pages.add(pageList)
+				 		feature.pages.add(pageDetails)
 				 	}
 				 }else{
 				 	
@@ -616,7 +780,7 @@ class RessourceTransformer {
 	 def void renameOldReference(EList<Attribute> torenameAttribute, EList<Attribute> newAttribute) {
 		
 		
-		for( Page page: featurs.pages.filter[t | t instanceof  DynamicPage]){
+		for( Page page: feature.pages.filter[t | t instanceof  DynamicPage]){
 			var DynamicPage dynPage = page as DynamicPage
 			for(Attribute attr : torenameAttribute){
 				if(dynPage.filters.contains(attr)){
@@ -633,8 +797,6 @@ class RessourceTransformer {
 		}
 		
 	}
-	
-	
 	
 	private def EList<Reference> solveReference(Reference reference, Entity mappingEntity,Entity fromEntity,Entity toEntity ) {
 		var Reference nRef =  EJSLFactory.eINSTANCE.createReference

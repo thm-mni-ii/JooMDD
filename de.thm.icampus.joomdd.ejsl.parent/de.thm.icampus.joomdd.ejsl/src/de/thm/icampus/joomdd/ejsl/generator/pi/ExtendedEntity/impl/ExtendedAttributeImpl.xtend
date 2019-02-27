@@ -68,15 +68,13 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 			if(att.withattribute !== null && att.withattribute.name.compareTo(this.name)==0 )
 			this.isTheBaseElement = true
 		}
-			for(Reference ref: entity.references.filter[t | !t.upper.equalsIgnoreCase("1")]){
-				for(Attribute refAttr: ref.attribute)
-				if(this.name.equalsIgnoreCase(refAttr.name)){
-					this.isReferenced = true
-					
-				}
-				    
-			}
 		
+		for(Reference ref: entity.references.filter[t | !t.upper.equalsIgnoreCase("1")]){
+			for(Attribute refAttr: ref.attribute)
+			if(this.name.equalsIgnoreCase(refAttr.name)){
+				this.isReferenced = true
+			}    
+		}
 	}
 	
 	def String generatorTypeHtmlType() {

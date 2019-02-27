@@ -1151,7 +1151,7 @@ public class Slug  {
 	
 	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference, ExtendedComponent com) '''
 	    <?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-	    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
+	    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_FORM_LBL_«Slug.slugify(reference.getSourceEntity.name).toUpperCase»_«Slug.slugify(Slug.getOtherEntityToMapping(reference).references.get(0).attributerefereced.get(0).name).toUpperCase»', true)); ?>
 	    <div class="control-group">
 	        <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
 	        <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
