@@ -100,7 +100,7 @@ class FieldsGenerator {
 	}
 	'''
     def private genGetData_item()'''
-	protected function getData_item($«entFrom.primaryKey.name»)
+	protected function getData_item($id)
 	{
 	   $db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -131,10 +131,10 @@ class FieldsGenerator {
 		    
 		     $this->primary_key = $this->getAttribute("primary_key_name");
 		     $id = intval($input->get($this->primary_key));
-		    if (empty($«entFrom.primaryKey.name»)) {
+		    if (empty($id)) {
 		        $alldata = $this->getAllData();
 		        $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' >";
-		        $html[] = "<option>". Text::_("JOPTION_SELECT_ATTRIBUTE"). "</option>";
+		        $html[] = "<option>". Text::_("JOPTION_SELECT_" . strtoupper($this->fieldname)). "</option>";
 		        foreach ($alldata as $data) {
 		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 		            . $this->generateStringValue($data) ."</option>";
@@ -146,7 +146,7 @@ class FieldsGenerator {
 		    $data = $this->getData_item($id);
 		    $selectData = $this->getReferencedata($data);
 		    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id. "select' class='form-control' name='" . $this->name. "select'>";
-		    $html[] = "<option>". Text::_("JOPTION_SELECT_ATTRIBUTE"). "</option>";
+		    $html[] = "<option>". Text::_("JOPTION_SELECT_" . strtoupper($this->fieldname)). "</option>";
 		    foreach ($selectData as $selected) {
 		        $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
 		        . $this->generateStringValue($selected) ."</option>";

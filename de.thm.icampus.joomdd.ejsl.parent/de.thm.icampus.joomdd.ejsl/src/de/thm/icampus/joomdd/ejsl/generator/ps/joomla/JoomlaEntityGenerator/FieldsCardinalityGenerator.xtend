@@ -85,7 +85,6 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    if (empty($«entFrom.primaryKey.name»)) {
 		        $alldata = $this->getAllData();
 		        $html[] = "<select  onchange='setMultipleValueForeignKeys(this)' generated='true' multiple id='" . $this->id . "select'  class='form-control' >";
-		        $html[] = "<option>". Text::_("JOPTION_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
 		        foreach ($alldata as $data) {
 		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 		            . $this->generateStringValue($data) ."</option>";
@@ -97,7 +96,6 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    $data_item = $this->getData_item($«entFrom.primaryKey.name»);
 		    $referenceData = $this->getAllReferenceData($data_item);
 		    $html[] = "<select  multiple='true' onchange='setMultipleValueForeignKeys(this)' generated='true'  id='" . $this->id . "select' class='form-control' >";
-		    $html[] = "<option>". Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_SELECT_«foreignReference.entity.name.toUpperCase»"). "</option>";
 		
 		    foreach($referenceData as $reference) {
 		        $html[] = "<option  $reference->selected  value='". $this->generateJsonValue($reference)."'>" . $this->generateStringValue($reference) ."</option>";

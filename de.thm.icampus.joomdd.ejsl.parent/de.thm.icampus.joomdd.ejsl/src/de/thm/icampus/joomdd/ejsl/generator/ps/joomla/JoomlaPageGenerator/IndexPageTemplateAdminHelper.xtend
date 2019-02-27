@@ -336,91 +336,97 @@ class IndexPageTemplateAdminHelper {
 	'''
     
     def private CharSequence genAdminViewLayoutData(EList<ExtendedAttribute>column)'''
-        <table class="table table-striped" id="«indexpage.name.toFirstUpper»List">
-            <thead>
-                <tr>
-                    <?php if (isset($this->items[0]) && property_exists($this->items[0], 'ordering')) : ?>
-                    <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo HTMLHelper::_('grid.sort', '<i class="icon-menu-2"></i>', '«this.mainEntity.name.toLowerCase».ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
-                    </th>
-                    <?php $columns++; ?>
-                    <?php endif; ?>
-                    <th width="1%" class="hidden-phone">
-                        <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
-                    </th>
-                    <?php if (isset($this->items[0]) && property_exists($this->items[0], 'state')) : ?>
-                    <th width="1%" class="nowrap center">
-                        <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', '«this.mainEntity.name.toLowerCase».state', $listDirn, $listOrder); ?>
-                    </th>
-                    <?php $columns++; ?>
-                    <?php endif; ?>
-                    «FOR ExtendedAttribute attr : column»
-                    <th class='left'>
-                        <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
-                    </th>
-                    «ENDFOR»
-                    <?php if (isset($this->items[0]) && property_exists($this->items[0], '«mainEntity.primaryKey.name»')) : ?>
-                    <th width="1%" class="nowrap center hidden-phone">
-                        <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
-                    </th>
-                    <?php $columns++; ?>
-                    <?php endif; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($this->items as $i => $item) :
-                $ordering   = ($listOrder == '«this.mainEntity.name.toLowerCase».ordering');
-                $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                $canChange  = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                ?>
-                <tr class="row<?php echo $i % 2; ?>">
-                    <?php if (isset($this->items[0]->ordering)): ?>
-                    <td class="order nowrap center hidden-phone">
-                        <?php if ($canChange) :
-                        $disableClassName = '';
-                        $disabledLabel    = '';
-                        if (!$saveOrder) :
-                        $disabledLabel    = JText::_('JORDERINGDISABLED');
-                        $disableClassName = 'inactive tip-top';
-                        endif; ?>
-                        <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
-                            <i class="icon-menu"></i>
-                        </span>
-                        <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
-                        <?php else : ?>
-                        <span class="sortable-handler inactive" >
-                            <i class="icon-menu"></i>
-                        </span>
+        <?php if (empty($this->items)) : ?>
+            <div class="alert alert-no-items">
+                <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+            </div>
+        <?php else : ?>
+            <table class="table table-striped" id="«indexpage.name.toFirstUpper»List">
+                <thead>
+                    <tr>
+                        <?php if (isset($this->items[0]) && property_exists($this->items[0], 'ordering')) : ?>
+                        <th width="1%" class="nowrap center hidden-phone">
+                            <?php echo HTMLHelper::_('grid.sort', '<i class="icon-menu-2"></i>', '«this.mainEntity.name.toLowerCase».ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+                        </th>
+                        <?php $columns++; ?>
                         <?php endif; ?>
-                    </td>
-                    <?php endif; ?>
-                    <td class="center hidden-phone">
-                        <?php echo HTMLHelper::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
-                    </td>
-                    <?php if (isset($this->items[0]->state)): ?>
-                    <td class="center">
-                        <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
-                    </td>
-                    <?php endif; ?>
-                    «genAdminModelAttributeReference(column, indexpage, com)»
-                    <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
-                    <td class="center hidden-phone">
-                        <?php echo (int) $item->«mainEntity.primaryKey.name»; ?>
-                    </td>
-                    <?php endif; ?>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="<?php echo $columns;?>">
-                        <?php echo $this->pagination->getListFooter(); ?>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
+                        <th width="1%" class="hidden-phone">
+                            <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+                        </th>
+                        <?php if (isset($this->items[0]) && property_exists($this->items[0], 'state')) : ?>
+                        <th width="1%" class="nowrap center">
+                            <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', '«this.mainEntity.name.toLowerCase».state', $listDirn, $listOrder); ?>
+                        </th>
+                        <?php $columns++; ?>
+                        <?php endif; ?>
+                        «FOR ExtendedAttribute attr : column»
+                        <th class='left'>
+                            <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«mainEntity.name.toUpperCase»_«attr.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+                        </th>
+                        «ENDFOR»
+                        <?php if (isset($this->items[0]) && property_exists($this->items[0], '«mainEntity.primaryKey.name»')) : ?>
+                        <th width="1%" class="nowrap center hidden-phone">
+                            <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
+                        </th>
+                        <?php $columns++; ?>
+                        <?php endif; ?>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->items as $i => $item) :
+                    $ordering   = ($listOrder == '«this.mainEntity.name.toLowerCase».ordering');
+                    $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                    $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                    $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                    $canChange  = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                    ?>
+                    <tr class="row<?php echo $i % 2; ?>">
+                        <?php if (isset($this->items[0]->ordering)): ?>
+                        <td class="order nowrap center hidden-phone">
+                            <?php if ($canChange) :
+                            $disableClassName = '';
+                            $disabledLabel    = '';
+                            if (!$saveOrder) :
+                            $disabledLabel    = JText::_('JORDERINGDISABLED');
+                            $disableClassName = 'inactive tip-top';
+                            endif; ?>
+                            <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
+                                <i class="icon-menu"></i>
+                            </span>
+                            <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
+                            <?php else : ?>
+                            <span class="sortable-handler inactive" >
+                                <i class="icon-menu"></i>
+                            </span>
+                            <?php endif; ?>
+                        </td>
+                        <?php endif; ?>
+                        <td class="center hidden-phone">
+                            <?php echo HTMLHelper::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
+                        </td>
+                        <?php if (isset($this->items[0]->state)): ?>
+                        <td class="center">
+                            <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
+                        </td>
+                        <?php endif; ?>
+                        «genAdminModelAttributeReference(column, indexpage, com)»
+                        <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
+                        <td class="center hidden-phone">
+                            <?php echo (int) $item->«mainEntity.primaryKey.name»; ?>
+                        </td>
+                        <?php endif; ?>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="<?php echo $columns;?>">
+                            <?php echo $this->pagination->getListFooter(); ?>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        <?php endif; ?>
     '''
     
     def getextendedTableColumnListSize(){

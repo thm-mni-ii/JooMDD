@@ -29,27 +29,11 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	}
 
 	def genComponentLanguage(ExtendedComponent component, String root) {
-	    if (component.languages.empty) {
-            var Language lang = EcoreUtil2.create(EJSLPackage.Literals.LANGUAGE) as Language
-            lang.name = "en-GB"
-            lang.sys = false
-	        component.languages.add(EcoreUtil2.copy(lang))
-	        lang.sys = true
-	        component.languages.add(EcoreUtil2.copy(lang))
-	    }
-	    
-		for (lang : component.languages) {
+	   for (lang : component.languages) {
 			val ldir = lang.name
 			var EList<KVPairLanguage> languagesWordsFront = languageFileContent(component,lang, component.frontEndExtendedPagerefence)
 			var EList<KVPairLanguage> languagesWordsBack = languageFileContent(component,lang, component.backEndExtendedPagerefence)
-			
-			for(keys: lang.keyvaluepairs){
-				if(!keysContains(keys, languagesWordsFront)){
-					languagesWordsFront.add(new KVPairLanguage(keys) )
-					languagesWordsBack.add(new KVPairLanguage(keys) )
-				}
-			}
-			
+						
 			val languagesWordsBackOrigin = languagesWordsBack.clone
 			
 			var languagesWordsFrontAdds = languagesWordsFront.filter[ l | 
@@ -90,6 +74,13 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 		EList<ExtendedPageReference> pagerefList) {
 		
 		var EList<KVPairLanguage> languagesWords = new BasicEList<KVPairLanguage>()
+		
+        for(keyValuePair: language.keyvaluepairs){
+            if(!keysContains(keyValuePair, languagesWords)){
+                languagesWords.add(new KVPairLanguage(keyValuePair) )
+            }
+        }		
+		
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_LABEL",com.name.toFirstUpper))
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_DESC",com.manifest.description))
 		languagesWords.addsLanguageKeys(new KVPairLanguage(Slug.nameExtensionBind("com", com.name).toUpperCase+ "_UPDATE_TEXT","The update is succesfull"))
@@ -205,7 +196,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	
 	def void addsLanguageKeys(EList<KVPairLanguage> list, KVPairLanguage language){
 		for(KVPairLanguage g : list){
-			if(g.kv.name == language.kv.name){
+			if(g.kv.name.equals(language.kv.name)){
 				return;
 			}
 		}
@@ -266,8 +257,9 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 	
 	def boolean keysContains(KeyValuePair pair,EList<KVPairLanguage> languagesWords) {
 		for(KVPairLanguage kvl: languagesWords){
-			if(kvl.kv.name == pair.name)
-			return true
+			if(kvl.kv.name.equals(pair.name)){
+			    return true    
+			}
 		}
 		return false
 	}

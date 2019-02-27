@@ -12,7 +12,6 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Feature
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
 
-
 class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 
 	Entity instance
@@ -25,7 +24,6 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	EList<ExtendedReference> allRefactoryReference
 	ExtendedAttribute primaryAttribute
 	
-
 	new(Entity entity) {
 		entity.name = PlattformUtil.slugify(entity.name)
 		this.name = entity.name.toLowerCase
@@ -34,7 +32,6 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		this.references = entity.references
 		instance = entity
 		this.preserve = entity.preserve
-		
 		initLists()
 	}
 
@@ -71,13 +68,14 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		for (Entity ent : allEntity) {
 			if (ent.references != null) {
 				var Iterable<Reference> listRef = ent.references.filter[t|t.entity.name == instance.name]
-				for (Reference ref : listRef)
-				    if(ref.upper.equals("1"))
-					allReferencesToEntity.add(new ExtendedReferenceImpl(ref, ent))
-
+				for (Reference ref : listRef){
+				    if(ref.upper.equals("1")){
+				        allReferencesToEntity.add(new ExtendedReferenceImpl(ref, ent))    
+				    }                    
+				}				    
 			}
 		}
-	
+		
 		allRefactoryAttribute = new BasicEList<ExtendedAttribute>
 		allRefactoryReference = new BasicEList<ExtendedReference>
 		allRefactoryAttribute.addAll(ownExtendedAttributes.filter[t | !t.preserve])
