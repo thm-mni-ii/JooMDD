@@ -15,7 +15,7 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 		editor = xtext_ace.createEditor({
 			baseUrl: baseUrl ,
 			syntaxDefinition: "js/folding-mode-eJSL",
-			theme: "ace/theme/github",
+			theme: "ace/theme/clouds",
 			resourceId: "/src/" + resourceID,
 			dirtyElement: "dirty",
 			dirtyStatusClass: "visible"
