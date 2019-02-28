@@ -208,7 +208,11 @@ eJSLModel "Conference" {
                     version = "1.0.0"
                 }
                 languages {
-                    Language de-DE {}
+                    Language de-DE {
+                        keyvaluepairs {
+                            MYCONFERENCE_HELLO_WORLD = "Hallo Welt"
+                        }
+                    }
                     Language system de-DE {}
                     Language en-GB {}
                     Language system en-GB {}
