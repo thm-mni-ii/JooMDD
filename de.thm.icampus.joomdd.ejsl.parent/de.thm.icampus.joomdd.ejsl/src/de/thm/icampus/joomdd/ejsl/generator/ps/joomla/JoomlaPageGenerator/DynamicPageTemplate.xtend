@@ -433,12 +433,12 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
         					/>
     					'''
 					}
-					case "*" ,case  "-1": {
+					case "*", case  "-1": {
 						
 						var listOfref = entity.searchListRefWithAttr(field.attribute)
     					return ''' 
     					<field name="«field.attribute.name»"
-    					    type="hidden"
+    					    «type»
     					    id="«field.attribute.name.toLowerCase»"
     					    label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
     					    description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
@@ -447,12 +447,12 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     				        «ENDFOR»
     					/>
     					«FOR ExtendedReference refItem: listOfref»
-    					«var Entity foreign = Slug.getOtherEntityToMapping(refItem)»
+    					«var languageKey = Slug.getNReferenceLanguageKey(component, refItem, entity.name)»
     					<field name="«refItem.entity.name.toLowerCase»_id"
     					    type ="«entity.name.toLowerCase»To«refItem.entity.name.toLowerCase»"
     					    id="«refItem.entity.name.toLowerCase»_id"
-    					    label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«Slug.slugify(foreign.references.get(0).attributerefereced.get(0).name).toUpperCase»"
-    					    description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«Slug.slugify(foreign.references.get(0).attributerefereced.get(0).name).toUpperCase»_DESC"
+    					    label="«languageKey»"
+    					    description="«languageKey»_DESC"
     					/>
     					«FOR Attribute attr: Slug.getOtherAttribute(refItem)»
     					<field name="«attr.name.toLowerCase»"

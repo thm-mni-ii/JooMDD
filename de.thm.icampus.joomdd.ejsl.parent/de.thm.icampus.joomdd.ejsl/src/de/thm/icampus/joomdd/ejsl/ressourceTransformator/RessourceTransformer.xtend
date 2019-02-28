@@ -986,8 +986,9 @@ class RessourceTransformer {
 	
 	def Attribute containsInrefrence(Attribute attribute, Entity entity) {
 		for(Reference r: entity.references){
-			if(r.attribute.contains(attribute))
-			return r.attributerefereced.get(r.attribute.indexOf(attribute))
+			if(r.attribute.contains(attribute)){
+			    return r.attributerefereced.get(r.attribute.indexOf(attribute))
+			}
 		}
 		return null
 	}
