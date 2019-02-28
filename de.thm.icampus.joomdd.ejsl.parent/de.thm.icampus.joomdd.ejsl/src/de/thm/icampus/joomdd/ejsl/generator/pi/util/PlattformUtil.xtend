@@ -49,47 +49,48 @@ class PlattformUtil {
 	}
 	
 	static def EList<ExtendedEntity> getAllReferenceOfEntity(ExtendedEntity entity){
-			val LinkedList<Entity> visited = new LinkedList<Entity> ();
+        val LinkedList<Entity> visited = new LinkedList<Entity> ();
 		visited.add(entity.instance)
 		var LinkedList<Entity> tosearch = new LinkedList<Entity> ();
+		
 		for(Reference ref: entity.references){
-			if(!visited.contains(ref.entity) && !tosearch.contains(ref.entity))
-			tosearch.add(ref.entity)
+            if(!visited.contains(ref.entity) && !tosearch.contains(ref.entity)){
+			    tosearch.add(ref.entity)
+			}
 		}
+		
 		while(tosearch.size != 0){
-			var LinkedList<Entity> childs = new LinkedList<Entity> ();
-			var LinkedList<Entity> toremove = new LinkedList<Entity> ();
+			var LinkedList<Entity> childs = new LinkedList<Entity>();
+			var LinkedList<Entity> toremove = new LinkedList<Entity>();
+			
 			for(Entity ent : tosearch){
-				
 				if(!visited.contains(ent)){//22
 					for(Reference ref: ent.references){
 						if(!visited.contains(ref.entity) ){
-							
-						 if(!tosearch.contains(ref.entity))
-							childs.add(ref.entity)
-							}
-						 
+						    if(!tosearch.contains(ref.entity)){
+						        childs.add(ref.entity) 
+						    }
+						}
 					}
 					
-					  visited.add(ent);
+					visited.add(ent);
 					toremove.add(ent)
-				}// 22
-				
+				}				
 				else{
 					toremove.add(ent)
 				}
 			}
 			
 			tosearch.removeAll(toremove)
-			
 			tosearch.addAll(childs.filter[t | !visited.contains(t)])
 		}
+		
 		visited.removeFirst
 		var EList<ExtendedEntity> allEntityFromReference= new BasicEList<ExtendedEntity>()
 		for(Entity ent : visited){
-		allEntityFromReference.add(new ExtendedEntityImpl(ent))
-		
+		    allEntityFromReference.add(new ExtendedEntityImpl(ent))
 		}
+		
 		return allEntityFromReference
 	}
 }

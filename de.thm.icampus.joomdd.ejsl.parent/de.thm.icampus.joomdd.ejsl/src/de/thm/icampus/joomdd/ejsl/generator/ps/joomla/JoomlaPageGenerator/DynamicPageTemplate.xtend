@@ -416,52 +416,50 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 				switch (ref.upper) {
 					case "1": {
 						return '''
-					<field name="«field.attribute.name»"
-					type="«component.name.toLowerCase»reference"
-					id="«field.attribute.name.toLowerCase»"
-					label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
-					description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
-					 tables="{'table':'#__«component.name.toLowerCase»_«entity.name.toLowerCase»', 'foreignTable':'#__«component.name.toLowerCase»_«ref.entity.name.toLowerCase»'}"
-					referenced_keys ="{«writeRefrence(ref)» }"
-					primary_key_name="«entity.primaryKey.name»"
-		            «FOR KeyValuePair kvpair : field.attributes»
-		            «kvpair.name» = "«kvpair.value»"
-		            «ENDFOR»
-					/>
-					'''
-						
-						}
-						case "*" ,case  "-1": {
-							var Entity foreign = Slug.getOtherEntityToMapping(ref)
-					return ''' 
-					<field name="«field.attribute.name»"
-								«type»
-								id="«field.attribute.name.toLowerCase»"
-								label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
-								description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
-						        «FOR KeyValuePair kvpair : field.attributes»
-						        «kvpair.name» = "«kvpair.value»"
-						        «ENDFOR»
-								/>
-					      <field name="«ref.entity.name.toLowerCase»_id"
-					        type ="«entity.name.toLowerCase»To«ref.entity.name.toLowerCase»"
-					        id="«ref.entity.name.toLowerCase»_id"
-					        label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«foreign.name.toUpperCase»"
-					        description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«foreign.name.toUpperCase»_DESC"/>
-					    «FOR Attribute attr: Slug.getOtherAttribute(ref)»
-					    <field name="«attr.name.toLowerCase»"
-					        type ="hidden"
-					        id="«attr.name.toLowerCase»"/>
-					    «ENDFOR»'''
-						}
+        					<field name="«field.attribute.name»"
+        					type="«component.name.toLowerCase»reference"
+        					id="«field.attribute.name.toLowerCase»"
+        					label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
+        					description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
+        					 tables="{'table':'#__«component.name.toLowerCase»_«entity.name.toLowerCase»', 'foreignTable':'#__«component.name.toLowerCase»_«ref.entity.name.toLowerCase»'}"
+        					referenced_keys ="{«writeRefrence(ref)» }"
+        					primary_key_name="«entity.primaryKey.name»"
+        		            «FOR KeyValuePair kvpair : field.attributes»
+        		            «kvpair.name» = "«kvpair.value»"
+        		            «ENDFOR»
+        					/>
+    					'''
+					}
+					case "*" ,case  "-1": {
+						var Entity foreign = Slug.getOtherEntityToMapping(ref)
+    					return ''' 
+    					<field name="«field.attribute.name»"
+    					    «type»
+    					    id="«field.attribute.name.toLowerCase»"
+    					    label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
+    					    description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
+    				        «FOR KeyValuePair kvpair : field.attributes»
+    				        «kvpair.name» = "«kvpair.value»"
+    				        «ENDFOR»
+    					/>
+    					<field name="«ref.entity.name.toLowerCase»_id"
+    					    type ="«entity.name.toLowerCase»To«ref.entity.name.toLowerCase»"
+    					    id="«ref.entity.name.toLowerCase»_id"
+    					    label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«Slug.slugify(foreign.references.get(0).attributerefereced.get(0).name).toUpperCase»"
+    					    description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«Slug.slugify(foreign.references.get(0).attributerefereced.get(0).name).toUpperCase»_DESC"
+    					/>
+    					«FOR Attribute attr: Slug.getOtherAttribute(ref)»
+    					<field name="«attr.name.toLowerCase»"
+    					    type ="hidden"
+    					    id="«attr.name.toLowerCase»"
+    					/>
+    					«ENDFOR»'''
+					}
 					default: {  
 						
 					}
 				}
 			}
-			
-			
-			
 			
 			return ""
 		}
