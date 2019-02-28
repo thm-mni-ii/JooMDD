@@ -172,6 +172,21 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		return null
 	}
 	
+		
+		override searchListRefWithAttr(Attribute attribute) {
+		var EList<ExtendedReference> result = new BasicEList<ExtendedReference>()
+		
+			for(ExtendedReference ref : this.extendedReferences){
+			if(ref.attribute.contains(attribute))
+			result.add(ref)
+		}
+		
+		
+		return result
+	}
+	
+	
+	
 
 	
 
