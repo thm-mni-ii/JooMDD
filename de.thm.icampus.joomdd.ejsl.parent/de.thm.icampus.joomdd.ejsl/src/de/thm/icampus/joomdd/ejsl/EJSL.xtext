@@ -203,6 +203,7 @@ DetailPageField returns DetailPageField:
 		(('html type =' (htmltype = HTMLTypes)) | ('field type =' (fieldtype = [Attribute|QualifiedName])))
 		 ('values' '{' values+=KeyValuePair (',' values+=KeyValuePair)* '}')?
 		('field attributes' '{' (attributes+=KeyValuePair (',' attributes+=KeyValuePair)*)? '}')?
+		(required='required')?
 	'}'
 ;
 
@@ -270,7 +271,7 @@ ContextLink returns ContextLink:
 
 LinkParameter returns LinkParameter:
 	{LinkParameter}
-	'Parameter' name=MYID '=' ('*Attribute '(attvalue=[Attribute|ID]| id?='ID') | value=STRING)
+	'Parameter' name=MYID '=' ('*Attribute '(attvalue=[Attribute|STRING]| id?='ID') | value=STRING)
 ;
 
 // extension model

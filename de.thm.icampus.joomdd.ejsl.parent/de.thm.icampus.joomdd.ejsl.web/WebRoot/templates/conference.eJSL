@@ -5,7 +5,6 @@ eJSLModel "Conference" {
                 attributes {
                     Attribute name {
                         type = Short_Text
-                        Unique attribute with ID
                     }
                     Attribute affiliation {
                         type = Text
@@ -22,7 +21,6 @@ eJSLModel "Conference" {
                 attributes {
                     Attribute title {
                         type = Short_Text
-                        Unique attribute
                     }
                     Attribute ^description {
                         type = Text
@@ -45,7 +43,6 @@ eJSLModel "Conference" {
                 attributes {
                     Attribute roomname {
                         type = Short_Text
-                        Unique attribute
                     }
                     Attribute ^position {
                         type = Text
@@ -56,7 +53,6 @@ eJSLModel "Conference" {
                 attributes {
                     Attribute title {
                         type = Short_Text
-                        Unique attribute
                     }
                     Attribute time {
                         type = Datetime
@@ -96,13 +92,32 @@ eJSLModel "Conference" {
                         target = Participant 
                         linked attribute = Participant.name
                         linkparameters {
-                            Parameter name = *Attribute  "Participant.name"
+                            Parameter name = *Attribute "Participant.name"
                         }
-                    }
+                    } 
                 }
             }
             DetailsPage Participant {
-                *Entities Participant 
+                *Entities Participant
+                editFields {
+                	Participant.name {
+                		html type = Text_Field
+                	},
+                	Participant.address {
+                		html type = Textarea
+                	},
+                	Participant.affiliation {
+                		html type = Editor
+                	},
+                	Participant.nationality {
+                		html type = Select
+                		values {
+                			en= "English",
+                			de="German",
+                			other="Other"
+                		}                		
+                	}
+                }
                 links {
                     InternalLink Index {
                         target = Participants 
@@ -171,7 +186,7 @@ eJSLModel "Conference" {
                 }
             }
             DetailsPage Session {
-                *Entities Programme 
+                *Entities Programme
                 links {
                     InternalLink Index {
                         target = Programme 
@@ -188,9 +203,9 @@ eJSLModel "Conference" {
                             authoremail = "john.doe@example.org"
                         }
                     }
-                    copyright = "Copyright (C) 2018 All right reserved."
+                    copyright = "Copyright (C) 2019 All right reserved."
                     license = "GNU General Public License"
-                    version = "1.0.1"
+                    version = "1.0.0"
                 }
                 languages {
                     Language de-DE {}
@@ -224,6 +239,25 @@ eJSLModel "Conference" {
                         }
                     }
                 }
+            } 
+            Module Talks {
+            	Manifestation {
+                    authors {
+                        Author "John Doe" {
+                            authoremail = "john.doe@example.org"
+                        }
+                    }
+                    copyright = "Copyright (C) 2019 All right reserved."
+                    license = "GNU General Public License"
+                    version = "1.0.0"
+                }
+                languages {
+                    Language de-DE {}
+                    Language system de-DE {}
+                    Language en-GB {}
+                    Language system en-GB {}
+                }
+                *Page : Talks from : MyConference data backendDAO
             }
         }   
     }
