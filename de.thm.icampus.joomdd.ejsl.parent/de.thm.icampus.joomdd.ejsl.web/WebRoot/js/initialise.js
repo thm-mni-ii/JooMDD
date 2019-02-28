@@ -12,7 +12,7 @@ require(["jquery", "bootstrap", "jquery-easing", "scrolling-nav"], function($) {
 			logoutMenuBtn.removeClass("d-none");
 		})
 		.fail(function( jqXHR, textStatus, errorThrown ) {
-		  	loginMenuSpinner.removeClass('fa-spinner').removeClass('fa-pulse').addClass('fa-user-o');
+		  	loginMenuSpinner.removeClass('fa-spinner').removeClass('fa-pulse').removeClass('fas fa-fw').addClass('far fa-user');
 		})
 		.always(function( mixedDataJqXHR, textStatus, mixedJqXHRErrorThrown ) {
 			var resourceID = "main.eJSL";

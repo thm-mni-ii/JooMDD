@@ -19,7 +19,17 @@ require(["jquery"], function ($) {
 
         /* TODO: Add tour points accordingly */
         tourPoints = [
+            new TourPoint($('.intro-message-editor'), `Welcome to our interactive tour to discover the features of the JooMDD web editor.`),
             new TourPoint($('#saveModel'), `This is the save button. Press this button to save your model.`),
+            new TourPoint($('#addModel'), ``),
+            new TourPoint($('#download'), ``),
+            new TourPoint($('#loadModel'), ``),
+            new TourPoint($('#uploadExtension'), ``),
+            new TourPoint($('#extractModel'), ``),
+            new TourPoint($('#folder_tree'), ``),
+            new TourPoint($('#editorContainer'), ``),
+            new TourPoint($('#platform'), ``),
+            new TourPoint($('#btnGroupDrop1'), `We recommend to start with our eample models, e.g. the conference model.`),
             new TourPoint($('#generateCode'), `This is the generate button. Use this button to start the 
             generation of your excellent MDD'd Joomla! component`)
         ];
