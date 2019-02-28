@@ -1145,26 +1145,53 @@ public class Slug  {
 	
 	def static Entity getOtherEntityToMapping(ExtendedReference reference) {
 	    var Entity toEntity = reference.destinationEntity
-	    var g = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.sourceEntity.name)])
+	    var g = (toEntity.references.filter[t | 
+	        ! t.entity.name.equalsIgnoreCase(reference.sourceEntity.name)
+	    ])
 	    var Reference ref = g.get(0)
 	    return ref.entity
 	}
 	
-	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference, ExtendedComponent com) '''
-	    <?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-	    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_FORM_LBL_«Slug.slugify(reference.getSourceEntity.name).toUpperCase»_«Slug.slugify(Slug.getOtherEntityToMapping(reference).references.get(0).attributerefereced.get(0).name).toUpperCase»', true)); ?>
-	    <div class="control-group">
-	        <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
-	        <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
-	    </div>
-	    «FOR attribute: Slug.getOtherAttribute(reference)»
-	    <div class="control-group">
-	        <div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
-	    </div>
-	    «ENDFOR»
-	    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-	    <?php endif; ?>
-	'''
+	def static getNReferenceLanguageKey(ExtendedComponent component, ExtendedReference reference, String entityName) {
+		var otherEntity = Slug.getOtherEntityToMapping(reference)
+		var extensionName = Slug.nameExtensionBind("com", component.name)
+
+		var referenceEntityName = otherEntity.references.findFirst [ r |
+			r.entity.name.equals(reference.entity.name)
+		]
+		var attributedReferenceName = referenceEntityName.attributerefereced.get(0).name
+
+		var languageKey = newArrayList(
+			extensionName,
+			"FORM",
+			"LBL",
+			entityName,
+			attributedReferenceName
+		).join("_")
+
+		return Slug.slugify(languageKey).toUpperCase
+	}
+	
+	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference, ExtendedComponent com) {
+	   var languageKey = getNReferenceLanguageKey(com, reference, reference.getSourceEntity.name)
+	   var otherEntity = Slug.getOtherEntityToMapping(reference)   
+	    
+	   return '''
+    	    <?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
+    	    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«otherEntity.name.toLowerCase»', Text::_('«languageKey»', true)); ?>
+    	    <div class="control-group">
+    	        <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
+    	        <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
+    	    </div>
+    	    «FOR attribute: Slug.getOtherAttribute(reference)»
+    	    <div class="control-group">
+    	        <div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
+    	    </div>
+    	    «ENDFOR»
+    	    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+    	    <?php endif; ?>
+    	'''
+    }
 	
 	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
 		<?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
