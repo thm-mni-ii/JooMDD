@@ -247,6 +247,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
      * 
      */
     def CharSequence writeAttribute(ExtendedEntity entity,ExtendedAttribute attr, ExtendedComponent component, ExtendedDynamicPage page){
+        if(attr.isPreserve)
+			return ''''''
         var ExtendedDetailPageField field =  Slug.getEditedFieldsForattribute(page, attr)
         var EList<KeyValuePair> options = new BasicEList<KeyValuePair>
         if(field !== null) {
@@ -395,6 +397,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    	}
 		
 		def CharSequence writeFieldType(ExtendedDetailPageField field, ExtendedEntity entity, ExtendedComponent component, ExtendedDynamicPage page){
+			
 			var Attribute refAttr = field.fieldtype
 			var String type = getHtmlTypeOfAttribute(page,field.extendedAttribute,entity,component)
 			var Entity refEntity = field.fieldtype.eContainer as Entity
@@ -431,10 +434,11 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     					'''
 					}
 					case "*" ,case  "-1": {
-						var Entity foreign = Slug.getOtherEntityToMapping(ref)
+						
+						var listOfref = entity.searchListRefWithAttr(field.attribute)
     					return ''' 
     					<field name="«field.attribute.name»"
-    					    «type»
+    					    type="hidden"
     					    id="«field.attribute.name.toLowerCase»"
     					    label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»"
     					    description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«field.attribute.name.toUpperCase»_DESC"
@@ -442,18 +446,22 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     				        «kvpair.name» = "«kvpair.value»"
     				        «ENDFOR»
     					/>
-    					<field name="«ref.entity.name.toLowerCase»_id"
-    					    type ="«entity.name.toLowerCase»To«ref.entity.name.toLowerCase»"
-    					    id="«ref.entity.name.toLowerCase»_id"
+    					«FOR ExtendedReference refItem: listOfref»
+    					«var Entity foreign = Slug.getOtherEntityToMapping(refItem)»
+    					<field name="«refItem.entity.name.toLowerCase»_id"
+    					    type ="«entity.name.toLowerCase»To«refItem.entity.name.toLowerCase»"
+    					    id="«refItem.entity.name.toLowerCase»_id"
     					    label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«Slug.slugify(foreign.references.get(0).attributerefereced.get(0).name).toUpperCase»"
     					    description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«entity.name.toUpperCase»_«Slug.slugify(foreign.references.get(0).attributerefereced.get(0).name).toUpperCase»_DESC"
     					/>
-    					«FOR Attribute attr: Slug.getOtherAttribute(ref)»
+    					«FOR Attribute attr: Slug.getOtherAttribute(refItem)»
     					<field name="«attr.name.toLowerCase»"
     					    type ="hidden"
     					    id="«attr.name.toLowerCase»"
     					/>
-    					«ENDFOR»'''
+    					«ENDFOR»
+    					«ENDFOR»
+    					'''
 					}
 					default: {  
 						

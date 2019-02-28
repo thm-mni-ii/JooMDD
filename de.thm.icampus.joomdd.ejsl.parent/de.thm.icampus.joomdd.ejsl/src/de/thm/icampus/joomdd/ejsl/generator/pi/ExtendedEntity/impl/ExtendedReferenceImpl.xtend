@@ -20,7 +20,11 @@ class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 		this.attributerefereced = e.attributerefereced
 		entity = e.entity
 		toEntity = e.entity
-		fromEntity = from
+		if(from === null){
+			fromEntity = e.attribute.get(0).eContainer as Entity
+		}else{
+			fromEntity = from
+		}
 		this.preserve = e.preserve
 		this.upper = e.upper
 		this.lower = e.lower

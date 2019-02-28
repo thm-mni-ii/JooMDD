@@ -166,6 +166,7 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				}
     			for( ExtendedReference ref: ent.allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("-1")]){
     			    var Entity refEntity = Slug.getOtherEntityToMapping(ref)
+    			    if(refEntity !== null)
     			    languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FORM_LBL_"+Slug.slugify(ent.name).toUpperCase+"_"+refEntity.name.toUpperCase,refEntity.name.toFirstUpper))
     			}
 			}

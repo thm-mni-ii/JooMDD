@@ -1145,7 +1145,8 @@ public class Slug  {
 	
 	def static Entity getOtherEntityToMapping(ExtendedReference reference) {
 	    var Entity toEntity = reference.destinationEntity
-	    var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.sourceEntity.name)]).get(0)
+	    var g = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.sourceEntity.name)])
+	    var Reference ref = g.get(0)
 	    return ref.entity
 	}
 	

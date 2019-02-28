@@ -39,6 +39,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import org.eclipse.xtext.EcoreUtil2
 import java.util.ArrayList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import org.eclipse.emf.ecore.EStructuralFeature
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -647,12 +648,22 @@ class RessourceTransformer {
 				   			if(attr.withattribute !== null){
 				   				ent.attributes.remove(attr.withattribute)
 				   				attr.isunique = false
+				   				attr.preserve = true
 				   			}
 				   		}
+				   		var EList<Attribute> ref_attribute_old = new BasicEList<Attribute>()
+				   		var EList<Attribute> ref_referenced_attribute_old = new BasicEList<Attribute>()
+				   		ref_attribute_old.addAll(ref.attribute)
+				   		ref_referenced_attribute_old.addAll(ref.attributerefereced)
+				   		ref.attribute.removeAll(ref_attribute_old)
+				   		ref.attributerefereced.removeAll(ref_referenced_attribute_old)
+				   		ref.attribute.addAll(referenced.attributerefereced)
+				   		ref.attributerefereced.addAll(referenced.attribute)
 				 		toDeleteReference.add(ref)
 				 	}
 			 else if(ref.upper.equalsIgnoreCase("-1") && referenced === null){
 				 		var Attribute primaryKey = this.searchPKAttribute(ent)
+				 		ref.attribute.forEach[t |   t.preserve  = true]
 				 		var EList<Attribute> getAttributeList = new BasicEList<Attribute>
 				 		if(primaryKey !== null){
 				 			getAttributeList.addAll( this.searchUniqueAttribute(ent).filter[t | !ref.attribute.contains(t) && !t.isIsprimary])
@@ -683,12 +694,21 @@ class RessourceTransformer {
 				   				attr.isunique = false
 				   			}
 				   			}
-				 			toDeleteReference.add(ref);
+				   		var EList<Attribute> ref_attribute_old = new BasicEList<Attribute>()
+				   		var EList<Attribute> ref_referenced_attribute_old = new BasicEList<Attribute>()
+				   		ref_attribute_old.addAll(ref.attribute)
+				   		ref_referenced_attribute_old.addAll(ref.attributerefereced)
+				   		ref.attribute.removeAll(ref_attribute_old)
+				   		ref.attributerefereced.removeAll(ref_referenced_attribute_old)
+				   		ref.attribute.addAll(newRef.attributerefereced)
+				   		ref.attributerefereced.addAll(newRef.attribute)
+				 		toDeleteReference.add(ref);
 				 			
 				 			
 				 		}
 				 	}
 				 	}
+				 	ent.references.removeAll(toDeleteReference)
 				 	}
 	}
 	
