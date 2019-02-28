@@ -126,7 +126,10 @@ require(["jquery"], function ($) {
         }
 
         endTour() {
-            this.hideTourPoints();
+            this.tourPoints.forEach((tourPoint) => {
+                tourPoint.objects.undim();
+                tourPoint.objects.popover('disable');
+            });
         }
 
     }
