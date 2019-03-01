@@ -4,6 +4,8 @@ import java.util.Properties
 import java.io.InputStream
 import java.io.FileInputStream
 import java.io.IOException
+import java.nio.file.Paths
+import java.nio.file.Files
 
 class Config {
 	private static Config instance;
@@ -26,10 +28,13 @@ class Config {
         	try {
         		var String workingDir = System.getProperty("user.dir");
         		var String path = workingDir + "/conf/config.properties";
-        		input = new FileInputStream(path);
-				// load a properties file
-				properties.load(input);
-				properties.setProperty("serverPath", workingDir);
+        		
+        		if (Files.exists(Paths.get(path))){
+                    input = new FileInputStream(path);
+                    // load a properties file
+                    properties.load(input);
+                    properties.setProperty("serverPath", workingDir);
+        		}        		
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			} finally {
