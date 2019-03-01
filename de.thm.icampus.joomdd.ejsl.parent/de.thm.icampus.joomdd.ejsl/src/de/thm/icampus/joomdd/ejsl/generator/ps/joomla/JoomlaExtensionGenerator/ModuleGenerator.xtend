@@ -472,6 +472,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	        «ENDFOR»
 	        ");
 	        «ENDFOR»
+	        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), name, ",")»
+	        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
 	        // Filter by published state
 	        $published = $params_module->get('state');
 	        if (is_numeric($published)) {

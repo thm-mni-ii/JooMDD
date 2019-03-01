@@ -37,6 +37,8 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.LinkGeneratorHandler
 import java.util.ArrayList
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
+import com.google.common.collect.Streams
+import java.util.stream.Collectors
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -819,6 +821,49 @@ public class Slug  {
 		return ''	
 	}
 
+    def static createGroupBy(ExtendedEntity entity) {
+        '''$query->group('«entity.name.toLowerCase».«entity.attributes.findFirst[a | a.isprimary].name»');'''
+    }
+    
+    def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator) {
+        val entityName = entity.name
+        var queries = newArrayList
+        
+        for (extendedReference : entity.allExtendedReferences){
+            var isNToM = extendedReference.destinationEntity.references.exists[ r |
+                r.entity.name.equals(entityName)
+            ]
+            
+            if (isNToM){
+                val reference = extendedReference.destinationEntity.references.findFirst[ r | 
+                    r.entity.name.equals(entityName) === false
+                ]
+                
+                val referenceEntityName = reference.entity.name
+                var referencedAttributeName = reference.attributerefereced.get(0).name
+                
+                var attribute = reference.attribute
+                var attributeRefererenced = reference.attributerefereced
+                
+                var joinOn = Streams.zip(attribute.stream(), attributeRefererenced.stream(), [att, attRef | 
+                     '''«referenceEntityName».«attRef.name» = «extendedReference.entity.name».«att.name»'''
+                ]).collect(Collectors.toList()).join(
+                    ''' AND 
+                    '''
+                )
+                
+                var query = '''
+                $query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
+                $query->join('LEFT', "«Slug.databaseName(componentName, referenceEntityName)» AS «referenceEntityName» ON
+                «joinOn»
+                ");
+                '''
+                queries.add(query)
+            }
+        }
+        
+        return queries.join
+    }
 	
 	def static CharSequence databaseName(String componentName, String entityName) {
 		return "#__" + componentName.toLowerCase + "_" + entityName.toLowerCase
