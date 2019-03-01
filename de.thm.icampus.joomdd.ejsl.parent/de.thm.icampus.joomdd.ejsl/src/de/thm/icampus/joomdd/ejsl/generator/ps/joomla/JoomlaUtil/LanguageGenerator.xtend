@@ -184,13 +184,12 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
 				
                 var attrEntityName = attr.entity.name
-                // TODO: There might be more than one entity.
-                val pageEntityName = dynamicPagereference.extendedPage.extendedDynamicPageInstance.entities.get(0).name
+                val pageEntityNameList = dynamicPagereference.extendedPage.extendedDynamicPageInstance.entities.map[e | e.name]
                 
                 var String searchDescriptionAttributeName
-				if (pageEntityName.equals(attrEntityName) === false){
+				if (pageEntityNameList.contains(attrEntityName) === false){
 				    var reference = attr.entity.references.findFirst[ r |
-				        r.entity.name.equals(pageEntityName) === false
+				        pageEntityNameList.contains(r.entity.name) === false
 				    ]
 				    				    
 				    searchDescriptionAttributeName = reference.entity.name
