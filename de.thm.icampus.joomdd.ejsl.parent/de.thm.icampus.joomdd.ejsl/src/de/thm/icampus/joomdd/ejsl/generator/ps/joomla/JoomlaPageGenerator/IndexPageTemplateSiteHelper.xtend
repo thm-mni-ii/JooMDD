@@ -162,39 +162,45 @@ class IndexPageTemplateSiteHelper {
 	    <?php
 	        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	    ?>
-	    <table class="table table-striped">
-	        <thead>
-	            <tr>
-	                <?php if ((isset($this->items[0]) && property_exists($this->items[0], 'state')) && $canEdit) : ?>
-	                <th width="1%" class="nowrap center">
-	                    <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
-	                </th>
-	                <?php $columns++;?>
-	                <?php endif; ?>
-	                «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
-	                <th class='left'>
-	                    <?php echo HTMLHelper::_('grid.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
-	                </th>
-	                «ENDFOR»
-	                <?php if ((isset($this->items[0]) && property_exists($this->items[0], '«mainEntity.primaryKey.name»')) && $canEdit) : ?>
-	                <th width="1%" class="nowrap center hidden-phone">
-	                    <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
-	                </th>
-	                <?php $columns++;?>
-	                <?php endif; ?>
-	            </tr>
-	        </thead>
-	        <tbody>
-	            «genViewTemplateBody()»
-	        </tbody>
-	        <tfoot>
-	            <tr>
-	                <td colspan="<?php echo $columns;?>">
-	                    <?php echo $this->pagination->getListFooter(); ?>
-	                </td>
-	            </tr>
-	        </tfoot>
-	    </table>
+	    <?php if (empty($this->items)) : ?>
+	       <div class="alert alert-no-items">
+	           <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+	       </div>
+	    <?php else : ?>
+	        <table class="table table-striped">
+	            <thead>
+	                <tr>
+	                    <?php if ((isset($this->items[0]) && property_exists($this->items[0], 'state')) && $canEdit) : ?>
+	                        <th width="1%" class="nowrap center">
+	                        <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+	                        </th>
+	                        <?php $columns++;?>
+	                    <?php endif; ?>
+	                        «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
+	                        <th class='left'>
+	                            <?php echo HTMLHelper::_('grid.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«mainEntity.name.toUpperCase»_«attr.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+	                        </th>
+	                        «ENDFOR»
+	                    <?php if ((isset($this->items[0]) && property_exists($this->items[0], '«mainEntity.primaryKey.name»')) && $canEdit) : ?>
+	                        <th width="1%" class="nowrap center hidden-phone">
+	                            <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', '«this.mainEntity.name.toLowerCase».«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
+	                        </th>
+	                        <?php $columns++;?>
+	                    <?php endif; ?>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                «genViewTemplateBody()»
+	            </tbody>
+	            <tfoot>
+	                <tr>
+	                    <td colspan="<?php echo $columns;?>">
+	                        <?php echo $this->pagination->getListFooter(); ?>
+	                    </td>
+	                </tr>
+	            </tfoot>
+	        </table>
+	    <?php endif; ?>
 	    «IF details !== null»
 	    <?php if ($canCreate): ?>
 	    <a href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>" class="btn btn-success btn-small">
