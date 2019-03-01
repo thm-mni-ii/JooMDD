@@ -20,18 +20,23 @@ require(["jquery"], function ($) {
         /* TODO: Add tour points accordingly */
         tourPoints = [
             new TourPoint($('.intro-message-editor'), `Welcome to our interactive tour to discover the features of the JooMDD web editor.`),
-            new TourPoint($('#saveModel'), `This is the save button. Press this button to save your model.`),
-            new TourPoint($('#addModel'), ``),
-            new TourPoint($('#download'), ``),
-            new TourPoint($('#loadModel'), ``),
-            new TourPoint($('#uploadExtension'), ``),
-            new TourPoint($('#extractModel'), ``),
-            new TourPoint($('#folder_tree'), ``),
-            new TourPoint($('#editorContainer'), ``),
-            new TourPoint($('#platform'), ``),
             new TourPoint($('#btnGroupDrop1'), `We recommend to start with our eample models, e.g. the conference model.`),
-            new TourPoint($('#generateCode'), `This is the generate button. Use this button to start the 
-            generation of your excellent MDD'd Joomla! component`)
+            new TourPoint($('#addModel'), `Use this button to add a new model. The model will appear in the file tree under 'src'.`),
+            new TourPoint($('#loadModel'), `With this button you can load the selected model in the file tree to the model editor.`),
+            new TourPoint($('#editorContainer'), `This is the model editor. Here you can specify your eJSL model information. The editor provides syntax highlighting, code completion, and live validation.`),
+            new TourPoint($('#editorFullscreen'), `Use this button to open the model editor in a (nearly) fullscreen modal.`),
+            new TourPoint($('#saveModel'), `This is the save button. Press this button to save your model.`),
+            new TourPoint($('#platform'), `Here, you can choose the Joomla version for which the extension code will be generated.`),
+            new TourPoint($('#generateCode'), `This is the generate button. Use this button to start the generation of your Joomla! extension(s). The generated code can be found in the file tree under 'src-gen'.`),
+            new TourPoint($('#download'), `Use this button to download the selected node in the file tree as .zip. Alternatively, you can use the context menu (right-click) in the file tree to download a node.`)
+            
+            
+            /*,
+            new TourPoint($('#folder_tree > ul'), ``),
+            new TourPoint($('div.ace_gutter'), `This status bar shows existing model violations. If there are violations, the code generator will not generaty any code.`),
+            new TourPoint($('#uploadExtension'), ``),
+            new TourPoint($('#extractModel'), ``)
+            */
         ];
         position = 0;
         isActive = false;
@@ -136,15 +141,17 @@ require(["jquery"], function ($) {
         }
 
         endTour() {
+            
             this.tourPoints.forEach((tourPoint) => {
                 tourPoint.objects.undim();
                 tourPoint.objects.popover('disable');
             });
+            
         }
 
     }
 
-    const interactiveTour = new InteractiveTour();
+    var interactiveTour;
 
     // Dimming and popover as jQuery extension
     (function ($) {
@@ -176,6 +183,8 @@ require(["jquery"], function ($) {
             $curtain.on('click', (event) => {
                 if (event.target.classList.contains('dimbackground-curtain')) {
                     interactiveTour.endTour();
+                    dimmedNodes = [];
+                    interactiveTour = null;
                 }
             });
             $('body').append($curtain);
@@ -327,8 +336,21 @@ require(["jquery"], function ($) {
 
         /* TODO Remove if check is implemented*/
         setTimeout(() => {
-            interactiveTour.startTour();
+            if (sessionStorage.getItem("joomddTour") != 1)
+            {
+                interactiveTour = new InteractiveTour();
+                
+                sessionStorage.setItem("joomddTour", 1)
+                interactiveTour.startTour();
+            }
+
         }, 1000);
+
+        /*$('#startTour').click(() => {
+            interactiveTour = new InteractiveTour();
+            interactiveTour.startTour();
+        });*/
+        
 
     });
 });

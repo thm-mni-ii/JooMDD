@@ -87,8 +87,13 @@
 
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
+            <!--<li class="nav-item">
+              <button id="startTour" type="button" class="btn btn-joomdd" aria-haspopup="true" aria-expanded="false">
+                  Start Tour
+              </button>
+            </li>-->
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="https://github.com/icampus/JooMDD/blob/master/README.md">Documentation</a>
+              <a class="nav-link js-scroll-trigger" href="https://github.com/icampus/JooMDD/blob/master/docu">Documentation</a>
             </li>
             <li class="nav-item btn-group">
               <div id="loginMenuDropdown" class="btn-group">
@@ -145,25 +150,7 @@
         <div class="row">
           <div class="col-lg-8 ml-auto">
             <div>
-              <button
-                      id="saveModel"
-                      class="btn btn-light btn-lg"
-                      title="Save your model code in the editor to the selected model in the tree.">
-                <i class="fas fa-save fa-fw"></i>
-                <span>Save Model</span>
-              </button>
-              <button
-                      id="generateCode"
-                      class="btn btn-light btn-lg"
-                      title="Generate Joomla! code for the selected model.">
-                <i class="fas fa-caret-right fa-fw"></i>
-                <span>Generate Code</span>
-              </button>
-              <select id="platform" class="custom-select">
-				  <option value="j3" selected>Joomla 3</option>
-				  <option value="j4">Joomla 4</option>
-			  </select>
-              <span class="btn-group" role="group">
+            <span class="btn-group" role="group">
                 <button id="btnGroupDrop1" type="button" class="btn btn-light btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Load Example Model
                 </button>
@@ -174,6 +161,26 @@
                   <button class="templates dropdown-item" value="brueckenKurs.eJSL">Brückenkurse</button>
                 </div>
               </span>
+              <button
+                      id="saveModel"
+                      class="btn btn-light btn-lg"
+                      title="Save your model code in the editor to the selected model in the tree.">
+                <i class="fas fa-save fa-fw"></i>
+                <span>Save Model</span>
+              </button>
+              <select id="platform" class="custom-select">
+                  <option value="j3" selected>Joomla 3</option>
+                  <option value="j4">Joomla 4</option>
+			        </select>
+              <button
+                      id="generateCode"
+                      class="btn btn-light btn-lg"
+                      title="Generate Joomla! code for the selected model.">
+                <i class="fas fa-caret-right fa-fw"></i>
+                <span>Generate Code</span>
+              </button>
+              
+              
             </div>
             <hr id="spacer" class="section-heading-spacer">
             <div class="clearfix"></div>
@@ -223,16 +230,17 @@
                   </div>
                 </div>
               </div>
+              
+              <button id="loadModel" class="btn btn-light btn-lg">
+                <i class="fas fa-arrow-left fa-fw"></i>
+                <span>Load Model to Editor</span>
+              </button>
               <button
                       id="download"
                       class="btn btn-light btn-lg"
                       title="You can download (.zip) all models and sub-trees by selecting them/their parent node and click this button.">
                 <i class="fas fa-download fa-fw"></i>
                 <span>Download Node</span>
-              </button>
-              <button id="loadModel" class="btn btn-light btn-lg">
-                <i class="fas fa-arrow-left fa-fw"></i>
-                <span>Load Model to Editor</span>
               </button>
               <button id="uploadExtension" class="btn btn-light btn-lg"  data-toggle="modal" data-target="#uploadExtensionModal">
                 <i class="fas fa-upload fa-fw"></i>
@@ -272,7 +280,9 @@
             </div>
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
-            <div id="folder_tree" class="filetree"></div>
+            <div id="folder_tree_container" >
+                <div id="folder_tree" class="filetree"></div>
+            </div>
           </div>
         </div>
 
