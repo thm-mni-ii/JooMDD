@@ -26,10 +26,8 @@ require(["jquery","alert"], function($, alert) {
 	
 	// Fullscreen (displayed) handler
 	$('#fullscreenModal').on('shown.bs.modal', function (e) {
-  		var editor = $("#xtext-editor");
-		editor = editor[0];
-		editor.env.editor.resize();
-		$(editor).css('visibility','visible');
+  		var editor = ace.edit("#xtext-editor");
+  		editor.container.requestFullscreen();
 	});
 	
 	// Fullscreen (closing) handler
@@ -222,10 +220,18 @@ require(["jquery","alert"], function($, alert) {
 				var data = $('#folder_tree').jstree(true).get_selected();
 				if(data.length ==1){
 					var nameArray = data[0].split("/");
-					var namefile = nameArray[nameArray.length-1]
+					var namefile = nameArray[nameArray.length-1];
 
-					var response = editorhandler.loadEditor(namefile+"");
-                    alert.showSuccess("Model Successfully loaded.");
+					$.ajax({
+						method: "GET",
+						url: "/resource-loader",
+						data: { resource: namefile }
+					})
+					.done(function( msg ) {
+						var editor = ace.edit("xtext-editor");
+						editor.getSession().setValue(msg);
+                    	alert.showSuccess("Model Successfully loaded.");
+					});
 				}else{
 					alert.showError("You can only load one model.");
 				}
