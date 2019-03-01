@@ -8,9 +8,6 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
-import com.google.common.collect.Streams
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 /**
  * This class contains the templates to generate the necessary code for backend view templates (index pages).
@@ -147,8 +144,8 @@ class IndexPageTemplateAdminHelper {
 	        «ENDFOR»
 	        ");
 	        «ENDFOR»
-	        «createQueryForNToM(indexpage.extendedEntityList.get(0), com.name)»
-	        «createGroupBy(indexpage.extendedEntityList.get(0))»
+	        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), com.name, '''<\/br>''')»
+	        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
 	        // Filter by published state
 	        $published = $this->getState('filter.state');
 	        if (is_numeric($published)) {
@@ -194,52 +191,7 @@ class IndexPageTemplateAdminHelper {
 	        }
 	        return $query;
 	    }
-    '''
-    
-    def createGroupBy(ExtendedEntity entity) {
-        '''$query->group('«entity.name.toLowerCase».«entity.attributes.findFirst[a | a.isprimary].name»');'''
-    }
-    
-    def createQueryForNToM(ExtendedEntity entity, String componentName) {
-        val entityName = entity.name
-        var queries = newArrayList
-        
-        for (extendedReference : entity.allExtendedReferences){
-            var isNToM = extendedReference.destinationEntity.references.exists[ r |
-                r.entity.name.equals(entityName)
-            ]
-            
-            if (isNToM){
-                val reference = extendedReference.destinationEntity.references.findFirst[ r | 
-                    r.entity.name.equals(entityName) === false
-                ]
-                
-                val referenceEntityName = reference.entity.name
-                var referencedAttributeName = reference.attributerefereced.get(0).name
-                
-                var attribute = reference.attribute
-                var attributeRefererenced = reference.attributerefereced
-                
-                var joinOn = Streams.zip(attribute.stream(), attributeRefererenced.stream(), [att, attRef | 
-                     '''«referenceEntityName».«attRef.name» = «extendedReference.entity.name».«att.name»'''
-                ]).collect(Collectors.toList()).join(
-                    ''' AND 
-                    '''
-                )
-                
-                var query = '''
-                $query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "<\/br>") AS «referenceEntityName»_«referencedAttributeName»');
-                $query->join('LEFT', "«Slug.databaseName(componentName, referenceEntityName)» AS «referenceEntityName» ON
-                «joinOn»
-                ");
-                '''
-                queries.add(query)
-            }
-        }
-        
-        return queries.join
-    }
-    
+    '''    
     
 	def CharSequence genAdminModelGetItem()'''
 		/**
