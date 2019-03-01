@@ -177,19 +177,39 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			    languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_" + dynamicPagereference.extendedPage.name.toUpperCase+"_FILTER_LABEL" , "Filter"))
 			}
 			
-			var searchDestriptionAttributes = newArrayList			
+			var searchDescriptionAttributes = newArrayList			
 			for( ExtendedAttribute attr: dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendFiltersList){
 			    languagesWords.addsLanguageKeys(new KVPairLanguage("JOPTION_SELECT_"+ Slug.slugify(attr.name).toUpperCase, "Select a "+Slug.slugify(attr.name).toFirstUpper))
 				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase,Slug.slugify(attr.name).toFirstUpper))
 				languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_"+dynamicPagereference.extendedPage.extendedDynamicPageInstance.extendedEntityList.get(0).name.toUpperCase+"_"+Slug.slugify(attr.name).toUpperCase, Slug.slugify(attr.name).toFirstUpper))
-				searchDestriptionAttributes.add(Slug.slugify(attr.name).toFirstUpper)
+				
+                var attrEntityName = attr.entity.name
+                val pageEntityNameList = dynamicPagereference.extendedPage.extendedDynamicPageInstance.entities.map[e | e.name]
+                
+                var String searchDescriptionAttributeName
+				if (pageEntityNameList.contains(attrEntityName) === false){
+				    var reference = attr.entity.references.findFirst[ r |
+				        pageEntityNameList.contains(r.entity.name) === false
+				    ]
+				    				    
+				    searchDescriptionAttributeName = reference.entity.name
+				}
+				else
+				{
+                    searchDescriptionAttributeName = attr.name 
+				}
+				
+				searchDescriptionAttributes.add(Slug.slugify(searchDescriptionAttributeName).toFirstUpper) 
 			}
 			
-			var lastElement = searchDestriptionAttributes.last
-			searchDestriptionAttributes.remove(lastElement)
-			var searchDestription = '''Search in «searchDestriptionAttributes.join(", ")»«IF searchDestriptionAttributes.size > 0» and «ENDIF»«lastElement».'''
-			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_SEARCH_"+dynamicPagereference.extendedPage.name.toUpperCase+"_DESC", searchDestription))
-			languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+dynamicPagereference.extendedPage.name.toUpperCase+"_ACTIONS","Actions"))
+			if (searchDescriptionAttributes.empty === false){
+			    var lastElement = searchDescriptionAttributes.last
+                searchDescriptionAttributes.remove(lastElement)
+                var searchDestription = '''Search in «searchDescriptionAttributes.join(", ")»«IF searchDescriptionAttributes.size > 0» and «ENDIF»«lastElement».'''
+                languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_FILTER_SEARCH_"+dynamicPagereference.extendedPage.name.toUpperCase+"_DESC", searchDestription))
+            }
+            languagesWords.addsLanguageKeys(new KVPairLanguage(com.extensionName.toUpperCase +"_"+dynamicPagereference.extendedPage.name.toUpperCase+"_ACTIONS","Actions"))
+			
 		}
 		
 		return languagesWords
