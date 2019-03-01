@@ -13,31 +13,26 @@ require(["jquery","alert"], function($, alert) {
 	$('#loginMenuDropdown').on('shown.bs.dropdown', function () {
 		$("#loginAlert").css('visibility','hidden');
 	});
-	
-	// Fullscreen (opening) handler
-	$('#fullscreenModal').on('show.bs.modal', function (e) {
-  		var editor = $("#xtext-editor");
-		editor = editor[0];
-		$(editor).css('visibility','hidden');
-		$("#fullscreenModal .modal-title").text($("#modelname").text());
-		$(editor).detach().appendTo('#fullscreenModalBody');
-		editor.env.editor.setValue(editor.env.editor.getValue());
+		
+	// Fullscreen handler
+	$('#editorFullscreen').click(function (e) {
+  		var editor = ace.edit("xtext-editor");
+  		openFullscreen(editor.container);
 	});
+    
+	function openFullscreen(elem) {
+		if (elem.requestFullscreen) {
+			elem.requestFullscreen();
+		} else if (elem.mozRequestFullScreen) { /* Firefox */
+			elem.mozRequestFullScreen();
+		} else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+			elem.webkitRequestFullscreen();
+		} else if (elem.msRequestFullscreen) { /* IE/Edge */
+			elem.msRequestFullscreen();
+		}
+	}
 	
-	// Fullscreen (displayed) handler
-	$('#fullscreenModal').on('shown.bs.modal', function (e) {
-  		var editor = ace.edit("#xtext-editor");
-  		editor.container.requestFullscreen();
-	});
 	
-	// Fullscreen (closing) handler
-	$('#fullscreenModal').on('hide.bs.modal', function (e) {
-  		var editor = $("#xtext-editor");
-		editor = editor[0];
-		$(editor).detach().appendTo('#editorContainer');
-		editor.env.editor.resize();
-	});
-     
 	// Load example chosen template in text editor
 	$(".templates").click(function(){
 	var nameTemplate = $(this).val();
