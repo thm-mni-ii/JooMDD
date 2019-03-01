@@ -127,7 +127,7 @@ class JoomlaEntityGenerator {
         ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`
         «FOR ExtendedAttribute attr: en.refactoryAttribute»
         «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
-        ADD COLUMN `«attr.name»`  «attr.generatorType» «if(attr.isprimary) " PRIMARY KEY"»
+        ADD COLUMN IF NOT EXISTS `«attr.name»`  «attr.generatorType» «if(attr.isprimary) " PRIMARY KEY"»
         «var ExtendedAttribute after = getAfterAttribute(attr,en)»
         «IF after !== null»
         AFTER «after.name»,
@@ -135,7 +135,7 @@ class JoomlaEntityGenerator {
         ,
         «ENDIF»
         «ELSE»
-        ADD COLUMN `«attr.name»`  «attr.generatorType»
+        ADD COLUMN IF NOT EXISTS `«attr.name»`  «attr.generatorType»
         «var ExtendedAttribute after = getAfterAttribute(attr,en)»
         «IF after !== null»
         AFTER «after.name»
