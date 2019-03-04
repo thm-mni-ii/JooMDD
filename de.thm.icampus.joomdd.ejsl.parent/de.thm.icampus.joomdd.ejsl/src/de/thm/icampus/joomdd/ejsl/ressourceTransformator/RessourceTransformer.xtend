@@ -888,8 +888,6 @@ class RessourceTransformer {
 		return false
 	}
 	
-	
-	
 	private def EList<Attribute> copyAttribute( Entity fromEntity, EList<Attribute> attributeOldList) {
 		var EList<Attribute> result = new BasicEList<Attribute>
 		for(Attribute attribute: attributeOldList){
