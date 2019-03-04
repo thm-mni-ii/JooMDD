@@ -48,17 +48,20 @@ class EJSLValidator extends AbstractEJSLValidator {
 	@Check
 	def checkDatatypesAreUnique(EJSLModel model) {
 		var types = new HashSet<String>
-
-		for (type : model.getEjslPart.getDatatypes) {
-			if (!types.add(type.name)) {
-				error(
-					'Datatype must be unique.',
-					type,
-					EJSLPackage.Literals.DATATYPE__NAME,
-					AMBIGUOUS_DATATYPE
-				)
-			}
-		}
+        var ejslPart = model.ejslPart
+        
+        if (ejslPart !== null) {
+            for (type : ejslPart.getDatatypes) {
+                if (!types.add(type.name)) {
+                    error(
+                        'Datatype must be unique.',
+                        type,
+                        EJSLPackage.Literals.DATATYPE__NAME,
+                        AMBIGUOUS_DATATYPE
+                    )
+                }
+            }
+        }
 	}
 
 	/**
