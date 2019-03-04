@@ -240,7 +240,7 @@ require(["jquery","alert"], function($, alert) {
 					filename= filename+".eJSL"
 				if(tempArray.length > 1)
 					filename = tempArray[0] + ".eJSL"
-				var response = editorhandler.loadEditor(filename+"");
+				var editor = editorhandler.loadEditor(filename+"");
 			});
 
 			// Upload of an existing extension
