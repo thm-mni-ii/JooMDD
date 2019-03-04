@@ -216,17 +216,11 @@ require(["jquery","alert"], function($, alert) {
 				if(data.length ==1){
 					var nameArray = data[0].split("/");
 					var namefile = nameArray[nameArray.length-1];
-
-					$.ajax({
-						method: "GET",
-						url: "/resource-loader",
-						data: { resource: namefile }
-					})
-					.done(function( msg ) {
-						var editor = ace.edit("xtext-editor");
-						editor.getSession().setValue(msg);
-                    	alert.showSuccess("Model Successfully loaded.");
-					});
+					var confirmed = confirmUnsavedChangeToModel(namefile);
+					
+					if (confirmed === true){
+						var editor = editorhandler.loadEditor(namefile+"");
+					}
 				}else{
 					alert.showError("You can only load one model.");
 				}
@@ -240,7 +234,12 @@ require(["jquery","alert"], function($, alert) {
 					filename= filename+".eJSL"
 				if(tempArray.length > 1)
 					filename = tempArray[0] + ".eJSL"
-				var editor = editorhandler.loadEditor(filename+"");
+					
+				var confirmed = confirmUnsavedChangeToModel(filename);
+				
+				if (confirmed === true){
+					var editor = editorhandler.loadEditor(filename+"");
+				}
 			});
 
 			// Upload of an existing extension
@@ -264,6 +263,18 @@ require(["jquery","alert"], function($, alert) {
 						}
 				});
 			});
+			
+			function confirmUnsavedChangeToModel(modelNameToChange){
+				var editor = ace.edit("xtext-editor");
+				var modified = editor.xtextServices.editorContext._dirty;
+				var confirmed = true;
+				
+				if (modified) {
+					confirmed = confirm('You have unsaved changes in your current model.\nPress OK to load the model "' + modelNameToChange + '" anyway.');
+				}
+				
+				return confirmed;
+			}
 		});
 	});
 });
