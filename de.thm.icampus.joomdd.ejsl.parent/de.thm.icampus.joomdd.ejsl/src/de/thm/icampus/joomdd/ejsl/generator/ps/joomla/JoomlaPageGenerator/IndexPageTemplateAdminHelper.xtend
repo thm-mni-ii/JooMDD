@@ -366,12 +366,6 @@ class IndexPageTemplateAdminHelper {
                             <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«mainEntity.name.toUpperCase»_«attr.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
                         </th>
                         «ENDFOR»
-                        <?php if (isset($this->items[0]) && property_exists($this->items[0], '«mainEntity.primaryKey.name»')) : ?>
-                        <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
-                        </th>
-                        <?php $columns++; ?>
-                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -412,11 +406,6 @@ class IndexPageTemplateAdminHelper {
                         </td>
                         <?php endif; ?>
                         «genAdminModelAttributeReference(column, indexpage, com)»
-                        <?php if (isset($this->items[0]->«mainEntity.primaryKey.name»)): ?>
-                        <td class="center hidden-phone">
-                            <?php echo (int) $item->«mainEntity.primaryKey.name»; ?>
-                        </td>
-                        <?php endif; ?>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

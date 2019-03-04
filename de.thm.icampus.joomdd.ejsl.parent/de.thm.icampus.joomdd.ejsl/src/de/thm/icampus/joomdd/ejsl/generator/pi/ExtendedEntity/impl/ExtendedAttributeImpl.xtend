@@ -52,13 +52,22 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		var Entity ent = instance.eContainer as Entity
 		
 		if(ent === null){
-			var Reference ref = (entity.references.filter[t | t.entity.attributes.contains(instance)]).get(0)
-			return ref.entity
+		    if (entity.references.length > 0){
+		        var filteredList = (entity.references.filter[t | t.entity.attributes.contains(instance)])
+		        
+		        if (filteredList.length > 0){
+                    var Reference ref = filteredList.get(0)
+                    return ref.entity
+		        }
+		    }
 		}
-		
-		if(ent.name != entity.name)
-		return ent
-		
+		else
+		{
+		    if(ent.name != entity.name){
+                return ent  
+            }
+		}
+
 		return entity
 	}
 	

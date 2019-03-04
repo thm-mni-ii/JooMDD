@@ -40,6 +40,8 @@ import org.eclipse.xtext.EcoreUtil2
 import java.util.ArrayList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.ecore.EStructuralFeature
+import java.util.stream.Collectors
+import java.util.List
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -52,6 +54,9 @@ class RessourceTransformer {
 	EJSLModel modelInstance
 	CMSExtension cmsextension
 	Feature feature
+	
+	String defaultPrimaryAttributeName = "id"
+	
 	new (EJSLModel model){
 		modelInstance = model
 		
@@ -62,9 +67,13 @@ class RessourceTransformer {
 	def dotransformation(){
 		feature.entities.forEach[t | t.name = Util.slugify(t.name)]
 		feature.pages.forEach[t | t.name = Util.slugify(t.name)]
+		
 		for(Entity ent: feature.entities){
 			this.completeAttributeOfEntity(ent)
 		}
+		
+        addDefaultFilterAndColumns();
+		
 		for(Entity ent: feature.entities){
     		completeReferenceOfEntity(ent)
     		setReferenceAttribute(ent)
@@ -76,7 +85,6 @@ class RessourceTransformer {
 		createMappingsTable(feature.entities)
 		formatEntitiesAttribute(feature.entities)
 		completeDetailsPage();
-		completeIndexPage();
 		
 		var JoomlaTranformator jt = new JoomlaTranformator(modelInstance)
 		jt.completeCMSExtension
@@ -247,10 +255,10 @@ class RessourceTransformer {
 	 * @param Entity ent contains a entity
 	 */
 	private def completeAttributeOfEntity(Entity ent) {
-		if(!ent.havePrimaryAttribute()){
-			
+	    
+		if(ent.havePrimaryAttribute === false){
 			var Attribute id = EJSLFactory.eINSTANCE.createAttribute
-			id.name = "id"
+			id.name = defaultPrimaryAttributeName
 			var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
 			typeid.type =  StandardTypeKinds.INTEGER
 			typeid.notnull = true
@@ -258,17 +266,15 @@ class RessourceTransformer {
 			id.type = typeid
 			id.isprimary = true
 			ent.attributes.add(id)
-			
 		}
+		
 		for(Attribute attr: ent.attributes){
 			 if(attr.id){
 			 	attr.withattribute = ent.searchIdAttribute
 			 	attr.id = false;
 			 }
-		}
-		
-		
-		}
+		}	
+	}
 		/**
 	 * Search an return if the entity have a primary keys
 	 * @param Entity entity contains a entity
@@ -276,8 +282,9 @@ class RessourceTransformer {
 	 */
 	private def Attribute searchIdAttribute(Entity entity){
 		for(Attribute e: entity.attributes){
-			if(e.name.equalsIgnoreCase("id") || e.name.equalsIgnoreCase("^id") || e.isIsprimary)
-			return e
+			if(e.name.equalsIgnoreCase(defaultPrimaryAttributeName) || e.name.equalsIgnoreCase("^"+defaultPrimaryAttributeName) || e.isIsprimary){
+			    return e
+			}
 		}
 		return null
 	}
@@ -394,17 +401,18 @@ class RessourceTransformer {
 	def Attribute setNewGenAttribute(Entity ent, Reference ref, Attribute attrRef){
 		var Entity referenceEntity = ref.entity
 		var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
-					newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name.toLowerCase
-					newAttribute.type =  Util.copyType(attrRef.type)
-					if(newAttribute.type instanceof StandardTypes)
-					{
-					var StandardTypes typs = newAttribute.type  as StandardTypes
-					typs.notnull = false
-					}
-					ent.attributes.add(newAttribute)
-					ref.attribute.add(newAttribute)
-										
-					return newAttribute
+		newAttribute.name = referenceEntity.name.toString.toLowerCase + "_" + attrRef.name.toLowerCase
+		newAttribute.type =  Util.copyType(attrRef.type)
+		
+		if(newAttribute.type instanceof StandardTypes)
+		{
+    		var StandardTypes typs = newAttribute.type  as StandardTypes
+    		typs.notnull = false
+		}
+		ent.attributes.add(newAttribute)
+		ref.attribute.add(newAttribute)
+							
+		return newAttribute
 	}
 	
 	
@@ -532,19 +540,28 @@ class RessourceTransformer {
 		}
 	}
 	
-	def completeIndexPage() {
-			for(Page page: feature.pages.filter[t | t instanceof IndexPage]){
-			var IndexPage dp = page as IndexPage
-			completeColUmnAndFilterList(dp)
+	def addDefaultFilterAndColumns() {
+	    var List<IndexPage> indexPageList = feature.pages
+            .stream
+            .filter[p | p instanceof IndexPage]
+            .map[p | p as IndexPage]
+            .collect(Collectors.toList());
+	    
+	    for(IndexPage page : indexPageList){
+			completeColUmnAndFilterList(page)
 		}
 	}
 	
 	def completeDetailsPage(){
-		
-		for(Page page: feature.pages.filter[t | t instanceof DetailsPage ]){
-			var DetailsPage dp = page as DetailsPage
-			completeTableColumnAndEditedFields(dp)
-			for(DetailPageField field: dp.editfields){
+        var List<DetailsPage> detailsPageList = feature.pages
+            .stream
+            .filter[p | p instanceof DetailsPage]
+            .map[p | p as DetailsPage]
+            .collect(Collectors.toList());
+            
+		for(DetailsPage page : detailsPageList){
+			completeTableColumnAndEditedFields(page)
+			for(DetailPageField field: page.editfields){
 				if(field.htmltype === null){
 				  field.htmltype = parseAttributeType(field.attribute).htmltype
 				    
@@ -555,27 +572,24 @@ class RessourceTransformer {
 	}
 	
 	private def completeTableColumnAndEditedFields(DetailsPage page) {
-
-	
-			for(Attribute attr: page.entities.get(0).attributes){
-				if(!page.tablecolumns.contains(attr)){
-					page.tablecolumns.add(attr)
-					
-				}
-				var DetailPageField df = existingAlreadyFieldWithAttr(page.editfields, attr)
-				if(df !== null){
-					completeDetailageField(df)
-				}else{
-					page.editfields.add(parseAttributeType(attr))
-				}
+		for(Attribute attr: page.entities.get(0).attributes){
+			if(!page.tablecolumns.contains(attr)){
+				page.tablecolumns.add(attr)
 				
 			}
-		
+			var DetailPageField df = existingAlreadyFieldWithAttr(page.editfields, attr)
+			if(df !== null){
+				completeDetailageField(df)
+			}else{
+				page.editfields.add(parseAttributeType(attr))
+			}
+		}
 	}
+	
 	//@todo
 	def completeDetailageField(DetailPageField field) {
-		
 		var Attribute attr = field.attribute
+		
 		if( attr !== null ){
 			var Entity ent = field.attribute.eContainer as Entity
 			var Reference ref = ent.searchRefrenceOfAttribute(field.attribute)
@@ -615,22 +629,53 @@ class RessourceTransformer {
 	}
 	
 	private def completeColUmnAndFilterList(IndexPage page) {		
-		if(page.filters.empty && !page.tablecolumns.empty){
+		
+		// TODO: There might be more than one entity.
+		var firstEntity = page.entities.get(0)
+		var idAttribute = EcoreUtil2.copy(firstEntity.attributes.findFirst[ a | 
+		    a.name.equals(defaultPrimaryAttributeName) && a.isIsprimary === true
+		])
+		
+		var pageFilterList = page.filters
+		var pageTableColumnList = page.tablecolumns
+		
+		// Both lists are not empty
+		if (pageFilterList.empty === pageTableColumnList.empty && pageFilterList.empty === false){
+		    // Add the id attribute (primary) to the end of the list.
+		    if (idAttribute !== null){
+                pageFilterList.add(idAttribute)
+                pageTableColumnList.add(idAttribute)
+            }
+		}
+		
+		// The filter list is empty. We add all attributes from the table column list.
+        // We also add the id attribute (primary) if present.
+		if(pageFilterList.empty && pageTableColumnList.empty === false){
+			if (idAttribute !== null){
+			    pageTableColumnList.add(idAttribute)
+			}
 			for(Attribute attr: page.tablecolumns){
-				page.filters.add(attr)
+				pageFilterList.add(EcoreUtil2.copy(attr))
 			}
 		}
-		if(!page.filters.empty && page.tablecolumns.empty){
-			
+		
+		// The table column list is empty. We add all attributes from the filter list.
+		// We also add the id attribute (primary) if present.
+		if(pageFilterList.empty === false && pageTableColumnList.empty){
+		    if (idAttribute !== null){
+                pageFilterList.add(idAttribute)
+            }
 			for(Attribute attr: page.filters){
-				page.tablecolumns.add(attr)
+				pageTableColumnList.add(EcoreUtil2.copy(attr))
 			}
 		}
-		if(page.filters.empty&& page.tablecolumns.empty){
-			for(Attribute attr: page.entities.get(0).attributes){
-				if((page.entities.get(0).references.filter[t | !t.attribute.contains(attr) && t.upper != 1]).size ==0)
-				page.tablecolumns.add(attr)
-				page.filters.add(attr)
+		
+		// Both lists are empty. We add all attributes from the entity.
+		// This includes the id attribute (primary))
+		if(pageFilterList.empty && pageTableColumnList.empty){
+			for(Attribute attr: firstEntity.attributes){
+    			pageFilterList.add(EcoreUtil2.copy(attr))
+    			pageTableColumnList.add(EcoreUtil2.copy(attr))
 			}
 		}
 	}
@@ -717,7 +762,7 @@ class RessourceTransformer {
 		
 		var EList<Entity> newEntity = new BasicEList<Entity>()
 		for(Entity ent: entitiesList){
-			var EList<Reference> toDeleteReference = new BasicEList<Reference>()
+			var EList<Reference>toDeleteReference = new BasicEList<Reference>()
 			var EList<Reference>toAddReference = new BasicEList<Reference>()
 			var EList<Attribute>toDeleteAttribute = new BasicEList<Attribute>()
 			for(Reference ref: ent.references){
@@ -727,6 +772,7 @@ class RessourceTransformer {
 				 	
 				 		var Entity mappingEntity = EJSLFactory.eINSTANCE.createEntity
 				 		mappingEntity.name = mappingEntityName
+				 		
 				 		var EList<Attribute> attributeFromEntity = new BasicEList<Attribute>
 				 		var EList<Attribute> copy_attributeFromEntity = new BasicEList<Attribute>
 				 		var EList<Attribute> to_rename_attributeFromEntity = new BasicEList<Attribute>
@@ -747,34 +793,34 @@ class RessourceTransformer {
 				 		ent.attributes.removeAll(ref.attribute)
 				 		ref.entity.attributes.removeAll(ref.entity.references.filter[t | t.entity.name == ent.name].get(0).attribute)
 				 		mappingEntity.references.addAll(solveReference(ref,mappingEntity,ent,ref.entity))
+				 		
 				 		newEntity.add(mappingEntity)
 				 		println("generateMappingsTable " + mappingEntityName)
+				 		
 				 		deleteReferenceToEntity(ref.entity, ent,mappingEntity)
 				 		toDeleteReference.add(ref)
 				 		toAddReference.add(createNewReverseReference(mappingEntity, ent,ref))
 				 		completeAttributeOfEntity(mappingEntity);
+				 		
 				 		var IndexPage pageList = createNewExtendedIndexPageForExtensions(mappingEntity)
 				 		var DetailsPage pageDetails = createNewExtendedDetailsPageForExtensions(mappingEntity)
 				 		createLinktoPage(pageList,pageDetails)
 				 		feature.pages.add(pageList)
 				 		feature.pages.add(pageDetails)
 				 	}
-				 }else{
-				 	
-				 	
-				 	
 				 }
 			}
+			
 			if(!toDeleteReference.isEmpty)
-			ent.references.removeAll(toDeleteReference) 
+			{
+			    ent.references.removeAll(toDeleteReference)
+			}
 			
-			if(!toAddReference.isEmpty)
-			ent.references.addAll(toAddReference)
-			
-			
+			if(!toAddReference.isEmpty){
+			    ent.references.addAll(toAddReference)
+			}			
 		}
 		entitiesList.addAll(newEntity)
-		
 	}
 	
 	def EList<Attribute> searchUniqueAttribute(Entity entity) {
@@ -798,24 +844,21 @@ class RessourceTransformer {
 	}
 	
 	 def void renameOldReference(EList<Attribute> torenameAttribute, EList<Attribute> newAttribute) {
-		
-		
 		for( Page page: feature.pages.filter[t | t instanceof  DynamicPage]){
 			var DynamicPage dynPage = page as DynamicPage
 			for(Attribute attr : torenameAttribute){
 				if(dynPage.filters.contains(attr)){
 					var Attribute newAttr = newAttribute.get(torenameAttribute.indexOf(attr))
-					dynPage.filters.remove(attr)
-					dynPage.filters.add(newAttr)
+					var oldAttrIndex = dynPage.filters.indexOf(attr)
+					dynPage.filters.set(oldAttrIndex, newAttr)
 				}
 				if(dynPage.tablecolumns.contains(attr)){
 					var Attribute newAttr = newAttribute.get(torenameAttribute.indexOf(attr))
-					dynPage.tablecolumns.remove(attr)
-					dynPage.tablecolumns.add(newAttr)
+					var oldAttrIndex = dynPage.tablecolumns.indexOf(attr)
+                    dynPage.tablecolumns.set(oldAttrIndex, newAttr)
 				}
 			}
 		}
-		
 	}
 	
 	private def EList<Reference> solveReference(Reference reference, Entity mappingEntity,Entity fromEntity,Entity toEntity ) {
@@ -869,7 +912,7 @@ class RessourceTransformer {
 
 			if(attribute.id && attribute.withattribute === null){
 				var Attribute newID = EJSLFactory.eINSTANCE.createAttribute
-				newID.name = fromEntity.name.toLowerCase + "_" + "id"
+				newID.name = fromEntity.name.toLowerCase + "_" + defaultPrimaryAttributeName
 				var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
 				typeid.type =  StandardTypeKinds.INTEGER
 				typeid.notnull = true

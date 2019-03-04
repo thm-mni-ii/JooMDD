@@ -66,13 +66,17 @@ class ManifestValidator extends AbstractDeclarativeValidator {
 	 */	
 	@Check
 	def checkAuthorEmailIsValid(Author author) {
-		if (!author.authoremail.isEmailAdressValid) {
-			error(
-				'Invalid e-mail address. Should be in this format: xxx@xx.xx',
-				EJSLPackage.Literals.AUTHOR__AUTHOREMAIL,
-				de.thm.icampus.joomdd.ejsl.validation.elements.ManifestValidator.MANIFEST_AUTHOR_EMAIL_INVALID
-			)
-		}
+	    var authorEmail = author.authoremail
+	    
+	    if(authorEmail !== null) {
+	        if (!authorEmail.isEmailAdressValid) {
+                error(
+                    'Invalid e-mail address. Should be in this format: xxx@xx.xx',
+                    EJSLPackage.Literals.AUTHOR__AUTHOREMAIL,
+                    de.thm.icampus.joomdd.ejsl.validation.elements.ManifestValidator.MANIFEST_AUTHOR_EMAIL_INVALID
+                )
+            }
+	    }
 	}
 
 	/**
@@ -80,13 +84,17 @@ class ManifestValidator extends AbstractDeclarativeValidator {
 	 */	
 	@Check
 	def checkAuthorUrlIsValid(Author author) {
-		if (!author.authorurl.isUrlValid) {
-			warning(
-				'Invalid URL. Should be in this format: http(s)//:www.xxx.xx',
-				EJSLPackage.Literals.AUTHOR__AUTHORURL,
-				de.thm.icampus.joomdd.ejsl.validation.elements.ManifestValidator.MANIFEST_AURHOR_URL_INVALID
-			)
-		}
+	    var authorUrl = author.authorurl
+	    
+	    if (authorUrl !== null){
+	        if (!authorUrl.isUrlValid) {
+                warning(
+                    'Invalid URL. Should be in this format: http(s)//:www.xxx.xx',
+                    EJSLPackage.Literals.AUTHOR__AUTHORURL,
+                    de.thm.icampus.joomdd.ejsl.validation.elements.ManifestValidator.MANIFEST_AURHOR_URL_INVALID
+                )
+            }
+	    }
 	}
 
 	/**
