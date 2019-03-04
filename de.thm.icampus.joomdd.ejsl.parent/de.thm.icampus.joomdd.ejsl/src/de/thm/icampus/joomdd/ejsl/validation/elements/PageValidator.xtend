@@ -44,17 +44,21 @@ class PageValidator extends AbstractDeclarativeValidator {
 	@Check
 	def checkPagesAreUnique(EJSLModel model) {
 		var pages = new HashSet<String>
-
-		for (page : model.ejslPart.feature.pages) {
-			if (!pages.add(page.getName)) {
-				error(
-					'Page names must be unique.',
-					page,
-					EJSLPackage.Literals.PAGE__NAME,
-					de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_AMBIGUOUS
-				)
-			}
-		}	
+        
+        var ejslPart = model.ejslPart
+        
+        if (ejslPart !== null){
+            for (page : ejslPart.feature.pages) {
+                if (!pages.add(page.getName)) {
+                    error(
+                        'Page names must be unique.',
+                        page,
+                        EJSLPackage.Literals.PAGE__NAME,
+                        de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_AMBIGUOUS
+                    )
+                }
+            }
+        }	
 	}
 	
 	/**
@@ -64,41 +68,44 @@ class PageValidator extends AbstractDeclarativeValidator {
 	def checkMultipleEntitiesInIndexPageReferences(EJSLModel model) throws Exception {
 		var mainEntities = new HashSet<Entity>
 		var foundReferenceEntity = new HashSet<Entity>
-		
-		for (page: model.ejslPart.feature.pages) {
-			
-			if (page instanceof IndexPage){
-				
-				if (page.entities.size > 1) {
-					// Save main entity
-					mainEntities.add(page.entities.get(0))
-					for (int i : 1 ..< page.entities.size) {
-						
-						// Check if current entity has a reference to main entity
-						for (referencedE : page.entities.get(i).references) {
-							if (referencedE.entity instanceof Entity) {
-								if (referencedE.entity.name.toLowerCase == mainEntities.get(0).name.toLowerCase) {
-									foundReferenceEntity.add(referencedE.entity as Entity)
-								}
-							}
-						}
-						if (foundReferenceEntity.empty) {
-							error(
-								'Entity: \'' + page.entities.get(i).name + 
-								'\' of IndexPage: \'' + page.name + '\' has no reference to IndexPage main-entity: \'' + 
-								mainEntities.get(0).name + '\'.',
-								page,
-								EJSLPackage.Literals.DYNAMIC_PAGE__ENTITIES,
-								i,
-								de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_MISSING_REFERENCE_TO_MAIN_ENTITY
-							)
-						}
-						foundReferenceEntity.clear
-					}
-				}
-				mainEntities.clear
-			}
-		}
+		var ejslPart = model.ejslPart
+        
+        if (ejslPart !== null){
+    		for (page: ejslPart.feature.pages) {
+    			
+    			if (page instanceof IndexPage){
+    				
+    				if (page.entities.size > 1) {
+    					// Save main entity
+    					mainEntities.add(page.entities.get(0))
+    					for (int i : 1 ..< page.entities.size) {
+    						
+    						// Check if current entity has a reference to main entity
+    						for (referencedE : page.entities.get(i).references) {
+    							if (referencedE.entity instanceof Entity) {
+    								if (referencedE.entity.name.toLowerCase == mainEntities.get(0).name.toLowerCase) {
+    									foundReferenceEntity.add(referencedE.entity as Entity)
+    								}
+    							}
+    						}
+    						if (foundReferenceEntity.empty) {
+    							error(
+    								'Entity: \'' + page.entities.get(i).name + 
+    								'\' of IndexPage: \'' + page.name + '\' has no reference to IndexPage main-entity: \'' + 
+    								mainEntities.get(0).name + '\'.',
+    								page,
+    								EJSLPackage.Literals.DYNAMIC_PAGE__ENTITIES,
+    								i,
+    								de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_MISSING_REFERENCE_TO_MAIN_ENTITY
+    							)
+    						}
+    						foundReferenceEntity.clear
+    					}
+    				}
+    				mainEntities.clear
+    			}
+    		}
+    	}
 	}
 	
 	/**
@@ -125,19 +132,20 @@ class PageValidator extends AbstractDeclarativeValidator {
 	  		
 	  		// Check if editfield type is set as reference in entity
 	  		for (editf : p.editfields) {
-	  			if (editf.attribute.eContainer instanceof Entity && editf.fieldtype.eContainer instanceof Entity) {
-	  				val ent = editf.attribute.eContainer as Entity
-	  				val refEnt = editf.fieldtype.eContainer as Entity
-	  				if (refEntities.add(ent.name + "." + refEnt.name + "." + editf.fieldtype.name)) {
-	  					error(
-						'Field type of editfield has to be a reference in given entity.',
-						editf,
-						EJSLPackage.Literals.DETAILS_PAGE__EDITFIELDS.EOpposite,
-						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_DETAILSPAGE_EDITFIELDS_REFERENCE
-					)
-					
-	  				}
-	  			}
+	  		    if (editf.fieldtype !== null){
+    	  			if (editf.attribute.eContainer instanceof Entity && editf.fieldtype.eContainer instanceof Entity) {
+    	  				val ent = editf.attribute.eContainer as Entity
+    	  				val refEnt = editf.fieldtype.eContainer as Entity
+    	  				if (refEntities.add(ent.name + "." + refEnt.name + "." + editf.fieldtype.name)) {
+                            error(
+        						'Field type of editfield has to be a reference in given entity.',
+        						editf,
+        						EJSLPackage.Literals.DETAILS_PAGE__EDITFIELDS.EOpposite,
+        						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_DETAILSPAGE_EDITFIELDS_REFERENCE
+                            )
+    	  				}
+    	  			}
+    	  		}
 	  		}
 	  	}
 	  }
@@ -280,23 +288,6 @@ class PageValidator extends AbstractDeclarativeValidator {
 	 	}
 	 }
 	
-//	/**
-//	 * Checks if the name of a page contains a underscore
-//	 */
-//	@Check
-//	def checkNoUnderscoreInPageName(EJSLModel model) {
-//		for (page : model.ejslPart.getFeature.pages) {
-//			if (page.name.contains('_')) {
-//				error(
-//					'Page name ' + page.name + ' contains a underscore',
-//								page,
-//								EJSLPackage.Literals.PAGE__NAME,
-//								de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FORBIDDEN_UNDERSCORE
-//				)
-//			}
-//		}
-//	}
-	
 	/**
 	 * Check if all local parameters of a page have different/unique names.
 	 */
@@ -322,17 +313,20 @@ class PageValidator extends AbstractDeclarativeValidator {
 	@Check
 	def checkPageGlobalparametersAreUnique(EJSLModel model) {
 		var params = new HashSet<String>
-
-		for (param : model.getEjslPart.getGlobalparameters) {
-			if (!params.add(param.getName)) {
-				error(
-					'Globalparameter name must be unique.',
-					param,
-					EJSLPackage.Literals.PARAMETER__NAME,
-					de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_GLOBALPARAMETER_AMBIGUOUS
-				)
-			}
-		}
+        var ejslPart = model.ejslPart
+        
+        if (ejslPart !== null){
+    		for (param : ejslPart.getGlobalparameters) {
+    			if (!params.add(param.getName)) {
+    				error(
+    					'Globalparameter name must be unique.',
+    					param,
+    					EJSLPackage.Literals.PARAMETER__NAME,
+    					de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_GLOBALPARAMETER_AMBIGUOUS
+    				)
+    			}
+    		}
+    	}
 	}
 	
 	/**

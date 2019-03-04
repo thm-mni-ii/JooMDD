@@ -44,16 +44,20 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	def checkEntitiesAreUnique(EJSLModel model) {
 		var entities = new HashSet<String>
 
-		for (entity : model.getEjslPart.getFeature.getEntities) {
-			if (!entities.add(entity.name)) {
-				error(
-					'Entity names must be unique.',
-					entity,
-					EJSLPackage.Literals.ENTITY__NAME,
-					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_AMBIGOUS
-				)
-			}
-		}
+        var ejslPart = model.ejslPart
+        
+        if (ejslPart !== null){
+            for (entity : ejslPart.getFeature.getEntities) {
+                if (!entities.add(entity.name)) {
+                    error(
+                        'Entity names must be unique.',
+                        entity,
+                        EJSLPackage.Literals.ENTITY__NAME,
+                        de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_AMBIGOUS
+                    )
+                }
+            }
+        }
 	}
 	
 	/**
@@ -114,16 +118,21 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	 */
 	@Check(FAST)
 	def checkEntityNameIsNoXtextKeyword(EJSLModel model) {
-		for (entity : model.ejslPart.feature.entities) {
-			if (Keywords.RESERVED_KEYWORDS.contains(entity.name)){
-				error(
-					'Entity name ' + entity.name + ' is a reserved keyword.',
-								entity,
-								EJSLPackage.Literals.ENTITY__NAME,
-								de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_NAME_FORBIDDEN
-				)
-			}
-		}
+	    
+	    var ejslPart = model.ejslPart
+        
+        if (ejslPart !== null){
+    		for (entity : ejslPart.feature.entities) {
+    			if (Keywords.RESERVED_KEYWORDS.contains(entity.name)){
+    				error(
+    					'Entity name ' + entity.name + ' is a reserved keyword.',
+    								entity,
+    								EJSLPackage.Literals.ENTITY__NAME,
+    								de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_NAME_FORBIDDEN
+    				)
+    			}
+    		}
+    	}
 	}
 	
 	/**
@@ -134,42 +143,46 @@ class EntityValidator extends AbstractDeclarativeValidator {
 		var entities = new HashSet<String>
 		var refs = new HashSet<String>
 		
-		// Save all Entity names
-		for (entity : model.getEjslPart.getFeature.getEntities) {
-			entities.add(entity.name)
-		}
+		var ejslPart = model.ejslPart
 		
-		// Run through all Entities
-		for (entity : model.getEjslPart.getFeature.getEntities) {
-			
-			// Run through all attributes of that Entity
-			for (attribute : entity.attributes) {
-				
-				// Check for every attribute if there is a equal named Entity
-				for (eName : entities) {
-					
-					if (attribute.name.toLowerCase == eName.toLowerCase) {			
-						
-						// Check if Reference exists
-						for (references : entity.references){
-							refs.add(references.entity.name.toLowerCase)
-						}
-						
-						// When no Reference to that Entity exists, show a warning message
-						if (refs.add(eName.toLowerCase)) {
-							warning(
-								'Attribute ' + attribute.name + ' should have a Reference to matching Entity. Make sure referenced Entity is defined above',
-								attribute,
-								EJSLPackage.Literals.ATTRIBUTE__NAME,
-								de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_MISSING_REFERENCE
-							)
-						}
-					}
-					
-					// Reset references
-					refs.clear
-				}
-			}
+		if (ejslPart !== null){
+            // Save all Entity names
+		    for (entity : ejslPart.getFeature.getEntities) {
+                entities.add(entity.name)
+            }
+            
+            // Run through all Entities
+            for (entity : ejslPart.getFeature.getEntities) {
+                
+                // Run through all attributes of that Entity
+                for (attribute : entity.attributes) {
+                    
+                    // Check for every attribute if there is a equal named Entity
+                    for (eName : entities) {
+                        
+                        if (attribute.name.toLowerCase == eName.toLowerCase) {          
+                            
+                            // Check if Reference exists
+                            for (references : entity.references){
+                                refs.add(references.entity.name.toLowerCase)
+                            }
+                            
+                            // When no Reference to that Entity exists, show a warning message
+                            if (refs.add(eName.toLowerCase)) {
+                                warning(
+                                    'Attribute ' + attribute.name + ' should have a Reference to matching Entity. Make sure referenced Entity is defined above',
+                                    attribute,
+                                    EJSLPackage.Literals.ATTRIBUTE__NAME,
+                                    de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_MISSING_REFERENCE
+                                )
+                            }
+                        }
+                        
+                        // Reset references
+                        refs.clear
+                    }
+                }
+            }
 		}
 	}
 	
