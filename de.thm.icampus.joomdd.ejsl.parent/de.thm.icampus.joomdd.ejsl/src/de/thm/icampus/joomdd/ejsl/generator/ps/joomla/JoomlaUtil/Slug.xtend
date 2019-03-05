@@ -830,9 +830,10 @@ public class Slug  {
         var queries = newArrayList
         
         for (extendedReference : entity.allExtendedReferences){
-            var isNToM = extendedReference.destinationEntity.references.exists[ r |
+            var filteredEntities = extendedReference.destinationEntity.references.filter[ r |
                 r.entity.name.equals(entityName)
             ]
+            var isNToM = filteredEntities.empty === false && filteredEntities.size === 1
             
             if (isNToM){
                 val reference = extendedReference.destinationEntity.references.findFirst[ r | 
@@ -997,15 +998,7 @@ public class Slug  {
 	}
 	
 	static def CharSequence transformAttributeListInString(EList<Attribute>attributes, String separeSign) {
-		var StringBuffer result = new StringBuffer()
-		for (attr: attributes) {
-			if (attr != attributes.last) {
-			result.append(attr.name.toLowerCase + separeSign)
-			} else {
-				result.append(Slug.slugify(attr.name))
-			}
-		}
-		return result.toString
+		return attributes.map[ a | Slug.slugify(a.name.toLowerCase)].join(separeSign)
 	}
 	
 	static def CharSequence transformAttributeListInString(String postWord, EList<Attribute>attributes, String separeSign){

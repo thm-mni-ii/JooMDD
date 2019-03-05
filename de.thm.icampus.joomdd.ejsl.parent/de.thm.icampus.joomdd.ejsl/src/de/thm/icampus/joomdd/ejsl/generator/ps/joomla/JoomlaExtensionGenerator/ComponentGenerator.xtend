@@ -119,11 +119,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		}
 
 		// Generate frontend section 
-		if (extendedComp.frontEndExtendedPagerefence !== null) {
+		if (extendedComp.frontEndExtendedPagerefence !== null && extendedComp.frontEndExtendedPagerefence.empty === false) {
 			generateFrontendSection
 		}
 	    // Generate backend section 
-		if (extendedComp.backEndExtendedPagerefence !== null) {
+		if (extendedComp.backEndExtendedPagerefence !== null  && extendedComp.backEndExtendedPagerefence.empty === false) {
 			generateBackendSection
 		}
 		return ""
@@ -140,119 +140,151 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 * 
 	 * @return  Charsequence code for the manifest file
 	 */
-	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) '''
-		<?xml version="1.0" encoding="utf-8"?>
-		<extension type="component" version="3.5" method="upgrade">
-		    <name>«component.name»</name>
-		    «Slug.generateAuthors(component.manifest.authors)»
-		    «IF (component.manifest.creationdate !== null)»
-		    <creationDate>«component.manifest.creationdate»</creationDate>
-		    «ELSE»
-		    <creationDate>«Calendar::instance.get(Calendar::YEAR)»</creationDate>
-		    «ENDIF»
-		    «IF (component.manifest.copyright !== null)»
-		    <copyright>«component.manifest.copyright»</copyright>
-		    «ENDIF»
-		
-		    «IF (component.manifest.license !== null)»
-		    <license>«component.manifest.license»</license>
-		    «ENDIF»
-		    «IF (component.manifest.version !== null)»
-		    <version>«component.manifest.version»</version>
-		    «ELSE»
-		    <version>1.0.1</version>
-		    «ENDIF»
-		    «IF (component.manifest.description !== null)»
-		    <description>«component.manifest.description»</description>
-		    «ENDIF»
-		
-		    <scriptfile>script.php</scriptfile>
-		    <!-- Install Section -->
-		    <install>
-		        <sql>
-		            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
-		        </sql>
-		    </install>
-		
-		    <!-- Uninstall Section -->
-		    <uninstall>
-		        <sql>
-		            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
-		        </sql> 
-		    </uninstall>
-		
-		    <!-- Update Section -->
-		    <update>
-		        <schemas>
-		            <schemapath type="mysql">sql/updates/mysql</schemapath>
-		        </schemas>
-		    </update>
-		    <media destination="«name»" folder="media/«extendedComp.extensionName»">
-		        <folder>images</folder>
-		        <folder>js</folder>
-		        <folder>css</folder>
-		        «FOR page : dymPages.filter[t | t !== null && t.detailsPage && t.haveFiletoLoad]»
-		        <folder>«page.name.toLowerCase»</folder>
-		        «ENDFOR»
-		    </media>
-		
-		    <!-- Site Main File Copy Section -->
-		    <files folder="components/«extendedComp.extensionName»">
-		        <filename>«noPrefixName».php</filename>
-		        <filename>controller.php</filename>
-		        <!-- Additional Files -->
-		        <folder>views</folder>
-		        <folder>models</folder>
-		        <folder>language</folder>
-		        <folder>controllers</folder>		       
-		    </files>
-		    
-		    «componentManifestLanguages(component, false)»
-		
-		    <administration>
-		        <!-- Administration Menu Section -->
-		        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
-		        <submenu>
-		            «FOR page : dymPages.filter[t | !t.detailsPage]»
-		            <menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
-		                alias="«Slug.nameExtensionBind("com", component.name).toUpperCase»_ALIAS_«page.name.toUpperCase»"
-		                view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«page.name.toUpperCase»</menu>
-		    «ENDFOR»
-		        </submenu>
-		        <!-- Administration Main File Copy Section -->
-		        <files folder="administrator/components/«extendedComp.extensionName»">
-		            <!-- Admin Main File Copy Section -->
-		            <filename>«noPrefixName».php</filename>
-		            <filename>controller.php</filename>
-		            <filename>access.xml</filename>
-		            <filename>config.xml</filename>
-		            <!-- SQL Files Section -->
-		            <folder>sql</folder>
-		            <!-- Table Files Section -->
-		            <folder>tables</folder>
-		            <!-- Model Files Section -->
-		            <folder>models</folder>
-		            <!-- View Files Section -->
-		            <folder>views</folder>
-		            <folder>language</folder>
-		            <folder>controllers</folder>
-		            <folder>helpers</folder>
-		        </files>
-		
-		        «componentManifestLanguages(component, true)»
-		    </administration>
-		</extension>
-	'''
+	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) {
+	    
+	    var sectionManifest = newArrayList
+	    
+	    // Check for a frontend section
+	    if (component.frontEndExtendedPagerefence.empty === false) {
+	        var frontendManifest = frontendManifest(component)
+	        sectionManifest.add(frontendManifest)
+	    }
+	    
+        // Check for a backend section
+        if (component.backEndExtendedPagerefence.empty === false) {
+            sectionManifest.add(backendManifest(component, dymPages))
+        }
+        else
+        {
+            // Joomla requires at least an empty administration tag
+            sectionManifest.add('''
+                <administration>
+                </administration>
+            ''')
+        }
+        
+	    '''
+        <?xml version="1.0" encoding="utf-8"?>
+        <extension type="component" version="3.5" method="upgrade">
+            <name>«component.name»</name>
+            «Slug.generateAuthors(component.manifest.authors)»
+            «IF (component.manifest.creationdate !== null)»
+            <creationDate>«component.manifest.creationdate»</creationDate>
+            «ELSE»
+            <creationDate>«Calendar::instance.get(Calendar::YEAR)»</creationDate>
+            «ENDIF»
+            «IF (component.manifest.copyright !== null)»
+            <copyright>«component.manifest.copyright»</copyright>
+            «ENDIF»
+        
+            «IF (component.manifest.license !== null)»
+            <license>«component.manifest.license»</license>
+            «ENDIF»
+            «IF (component.manifest.version !== null)»
+            <version>«component.manifest.version»</version>
+            «ELSE»
+            <version>1.0.1</version>
+            «ENDIF»
+            «IF (component.manifest.description !== null)»
+            <description>«component.manifest.description»</description>
+            «ENDIF»
+        
+            <scriptfile>script.php</scriptfile>
+            <!-- Install Section -->
+            <install>
+                <sql>
+                    <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+                </sql>
+            </install>
+        
+            <!-- Uninstall Section -->
+            <uninstall>
+                <sql>
+                    <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+                </sql> 
+            </uninstall>
+        
+            <!-- Update Section -->
+            <update>
+                <schemas>
+                    <schemapath type="mysql">sql/updates/mysql</schemapath>
+                </schemas>
+            </update>
+            <media destination="«name»" folder="media/«extendedComp.extensionName»">
+                <folder>images</folder>
+                <folder>js</folder>
+                <folder>css</folder>
+                «FOR page : dymPages.filter[t | t !== null && t.detailsPage && t.haveFiletoLoad]»
+                <folder>«page.name.toLowerCase»</folder>
+                «ENDFOR»
+            </media>
+            «FOR section : sectionManifest»
+
+            «section»
+            «ENDFOR»
+        </extension>
+        '''
+	}
+    
+    def backendManifest(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) '''
+    <administration>
+        <!-- Administration Menu Section -->
+        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
+        <submenu>
+            «FOR page : dymPages.filter[t | !t.detailsPage]»
+            <menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
+                alias="«Slug.nameExtensionBind("com", component.name).toUpperCase»_ALIAS_«page.name.toUpperCase»"
+                view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«page.name.toUpperCase»</menu>
+            «ENDFOR»
+        </submenu>
+        <!-- Administration Main File Copy Section -->
+        <files folder="administrator/components/«extendedComp.extensionName»">
+            <!-- Admin Main File Copy Section -->
+            <filename>«noPrefixName».php</filename>
+            <filename>controller.php</filename>
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <!-- SQL Files Section -->
+            <folder>sql</folder>
+            <!-- Table Files Section -->
+            <folder>tables</folder>
+            <!-- Model Files Section -->
+            <folder>models</folder>
+            <!-- View Files Section -->
+            <folder>views</folder>
+            <folder>language</folder>
+            <folder>controllers</folder>
+            <folder>helpers</folder>
+        </files>
+
+        «componentManifestLanguages(component, true)»
+    </administration>
+    '''
+    
+    def frontendManifest(ExtendedComponent component) '''
+    <!-- Site Main File Copy Section -->
+    <files folder="components/«extendedComp.extensionName»">
+        <filename>«noPrefixName».php</filename>
+        <filename>controller.php</filename>
+        <!-- Additional Files -->
+        <folder>views</folder>
+        <folder>models</folder>
+        <folder>language</folder>
+        <folder>controllers</folder>               
+    </files>
+    
+    «componentManifestLanguages(component, false)»
+    '''
 
 	private def componentManifestLanguages(ExtendedComponent component, boolean admin) '''
 	<languages>
-	«FOR lang : component.languages»
-	«IF !lang.sys»
-		<language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
-	«ELSE»
+	    «FOR lang : component.languages»
+	    «IF !lang.sys»
+	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
+	    «ELSE»
 	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
-	«ENDIF»
-	«ENDFOR»
+        «ENDIF»
+        «ENDFOR»
 	</languages>
 	'''
 
@@ -308,7 +340,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    extendedComp.phpAdminTemplateContent
 		)
 		
-		var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.ComponentHelperGenerator help = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.ComponentHelperGenerator(extendedComp)
+		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
 		generateFile( adminPath + "/helpers/" + extendedComp.name.toLowerCase + ".php", 
 		    help.generate
 		)

@@ -18,7 +18,6 @@ import org.eclipse.xtext.generator.JavaIoFileSystemAccess
 import org.eclipse.xtext.generator.OutputConfiguration
 import org.eclipse.xtext.parser.IEncodingProvider
 import org.eclipse.xtext.resource.IResourceServiceProvider
-import java.awt.EventQueue
 import java.util.regex.Pattern
 import java.util.regex.Matcher
 import de.thm.icampus.joomdd.ejsl.util.Config
