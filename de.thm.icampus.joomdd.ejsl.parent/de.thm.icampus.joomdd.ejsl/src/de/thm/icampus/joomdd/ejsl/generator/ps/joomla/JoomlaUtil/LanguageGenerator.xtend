@@ -42,30 +42,42 @@ class LanguageGenerator extends AbstractExtensionGenerator {
 			
 			languagesWordsBack.addAll(languagesWordsFrontAdds)
 			
+			var componentHasFrontend = component.frontEndExtendedPagerefence.empty === false
+			var componentHasBackend = component.backEndExtendedPagerefence.empty === false
 			
 			if(!lang.sys) {
-				fsa.generateFile(
-					root +"/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
-					Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
-					fileLangGen(languagesWordsFront)
-				)
-				fsa.generateFile(
-					root + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
-						Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
-					fileLangGen(languagesWordsBack)
-				)
+			    
+			    if (componentHasFrontend) {
+			        fsa.generateFile(
+                        root +"/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+                        Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
+                        fileLangGen(languagesWordsFront)
+                    )
+			    }
+			    
+				if (componentHasBackend) {
+    				fsa.generateFile(
+    					root + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+    						Slug.nameExtensionBind("com", component.name).toLowerCase + ".ini",
+    					fileLangGen(languagesWordsBack)
+    				)
+    			}
 			} else {
-				fsa.generateFile(
-					root +"/components/"+ component.extensionName+ "/language/" + ldir + "/" + ldir + "." + 
-						Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
-					fileLangGen(languagesWordsFront)
-				)
+			    if (componentHasFrontend) {
+    				fsa.generateFile(
+    					root +"/components/"+ component.extensionName+ "/language/" + ldir + "/" + ldir + "." + 
+    						Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
+    					fileLangGen(languagesWordsFront)
+    				)
+    			}
 				
-				fsa.generateFile(
-					root  + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
-						Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
-					fileLangGen(languagesWordsBack)
-				)
+                if (componentHasBackend) {
+    				fsa.generateFile(
+    					root  + "/administrator/components/"+ component.extensionName + "/language/" + ldir + "/" + ldir + "." +
+    						Slug.nameExtensionBind("com", component.name).toLowerCase + ".sys.ini",
+    					fileLangGen(languagesWordsBack)
+    				)
+				}
 			}
 		}
 	}
