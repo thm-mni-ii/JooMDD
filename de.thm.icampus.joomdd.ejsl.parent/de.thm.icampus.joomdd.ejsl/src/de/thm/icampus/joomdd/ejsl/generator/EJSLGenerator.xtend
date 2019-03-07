@@ -114,7 +114,6 @@ class EJSLGenerator extends AbstractGenerator {
             outputFolder = config.getProperty("outputFolder")
         }
         
-        println(outputFolder)
         genData.setOutputConfigurations(mapOutputConfigurations(outputFolder))
 
         for (e : resource.allContents.toIterable.filter(typeof(EJSLModel))) {
@@ -159,6 +158,7 @@ class EJSLGenerator extends AbstractGenerator {
             }
         }
         
+        println("Code successfully generated.")
         if (webConfig.properties.getProperty("serverPath") !== null) {
         	fsa.generateFile("status", "Code successfully generated.")
         }

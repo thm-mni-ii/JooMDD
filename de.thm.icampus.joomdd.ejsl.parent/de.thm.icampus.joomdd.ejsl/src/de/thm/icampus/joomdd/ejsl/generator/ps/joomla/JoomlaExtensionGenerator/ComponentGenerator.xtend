@@ -64,8 +64,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 * 
 	 */
 	override generate() {
-		println("component path " +path);
-
 		var List<ExtendedDynamicPage>  indexPages = new LinkedList<ExtendedDynamicPage>()
 		for(ExtendedPageReference ext : extendedComp.backEndExtendedPagerefence) {
             if(ext.extendedPage.extendedDynamicPageInstance !== null) {

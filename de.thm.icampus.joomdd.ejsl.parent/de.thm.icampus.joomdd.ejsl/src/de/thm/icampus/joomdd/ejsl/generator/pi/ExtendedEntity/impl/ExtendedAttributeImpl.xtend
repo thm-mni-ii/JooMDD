@@ -158,12 +158,19 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 			}
 		}
 		var String result = value
+		
 		if (eJSlType.notnull || isprimary)
-			result = result + "NOT NULL "
-		if (eJSlType.^default!= null)
-			result = result + "DEFAULT " + '''"«eJSlType.^default.toString()»"'''
-		if (eJSlType.autoincrement || isprimary)
-			result = result + " AUTO_INCREMENT "
+		{
+		    result = result + "NOT NULL "
+		}
+
+		if (eJSlType.^default!= null){
+		    result = result + "DEFAULT " + '''"«eJSlType.^default.toString()»"'''
+		}
+			
+		if (eJSlType.autoincrement || isprimary){
+		    result = result + " AUTO_INCREMENT "
+		}	
 
 		return result
 	}

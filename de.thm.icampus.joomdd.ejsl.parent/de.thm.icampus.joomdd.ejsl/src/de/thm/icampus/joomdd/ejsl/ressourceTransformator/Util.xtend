@@ -22,8 +22,6 @@ class Util {
 					new_type.notnull = old_type.notnull
 					new_type.^default = old_type.^default
 					return new_type
-					
-					
 			}
 		}
 		

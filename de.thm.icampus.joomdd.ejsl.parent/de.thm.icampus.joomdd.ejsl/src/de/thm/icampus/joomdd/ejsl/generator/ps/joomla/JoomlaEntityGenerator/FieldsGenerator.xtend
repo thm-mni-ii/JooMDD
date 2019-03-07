@@ -260,18 +260,8 @@ class FieldsGenerator {
 	    $query = $dbo->getQuery(true);
 	    $query->select("DISTINCT $valueColumn as value, $textColumn as text")
 	        ->from("$this->table AS «entFrom.name.toLowerCase»")
-	        «FOR ExtendedReference ref:entFrom.allExtendedReferences »
-	        ->join('LEFT', "«Slug.databaseName(com.name,ref.destinationEntity.name)» as  «ref.destinationEntity.name.toLowerCase» ON
-	            «FOR ExtendedAttribute attr: ref.extendedAttributes»
-	            «IF ref.extendedAttributes.last != attr»
-	            «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
-	            «ELSE»
-	            «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
-	            «ENDIF»
-	            «ENDFOR»
-	        ")
-	        «ENDFOR»
 	        ->order("$textColumn ASC");
+	    «Slug.createLeftJoins(entFrom.allExtendedReferences, com.name, entFrom.name)»
 	    $dbo->setQuery($query);
 	    $result = $dbo->loadObjectList();
 	    return $result;

@@ -63,11 +63,16 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 
 		allAttributes.addAll(ownExtendedAttributes)
 		allAttributes.addAll(parentExtendedAttributes)
-		extendedReferences.addAll(references.map[t|new ExtendedReferenceImpl(t, this.instance)])
+		extendedReferences.addAll(references.map[t |
+		    new ExtendedReferenceImpl(t, this.instance)
+		])
 		var EList<Entity> allEntity = (instance.eContainer as Feature).entities
 		for (Entity ent : allEntity) {
 			if (ent.references != null) {
-				var Iterable<Reference> listRef = ent.references.filter[t|t.entity.name == instance.name]
+				var listRef = ent.references.filter[t |
+				    t.entity.name == instance.name
+				].toList
+				
 				for (Reference ref : listRef){
 				    if(ref.upper.equals("1")){
 				        allReferencesToEntity.add(new ExtendedReferenceImpl(ref, ent))    

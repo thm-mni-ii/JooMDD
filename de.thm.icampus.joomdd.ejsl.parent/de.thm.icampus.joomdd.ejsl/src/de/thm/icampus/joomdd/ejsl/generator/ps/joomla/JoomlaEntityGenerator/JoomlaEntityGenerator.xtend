@@ -17,173 +17,145 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Reference
  * @author Dieudonne Timma, Dennis Priefer
  */
 class JoomlaEntityGenerator {
-	EList<ExtendedEntity> entities
-	String extendsionN
-	boolean update
-	new(EList<ExtendedEntity> entityList, String extendsionName, boolean updateScript) {
-		entities = orderEntity(entityList)
-		extendsionN = extendsionName
-		update = updateScript
-	}
-	
-	def dogenerate() {
-		return sqlAdminSqlInstallContent(extendsionN,update)
-	}
-	
-	def setUpdate(boolean updateScript) {
-		this.update = updateScript
-	}
-	
-	def dogenerate(String path, IFileSystemAccess fileGen) {
-	    if (update) {
-	        fileGen.generateFile(path + "/update.sql",generateUpdateScript(extendsionN))
-		    fileGen.generateFile(path + "/install.sql",sqlAdminSqlInstallContent(extendsionN,update))
-		} else {
-		    fileGen.generateFile(path + "/install.sql",sqlAdminSqlInstallContent(extendsionN,update))
-		}
-		
-		fileGen.generateFile(path+ "/uninstall.sql",sqlAdminSqlUninstallContent(extendsionN))
-	}
-	
-	public def CharSequence sqlAdminSqlInstallContent(String extensionName, boolean isupdate) {
+    List<ExtendedEntity> entities
+    String extendsionN
+    boolean update
+
+    new(EList<ExtendedEntity> entityList, String extendsionName, boolean updateScript) {
+        entities = entityList
+        extendsionN = extendsionName
+        update = updateScript
+    }
+
+    def dogenerate() {
+        return sqlAdminSqlInstallContent(extendsionN, update)
+    }
+
+    def setUpdate(boolean updateScript) {
+        this.update = updateScript
+    }
+
+    def dogenerate(String path, IFileSystemAccess fileGen) {
+        if (update) {
+            fileGen.generateFile(path + "/update.sql", generateUpdateScript(extendsionN))
+            fileGen.generateFile(path + "/install.sql", sqlAdminSqlInstallContent(extendsionN, update))
+        } else {
+            fileGen.generateFile(path + "/install.sql", sqlAdminSqlInstallContent(extendsionN, update))
+        }
+
+        fileGen.generateFile(path + "/uninstall.sql", sqlAdminSqlUninstallContent(extendsionN))
+    }
+
+    public def CharSequence sqlAdminSqlInstallContent(String extensionName, boolean isupdate) {
         var StringBuffer result = new StringBuffer;
-        for(ExtendedEntity e : entities)
-	    {
-	        result.append(generateSQLTable(e, isupdate, extensionName));
-	    }   
-	        
+        for (ExtendedEntity e : entities) {
+            result.append(generateSQLTable(e, isupdate, extensionName));
+        }
+        for (ExtendedEntity e : entities.filter[ e | e.references.empty === false && e.references.forall[ r | r.upper.equalsIgnoreCase("-1") ] === false]) {
+            result.append(generateSQLConstraints(e, extensionName));
+        }
+
         return result.toString
     }
-	
-    def boolean isAllreferenVisited(EList<ExtendedReference> list, List<String> visited, EList<ExtendedEntity> entityLsit) {
-	    for(ExtendedReference r: list.filter[t | t !== null && t.upper.equalsIgnoreCase("1")]) {
-		    if(!visited.contains(r.destinationEntity.name)) {
-			    if((entityLsit.filter[t | t.name.equalsIgnoreCase(r.destinationEntity.name)]).size > 0){
-			        return false
-			    }
-			}
-		}
-		return true
-	}
-	    
-    def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName)'''
+    
+    def generateSQLConstraints(ExtendedEntity entity, String extensionName)
+        '''
+        ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, entity.name)»`
+            «entity.refactoryReference.filter[ r | !r.preserve && r.upper.equalsIgnoreCase("1") ].map[ r |
+                '''
+                ADD CONSTRAINT `«extensionName.toLowerCase»_«entity.name.toLowerCase»_ibfk_«entity.refactoryReference.indexOf(r)»` FOREIGN KEY(«Slug.transformAttributeListInString(r.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(r.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(r.attributerefereced, ', ')»)
+                ON UPDATE CASCADE
+                ON DELETE CASCADE'''
+            ].join(''', 
+            ''')»
+        ;
+        '''
+
+    def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName) '''
         «IF isupdate»
-        DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
+            DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
         «ENDIF»
         CREATE TABLE  IF NOT EXISTS `«Slug.databaseName( componentName, table.name.toLowerCase)»` (
-        «FOR a:table.allExtendedAttributes.filter[t | !t.isPreserve]»
-        `«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
+        «FOR a : table.allExtendedAttributes.filter[t | !t.isPreserve]»
+            `«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
         «ENDFOR»
-        «FOR ExtendedAttribute a:table.ownExtendedAttributes»
-        «IF a.isunique»
-        UNIQUE KEY («a.name»«if(a.withattribute !== null)''',«a.withattribute.name»'''»),
-        «ENDIF»
+        «FOR ExtendedAttribute a : table.ownExtendedAttributes»
+            «IF a.isunique»
+                UNIQUE KEY («a.name»«if(a.withattribute !== null)''',«a.withattribute.name»'''»),
+            «ENDIF»
         «ENDFOR»
-        «FOR ref:table.references»
-        INDEX(«Slug.transformAttributeListInString(ref.attribute,  ', ')»),
-        «ENDFOR»
-        «FOR ref:table.references.filter[t | t.upper.equals("1")]»
-        CONSTRAINT `«componentName.toLowerCase»_«table.name.toLowerCase»_ibfk_«table.references.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(componentName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
-            ON UPDATE CASCADE
-            ON DELETE CASCADE,
+        «FOR ref : table.references»
+            INDEX(«Slug.transformAttributeListInString(ref.attribute,  ', ')»),
         «ENDFOR»
         PRIMARY KEY (`«table.primaryKey.name»`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     '''
-	
+
     public def CharSequence sqlAdminSqlUninstallContent(String extensionName) {
         var LinkedList<ExtendedEntity> visited = new LinkedList<ExtendedEntity>;
         visited.addAll(entities)
         var StringBuffer result = new StringBuffer;
         result.append("SET foreign_key_checks = 0;")
         result.append("\n\r")
-        while(!visited.empty) {
-            result.append('''DROP TABLE IF EXISTS `«Slug.databaseName(extensionName.toLowerCase, (visited.removeLast.name))»`;''');
-	        result.append("\n\r")
-	    }
-	    return result.toString
+        while (!visited.empty) {
+            result.
+                append('''DROP TABLE IF EXISTS `«Slug.databaseName(extensionName.toLowerCase, (visited.removeLast.name))»`;''');
+            result.append("\n\r")
+        }
+        return result.toString
     }
-    
-    private def EList<ExtendedEntity> orderEntity(EList<ExtendedEntity> entitiesList) {
-        var EList<ExtendedEntity> result = new BasicEList<ExtendedEntity>()
-        var LinkedList<String> visited = new LinkedList<String>();
-        
-        while(visited.size < entitiesList.size ) {
-            for (ExtendedEntity e:entitiesList) {
-                if(e.allExtendedReferences.empty && !visited.contains(e.name)) {	        		
-                    visited.add(e.name);
-	        		result.add(e)
-	        	} else if(!visited.contains(e.name) && !e.references.empty && isAllreferenVisited(e.allExtendedReferences, visited, entitiesList) ) {
-	        	    visited.add(e.name);
-	        	    result.add(e)
-	        	}
-	        }
-	    }
-	    return result
-	}
-	
-    public def CharSequence generateUpdateScript(String extensionName)'''
-        «FOR ExtendedEntity en: entities.filter[t | !t.preserve] »
+
+    public def CharSequence generateUpdateScript(String extensionName) 
+    '''
+        «FOR ExtendedEntity en : entities.filter[t | !t.preserve]»
         ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`
-        «FOR ExtendedAttribute attr: en.refactoryAttribute»
-        «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
-        ADD COLUMN IF NOT EXISTS `«attr.name»`  «attr.generatorType» «if(attr.isprimary) " PRIMARY KEY"»
-        «var ExtendedAttribute after = getAfterAttribute(attr,en)»
-        «IF after !== null»
-        AFTER «after.name»,
-        «ELSE»
-        ,
-        «ENDIF»
-        «ELSE»
-        ADD COLUMN IF NOT EXISTS `«attr.name»`  «attr.generatorType»
-        «var ExtendedAttribute after = getAfterAttribute(attr,en)»
-        «IF after !== null»
-        AFTER «after.name»
-        «ENDIF»
-        «ENDIF»
-        «ENDFOR»
+            «FOR ExtendedAttribute attr: en.refactoryAttribute»
+                «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
+                    ADD COLUMN IF NOT EXISTS `«attr.name»`  «attr.generatorType» «if(attr.isprimary) " PRIMARY KEY"»
+                    «var ExtendedAttribute after = getAfterAttribute(attr,en)»
+                    «IF after !== null»
+                        AFTER «after.name»,
+                    «ELSE»
+                        ,
+                    «ENDIF»
+                «ELSE»
+                    ADD COLUMN IF NOT EXISTS `«attr.name»`  «attr.generatorType»
+                    «var ExtendedAttribute after = getAfterAttribute(attr,en)»
+                    «IF after !== null»
+                        AFTER «after.name»
+                    «ENDIF»
+                «ENDIF»
+            «ENDFOR»
         ;
         
         «FOR ExtendedAttribute attr: en.refactoryAttribute.filter[t | t.isunique && !t.preserve]»
-        CREATE UNIQUE INDEX `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibih_«attr.name»«if(attr.withattribute !== null) "_" + attr.withattribute.name»` ON `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»`'''»);
+            CREATE UNIQUE INDEX `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibih_«attr.name»«if(attr.withattribute !== null) "_" + attr.withattribute.name»` ON `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»`'''»);
         «ENDFOR»
         
-       «IF !en.references.isEmpty»
-        ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`
+        «IF !en.references.isEmpty»
+            «generateSQLConstraints(en, extensionName)»
         «ENDIF»
-        «FOR Reference ref: en.refactoryReference.filter[t | !t.preserve && t.upper.equalsIgnoreCase("1")]»
-        «IF ref !=  (en.refactoryReference.filter[t | !t.preserve]).getMylastReference»
-        ADD CONSTRAINT `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibfk_«en.refactoryReference.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-        «ELSE»
-        ADD CONSTRAINT `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibfk_«en.refactoryReference.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-        «ENDIF»
-        «ENDFOR»
-        ;
         «ENDFOR»
         
     '''
-    
-	def ExtendedAttribute getMylastAttribute(Iterable<ExtendedAttribute> list) {
-		return list.get(list.size-1)
-	}
-	
-	def ExtendedReference getMylastReference(Iterable<ExtendedReference> list) {
-		return list.get(list.size-1)
-	}
-	
-	def getAfterAttribute(ExtendedAttribute attribute, ExtendedEntity ent) {
-		if(ent.ownExtendedAttributes.get(0). name.equalsIgnoreCase(attribute.name)) {
-		    return null
-		}
-		for(ExtendedAttribute attr: ent.ownExtendedAttributes) {
-		    if(attr.name.equalsIgnoreCase(attribute.name)) {
-			    var int index = ent.ownExtendedAttributes.indexOf(attr)
-				return ent.ownExtendedAttributes.get(index-1)
-			}
-		}
-	}
+
+    def ExtendedAttribute getMylastAttribute(Iterable<ExtendedAttribute> list) {
+        return list.get(list.size - 1)
+    }
+
+    def ExtendedReference getMylastReference(Iterable<ExtendedReference> list) {
+        return list.get(list.size - 1)
+    }
+
+    def getAfterAttribute(ExtendedAttribute attribute, ExtendedEntity ent) {
+        if (ent.ownExtendedAttributes.get(0).name.equalsIgnoreCase(attribute.name)) {
+            return null
+        }
+        for (ExtendedAttribute attr : ent.ownExtendedAttributes) {
+            if (attr.name.equalsIgnoreCase(attribute.name)) {
+                var int index = ent.ownExtendedAttributes.indexOf(attr)
+                return ent.ownExtendedAttributes.get(index - 1)
+            }
+        }
+    }
 }

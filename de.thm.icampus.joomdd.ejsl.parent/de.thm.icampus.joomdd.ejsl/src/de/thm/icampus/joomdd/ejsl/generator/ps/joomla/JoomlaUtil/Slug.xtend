@@ -39,6 +39,7 @@ import java.util.ArrayList
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import com.google.common.collect.Streams
 import java.util.stream.Collectors
+import java.util.HashMap
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -831,9 +832,9 @@ public class Slug  {
         
         for (extendedReference : entity.allExtendedReferences){
             var filteredEntities = extendedReference.destinationEntity.references.filter[ r |
-                r.entity.name.equals(entityName)
+                r.entity.name.equals(entityName) && r.upper.equals("-1") && extendedReference.upper.equals("-1")
             ]
-            var isNToM = filteredEntities.empty === false && filteredEntities.size === 1
+            var isNToM = filteredEntities.empty === false
             
             if (isNToM){
                 val reference = extendedReference.destinationEntity.references.findFirst[ r | 
@@ -865,6 +866,28 @@ public class Slug  {
         
         return queries.join
     }
+    
+    def static createLeftJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
+        var HashMap<String, Integer> counterMap = newHashMap
+        var output = ''''''
+        
+        for (ExtendedReference ref : extendedReference) {
+            var originDestinationEntityName = ref.destinationEntity.name
+            var counter = counterMap.getOrDefault(originDestinationEntityName, 0)
+            val destinationEntityName = if (counter === 0) {ref.destinationEntity.name} else {'''«ref.destinationEntity.name»«counter»'''}.toLowerCase
+            output += '''
+            $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» as «destinationEntityName» ON
+                «ref.extendedAttributes.map[ attr | 
+                    '''«entityName.toLowerCase».«attr.name.toLowerCase» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»'''
+                ].join(''' AND ''')»
+            ");
+            '''
+            counter++
+            counterMap.put(originDestinationEntityName, counter)
+        }
+        
+        return output
+    } 
 	
 	def static CharSequence databaseName(String componentName, String entityName) {
 		return "#__" + componentName.toLowerCase + "_" + entityName.toLowerCase

@@ -5,6 +5,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
+import java.util.stream.Collectors
 
 /**
  * This class contains the templates to generate the tables.
@@ -112,6 +113,15 @@ class TableGeneratorTemplate {
 		        $array['created_by'] = Factory::getUser()->id;
 		    }
 		
+		    «var referenceAttributeUniqueList = ent.refactoryReference.map[ r | 
+		        r.attribute.map[ a | a.name ].toList
+		    ].flatten.toSet»
+		    «FOR name : referenceAttributeUniqueList»
+		    if (array_key_exists('«name»', $array) && empty($array['«name»'])) {
+		        $array['«name»'] = NULL;
+		    }
+
+		    «ENDFOR»
 		    //Support for file field: file
 		
 		    if (isset($array['params']) && is_array($array['params'])) {
