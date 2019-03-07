@@ -66,7 +66,6 @@ class RessourceTransformer {
     }
 
     def dotransformation() {
-        
         var entityList = feature.entities
         entityList.forEach[t|t.name = Util.slugify(t.name)]
         feature.pages.forEach[t|t.name = Util.slugify(t.name)]
@@ -187,7 +186,7 @@ class RessourceTransformer {
     
     private def containsAttributeName(EList<Attribute> attributeList, String name){
         return attributeList.exists[ a | 
-            a.name.equals(name)
+            a.name.equalsIgnoreCase(name)
         ]    
     }
     
@@ -499,8 +498,8 @@ class RessourceTransformer {
             var StandardTypes typs = newAttribute.type as StandardTypes
             typs.notnull = false
         }
-        ent.attributes.add(EcoreUtil2.copy(newAttribute))
-        ref.attribute.add(EcoreUtil2.copy(newAttribute))
+        ent.attributes.add(newAttribute)
+        ref.attribute.add(newAttribute)
 
         return newAttribute
     }
@@ -808,8 +807,7 @@ class RessourceTransformer {
                         mappingEntity.references.addAll(solveReference(ref, mappingEntity, ent, ref.entity))
 
                         newEntity.add(mappingEntity)
-                        println("generateMappingsTable " + mappingEntityName)
-
+                        
                         deleteReferenceToEntity(ref.entity, ent, mappingEntity)
                         toDeleteReference.add(ref)
                         toAddReference.add(createNewReverseReference(mappingEntity, ent, ref))

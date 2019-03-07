@@ -832,9 +832,9 @@ public class Slug  {
         
         for (extendedReference : entity.allExtendedReferences){
             var filteredEntities = extendedReference.destinationEntity.references.filter[ r |
-                r.entity.name.equals(entityName)
+                r.entity.name.equals(entityName) && r.upper.equals("-1") && extendedReference.upper.equals("-1")
             ]
-            var isNToM = filteredEntities.empty === false && filteredEntities.size === 1
+            var isNToM = filteredEntities.empty === false
             
             if (isNToM){
                 val reference = extendedReference.destinationEntity.references.findFirst[ r | 

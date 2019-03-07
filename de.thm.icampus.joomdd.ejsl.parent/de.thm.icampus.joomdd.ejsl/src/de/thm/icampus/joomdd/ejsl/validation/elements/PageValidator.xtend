@@ -125,7 +125,6 @@ class PageValidator extends AbstractDeclarativeValidator {
                         if (attrRef.eContainer instanceof Entity) {
                             val refEnt = attrRef.eContainer as Entity
                             refEntities.add(entity.name + "." + refEnt.name + "." + attrRef.name)
-                            println(entity.name + "." + refEnt.name + "." + attrRef.name)
                         }
                     }
                 }
