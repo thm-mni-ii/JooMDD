@@ -870,13 +870,14 @@ public class Slug  {
     def static createLeftJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
         var HashMap<String, Integer> counterMap = newHashMap
         var output = ''''''
+        counterMap.put(entityName,1)
         
         for (ExtendedReference ref : extendedReference) {
             var originDestinationEntityName = ref.destinationEntity.name
             var counter = counterMap.getOrDefault(originDestinationEntityName, 0)
             val destinationEntityName = if (counter === 0) {ref.destinationEntity.name} else {'''«ref.destinationEntity.name»«counter»'''}.toLowerCase
             output += '''
-            $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» as «destinationEntityName» ON
+            $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» AS «destinationEntityName» ON
                 «ref.extendedAttributes.map[ attr | 
                     '''«entityName.toLowerCase».«attr.name.toLowerCase» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»'''
                 ].join(''' AND ''')»

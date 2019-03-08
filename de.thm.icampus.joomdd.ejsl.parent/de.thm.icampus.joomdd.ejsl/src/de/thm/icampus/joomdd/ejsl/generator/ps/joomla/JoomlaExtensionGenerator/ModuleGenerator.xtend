@@ -461,17 +461,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	        // Join over the user field 'user'
 	        $query->select('user.name AS user');
 	        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name.toLowerCase».created_by');
-	        «FOR ExtendedReference ref:indexpage.extendedEntityList.get(0).allExtendedReferences »
-	        $query->join('LEFT', "«Slug.databaseName(name,ref.destinationEntity.name)»  AS «ref.destinationEntity.name.toLowerCase» ON
-	        «FOR ExtendedAttribute attr: ref.extendedAttributes»
-	        «IF ref.extendedAttributes.last != attr»
-	        «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
-	        «ELSE»
-	        «indexpage.entities.get(0).name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
-	        «ENDIF»
-	        «ENDFOR»
-	        ");
-	        «ENDFOR»
+	    
+	        «Slug.createLeftJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, name.toLowerCase, indexpage.entities.get(0).name.toLowerCase)»
 	        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), name, ",")»
 	        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
 	        // Filter by published state
