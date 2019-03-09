@@ -62,21 +62,36 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		allAttributeOfFilterAndColum = new BasicEList<ExtendedAttribute>
 		extendedEntity = new BasicEList<ExtendedEntity>
 		
-		extendedTableColumnList.addAll((this.tablecolumns.map[t| new ExtendedAttributeImpl(t, this.entities.get(0))]))
-		extendedFiltersList.addAll((this.filters.map[t|new ExtendedAttributeImpl(t,this.entities.get(0))]))
-		extendedEntity.addAll(this.entities.map[t | new ExtendedEntityImpl(t)])
+		extendedTableColumnList.addAll((this.tablecolumns.map[ t |
+		    new ExtendedAttributeImpl(t, this.entities.get(0))
+		]))
+		extendedFiltersList.addAll((this.filters.map[ t | 
+		    new ExtendedAttributeImpl(t,this.entities.get(0))
+		]))
+		extendedEntity.addAll(this.entities.map[ t | 
+		    new ExtendedEntityImpl(t)
+		])
 		
 		if(instance instanceof DetailsPage){
 			this.isDetailsPage = true
 			var DetailsPage dpg = instance as DetailsPage
-			extendedEditFieldsList.addAll(dpg.editfields.map[t| new ExtendedDetailPageFieldImpl(t)])
+			extendedEditFieldsList.addAll(dpg.editfields.map[ t |
+			    new ExtendedDetailPageFieldImpl(t)
+			])
 		}
-		 extendedGlobalParameterList = new BasicEList<ExtendedParameter>
-		 extendedGlobalParameterList.addAll(this.globalparameters.map[t| new ExtendedParameterImpl(t)])
-		 extendedLocalParameterList = new BasicEList<ExtendedParameter>
-		 extendedLocalParameterList.addAll(this.localparameters.map[t| new ExtendedParameterImpl(t)])
-		 extendedParameterGroupList = new BasicEList<ExtendedParameterGroup>
-		extendedParameterGroupList.addAll(this.parametergroups.map[t | new ExtendedParameterGroupImpl(t)])
+		extendedGlobalParameterList = new BasicEList<ExtendedParameter>
+		extendedGlobalParameterList.addAll(this.globalparameters.map[ t 
+		    | new ExtendedParameterImpl(t)
+		])
+		extendedLocalParameterList = new BasicEList<ExtendedParameter>
+		extendedLocalParameterList.addAll(this.localparameters.map[ t |
+		    new ExtendedParameterImpl(t)
+		])
+		extendedParameterGroupList = new BasicEList<ExtendedParameterGroup>
+		extendedParameterGroupList.addAll(this.parametergroups.map[ t | 
+		    new ExtendedParameterGroupImpl(t)
+		])
+		
 		for(ExtendedAttribute colum:  extendedTableColumnList){
 			var boolean isInList=false
 		 for(ExtendedAttribute filter: extendedFiltersList){
