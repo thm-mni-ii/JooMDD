@@ -7,6 +7,7 @@ define('alert',['jquery',"jstree"], function(jQuery, jstree) {
         $("#alert #alertState").text("Success! ");
 		$("#alert #alertText").text(text);
 	};
+	
 	alert.showError = function(text){
         $("#alert").toggleClass('alert-danger', true)
         $("#alert").toggleClass('alert-success', false)
@@ -15,24 +16,12 @@ define('alert',['jquery',"jstree"], function(jQuery, jstree) {
         $("#alert #alertText").text(text);
     };
 
-
 	alert.showloadmodal = function(text){
-		$(".loader").css("display","inline-block");
+		$(".loader").css("display","inline-flex");
 	};
 	alert.closeloadmodal = function(text){
 		$(".loader").css("display","none");
 	};
-		 
-	/*
-	// Get the modal
-	var modal = document.getElementById('infoModal');
-
-	// When the user clicks anywhere outside of the modal, close it
-	window.onclick = function(event) {
-		if (event.target == modal) {
-			modal.style.display = "none";
-		}
-	}
-	*/
+	
 	return alert;
 })

@@ -60,6 +60,7 @@
                 "initialise": "js/initialise",
                 "settings": "js/settings",
                 "buttonhandler": "js/buttonhandler",
+                "saveActionHandler": "js/saveActionHandler",
                 "themes": "js/themes"
             }
         });
@@ -161,13 +162,6 @@
                   <button class="templates dropdown-item" value="brueckenKurs.eJSL">Brückenkurse</button>
                 </div>
               </span>
-              <button
-                      id="saveModel"
-                      class="btn btn-light btn-lg"
-                      title="Save your model code in the editor to the selected model in the tree.">
-                <i class="fas fa-save fa-fw"></i>
-                <span>Save Model</span>
-              </button>
               <select id="platform" class="custom-select">
                   <option value="j3" selected>Joomla 3</option>
                   <option value="j4">Joomla 4</option>
@@ -179,7 +173,7 @@
                 <i class="fas fa-caret-right fa-fw"></i>
                 <span>Generate Code</span>
               </button>
-              
+              <span class="loader"></span>
               
             </div>
             <hr id="spacer" class="section-heading-spacer">
@@ -187,8 +181,17 @@
             <div id="alert" class="alert alert-dismissable fade show">
               <strong id="alertState"></strong><span id="alertText"></span>
             </div>
-            <h4 class=""><span id="modelname" class="align-middle">ModelName</span><span id="dirty" style="visibility: hidden">*</span><span class="loader"></span>
-            	<button id="editorFullscreen" type="button" class="btn btn-light btn-lg">
+            <h4 class=""><span id="modelname" class="align-middle">ModelName</span><span id="dirty" style="visibility: hidden">*</span>
+            	<button
+                      id="saveModel"
+                      class="btn btn-light btn-lg"
+                      title="Save your model code in the editor to the selected model in the tree. (Ctrl+S / ⌘+S)">
+                <i class="fas fa-save fa-fw"></i>
+              </button>
+            	<button id="editorFormatter" title="Format model (Ctrl+⇧+F / ⌘+⇧+F)" type="button" class="btn btn-light btn-lg">
+                    <i class="fas fa-align-center"></i>
+                </button>
+            	<button id="editorFullscreen" title="Open model in fullscreen mode" type="button" class="btn btn-light btn-lg">
 	            	<i class="fas fa-expand fa-fw"></i>
 	          	</button>
 	        </h4>
