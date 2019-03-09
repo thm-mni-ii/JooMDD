@@ -12,13 +12,16 @@ subprojects {
 		
 	if(!(project.name == 'ProjectWizard' )) // excluding ProjectWizard for the standard xtext configuration
 	{
-		ext.xtextVersion = '2.16.0'
+		ext.xtextVersion = '2.17.0.M3'
 		repositories {
 			jcenter()
 		}
 	
 		
 		apply plugin: 'java'
+        dependencies {
+            compile platform("org.eclipse.xtext:xtext-dev-bom:${xtextVersion}")
+        }
 		apply plugin: 'org.xtext.xtend'
 		apply from: "${rootDir}/gradle/source-layout.gradle"
 		apply from: "${rootDir}/gradle/maven-deployment.gradle"
