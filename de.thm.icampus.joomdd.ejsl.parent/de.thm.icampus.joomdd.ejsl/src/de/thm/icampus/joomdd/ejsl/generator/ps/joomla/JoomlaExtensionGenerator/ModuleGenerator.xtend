@@ -269,22 +269,23 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		<?php if (count($items) !== 1) : ?>
 		<ul class="«extMod.name»<?php echo $moduleclass_sfx; ?>">
-		
 		    <?php foreach ($items as $item) : ?>
-		    <li><div class="«extMod.pageRef.page.name»item">
-		    <?php if (empty($item)) : ?>
-		        <?php // itemlist is empty ;?>
-		    «IF !(dynpage.entities.isEmpty)»
-		    <?php else : ?>
-		        «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
-		        «IF !attr.name.equalsIgnoreCase("params")»
-		        <?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
-		        <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
+		    <li>
+		        <div class="«extMod.pageRef.page.name»item">
+		        <?php if (empty($item)) : ?>
+		            <?php // itemlist is empty ;?>
+		        «IF !(dynpage.entities.isEmpty)»
+		        <?php else : ?>
+		            «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+		            «IF !attr.name.equalsIgnoreCase("params")»
+		            <?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
+		            <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
+		            «ENDIF»
+		            «ENDFOR»
 		        «ENDIF»
-		        «ENDFOR»
-		    «ENDIF»
-		    <?php endif; ?>
-		    </div></li>
+		        <?php endif; ?>
+		        </div>
+		    </li>
 		    <?php endforeach; ?>
 		</ul>
 		<?php else : 
