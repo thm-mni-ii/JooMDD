@@ -40,6 +40,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import com.google.common.collect.Streams
 import java.util.stream.Collectors
 import java.util.HashMap
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -831,10 +832,7 @@ public class Slug  {
         var queries = newArrayList
         
         for (extendedReference : entity.allExtendedReferences){
-            var filteredEntities = extendedReference.destinationEntity.references.filter[ r |
-                r.entity.name.equals(entityName) && r.upper.equals("1") && extendedReference.upper.equals("-1")
-            ]
-            var isNToM = filteredEntities.empty === false
+            var isNToM = extendedReference.destinationEntity instanceof MappingEntity
             
             if (isNToM) {
                 val reference = extendedReference.destinationEntity.references.findFirst[ r | 

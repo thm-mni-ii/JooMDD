@@ -11,6 +11,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.eJSL.Feature
 import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 
@@ -23,6 +25,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	EList<ExtendedAttribute> allRefactoryAttribute
 	EList<ExtendedReference> allRefactoryReference
 	ExtendedAttribute primaryAttribute
+	boolean isMappingEntity = false
 	
 	new(Entity entity) {
 		entity.name = PlattformUtil.slugify(entity.name)
@@ -33,6 +36,10 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		instance = entity
 		this.preserve = entity.preserve
 		initLists()
+		
+		if (entity instanceof MappingEntity) {
+		    isMappingEntity = true
+		}
 	}
 
 	override getOwnExtendedAttributes() {
@@ -189,11 +196,8 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 		
 		return result
 	}
-	
-	
-	
 
-	
-
-
+    override getIsMappingEntity() {
+        this.isMappingEntity
+    }
 }

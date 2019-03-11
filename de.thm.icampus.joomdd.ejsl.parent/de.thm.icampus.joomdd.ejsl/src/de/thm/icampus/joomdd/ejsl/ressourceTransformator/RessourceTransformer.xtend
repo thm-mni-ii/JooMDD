@@ -42,6 +42,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.ecore.EStructuralFeature
 import java.util.stream.Collectors
 import java.util.List
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -779,7 +780,7 @@ class RessourceTransformer {
                     if (!ref.entity.existingReferenceBetweenEntity(ent, newEntity)) {
                         var String mappingEntityName = ent.name + "" + ref.entity.name
 
-                        var Entity mappingEntity = EJSLFactory.eINSTANCE.createEntity
+                        var MappingEntity mappingEntity = new MappingEntity
                         mappingEntity.name = mappingEntityName
 
                         var EList<Attribute> attributeFromEntity = new BasicEList<Attribute>

@@ -116,4 +116,5 @@ interface ExtendedEntity extends Entity {
 	
 	def EList<ExtendedReference> searchListRefWithAttr(Attribute attribute)
 	
+	def boolean getIsMappingEntity()
 }
