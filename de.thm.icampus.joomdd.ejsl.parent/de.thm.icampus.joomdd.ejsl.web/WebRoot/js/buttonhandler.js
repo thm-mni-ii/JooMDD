@@ -19,6 +19,12 @@ require(["jquery","alert"], function($, alert) {
   		var editor = ace.edit("xtext-editor");
   		openFullscreen(editor.container);
 	});
+	
+	// Formatter handler
+	$('#editorFormatter').click(function (e) {
+  		var editor = ace.edit("xtext-editor");
+  		editor.xtextServices.format();
+	});
     
 	function openFullscreen(elem) {
 		if (elem.requestFullscreen) {
@@ -132,24 +138,16 @@ require(["jquery","alert"], function($, alert) {
 		  	// Something went wrong.
 		});
 	});
+	
+	// Save the current model
+	$("#saveModel").click(() => {
+		var editor = ace.edit("xtext-editor");
+		editor.commands.exec("xtext-save");
+	});
 
 	require(["treeloader"],function(treeloader) {
-
-		// Save the current model
-		$("#saveModel").click(function(){
-		var editor = $("#xtext-editor");
-		var save = editor[0].env.editor.xtextServices.saveResource();
-		save.then( value => {
-			window.onbeforeunload = null;
-			alert.showSuccess("Model has been saved successfully.")
-		}, reason => {
-            alert.showError("Model cannot be saved.")
-		} );
-		});
-
 		$("#platform").change(function(){
-			var editor = $("#xtext-editor");
-			editor = editor[0];
+			var editor = ace.edit("xtext-editor");
 			
 		    content = editor.env.document.getValue();
 			var contentLength = editor.env.document.getLength();

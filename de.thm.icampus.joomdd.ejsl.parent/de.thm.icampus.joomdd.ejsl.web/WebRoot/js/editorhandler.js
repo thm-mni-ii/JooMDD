@@ -1,4 +1,4 @@
-define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeloader"], function(jQuery,jstree,ace,xtext_ace,treeloader) {
+define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeloader", "alert"], function(jQuery,jstree,ace,xtext_ace,treeloader,alert) {
 	 var exports = {};
 	 var editor = null;
 	 exports.loadEditor = function(resourceID) {
@@ -18,7 +18,9 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 			theme: "ace/theme/clouds",
 			resourceId: "/src/" + resourceID,
 			dirtyElement: "dirty",
-			dirtyStatusClass: "visible"
+			dirtyStatusClass: "visible",
+		    enableFormattingAction: true,
+		    enableSaveAction: true
 		});
 				
 		$("#modelname").text(resourceID)
@@ -26,6 +28,19 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 			fontSize: "14px",
 			minLines: 25
         });
+		
+		editor.xtextServices.successListeners.push((serviceType, severity, message, requestData) => {
+			if (serviceType === "save") {
+		        window.onbeforeunload = null;
+		        alert.showSuccess("Model has been saved successfully.");
+			}
+		});
+		
+		editor.xtextServices.errorListeners.push((serviceType, severity, message, requestData) => {
+			if (serviceType === "save") {
+				alert.showError("Model cannot be saved.");
+			}
+		});
 		
 		editor.xtextServices.errorListeners.push((serviceType, severity, message, requestData) => {
 			if (typeof(requestData) !== 'undefined') {
@@ -45,7 +60,7 @@ define('editorhandler',[ 'jquery',"jstree","ace/ace","xtext/xtext-ace","treeload
 																		serverData.platform = params.platform;
 																	}
 																	originInitServerData(serverData, editorContext, params);
-																} 
+																}
          
         var afterEditorCreation = function() {
         	var jstree = $('#folder_tree').jstree(true);
