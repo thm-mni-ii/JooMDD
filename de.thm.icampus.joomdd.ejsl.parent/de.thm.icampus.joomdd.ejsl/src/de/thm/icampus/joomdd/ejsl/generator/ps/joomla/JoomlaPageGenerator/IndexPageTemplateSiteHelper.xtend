@@ -7,6 +7,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary code for frontend view templates (index pages).
@@ -107,7 +108,7 @@ class IndexPageTemplateSiteHelper {
 	    if ($menu) {
 	        $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
 	    } else {
-	        $this->params->def('page_heading', Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
+	        $this->params->def('page_heading', Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.DEFAULT_PAGE_TITLE)»'));
 	    }
 	    $title = $this->params->get('page_title', '');
 	    if (empty($title)) {
@@ -198,7 +199,7 @@ class IndexPageTemplateSiteHelper {
 	    «IF details !== null»
 	    <?php if ($canCreate): ?>
 	    <a href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>" class="btn btn-success btn-small">
-	        <iclass="icon-plus"></i> <?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD_ITEM'); ?>
+	        <iclass="icon-plus"></i> <?php echo Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.ADD_ITEM)»'); ?>
 	    </a>
 	    <?php endif; ?>
 	    «ENDIF»
@@ -216,7 +217,7 @@ class IndexPageTemplateSiteHelper {
 	    «IF details !== null»
 	    function deleteItem() {
 	        var item_id = jQuery(this).attr('data-item-id');
-	        if (confirm("<?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_MESSAGE'); ?>")) {
+	        if (confirm("<?php echo Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.DELETE_MESSAGE)»'); ?>")) {
 	            window.location.href = '<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=') ?>' + item_id;
 	        }
 	    }

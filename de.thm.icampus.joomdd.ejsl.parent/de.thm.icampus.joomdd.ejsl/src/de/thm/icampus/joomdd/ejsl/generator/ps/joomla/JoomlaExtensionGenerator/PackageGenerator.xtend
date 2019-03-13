@@ -61,8 +61,10 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         if(success) {
             Slug.deleteFolder(rootPath + path + "packages/tocompress")
         }
+        
         var LanguageGenerator lang = new LanguageGenerator(fsa)
         lang.genPackageLanguage(pkg, path)
+        
         return ''
 	}
 	

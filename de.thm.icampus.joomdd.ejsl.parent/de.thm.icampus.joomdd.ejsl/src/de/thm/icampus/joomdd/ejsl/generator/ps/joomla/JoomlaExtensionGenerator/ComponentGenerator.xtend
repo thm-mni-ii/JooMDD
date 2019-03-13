@@ -17,6 +17,8 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import java.util.LinkedList
 import org.eclipse.xtext.EcoreUtil2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla component.
@@ -97,10 +99,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile(path + name + ".xml", extendedComp.xmlContent(indexPages))
 		generateFile(path + "script.php", generateScript(extendedComp, name))
 
-		// Generate language folders and files
-		var LanguageGenerator langgen = new LanguageGenerator(fsa)
-		langgen.genComponentLanguage(extendedComp,path)
-
 		//Generate media folder
 		generateEmptyDirectory(mediaPath+"/images")
 		generateFile( mediaPath + "/js/setForeignKeys.js", genScriptForForeignKeys)
@@ -124,6 +122,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		if (extendedComp.backEndExtendedPagerefence !== null  && extendedComp.backEndExtendedPagerefence.empty === false) {
 			generateBackendSection
 		}
+		
+        // Generate language folders and files
+        var LanguageGenerator langgen = new LanguageGenerator(fsa)
+        langgen.genComponentLanguage(extendedComp,path)
+        
 		return ""
 	}
 
@@ -227,12 +230,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     def backendManifest(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) '''
     <administration>
         <!-- Administration Menu Section -->
-        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
+        <menu>«component.addLanguage(newArrayList("com", component.name), component.name)»</menu>
         <submenu>
             «FOR page : dymPages.filter[t | !t.detailsPage]»
-            <menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
-                alias="«Slug.nameExtensionBind("com", component.name).toUpperCase»_ALIAS_«page.name.toUpperCase»"
-                view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«page.name.toUpperCase»</menu>
+            <menu link="option=«component.addLanguage(newArrayList("com", component.name), component.name)»&amp;view=«page.name.toLowerCase»" 
+                alias="«component.addLanguage(newArrayList("com", component.name, "ALIAS", page.name), page.name)»"
+                view="«page.name.toLowerCase»">«component.addLanguage(newArrayList("com", component.name, "TITLE", page.name), page.name)»</menu>
             «ENDFOR»
         </submenu>
         <!-- Administration Main File Copy Section -->
@@ -521,7 +524,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 * Returns the code for the layout of the main view of the component
 	 * @param Component component content the instance of a component
 	 */
-	def CharSequence phpAdminTemplateContent(Component component) '''
+	def CharSequence phpAdminTemplateContent(ExtendedComponent component) '''
 		<?php
 		«Slug.generateFileDoc(component)»
 		
@@ -529,7 +532,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateUses(newArrayList("Text"))»
 		?>
-		<p class="text-center"> <h1><?php echo "Welcome to ". Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
+		<p class="text-center"> <h1><?php echo "Welcome to ". Text::_('«component.addLanguage(newArrayList("com", component.name), component.name)»') . " ". Text::_('«component.addLanguage(newArrayList("com", component.name), StaticLanguage.HOME)»'); ?> </h1>
 		    <h4>«component.manifest.description»</h4>
 		</p> 
 		<div id="cpanel" class='cpanel'>
@@ -606,7 +609,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    private function addToolBar()
 		    {
-		        JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . ': ' . Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'), 'logo');
+		        JToolBarHelper::title(Text::_('«component.addLanguage(newArrayList("com", component.name), component.name)»') . ': ' . Text::_('«component.addLanguage(newArrayList("com", component.name), StaticLanguage.HOME)»'), 'logo');
 		        JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
 		    }
 		
@@ -620,7 +623,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        $views = array();
 		        «FOR ExtendedPageReference pg : component.backEndExtendedPagerefence.filter[t | t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage ]»
 		        $views['«pg.extendedPage.name.toLowerCase»'] = array();
-		        $views['«pg.extendedPage.name.toLowerCase»']['title'] = Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»');
+		        $views['«pg.extendedPage.name.toLowerCase»']['title'] = Text::_('«component.addLanguage(newArrayList("com", component.name, "TITLE", pg.extendedPage.name), pg.extendedPage.name)»');
 		        $views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»";
 		    «ENDFOR»
 		    $this->views = $views;
@@ -678,35 +681,35 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            type="text"
 		            size="50"
 		            default="10"
-		            label="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_LABEL"
-		            description="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_DESC" />
+		            label="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FIELD_MAXIMUM_SIZE_LABEL)»"
+		            description="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FIELD_MAXIMUM_SIZE_DESC)»" />
 		        <field
 		            name="accept_format"
 		            type="text"
 		            size="50"
 		            default="bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
-		            label="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_LABEL"
-		            description="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_DESC" />
+		            label="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FIELD_ACCEPT_FORMAT_LABEL)»"
+		            description="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FIELD_ACCEPT_FORMAT_DESC)»" />
 		        «FOR detailsPage : dynPages.filter[t | t.isDetailsPage && t.haveFiletoLoad]»
 		        <field
 		            name="«detailsPage.name.toLowerCase»_file_path"
 		            type="text"
 		            size="50"
 		            default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/files"
-		            label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_FILE_FOLDER_LABEL"
-		            description="«name.toUpperCase»_«detailsPage.name.toUpperCase»PATH_FILE_FOLDER_DESC" />
+		            label="«component.addLanguage(newArrayList("com", component.name, detailsPage.name), StaticLanguage.PATH_FILE_FOLDER_LABEL)»"
+		            description="«component.addLanguage(newArrayList("com", component.name, detailsPage.name), StaticLanguage.PATH_FILE_FOLDER_DESC)»" />
 		        <field
 		            name="«detailsPage.name.toLowerCase»_image_path"
 		            type="text"
 		            size="50"
 		            default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/images"
-		            label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_LABEL"
-		            description="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_DESC" />
+		            label="«component.addLanguage(newArrayList("com", component.name, detailsPage.name), StaticLanguage.PATH_IMAGE_FOLDER_LABEL)»"
+		            description="«component.addLanguage(newArrayList("com", component.name, detailsPage.name), StaticLanguage.PATH_IMAGE_FOLDER_DESC)»" />
 		         «ENDFOR»
 		     «ENDIF»
 		    </fieldset>
 		    «FOR g : component.extendedParameterGroupList»
-		    <fieldset name="«g.name.toLowerCase»" label="«g.name.toUpperCase»_LABEL" description="«g.name.toUpperCase»_DESC">
+		    <fieldset name="«g.name.toLowerCase»" label="«component.addLanguage(newArrayList("com", component.name, g.name, "LABEL"), g.name)»" description="«component.addLanguage(newArrayList("com", component.name, g.name, "DESC"), g.name)»">
 		        «FOR p:g.extendedParameterList»
 		        «Slug.writeParameter(p,component)»
 		        «ENDFOR»

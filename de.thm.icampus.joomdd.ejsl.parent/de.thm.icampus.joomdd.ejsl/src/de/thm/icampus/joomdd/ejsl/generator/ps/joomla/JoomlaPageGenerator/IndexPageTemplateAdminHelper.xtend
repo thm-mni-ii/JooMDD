@@ -275,7 +275,7 @@ class IndexPageTemplateAdminHelper {
 	        $state = $this->get('State');
 	        $canDo = «com.name.toFirstUpper»Helper::getActions($state->get('filter.category_id'));
 
-	        JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_TITLE_«indexpage.name.toUpperCase»'));
+	        JToolBarHelper::title(Text::_('«com.addLanguage(newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
 
 	        //Check if the form exists before showing the add/edit buttons
 	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«  details.toLowerCase»';

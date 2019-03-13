@@ -132,7 +132,7 @@ class ExtentionScriptGenerator {
 		 */
 		public function update($parent)
 		{
-		    echo '<p>' . Text::sprintf('«extName.toUpperCase»_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
+		    echo '<p>' . Text::sprintf('«com.addLanguage(newArrayList("com", com.name, "UPDATE", "TEXT"), "")»', $parent->get('manifest')->version) . '</p>';
 		}
 	'''
 	def CharSequence genUnsinstall() '''
@@ -143,7 +143,7 @@ class ExtentionScriptGenerator {
 		 */
 		public function uninstall($parent)
 		{
-		    echo '<p>' .Text::_('«extName.toUpperCase»_UNINSTALL_TEXT') . '</p>';
+		    echo '<p>' .Text::_('«com.addLanguage(newArrayList("com", com.name, "UNINSTALL", "TEXT"), "")»') . '</p>';
 		}
 	'''
    
@@ -161,7 +161,7 @@ class ExtentionScriptGenerator {
 		    }
 		    $parent->getParent()->setRedirectURL('index.php?option=«extName»');
 		    «ELSE»
-		    echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_TEXT') . '</p>';
+		    echo '<p>' .Text::_('«com.addLanguage(newArrayList("com", com.name, "INSTALL", "TEXT"), "")»') . '</p>';
 		    «ENDIF»
 		}
 	'''

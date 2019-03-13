@@ -5,6 +5,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary code for view templates.
@@ -236,23 +237,23 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     <field
                         name="search"
                         type="text"
-                        label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_«ipage.name.toUpperCase»_DESC"
-                        description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_SEARCH_«ipage.name.toUpperCase»_DESC"
+                        label="«com.addLanguage(newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_LABEL)»"
+                        description="«com.addLanguage(newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_DESC)»"
                         hint="JSEARCH_FILTER"
                     />
                     <field
                         name="state"
                         type="status"
-                        label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED"
-                        description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED_DESC"
+                        label="«com.addLanguage(newArrayList("com", com.name), StaticLanguage.FILTER_PUBLISHED_LABEL)»"
+                        description="«com.addLanguage(newArrayList("com", com.name), StaticLanguage.FILTER_PUBLISHED_DESC)»"
                         onchange="this.form.submit();">
                         <option value="">JOPTION_SELECT_PUBLISHED</option>
                     </field>
                     <field
                         name="created_by"
                         type="«com.name.toLowerCase»user"
-                        label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
-                        description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_CREATED_BY"
+                        label="«com.addLanguage(newArrayList("com", com.name), StaticLanguage.FILTER_CREATED_BY_LABEL)»"
+                        description="«com.addLanguage(newArrayList("com", com.name), StaticLanguage.FILTER_CREATED_BY_DESC)»"
                         entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
                         onchange="this.form.submit();">
                         <option value="">JOPTION_SELECT_CREATED_BY</option>
@@ -261,8 +262,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     <field
                         name="«attr.name»"
                         type="«ipage.extendedEntityList.get(0).name.toLowerCase»"
-                        label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-                        description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+                        label="«com.addLanguage(newArrayList("com", com.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+                        description="«com.addLanguage(newArrayList("com", com.name, "FILTER", attr.name, "DESC"), attr.name)»"
                         valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
                         textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
                         onchange="this.form.submit();">

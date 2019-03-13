@@ -41,6 +41,10 @@ import com.google.common.collect.Streams
 import java.util.stream.Collectors
 import java.util.HashMap
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
+import de.thm.icampus.joomdd.ejsl.eJSL.Language
+import de.thm.icampus.joomdd.ejsl.eJSL.impl.KeyValuePairImpl
+import org.eclipse.emf.ecore.EPackage
+import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -1070,6 +1074,9 @@ public class Slug  {
 				val String[] type_temp_array = type.split('''"'''.toString())
    		val String type_temp = type_temp_array.get(1)
    		
+   		var fieldLabel = component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, "LABEL"), param.name)
+   		var fieldDescription = component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, "DESC"), param.name)
+   		
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
    	        return '''
@@ -1079,14 +1086,14 @@ public class Slug  {
    		            multiple
    		            «ENDIF»
    		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
    		            >
    		            «FOR KeyValuePair kv: param.values»
-   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		            <option value="«kv.value»">«component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
    		            «ENDFOR»
    		        </field> 
    		        '''
@@ -1097,8 +1104,8 @@ public class Slug  {
    		            type ="imageloader"
    		            accept="image/*"
    		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
@@ -1110,8 +1117,8 @@ public class Slug  {
    		        <field name="«param.name.toLowerCase»"
    		            type ="fileloader"
    		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
   		            «ENDFOR»
@@ -1123,14 +1130,14 @@ public class Slug  {
    		        <field name="«param.name.toLowerCase»"
    		            type="checkboxes" 
    		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
    		            >
    		            «FOR KeyValuePair kv: param.values»
-   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		            <option value="«kv.value»">«component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
    		            «ENDFOR»
    		        </field> 
    		        '''
@@ -1140,14 +1147,14 @@ public class Slug  {
 	   		        <field name="«param.name.toLowerCase»"
 	   		            type="radio"
 	   		            id="«param.name.toLowerCase»"
-	   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-	   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+	   		            label="«fieldLabel»"
+	   		            description="«fieldDescription»"
 	   		            «FOR KeyValuePair kvpair : param.attributes»
 	   		            «kvpair.name» = "«kvpair.value»"
 	   		            «ENDFOR»
 	   		            >
 	   		            «FOR KeyValuePair kv: param.values»
-	   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+	   		            <option value="«kv.value»">«component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
 	   		            «ENDFOR»
 	   		        </field> 
    		        '''
@@ -1157,8 +1164,8 @@ public class Slug  {
    		        <field name="«param.name.toLowerCase»"
    		            type="radio" 
    		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            default="0"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
@@ -1174,8 +1181,8 @@ public class Slug  {
    		        <field name="«param.name.toLowerCase»"
    		            «type»
    		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
@@ -1255,7 +1262,7 @@ public class Slug  {
 	
 	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
 		<?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«com.addLanguage(newArrayList("com", com.name, Slug.getOtherEntityToMapping(reference).name), Slug.getOtherEntityToMapping(reference).name)»', true)); ?>
 		<div class="control-group">
 		    <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
 		    <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
