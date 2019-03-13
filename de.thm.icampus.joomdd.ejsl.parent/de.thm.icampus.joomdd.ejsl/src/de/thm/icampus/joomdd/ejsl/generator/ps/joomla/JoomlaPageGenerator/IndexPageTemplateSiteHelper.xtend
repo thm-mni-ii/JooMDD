@@ -108,7 +108,7 @@ class IndexPageTemplateSiteHelper {
 	    if ($menu) {
 	        $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
 	    } else {
-	        $this->params->def('page_heading', Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.DEFAULT_PAGE_TITLE)»'));
+	        $this->params->def('page_heading', Text::_('«com.addLanguage(newArrayList("com", com.name, indexpage.name), indexpage.name)»'));
 	    }
 	    $title = $this->params->get('page_title', '');
 	    if (empty($title)) {

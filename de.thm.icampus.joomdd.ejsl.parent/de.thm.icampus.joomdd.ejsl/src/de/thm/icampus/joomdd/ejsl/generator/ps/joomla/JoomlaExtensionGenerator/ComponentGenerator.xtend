@@ -709,7 +709,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     «ENDIF»
 		    </fieldset>
 		    «FOR g : component.extendedParameterGroupList»
-		    <fieldset name="«g.name.toLowerCase»" label="«component.addLanguage(newArrayList("com", component.name, g.name, "LABEL"), g.name)»" description="«component.addLanguage(newArrayList("com", component.name, g.name, "DESC"), g.name)»">
+		    <fieldset name="«g.name.toLowerCase»" label="«component.addLanguage(newArrayList("com", component.name, g.name, "LABEL"), g.name)»" description="«component.addLanguage(newArrayList("com", component.name, g.name, "DESC"), StaticLanguage.getCommonDescriptionFor(g.name))»">
 		        «FOR p:g.extendedParameterList»
 		        «Slug.writeParameter(p,component)»
 		        «ENDFOR»
@@ -725,7 +725,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            label="JCONFIG_PERMISSIONS_LABEL"
 		            filter="rules"
 		            validate="rules"
-		            component="«Slug.nameExtensionBind("com",extendedComp.name)»"
+		            component="«Slug.nameExtensionBind("com", extendedComp.name)»"
 		            section="component" />
 		    </fieldset>
 		</config>

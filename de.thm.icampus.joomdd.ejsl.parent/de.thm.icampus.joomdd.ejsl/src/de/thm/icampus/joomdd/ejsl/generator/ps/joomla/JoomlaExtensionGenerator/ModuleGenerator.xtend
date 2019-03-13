@@ -209,8 +209,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
 		                    name="«attr.name»"
 		                    type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
-		                    label="«module.addLanguage(newArrayList("mod", module.name, "FILTER", attr.name), attr.name)»"
-		                    description="«module.addLanguage(newArrayList("mod", module.name, "FILTER", "DESC", attr.name), attr.name)»"
+		                    label="«module.addLanguage(newArrayList("mod", module.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+		                    description="«module.addLanguage(newArrayList("mod", module.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
 		                    valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
 		                    textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
 		                    <option value="">«module.addLanguage(newArrayList("mod", module.name, "JOPTION", "SELECT", attr.name), attr.name)»</option>

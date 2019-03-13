@@ -70,7 +70,7 @@ class ExtendedExtensionsImpl extends ExtensionImpl implements ExtendedExtensions
 	}
 	
 	override extensionName() {
-		switch(instance){
+		switch(instance) {
 			Component:{
 				return "com_" + this.name.toLowerCase
 			}

@@ -263,7 +263,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                         name="«attr.name»"
                         type="«ipage.extendedEntityList.get(0).name.toLowerCase»"
                         label="«com.addLanguage(newArrayList("com", com.name, "FILTER", attr.name, "LABEL"), attr.name)»"
-                        description="«com.addLanguage(newArrayList("com", com.name, "FILTER", attr.name, "DESC"), attr.name)»"
+                        description="«com.addLanguage(newArrayList("com", com.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
                         valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
                         textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
                         onchange="this.form.submit();">

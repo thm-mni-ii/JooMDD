@@ -12,6 +12,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtend.lib.annotations.Accessors
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 
 /**
  * Abstract class for Joomla page generator classes.
@@ -75,7 +76,7 @@ abstract public class AbstractPageGenerator {
 		<?xml version="1.0" encoding="utf-8"?>
 		<metadata>
 		    <layout title="«component.addLanguage(newArrayList("com", component.name, "VIEW", pagename, "TITLE"), pagename)»" option="View">
-		        <message><![CDATA[«component.addLanguage(newArrayList("com", component.name, "VIEW", pagename, "DESC"), pagename)»]]></message>
+		        <message><![CDATA[«component.addLanguage(newArrayList("com", component.name, "VIEW", pagename, "DESC"), StaticLanguage.getCommonDescriptionFor(pagename))»]]></message>
 		    </layout>
 		    <fields
 		        name="request"

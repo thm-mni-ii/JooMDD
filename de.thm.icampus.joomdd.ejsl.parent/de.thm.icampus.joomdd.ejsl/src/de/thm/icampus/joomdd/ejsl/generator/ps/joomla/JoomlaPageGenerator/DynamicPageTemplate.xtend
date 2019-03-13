@@ -35,7 +35,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	<?xml version="1.0" encoding="utf-8"?>
 	<metadata>
 	    <layout title="«component.addLanguage(newArrayList("com", component.name, "VIEW", pagename, "TITLE"), pagename)»" option="View">
-	        <message><![CDATA[«component.addLanguage(newArrayList("com", component.name, "VIEW", pagename, "DESC"), pagename)»]]></message>
+	        <message><![CDATA[«component.addLanguage(newArrayList("com", component.name, "VIEW", pagename, "DESC"), StaticLanguage.getCommonDescriptionFor(pagename))»]]></message>
 	    </layout>	
 		 «IF !page.containsParamertergroup("params") »
 		 <fields name="params">
@@ -77,11 +77,11 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	<fieldset name="request"
 	    addfieldpath="/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields">
 	    <field name="«page.extendedEntityList.get(0).primaryKey.name»" type="«page.extendedEntityList.get(0).name.toLowerCase»"
-	        label="«component.addLanguage(newArrayList("com", component.name, "FILTER", page.extendedEntityList.get(0).name, page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name, "LABEL"), "")»"
+	        label="«component.addLanguage(newArrayList("com", component.name, "FILTER", page.extendedEntityList.get(0).name, page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name, "LABEL"), page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name)»"
 	        required="true"
 	        edit="true"
 	        clear="false"
-	        description="«component.addLanguage(newArrayList("com", component.name, "FILTER", page.extendedEntityList.get(0).name, page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name, "DESC"), "")»"
+	        description="«component.addLanguage(newArrayList("com", component.name, "FILTER", page.extendedEntityList.get(0).name, page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name, "DESC"), StaticLanguage.getCommonDescriptionFor(page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name))»"
 	        valueColumn="«page.extendedEntityList.get(0).primaryKey.name»"
 	        textColumn="«page.extendedEntityList.get(0).getFirstUniqueKey().name.toLowerCase»">
 	        <option value="">«component.addLanguage(newArrayList("com", component.name, "OPTION", "SELECT", page.extendedEntityList.get(0).getFirstUniqueKey().name), page.extendedEntityList.get(0).getFirstUniqueKey().name)»</option>
@@ -168,7 +168,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
             name="«attr.name»"
             type="«page.extendedEntityList.get(0).name.toLowerCase»"
             label="«component.addLanguage(newArrayList("com", component.name, "FILTER", page.name, attr.name, "LABEL"), attr.name)»"
-            description="«component.addLanguage(newArrayList("com", component.name, "FILTER", page.name, attr.name, "DESC"), attr.name)»»"
+            description="«component.addLanguage(newArrayList("com", component.name, "FILTER", page.name, attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»»"
             valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
             textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
             <option value="">JSELECT</option>
@@ -279,7 +279,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		val String type_temp = type_temp_array.get(1)
    		
    		var fieldLabel = component.addLanguage(newArrayList("com", component.name, "FORM", "LBL", entity.name, attr.name, "LABEL"), attr.name)
-        var fieldDescription = component.addLanguage(newArrayList("com", component.name, "FORM", "LBL", entity.name, attr.name, "DESC"), attr.name)
+        var fieldDescription = component.addLanguage(newArrayList("com", component.name, "FORM", "LBL", entity.name, attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
    	        result.append('''
@@ -304,7 +304,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		    case "imagepicker": {
    		        result.append('''
    		        <field name="«attr.name.toLowerCase»"
-   		            type ="imageloader"
+   		            type="imageloader"
    		            accept="image/*"
    		            path="«page.name.toLowerCase»_image_path"
    		            id="«attr.name.toLowerCase»"
@@ -319,7 +319,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		    case "filepicker": {
    		        result.append('''
    		        <field name="«attr.name.toLowerCase»"
-   		            type ="fileloader"
+   		            type="fileloader"
    		            path="«page.name.toLowerCase»_file_path"
    		            id="«attr.name.toLowerCase»"
    		            label="«fieldLabel»"
@@ -405,7 +405,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 			var Entity refEntity = field.fieldtype.eContainer as Entity
 			var ExtendedReference ref = entity.searchRefWithAttr(field.attribute,refEntity)
 			var fieldLabel = component.addLanguage(newArrayList("com", component.name, "FORM", "LBL", entity.name, field.attribute.name, "LABEL"), field.attribute.name)
-			var fieldDescription = component.addLanguage(newArrayList("com", component.name, "FORM", "LBL", entity.name, field.attribute.name, "DESC"), field.attribute.name)
+			var fieldDescription = component.addLanguage(newArrayList("com", component.name, "FORM", "LBL", entity.name, field.attribute.name, "DESC"), StaticLanguage.getCommonDescriptionFor(field.attribute.name))
 			if(field.extendedAttribute.theBaseElementOfUniquePair){
 			return '''
 			<field name="«field.attribute.name»"
@@ -453,14 +453,14 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     					«FOR ExtendedReference refItem: listOfref»
     					«var languageKey = Slug.getNReferenceLanguageKey(component, refItem, entity.name)»
     					<field name="«refItem.entity.name.toLowerCase»_id"
-    					    type ="«entity.name.toLowerCase»To«refItem.entity.name.toLowerCase»"
+    					    type="«entity.name.toLowerCase»To«refItem.entity.name.toLowerCase»"
     					    id="«refItem.entity.name.toLowerCase»_id"
-    					    label="«component.addLanguage(newArrayList("com", component.name, languageKey, "LABEL"), languageKey)»"
-    					    description="«component.addLanguage(newArrayList("com", component.name, languageKey, "DESC"), languageKey)»"
+    					    label="«component.addLanguage(newArrayList(languageKey, "LABEL"), refItem.entity.name)»"
+    					    description="«component.addLanguage(newArrayList(languageKey, "DESC"), StaticLanguage.getCommonDescriptionFor(refItem.entity.name))»"
     					/>
     					«FOR Attribute attr: Slug.getOtherAttribute(refItem)»
     					<field name="«attr.name.toLowerCase»"
-    					    type ="hidden"
+    					    type="hidden"
     					    id="«attr.name.toLowerCase»"
     					/>
     					«ENDFOR»

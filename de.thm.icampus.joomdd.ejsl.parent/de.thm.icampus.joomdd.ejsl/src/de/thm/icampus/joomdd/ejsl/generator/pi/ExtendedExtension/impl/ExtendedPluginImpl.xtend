@@ -98,7 +98,7 @@ class ExtendedPluginImpl extends PluginImpl implements ExtendedPlugin {
             else
             {
                 if (alreadyDefinedKey.value.equalsIgnoreCase(languageValue) === false) {
-                    println('''ExtendedComponentImpl: The given key «upperCaseKey» with the value  «languageValue» is already defined with another value «alreadyDefinedKey.value»''')
+                    println('''ExtendedComponentImpl: The given key «upperCaseKey» with the value «languageValue» is already defined with another value «alreadyDefinedKey.value»''')
                 }
             }
         ]

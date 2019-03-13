@@ -104,7 +104,9 @@ class LanguageGenerator extends AbstractExtensionGenerator {
     }
 	
 	def CharSequence fileLangGen( EList<KeyValuePair> keyValueLanguagePair) {
+	    // Sort the key in alphabetical order
 	    var languagePairSortedByKey = keyValueLanguagePair.sortBy[ name ]
+	    
 	    return '''
             «FOR KeyValuePair kv: languagePairSortedByKey»
                 «kv.name»="«kv.value»"

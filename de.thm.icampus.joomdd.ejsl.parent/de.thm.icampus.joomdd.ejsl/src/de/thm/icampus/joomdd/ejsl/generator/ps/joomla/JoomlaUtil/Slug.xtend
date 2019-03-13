@@ -229,15 +229,6 @@ public class Slug  {
 	        <div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
 	    </div>
 	'''
-
-	def static String generateKeysName(Component com, String name){
-		if(name!==null)
-		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(name).toUpperCase
-	}
-	
-	def static String generateKeysNamePage(Component com, Page page ,String name){
-		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(page.name).toUpperCase + "_" + Slug.slugify(name).toUpperCase
-	}
 	
 	def static ExtendedDynamicPage getPageForDetails(ExtendedDynamicPage inpage, ExtendedComponent com) {
 		if (inpage.links.empty) {
@@ -250,6 +241,7 @@ public class Slug  {
 				}
 			}
 		}
+		
 		for (Link lk: inpage.links) {
 		    switch lk {
 		        ContextLink: {
@@ -281,6 +273,7 @@ public class Slug  {
 				}
 			}
 		}
+		
 		for (Link lk: inpage.links) {
 			switch lk {
 			    ContextLink: {
@@ -1075,7 +1068,7 @@ public class Slug  {
    		val String type_temp = type_temp_array.get(1)
    		
    		var fieldLabel = component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, "LABEL"), param.name)
-   		var fieldDescription = component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, "DESC"), param.name)
+   		var fieldDescription = component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, "DESC"), StaticLanguage.getCommonDescriptionFor(param.name))
    		
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
@@ -1101,7 +1094,7 @@ public class Slug  {
    		    case "imagepicker": {
    		        return '''
    		        <field name="«param.name.toLowerCase»"
-   		            type ="imageloader"
+   		            type="imageloader"
    		            accept="image/*"
    		            id="«param.name.toLowerCase»"
    		            label="«fieldLabel»"
@@ -1115,7 +1108,7 @@ public class Slug  {
    		    case "filepicker": {
    		        return '''
    		        <field name="«param.name.toLowerCase»"
-   		            type ="fileloader"
+   		            type="fileloader"
    		            id="«param.name.toLowerCase»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"

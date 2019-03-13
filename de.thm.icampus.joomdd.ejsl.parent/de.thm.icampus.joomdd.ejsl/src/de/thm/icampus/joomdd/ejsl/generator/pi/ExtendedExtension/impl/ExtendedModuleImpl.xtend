@@ -99,7 +99,7 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
             else
             {
                 if (alreadyDefinedKey.value.equalsIgnoreCase(languageValue) === false) {
-                    println('''ExtendedComponentImpl: The given key «upperCaseKey» with the value  «languageValue» is already defined with another value «alreadyDefinedKey.value»''')
+                    println('''ExtendedComponentImpl: The given key «upperCaseKey» with the value «languageValue» is already defined with another value «alreadyDefinedKey.value»''')
                 }
             }
         ]

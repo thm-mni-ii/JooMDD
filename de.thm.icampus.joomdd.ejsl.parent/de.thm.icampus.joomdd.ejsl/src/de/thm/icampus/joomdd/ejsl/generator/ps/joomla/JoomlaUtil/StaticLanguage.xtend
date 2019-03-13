@@ -94,7 +94,7 @@ class StaticLanguage {
     static StaticLanguageValue SEARCH_LABEL = new StaticLanguageValue("SEARCH_LABEL", "Search")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue SEARCH_DESC = new StaticLanguageValue("SEARCH_LABEL_DESC", "Search data")
+    static StaticLanguageValue SEARCH_DESC = new StaticLanguageValue("SEARCH_DESC", "Search data")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue FILTER_CREATED_BY_LABEL = new StaticLanguageValue("FILTER_CREATED_BY_LABEL", "Created by")
@@ -139,9 +139,6 @@ class StaticLanguage {
     static StaticLanguageValue ITEM_NOT_LOADED = new StaticLanguageValue("ITEM_NOT_LOADED", "")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue DEFAULT_PAGE_TITLE = new StaticLanguageValue("DEFAULT_PAGE_TITLE", "")
-    
-    @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue FIELD_MAXIMUM_SIZE_LABEL = new StaticLanguageValue("FIELD_MAXIMUM_SIZE_LABEL", "")
     
     @Accessors(PUBLIC_GETTER)
@@ -164,4 +161,8 @@ class StaticLanguage {
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue PATH_IMAGE_FOLDER_DESC = new StaticLanguageValue("PATH_FILE_FOLDER_DESC", "")
+    
+    def static String getCommonDescriptionFor(String attribute) {
+        return '''Description for «attribute»'''
+    }
 }
