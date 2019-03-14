@@ -163,7 +163,7 @@ class FieldsGenerator {
 		 * Method to get the field input markup.
 		 *
 		 * @return	string	The field input markup.
-		 * @since	1.6
+		 * @since 1.6
 		 */
 		protected function getInput()
 		{

@@ -984,19 +984,24 @@ public class Slug  {
 	}
 	
 	static def CharSequence genLinkedInfo(DynamicPage page, Component com)'''
- 	    private  $entitiesRef = array(
- 	    «FOR Link linkItem: page.links»
- 	    «switch linkItem {
- 		    InternalLink :{
- 			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
- 				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
- 				    '''
- 				    "«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.generateAttributeAndRefernce(ref)»
- 				    ), "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name.toLowerCase»"),'''	
- 			    }				
- 		    }	
- 	    }»
- 	    «ENDFOR»
+ 	    private $entitiesRef = array(
+ 	        «FOR Link linkItem: page.links»
+ 	        «switch linkItem {
+     		    InternalLink :{
+     			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
+     				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
+     				    '''
+     				    "«linkItem.name.toLowerCase»" => array(
+     				        "db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»",
+     				        "refattr" => array(
+     				            «Slug.generateAttributeAndRefernce(ref)»
+     				        ),
+     				        "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name.toLowerCase»"
+     				    ),'''	
+     			    }				
+     		    }	
+     	    }»
+     	    «ENDFOR»
  	    null);
  	'''
 	
@@ -1007,7 +1012,8 @@ public class Slug  {
 			var int index = reference.attribute.indexOf(attr)
 			var Attribute referenced = reference.attributerefereced.get(index)
 			if(attr != reference.attribute.last)
-			result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»",''')
+			    result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»",
+			    ''')
 			else{
 				result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»"''')
 			}

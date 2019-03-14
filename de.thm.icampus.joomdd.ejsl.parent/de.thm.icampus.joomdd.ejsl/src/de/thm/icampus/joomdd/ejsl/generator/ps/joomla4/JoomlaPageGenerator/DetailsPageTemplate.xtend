@@ -145,7 +145,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 * Method to get the data that should be injected in the form.
 		 *
 		 * @return	mixed	The data for the form.
-		 * @since	1.6
+		 * @since 1.6
 		 * @generated
 		 */
 		protected function loadFormData()
@@ -168,7 +168,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 * @param	integer	The id of the primary key.
 		 *
 		 * @return	mixed	Object on success, false on failure.
-		 * @since	1.6
+		 * @since 1.6
 		 * @generated
 		 */
 		public function getItem($pk = null)
@@ -212,7 +212,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		 * @param	array	$data		An optional array of data for the form to interogate.
 		 * @param	boolean	$loadData	True if the form is to load its own data (default case), false if not.
 		 * @return	Form	A Form object on success, false on failure
-		 * @since	1.6
+		 * @since 1.6
 		 * @generated
 		 */
 		public function getForm($data = array(), $loadData = true)

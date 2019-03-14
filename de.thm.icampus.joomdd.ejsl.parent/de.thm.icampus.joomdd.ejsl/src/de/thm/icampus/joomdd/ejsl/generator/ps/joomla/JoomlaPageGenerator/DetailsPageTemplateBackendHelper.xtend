@@ -28,7 +28,7 @@ class DetailsPageTemplateBackendHelper {
 		/**
 		 * Prepare and sanitise the table prior to saving.
 		 *
-		 * @since	1.6
+		 * @since 1.6
 		 */
 		protected function prepareTable($table)
 		{
@@ -130,7 +130,7 @@ class DetailsPageTemplateBackendHelper {
 		 * @param	string	A prefix for the table class name. Optional.
 		 * @param	array	Configuration array for model. Optional.
 		 * @return	Table	A database object
-		 * @since	1.6
+		 * @since 1.6
 		 */
 		public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array())
 		{

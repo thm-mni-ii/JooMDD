@@ -116,7 +116,7 @@ class FieldsGenerator {
 		 * Method to get the field input markup.
 		 *
 		 * @return	string	The field input markup.
-		 * @since	1.6
+		 * @since 1.6
 		 */
 		protected function getInput()
 		{
@@ -165,28 +165,28 @@ class FieldsGenerator {
 	*/
 	protected function getReferencedata($data)
 	{
-				$caseCheck = "";
-				foreach ($this->keysAndForeignKeys as $k=>$v){
-	    			    $fk =  $v["key"];
-	    				$caseCheck .= " b." . $v["ref"] . " = '" .$data->$fk . "' and";
-	    			}
-				$caseCheck = rtrim($caseCheck,"and");
-				$db = JFactory::getDbo();
-				$query = $db->getQuery(true);
-				$query->select("distinct (case when"
-					. $caseCheck .
-					"then 'selected'
-					else ' ' end) as selected");
-				foreach($this->keysAndForeignKeys as $key =>$value)
-				{
-					$query->select(" b." . $value["ref"]);
-				}
-				$query->from( $this->referenceStruct->foreignTable . " as b ")
-					->where("b.state = 1")
-					->order( "b." . $this->keysAndForeignKeys[0]["ref"]. " ASC");
-				$db->setQuery($query);
-				return $db->loadObjectList();
+		$caseCheck = "";
+		foreach ($this->keysAndForeignKeys as $k=>$v){
+			    $fk =  $v["key"];
+				$caseCheck .= " b." . $v["ref"] . " = '" .$data->$fk . "' and";
 			}
+		$caseCheck = rtrim($caseCheck,"and");
+		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
+		$query->select("distinct (case when"
+			. $caseCheck .
+			"then 'selected'
+			else ' ' end) as selected");
+		foreach($this->keysAndForeignKeys as $key =>$value)
+		{
+			$query->select(" b." . $value["ref"]);
+		}
+		$query->from( $this->referenceStruct->foreignTable . " as b ")
+			->where("b.state = 1")
+			->order( "b." . $this->keysAndForeignKeys[0]["ref"]. " ASC");
+		$db->setQuery($query);
+		return $db->loadObjectList();
+	}
 	'''
 
 	private def CharSequence genGetAllData() '''
@@ -249,7 +249,7 @@ class FieldsGenerator {
 		{
 		    $valueColumn = $this->getAttribute('valueColumn');
 		    $textColumn = $this->getAttribute('textColumn');
-		    return  array_merge(parent::getOptions(),$this->getAllData($valueColumn, $textColumn));
+		    return array_merge(parent::getOptions(), $this->getAllData($valueColumn, $textColumn));
 		}
 	'''
 	
@@ -307,7 +307,7 @@ class FieldsGenerator {
 		            ->order("b.name ASC");
 		        $dbo->setQuery($query);
 		        $dataList = $dbo->loadObjectList();
-		        return  array_merge(parent::getOptions(),$dataList);
+		        return array_merge(parent::getOptions(), $dataList);
 		    }
 		}
 	'''

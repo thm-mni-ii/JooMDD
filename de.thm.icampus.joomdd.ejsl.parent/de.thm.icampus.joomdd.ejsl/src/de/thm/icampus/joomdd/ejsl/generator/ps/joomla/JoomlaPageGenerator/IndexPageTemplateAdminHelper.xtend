@@ -34,7 +34,7 @@ class IndexPageTemplateAdminHelper {
 	/**
 	 * Constructor.
 	 *
-	 * @param   array  $config	An optional associative array of configuration settings.
+	 * @param   array  $config  An optional associative array of configuration settings.
 	 * @return  «com.name.toFirstUpper»Controller«indexpage.name.toFirstUpper»
 	 * @see     JController
 	 * @since   1.6
@@ -49,7 +49,7 @@ class IndexPageTemplateAdminHelper {
 	public def genAdminControllerGetModel()'''
 	/**
 	 * Overwrite the  getModel.
-	 * @since	1.6
+	 * @since 1.6
 	 */
 	public function getModel($name = '«details.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
 	{
@@ -98,7 +98,8 @@ class IndexPageTemplateAdminHelper {
     	            «FOR ExtendedAttribute attr: indexpage.allAttributeOfFilterAndColum»
     	            ,'«attr.name.toLowerCase»', '«attr.entity.name.toLowerCase».«attr.name.toLowerCase»'
     	            «ENDFOR»
-    	        );}
+    	        );
+    	    }
     	    parent::__construct($config);
     	}
 	'''
@@ -107,8 +108,8 @@ class IndexPageTemplateAdminHelper {
 	    /**
 	     * Build an SQL query to load the list data.
 	     *
-	     * @return	JDatabaseQuery
-	     * @since	1.6
+	     * @return  JDatabaseQuery
+	     * @since 1.6
 	     * @generated
 	     */
 	    protected function getListQuery()
@@ -118,9 +119,11 @@ class IndexPageTemplateAdminHelper {
 	        $query = $db->getQuery(true);
 
 	        // Select the required fields from the table.
-	        $query->select("distinct " .
+	        $query->select(
+	            "distinct " .
 	            $this->getState(
-	                'list.select', '«indexpage.entities.get(0).name.toLowerCase».*'
+	                'list.select',
+	                '«indexpage.entities.get(0).name.toLowerCase».*'
 	            )
 	        );
 	        $query->from('`#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»` AS «indexpage.entities.get(0).name.toLowerCase»');
@@ -143,13 +146,13 @@ class IndexPageTemplateAdminHelper {
 	        } elseif ($published === '') {
 	            $query->where('(«indexpage.entities.get(0).name.toLowerCase».state IN (0, 1))');
 	        }
-	        // Filter by User 
+	        // Filter by User
 	        $created_by = $this->getState('filter.created_by');
 	        if (!empty($created_by)) {
 	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '" . $db->escape($created_by) . "'");
 	        }
 	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-	        // Filter by «attr.name» 
+	        // Filter by «attr.name»
 	        $«attr.name» = $this->getState('filter.«attr.name»');
 	        if (!empty($«attr.name»)) {
 	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '" . $db->escape($«attr.name») . "'");
@@ -163,10 +166,10 @@ class IndexPageTemplateAdminHelper {
 	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
-	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE '.$search. 
+	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE ' . $search . 
 	                «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
 	                «IF filters.indexOf(attr) > 0»
-	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE '.$search.
+	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE ' . $search .
 	                «ENDIF»
 	                «ENDFOR»
 	                ')');
@@ -204,22 +207,21 @@ class IndexPageTemplateAdminHelper {
 	    /**
 	     * Function to save the new Order of the Profile
 	     *
-	     * @param   Array  $datas_ID  content the ID in the new Ordering
+	     * @param   Array  $dataID  content the ID in the new Ordering
 	     *
 	     * @return  array  including headers
 	     * @generated
 	     */
-	    public function saveOrdering($datas_ID)
+	    public function saveOrdering($dataID)
 	    {
 	        $db = Factory::getDbo();
 	        $query = $db->getQuery(true);
 
 	        $statement = 'Update #__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase» Set `ordering` = CASE';
-	        foreach ($datas_ID  as $order => $profileID)
-	        {
+	        foreach ($dataID as $order => $profileID) {
 	            $statement .= ' WHEN «mainEntity.primaryKey.name» = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
 	        }
-	        $statement .= ' ELSE ' . 0 . ' END Where «mainEntity.primaryKey.name» IN(' . implode(',', $datas_ID) . ')';
+	        $statement .= ' ELSE ' . 0 . ' END Where «mainEntity.primaryKey.name» IN(' . implode(',', $dataID) . ')';
 	        $db->setQuery($statement);
 	        $response = $db->execute();
 
@@ -498,7 +500,7 @@ class IndexPageTemplateAdminHelper {
             $key = $this->entitiesRef["$linkName"]["foreignPk"];
             $query->select($key)
                 ->from($dbtable);
-            foreach ($attribute as $index=>$attributItem) {
+            foreach ($attribute as $index => $attributItem) {
                 $query->where($attributItem . " like '".$attrvalue->$index."'");
             }
 

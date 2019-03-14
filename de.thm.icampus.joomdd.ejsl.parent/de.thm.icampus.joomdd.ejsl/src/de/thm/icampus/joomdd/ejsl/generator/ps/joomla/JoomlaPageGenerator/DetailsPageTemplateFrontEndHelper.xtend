@@ -30,7 +30,7 @@ class DetailsPageTemplateFrontEndHelper {
 //		/**
 //		 * Method to check out an item for editing and redirect to the edit form.
 //		 *
-//		 * @since	1.6
+//		 * @since 1.6
 //		 */
 //		public function edit()
 //		{
@@ -280,7 +280,7 @@ class DetailsPageTemplateFrontEndHelper {
 	 *
 	 * @param	integer		The id of the row to check out.
 	 * @return	boolean		True on success, false on failure.
-	 * @since	1.6
+	 * @since 1.6
 	 */
 	public function checkin($id = null)
 	{

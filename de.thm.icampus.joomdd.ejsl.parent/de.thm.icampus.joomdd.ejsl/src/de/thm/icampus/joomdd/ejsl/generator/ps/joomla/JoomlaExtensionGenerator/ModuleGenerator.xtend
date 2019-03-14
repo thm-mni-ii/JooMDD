@@ -442,8 +442,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	    /**
 	     * Build an SQL query to load the list data.
 	     *
-	     * @return	JDatabaseQuery
-	     * @since	1.6
+	     * @return  JDatabaseQuery
+	     * @since 1.6
 	     * @generated
 	     */
 	    private static function getListQuery($params_module = null)
@@ -475,13 +475,13 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	        } elseif ($published === '') {
 	            $query->where('(«indexpage.entities.get(0).name.toLowerCase».state IN (0, 1))');
 	        }
-	        // Filter by User 
+	        // Filter by User
 	        $created_by = $params_module->get('created_by');
 	        if (!empty($created_by)) {
 	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '" . $db->escape($created_by) . "'");
 	        }
 	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-	        // Filter by «attr.name» 
+	        // Filter by «attr.name»
 	        $«attr.name» = $params_module->get('«attr.name»');
 	        if (!empty($«attr.name»)) {
 	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '" . $db->escape($«attr.name») . "'");
@@ -495,10 +495,10 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
-	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE '.$search. 
+	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE ' . $search . 
 	                «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
 	                «IF filters.indexOf(attr) > 0»
-	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE '.$search.
+	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE ' . $search .
 	                «ENDIF»
 	                «ENDFOR»
 	                ')');
