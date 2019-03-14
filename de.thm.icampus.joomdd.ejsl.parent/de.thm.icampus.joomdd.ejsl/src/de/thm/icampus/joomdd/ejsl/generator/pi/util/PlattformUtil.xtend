@@ -29,7 +29,6 @@ class PlattformUtil {
 		res = res.replaceAll("_1","")
 		res = res.replaceAll("_unexc_","")
 		
-		res = res.toLowerCase()
 		trim(res, "_".charAt(0))
 	}
 	

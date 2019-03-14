@@ -31,13 +31,13 @@ class StaticLanguage {
     static StaticLanguageValue ITEM_DELETED_SUCCESSFULLY = new StaticLanguageValue("ITEM_DELETED_SUCCESSFULLY", "The data are successfully deleted.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue DELETE_MESSAGE = new StaticLanguageValue("DELETE_MESSAGE", "Do you want to delete the Data?")
+    static StaticLanguageValue DELETE_MESSAGE = new StaticLanguageValue("DELETE_MESSAGE", "Do you want to delete the data?")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue ITEMS_PUBLISHED = new StaticLanguageValue("ITEMS_PUBLISHED", "The data are successfully published.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue TEMPLATE_LAYOUT_DESC = new StaticLanguageValue("TEMPLATE_LAYOUT_DESC", "Choice a layout for the Indexpage.")
+    static StaticLanguageValue TEMPLATE_LAYOUT_DESC = new StaticLanguageValue("TEMPLATE_LAYOUT_DESC", "Choice a layout for the indexpage.")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue DIRECTION = new StaticLanguageValue("DIRECTION", "Direction")
