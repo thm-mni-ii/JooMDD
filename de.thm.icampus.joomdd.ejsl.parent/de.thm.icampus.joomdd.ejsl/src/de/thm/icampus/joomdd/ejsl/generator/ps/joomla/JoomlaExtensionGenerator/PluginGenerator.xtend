@@ -625,7 +625,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		            'link' => '',
 		            'image' => '',
 		            'icon' => '',
-		            'text' => Text::_('«plugin.addLanguage(newArrayList("plg", plugin.name, "QUICKICON", "CHECKING"), "")»'),
+		            'text' => Text::_('«Slug.addLanguage(plugin.languages, newArrayList("plg", plugin.name, "QUICKICON", "CHECKING"), "")»'),
 		            'id' => 'plg_quickicon_«plugin.name»',
 		            'group' => 'MOD_QUICKICON_MAINTENANCE'
 		        )

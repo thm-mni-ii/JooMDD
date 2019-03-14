@@ -12,6 +12,4 @@ interface ExtendedPlugin extends Plugin {
 	def EList<ExtendedEntity> getExtendedEntities()
 	def EList<ExtendedParameter> getExtendedParameter()
 	def String extensionName()
-    def String addLanguage(ArrayList<String> keyArray, String value)
-    def String addLanguage(ArrayList<String> keyArray, StaticLanguageValue value)
 }

@@ -237,8 +237,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     <field
                         name="search"
                         type="text"
-                        label="«com.addLanguage(newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_LABEL)»"
-                        description="«com.addLanguage(newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_DESC)»"
+                        label="«Slug.addLanguage(com.languages, newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_LABEL)»"
+                        description="«Slug.addLanguage(com.languages, newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_DESC)»"
                         hint="JSEARCH_FILTER"
                     />
                     <field
@@ -262,12 +262,12 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     <field
                         name="«attr.name»"
                         type="«ipage.extendedEntityList.get(0).name.toLowerCase»"
-                        label="«com.addLanguage(newArrayList("com", com.name, "FILTER", attr.name, "LABEL"), attr.name)»"
-                        description="«com.addLanguage(newArrayList("com", com.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
+                        label="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+                        description="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
                         valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
                         textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
                         onchange="this.form.submit();">
-                        <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
+                        <option value="">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", "SELECT", attr.name), "Select a " + attr.name)»</option>
                     </field>
                     «ENDFOR»
                 </fields>

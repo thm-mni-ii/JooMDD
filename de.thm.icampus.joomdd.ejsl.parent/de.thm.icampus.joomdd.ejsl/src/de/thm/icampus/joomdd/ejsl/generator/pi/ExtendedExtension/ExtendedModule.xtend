@@ -10,6 +10,4 @@ interface ExtendedModule extends Module {
 	def ExtendedPageReference getExtendedPageReference()
 	def String getExtendedComponentName()
 	def String extensionName()
-    def String addLanguage(ArrayList<String> keyArray, String value)
-    def String addLanguage(ArrayList<String> keyArray, StaticLanguageValue value)	
 }

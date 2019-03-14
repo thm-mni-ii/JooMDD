@@ -18,6 +18,4 @@ interface ExtendedComponent extends Component {
 	def Component getInstance()
 	def String extensionName()
 	def boolean hasFileToload()
-	def String addLanguage(ArrayList<String> keyArray, String value)
-    def String addLanguage(ArrayList<String> keyArray, StaticLanguageValue value)
 }

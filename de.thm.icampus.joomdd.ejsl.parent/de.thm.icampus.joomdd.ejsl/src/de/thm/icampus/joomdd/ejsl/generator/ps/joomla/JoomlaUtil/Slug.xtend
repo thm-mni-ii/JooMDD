@@ -1067,8 +1067,8 @@ public class Slug  {
 				val String[] type_temp_array = type.split('''"'''.toString())
    		val String type_temp = type_temp_array.get(1)
    		
-   		var fieldLabel = component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, "LABEL"), param.name)
-   		var fieldDescription = component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, "DESC"), StaticLanguage.getCommonDescriptionFor(param.name))
+   		var fieldLabel = addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, "LABEL"), param.name)
+   		var fieldDescription = addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, "DESC"), StaticLanguage.getCommonDescriptionFor(param.name))
    		
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
@@ -1086,7 +1086,7 @@ public class Slug  {
    		            «ENDFOR»
    		            >
    		            «FOR KeyValuePair kv: param.values»
-   		            <option value="«kv.value»">«component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
+   		            <option value="«kv.value»">«addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
    		            «ENDFOR»
    		        </field> 
    		        '''
@@ -1130,7 +1130,7 @@ public class Slug  {
    		            «ENDFOR»
    		            >
    		            «FOR KeyValuePair kv: param.values»
-   		            <option value="«kv.value»">«component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
+   		            <option value="«kv.value»">«addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
    		            «ENDFOR»
    		        </field> 
    		        '''
@@ -1147,7 +1147,7 @@ public class Slug  {
 	   		            «ENDFOR»
 	   		            >
 	   		            «FOR KeyValuePair kv: param.values»
-	   		            <option value="«kv.value»">«component.addLanguage(newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
+	   		            <option value="«kv.value»">«addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
 	   		            «ENDFOR»
 	   		        </field> 
    		        '''
@@ -1255,7 +1255,7 @@ public class Slug  {
 	
 	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
 		<?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«com.addLanguage(newArrayList("com", com.name, Slug.getOtherEntityToMapping(reference).name), Slug.getOtherEntityToMapping(reference).name)»', true)); ?>
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«addLanguage(com.languages, newArrayList("com", com.name, Slug.getOtherEntityToMapping(reference).name), Slug.getOtherEntityToMapping(reference).name)»', true)); ?>
 		<div class="control-group">
 		    <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
 		    <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
@@ -1287,4 +1287,60 @@ public class Slug  {
 	    }
 	    root.delete
 	}
+	
+	/**
+     * You can use this function to add a static language variable.
+     * These are variables that have a constant value. 
+     */
+    def static String addLanguage(EList<Language> languages, ArrayList<String> keyArray, StaticLanguageValue staticLanguageValue) {
+        keyArray.add(staticLanguageValue.key)
+        return addLanguage(languages, keyArray, staticLanguageValue.value)
+    }
+    
+    /**
+     * You can add language key-value pairs using this function.
+     * The given key (array) will only be added if the key does not exist already.
+     * 
+     * @param ArrayList keyArray
+     * @param String    value
+     * @return String   Returns the to upper case representation of the given keyArray
+     */
+    def static String addLanguage(EList<Language> languages, ArrayList<String> keyArray, String value) {
+        val String upperCaseKey = keyArray.map[ k | 
+            Slug.slugify(k)
+        ].join("_").toUpperCase
+        var String tmpValue = value
+        
+        // Use the key as value when the value is empty.
+        if (value.trim.empty === true) {
+            tmpValue = upperCaseKey        
+        }
+        
+        // We need this (constant) variable for the loop below.
+        val String languageValue = tmpValue
+        
+        // Iterate over each language and add the key if it does not exist.
+        languages.forEach[ l | 
+            // Add the new key only if it does not exist already
+            var alreadyDefinedKey = l.keyvaluepairs.findFirst[ kv | 
+                kv.name.equalsIgnoreCase(upperCaseKey)
+            ]
+            if (alreadyDefinedKey === null)
+            {
+                // Create the new key-value pair and add it to the language
+                var keyValuePair  = EJSLFactory.eINSTANCE.createKeyValuePair
+                keyValuePair.name = upperCaseKey
+                keyValuePair.value = languageValue
+                l.keyvaluepairs.add(keyValuePair)
+            }
+            else
+            {
+                if (alreadyDefinedKey.value.equalsIgnoreCase(languageValue) === false) {
+                    println('''ExtendedComponentImpl: The given key «upperCaseKey» with the value «languageValue» is already defined with another value «alreadyDefinedKey.value»''')
+                }
+            }
+        ]
+        
+        return upperCaseKey
+    }   
 }

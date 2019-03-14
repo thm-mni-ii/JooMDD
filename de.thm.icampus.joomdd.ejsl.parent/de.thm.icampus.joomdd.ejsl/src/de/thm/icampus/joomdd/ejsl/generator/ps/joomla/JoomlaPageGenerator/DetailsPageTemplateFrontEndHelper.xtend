@@ -147,7 +147,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»', null);
 	
 	    // Redirect to the list screen.
-	    $this->setMessage(Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.ITEM_SAVED_SUCCESSFULLY)»'));
+	    $this->setMessage(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.ITEM_SAVED_SUCCESSFULLY)»'));
 	    $menu = Factory::getApplication()->getMenu();
 	    $item = $menu->getActive();
 	    $url = (empty($item->link) ? 'index.php?' : $item->link);
@@ -222,7 +222,7 @@ class DetailsPageTemplateFrontEndHelper {
 	            // Flush the data from the session.
 	            $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».data', null);
 
-	            $this->setMessage(Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.ITEM_DELETED_SUCCESSFULLY)»'));
+	            $this->setMessage(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.ITEM_DELETED_SUCCESSFULLY)»'));
 	        }
 
 	        // Redirect to the list screen.
@@ -517,7 +517,7 @@ class DetailsPageTemplateFrontEndHelper {
 	     if ($menu) {
 	         $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
 	     } else {
-	         $this->params->def('page_heading', Text::_('«com.addLanguage(newArrayList("com", com.name, dpage.name, "DEFAULT", "PAGE", "TITLE"), dpage.name)»'));
+	         $this->params->def('page_heading', Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, dpage.name, "DEFAULT", "PAGE", "TITLE"), dpage.name)»'));
 	     }
 	     $title = $this->params->get('page_title', '');
 	     if (empty($title)) {
@@ -553,7 +553,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    </div>
 	    <div class="form-horizontal">
 	        <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
-	        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('«com.addLanguage(newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)); ?>
+	        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)); ?>
 	        <div class="row-fluid">
 	            <div class="span10 form-horizontal">
 	                <fieldset class="adminform">
@@ -599,7 +599,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    <div class="item_fields">
 	        <table class="table">
 	            <tr>
-	                <th><?php echo Text::_('«com.addLanguage(newArrayList("com", com.name, "FORM", "LBL", "NONE"), StaticLanguage.STATE)»'); ?></th>
+	                <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", "NONE"), StaticLanguage.STATE)»'); ?></th>
 	                <td>
 	                    <i class="icon-<?php echo ($this->item->state == 1) ? 'publish' : 'unpublish'; ?>"></i>
 	                </td>
@@ -624,7 +624,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    <?php endif; ?>
 	<?php 
 	else:
-	    echo Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.ITEM_NOT_LOADED)»');
+	    echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.ITEM_NOT_LOADED)»');
 	endif;
 	?>
 	'''
@@ -634,7 +634,7 @@ class DetailsPageTemplateFrontEndHelper {
 		case "image": {
 		'''
 		<tr>
-		    <th><?php echo Text::_('«com.addLanguage(newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
+		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
 		    <td>
 		        <img id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'src='<?php echo $image_path . '/'. $this->item->«attr.name.toLowerCase»; ?>' />
 		    </td>
@@ -643,7 +643,7 @@ class DetailsPageTemplateFrontEndHelper {
 		case "file": {
 		'''
 		<tr>
-		    <th><?php echo Text::_('«com.addLanguage(newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
+		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
 		    <td>
 		        <a id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>' href="<?php echo $file_path . '/'. $this->item->«attr.name.toLowerCase»; ?>">
 		            <img src='<?php echo $iconpath . '/'. explode('.',$this->item->«attr.name.toLowerCase»)[0]; ?>' />'<?php  echo $this->item->«attr.name.toLowerCase»; ?>'
@@ -654,7 +654,7 @@ class DetailsPageTemplateFrontEndHelper {
 		case "link": {
 		'''
 		<tr>
-		    <th><?php echo Text::_('«com.addLanguage(newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?></th>
+		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?></th>
 		    <td>
 		        <a href="<?php echo $this->item->«attr.name.toLowerCase»; ?>">
 		            <?php echo $this->item->«attr.name.toLowerCase»; ?>
@@ -666,7 +666,7 @@ class DetailsPageTemplateFrontEndHelper {
 		'''
 		<tr>
 		    <th>
-		        <?php echo Text::_('«com.addLanguage(newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?>
+		        <?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?>
 		    </th>
 		    <td>
 		        <?php echo $this->item->«attr.name.toLowerCase»; ?>

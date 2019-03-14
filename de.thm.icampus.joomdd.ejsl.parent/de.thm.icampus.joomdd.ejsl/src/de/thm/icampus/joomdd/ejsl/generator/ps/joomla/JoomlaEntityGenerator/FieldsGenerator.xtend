@@ -129,12 +129,12 @@ class FieldsGenerator {
 		    $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
 		    $input = Factory::getApplication()->input;
 		    
-		     $this->primary_key = $this->getAttribute("primary_key_name");
-		     $id = intval($input->get($this->primary_key));
+		    $this->primary_key = $this->getAttribute("primary_key_name");
+		    $id = intval($input->get($this->primary_key));
 		    if (empty($id)) {
 		        $alldata = $this->getAllData();
 		        $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' >";
-		        $html[] = "<option>". Text::_("JOPTION_SELECT_" . strtoupper($this->fieldname)). "</option>";
+		        $html[] = "<option>". Text::_(JSELECT). "</option>";
 		        foreach ($alldata as $data) {
 		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 		            . $this->generateStringValue($data) ."</option>";

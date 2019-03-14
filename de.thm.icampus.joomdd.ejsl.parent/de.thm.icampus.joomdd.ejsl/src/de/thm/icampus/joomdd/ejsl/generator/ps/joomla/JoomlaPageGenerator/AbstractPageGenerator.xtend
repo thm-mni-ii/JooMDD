@@ -75,8 +75,8 @@ abstract public class AbstractPageGenerator {
     def CharSequence xmlSiteTemplateContent(String pagename, ExtendedStaticPage page, ExtendedComponent component) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<metadata>
-		    <layout title="«component.addLanguage(newArrayList("com", component.name, "VIEW", pagename, "TITLE"), pagename)»" option="View">
-		        <message><![CDATA[«component.addLanguage(newArrayList("com", component.name, "VIEW", pagename, "DESC"), StaticLanguage.getCommonDescriptionFor(pagename))»]]></message>
+		    <layout title="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "VIEW", pagename, "TITLE"), pagename)»" option="View">
+		        <message><![CDATA[«Slug.addLanguage(component.languages, newArrayList("com", component.name, "VIEW", pagename, "DESC"), StaticLanguage.getCommonDescriptionFor(pagename))»]]></message>
 		    </layout>
 		    <fields
 		        name="request"
@@ -86,7 +86,7 @@ abstract public class AbstractPageGenerator {
 		        «generateParameter(page.extendedGlobalParamater, component)»
 		        «generateParameter(page.extendedLocalParameter, component)»
 		        «FOR ExtendedParameterGroup e : page.extendedParameterGroup »
-		        <fieldset name="«e.name.toLowerCase»"  label="«component.addLanguage(newArrayList("com", component.name, "FIELDSET", page.name, e.name, "LABEL"), e.name)»" 
+		        <fieldset name="«e.name.toLowerCase»"  label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name, "LABEL"), e.name)»" 
 		            «generateParameter(e.extendedParameterList, component)»
 		            «generateParameter(e.extendedParameterList,component)»
 		        </fieldset>

@@ -155,7 +155,7 @@ class DetailsPageTemplateBackendHelper {
 		    }
 		    $canDo = «com.name.toFirstUpper»Helper::getActions();
 
-		    JToolBarHelper::title(Text::_('«com.addLanguage(newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
+		    JToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
 
 		    // If not checked out, allow to save the item.
 		    if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
@@ -204,7 +204,7 @@ class DetailsPageTemplateBackendHelper {
 		    <div class="form-horizontal">
 		        <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
-		        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('«com.addLanguage(newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)); ?>
+		        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)); ?>
 		        <div class="row-fluid">
 		            <div class="span10 form-horizontal">
 		                <fieldset class="adminform">

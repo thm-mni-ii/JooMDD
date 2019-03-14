@@ -145,41 +145,41 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		            <fieldset name="basic">
 		                «IF dynpage !== null»
 		                <field name="ordering" type="list"
-		                    label="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.ORDERING_LABEL)»"
-		                    description="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.ORDERING_DESC)»"
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.ORDERING_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.ORDERING_DESC)»"
 		                    class="inputbox"
 		                    default="«dynpage.extendFiltersList.get(0).name.toLowerCase»">
 		                    «FOR ExtendedAttribute attr: dynpage.extendFiltersList»
-		                    <option value="«attr.name.toLowerCase»">«module.addLanguage(newArrayList("mod", module.name, "FORM", "LBL", attr.name), attr.name)»</option>
+		                    <option value="«attr.name.toLowerCase»">«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FORM", "LBL", attr.name), attr.name)»</option>
 		                    «ENDFOR»
 		                </field>
 		                «ENDIF»
 		                <field name="direction" type="list"
-		                    label="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.DIRECTION)»"
-		                    description="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.DIRECTION_DESC)»"
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_DESC)»"
 		                    class="inputbox"
 		                    size="1"
 		                    default="ASC">
-		                    <option value="ASC">«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.DIRECTION_ASC)»</option>
-		                    <option value="DESC">«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.DIRECTION_DESCENDING)»</option>
+		                    <option value="ASC">«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_ASC)»</option>
+		                    <option value="DESC">«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_DESCENDING)»</option>
 		                </field>
 		                <field
 		                    name="start"
 		                    type="int"
 		                    default="0"
-		                    label="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.START_LABEL)»"
-		                    description="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.START_DESC)»" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.START_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.START_DESC)»" />
 		                <field
 		                    name="limit"
 		                    type="int"
 		                    default="10"
-		                    label="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.LIMIT_LABEL)»"
-		                    description="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.LIMIT_DESC)»" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.LIMIT_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.LIMIT_DESC)»" />
 		                <field
 		                    name="search"
 		                    type="text"
-		                    label="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.SEARCH_LABEL)»"
-		                    description="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.SEARCH_DESC)»" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.SEARCH_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.SEARCH_DESC)»" />
 		                <field name="state" type="list"
 		                    label="JSTATUS"
 		                    description="JFIELD_PUBLISHED_DESC"
@@ -209,11 +209,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
 		                    name="«attr.name»"
 		                    type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
-		                    label="«module.addLanguage(newArrayList("mod", module.name, "FILTER", attr.name, "LABEL"), attr.name)»"
-		                    description="«module.addLanguage(newArrayList("mod", module.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
 		                    valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
 		                    textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
-		                    <option value="">«module.addLanguage(newArrayList("mod", module.name, "JOPTION", "SELECT", attr.name), attr.name)»</option>
+		                    <option value="">«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "JOPTION", "SELECT", attr.name), attr.name)»</option>
 		                </field>
 		                «ENDIF»
 		                «ENDFOR»

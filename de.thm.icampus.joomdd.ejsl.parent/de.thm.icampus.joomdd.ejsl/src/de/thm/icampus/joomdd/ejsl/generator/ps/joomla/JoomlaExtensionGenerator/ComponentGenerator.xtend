@@ -230,12 +230,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     def backendManifest(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) '''
     <administration>
         <!-- Administration Menu Section -->
-        <menu>«component.addLanguage(newArrayList("com", component.name), component.name)»</menu>
+        <menu>«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»</menu>
         <submenu>
             «FOR page : dymPages.filter[t | !t.detailsPage]»
-            <menu link="option=«component.addLanguage(newArrayList("com", component.name), component.name)»&amp;view=«page.name.toLowerCase»" 
-                alias="«component.addLanguage(newArrayList("com", component.name, "ALIAS", page.name), page.name)»"
-                view="«page.name.toLowerCase»">«component.addLanguage(newArrayList("com", component.name, "TITLE", page.name), page.name)»</menu>
+            <menu link="option=«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»&amp;view=«page.name.toLowerCase»" 
+                alias="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "ALIAS", page.name), page.name)»"
+                view="«page.name.toLowerCase»">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "TITLE", page.name), page.name)»</menu>
             «ENDFOR»
         </submenu>
         <!-- Administration Main File Copy Section -->
@@ -532,7 +532,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateUses(newArrayList("Text"))»
 		?>
-		<p class="text-center"> <h1><?php echo "Welcome to ". Text::_('«component.addLanguage(newArrayList("com", component.name), component.name)»') . " ". Text::_('«component.addLanguage(newArrayList("com", component.name), StaticLanguage.HOME)»'); ?> </h1>
+		<p class="text-center"> <h1><?php echo "Welcome to ". Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»') . " ". Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), StaticLanguage.HOME)»'); ?> </h1>
 		    <h4>«component.manifest.description»</h4>
 		</p> 
 		<div id="cpanel" class='cpanel'>
@@ -609,7 +609,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    private function addToolBar()
 		    {
-		        JToolBarHelper::title(Text::_('«component.addLanguage(newArrayList("com", component.name), component.name)»') . ': ' . Text::_('«component.addLanguage(newArrayList("com", component.name), StaticLanguage.HOME)»'), 'logo');
+		        JToolBarHelper::title(Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»') . ': ' . Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), StaticLanguage.HOME)»'), 'logo');
 		        JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
 		    }
 		
@@ -623,7 +623,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        $views = array();
 		        «FOR ExtendedPageReference pg : component.backEndExtendedPagerefence.filter[t | t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage ]»
 		        $views['«pg.extendedPage.name.toLowerCase»'] = array();
-		        $views['«pg.extendedPage.name.toLowerCase»']['title'] = Text::_('«component.addLanguage(newArrayList("com", component.name, "TITLE", pg.extendedPage.name), pg.extendedPage.name)»');
+		        $views['«pg.extendedPage.name.toLowerCase»']['title'] = Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name, "TITLE", pg.extendedPage.name), pg.extendedPage.name)»');
 		        $views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»";
 		    «ENDFOR»
 		    $this->views = $views;
@@ -709,7 +709,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     «ENDIF»
 		    </fieldset>
 		    «FOR g : component.extendedParameterGroupList»
-		    <fieldset name="«g.name.toLowerCase»" label="«component.addLanguage(newArrayList("com", component.name, g.name, "LABEL"), g.name)»" description="«component.addLanguage(newArrayList("com", component.name, g.name, "DESC"), StaticLanguage.getCommonDescriptionFor(g.name))»">
+		    <fieldset name="«g.name.toLowerCase»" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, g.name, "LABEL"), g.name)»" description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, g.name, "DESC"), StaticLanguage.getCommonDescriptionFor(g.name))»">
 		        «FOR p:g.extendedParameterList»
 		        «Slug.writeParameter(p,component)»
 		        «ENDFOR»
