@@ -199,7 +199,7 @@ class IndexPageTemplateSiteHelper {
 	    «IF details !== null»
 	    <?php if ($canCreate): ?>
 	    <a href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>" class="btn btn-success btn-small">
-	        <iclass="icon-plus"></i> <?php echo Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.ADD_ITEM)»'); ?>
+	        <iclass="icon-plus"></i> <?php echo Text::_('JGLOBAL_FIELD_ADD'); ?>
 	    </a>
 	    <?php endif; ?>
 	    «ENDIF»

@@ -244,16 +244,16 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     <field
                         name="state"
                         type="status"
-                        label="«com.addLanguage(newArrayList("com", com.name), StaticLanguage.FILTER_PUBLISHED_LABEL)»"
-                        description="«com.addLanguage(newArrayList("com", com.name), StaticLanguage.FILTER_PUBLISHED_DESC)»"
+                        label="JOPTION_SELECT_PUBLISHED"
+                        description="JOPTION_SELECT_PUBLISHED_DESC"
                         onchange="this.form.submit();">
                         <option value="">JOPTION_SELECT_PUBLISHED</option>
                     </field>
                     <field
                         name="created_by"
                         type="«com.name.toLowerCase»user"
-                        label="«com.addLanguage(newArrayList("com", com.name), StaticLanguage.FILTER_CREATED_BY_LABEL)»"
-                        description="«com.addLanguage(newArrayList("com", com.name), StaticLanguage.FILTER_CREATED_BY_DESC)»"
+                        label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+                        description="JGLOBAL_FIELD_CREATED_BY_DESC"
                         entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
                         onchange="this.form.submit();">
                         <option value="">JOPTION_SELECT_CREATED_BY</option>

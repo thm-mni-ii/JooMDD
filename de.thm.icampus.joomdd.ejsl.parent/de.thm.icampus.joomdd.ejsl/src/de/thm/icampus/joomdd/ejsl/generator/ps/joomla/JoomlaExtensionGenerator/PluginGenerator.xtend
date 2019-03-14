@@ -597,7 +597,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 	
 	def CharSequence quickiconsEvents(ExtendedPlugin plugin)'''
 		/**
-		 * Load the language file on instantiation.
+		 * Loads the language file on instantiation.
 		 *
 		 * @var    boolean
 		 * @since  3.1
@@ -625,7 +625,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		            'link' => '',
 		            'image' => '',
 		            'icon' => '',
-		            'text' => Text::_('«plugin.addLanguage(newArrayList("plg", "QUICKICON", plugin.name, "CHECKING"), "")»'),
+		            'text' => Text::_('«plugin.addLanguage(newArrayList("plg", plugin.name, "QUICKICON", "CHECKING"), "")»'),
 		            'id' => 'plg_quickicon_«plugin.name»',
 		            'group' => 'MOD_QUICKICON_MAINTENANCE'
 		        )

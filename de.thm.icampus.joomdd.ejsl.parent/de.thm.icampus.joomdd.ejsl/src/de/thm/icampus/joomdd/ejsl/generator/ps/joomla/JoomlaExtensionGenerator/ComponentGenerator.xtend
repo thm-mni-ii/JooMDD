@@ -681,30 +681,30 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            type="text"
 		            size="50"
 		            default="10"
-		            label="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FIELD_MAXIMUM_SIZE_LABEL)»"
-		            description="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FIELD_MAXIMUM_SIZE_DESC)»" />
+		            label="JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT"
+		            description="JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT" />
 		        <field
 		            name="accept_format"
 		            type="text"
 		            size="50"
 		            default="bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
-		            label="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FIELD_ACCEPT_FORMAT_LABEL)»"
-		            description="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FIELD_ACCEPT_FORMAT_DESC)»" />
+		            label="COM_MEDIA_FIELD_LEGAL_EXTENSIONS_LABEL"
+		            description="COM_MEDIA_FIELD_LEGAL_EXTENSIONS_DESC" />
 		        «FOR detailsPage : dynPages.filter[t | t.isDetailsPage && t.haveFiletoLoad]»
 		        <field
 		            name="«detailsPage.name.toLowerCase»_file_path"
 		            type="text"
 		            size="50"
 		            default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/files"
-		            label="«component.addLanguage(newArrayList("com", component.name, detailsPage.name), StaticLanguage.PATH_FILE_FOLDER_LABEL)»"
-		            description="«component.addLanguage(newArrayList("com", component.name, detailsPage.name), StaticLanguage.PATH_FILE_FOLDER_DESC)»" />
+		            label="COM_MEDIA_FIELD_PATH_FILE_FOLDER_LABEL"
+		            description="COM_MEDIA_FIELD_PATH_FILE_FOLDER_DESC" />
 		        <field
 		            name="«detailsPage.name.toLowerCase»_image_path"
 		            type="text"
 		            size="50"
 		            default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/images"
-		            label="«component.addLanguage(newArrayList("com", component.name, detailsPage.name), StaticLanguage.PATH_IMAGE_FOLDER_LABEL)»"
-		            description="«component.addLanguage(newArrayList("com", component.name, detailsPage.name), StaticLanguage.PATH_IMAGE_FOLDER_DESC)»" />
+		            label="COM_MEDIA_FIELD_PATH_IMAGE_FOLDER_LABEL"
+		            description="COM_MEDIA_FIELD_PATH_IMAGE_FOLDER_DESC" />
 		         «ENDFOR»
 		     «ENDIF»
 		    </fieldset>

@@ -87,7 +87,7 @@ class DetailsPageTemplateBackendHelper {
 		    if (isset($files)) {
 		        foreach ($files as $file) {
 		            if (!isset($file['name'])) {
-		                $this->setMessage(Text::_('«com.addLanguage(newArrayList("com", com.name, "INVALID", "FILE", "NAME"), "")»'), 'error');
+		                $this->setMessage(Text::_('COM_TEMPLATES_INVALID_FILE_NAME'), 'error');
 		                $this->setRedirect(
 		                   Route::_(
 		                   'index.php?option=' . $this->option . '&view=' . $this->view_item
@@ -108,7 +108,7 @@ class DetailsPageTemplateBackendHelper {
 		                || ($uploadMaxFileSize > 0 && $file['size'] > $uploadMaxFileSize))
 		            {
 		                // File size exceed either 'upload_max_filesize' or 'upload_maxsize'.
-		                $this->setMessage(Text::_('«com.addLanguage(newArrayList("com", com.name, "ERROR", "WARNFILETOOLARGE"), "")»'), 'error');
+		                $this->setMessage(Text::_('COM_MEDIA_ERROR_WARNFILETOOLARGE'), 'error');
 		                $this->setRedirect(
 		                    Route::_(
 		                        'index.php?option=' . $this->option . '&view=' . $this->view_item

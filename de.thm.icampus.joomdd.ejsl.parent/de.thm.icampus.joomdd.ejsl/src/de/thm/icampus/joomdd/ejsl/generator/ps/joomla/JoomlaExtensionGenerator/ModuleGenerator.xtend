@@ -198,8 +198,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    name="created_by"
 		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com", com).toLowerCase»/models/fields"
 		                    type="«module.name.toLowerCase»user"
-		                    label="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.FILTER_CREATED_BY_LABEL)»"
-		                    description="«module.addLanguage(newArrayList("mod", module.name), StaticLanguage.FILTER_CREATED_BY_DESC)»"
+		                    label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+		                    description="JGLOBAL_FIELD_CREATED_BY_DESC"
 		                    entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»">
 		                    <option value="">JOPTION_SELECT_CREATED_BY</option>
 		                </field>

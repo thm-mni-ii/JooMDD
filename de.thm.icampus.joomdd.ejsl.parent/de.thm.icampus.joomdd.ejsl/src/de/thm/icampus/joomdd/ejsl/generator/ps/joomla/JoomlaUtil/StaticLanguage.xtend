@@ -13,18 +13,6 @@ class StaticLanguage {
     static StaticLanguageValue STATE_DESC = new StaticLanguageValue("STATE_DESC", "State Description")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue CREATED_BY_LABEL = new StaticLanguageValue("CREATED_BY_LABEL", "Created by")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue CREATED_BY_DESC = new StaticLanguageValue("CREATED_BY_DESC", "")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue UPDATE_TEXT = new StaticLanguageValue("UPDATE_TEXT", "The update is succesfull.")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ID = new StaticLanguageValue("ID", "ID")
-    
-    @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue CHECKED_OUT = new StaticLanguageValue("CHECKED_OUT", "Checked out")
     
     @Accessors(PUBLIC_GETTER)
@@ -35,18 +23,6 @@ class StaticLanguage {
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue ORDERING_DESC = new StaticLanguageValue("ORDERING_DESC", "Ordering description")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue JSTATUS = new StaticLanguageValue("JSTATUS", "state")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue EDIT_ITEM = new StaticLanguageValue("EDIT_ITEM", "Edit")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue DELETE_ITEM = new StaticLanguageValue("DELETE_ITEM", "Delete")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ADD_ITEM = new StaticLanguageValue("ADD_ITEM", "Add")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue ITEM_SAVED_SUCCESSFULLY = new StaticLanguageValue("ITEM_SAVED_SUCCESSFULLY", "The data are successfully saved.")
@@ -61,22 +37,19 @@ class StaticLanguage {
     static StaticLanguageValue ITEMS_PUBLISHED = new StaticLanguageValue("ITEMS_PUBLISHED", "The data are successfully published.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue TEMPLATE_LAYOUT = new StaticLanguageValue("TEMPLATE_LAYOUT", "Template Layout")
-    
-    @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue TEMPLATE_LAYOUT_DESC = new StaticLanguageValue("TEMPLATE_LAYOUT_DESC", "Choice a layout for the Indexpage.")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue DIRECTION = new StaticLanguageValue("DIRECTION", "Direction")
     
     @Accessors(PUBLIC_GETTER)
+    static StaticLanguageValue DIRECTION_DESC = new StaticLanguageValue("DIRECTION_DESC", "Direction")
+    
+    @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue DIRECTION_ASC = new StaticLanguageValue("DIRECTION_ASC", "ASC")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue DIRECTION_DESCENDING = new StaticLanguageValue("DIRECTION_DESCENDING", "DESC")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue DIRECTION_DESC = new StaticLanguageValue("DIRECTION_DESC", "Direction")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue START_LABEL = new StaticLanguageValue("START_LABEL", "Start")
@@ -97,16 +70,7 @@ class StaticLanguage {
     static StaticLanguageValue SEARCH_DESC = new StaticLanguageValue("SEARCH_DESC", "Search data")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue FILTER_CREATED_BY_LABEL = new StaticLanguageValue("FILTER_CREATED_BY_LABEL", "Created by")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue FILTER_CREATED_BY_DESC = new StaticLanguageValue("FILTER_CREATED_BY_DESC", "Created by")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue FILTER_PUBLISHED_LABEL = new StaticLanguageValue("FILTER_PUBLISHED_LABEL", "")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue FILTER_PUBLISHED_DESC = new StaticLanguageValue("FILTER_PUBLISHED_DESC", "")
+    static StaticLanguageValue TEMPLATE_LAYOUT = new StaticLanguageValue("TEMPLATE_LAYOUT", "Template Layout")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue LAYOUT_LIST = new StaticLanguageValue("LAYOUT_LIST", "List Layout")
@@ -124,43 +88,22 @@ class StaticLanguage {
     static StaticLanguageValue PARAMS_GLOBAL_LABEL = new StaticLanguageValue("PARAMS_GLOBAL_LABEL", "Global Parameter")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue EDIT_PARAMS_LOCAL_LABEL = new StaticLanguageValue("EDIT_PARAMS_LOCAL_LABEL", "Local Parameter")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue EDIT_PARAMS_GLOBAL_LABEL = new StaticLanguageValue("EDIT_PARAMS_GLOBAL_LABEL", "Global Parameter")
-    
-    @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue FILTER_LABEL = new StaticLanguageValue("FILTER_LABEL", "Filter")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue ACTIONS = new StaticLanguageValue("ACTIONS", "Actions")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEM_NOT_LOADED = new StaticLanguageValue("ITEM_NOT_LOADED", "")
+    static StaticLanguageValue ITEM_NOT_LOADED = new StaticLanguageValue("ITEM_NOT_LOADED", "Items could not be loaded.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue FIELD_MAXIMUM_SIZE_LABEL = new StaticLanguageValue("FIELD_MAXIMUM_SIZE_LABEL", "")
+    static StaticLanguageValue UPDATE_TEXT = new StaticLanguageValue("UPDATE_TEXT", "Successfully updated.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue FIELD_MAXIMUM_SIZE_DESC = new StaticLanguageValue("FIELD_MAXIMUM_SIZE_DESC", "")
+    static StaticLanguageValue UNINSTALL_TEXT = new StaticLanguageValue("UNINSTALL_TEXT", "Successfully uninstalled.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue FIELD_ACCEPT_FORMAT_LABEL = new StaticLanguageValue("FIELD_ACCEPT_FORMAT_LABEL", "")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue FIELD_ACCEPT_FORMAT_DESC = new StaticLanguageValue("FIELD_ACCEPT_FORMAT_DESC", "")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue PATH_FILE_FOLDER_LABEL = new StaticLanguageValue("PATH_FILE_FOLDER_LABEL", "")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue PATH_FILE_FOLDER_DESC = new StaticLanguageValue("PATH_FILE_FOLDER_DESC", "")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue PATH_IMAGE_FOLDER_LABEL = new StaticLanguageValue("PATH_FILE_FOLDER_LABEL", "")
-    
-    @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue PATH_IMAGE_FOLDER_DESC = new StaticLanguageValue("PATH_FILE_FOLDER_DESC", "")
+    static StaticLanguageValue INSTALL_TEXT = new StaticLanguageValue("INSTALL_TEXT", "Successfully installed.")
     
     def static String getCommonDescriptionFor(String attribute) {
         return '''Description for «attribute»'''

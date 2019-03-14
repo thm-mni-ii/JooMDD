@@ -147,7 +147,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»', null);
 	
 	    // Redirect to the list screen.
-	    $this->setMessage(Text::_('«com.addLanguage(newArrayList("com", com.name, "ITEM", "SAVED", "SUCCESSFULLY"), "")»'));
+	    $this->setMessage(Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.ITEM_SAVED_SUCCESSFULLY)»'));
 	    $menu = Factory::getApplication()->getMenu();
 	    $item = $menu->getActive();
 	    $url = (empty($item->link) ? 'index.php?' : $item->link);
@@ -222,7 +222,7 @@ class DetailsPageTemplateFrontEndHelper {
 	            // Flush the data from the session.
 	            $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».data', null);
 
-	            $this->setMessage(Text::_('«com.addLanguage(newArrayList("com", com.name, "ITEM", "DELETED", "SUCCESSFULLY"), "")»'));
+	            $this->setMessage(Text::_('«com.addLanguage(newArrayList("com", com.name), StaticLanguage.ITEM_DELETED_SUCCESSFULLY)»'));
 	        }
 
 	        // Redirect to the list screen.
@@ -605,7 +605,7 @@ class DetailsPageTemplateFrontEndHelper {
 	                </td>
 	            </tr>
 	            <tr>
-	                <th><?php echo Text::_('«com.addLanguage(newArrayList("com", com.name, "FORM", "LBL", "NONE"), StaticLanguage.CREATED_BY_LABEL)»'); ?></th>
+	                <th><?php echo Text::_('JGLOBAL_FIELD_CREATED_BY_LABEL'); ?></th>
 	                <td><?php echo Factory::getUser($this->item->created_by)->name; ?></td>
 	            </tr>
 	            «FOR ExtendedAttribute a: dpage.extendedTableColumnList.filter[t | !t.isprimary]»
@@ -616,11 +616,11 @@ class DetailsPageTemplateFrontEndHelper {
 	
 	    <?php if($canEdit && $this->item->checked_out == 0): ?>
 	    <a class="btn btn-primary" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«editPageName.toLowerCase»&«mainEntity.primaryKey.name»='.$this->item->«mainEntity.primaryKey.name»); ?>">
-	    <?php echo Text::_("«com.addLanguage(newArrayList("com", com.name), StaticLanguage.EDIT_ITEM)»"); ?></a>
+	    <?php echo Text::_("JACTION_EDIT"); ?></a>
 	    <?php endif; ?>
 	    <?php if(Factory::getUser()->authorise('core.delete','«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$this->item->«mainEntity.primaryKey.name»)):?>
 	    <a class="btn btn-danger" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».remove&«mainEntity.primaryKey.name»=' . $this->item->«mainEntity.primaryKey.name»); ?>">
-	    <?php echo Text::_("«com.addLanguage(newArrayList("com", com.name), StaticLanguage.DELETE_ITEM)»"); ?></a>
+	    <?php echo Text::_("JACTION_DELETE"); ?></a>
 	    <?php endif; ?>
 	<?php 
 	else:

@@ -157,8 +157,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
             name="created_by"
             addfieldpath="components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
             type="«component.name.toLowerCase»user"
-            label="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FILTER_CREATED_BY_LABEL)»"
-            description="«component.addLanguage(newArrayList("com", component.name), StaticLanguage.FILTER_CREATED_BY_DESC)»"
+            label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+            description="JGLOBAL_FIELD_CREATED_BY_DESC"
             entity = "«page.extendedEntityList.get(0).name.toLowerCase»">
             <option value="">JSELECT</option>
         </field>
@@ -201,8 +201,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	        readonly="true" class="readonly"
 	        description="JGLOBAL_FIELD_ID_DESC" /> 
 	    <field name="created_by" type="hidden" default="" 
-	        label="«component.addLanguage(newArrayList("com", component.name, "FORM", "LBL", "NONE"), StaticLanguage.CREATED_BY_LABEL)»"
-	        description="«component.addLanguage(newArrayList("com", component.name, "FORM", "LBL", "NONE"), StaticLanguage.CREATED_BY_DESC)»"  /> 
+	        label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+	        description="JGLOBAL_FIELD_CREATED_BY_DESC"  /> 
 	    «FOR ExtendedEntity e : page.extendedEntityList»
 	    «FOR ExtendedAttribute attr : e.ownExtendedAttributes.filter[t | !t.isIsprimary]»
 	    «writeAttribute(e,attr,component,page)»
