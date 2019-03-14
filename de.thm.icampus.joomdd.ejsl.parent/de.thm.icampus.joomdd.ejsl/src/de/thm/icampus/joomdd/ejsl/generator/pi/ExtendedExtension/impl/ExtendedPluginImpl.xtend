@@ -10,6 +10,10 @@ import org.eclipse.emf.common.util.BasicEList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedEntityImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import java.util.ArrayList
+import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
 class ExtendedPluginImpl extends PluginImpl implements ExtendedPlugin {
 	
@@ -44,6 +48,5 @@ class ExtendedPluginImpl extends PluginImpl implements ExtendedPlugin {
 	
 	override extensionName() {
 		return extensionName
-	}
-	
+	}	
 }

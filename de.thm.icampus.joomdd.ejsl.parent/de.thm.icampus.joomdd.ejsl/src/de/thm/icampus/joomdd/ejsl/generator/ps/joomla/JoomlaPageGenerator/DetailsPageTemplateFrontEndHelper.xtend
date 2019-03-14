@@ -7,6 +7,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary code for frontend views.
@@ -146,7 +147,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»', null);
 	
 	    // Redirect to the list screen.
-	    $this->setMessage(Text::_('COM_«com.name.toUpperCase»_ITEM_SAVED_SUCCESSFULLY'));
+	    $this->setMessage(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.ITEM_SAVED_SUCCESSFULLY)»'));
 	    $menu = Factory::getApplication()->getMenu();
 	    $item = $menu->getActive();
 	    $url = (empty($item->link) ? 'index.php?' : $item->link);
@@ -221,7 +222,7 @@ class DetailsPageTemplateFrontEndHelper {
 	            // Flush the data from the session.
 	            $app->setUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».data', null);
 
-	            $this->setMessage(Text::_('COM_«com.name.toUpperCase»_ITEM_DELETED_SUCCESSFULLY'));
+	            $this->setMessage(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.ITEM_DELETED_SUCCESSFULLY)»'));
 	        }
 
 	        // Redirect to the list screen.
@@ -516,7 +517,7 @@ class DetailsPageTemplateFrontEndHelper {
 	     if ($menu) {
 	         $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
 	     } else {
-	         $this->params->def('page_heading', Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
+	         $this->params->def('page_heading', Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, dpage.name, "DEFAULT", "PAGE", "TITLE"), dpage.name)»'));
 	     }
 	     $title = $this->params->get('page_title', '');
 	     if (empty($title)) {
@@ -552,7 +553,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    </div>
 	    <div class="form-horizontal">
 	        <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
-	        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('COM_«com.name.toUpperCase»_TITLE_«dpage.name.toUpperCase»', true)); ?>
+	        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)); ?>
 	        <div class="row-fluid">
 	            <div class="span10 form-horizontal">
 	                <fieldset class="adminform">
@@ -598,13 +599,13 @@ class DetailsPageTemplateFrontEndHelper {
 	    <div class="item_fields">
 	        <table class="table">
 	            <tr>
-	                <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_STATE'); ?></th>
+	                <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", "NONE"), StaticLanguage.STATE)»'); ?></th>
 	                <td>
 	                    <i class="icon-<?php echo ($this->item->state == 1) ? 'publish' : 'unpublish'; ?>"></i>
 	                </td>
 	            </tr>
 	            <tr>
-	                <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY'); ?></th>
+	                <th><?php echo Text::_('JGLOBAL_FIELD_CREATED_BY_LABEL'); ?></th>
 	                <td><?php echo Factory::getUser($this->item->created_by)->name; ?></td>
 	            </tr>
 	            «FOR ExtendedAttribute a: dpage.extendedTableColumnList.filter[t | !t.isprimary]»
@@ -615,15 +616,15 @@ class DetailsPageTemplateFrontEndHelper {
 	
 	    <?php if($canEdit && $this->item->checked_out == 0): ?>
 	    <a class="btn btn-primary" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«editPageName.toLowerCase»&«mainEntity.primaryKey.name»='.$this->item->«mainEntity.primaryKey.name»); ?>">
-	    <?php echo Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_EDIT_ITEM"); ?></a>
+	    <?php echo Text::_("JACTION_EDIT"); ?></a>
 	    <?php endif; ?>
 	    <?php if(Factory::getUser()->authorise('core.delete','«Slug.nameExtensionBind("com", com.name).toLowerCase».«dpage.name.toLowerCase».'.$this->item->«mainEntity.primaryKey.name»)):?>
 	    <a class="btn btn-danger" href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«editPageName.toLowerCase».remove&«mainEntity.primaryKey.name»=' . $this->item->«mainEntity.primaryKey.name»); ?>">
-	    <?php echo Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_ITEM"); ?></a>
+	    <?php echo Text::_("JACTION_DELETE"); ?></a>
 	    <?php endif; ?>
 	<?php 
 	else:
-	    echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_ITEM_NOT_LOADED');
+	    echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.ITEM_NOT_LOADED)»');
 	endif;
 	?>
 	'''
@@ -633,7 +634,7 @@ class DetailsPageTemplateFrontEndHelper {
 		case "image": {
 		'''
 		<tr>
-		    <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
 		    <td>
 		        <img id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'src='<?php echo $image_path . '/'. $this->item->«attr.name.toLowerCase»; ?>' />
 		    </td>
@@ -642,7 +643,7 @@ class DetailsPageTemplateFrontEndHelper {
 		case "file": {
 		'''
 		<tr>
-		    <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
 		    <td>
 		        <a id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>' href="<?php echo $file_path . '/'. $this->item->«attr.name.toLowerCase»; ?>">
 		            <img src='<?php echo $iconpath . '/'. explode('.',$this->item->«attr.name.toLowerCase»)[0]; ?>' />'<?php  echo $this->item->«attr.name.toLowerCase»; ?>'
@@ -653,7 +654,7 @@ class DetailsPageTemplateFrontEndHelper {
 		case "link": {
 		'''
 		<tr>
-		    <th><?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?></th>
+		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?></th>
 		    <td>
 		        <a href="<?php echo $this->item->«attr.name.toLowerCase»; ?>">
 		            <?php echo $this->item->«attr.name.toLowerCase»; ?>
@@ -665,7 +666,7 @@ class DetailsPageTemplateFrontEndHelper {
 		'''
 		<tr>
 		    <th>
-		        <?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«attr.name.toUpperCase»'); ?>
+		        <?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?>
 		    </th>
 		    <td>
 		        <?php echo $this->item->«attr.name.toLowerCase»; ?>

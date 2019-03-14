@@ -7,6 +7,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 
 /**
  * This class generates the install script files for Joomla extensions.
@@ -132,7 +133,7 @@ class ExtentionScriptGenerator {
 		 */
 		public function update($parent)
 		{
-		    echo '<p>' . Text::sprintf('«extName.toUpperCase»_UPDATE_TEXT', $parent->get('manifest')->version) . '</p>';
+		    echo '<p>' . Text::sprintf('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.UPDATE_TEXT)»', $parent->get('manifest')->version) . '</p>';
 		}
 	'''
 	def CharSequence genUnsinstall() '''
@@ -143,7 +144,7 @@ class ExtentionScriptGenerator {
 		 */
 		public function uninstall($parent)
 		{
-		    echo '<p>' .Text::_('«extName.toUpperCase»_UNINSTALL_TEXT') . '</p>';
+		    echo '<p>' .Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.UNINSTALL_TEXT)»') . '</p>';
 		}
 	'''
    
@@ -161,7 +162,7 @@ class ExtentionScriptGenerator {
 		    }
 		    $parent->getParent()->setRedirectURL('index.php?option=«extName»');
 		    «ELSE»
-		    echo '<p>' .Text::_('«extName.toUpperCase»_INSTALL_TEXT') . '</p>';
+		    echo '<p>' .Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.INSTALL_TEXT)»»') . '</p>';
 		    «ENDIF»
 		}
 	'''

@@ -9,6 +9,10 @@ import de.thm.icampus.joomdd.ejsl.eJSL.ComponentReference
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.eJSL.CoreComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import java.util.ArrayList
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
+import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
 class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 	
@@ -46,5 +50,4 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
 	override extensionName() {
 		return extensionName
 	}
-	
 }

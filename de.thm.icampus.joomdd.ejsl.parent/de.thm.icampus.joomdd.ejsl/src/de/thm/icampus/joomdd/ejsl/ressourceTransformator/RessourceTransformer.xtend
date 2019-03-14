@@ -318,6 +318,7 @@ class RessourceTransformer {
                             keyValuePairList.add(EcoreUtil2.copy(keyValuePair))
 
                             var filterKey = newArrayList(
+                                extensionName,
                                 "JOPTION",
                                 "SELECT",
                                 reference.entity.name,

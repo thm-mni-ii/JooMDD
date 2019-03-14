@@ -19,6 +19,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import org.apache.log4j.Logger
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla module.
@@ -68,6 +69,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		generateFile(path + name + ".php", this.extMod.phpContent)
 		generateFile(path + "helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage))
 		generateFile(path + "tmpl/default.php", defaultTemplate())
+		
 		var LanguageGenerator lang = new LanguageGenerator(fsa)
 		lang.genModuleLanguage(extMod, path)
        
@@ -143,44 +145,44 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		            <fieldset name="basic">
 		                «IF dynpage !== null»
 		                <field name="ordering" type="list"
-		                    label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ORDERING"
-		                    description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_ORDERING_DESC"
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.ORDERING_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.ORDERING_DESC)»"
 		                    class="inputbox"
 		                    default="«dynpage.extendFiltersList.get(0).name.toLowerCase»">
 		                    «FOR ExtendedAttribute attr: dynpage.extendFiltersList»
-		                    <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_FORM_LBL_«attr.name.toUpperCase»</option>
+		                    <option value="«attr.name.toLowerCase»">«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FORM", "LBL", attr.name), attr.name)»</option>
 		                    «ENDFOR»
 		                </field>
 		                «ENDIF»
 		                <field name="direction" type="list"
-		                    label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_DIRECTION"
-		                    description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_DIRECTION_DESC"
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_DESC)»"
 		                    class="inputbox"
 		                    size="1"
 		                    default="ASC">
-		                    <option value="ASC">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ASC</option>
-		                    <option value="DESC">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_DESC</option>
+		                    <option value="ASC">«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_ASC)»</option>
+		                    <option value="DESC">«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_DESCENDING)»</option>
 		                </field>
 		                <field
 		                    name="start"
 		                    type="int"
 		                    default="0"
-		                    label="MOD_«module.name.toUpperCase»_START_LABEL"
-		                    description="MOD_«module.name.toUpperCase»_START_DESC" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.START_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.START_DESC)»" />
 		                <field
 		                    name="limit"
 		                    type="int"
 		                    default="10"
-		                    label="MOD_«module.name.toUpperCase»_LIMIT_LABEL"
-		                    description="MOD_«module.name.toUpperCase»_LIMIT_DESC" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.LIMIT_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.LIMIT_DESC)»" />
 		                <field
 		                    name="search"
 		                    type="text"
-		                    label="MOD_«module.name.toUpperCase»_SEARCH_LABEL"
-		                    description="MOD_«module.name.toUpperCase»_SEARCH_DESC" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.SEARCH_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.SEARCH_DESC)»" />
 		                <field name="state" type="list"
-		                    label="MOD_«module.name.toUpperCase»_JSTATUS"
-		                    description="MOD_«module.name.toUpperCase»_JFIELD_PUBLISHED_DESC"
+		                    label="JSTATUS"
+		                    description="JFIELD_PUBLISHED_DESC"
 		                    class="inputbox"
 		                    size="1"
 		                    default="1">
@@ -194,10 +196,10 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		            <fieldset name="filter">
 		                <field
 		                    name="created_by"
-		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
+		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com", com).toLowerCase»/models/fields"
 		                    type="«module.name.toLowerCase»user"
-		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
-		                    description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
+		                    label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+		                    description="JGLOBAL_FIELD_CREATED_BY_DESC"
 		                    entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»">
 		                    <option value="">JOPTION_SELECT_CREATED_BY</option>
 		                </field>
@@ -207,11 +209,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
 		                    name="«attr.name»"
 		                    type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
-		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-		                    description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
 		                    valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
 		                    textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
-		                    <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
+		                    <option value="">«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "JOPTION", "SELECT", attr.name), attr.name)»</option>
 		                </field>
 		                «ENDIF»
 		                «ENDFOR»

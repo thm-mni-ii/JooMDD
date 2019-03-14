@@ -24,6 +24,10 @@ import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.impl.ExtendedPageImpl
 import de.thm.icampus.joomdd.ejsl.eJSL.CMSExtension
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import java.util.ArrayList
+import java.util.HashMap
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
 class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	
@@ -169,5 +173,4 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	override hasFileToload(){
 		return hasFileOrImageLoader;
 	}
-	
 }

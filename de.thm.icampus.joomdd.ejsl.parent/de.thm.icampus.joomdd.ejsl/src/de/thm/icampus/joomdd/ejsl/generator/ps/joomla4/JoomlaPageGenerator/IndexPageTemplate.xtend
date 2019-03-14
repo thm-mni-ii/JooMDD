@@ -262,8 +262,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		            <field
 		                name="state"
 		                type="status"
-		                label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED"
-		                description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED_DESC"
+		                label="JOPTION_SELECT_PUBLISHED"
+		                description="JOPTION_SELECT_PUBLISHED_DESC"
 		                onchange="this.form.submit();">
 		                <option value="">JOPTION_SELECT_PUBLISHED</option>
 		            </field>
@@ -323,8 +323,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		            <field
 		                name="state"
 		                type="status"
-		                label="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED"
-		                description="«Slug.nameExtensionBind("com", com.name).toUpperCase»_FILTER_PUBLISHED_DESC"
+		                label="JOPTION_SELECT_PUBLISHED"
+		                description="JOPTION_SELECT_PUBLISHED_DESC"
 		                onchange="this.form.submit();">
 		                <option value="">JOPTION_SELECT_PUBLISHED</option>
 		            </field>

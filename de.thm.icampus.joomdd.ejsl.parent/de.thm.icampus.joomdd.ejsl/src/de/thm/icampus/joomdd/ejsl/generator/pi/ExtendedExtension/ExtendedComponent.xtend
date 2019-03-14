@@ -5,6 +5,8 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
+import java.util.ArrayList
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
 
 interface ExtendedComponent extends Component {
 	
@@ -16,6 +18,4 @@ interface ExtendedComponent extends Component {
 	def Component getInstance()
 	def String extensionName()
 	def boolean hasFileToload()
-	
-	
 }
