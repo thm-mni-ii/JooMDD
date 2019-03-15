@@ -61,9 +61,9 @@ class FieldsGenerator {
 
 		class JFormField«com.name.toFirstUpper»reference extends FormField
 		{
-		     public $referenceStruct = array();
-		     public $keysAndForeignKeys = array();
-		     public $primary_key ="id";
+		    public $referenceStruct = array();
+		    public $keysAndForeignKeys = array();
+		    public $primary_key ="id";
 
 		    «genGetInput»
 
@@ -100,12 +100,12 @@ class FieldsGenerator {
 	}
 	'''
     def private genGetData_item()'''
-	protected function getData_item($id)
+	protected function getDataItem($id)
 	{
-	   $db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select("*")->from($this->referenceStruct->table)
-	         ->where($this->primary_key . " = " . $id);
+	    $db = JFactory::getDbo();
+	    $query = $db->getQuery(true);
+	    $query->select("*")->from($this->referenceStruct->table)
+	          ->where($this->primary_key . " = " . $id);
 	    $db->setQuery($query);
 	    return $db->loadObject();
 	}
@@ -115,25 +115,30 @@ class FieldsGenerator {
 		/**
 		 * Method to get the field input markup.
 		 *
-		 * @return	string	The field input markup.
+		 * @return  string  The field input markup.
 		 * @since 1.6
 		 */
 		protected function getInput()
 		{
-			$tempsTable = str_replace("'","\"",$this->getAttribute("tables"));
-			$tempsAttr = str_replace("'","\"",$this->getAttribute("referenced_keys"));
-			$this->referenceStruct = json_decode( $tempsTable);
-			$this->keysAndForeignKeys = json_decode($tempsAttr,true);
+		    $tempsTable = str_replace("'", "\"", $this->getAttribute("tables"));
+		    $tempsAttr = str_replace("'", "\"", $this->getAttribute("referenced_keys"));
+		    $this->referenceStruct = json_decode($tempsTable);
+		    $this->keysAndForeignKeys = json_decode($tempsAttr, true);
 		    $html = array();
 		    $document = Factory::getDocument();
-		    $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setForeignKeys.js');
 		    $input = Factory::getApplication()->input;
 		    
 		    $this->primary_key = $this->getAttribute("primary_key_name");
 		    $id = intval($input->get($this->primary_key));
 		    if (empty($id)) {
 		        $alldata = $this->getAllData();
-		        $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id . "select'  class='form-control' >";
+		        $html[] = "<select
+		                       required
+		                       onchange='setValueForeignKeys(this)'
+		                       id='" . $this->id . "select'
+		                       class='form-control'
+		                   >";
 		        $html[] = "<option>". Text::_(JSELECT). "</option>";
 		        foreach ($alldata as $data) {
 		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
@@ -143,9 +148,15 @@ class FieldsGenerator {
 		        $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id . "'/>";
 		        return implode($html);
 		    }
-		    $data = $this->getData_item($id);
+		    $data = $this->getDataItem($id);
 		    $selectData = $this->getReferencedata($data);
-		    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->id. "select' class='form-control' name='" . $this->name. "select'>";
+		    $html[] = "<select
+		                   required
+		                   onchange='setValueForeignKeys(this)'
+		                   id='" . $this->id. "select'
+		                   class='form-control'
+		                   name='" . $this->name. "select'
+		               >";
 		    $html[] = "<option>". Text::_("JOPTION_SELECT_" . strtoupper($this->fieldname)). "</option>";
 		    foreach ($selectData as $selected) {
 		        $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
@@ -165,54 +176,53 @@ class FieldsGenerator {
 	*/
 	protected function getReferencedata($data)
 	{
-		$caseCheck = "";
-		foreach ($this->keysAndForeignKeys as $k=>$v){
-			    $fk =  $v["key"];
-				$caseCheck .= " b." . $v["ref"] . " = '" .$data->$fk . "' and";
-			}
-		$caseCheck = rtrim($caseCheck,"and");
-		$db = JFactory::getDbo();
-		$query = $db->getQuery(true);
-		$query->select("distinct (case when"
-			. $caseCheck .
-			"then 'selected'
-			else ' ' end) as selected");
-		foreach($this->keysAndForeignKeys as $key =>$value)
-		{
-			$query->select(" b." . $value["ref"]);
-		}
-		$query->from( $this->referenceStruct->foreignTable . " as b ")
-			->where("b.state = 1")
-			->order( "b." . $this->keysAndForeignKeys[0]["ref"]. " ASC");
-		$db->setQuery($query);
-		return $db->loadObjectList();
+	    $caseCheck = "";
+	    foreach ($this->keysAndForeignKeys as $k => $v) {
+	        $fk =  $v["key"];
+	        $caseCheck .= " b." . $v["ref"] . " = '" .$data->$fk . "' and";
+	    }
+	    $caseCheck = rtrim($caseCheck, "and");
+	    $db = JFactory::getDbo();
+	    $query = $db->getQuery(true);
+	    $query->select("distinct (case when"
+	        . $caseCheck .
+	        "then 'selected'
+	        else ' ' end) as selected");
+	    foreach ($this->keysAndForeignKeys as $key => $value) {
+	        $query->select(" b." . $value["ref"]);
+	    }
+	    $query->from($this->referenceStruct->foreignTable . " as b ")
+	        ->where("b.state = 1")
+	        ->order("b." . $this->keysAndForeignKeys[0]["ref"]. " ASC");
+	    $db->setQuery($query);
+	    return $db->loadObjectList();
 	}
 	'''
 
 	private def CharSequence genGetAllData() '''
 		protected function getAllData()
 		{
-			$db = JFactory::getDbo();
-			$query = $db->getQuery(true);
-			foreach ($this->keysAndForeignKeys as $k=>$v){
-			$query->select("b." . $v["ref"]);
-			}
-			$query->from($this->referenceStruct->foreignTable . " as b")
-			->where("b.state = 1")
-			->order("b." . $this->keysAndForeignKeys[0]["ref"] . " ASC");
-			$db->setQuery($query);
-			return $db->loadObjectList();
+		    $db = JFactory::getDbo();
+		    $query = $db->getQuery(true);
+		    foreach ($this->keysAndForeignKeys as $k => $v) {
+		        $query->select("b." . $v["ref"]);
+		    }
+		    $query->from($this->referenceStruct->foreignTable . " as b")
+		    ->where("b.state = 1")
+		    ->order("b." . $this->keysAndForeignKeys[0]["ref"] . " ASC");
+		    $db->setQuery($query);
+		    return $db->loadObjectList();
 		}
 	'''
 
 	private def CharSequence genGenerateJsonValue() '''
 		public function generateJsonValue($data)
 		{
-			$result  = array();
-			foreach($this->keysAndForeignKeys as $key=>$value){
-				$result["jform_" .  $value["key"]] = $data->{$value["ref"]};
-				}
-			return json_encode($result);
+		    $result  = array();
+		    foreach ($this->keysAndForeignKeys as $key => $value) {
+		        $result["jform_" .  $value["key"]] = $data->{$value["ref"]};
+		    }
+		    return json_encode($result);
 		}
 	'''
 
@@ -220,7 +230,7 @@ class FieldsGenerator {
 		public function generateStringValue($data)
 		{
 		    $result = array();
-		   $result[] = $data->{$this->keysAndForeignKeys[0]["ref"]} . " ";
+		    $result[] = $data->{$this->keysAndForeignKeys[0]["ref"]} . " ";
 		    return implode($result);
 		}
 	'''
@@ -235,7 +245,8 @@ class FieldsGenerator {
 		
 		FormHelper::loadFieldClass('list');
 		
-		class JFormField«entFrom.name.toFirstLower» extends JFormFieldList{
+		class JFormField«entFrom.name.toFirstLower» extends JFormFieldList
+		{
 		    protected $table = "«Slug.databaseName(com.name, entFrom.name)»";
 		    
 		    «genGetOptionsForEntity»
@@ -293,8 +304,8 @@ class FieldsGenerator {
 		
 		FormHelper::loadFieldClass('list');
 		
-		class JFormField«component.name.toFirstUpper»user extends JFormFieldList{
-		    
+		class JFormField«component.name.toFirstUpper»user extends JFormFieldList
+		{
 		    protected function getOptions()
 		    {
 		        $entity = $this->getAttribute('entity');

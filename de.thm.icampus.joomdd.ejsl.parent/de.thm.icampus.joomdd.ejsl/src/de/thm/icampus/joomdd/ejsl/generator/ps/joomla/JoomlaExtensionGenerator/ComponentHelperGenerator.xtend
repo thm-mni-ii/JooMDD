@@ -79,8 +79,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		    $actions = array(
 		        'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete');
 		
-		    foreach ($actions as $action)
-		    {
+		    foreach ($actions as $action) {
 		        $result->set($action, $user->authorise($action, $assetName));
 		    }
 		
@@ -107,10 +106,19 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		        $index =1;
 		        $file["name"] = $index."_".$file["name"];
 		        $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
-		        while(JFile::exists($file['filepath'])) {
+		        while (JFile::exists($file['filepath'])) {
 		            $index = $index +1;
 		            $file["name"] = $index."_".$file["name"];
-		            $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
+		            $file['filepath'] = JPath::clean(
+		                implode(
+		                    DIRECTORY_SEPARATOR,
+		                    array(
+		                        JPATH_ROOT,
+		                        $target,
+		                        $file['name']
+		                    )
+		                )
+		            );
 		        }
 		    }
 		    $object_file = new CMSObject($file);
@@ -137,7 +145,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 	        var settings = $.extend({
 	            // Classes for styling the input
 	            class: "btn btn-success"
-	        }, options );
+	        }, options);
 	
 	        // Create an input inside each matched element
 	        return this.each(function () {
@@ -153,7 +161,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 	        // var add = $(that).children('#add');
 	        var preview = $(that).children('#preview');
 	
-	        if(settings.file != '' &&settings.file != ' ') {
+	        if (settings.file != '' &&settings.file != ' ') {
 	            var preview = create_preview(that, settings.file, settings.value, settings);
 	            $(that).children('#add').attr('class','hidden');
 	            $(that).children('#preview').html(preview);

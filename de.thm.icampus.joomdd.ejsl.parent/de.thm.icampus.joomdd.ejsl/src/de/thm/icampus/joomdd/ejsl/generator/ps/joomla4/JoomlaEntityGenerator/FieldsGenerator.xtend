@@ -218,7 +218,7 @@ class FieldsGenerator {
 	        «ENDFOR»
 	        then 'selected'
 	        else ' ' end) as selected");
-	    foreach ($this->keysAndForeignKeys as $key =>$value) {
+	    foreach ($this->keysAndForeignKeys as $key => $value) {
 	        $query->select(" b.$value");
 	    }
 
@@ -248,7 +248,7 @@ class FieldsGenerator {
 		public function generateJsonValue($data)
 		{
 		    $result  = array();
-		    foreach ($this->keysAndForeignKeys as $key=>$value) {
+		    foreach ($this->keysAndForeignKeys as $key => $value) {
 		        $result["jform_$key"] = $data->{$value};
 		    }
 		    return json_encode($result);

@@ -159,14 +159,19 @@ class IndexPageTemplateSiteHelper {
 	}
 
 	public def CharSequence genViewTemplateHead()'''
-	<form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
+	<form
+	    action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>"
+	    method="post"
+	    name="adminForm"
+	    id="adminForm"
+	>
 	    <?php
 	        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	    ?>
 	    <?php if (empty($this->items)) : ?>
-	       <div class="alert alert-no-items">
-	           <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
-	       </div>
+	        <div class="alert alert-no-items">
+	            <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+	        </div>
 	    <?php else : ?>
 	        <table class="table table-striped">
 	            <thead>
@@ -179,7 +184,13 @@ class IndexPageTemplateSiteHelper {
 	                    <?php endif; ?>
 	                        «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
 	                        <th class='left'>
-	                            <?php echo HTMLHelper::_('grid.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«mainEntity.name.toUpperCase»_«attr.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+	                            <?php echo HTMLHelper::_(
+	                                'grid.sort',
+	                                '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
+	                                '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»',
+	                                $listDirn,
+	                                $listOrder
+	                            ); ?>
 	                        </th>
 	                        «ENDFOR»
 	                </tr>
@@ -197,9 +208,11 @@ class IndexPageTemplateSiteHelper {
 	        </table>
 	    <?php endif; ?>
 	    «IF details !== null»
-	    <?php if ($canCreate): ?>
-	    <a href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>" class="btn btn-success btn-small">
-	        <iclass="icon-plus"></i> <?php echo Text::_('JGLOBAL_FIELD_ADD'); ?>
+	    <?php if ($canCreate) : ?>
+	    <a
+	        href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>"
+	        class="btn btn-success btn-small">
+	        <i class="icon-plus"></i> <?php echo Text::_('JGLOBAL_FIELD_ADD'); ?>
 	    </a>
 	    <?php endif; ?>
 	    «ENDIF»
@@ -257,7 +270,8 @@ class IndexPageTemplateSiteHelper {
         «FOR ExtendedAttribute attr : column»
         <td>
             «IF Slug.isAttributeLinked(attr, indexpage)»
-            <a href="<?php echo Route::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")»); ?>">
+            <a href="<?php echo Route::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->").trim»); ?>"
+            >
                 <?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
             </a>
             «ELSE»

@@ -19,13 +19,9 @@ public class ContextLinkGenerator extends AbstractLinkGenerator {
 		valueF= valueFeatures
 	}
 	
-	override generateLink(String sect, String compname) '''
-	«if (sect.isEmpty) '' else sect +"/"»'index.php?option=«Slug.nameExtensionBind("com",compname).toLowerCase»&view=«lk.target.name.toLowerCase»' «genLinkOption(lk.linkparameters)»'''
+	override generateLink(String sect, String compname) 
+	'''«if (sect.isEmpty) '' else sect +"/"»'index.php?option=«Slug.nameExtensionBind("com",compname).toLowerCase»&view=«lk.target.name.toLowerCase»' «genLinkOption(lk.linkparameters)»'''
 	
-	def CharSequence genLinkOption(EList<LinkParameter> params)'''
-	    «FOR LinkParameter lp : params»
-	        . '&«lp.name»=«IF lp.attvalue !== null»' . «valueF + lp.attvalue.name.toLowerCase»«ELSE»«lp.value»'«ENDIF»
-	    «ENDFOR»
-	'''
-	
-} // ContextLink
+	def CharSequence genLinkOption(EList<LinkParameter> params)
+	'''«params.map[ lp | '''. '&«lp.name»=«IF lp.attvalue !== null»' . «valueF + lp.attvalue.name.toLowerCase»«ELSE»«lp.value»'«ENDIF»''' ].join»'''
+}

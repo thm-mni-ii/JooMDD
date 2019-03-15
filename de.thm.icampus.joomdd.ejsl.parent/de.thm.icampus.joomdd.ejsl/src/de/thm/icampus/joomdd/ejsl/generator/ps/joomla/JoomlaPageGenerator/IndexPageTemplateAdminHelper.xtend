@@ -166,13 +166,9 @@ class IndexPageTemplateAdminHelper {
 	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
-	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE ' . $search . 
-	                «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-	                «IF filters.indexOf(attr) > 0»
-	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE ' . $search .
-	                «ENDIF»
-	                «ENDFOR»
-	                ')');
+	                $query->where("(«indexpage.extendFiltersList.map[ attr | '''«attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE $search''' ].join('''
+	                
+	                OR ''')»)");
 	                «ENDIF»
 	            }
 	        }
@@ -292,8 +288,20 @@ class IndexPageTemplateAdminHelper {
 	        if ($canDo->get('core.edit.state')) {
 	            if (isset($this->items[0]->state)) {
 	                JToolBarHelper::divider();
-	                JToolBarHelper::custom('«indexpage.name.toLowerCase».publish', 'publish.png', 'publish_f2.png', 'JTOOLBAR_PUBLISH', true);
-	                JToolBarHelper::custom('«indexpage.name.toLowerCase».unpublish', 'unpublish.png', 'unpublish_f2.png', 'JTOOLBAR_UNPUBLISH', true);
+	                JToolBarHelper::custom(
+	                    '«indexpage.name.toLowerCase».publish',
+	                    'publish.png',
+	                    'publish_f2.png',
+	                    'JTOOLBAR_PUBLISH',
+	                    true
+	                );
+	                JToolBarHelper::custom(
+	                    '«indexpage.name.toLowerCase».unpublish',
+	                    'unpublish.png',
+	                    'unpublish_f2.png',
+	                    'JTOOLBAR_UNPUBLISH',
+	                    true
+	                );
 	            } elseif (isset($this->items[0])) {
 	                //If this component does not use state then show a direct delete button as we can not trash
 	                JToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_DELETE');
@@ -303,7 +311,13 @@ class IndexPageTemplateAdminHelper {
 	                JToolBarHelper::archiveList('«indexpage.name.toLowerCase».archive', 'JTOOLBAR_ARCHIVE');
 	            }
 	            if (isset($this->items[0]->checked_out)) {
-	                JToolBarHelper::custom('«indexpage.name.toLowerCase».checkin', 'checkin.png', 'checkin_f2.png', 'JTOOLBAR_CHECKIN', true);
+	                JToolBarHelper::custom(
+	                    '«indexpage.name.toLowerCase».checkin',
+	                    'checkin.png',
+	                    'checkin_f2.png',
+	                    'JTOOLBAR_CHECKIN',
+	                    true
+	                );
 	            }
 	        }
 	        //Show trash and delete for components that uses the state field
@@ -340,48 +354,81 @@ class IndexPageTemplateAdminHelper {
                     <tr>
                         <?php if (isset($this->items[0]) && property_exists($this->items[0], 'ordering')) : ?>
                         <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo HTMLHelper::_('grid.sort', '<i class="icon-menu-2"></i>', '«this.mainEntity.name.toLowerCase».ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+                            <?php echo HTMLHelper::_(
+                                'grid.sort',
+                                '<i class="icon-menu-2"></i>',
+                                '«this.mainEntity.name.toLowerCase».ordering',
+                                $listDirn,
+                                $listOrder,
+                                null,
+                                'asc',
+                                'JGRID_HEADING_ORDERING'
+                            ); ?>
                         </th>
                         <?php $columns++; ?>
                         <?php endif; ?>
                         <th width="1%" class="hidden-phone">
-                            <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+                            <input
+                                type="checkbox"
+                                name="checkall-toggle"
+                                value=""
+                                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
+                                onclick="Joomla.checkAll(this)"
+                            />
                         </th>
                         <?php if (isset($this->items[0]) && property_exists($this->items[0], 'state')) : ?>
                         <th width="1%" class="nowrap center">
-                            <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', '«this.mainEntity.name.toLowerCase».state', $listDirn, $listOrder); ?>
+                            <?php echo HTMLHelper::_(
+                                'grid.sort',
+                                'JSTATUS',
+                                '«this.mainEntity.name.toLowerCase».state',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         <?php $columns++; ?>
                         <?php endif; ?>
                         «FOR ExtendedAttribute attr : column»
                         <th class='left'>
-                            <?php echo HTMLHelper::_('grid.sort',  '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_«mainEntity.name.toUpperCase»_«attr.name.toUpperCase»', '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
+                            <?php echo HTMLHelper::_(
+                                'grid.sort',
+                                '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
+                                '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»',
+                                $listDirn,
+                                $listOrder
+                            ); ?>
                         </th>
                         «ENDFOR»
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($this->items as $i => $item) :
-                    $ordering   = ($listOrder == '«this.mainEntity.name.toLowerCase».ordering');
-                    $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                    $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                    $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                    $canChange  = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                        $ordering   = ($listOrder == '«this.mainEntity.name.toLowerCase».ordering');
+                        $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                        $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                        $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
+                        $canChange  = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                     ?>
                     <tr class="row<?php echo $i % 2; ?>">
-                        <?php if (isset($this->items[0]->ordering)): ?>
+                        <?php if (isset($this->items[0]->ordering)) : ?>
                         <td class="order nowrap center hidden-phone">
                             <?php if ($canChange) :
-                            $disableClassName = '';
-                            $disabledLabel    = '';
-                            if (!$saveOrder) :
-                            $disabledLabel    = JText::_('JORDERINGDISABLED');
-                            $disableClassName = 'inactive tip-top';
-                            endif; ?>
-                            <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
+                                $disableClassName = '';
+                                $disabledLabel    = '';
+                                if (!$saveOrder) :
+                                    $disabledLabel    = JText::_('JORDERINGDISABLED');
+                                    $disableClassName = 'inactive tip-top';
+                                endif; ?>
+                            <span class="sortable-handler hasTooltip <?php echo $disableClassName?>"
+                                  title="<?php echo $disabledLabel?>">
                                 <i class="icon-menu"></i>
                             </span>
-                            <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
+                            <input type="text"
+                                   style="display:none"
+                                   name="order[]"
+                                   size="5"
+                                   value="<?php echo $item->ordering;?>"
+                                   class="width-20 text-area-order" />
                             <?php else : ?>
                             <span class="sortable-handler inactive" >
                                 <i class="icon-menu"></i>
@@ -392,9 +439,16 @@ class IndexPageTemplateAdminHelper {
                         <td class="center hidden-phone">
                             <?php echo HTMLHelper::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
                         </td>
-                        <?php if (isset($this->items[0]->state)): ?>
+                        <?php if (isset($this->items[0]->state)) : ?>
                         <td class="center">
-                            <?php echo HTMLHelper::_('jgrid.published', $item->state, $i, '«indexpage.name.toLowerCase».', $canChange, 'cb'); ?>
+                            <?php echo HTMLHelper::_(
+                                'jgrid.published',
+                                $item->state,
+                                $i,
+                                '«indexpage.name.toLowerCase».',
+                                $canChange,
+                                'cb'
+                            ); ?>
                         </td>
                         <?php endif; ?>
                         «genAdminModelAttributeReference(column, indexpage, com)»
@@ -417,8 +471,12 @@ class IndexPageTemplateAdminHelper {
     }
     
     def  CharSequence genAdminViewLayoutForm()''' 
-        <form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
-            <?php if(!empty($this->sidebar)): ?>
+        <form
+            action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>"
+            method="post"
+            name="adminForm"
+            id="adminForm">
+            <?php if (!empty($this->sidebar)) : ?>
             <div id="j-sidebar-container" class="span2">
                 <?php echo $this->sidebar; ?>
             </div>
@@ -439,7 +497,7 @@ class IndexPageTemplateAdminHelper {
 
     def CharSequence genAdminViewLayoutHeader()'''
         $user = Factory::getUser();
-        $userId	= $user->get('id');
+        $userId = $user->get('id');
         $listOrder = $this->state->get('list.ordering');
         $listDirn = $this->state->get('list.direction');
         $canOrder = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
@@ -447,7 +505,13 @@ class IndexPageTemplateAdminHelper {
         $model = $this->getModel();
         if ($saveOrder) {
             $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
-            HTMLHelper::_('sortablelist.sortable', '«indexpage.name.toFirstUpper»List', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
+            HTMLHelper::_(
+                'sortablelist.sortable',
+                '«indexpage.name.toFirstUpper»List',
+                'adminForm',
+                strtolower($listDirn),
+                $saveOrderingUrl
+            );
         }
         ?>
         <script type="text/javascript">
@@ -515,7 +579,8 @@ class IndexPageTemplateAdminHelper {
         «IF Slug.isAttributeLinked(attr, indexpage)»
         <td>
         <?php if ($canEdit) : ?>
-            <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->")»); ?>">
+            <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»); ?>"
+            >
                 <?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
             </a>
         <?php else : ?>

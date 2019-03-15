@@ -464,7 +464,6 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	        // Join over the user field 'user'
 	        $query->select('user.name AS user');
 	        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name.toLowerCase».created_by');
-	    
 	        «Slug.createLeftJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, name.toLowerCase, indexpage.entities.get(0).name.toLowerCase)»
 	        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), name, ",")»
 	        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
@@ -495,13 +494,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
-	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE ' . $search . 
-	                «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-	                «IF filters.indexOf(attr) > 0»
-	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE ' . $search .
-	                «ENDIF»
-	                «ENDFOR»
-	                ')');
+	                $query->where('( «indexpage.extendFiltersList.map[ attr | '''«attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE $search''' ].join(" OR ")»)');
 	                «ENDIF»
 	            }
 	        }

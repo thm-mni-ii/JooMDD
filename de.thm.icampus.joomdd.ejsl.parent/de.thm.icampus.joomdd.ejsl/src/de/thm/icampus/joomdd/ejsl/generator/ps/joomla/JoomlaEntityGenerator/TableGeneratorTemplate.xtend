@@ -119,7 +119,11 @@ class TableGeneratorTemplate {
 		        r.attribute.map[ a | a.name ].toList
 		    ].flatten.toSet»
 		    «FOR name : referenceAttributeUniqueList»
-		    if (array_key_exists('«name»', $array) && empty($array['«name»'])) {
+		    if (array_key_exists(
+		        '«name»',
+		        $array
+		    ) && empty($array['«name»'])
+		    ) {
 		        $array['«name»'] = null;
 		    }
 
@@ -209,8 +213,13 @@ class TableGeneratorTemplate {
 		    if (isset($this->foreigntableOption)) {
 		        foreach ($this->foreigntableOptio as $key => $dbtable) {
 		            $instance_table = Table::getInstance($dbtable['type'], $dbtable['prefix']);
-		            $allForeignKeys = $this->loadAllPrimaryKeyofRef($pk, $dbtable['refkey']
-		                , $dbtable['name'], $dbtable['foreignkey'],$dbtable["foreignId"]);
+		            $allForeignKeys = $this->loadAllPrimaryKeyofRef(
+		                $pk,
+		                $dbtable['refkey'],
+		                $dbtable['name'],
+		                $dbtable['foreignkey'],
+		                $dbtable["foreignId"]
+		            );
 		            foreach ($allForeignKeys as $keyOf) {
 		                $result = $instance_table->delete($keyOf);
 		            }
