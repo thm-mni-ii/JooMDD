@@ -170,7 +170,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		            $table->load($pk);
 		        } catch (Exception $e) {
 		            // Check for a table object error.
-		            throw new Exception('Database Failur: No element found'. $e);
+		            throw new Exception('Database failure: No element found'. $e);
 		        }
 		    }
 
@@ -299,15 +299,15 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	    {
 	        «var EList<Attribute> referenceAttr = Slug.getOtherAttribute(ref)»
 	        «FOR Attribute attr : referenceAttr»
-	        $«attr.name.toLowerCase» = json_decode($inputs['«attr.name.toLowerCase»']);
+	        $«attr.name» = json_decode($inputs['«attr.name»']);
 	        «ENDFOR»
-	        $«ref.entity.name.toLowerCase»_id = json_decode($inputs['«ref.entity.name.toLowerCase»_id']);
+	        $«ref.entity.name»_id = json_decode($inputs['«ref.entity.name»_id']);
 	        «FOR ExtendedAttribute toAttr: ref.extendedAttributes»
-	        $«toAttr.name.toLowerCase»= $inputs['«toAttr.name.toLowerCase»'];
+	        $«toAttr.name»= $inputs['«toAttr.name»'];
 	        «ENDFOR»
 	        if («Slug.transformAttributeListInString("!empty($", referenceAttr ,"&&", ")")») {
-	            if (!empty($«ref.entity.name.toLowerCase»_id)) {
-	                foreach ($«ref.entity.name.toLowerCase»_id as $item) {
+	            if (!empty($«ref.entity.name»_id)) {
+	                foreach ($«ref.entity.name»_id as $item) {
 	                    if (intval($item) != 0) {
 	                        $mappingTableDelete = $this->getTable("«ref.entity.name.toFirstLower»");
 	                        $mappingTableDelete->delete($item);
@@ -315,13 +315,13 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 	                }
 	            }
 	            $mappingTable = $this->getTable("«ref.entity.name.toFirstLower»");
-	            for ($index =0; $index< count($«referenceAttr.get(0).name.toLowerCase»); $index++) {
+	            for ($index = 0; $index < count($«referenceAttr.get(0).name»); $index++) {
 	                $dataToSave = array();
 	                «FOR Attribute attr: referenceAttr»
-	                $dataToSave["«attr.name.toLowerCase»"] = $«attr.name.toLowerCase»[$index];
+	                $dataToSave["«attr.name»"] = $«attr.name»[$index];
 	                «ENDFOR»
 	                «FOR ExtendedAttribute toattr: ref.extendedAttributes»
-	                $dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name.toLowerCase»"] = $«toattr.name.toLowerCase»;
+	                $dataToSave["«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf(toattr)).name»"] = $«toattr.name»;
 	                «ENDFOR»
 	                $dataToSave["state"]=1;
 	                $mappingTable->save($dataToSave);

@@ -67,7 +67,7 @@ public class Slug  {
 		res = res.replaceAll("ü", "ue")
 		res = res.replaceAll("ß", "ss")
 		res = res.replaceAll("[^-\\w]+", '')
-		res = res.toLowerCase()
+
 		trim(res, "_".charAt(0))
 	}
 	
@@ -96,7 +96,7 @@ public class Slug  {
 		var i = 0
 		
 		while ((i=i+1) < split.size) {
-			res.append(split.get(i).toLowerCase.toFirstUpper)
+			res.append(split.get(i).toFirstUpper)
 		}
 		
 		return res.toString
@@ -220,16 +220,16 @@ public class Slug  {
 	}
 			
 	def static CharSequence inputHiddenFeldTemplate(ExtendedAttribute attr) '''
-	    <div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
+	    <div class="controls"><?php echo $this->form->getInput('«attr.name»'); ?></div>
 	'''
 		
 	def static CharSequence inputFeldTemplate(ExtendedAttribute attr) '''
 	    <div class="control-group">
 	        <div class="control-label">
-	            <?php echo $this->form->getLabel('«attr.name.toLowerCase»'); ?>
+	            <?php echo $this->form->getLabel('«attr.name»'); ?>
 	        </div>
 	        <div class="controls">
-	            <?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?>
+	            <?php echo $this->form->getInput('«attr.name»'); ?>
 	        </div>
 	    </div>
 	'''
@@ -825,7 +825,7 @@ public class Slug  {
 	}
 
     def static createGroupBy(ExtendedEntity entity) {
-        '''$query->group('«entity.name.toLowerCase».«entity.attributes.findFirst[a | a.isprimary].name»');'''
+        '''$query->group('«entity.name».«entity.attributes.findFirst[a | a.isprimary].name»');'''
     }
     
     def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator) {
@@ -874,11 +874,11 @@ public class Slug  {
         for (ExtendedReference ref : extendedReference) {
             var originDestinationEntityName = ref.destinationEntity.name
             var counter = counterMap.getOrDefault(originDestinationEntityName, 0)
-            val destinationEntityName = if (counter === 0) {ref.destinationEntity.name} else {'''«ref.destinationEntity.name»«counter»'''}.toLowerCase
+            val destinationEntityName = if (counter === 0) {ref.destinationEntity.name} else {'''«ref.destinationEntity.name»«counter»'''}
             output += '''
             $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» AS «destinationEntityName» ON
                 «ref.extendedAttributes.map[ attr | 
-                    '''«entityName.toLowerCase».«attr.name.toLowerCase» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»'''
+                    '''«entityName».«attr.name» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name»'''
                 ].join(''' AND
                 ''')»
             ");
@@ -891,7 +891,7 @@ public class Slug  {
     } 
 	
 	def static CharSequence databaseName(String componentName, String entityName) {
-		return "#__" + componentName.toLowerCase + "_" + entityName.toLowerCase
+		return "#__" + componentName + "_" + entityName
 	}
 	
 	def static Boolean isAttributeLinked(ExtendedAttribute attr, DynamicPage page) {
@@ -924,11 +924,11 @@ public class Slug  {
             			            if (idRef !== null) {
             				            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
             				        } else {
-            				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»", $item)'''
+            				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
             		 	            }
             		 	        }
                             } else {
-            		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
+            		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
             		        }
                         }
                     }»
@@ -987,12 +987,12 @@ public class Slug  {
      			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
      				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
      				    '''
-     				    "«linkItem.name.toLowerCase»" => array(
-     				        "db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»",
+     				    "«linkItem.name»" => array(
+     				        "db"=> "#__«com.name»_«ref.entity.name»",
      				        "refattr" => array(
      				            «Slug.generateAttributeAndRefernce(ref)»
      				        ),
-     				        "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name.toLowerCase»"
+     				        "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name»"
      				    ),'''	
      			    }				
      		    }	
@@ -1008,10 +1008,10 @@ public class Slug  {
 			var int index = reference.attribute.indexOf(attr)
 			var Attribute referenced = reference.attributerefereced.get(index)
 			if(attr != reference.attribute.last)
-			    result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»",
+			    result.append('''"«attr.name»"=>"«referenced.name»",
 			    ''')
 			else{
-				result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»"''')
+				result.append('''"«attr.name»"=>"«referenced.name»"''')
 			}
 			
 		}
@@ -1019,14 +1019,14 @@ public class Slug  {
 	}
 	
 	static def CharSequence transformAttributeListInString(EList<Attribute>attributes, String separeSign) {
-		return attributes.map[ a | Slug.slugify(a.name.toLowerCase)].join(separeSign)
+		return attributes.map[ a | Slug.slugify(a.name)].join(separeSign)
 	}
 	
 	static def CharSequence transformAttributeListInString(String postWord, EList<Attribute>attributes, String separeSign){
 		var StringBuffer result = new StringBuffer()
 		for (attr: attributes) {
 			if (attr != attributes.last) {
-			    result.append(postWord + Slug.slugify(attr.name).toLowerCase + separeSign)
+			    result.append(postWord + Slug.slugify(attr.name) + separeSign)
 			} else {
 				result.append(postWord+ Slug.slugify(attr.name))
 			}
@@ -1038,7 +1038,7 @@ public class Slug  {
 		var StringBuffer result = new StringBuffer()
 		for (attr: attributes) {
 			if (attr != attributes.last) {
-			    result.append(postWord + Slug.slugify(attr.name).toLowerCase + afterWord + separeSign)
+			    result.append(postWord + Slug.slugify(attr.name) + afterWord + separeSign)
 			} else {
 				result.append(postWord+ Slug.slugify(attr.name)+afterWord)
 			}
@@ -1050,7 +1050,7 @@ public class Slug  {
 		var StringBuffer result = new StringBuffer()
 		for (attr: attributes) {
 			if (attr != attributes.last) {
-			    result.append(quotationMark+postWord + Slug.slugify(attr.name).toLowerCase+quotationMark + separeSign)
+			    result.append(quotationMark+postWord + Slug.slugify(attr.name)+quotationMark + separeSign)
 			} else {
 				result.append(quotationMark+postWord+ Slug.slugify(attr.name) +quotationMark)
 			}
@@ -1075,12 +1075,12 @@ public class Slug  {
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
    	        return '''
-   		    <field name="«param.name.toLowerCase»"
+   		    <field name="«param.name»"
    		            type="list" 
    		            «IF type.equalsIgnoreCase("multiselect")»
    		            multiple
    		            «ENDIF»
-   		            id="«param.name.toLowerCase»"
+   		            id="«param.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
@@ -1095,10 +1095,10 @@ public class Slug  {
    		    }
    		    case "imagepicker": {
    		        return '''
-   		        <field name="«param.name.toLowerCase»"
+   		        <field name="«param.name»"
    		            type="imageloader"
    		            accept="image/*"
-   		            id="«param.name.toLowerCase»"
+   		            id="«param.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
@@ -1109,9 +1109,9 @@ public class Slug  {
    		    }
    		    case "filepicker": {
    		        return '''
-   		        <field name="«param.name.toLowerCase»"
+   		        <field name="«param.name»"
    		            type="fileloader"
-   		            id="«param.name.toLowerCase»"
+   		            id="«param.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
@@ -1122,9 +1122,9 @@ public class Slug  {
    		    }
    		    case "checkbox": {
    		       return ''' 
-   		        <field name="«param.name.toLowerCase»"
+   		        <field name="«param.name»"
    		            type="checkboxes" 
-   		            id="«param.name.toLowerCase»"
+   		            id="«param.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
@@ -1139,9 +1139,9 @@ public class Slug  {
    		    }
    		    case "radiobutton": {
    		        return ''' 
-	   		        <field name="«param.name.toLowerCase»"
+	   		        <field name="«param.name»"
 	   		            type="radio"
-	   		            id="«param.name.toLowerCase»"
+	   		            id="«param.name»"
 	   		            label="«fieldLabel»"
 	   		            description="«fieldDescription»"
 	   		            «FOR KeyValuePair kvpair : param.attributes»
@@ -1156,9 +1156,9 @@ public class Slug  {
    		    }
    		    case "Yes_No_Buttons": {
    		        return ''' 
-   		        <field name="«param.name.toLowerCase»"
+   		        <field name="«param.name»"
    		            type="radio" 
-   		            id="«param.name.toLowerCase»"
+   		            id="«param.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            default="0"
@@ -1173,9 +1173,9 @@ public class Slug  {
    		    }
    		    default: {
    		        return '''  
-   		        <field name="«param.name.toLowerCase»"
+   		        <field name="«param.name»"
    		            «type»
-   		            id="«param.name.toLowerCase»"
+   		            id="«param.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
@@ -1187,7 +1187,6 @@ public class Slug  {
    		}
    	
    	}
-		
 	
     static def ExtendedDetailPageField getEditedFieldsForattribute(ExtendedDynamicPage dynPage, ExtendedAttribute attr){
 		for (ExtendedDetailPageField field:dynPage.extendedEditedFieldsList ) {
@@ -1239,25 +1238,25 @@ public class Slug  {
 	   var otherEntity = Slug.getOtherEntityToMapping(reference)   
 	    
 	   return '''
-    	    <?php if (Factory::getUser()->authorise('core.admin', '«com.name.toLowerCase»')) : ?>
+    	    <?php if (Factory::getUser()->authorise('core.admin', '«com.name»')) : ?>
     	    <?php echo HTMLHelper::_(
     	        'bootstrap.addTab',
     	        'myTab',
-    	        '«otherEntity.name.toLowerCase»',
+    	        '«otherEntity.name»',
     	        Text::_('«languageKey»', true)
     	    ); ?>
     	    <div class="control-group">
     	        <div class="control-label">
-    	            <?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?>
+    	            <?php echo $this->form->getLabel('«reference.entity.name»_id'); ?>
     	        </div>
     	        <div class="controls">
-    	            <?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?>
+    	            <?php echo $this->form->getInput('«reference.entity.name»_id'); ?>
     	        </div>
     	    </div>
     	    «FOR attribute: Slug.getOtherAttribute(reference)»
     	    <div class="control-group">
     	        <div class="controls">
-    	             <?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?>
+    	            <?php echo $this->form->getInput('«attribute.name»'); ?>
     	        </div>
     	    </div>
     	    «ENDFOR»
@@ -1267,25 +1266,25 @@ public class Slug  {
     }
 	
 	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
-		<?php if (Factory::getUser()->authorise('core.admin', '«com.name.toLowerCase»')) : ?>
+		<?php if (Factory::getUser()->authorise('core.admin', '«com.name»')) : ?>
 		<?php echo HTMLHelper::_(
 		    'bootstrap.addTab',
 		    'myTab',
-		    '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»',
+		    '«Slug.getOtherEntityToMapping(reference).name»',
 		    Text::_('«addLanguage(com.languages, newArrayList("com", com.name, Slug.getOtherEntityToMapping(reference).name), Slug.getOtherEntityToMapping(reference).name)»', true)
 		); ?>
 		<div class="control-group">
 		    <div class="control-label">
-		        <?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?>
+		        <?php echo $this->form->getLabel('«reference.entity.name»_id'); ?>
 		    </div>
 		    <div class="controls">
-		        <?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?>
+		        <?php echo $this->form->getInput('«reference.entity.name»_id'); ?>
 		    </div>
 		</div>
 		«FOR attribute: Slug.getOtherAttribute(reference)»
 		<div class="control-group">
 		    <div class="controls">
-		        <?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?>
+		        <?php echo $this->form->getInput('«attribute.name»'); ?>
 		    </div>
 		</div>
 		«ENDFOR»
@@ -1360,7 +1359,7 @@ public class Slug  {
             else
             {
                 if (alreadyDefinedKey.value.equalsIgnoreCase(languageValue) === false) {
-                    println('''ExtendedComponentImpl: The given key «upperCaseKey» with the value «languageValue» is already defined with another value «alreadyDefinedKey.value»''')
+                    println('''The given key «upperCaseKey» with the value «languageValue» is already defined with another value «alreadyDefinedKey.value»''')
                 }
             }
         ]

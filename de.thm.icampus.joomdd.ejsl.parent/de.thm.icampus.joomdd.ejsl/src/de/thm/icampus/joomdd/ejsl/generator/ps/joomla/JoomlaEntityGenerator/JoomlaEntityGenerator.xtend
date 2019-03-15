@@ -60,10 +60,10 @@ class JoomlaEntityGenerator {
     
     def generateSQLConstraints(ExtendedEntity entity, String extensionName)
         '''
-        ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, entity.name)»`
+        ALTER TABLE `«Slug.databaseName(extensionName, entity.name)»`
             «entity.refactoryReference.filter[ r | !r.preserve && r.upper.equalsIgnoreCase("1") ].map[ r |
                 '''
-                ADD CONSTRAINT `«extensionName.toLowerCase»_«entity.name.toLowerCase»_ibfk_«entity.refactoryReference.indexOf(r)»` FOREIGN KEY(«Slug.transformAttributeListInString(r.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(r.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(r.attributerefereced, ', ')»)
+                ADD CONSTRAINT `«extensionName»_«entity.name»_ibfk_«entity.refactoryReference.indexOf(r)»` FOREIGN KEY(«Slug.transformAttributeListInString(r.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(r.entity.name))»` («Slug.transformAttributeListInString(r.attributerefereced, ', ')»)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE'''
             ].join(''', 
@@ -75,9 +75,9 @@ class JoomlaEntityGenerator {
         «IF isupdate»
             DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
         «ENDIF»
-        CREATE TABLE  IF NOT EXISTS `«Slug.databaseName( componentName, table.name.toLowerCase)»` (
+        CREATE TABLE  IF NOT EXISTS `«Slug.databaseName(componentName, table.name)»` (
         «FOR a : table.allExtendedAttributes.filter[t | !t.isPreserve]»
-            `«a.name.toLowerCase»` «a.generatorType.toLowerCase»,
+            `«a.name»` «a.generatorType»,
         «ENDFOR»
         «FOR ExtendedAttribute a : table.ownExtendedAttributes»
             «IF a.isunique»
@@ -99,7 +99,7 @@ class JoomlaEntityGenerator {
         result.append("\n\r")
         while (!visited.empty) {
             result.
-                append('''DROP TABLE IF EXISTS `«Slug.databaseName(extensionName.toLowerCase, (visited.removeLast.name))»`;''');
+                append('''DROP TABLE IF EXISTS `«Slug.databaseName(extensionName, (visited.removeLast.name))»`;''');
             result.append("\n\r")
         }
         return result.toString
@@ -108,7 +108,7 @@ class JoomlaEntityGenerator {
     public def CharSequence generateUpdateScript(String extensionName) 
     '''
         «FOR ExtendedEntity en : entities.filter[t | !t.preserve]»
-        ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`
+        ALTER TABLE `«Slug.databaseName(extensionName, en.name)»`
             «FOR ExtendedAttribute attr: en.refactoryAttribute»
                 «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
                     ADD COLUMN IF NOT EXISTS `«attr.name»`  «attr.generatorType» «if(attr.isprimary) " PRIMARY KEY"»
@@ -129,7 +129,7 @@ class JoomlaEntityGenerator {
         ;
         
         «FOR ExtendedAttribute attr: en.refactoryAttribute.filter[t | t.isunique && !t.preserve]»
-            CREATE UNIQUE INDEX `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibih_«attr.name»«if(attr.withattribute !== null) "_" + attr.withattribute.name»` ON `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»`'''»);
+            CREATE UNIQUE INDEX `«extensionName»_«en.name»_ibih_«attr.name»«if(attr.withattribute !== null) "_" + attr.withattribute.name»` ON `«Slug.databaseName(extensionName, en.name)»`  (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»`'''»);
         «ENDFOR»
         
         «IF !en.references.isEmpty»
