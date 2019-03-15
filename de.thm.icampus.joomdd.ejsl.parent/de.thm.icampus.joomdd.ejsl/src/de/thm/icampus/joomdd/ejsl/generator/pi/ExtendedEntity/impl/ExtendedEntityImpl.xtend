@@ -29,7 +29,7 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
 	
 	new(Entity entity) {
 		entity.name = PlattformUtil.slugify(entity.name)
-		this.name = entity.name.toLowerCase
+		this.name = entity.name
 		this.supertype = entity.supertype
 		this.attributes = entity.attributes
 		this.references = entity.references

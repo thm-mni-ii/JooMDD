@@ -30,27 +30,22 @@ public class LinkGeneratorHandler {
 		this.link = link
 	}
 	
-	
-	
 	public def CharSequence generateLink(){
 		switch link {
 			ExternalLink :{
 				var ExternalLinkGenerator extern = new ExternalLinkGenerator(link)
-				return extern.generateLink(sect,compname)
+				return extern.generateLink(sect, compname)
 			}
 			
 			InternalLink:{
-			if(link instanceof ContextLink) {
-				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.ContextLinkGenerator intern = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.ContextLinkGenerator(link,valueF)
-				return intern.generateLink(sect,compname)
+    			if(link instanceof ContextLink) {
+    				var de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.ContextLinkGenerator intern = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.ContextLinkGenerator(link,valueF)
+    				return intern.generateLink(sect, compname)
+    			} else {
+    				var InternalLinkGenerator intern = new InternalLinkGenerator(link)
+    				return intern.generateLink(sect, compname)
+    			}
 			}
-			else{
-				var InternalLinkGenerator intern = new InternalLinkGenerator(link)
-				return intern.generateLink(sect,compname)
-				}
-			}
-			
-			
 		}
 		return "//to do it is empty !"
 	}

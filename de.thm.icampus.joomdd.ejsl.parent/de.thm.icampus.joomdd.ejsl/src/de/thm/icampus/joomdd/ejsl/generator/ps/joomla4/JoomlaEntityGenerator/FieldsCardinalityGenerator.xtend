@@ -236,7 +236,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		public function generateJsonValue($data)
 		{
 		    $result  = array();
-		    foreach($this->keysAndForeignKeys["foreignTable"] as $key=>$value) {
+		    foreach ($this->keysAndForeignKeys["foreignTable"] as $key => $value) {
 		        if (!array_key_exists("jform_$key",$result )) {
 		            $result["jform_$key"] = array();
 		        }

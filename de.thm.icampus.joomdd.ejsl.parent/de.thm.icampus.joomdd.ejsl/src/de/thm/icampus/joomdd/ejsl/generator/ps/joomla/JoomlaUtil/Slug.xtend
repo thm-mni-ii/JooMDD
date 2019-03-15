@@ -225,8 +225,12 @@ public class Slug  {
 		
 	def static CharSequence inputFeldTemplate(ExtendedAttribute attr) '''
 	    <div class="control-group">
-	        <div class="control-label"><?php echo $this->form->getLabel('«attr.name.toLowerCase»'); ?></div>
-	        <div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
+	        <div class="control-label">
+	            <?php echo $this->form->getLabel('«attr.name.toLowerCase»'); ?>
+	        </div>
+	        <div class="controls">
+	            <?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?>
+	        </div>
 	    </div>
 	'''
 	
@@ -875,7 +879,8 @@ public class Slug  {
             $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» AS «destinationEntityName» ON
                 «ref.extendedAttributes.map[ attr | 
                     '''«entityName.toLowerCase».«attr.name.toLowerCase» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»'''
-                ].join(''' AND ''')»
+                ].join(''' AND
+                ''')»
             ");
             '''
             counter++
@@ -900,45 +905,36 @@ public class Slug  {
 		return false
 	}
 	
-	def static CharSequence linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures) '''
-	    «FOR Link lk: page.links»
-	    «IF lk.linkedAttribute !== null»
-	    «IF lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)»
-	    «switch lk {
-		    ExternalLink : {
-			    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»'''
-		    }
-		    InternalLink: {
-		        if ((lk as InternalLink).target instanceof DetailsPage) {
-		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
-		                if (!(lk instanceof ContextLink)) {
-		                    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
-		                } else {
-		                    if ((lk as ContextLink).linkparameters.filter[t | t.id].size == 0) {
-		                        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
-		                    } else {
-		    		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
-		   			        }
-		   		        }
-		   	        } else {
-		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
-		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
-		    	
-			            if (idRef !== null) {
-				            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
-				        } else {
-				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
-		 	            }
-		 	        }
-                } else {
-		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
-		        }
-            }
-        }»
-	    «ENDIF»
-	    «ENDIF»
-	    «ENDFOR»
-	'''
+	def static String linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures) 
+	'''«FOR Link lk: page.links»
+    	    «IF lk.linkedAttribute !== null»
+        	    «IF lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)»
+            	    «switch lk {
+            		    ExternalLink : {
+            			    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»'''
+            		    }
+            		    InternalLink: {
+            		        if ((lk as InternalLink).target instanceof DetailsPage) {
+            		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
+            		                '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name»'''
+            		   	        } else {
+            		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
+            		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
+            		    	
+            			            if (idRef !== null) {
+            				            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
+            				        } else {
+            				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»", $item)'''
+            		 	            }
+            		 	        }
+                            } else {
+            		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
+            		        }
+                        }
+                    }»
+        	    «ENDIF»
+    	    «ENDIF»
+	    «ENDFOR»'''
 	
 	def static Entity getEntityForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage) {
 		for (ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences) {
@@ -984,19 +980,24 @@ public class Slug  {
 	}
 	
 	static def CharSequence genLinkedInfo(DynamicPage page, Component com)'''
- 	    private  $entitiesRef = array(
- 	    «FOR Link linkItem: page.links»
- 	    «switch linkItem {
- 		    InternalLink :{
- 			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
- 				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
- 				    '''
- 				    "«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.generateAttributeAndRefernce(ref)»
- 				    ), "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name.toLowerCase»"),'''	
- 			    }				
- 		    }	
- 	    }»
- 	    «ENDFOR»
+ 	    private $entitiesRef = array(
+ 	        «FOR Link linkItem: page.links»
+ 	        «switch linkItem {
+     		    InternalLink :{
+     			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
+     				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
+     				    '''
+     				    "«linkItem.name.toLowerCase»" => array(
+     				        "db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»",
+     				        "refattr" => array(
+     				            «Slug.generateAttributeAndRefernce(ref)»
+     				        ),
+     				        "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name.toLowerCase»"
+     				    ),'''	
+     			    }				
+     		    }	
+     	    }»
+     	    «ENDFOR»
  	    null);
  	'''
 	
@@ -1007,7 +1008,8 @@ public class Slug  {
 			var int index = reference.attribute.indexOf(attr)
 			var Attribute referenced = reference.attributerefereced.get(index)
 			if(attr != reference.attribute.last)
-			result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»",''')
+			    result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»",
+			    ''')
 			else{
 				result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»"''')
 			}
@@ -1237,15 +1239,26 @@ public class Slug  {
 	   var otherEntity = Slug.getOtherEntityToMapping(reference)   
 	    
 	   return '''
-    	    <?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-    	    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«otherEntity.name.toLowerCase»', Text::_('«languageKey»', true)); ?>
+    	    <?php if (Factory::getUser()->authorise('core.admin', '«com.name.toLowerCase»')) : ?>
+    	    <?php echo HTMLHelper::_(
+    	        'bootstrap.addTab',
+    	        'myTab',
+    	        '«otherEntity.name.toLowerCase»',
+    	        Text::_('«languageKey»', true)
+    	    ); ?>
     	    <div class="control-group">
-    	        <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
-    	        <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
+    	        <div class="control-label">
+    	            <?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?>
+    	        </div>
+    	        <div class="controls">
+    	            <?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?>
+    	        </div>
     	    </div>
     	    «FOR attribute: Slug.getOtherAttribute(reference)»
     	    <div class="control-group">
-    	        <div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
+    	        <div class="controls">
+    	             <?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?>
+    	        </div>
     	    </div>
     	    «ENDFOR»
     	    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
@@ -1254,15 +1267,26 @@ public class Slug  {
     }
 	
 	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
-		<?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«addLanguage(com.languages, newArrayList("com", com.name, Slug.getOtherEntityToMapping(reference).name), Slug.getOtherEntityToMapping(reference).name)»', true)); ?>
+		<?php if (Factory::getUser()->authorise('core.admin', '«com.name.toLowerCase»')) : ?>
+		<?php echo HTMLHelper::_(
+		    'bootstrap.addTab',
+		    'myTab',
+		    '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»',
+		    Text::_('«addLanguage(com.languages, newArrayList("com", com.name, Slug.getOtherEntityToMapping(reference).name), Slug.getOtherEntityToMapping(reference).name)»', true)
+		); ?>
 		<div class="control-group">
-		    <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
-		    <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
+		    <div class="control-label">
+		        <?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?>
+		    </div>
+		    <div class="controls">
+		        <?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?>
+		    </div>
 		</div>
 		«FOR attribute: Slug.getOtherAttribute(reference)»
 		<div class="control-group">
-		    <div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
+		    <div class="controls">
+		        <?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?>
+		    </div>
 		</div>
 		«ENDFOR»
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>

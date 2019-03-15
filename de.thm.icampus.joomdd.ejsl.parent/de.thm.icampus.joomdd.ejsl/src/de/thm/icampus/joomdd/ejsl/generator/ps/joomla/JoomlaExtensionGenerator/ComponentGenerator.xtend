@@ -461,7 +461,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		}
 		
 		// Get an instance of the controller prefixed by «Slug::nameExtensionBind("com",component.name )»
-		$controller	= BaseController::getInstance('«component.name.toFirstUpper»');
+		$controller = BaseController::getInstance('«component.name.toFirstUpper»');
 		$controller->execute(Factory::getApplication()->input->get('task'));
 		$controller->redirect();
 	'''
@@ -536,9 +536,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    <h4>«component.manifest.description»</h4>
 		</p> 
 		<div id="cpanel" class='cpanel'>
-		    <?php 
-		    foreach ($this->views as $view)
-		    {
+		    <?php
+		    foreach ($this->views as $view) {
 		    ?>
 		        <div class="icon">
 		            <h3>
@@ -746,7 +745,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 * @param   array  A named array
 		 * @return  array
 		 */
-		public function «component.name.toFirstUpper»BuildRoute(&$query)
+		function «component.name.toFirstUpper»BuildRoute(&$query)
 		{
 		    $segments = array();
 		
@@ -769,8 +768,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		/**
 		 * @param  array  A named array
 		 *
+		 * @return array
 		 */
-		public function «component.name.toFirstUpper»ParseRoute($segments)
+		function «component.name.toFirstUpper»ParseRoute($segments)
 		{
 		    $vars = array();
 		
@@ -796,13 +796,15 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence genScriptForForeignKeys()'''
 		«Slug.generateFileDoc(extendedComp)»
+		
 		/**
-		 * this function set the value of reference for a foreign attribute 
+		 * This function set the value of reference for a foreign attribute
 		 */
-		function setValueForeignKeys(element) {
+		function setValueForeignKeys(element)
+		{
 		    var data = JSON.parse(element.value);
 		    var item;
-		    for(item in data) {
+		    for (item in data) {
 		        jQuery("#"+item).attr("value",data[item]);
 		    }
 		}
@@ -815,39 +817,40 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	def CharSequence genScriptForMultipleForeignKeys()'''
 	    «Slug.generateFileDoc(extendedComp)»
 
-	    jQuery(document).ready(function() {
-	        jQuery("select[generated='true']").each(function() {
+	    jQuery(document).ready(function () {
+	        jQuery("select[generated='true']").each(function () {
 	            jQuery(this).trigger('onchange');
 	        })
 	    });
 
 	    /**
-	     * this function set the values of references for many foreign attributes 
+	     * This function set the values of references for many foreign attributes
 	     */
-	    function setMultipleValueForeignKeys(element) {
+	    function setMultipleValueForeignKeys(element)
+	    {
 	        var data = [];
 	        var id = "#" + element.id + " option:selected";
 	        jQuery(id).each(function () {
 	            data.push(JSON.parse(jQuery(this).prop("value")));
 	        });
-	        if(data.length == 0) {
+	        if (data.length == 0) {
 	            return;
 	        }
 	        var allkeys = Object.keys(data[0])
 	        var all_item = [];
-	        for(var a = 0; a< allkeys.length; a++) {
+	        for (var a = 0; a< allkeys.length; a++) {
 	            all_item[allkeys[a]] = [];
 	        }
-	        for(var i =0; i<data.length; i++) {
+	        for (var i =0; i<data.length; i++) {
 	            var attr_obj = data[i];
 	            var attr_obj_keys = Object.keys(attr_obj);
-	            for(var j =0; j< attr_obj_keys.length; j++) {
+	            for (var j =0; j< attr_obj_keys.length; j++) {
 	                var attr_key_value = attr_obj_keys[j];
 	                var attr_value = attr_obj[attr_key_value][0];
 	                all_item[attr_key_value].push(attr_value);
 	            }
 	        }
-	        for(var c =0; c < allkeys.length; c++) {
+	        for (var c =0; c < allkeys.length; c++) {
 	            var value = all_item[allkeys[c]];
 	            jQuery("#"+ allkeys[c]).attr("value",JSON.stringify(value));
 	        }

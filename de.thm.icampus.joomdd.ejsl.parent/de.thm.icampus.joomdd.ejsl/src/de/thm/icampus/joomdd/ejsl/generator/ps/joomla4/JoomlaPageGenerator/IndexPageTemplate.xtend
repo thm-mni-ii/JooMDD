@@ -85,7 +85,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		{
 		    /**
 		     * Proxy for getModel.
-		     * @since	1.6
+		     * @since 1.6
 		     */
 		    public function &getModel($name = '«ipage.name.toFirstUpper»', $prefix = 'Site', $config = array())
 		    {

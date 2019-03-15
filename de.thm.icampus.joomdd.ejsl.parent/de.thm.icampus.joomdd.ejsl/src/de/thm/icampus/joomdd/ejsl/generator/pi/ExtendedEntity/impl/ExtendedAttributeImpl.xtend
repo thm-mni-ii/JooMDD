@@ -19,9 +19,9 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	boolean isTheBaseElement = false
 
 	new(Attribute attr) {
-		attr.name = PlattformUtil.slugify(attr.name).toLowerCase
+		attr.name = PlattformUtil.slugify(attr.name)
 		this.type = attr.type
-		this.name = PlattformUtil.slugify(attr.name).toLowerCase
+		this.name = PlattformUtil.slugify(attr.name)
 		this.isunique = attr.isIsunique
 		this.withattribute = attr.withattribute
 		entity = attr.eContainer as Entity
@@ -37,7 +37,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	new(Attribute attr, Entity ent) {
 		instance = attr
 		this.type = attr.type
-		this.name = PlattformUtil.slugify(attr.name).toLowerCase
+		this.name = PlattformUtil.slugify(attr.name)
 		this.isunique = attr.isIsunique
 		this.withattribute = attr.withattribute
 		entity = searchEntity(ent)
