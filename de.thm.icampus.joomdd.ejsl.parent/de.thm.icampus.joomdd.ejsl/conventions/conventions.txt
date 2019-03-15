@@ -2,47 +2,24 @@ cJSL_ContainerNameInCamelCase:
 	something_conf=something_Conf
 ;
 
-something_Conf:
-	"Something Configuration ("
+lists in camelcase:
+	"somethingConfiguration {"
 		...
-	")"
+	"}"
 ;
 
-EntitiesWithAttributesInCamelCase:
-	"Entity" feature=STRING "("
-		"Attribute:" feature=Attribute
-		"*Referenced Attribute:" referencedFeature=[Attribute]
-	(
-		"Grouped Attribute #1:" feature=Attribute
-		&"Grouped Attribute #2:" feature=Attribute
-		&"*Grouped Referenced Attribute:" referencedFeature=[Attribute]
+Objects with first to upper:
+	"Entity" name=ID "{"
 		...
-	)
-		...
-	")"
+	"}"
 ;
 
-EntitiesWithoutAttributesInCamelCase:
-	"Entity" feature=Type
+Properties in camelCase and '=':
+	"globalParameters =" feature=Type
 ;
 
-EntitiesWitDefaultObjectInstantiationWithAttributesInCamelCase:
-	{Entity}
-	"Entity" "("
-		"Attribute:" feature=Attribute
-		"*Referenced Attribute:" referencedFeature=[Attribute]
-	(
-		"Grouped Attribute #1:" feature=Attribute
-		&"Grouped Attribute #2:" feature=Attribute
-		&"*Grouped Referenced Attribute:" referencedFeature=[Attribute]
-		...
-	)
-		...
-	")"
-;
-
-enum enumWithCamelCase:
-	feature_name=... | ...
+enum enumWithSnakeCase:
+	feature_name = ... | ...
 ;
 
 terminal TERMINALNAME:

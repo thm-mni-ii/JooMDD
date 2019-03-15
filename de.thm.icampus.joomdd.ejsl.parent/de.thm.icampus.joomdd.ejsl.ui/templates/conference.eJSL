@@ -5,7 +5,6 @@ eJSLModel "Conference" {
                 attributes {
                     Attribute name {
                         type = Short_Text
-                        Unique attribute with ID
                     }
                     Attribute affiliation {
                         type = Text
@@ -22,7 +21,6 @@ eJSLModel "Conference" {
                 attributes {
                     Attribute title {
                         type = Short_Text
-                        Unique attribute
                     }
                     Attribute ^description {
                         type = Text
@@ -33,10 +31,9 @@ eJSLModel "Conference" {
                 }
                 references {
                     Reference {
- 						EntityAttribute = speaker
-	                    ReferencedEntity = Participant
-	                    ReferencedEntityAttribute = Participant.name
-	                    min = 1
+ 						entityAttribute = speaker
+	                    referencedEntity = Participant
+	                    referencedEntityAttribute = Participant.name
 	                    max = 1
                     }
                 } 
@@ -45,7 +42,6 @@ eJSLModel "Conference" {
                 attributes {
                     Attribute roomname {
                         type = Short_Text
-                        Unique attribute
                     }
                     Attribute ^position {
                         type = Text
@@ -56,7 +52,6 @@ eJSLModel "Conference" {
                 attributes {
                     Attribute title {
                         type = Short_Text
-                        Unique attribute
                     }
                     Attribute time {
                         type = Datetime
@@ -70,17 +65,15 @@ eJSLModel "Conference" {
                 }
                 references {
                     Reference {
-                        EntityAttribute = talk
-                        ReferencedEntity = Talk
-                        ReferencedEntityAttribute = Talk.title
-                        min = 0
+                        entityAttribute = talk
+                        referencedEntity = Talk
+                        referencedEntityAttribute = Talk.title
                         max = 1
                     }
                     Reference {
-                        EntityAttribute = room
-                        ReferencedEntity = Room
-                        ReferencedEntityAttribute = Room.roomname
-                        min = 1
+                        entityAttribute = room
+                        referencedEntity = Room
+                        referencedEntityAttribute = Room.roomname
                         max = 1
                     }
                 }
@@ -88,78 +81,110 @@ eJSLModel "Conference" {
         }
         pages {
             IndexPage Participants {
-                *Entities Participant
-                representation columns = Participant.name, Participant.address, Participant.affiliation
-                filters = Participant.name, Participant.affiliation links {
-                    InternalcontextLink Details {
-                        target = Participant linked attribute = Participant.name
-                        linkparameters {
-                            Parameter name = *Attribute  "Participant.name"
+                *entities =  Participant
+                representationColumns = Participant.name, Participant.address, Participant.affiliation
+                filters = Participant.name, Participant.affiliation 
+                links {
+                    InternalContextLink Details {
+                        target = Participant 
+                        linkedAttribute = Participant.name
+                        linkParameters {
+                            Parameter name = *Attribute "Participant.name"
                         }
-                    }
+                    } 
                 }
             }
             DetailsPage Participant {
-                *Entities Participant links {
+                *entities =  Participant
+                editFields {
+                	Participant.name {
+                		htmlType = Text_Field
+                	},
+                	Participant.address {
+                		htmlType = Textarea
+                	},
+                	Participant.affiliation {
+                		htmlType = Editor
+                	},
+                	Participant.nationality {
+                		htmlType = Select
+                		values {
+                			en= "English",
+                			de="German",
+                			other="Other"
+                		}                		
+                	}
+                }
+                links {
                     InternalLink Index {
-                        target = Participants linked attribute = name
+                        target = Participants 
+                        linkedAttribute = name
                     }
                 }
             }
             IndexPage Talks {
-                *Entities Talk
-                representation columns = Talk.title, Talk.speaker
-                filters = Talk.title, Talk.speaker links {
-                    InternalcontextLink Details {
-                        target = Talk linked attribute = Talk.title
-                        linkparameters {
+                *entities =  Talk
+                representationColumns = Talk.title, Talk.speaker
+                filters = Talk.title, Talk.speaker 
+                links {
+                    InternalContextLink Details {
+                        target = Talk 
+                        linkedAttribute = Talk.title
+                        linkParameters {
                             Parameter title = *Attribute  "Talk.title"
                         }
                     }
                 }
             }
             DetailsPage Talk {
-                *Entities Talk links {
+                *entities =  Talk 
+                links {
                     InternalLink Index {
-                        target = Talks linked attribute = title
+                        target = Talks 
+                        linkedAttribute = title
                     }
                 }
             }
             IndexPage Rooms {
-                *Entities Room
-                representation columns = Room.roomname, Room.^position
-                filters = Room.roomname, Room.^position links {
-                    InternalcontextLink Details {
-                        target = Room linked attribute = Room.roomname
-                        linkparameters {
-                            Parameter roomname = *Attribute  "Room.roomname"
-                        }
+                *entities =  Room
+                representationColumns = Room.roomname, Room.^position
+                filters = Room.roomname, Room.^position 
+                links {
+                    InternalContextLink Details {
+                        target = Room 
+                        linkedAttribute = Room.roomname
                     }
                 }
             }
             DetailsPage Room {
-                *Entities Room links {
+                *entities =  Room 
+                links {
                     InternalLink Index {
-                        target = Rooms linked attribute = roomname
+                        target = Rooms 
+                        linkedAttribute = roomname
                     }
                 }
             }
             IndexPage Programme {
-                *Entities Programme
-                representation columns = Programme.room, Programme.talk, Programme.time, Programme.title
-                filters = Programme.room, Programme.talk, Programme.time, Programme.title links {
-                    InternalcontextLink Details {
-                        target = Session linked attribute = Programme.title
-                        linkparameters {
+                *entities =  Programme
+                representationColumns = Programme.room, Programme.talk, Programme.time, Programme.title
+                filters = Programme.room, Programme.talk, Programme.time, Programme.title 
+                links {
+                    InternalContextLink Details {
+                        target = Session 
+                        linkedAttribute = Programme.title
+                        linkParameters {
                             Parameter title = *Attribute  "Programme.title"
                         }
                     }
                 }
             }
             DetailsPage Session {
-                *Entities Programme links {
+                *entities = Programme
+                links {
                     InternalLink Index {
-                        target = Programme linked attribute = Programme.title
+                        target = Programme 
+                        linkedAttribute = Programme.title
                     }
                 }
             }
@@ -169,29 +194,37 @@ eJSLModel "Conference" {
                 Manifestation {
                     authors {
                         Author "John Doe" {
-                            authoremail = "john.doe@example.org"
+                            authorEmail = "john.doe@example.org"
                         }
                     }
-                    copyright = "Copyright (C) 2017 All right reserved."
+                    copyright = "Copyright (C) 2019 All right reserved."
                     license = "GNU General Public License"
-                    version = "1.0.1"
+                    version = "1.0.0"
                 }
                 languages {
                     Language de-DE {
-                    }
-                    Language en-GB {
-                    }
-                }
-                sections {
-                    Frontend section {
-                        *Pages {
-                            *Page : Participants
-                            *Page : Talks
-                            *Page : Rooms
-                            *Page : Programme
+                        keyValuePairs {
+                            COM_MYCONFERENCE_HELLO_WORLD = "Hallo Welt"
                         }
                     }
-                    Backend section {
+                    Language system de-DE {}
+                    Language en-GB {}
+                    Language system en-GB {}
+                }
+                sections {
+                    FrontendSection {
+                        *Pages {
+                            *Page : Participants
+                            *Page : Participant
+                            *Page : Talks
+                            *Page : Talk
+                            *Page : Rooms
+                            *Page : Room
+                            *Page : Programme
+                            *Page : Session
+                        }
+                    }
+                    BackendSection {
                         *Pages {
                             *Page : Participants
                             *Page : Participant
@@ -204,6 +237,25 @@ eJSLModel "Conference" {
                         }
                     }
                 }
+            } 
+            Module Talks {
+            	Manifestation {
+                    authors {
+                        Author "John Doe" {
+                            authorEmail = "john.doe@example.org"
+                        }
+                    }
+                    copyright = "Copyright (C) 2019 All right reserved."
+                    license = "GNU General Public License"
+                    version = "1.0.0"
+                }
+                languages {
+                    Language de-DE {}
+                    Language system de-DE {}
+                    Language en-GB {}
+                    Language system en-GB {}
+                }
+                *Page : Talks from : MyConference data backendDAO
             }
         }   
     }

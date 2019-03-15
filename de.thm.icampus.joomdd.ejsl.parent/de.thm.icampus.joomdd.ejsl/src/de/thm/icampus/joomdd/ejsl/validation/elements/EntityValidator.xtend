@@ -201,13 +201,15 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	 */
 	 @Check
 	 def validateMinValues(Reference reference){
-	 	if(!MINVALUES.contains(reference.lower)){
-	 		error(
-					'The value for min has to be 0 or 1',
-					reference,
-					EJSLPackage.Literals.REFERENCE__LOWER,
-					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_LOWER_WRONG_VALUE
-				)
+	 	if (reference.lower !== null) {
+	 	    if(!MINVALUES.contains(reference.lower)){
+            error(
+                    'The value for min has to be 0 or 1',
+                    reference,
+                    EJSLPackage.Literals.REFERENCE__LOWER,
+                    de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_LOWER_WRONG_VALUE
+                )
+            }   
 	 	}
 	 }
 	 
