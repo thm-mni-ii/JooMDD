@@ -70,7 +70,6 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    «genGenerateJsonValue»
 		
 		    «gengenerateStringValue»
-		
 		}
 	'''
 	
@@ -79,29 +78,50 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		{
 		    $html = array();
 		    $document = Factory::getDocument();
-		    $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
 		    $input = Factory::getApplication()->input;
 		    $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
 		    if (empty($«entFrom.primaryKey.name»)) {
 		        $alldata = $this->getAllData();
-		        $html[] = "<select  onchange='setMultipleValueForeignKeys(this)' generated='true' multiple id='" . $this->id . "select'  class='form-control' >";
+		        $html[] = "<select
+		                       onchange='setMultipleValueForeignKeys(this)'
+		                       generated='true'
+		                       multiple
+		                       id='" . $this->id . "select'
+		                       class='form-control'
+		                   >";
 		        foreach ($alldata as $data) {
-		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
+		            $html[] = "<option value='". $this->generateJsonValue($data) ."'>"
 		            . $this->generateStringValue($data) ."</option>";
 		        }
 		        $html[]="</select>";
 		        $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id. "'/>";
 		        return implode($html);
 		    }
-		    $data_item = $this->getData_item($«entFrom.primaryKey.name»);
+		    $data_item = $this->getDataItem($«entFrom.primaryKey.name»);
 		    $referenceData = $this->getAllReferenceData($data_item);
-		    $html[] = "<select  multiple='true' onchange='setMultipleValueForeignKeys(this)' generated='true'  id='" . $this->id . "select' class='form-control' >";
+		    $html[] = "<select
+		                   multiple='true'
+		                   onchange='setMultipleValueForeignKeys(this)'
+		                   generated='true'
+		                   id='" . $this->id . "select'
+		                   class='form-control'
+		               >";
 		
-		    foreach($referenceData as $reference) {
-		        $html[] = "<option  $reference->selected  value='". $this->generateJsonValue($reference)."'>" . $this->generateStringValue($reference) ."</option>";
+		    foreach ($referenceData as $reference) {
+		        $html[] = "<option
+		                       $reference->selected
+		                       value='". $this->generateJsonValue($reference)."'>" .
+		                       $this->generateStringValue($reference) .
+		                   "</option>";
 		    }
 		    $html[]="</select>";
-		    $html[]="<input type='hidden' value='" . $this->attributValue($referenceData). "' name='" . $this->name. "' id='" . $this->id. "'/>";
+		    $html[]="<input
+		                 type='hidden'
+		                 value='" . $this->attributValue($referenceData). "'
+		                 name='" . $this->name. "'
+		                 id='" . $this->id. "'
+		             />";
 		    return implode($html);
 		}
 	'''
@@ -129,9 +149,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		protected function attributValue($referenceData)
 		{
 		    $values = array();
-		    foreach($referenceData as $reference)
-		    {
-		        if (!empty($reference->selected) && !in_array($reference->id,$values)) {
+		    foreach ($referenceData as $reference) {
+		        if (!empty($reference->selected) && !in_array($reference->id, $values)) {
 		            array_push($values, $reference->id);
 		        }
 		    }
@@ -148,21 +167,21 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
 		        ->from($this->referenceStruct["foreignTable"] . " as A")
 		        ->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
-		        «FOR attr : mainRef.extendedAttributes»
-		        «IF attr != mainRef.extendedAttributes.last»
-		        C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»' AND 
-		        «ELSE»
-		        C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»= '$item->«attr.name.toLowerCase»'	       
-		        «ENDIF»
-		        «ENDFOR»
-		        ) as B on 
-		        «FOR foreignAttr : foreignReference.attribute»
-		        «IF foreignAttr != foreignReference.attribute.last»
-		        A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase» AND 
-		        «ELSE»
-		        A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase»") 	       
-		        «ENDIF»
-		        «ENDFOR»
+		            «FOR attr : mainRef.extendedAttributes»
+		            «IF attr != mainRef.extendedAttributes.last»
+		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase» = '$item->«attr.name.toLowerCase»' AND 
+		            «ELSE»
+		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase» = '$item->«attr.name.toLowerCase»'
+		            «ENDIF»
+		            «ENDFOR»
+		            ) as B on 
+		            «FOR foreignAttr : foreignReference.attribute»
+		            «IF foreignAttr != foreignReference.attribute.last»
+		            A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase» AND 
+		            «ELSE»
+		            A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase»")
+		            «ENDIF»
+		            «ENDFOR»
 		        ->where("A.state = 1")
 		        ->order("A.«foreignReference.attributerefereced.get(0).name.toLowerCase»");
 		    $db->setQuery($query);
@@ -170,7 +189,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		}
 	'''
 	def private genGetData_item()'''
-		protected function getData_item($«entFrom.primaryKey.name»)
+		protected function getDataItem($«entFrom.primaryKey.name»)
 		{
 		    $db = Factory::getDbo();
 		    $query = $db->getQuery(true);
@@ -184,11 +203,11 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		public function generateJsonValue($data)
 		{
 		    $result  = array();
-		    foreach($this->keysAndForeignKeys["foreignTable"] as $key=>$value) {
-		        if (!array_key_exists("jform_$key",$result )) {
+		    foreach ($this->keysAndForeignKeys["foreignTable"] as $key => $value) {
+		        if (!array_key_exists("jform_$key", $result)) {
 		            $result["jform_$key"] = array();
 		        }
-		        array_push($result["jform_$key"],$data->{$key} );
+		        array_push($result["jform_$key"], $data->{$key});
 		    }
 		    return json_encode($result);
 		}

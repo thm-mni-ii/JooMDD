@@ -28,7 +28,7 @@ class DetailsPageTemplateBackendHelper {
 		/**
 		 * Prepare and sanitise the table prior to saving.
 		 *
-		 * @since	1.6
+		 * @since 1.6
 		 */
 		protected function prepareTable($table)
 		{
@@ -126,11 +126,11 @@ class DetailsPageTemplateBackendHelper {
 		/**
 		 * Returns a reference to the a Table object, always creating it.
 		 *
-		 * @param	type	The table type to instantiate
-		 * @param	string	A prefix for the table class name. Optional.
-		 * @param	array	Configuration array for model. Optional.
-		 * @return	Table	A database object
-		 * @since	1.6
+		 * @param  type  The table type to instantiate
+		 * @param  string  A prefix for the table class name. Optional.
+		 * @param  array  Configuration array for model. Optional.
+		 * @return  Table  A database object
+		 * @since 1.6
 		 */
 		public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array())
 		{
@@ -142,7 +142,7 @@ class DetailsPageTemplateBackendHelper {
 		/**
 		 * Add the page title and toolbar.
 		 */
-		protected function addToolbar() 
+		protected function addToolbar()
 		{
 		    Factory::getApplication()->input->set('hidemainmenu', true);
 		
@@ -163,11 +163,23 @@ class DetailsPageTemplateBackendHelper {
 		        JToolBarHelper::save('«dpage.name.toLowerCase».save', 'JTOOLBAR_SAVE');
 		    }
 		    if (!$checkedOut && ($canDo->get('core.create'))) {
-		        JToolBarHelper::custom('«dpage.name.toLowerCase».save2new', 'save-new.png', 'save-new_f2.png', 'JTOOLBAR_SAVE_AND_NEW', false);
+		        JToolBarHelper::custom(
+		            '«dpage.name.toLowerCase».save2new',
+		            'save-new.png',
+		            'save-new_f2.png',
+		            'JTOOLBAR_SAVE_AND_NEW',
+		            false
+		        );
 		    }
 		    // If an existing item, can save to a copy.
 		    if (!$isNew && $canDo->get('core.create')) {
-		        JToolBarHelper::custom('«dpage.name.toLowerCase».save2copy', 'save-copy.png', 'save-copy_f2.png', 'JTOOLBAR_SAVE_AS_COPY', false);
+		        JToolBarHelper::custom(
+		            '«dpage.name.toLowerCase».save2copy',
+		            'save-copy.png',
+		            'save-copy_f2.png',
+		            'JTOOLBAR_SAVE_AS_COPY',
+		            false
+		        );
 		    }
 		    if (empty($this->item->id)) {
 		        JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CANCEL');
@@ -189,8 +201,8 @@ class DetailsPageTemplateBackendHelper {
 		    $this->form = $this->get('Form');
 
 		    if (count($errors = $this->get('Errors'))) {
-			    throw new Exception(implode("\n", $errors));
-			}
+		        throw new Exception(implode("\n", $errors));
+		    }
 
 		    $this->addToolbar();
 		    parent::display($tpl);
@@ -199,35 +211,68 @@ class DetailsPageTemplateBackendHelper {
 	'''
 
 	def generateAdminViewLayoutForm() '''
-		<form action="<?php echo Route::_('index.php?option=com_«com.name.toLowerCase»&layout=edit&«mainEntity.primaryKey.name»=' . (int) $this->item->«mainEntity.primaryKey.name»); ?>" method="post" enctype="multipart/form-data" name="adminForm" id="«dpage.name.toLowerCase»-form" class="form-validate">
+		<form action="<?php echo Route::_('index.php?option=com_«com.name.toLowerCase»&layout=edit&«mainEntity.primaryKey.name»=' . (int) $this->item->«mainEntity.primaryKey.name»); ?>"
+		      method="post"
+		      enctype="multipart/form-data"
+		      name="adminForm"
+		      id="«dpage.name.toLowerCase»-form"
+		      class="form-validate">
 
 		    <div class="form-horizontal">
-		        <?php echo HTMLHelper::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
+		        <?php echo HTMLHelper::_(
+		            'bootstrap.startTabSet',
+		            'myTab',
+		            array(
+		                'active' => 'general'
+		            )
+		        ); ?>
 
-		        <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'general', Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)); ?>
+		        <?php echo HTMLHelper::_(
+		            'bootstrap.addTab',
+		            'myTab',
+		            'general',
+		            Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)
+		        ); ?>
 		        <div class="row-fluid">
 		            <div class="span10 form-horizontal">
 		                <fieldset class="adminform">
-		                    <input type="hidden" name="jform[«mainEntity.primaryKey.name»]" value="<?php echo $this->item->«mainEntity.primaryKey.name»; ?>" />
-		                    <input type="hidden" name="jform[ordering]" value="<?php echo $this->item->ordering; ?>" />
-		                    <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
-		                    <input type="hidden" name="jform[published]" value="<?php if($this->item->«mainEntity.primaryKey.name» != 0) echo $this->item->state; else echo 1;?>"/>
+		                    <input
+		                        type="hidden"
+		                        name="jform[«mainEntity.primaryKey.name»]"
+		                        value="<?php echo $this->item->«mainEntity.primaryKey.name»; ?>"
+		                    />
+		                    <input
+		                        type="hidden"
+		                        name="jform[ordering]"
+		                        value="<?php echo $this->item->ordering; ?>"
+		                    />
+		                    <input
+		                        type="hidden"
+		                        name="jform[state]"
+		                        value="<?php echo $this->item->state; ?>"
+		                    />
+		                    <input
+		                        type="hidden"
+		                        name="jform[published]"
+		                        value="<?php echo ($this->item->«mainEntity.primaryKey.name» != 0) ? $this->item->state : 1; ?>"
+		                    />
 		                    «IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
 		                    <input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
 		                    «ENDIF»
-		                    <input type="hidden" name="jform[checked_out]" value="<?php 
-		                        if (isset($this->item->checked_out)) {
-		                            echo $this->item->checked_out;
-		                        } else {
-		                            echo Factory::getUser()->id;
-		                        } ?>" />
-		                        <input type="hidden" name="jform[checked_out_time]" value="<?php 
-		                        if (isset($this->item->checked_out_time)) {
-		                            echo $this->item->checked_out_time;
-		                        } else {
-		                            echo date("Y-m-d H:i:s") ;
-		                        } ?>" />
-		                        
+		                    <input type="hidden" name="jform[checked_out]" value="<?php
+		                    if (isset($this->item->checked_out)) {
+		                        echo $this->item->checked_out;
+		                    } else {
+		                        echo Factory::getUser()->id;
+		                    } ?>"
+		                    />
+		                    <input type="hidden" name="jform[checked_out_time]" value="<?php
+		                    if (isset($this->item->checked_out_time)) {
+		                        echo $this->item->checked_out_time;
+		                    } else {
+		                        echo date("Y-m-d H:i:s");
+		                    } ?>"
+		                    />    
 		                    <?php
 		                    if (empty($this->item->created_by)) {?>
 		                    <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
@@ -242,8 +287,13 @@ class DetailsPageTemplateBackendHelper {
 		        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
 		        «Slug.generateEntytiesBackendInputRefrence(ref,com)»
 		        «ENDFOR» 
-		        <?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-		            <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'permissions', JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)); ?>
+		        <?php if (Factory::getUser()->authorise('core.admin', '«com.name.toLowerCase»')) : ?>
+		            <?php echo HTMLHelper::_(
+		                'bootstrap.addTab',
+		                'myTab',
+		                'permissions',
+		                JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)
+		            ); ?>
 		            <?php echo $this->form->getInput('rules'); ?>
 		            <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		        <?php endif; ?>

@@ -39,7 +39,6 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import org.eclipse.xtext.EcoreUtil2
 import java.util.ArrayList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
-import org.eclipse.emf.ecore.EStructuralFeature
 import java.util.stream.Collectors
 import java.util.List
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
@@ -68,8 +67,14 @@ class RessourceTransformer {
 
     def dotransformation() {
         var entityList = feature.entities
-        entityList.forEach[t|t.name = Util.slugify(t.name)]
-        feature.pages.forEach[t|t.name = Util.slugify(t.name)]
+        
+        entityList.forEach[ t |
+            t.name = Util.slugify(t.name)
+        ]
+        
+        feature.pages.forEach[ t |
+            t.name = Util.slugify(t.name)
+        ]
 
         for (Entity ent : entityList) {
             this.completeAttributeOfEntity(ent)

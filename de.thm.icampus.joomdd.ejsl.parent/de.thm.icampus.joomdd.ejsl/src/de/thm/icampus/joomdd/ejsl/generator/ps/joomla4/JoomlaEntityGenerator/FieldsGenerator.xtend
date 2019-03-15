@@ -163,7 +163,7 @@ class FieldsGenerator {
 		 * Method to get the field input markup.
 		 *
 		 * @return	string	The field input markup.
-		 * @since	1.6
+		 * @since 1.6
 		 */
 		protected function getInput()
 		{
@@ -218,7 +218,7 @@ class FieldsGenerator {
 	        «ENDFOR»
 	        then 'selected'
 	        else ' ' end) as selected");
-	    foreach ($this->keysAndForeignKeys as $key =>$value) {
+	    foreach ($this->keysAndForeignKeys as $key => $value) {
 	        $query->select(" b.$value");
 	    }
 
@@ -248,7 +248,7 @@ class FieldsGenerator {
 		public function generateJsonValue($data)
 		{
 		    $result  = array();
-		    foreach ($this->keysAndForeignKeys as $key=>$value) {
+		    foreach ($this->keysAndForeignKeys as $key => $value) {
 		        $result["jform_$key"] = $data->{$value};
 		    }
 		    return json_encode($result);

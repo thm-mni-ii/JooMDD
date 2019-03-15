@@ -49,7 +49,7 @@ class IndexPageTemplateAdminHelper {
 	public def genAdminControllerGetModel()'''
 	/**
 	 * Overwrite the  getModel.
-	 * @since	1.6
+	 * @since 1.6
 	 */
 	public function getModel($name = '«details.toFirstUpper»', $prefix = 'Administrator', $config = array())
 	{
@@ -108,7 +108,7 @@ class IndexPageTemplateAdminHelper {
 	     * Build an SQL query to load the list data.
 	     *
 	     * @return	JDatabaseQuery
-	     * @since	1.6
+	     * @since 1.6
 	     * @generated
 	     */
 	    protected function getListQuery()
@@ -171,10 +171,10 @@ class IndexPageTemplateAdminHelper {
 	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
-	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE '.$search. 
+	                $query->where('( «indexpage.entities.get(0).name.toLowerCase».«filters.get(0).name.toLowerCase» LIKE ' . $search . 
 	                «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
 	                «IF filters.indexOf(attr) > 0»
-	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE '.$search.
+	                'OR  «attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE ' . $search .
 	                «ENDIF»
 	                «ENDFOR»
 	                ')');

@@ -34,7 +34,7 @@ class Util {
 		res = res.replaceAll("ü", "ue")
 		res = res.replaceAll("ß", "ss")
 		res = res.replaceAll("[^-\\w]+", '')
-		res = res.toLowerCase()
+		
 		trim(res, "_".charAt(0))
 	}
 	def static String trim(String str, char c) {

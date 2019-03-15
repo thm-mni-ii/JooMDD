@@ -47,10 +47,15 @@ class ExtentionScriptGenerator {
 		class «extName.toFirstUpper»InstallerScript
 		{
 		    «genInstall()»
+
 		    «genSetCompoenentParamater()»
+
 		    «genUnsinstall()»
+
 		    «genUpsate()»
+
 		    «genpreflight()»
+
 		    «genPostflight()»
 		}
 	'''
