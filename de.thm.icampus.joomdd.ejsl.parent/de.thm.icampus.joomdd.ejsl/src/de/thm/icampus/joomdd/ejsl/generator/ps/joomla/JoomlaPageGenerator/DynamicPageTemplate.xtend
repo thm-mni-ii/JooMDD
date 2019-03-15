@@ -76,7 +76,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     def CharSequence genSettingForDetailsPage(String pagename, ExtendedDynamicPage page, ExtendedComponent component)'''
 	<fieldset name="request"
 	    addfieldpath="/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields">
-	    <field name="«page.extendedEntityList.get(0).primaryKey.name»" type="«page.extendedEntityList.get(0).name.toLowerCase»"
+	    <field name="«page.extendedEntityList.get(0).primaryKey.name»" type="«page.extendedEntityList.get(0).name»"
 	        label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", page.extendedEntityList.get(0).name, page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name, "LABEL"), page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name)»"
 	        required="true"
 	        edit="true"
@@ -283,12 +283,12 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
    	        result.append('''
-   		    <field name="«attr.name.toLowerCase»"
+   		    <field name="«attr.name»"
    		            type="list" 
    		            «IF type.contains("multiselect")»
    		            multiple ="true"
    		            «ENDIF»
-   		            id="«attr.name.toLowerCase»"
+   		            id="«attr.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : options»
@@ -303,11 +303,11 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		    }
    		    case "imagepicker": {
    		        result.append('''
-   		        <field name="«attr.name.toLowerCase»"
+   		        <field name="«attr.name»"
    		            type="imageloader"
    		            accept="image/*"
-   		            path="«page.name.toLowerCase»_image_path"
-   		            id="«attr.name.toLowerCase»"
+   		            path="«page.name»_image_path"
+   		            id="«attr.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : options»
@@ -318,10 +318,10 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		    }
    		    case "filepicker": {
    		        result.append('''
-   		        <field name="«attr.name.toLowerCase»"
+   		        <field name="«attr.name»"
    		            type="fileloader"
-   		            path="«page.name.toLowerCase»_file_path"
-   		            id="«attr.name.toLowerCase»"
+   		            path="«page.name»_file_path"
+   		            id="«attr.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : options»
@@ -332,9 +332,9 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		    }
    		    case "checkbox": {
    		        result.append(''' 
-   		        <field name="«attr.name.toLowerCase»"
+   		        <field name="«attr.name»"
    		            type="checkboxes" 
-   		            id="«attr.name.toLowerCase»"
+   		            id="«attr.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : options»
@@ -349,9 +349,9 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		    }
    		    case "radiobutton": {
    		        result.append(''' 
-	   		        <field name="«attr.name.toLowerCase»"
+	   		        <field name="«attr.name»"
 	   		            type="radio"
-	   		            id="«attr.name.toLowerCase»"
+	   		            id="«attr.name»"
 	   		            label="«fieldLabel»"
 	   		            description="«fieldDescription»"
 	   		            «FOR KeyValuePair kvpair : options»
@@ -366,9 +366,9 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		    }
    		    case "Yes_No_Buttons": {
    		        result.append(''' 
-   		        <field name="«attr.name.toLowerCase»"
+   		        <field name="«attr.name»"
    		            type="radio" 
-   		            id="«attr.name.toLowerCase»"
+   		            id="«attr.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            default="0"
@@ -383,23 +383,22 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
    		    }
    		    default: {
    		        result.append('''  
-   		        <field name="«attr.name.toLowerCase»"
+   		        <field name="«attr.name»"
    		            «type»
-   		            id="«attr.name.toLowerCase»"
+   		            id="«attr.name»"
    		            label="«fieldLabel»"
    		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : options»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
-   		            />
+   		        />
    		        ''');
    		    }
    		}
    		return result.toString
    	}
 		
-		def CharSequence writeFieldType(ExtendedDetailPageField field, ExtendedEntity entity, ExtendedComponent component, ExtendedDynamicPage page){
-			
+		def CharSequence writeFieldType(ExtendedDetailPageField field, ExtendedEntity entity, ExtendedComponent component, ExtendedDynamicPage page) {
 			var Attribute refAttr = field.fieldtype
 			var String type = getHtmlTypeOfAttribute(page,field.extendedAttribute,entity,component)
 			var Entity refEntity = field.fieldtype.eContainer as Entity
@@ -409,13 +408,13 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 			if(field.extendedAttribute.theBaseElementOfUniquePair){
 			return '''
 			<field name="«field.attribute.name»"
-			type="hidden"
-			id="«field.attribute.name.toLowerCase»"
-			label="«fieldLabel»"
-			description="«fieldDescription»"
-	        «FOR KeyValuePair kvpair : field.attributes»
-	        «kvpair.name» = "«kvpair.value»"
-	        «ENDFOR»
+			    type="hidden"
+			    id="«field.attribute.name»"
+			    label="«fieldLabel»"
+			    description="«fieldDescription»"
+			    «FOR KeyValuePair kvpair : field.attributes»
+			    «kvpair.name» = "«kvpair.value»"
+			    «ENDFOR»
 			/>
 			'''
 			}
@@ -424,11 +423,11 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 					case "1": {
 						return '''
         					<field name="«field.attribute.name»"
-        					type="«component.name.toLowerCase»reference"
-        					id="«field.attribute.name.toLowerCase»"
+        					type="«component.name»reference"
+        					id="«field.attribute.name»"
         					label="«fieldLabel»"
         					description="«fieldDescription»"
-        					 tables="{'table':'#__«component.name.toLowerCase»_«entity.name.toLowerCase»', 'foreignTable':'#__«component.name.toLowerCase»_«ref.entity.name.toLowerCase»'}"
+        					tables="{'table':'#__«component.name»_«entity.name»', 'foreignTable':'#__«component.name»_«ref.entity.name»'}"
         					referenced_keys ="{«writeRefrence(ref)» }"
         					primary_key_name="«entity.primaryKey.name»"
         		            «FOR KeyValuePair kvpair : field.attributes»
@@ -443,25 +442,25 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     					return ''' 
     					<field name="«field.attribute.name»"
     					    «type»
-    					    id="«field.attribute.name.toLowerCase»"
+    					    id="«field.attribute.name»"
     					    label="«fieldLabel»"
     					    description="«fieldDescription»"
-    				        «FOR KeyValuePair kvpair : field.attributes»
-    				        «kvpair.name» = "«kvpair.value»"
+    					    «FOR KeyValuePair kvpair : field.attributes»
+    					    «kvpair.name» = "«kvpair.value»"
     				        «ENDFOR»
     					/>
     					«FOR ExtendedReference refItem: listOfref»
     					«var languageKey = Slug.getNReferenceLanguageKey(component, refItem, entity.name)»
-    					<field name="«refItem.entity.name.toLowerCase»_id"
-    					    type="«entity.name.toLowerCase»To«refItem.entity.name.toLowerCase»"
-    					    id="«refItem.entity.name.toLowerCase»_id"
+    					<field name="«refItem.entity.name»_id"
+    					    type="«entity.name»To«refItem.entity.name»"
+    					    id="«refItem.entity.name»_id"
     					    label="«Slug.addLanguage(component.languages, newArrayList(languageKey, "LABEL"), refItem.entity.name)»"
     					    description="«Slug.addLanguage(component.languages, newArrayList(languageKey, "DESC"), StaticLanguage.getCommonDescriptionFor(refItem.entity.name))»"
     					/>
     					«FOR Attribute attr: Slug.getOtherAttribute(refItem)»
-    					<field name="«attr.name.toLowerCase»"
+    					<field name="«attr.name»"
     					    type="hidden"
-    					    id="«attr.name.toLowerCase»"
+    					    id="«attr.name»"
     					/>
     					«ENDFOR»
     					«ENDFOR»
@@ -476,18 +475,14 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 			return ""
 		}
 		
-		def String writeRefrence(Reference reference){
-			var String result = "";
+		def String writeRefrence(Reference reference) {
+			var result = newArrayList
 			
-			for(var i =0; i < reference.attribute.size; i++){
-				if(i < reference.attribute.size -1)
-			result += ''' '«i»':{ 'key': '«reference.attribute.get(i).name.toLowerCase»', 'ref': '«reference.attributerefereced.get(i).name.toLowerCase»'}, '''
-				else
-			result += ''' '«i»':{ 'key': '«reference.attribute.get(i).name.toLowerCase»', 'ref': '«reference.attributerefereced.get(i).name.toLowerCase»'} '''
-				
+			for(var i = 0; i < reference.attribute.size; i++) {
+			    result.add(''''«i»':{ 'key': '«reference.attribute.get(i).name»', 'ref': '«reference.attributerefereced.get(i).name.toLowerCase»'}''')
 			}
 			
-			return result.toString
+			return result.join(", ")
 		}
    
     /**

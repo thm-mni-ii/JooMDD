@@ -70,7 +70,7 @@ class TableGeneratorTemplate {
  		*/
  		public function __construct(&$db)
  		{
- 		    parent::__construct('#__«com.name.toLowerCase»_«ent.name.toLowerCase»', '«ent.primaryKey.name»', $db);
+ 		    parent::__construct('#__«com.name»_«ent.name»', '«ent.primaryKey.name»', $db);
  		    $this->initTheForeignTableOption();
  		}
  	'''
@@ -84,7 +84,7 @@ class TableGeneratorTemplate {
  		        "prefix" => "«com.name.toFirstUpper»Table",
  		        "foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
  		        "refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
- 		        "name" => "#__«com.name.toLowerCase»_«ref.sourceEntity.name.toLowerCase»",
+ 		        "name" => "#__«com.name»_«ref.sourceEntity.name»",
  		        "foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.destinationEntity).name.toLowerCase»'
  		    );
  		    array_push($this->foreigntableOption, $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)»);

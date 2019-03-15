@@ -37,7 +37,7 @@ class DetailsPageTemplateBackendHelper {
 		        if ($table->ordering === '') {
 		            $db = Factory::getDbo();
 		            $query = $db->getQuery(true);
-		            $query->select("MAX(ordering)")->from("#__«com.name.toLowerCase»_«mainEntity.name.toLowerCase»");
+		            $query->select("MAX(ordering)")->from("#__«com.name»_«mainEntity.name»");
 		            $db->setQuery($query);
 		            $max = $db->loadResult();
 		            $table->ordering = $max+1;
@@ -257,7 +257,7 @@ class DetailsPageTemplateBackendHelper {
 		                        value="<?php echo ($this->item->«mainEntity.primaryKey.name» != 0) ? $this->item->state : 1; ?>"
 		                    />
 		                    «IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
-		                    <input type="hidden" id="jform_title" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
+		                    <input type="hidden" id="jform[title]" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
 		                    «ENDIF»
 		                    <input type="hidden" name="jform[checked_out]" value="<?php
 		                    if (isset($this->item->checked_out)) {

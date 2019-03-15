@@ -126,47 +126,47 @@ class IndexPageTemplateAdminHelper {
 	                '«indexpage.entities.get(0).name.toLowerCase».*'
 	            )
 	        );
-	        $query->from('`#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»` AS «indexpage.entities.get(0).name.toLowerCase»');
+	        $query->from('`#__«com.name»_«indexpage.entities.get(0).name»` AS «indexpage.entities.get(0).name»');
 	        // Join over the users for the checked out user
 	        $query->select("uc.name AS editor");
-	        $query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name.toLowerCase».checked_out");
+	        $query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name».checked_out");
 	        // Join over the user field 'created_by'
 	        $query->select('created_by.name AS created_by');
-	        $query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name.toLowerCase».created_by');
+	        $query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name».created_by');
 	        // Join over the user field 'user'
 	        $query->select('user.name AS user');
-	        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name.toLowerCase».created_by');
+	        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name».created_by');
 	        «Slug.createLeftJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, com.name, indexpage.entities.get(0).name)»
 	        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), com.name, '''<\/br>''')»
 	        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
 	        // Filter by published state
 	        $published = $this->getState('filter.state');
 	        if (is_numeric($published)) {
-	            $query->where('«indexpage.entities.get(0).name.toLowerCase».state = ' . (int) $published);
+	            $query->where('«indexpage.entities.get(0).name».state = ' . (int) $published);
 	        } elseif ($published === '') {
-	            $query->where('(«indexpage.entities.get(0).name.toLowerCase».state IN (0, 1))');
+	            $query->where('(«indexpage.entities.get(0).name».state IN (0, 1))');
 	        }
 	        // Filter by User
 	        $created_by = $this->getState('filter.created_by');
 	        if (!empty($created_by)) {
-	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '" . $db->escape($created_by) . "'");
+	            $query->where("«indexpage.entities.get(0).name».created_by = '" . $db->escape($created_by) . "'");
 	        }
 	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
 	        // Filter by «attr.name»
 	        $«attr.name» = $this->getState('filter.«attr.name»');
 	        if (!empty($«attr.name»)) {
-	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '" . $db->escape($«attr.name») . "'");
+	            $query->where("«attr.entity.name».«attr.name» = '" . $db->escape($«attr.name») . "'");
 	        }
             «ENDFOR»
 	        // Filter by search in attribute
 	        $search = $this->getState('filter.search');
 	        if (!empty($search)) {
 	            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
-	                $query->where('«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
+	                $query->where('«indexpage.entities.get(0).name».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
 	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
-	                $query->where("(«indexpage.extendFiltersList.map[ attr | '''«attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE $search''' ].join('''
+	                $query->where("(«indexpage.extendFiltersList.map[ attr | '''«attr.entity.name».«attr.name» LIKE $search''' ].join('''
 	                
 	                OR ''')»)");
 	                «ENDIF»
@@ -581,15 +581,15 @@ class IndexPageTemplateAdminHelper {
         <?php if ($canEdit) : ?>
             <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»); ?>"
             >
-                <?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
+                <?php echo $this->escape($item->«attr.name»); ?>
             </a>
         <?php else : ?>
-            <?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
+            <?php echo $this->escape($item->«attr.name»); ?>
         <?php endif;?>
         </td>
         «ELSE»
         <td>
-            <?php echo $item->«attr.name.toLowerCase»; ?>
+            <?php echo $item->«attr.name»; ?>
         </td>
         «ENDIF»
         «ENDFOR»

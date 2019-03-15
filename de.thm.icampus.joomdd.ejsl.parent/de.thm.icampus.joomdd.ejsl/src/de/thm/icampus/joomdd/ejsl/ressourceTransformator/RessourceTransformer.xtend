@@ -498,7 +498,7 @@ class RessourceTransformer {
         var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
         var String refAttrName = ref.attribute.get(0).name
         
-        newAttribute.name = newArrayList(refAttrName, referenceEntity.name, attrRef.name).join("_").toLowerCase
+        newAttribute.name = newArrayList(refAttrName, referenceEntity.name, attrRef.name).join("_")
         newAttribute.type = Util.copyType(attrRef.type)
 
         if (newAttribute.type instanceof StandardTypes) {
@@ -519,7 +519,7 @@ class RessourceTransformer {
      */
     def Attribute getAttributeReference(Entity ent, Entity referencedEntity, Attribute referenced) {
         for (Attribute a : ent.attributes) {
-            if (a.name.equalsIgnoreCase(referencedEntity.name.toString.toLowerCase + "_" + referenced.name))
+            if (a.name.equalsIgnoreCase(referencedEntity.name + "_" + referenced.name))
                 return a;
         }
         for (Reference ref : ent.references) {
@@ -901,7 +901,7 @@ class RessourceTransformer {
     }
 
     private def isAttributeOfEntity(Attribute attribute, String entityName) {
-        if (attribute.name.startsWith(entityName.toLowerCase + "_"))
+        if (attribute.name.startsWith(entityName + "_"))
             return true
 
         return false
@@ -912,7 +912,7 @@ class RessourceTransformer {
         for (Attribute attribute : attributeOldList) {
 
             var Attribute newAttr = EJSLFactory.eINSTANCE.createAttribute
-            newAttr.name = fromEntity.name.toLowerCase + "_" + attribute.name
+            newAttr.name = fromEntity.name + "_" + attribute.name
             newAttr.type = Util.copyType(attribute.type)
             if (newAttr.type instanceof StandardTypes) {
                 var StandardTypes typ = newAttr.type as StandardTypes
@@ -928,7 +928,7 @@ class RessourceTransformer {
 
                 if (attribute.id && attribute.withattribute === null) {
                     var Attribute newID = EJSLFactory.eINSTANCE.createAttribute
-                    newID.name = fromEntity.name.toLowerCase + "_" + defaultPrimaryAttributeName
+                    newID.name = fromEntity.name + "_" + defaultPrimaryAttributeName
                     var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
                     typeid.type = StandardTypeKinds.INTEGER
                     typeid.notnull = true
@@ -942,7 +942,7 @@ class RessourceTransformer {
                 
                 if (attribute.withattribute !== null) {
                     var Attribute newUniq = EJSLFactory.eINSTANCE.createAttribute
-                    newUniq.name = fromEntity.name.toLowerCase + "_" + attribute.withattribute.name
+                    newUniq.name = fromEntity.name + "_" + attribute.withattribute.name
                     newUniq.type = Util.copyType(attribute.withattribute.type)
                     var type = newUniq.type
                     if (type instanceof StandardTypes) {
@@ -1001,7 +1001,7 @@ class RessourceTransformer {
     def boolean isContainInMappingEntity(String attributeName, String toEntityname, Entity mappingEntity) {
 
         if (mappingEntity.attributes.filter [ t |
-            t.name.toLowerCase.equalsIgnoreCase(toEntityname.toLowerCase() + "_" + attributeName)
+            t.name.equalsIgnoreCase(toEntityname + "_" + attributeName)
         ].size > 0)
             return true
         return false

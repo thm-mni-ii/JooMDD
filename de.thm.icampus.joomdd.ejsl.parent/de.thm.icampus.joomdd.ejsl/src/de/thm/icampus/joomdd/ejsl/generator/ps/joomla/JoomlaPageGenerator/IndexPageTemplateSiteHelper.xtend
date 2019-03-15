@@ -272,10 +272,10 @@ class IndexPageTemplateSiteHelper {
             «IF Slug.isAttributeLinked(attr, indexpage)»
             <a href="<?php echo Route::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->").trim»); ?>"
             >
-                <?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
+                <?php echo $this->escape($item->«attr.name»); ?>
             </a>
             «ELSE»
-            <?php echo $item->«attr.name.toLowerCase»; ?>
+            <?php echo $item->«attr.name»; ?>
             «ENDIF»
         </td>
 		«ENDFOR»

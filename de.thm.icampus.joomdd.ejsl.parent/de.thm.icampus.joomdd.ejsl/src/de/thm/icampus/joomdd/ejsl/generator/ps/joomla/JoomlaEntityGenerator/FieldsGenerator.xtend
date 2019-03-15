@@ -139,7 +139,7 @@ class FieldsGenerator {
 		                       id='" . $this->id . "select'
 		                       class='form-control'
 		                   >";
-		        $html[] = "<option>". Text::_(JSELECT). "</option>";
+		        $html[] = "<option>". Text::_('JSELECT'). "</option>";
 		        foreach ($alldata as $data) {
 		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 		            . $this->generateStringValue($data) ."</option>";
@@ -309,7 +309,7 @@ class FieldsGenerator {
 		    protected function getOptions()
 		    {
 		        $entity = $this->getAttribute('entity');
-		        $table = "#__«component.name.toLowerCase»_" . $entity;
+		        $table = "#__«component.name»_" . $entity;
 		        $dbo = Factory::getDbo();
 		        $query = $dbo->getQuery(true);
 		        $query->select("DISTINCT a.created_by AS value, b.name AS text")

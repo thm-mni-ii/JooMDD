@@ -42,17 +42,17 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    protected $keysAndForeignKeys= array( "table" => array(
 		        «FOR attr : mainRef.extendedAttributes»
 		        «IF attr != mainRef.extendedAttributes.last»
-		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
+		        "«attr.name»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name»",
 		        «ELSE»
-		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
+		        "«attr.name»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name»"
 		        «ENDIF»
 		        «ENDFOR»
 		    ),"foreignTable" => array(
 		        «FOR attr : foreignReference.attribute»
 		        «IF attr != foreignReference.attribute.last»
-		        "«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»",
+		        "«attr.name»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name»",
 		        «ELSE»
-		        "«attr.name.toLowerCase»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name.toLowerCase»"
+		        "«attr.name»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name»"
                 «ENDIF»
                 «ENDFOR»
 		    ));
@@ -78,7 +78,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		{
 		    $html = array();
 		    $document = Factory::getDocument();
-		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setMultipleForeignKeys.js');
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setMultipleForeignKeys.js');
 		    $input = Factory::getApplication()->input;
 		    $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
 		    if (empty($«entFrom.primaryKey.name»)) {
@@ -133,14 +133,14 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    $queryALL->select("
 		    «FOR foreignAttr : foreignReference.attribute»
 		    «IF foreignAttr != foreignReference.attribute.last»
-		    b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» , 
+		    b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name» , 
 		    «ELSE»
-		    b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase»
+		    b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name»
 		    «ENDIF»
 		    «ENDFOR»")
 		        ->from($this->referenceStruct["foreignTable"] . ' as b')
 		        ->where("state = 1")
-		        ->order(" «foreignReference.attributerefereced.get(0).name.toLowerCase»  ASC");
+		        ->order(" «foreignReference.attributerefereced.get(0).name»  ASC");
 		    $db->setQuery($queryALL);
 		    return $db->loadObjectList();
 		}
@@ -163,27 +163,27 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    $db = Factory::getDbo();
 		    $query = $db->getQuery(true);
 		
-		    $query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» as «foreignAttr.name.toLowerCase» ,«ENDFOR»
+		    $query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name» ,«ENDFOR»
 		    (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
 		        ->from($this->referenceStruct["foreignTable"] . " as A")
 		        ->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
 		            «FOR attr : mainRef.extendedAttributes»
 		            «IF attr != mainRef.extendedAttributes.last»
-		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase» = '$item->«attr.name.toLowerCase»' AND 
+		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name» = '$item->«attr.name»' AND 
 		            «ELSE»
-		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase» = '$item->«attr.name.toLowerCase»'
+		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name» = '$item->«attr.name»'
 		            «ENDIF»
 		            «ENDFOR»
 		            ) as B on 
 		            «FOR foreignAttr : foreignReference.attribute»
 		            «IF foreignAttr != foreignReference.attribute.last»
-		            A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase» AND 
+		            A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» = B.«foreignAttr.name» AND 
 		            «ELSE»
-		            A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name.toLowerCase» = B.«foreignAttr.name.toLowerCase»")
+		            A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» = B.«foreignAttr.name»")
 		            «ENDIF»
 		            «ENDFOR»
 		        ->where("A.state = 1")
-		        ->order("A.«foreignReference.attributerefereced.get(0).name.toLowerCase»");
+		        ->order("A.«foreignReference.attributerefereced.get(0).name»");
 		    $db->setQuery($query);
 		    return $db->loadObjectList();
 		}

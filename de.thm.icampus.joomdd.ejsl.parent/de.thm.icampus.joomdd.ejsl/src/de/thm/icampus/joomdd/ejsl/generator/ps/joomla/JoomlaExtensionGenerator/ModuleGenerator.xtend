@@ -454,47 +454,47 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
 	        // Select the required fields from the table.
 	        $query->select("distinct «indexpage.entities.get(0).name.toLowerCase».*");
-	        $query->from('`#__«name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»` AS «indexpage.entities.get(0).name.toLowerCase»');
+	        $query->from('`#__«name»_«indexpage.entities.get(0).name»` AS «indexpage.entities.get(0).name»');
 	        // Join over the users for the checked out user
 	        $query->select("uc.name AS editor");
-	        $query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name.toLowerCase».checked_out");
+	        $query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name».checked_out");
 	        // Join over the user field 'created_by'
 	        $query->select('created_by.name AS created_by');
-	        $query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name.toLowerCase».created_by');
+	        $query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name».created_by');
 	        // Join over the user field 'user'
 	        $query->select('user.name AS user');
-	        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name.toLowerCase».created_by');
-	        «Slug.createLeftJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, name.toLowerCase, indexpage.entities.get(0).name.toLowerCase)»
+	        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name».created_by');
+	        «Slug.createLeftJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, name, indexpage.entities.get(0).name)»
 	        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), name, ",")»
 	        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
 	        // Filter by published state
 	        $published = $params_module->get('state');
 	        if (is_numeric($published)) {
-	            $query->where('«indexpage.entities.get(0).name.toLowerCase».state = ' . (int) $published);
+	            $query->where('«indexpage.entities.get(0).name».state = ' . (int) $published);
 	        } elseif ($published === '') {
-	            $query->where('(«indexpage.entities.get(0).name.toLowerCase».state IN (0, 1))');
+	            $query->where('(«indexpage.entities.get(0).name».state IN (0, 1))');
 	        }
 	        // Filter by User
 	        $created_by = $params_module->get('created_by');
 	        if (!empty($created_by)) {
-	            $query->where("«indexpage.entities.get(0).name.toLowerCase».created_by = '" . $db->escape($created_by) . "'");
+	            $query->where("«indexpage.entities.get(0).name».created_by = '" . $db->escape($created_by) . "'");
 	        }
 	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
 	        // Filter by «attr.name»
 	        $«attr.name» = $params_module->get('«attr.name»');
 	        if (!empty($«attr.name»)) {
-	            $query->where("«attr.entity.name.toLowerCase».«attr.name» = '" . $db->escape($«attr.name») . "'");
+	            $query->where("«attr.entity.name».«attr.name» = '" . $db->escape($«attr.name») . "'");
 	        }
             «ENDFOR»
 	        // Filter by search in attribute
 	        $search = $params_module->get('search');
 	        if (!empty($search)) {
 	            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
-	                $query->where('«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
+	                $query->where('«indexpage.entities.get(0).name».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
 	            } else {
 	                $search = $db->Quote('%' . $db->escape($search, true) . '%');
 	                «IF !filters.empty»
-	                $query->where('( «indexpage.extendFiltersList.map[ attr | '''«attr.entity.name.toLowerCase».«attr.name.toLowerCase» LIKE $search''' ].join(" OR ")»)');
+	                $query->where('( «indexpage.extendFiltersList.map[ attr | '''«attr.entity.name».«attr.name» LIKE $search''' ].join(" OR ")»)');
 	                «ENDIF»
 	            }
 	        }
