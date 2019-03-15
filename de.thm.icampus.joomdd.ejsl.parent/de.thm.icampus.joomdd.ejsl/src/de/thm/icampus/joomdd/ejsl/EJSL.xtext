@@ -192,7 +192,7 @@ DetailsPage returns DetailsPage:
 		('pageactions' '{' (pageactions+=PageAction)* '}')?
 		('table columns =' tablecolumns+=[Attribute|QualifiedName] (',' tablecolumns+=[Attribute|QualifiedName])*)?
 		('filters =' filters+=[Attribute|QualifiedName] (',' filters+=[Attribute|QualifiedName])*)?
-		('links' '{' (links+=Link)* '}')?
+		('links' '{' (links+=Link)* '}')
 	'}'
 ;
 
@@ -265,7 +265,7 @@ ContextLink returns ContextLink:
 		'target =' target=[Page|QualifiedName]
 		('linked attribute =' linkedAttribute=[Attribute|QualifiedName])?
 		('linked action =' linkedAction=[PageAction|QualifiedName])?
-		'linkparameters' '{' (linkparameters+=LinkParameter)* '}'
+		('linkparameters' '{' (linkparameters+=LinkParameter)* '}')?
 	'}'
 ;
 
