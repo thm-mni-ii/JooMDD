@@ -431,12 +431,19 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ItemModel
 		{
 		    «frontHelp.generateSiteModelPopulatestate()»
+
 		    «generateModelGetItemFunction»
+
 		    «frontHelp.generateSiteModelCheckin()»
+
 		    «frontHelp.generateSiteModelgetTable»
+
 		    «frontHelp.generateSiteModelCheckout()»
+
 		    «frontHelp.generateSiteModelgetCategory()»
+
 		    «frontHelp.generateSiteModelpublish()»
+
 		    «frontHelp.generateSiteModelDelete()»
 		}
 	'''

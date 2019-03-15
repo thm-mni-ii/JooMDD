@@ -768,6 +768,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		/**
 		 * @param  array  A named array
 		 *
+		 * @return array
 		 */
 		function «component.name.toFirstUpper»ParseRoute($segments)
 		{

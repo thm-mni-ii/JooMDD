@@ -364,9 +364,10 @@ class DetailsPageTemplateFrontEndHelper {
 	
 	def CharSequence generateSiteModelDelete()'''
 	/**
-	 * to Delete Data of a Item
+	 * Delete data of an item
 	 * @param  Int  $datacontent  the Id
 	 *
+	 * @return Int or False
 	 */
 	public function delete($data)
 	{
@@ -381,8 +382,6 @@ class DetailsPageTemplateFrontEndHelper {
 	    } else {
 	        return false;
 	    }
-	
-	    return true;
 	}
 	'''
 	
@@ -391,6 +390,7 @@ class DetailsPageTemplateFrontEndHelper {
 	 * to search the Category name
 	 * @param  Int  $id  content the Id
 	 *
+	 * @return  mixed  The return value or null if the query failed.
 	 */
 	public function getCategoryName($id)
 	{
@@ -411,6 +411,7 @@ class DetailsPageTemplateFrontEndHelper {
 	 * @param  Int  $id  content the Id
 	 * @param  Int  $state
 	 *
+	 * @return  boolean  True if successful
 	 */
 	public function publish($id, $state)
 	{
