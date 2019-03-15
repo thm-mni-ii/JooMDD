@@ -479,7 +479,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 			var result = newArrayList
 			
 			for(var i = 0; i < reference.attribute.size; i++) {
-			    result.add(''''«i»':{ 'key': '«reference.attribute.get(i).name»', 'ref': '«reference.attributerefereced.get(i).name.toLowerCase»'}''')
+			    result.add(''''«i»':{ 'key': '«reference.attribute.get(i).name»', 'ref': '«reference.attributerefereced.get(i).name»'}''')
 			}
 			
 			return result.join(", ")

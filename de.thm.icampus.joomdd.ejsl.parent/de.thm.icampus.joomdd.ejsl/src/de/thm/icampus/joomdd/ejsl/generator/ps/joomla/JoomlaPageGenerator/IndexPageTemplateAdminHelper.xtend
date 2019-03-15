@@ -90,14 +90,15 @@ class IndexPageTemplateAdminHelper {
     	{
     	    if (empty($config['filter_fields'])) {
     	        $config['filter_fields'] = array(
-    	            '«mainEntity.primaryKey.name»', '«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name»',
-    	            'ordering', '«indexpage.entities.get(0).name.toLowerCase».ordering',
-    	            'state', '«indexpage.entities.get(0).name.toLowerCase».state',
-    	            'created_by', '«indexpage.entities.get(0).name.toLowerCase».created_by'
-    	            , 'published', '«indexpage.entities.get(0).name.toLowerCase».published'
-    	            «FOR ExtendedAttribute attr: indexpage.allAttributeOfFilterAndColum»
-    	            ,'«attr.name.toLowerCase»', '«attr.entity.name.toLowerCase».«attr.name.toLowerCase»'
-    	            «ENDFOR»
+    	            '«mainEntity.primaryKey.name»', '«indexpage.entities.get(0).name».«mainEntity.primaryKey.name»',
+    	            'ordering', '«indexpage.entities.get(0).name».ordering',
+    	            'state', '«indexpage.entities.get(0).name».state',
+    	            'created_by', '«indexpage.entities.get(0).name».created_by',
+    	            'published', '«indexpage.entities.get(0).name».published',
+    	            «indexpage.allAttributeOfFilterAndColum.map[ attr | 
+    	                ''''«attr.name»', '«attr.entity.name».«attr.name»'«»'''
+    	            ].join(''',
+    	            ''')»
     	        );
     	    }
     	    parent::__construct($config);

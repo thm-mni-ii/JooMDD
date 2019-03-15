@@ -256,7 +256,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                         description="JGLOBAL_FIELD_CREATED_BY_DESC"
                         entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
                         onchange="this.form.submit();">
-                        <option value="">JOPTION_SELECT_CREATED_BY</option>
+                        <option value="">JOPTION_SELECT_AUTHOR</option>
                     </field>
                     «FOR ExtendedAttribute attr : ipage.extendFiltersList»
                     <field
@@ -267,13 +267,12 @@ class IndexPageTemplate extends DynamicPageTemplate {
                         valueColumn="«attr.entity.name».«attr.name»"
                         textColumn="«attr.entity.name».«attr.name»"
                         onchange="this.form.submit();">
-                        <option value="">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", "SELECT", attr.name), "Select a " + attr.name)»</option>
+                        <option value="">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
                     </field>
                     «ENDFOR»
                 </fields>
                 <fields name="list">
                     <field name="limit" id="limit" class="input-medium" default="25" onchange="this.form.submit();" type="limitbox" >
-                    <option value="">JOPTION_SELECT_LIMIT</option>
                 </field>
             </fields>
         </form>

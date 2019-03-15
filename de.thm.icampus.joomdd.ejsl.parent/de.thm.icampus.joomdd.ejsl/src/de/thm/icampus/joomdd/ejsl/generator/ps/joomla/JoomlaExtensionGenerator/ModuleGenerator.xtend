@@ -201,7 +201,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    label="JGLOBAL_FIELD_CREATED_BY_LABEL"
 		                    description="JGLOBAL_FIELD_CREATED_BY_DESC"
 		                    entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»">
-		                    <option value="">JOPTION_SELECT_CREATED_BY</option>
+		                    <option value="">JOPTION_SELECT_AUTHOR</option>
 		                </field>
 		                «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
 		                «IF !attr.name.equalsIgnoreCase("params")»

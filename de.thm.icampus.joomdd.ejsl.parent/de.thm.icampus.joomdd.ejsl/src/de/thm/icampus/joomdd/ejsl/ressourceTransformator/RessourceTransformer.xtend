@@ -334,7 +334,7 @@ class RessourceTransformer {
                             var KeyValuePair filterKeyValuePair = EcoreUtil2.create(
                                 EJSLPackage.Literals.KEY_VALUE_PAIR) as KeyValuePair
                             filterKeyValuePair.name = filterKey
-                            filterKeyValuePair.value = '''Select a «value»'''
+                            filterKeyValuePair.value = '''- Select «value» -'''
 
                             keyValuePairList.add(EcoreUtil2.copy(filterKeyValuePair))
                         }

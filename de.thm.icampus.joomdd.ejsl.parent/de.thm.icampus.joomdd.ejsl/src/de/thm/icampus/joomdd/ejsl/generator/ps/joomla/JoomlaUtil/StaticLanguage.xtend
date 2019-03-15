@@ -79,9 +79,6 @@ class StaticLanguage {
     static StaticLanguageValue LAYOUT_TABLE = new StaticLanguageValue("LAYOUT_TABLE", "Table layout")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue SELECT_LIMIT = new StaticLanguageValue("SELECT_LIMIT", "limit")
-    
-    @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue PARAMS_LOCAL_LABEL = new StaticLanguageValue("PARAMS_LOCAL_LABEL", "Local Parameter")
     
     @Accessors(PUBLIC_GETTER)
