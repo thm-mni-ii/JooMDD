@@ -36,10 +36,9 @@ class ServerLauncher {
 		]
 		val log = new Slf4jLog(ServerLauncher.name)
 		println(args.toString)
+		
 		try {
-			
-			
-		server.start
+		    server.start
 			log.info('Server started ' + server.getURI + '...')
 			new Thread[
 				log.info('Press enter to stop the server...')
