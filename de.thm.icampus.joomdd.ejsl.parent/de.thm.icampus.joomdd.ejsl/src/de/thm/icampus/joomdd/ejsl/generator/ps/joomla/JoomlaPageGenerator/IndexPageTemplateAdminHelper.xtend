@@ -96,7 +96,8 @@ class IndexPageTemplateAdminHelper {
     	            'created_by', '«indexpage.entities.get(0).name».created_by',
     	            'published', '«indexpage.entities.get(0).name».published',
     	            «indexpage.allAttributeOfFilterAndColum.map[ attr | 
-    	                ''''«attr.name»', '«attr.entity.name».«attr.name»'«»'''
+    	                var column = indexpage.getTextColumn(attr, com.allExtendedEntity)
+    	                ''''«attr.name»', '«column»'«»'''
     	            ].join(''',
     	            ''')»
     	        );
