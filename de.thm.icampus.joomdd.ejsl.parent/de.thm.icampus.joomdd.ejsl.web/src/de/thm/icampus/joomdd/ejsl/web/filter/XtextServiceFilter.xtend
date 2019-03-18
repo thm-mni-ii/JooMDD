@@ -48,6 +48,7 @@ class XtextServiceFilter implements Filter {
 				userConfig.getConfig(userPath).setProperty("platform", platform);
 			}
 
+            requestURI = requestURI.replace(httpRequest.contextPath, "")
         	httpRequest.getRequestDispatcher(requestURI + "?" + resourceParameterName + "=" + userPath + resourceName).forward(requestWrapper, response);
         }
         else
