@@ -10,6 +10,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Entity
  */
 interface ExtendedAttribute extends Attribute {
 	
+    def void setParentProperties(Attribute attribute)
+    
 	/**
 	 * Returns all typeinformation of this attribute.
 	 * 
@@ -51,8 +53,6 @@ interface ExtendedAttribute extends Attribute {
 	 * @return the html-type in string representation
 	 */
 	def String htmlType()
-	
-	
 	
 	/**
 	 * Returns true if the Attribute is the base of unique pair

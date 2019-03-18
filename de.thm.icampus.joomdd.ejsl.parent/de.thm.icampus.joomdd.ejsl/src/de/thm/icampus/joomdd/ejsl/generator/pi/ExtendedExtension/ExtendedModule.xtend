@@ -5,8 +5,6 @@ import java.util.ArrayList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
 
 interface ExtendedModule extends Module {
-	
-	
 	def ExtendedPageReference getExtendedPageReference()
 	def String getExtendedComponentName()
 	def String extensionName()

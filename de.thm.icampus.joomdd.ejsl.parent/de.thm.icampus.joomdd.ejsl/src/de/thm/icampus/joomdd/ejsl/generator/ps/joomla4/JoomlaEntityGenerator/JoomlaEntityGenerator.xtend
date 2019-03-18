@@ -125,8 +125,8 @@ class JoomlaEntityGenerator {
    public def CharSequence generateUpdateScript(String extensionName)'''
         «FOR ExtendedEntity en: entities.filter[t | !t.preserve] »
         ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`
-        «FOR ExtendedAttribute attr: en.refactoryAttribute»
-        «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
+        «FOR ExtendedAttribute attr: en.allRefactoryAttribute»
+        «IF attr.name != en.allRefactoryAttribute.getMylastAttribute.name»
         ADD COLUMN `«attr.name»`  «attr.generatorType» «if(attr.isprimary) " PRIMARY KEY"»
         «var ExtendedAttribute after = getAfterAttribute(attr,en)»
         «IF after !== null»
@@ -144,20 +144,20 @@ class JoomlaEntityGenerator {
         «ENDFOR»
         ;
         
-        «FOR ExtendedAttribute attr: en.refactoryAttribute.filter[t | t.isunique && !t.preserve]»
+        «FOR ExtendedAttribute attr: en.allRefactoryAttribute.filter[t | t.isunique && !t.preserve]»
         CREATE UNIQUE INDEX `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibih_«attr.name»«if(attr.withattribute !== null) "_" + attr.withattribute.name»` ON `«Slug.databaseName(extensionName.toLowerCase, en.name)»`  (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»`'''»);
         «ENDFOR»
         
        «IF !en.references.isEmpty»
         ALTER TABLE `«Slug.databaseName(extensionName.toLowerCase, en.name)»`
         «ENDIF»
-        «FOR Reference ref: en.refactoryReference.filter[t | !t.preserve && t.upper.equalsIgnoreCase("1")]»
-        «IF ref !=  (en.refactoryReference.filter[t | !t.preserve]).getMylastReference»
-        ADD CONSTRAINT `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibfk_«en.refactoryReference.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
+        «FOR Reference ref: en.allRefactoryReference.filter[t | !t.preserve && t.upper.equalsIgnoreCase("1")]»
+        «IF ref !=  (en.allRefactoryReference.filter[t | !t.preserve]).getMylastReference»
+        ADD CONSTRAINT `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibfk_«en.allRefactoryReference.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
         «ELSE»
-        ADD CONSTRAINT `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibfk_«en.refactoryReference.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
+        ADD CONSTRAINT `«extensionName.toLowerCase»_«en.name.toLowerCase»_ibfk_«en.allRefactoryReference.indexOf(ref)»` FOREIGN KEY(«Slug.transformAttributeListInString(ref.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(ref.entity.name.toLowerCase))»` («Slug.transformAttributeListInString(ref.attributerefereced, ', ')»)
         ON UPDATE CASCADE
         ON DELETE CASCADE
         «ENDIF»

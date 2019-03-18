@@ -115,7 +115,7 @@ class TableGeneratorTemplate {
 		        $array['created_by'] = Factory::getUser()->id;
 		    }
 		
-		    «var referenceAttributeUniqueList = ent.refactoryReference.map[ r | 
+		    «var referenceAttributeUniqueList = ent.allRefactoryReference.map[ r | 
 		        r.attribute.map[ a | a.name ].toList
 		    ].flatten.toSet»
 		    «FOR name : referenceAttributeUniqueList»

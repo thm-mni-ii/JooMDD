@@ -67,5 +67,13 @@ interface ExtendedDynamicPage extends DynamicPage {
 	 */
 	def Boolean containsParamertergroup(String paramenterGroupName)
 	
+	/**
+	 * Returns the <table name>.<field name> representation in the database for the given attribute.
+	 */
+	def String getTextColumn(ExtendedAttribute attribute, EList<ExtendedEntity> extendedEntityList)
 	
+    /**
+     * Returns the <table name>.<field name> representation in the database for the given attribute.
+     */
+	def String getValueColumn(ExtendedAttribute attribute, EList<ExtendedEntity> extendedEntityList)
 }

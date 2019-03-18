@@ -34,7 +34,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	Component instance
 	EList<ExtendedPageReference> backEndPagesReference
 	EList<ExtendedPageReference> fronEndpagesReference
-	EList<ExtendedEntity> allextendedEntity
+	EList<ExtendedEntity> allExtendedEntity
 	EList<ExtendedParameterGroup> extendedParamaterGroups
 	EList<ExtendedPage> allExtendedPage
 	EList <ExtendedDynamicPage> allDynamicPage
@@ -57,7 +57,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 		fronEndpagesReference = new BasicEList<ExtendedPageReference>
 		allExtendedPage = new BasicEList<ExtendedPage>
 		allDynamicPage = new BasicEList<ExtendedDynamicPage>
-		allextendedEntity = new BasicEList<ExtendedEntity>
+		allExtendedEntity = new BasicEList<ExtendedEntity>
 		for( s: this.sections){
 			switch s {
 				BackendSection :{
@@ -65,11 +65,11 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					for(ExtendedPageReference pf: backEndPagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
 						for(ExtendedEntity entBackend: extp.extendedEntityList){
-							if(allextendedEntity.filter[t | t.name == entBackend.name].size == 0){
-								allextendedEntity.add(entBackend)
+							if(allExtendedEntity.filter[t | t.name == entBackend.name].size == 0){
+								allExtendedEntity.add(entBackend)
 								for(ExtendedEntity refEntity: PlattformUtil.getAllReferenceOfEntity(entBackend)){
-									if(allextendedEntity.filter[t | t.name.equalsIgnoreCase(refEntity.name)].empty){
-										allextendedEntity.add(refEntity)
+									if(allExtendedEntity.filter[t | t.name.equalsIgnoreCase(refEntity.name)].empty){
+										allExtendedEntity.add(refEntity)
 									}
 								}
 							}
@@ -81,11 +81,11 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					for(ExtendedPageReference pf: fronEndpagesReference.filter[t | t.page instanceof DynamicPage]){
 						var ExtendedDynamicPage extp = pf.extendedPage.extendedDynamicPageInstance
 						for(ExtendedEntity entFrontend: extp.extendedEntityList){
-							if(allextendedEntity.filter[t | t.name == entFrontend.name].size == 0){
-							allextendedEntity.add(entFrontend)
+							if(allExtendedEntity.filter[t | t.name == entFrontend.name].size == 0){
+							allExtendedEntity.add(entFrontend)
 							for(ExtendedEntity refEntity: PlattformUtil.getAllReferenceOfEntity(entFrontend)){
-									if(allextendedEntity.filter[t | t.name.equalsIgnoreCase(refEntity.name)].empty){
-										allextendedEntity.add(refEntity)
+									if(allExtendedEntity.filter[t | t.name.equalsIgnoreCase(refEntity.name)].empty){
+										allExtendedEntity.add(refEntity)
 									}
 								}
 							}
@@ -94,9 +94,9 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 					}
 			}
 		}
-		for(ExtendedEntity ent: allextendedEntity){
+		for(ExtendedEntity ent: allExtendedEntity){
 			if(ent == null)
-			allextendedEntity.remove(ent)
+			allExtendedEntity.remove(ent)
 		}
 		 extendedParamaterGroups = new BasicEList<ExtendedParameterGroup>
 		 extendedParamaterGroups.addAll(this.globalParamter.map[t| new ExtendedParameterGroupImpl(t)])
@@ -116,7 +116,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	def initPagesForMappingsEntity() {
 		var Feature container = (instance.eContainer as CMSExtension).feature
 		var EList<Page> page = container.pages
-		for(ExtendedEntity ent : allextendedEntity){
+		for(ExtendedEntity ent : allExtendedEntity){
 			if(allDynamicPage.filter[t | t.extendedEntityList.get(0).name.equalsIgnoreCase(ent.name)].empty && ent.isGenerated){
 			   var IndexPage inPage = (page.filter[t | t.name.equalsIgnoreCase(ent.name+"List")]).get(0) as IndexPage
 			   var DetailsPage detailsPage = (page.filter[t | t.name.equalsIgnoreCase(ent.name+"Details")]).get(0) as DetailsPage
@@ -152,7 +152,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
    	}
 	
 	override getAllExtendedEntity() {
-		return this.allextendedEntity
+		return this.allExtendedEntity
 	}
 	
 	override getInstance() {

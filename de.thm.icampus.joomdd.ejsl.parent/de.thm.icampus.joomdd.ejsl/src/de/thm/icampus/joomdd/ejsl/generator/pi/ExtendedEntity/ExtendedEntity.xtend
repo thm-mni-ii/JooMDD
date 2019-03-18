@@ -12,6 +12,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Reference
  */
 interface ExtendedEntity extends Entity {
 	
+	def void setParentProperties(Entity entity)
+	
 	/**
 	 * Returns all defined ExtendedAttributes on this ExtendedEntity.
 	 * 
@@ -55,20 +57,6 @@ interface ExtendedEntity extends Entity {
 	def boolean hasIdAttribute()
 	
 	/**
-	 * Adds a new Attribute. After that it belongs to this.
-	 * 
-	 * @param e Attribute to add
-	 */
-	def void addNewAttribute(Attribute e)
-	
-	/**
-	 * Searches all attributes and returns the identifier attribute. Null if not available.
-	 * 
-	 * @return ID attribute if available otherwise null
-	 */
-	def ExtendedAttribute searchIdAttribute()
-	
-	/**
 	 * Returns all ExtendedReference instances, which are connected to only this instance.
 	 * 
 	 * @return list of ExtendReference instances
@@ -86,12 +74,12 @@ interface ExtendedEntity extends Entity {
 	/**
 	 * TODO
 	 */
-	def EList<ExtendedAttribute> getRefactoryAttribute()
+	def EList<ExtendedAttribute> getAllRefactoryAttribute()
 	
 	/**
 	 * TODO
 	 */
-	def EList<ExtendedReference>getRefactoryReference()
+	def EList<ExtendedReference>getAllRefactoryReference()
 	
 	/**
 	 * TODO
