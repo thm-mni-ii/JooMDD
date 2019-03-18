@@ -8,71 +8,39 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.PlattformUtil
+import org.eclipse.xtext.EcoreUtil2
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
 
 class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
-
+    
 	Entity entity
 	String genType
 	Attribute instance
 	String htmlType
 	boolean isReferenced = false
-	boolean isTheBaseElement = false
+	boolean isTheBaseElement = false;
 
-	new(Attribute attr) {
-		attr.name = PlattformUtil.slugify(attr.name)
-		this.type = attr.type
-		this.name = PlattformUtil.slugify(attr.name)
-		this.isunique = attr.isIsunique
-		this.withattribute = attr.withattribute
-		entity = attr.eContainer as Entity
+	new(Attribute attribute) {
+	    setParentProperties(attribute)
+        instance = attribute
+	    
+		var attrEContainer = EcoreUtil2.getContainerOfType(attribute, Entity)
+		entity = attrEContainer
 		genType = generatorType()
 		htmlType = generatorTypeHtmlType()
-		this.preserve = attr.preserve
-		this.isprimary = attr.isprimary
-		instance = attr
-		initAttributeProperties
-
-	}
-	
-	new(Attribute attr, Entity ent) {
-		instance = attr
-		this.type = attr.type
-		this.name = PlattformUtil.slugify(attr.name)
-		this.isunique = attr.isIsunique
-		this.withattribute = attr.withattribute
-		entity = searchEntity(ent)
-		genType = generatorType()
-		htmlType = generatorTypeHtmlType()
-		this.preserve = attr.preserve
-		this.isprimary = attr.isprimary
 		initAttributeProperties
 	}
 	
-	def Entity searchEntity(Entity entity) {
-		var Entity ent = instance.eContainer as Entity
-		
-		if(ent === null){
-		    if (entity.references.length > 0){
-		        var filteredList = (entity.references.filter[t | t.entity.attributes.contains(instance)])
-		        
-		        if (filteredList.length > 0){
-                    var Reference ref = filteredList.get(0)
-                    return ref.entity
-		        }
-		    }
-		}
-		else
-		{
-		    if(ent.name != entity.name){
-                return ent  
-            }
-		}
-
-		return entity
-	}
-	
+    override setParentProperties(Attribute attribute) {
+        this.name = PlattformUtil.slugify(attribute.name)
+        this.type = attribute.type
+        this.isunique = attribute.isIsunique
+        this.withattribute = attribute.withattribute
+        this.preserve = attribute.preserve
+        this.isprimary = attribute.isprimary
+    }
+    
 	def initAttributeProperties() {
-		
 		for(Attribute att: this.entity.attributes ){
 			if(att.withattribute !== null && att.withattribute.name.compareTo(this.name)==0 )
 			this.isTheBaseElement = true
@@ -175,9 +143,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		return result
 	}
 
-	
-
-	override getEntity() {
+	override Entity getEntity() {
 		return entity
 	}
 
@@ -196,10 +162,8 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	override setIsReferenced(boolean value) {
 		this.isReferenced = value
 	}
-
 	
 	override isTheBaseElementOfUniquePair() {
 		return isTheBaseElement
 	}
-
 }

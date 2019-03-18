@@ -61,9 +61,9 @@ class JoomlaEntityGenerator {
     def generateSQLConstraints(ExtendedEntity entity, String extensionName)
         '''
         ALTER TABLE `«Slug.databaseName(extensionName, entity.name)»`
-            «entity.refactoryReference.filter[ r | !r.preserve && r.upper.equalsIgnoreCase("1") ].map[ r |
+            «entity.allRefactoryReference.filter[ r | !r.preserve && r.upper.equalsIgnoreCase("1") ].map[ r |
                 '''
-                ADD CONSTRAINT `«extensionName»_«entity.name»_ibfk_«entity.refactoryReference.indexOf(r)»` FOREIGN KEY(«Slug.transformAttributeListInString(r.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(r.entity.name))»` («Slug.transformAttributeListInString(r.attributerefereced, ', ')»)
+                ADD CONSTRAINT `«extensionName»_«entity.name»_ibfk_«entity.allRefactoryReference.indexOf(r)»` FOREIGN KEY(«Slug.transformAttributeListInString(r.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(r.entity.name))»` («Slug.transformAttributeListInString(r.attributerefereced, ', ')»)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE'''
             ].join(''', 
@@ -109,8 +109,8 @@ class JoomlaEntityGenerator {
     '''
         «FOR ExtendedEntity en : entities.filter[t | !t.preserve]»
         ALTER TABLE `«Slug.databaseName(extensionName, en.name)»`
-            «FOR ExtendedAttribute attr: en.refactoryAttribute»
-                «IF attr.name != en.refactoryAttribute.getMylastAttribute.name»
+            «FOR ExtendedAttribute attr: en.allRefactoryAttribute»
+                «IF attr.name != en.allRefactoryAttribute.getMylastAttribute.name»
                     ADD COLUMN IF NOT EXISTS `«attr.name»`  «attr.generatorType» «if(attr.isprimary) " PRIMARY KEY"»
                     «var ExtendedAttribute after = getAfterAttribute(attr,en)»
                     «IF after !== null»
@@ -128,7 +128,7 @@ class JoomlaEntityGenerator {
             «ENDFOR»
         ;
         
-        «FOR ExtendedAttribute attr: en.refactoryAttribute.filter[t | t.isunique && !t.preserve]»
+        «FOR ExtendedAttribute attr: en.allRefactoryAttribute.filter[t | t.isunique && !t.preserve]»
             CREATE UNIQUE INDEX `«extensionName»_«en.name»_ibih_«attr.name»«if(attr.withattribute !== null) "_" + attr.withattribute.name»` ON `«Slug.databaseName(extensionName, en.name)»`  (`«attr.name»` «if(attr.withattribute !== null)''',`«attr.withattribute.name»`'''»);
         «ENDFOR»
         

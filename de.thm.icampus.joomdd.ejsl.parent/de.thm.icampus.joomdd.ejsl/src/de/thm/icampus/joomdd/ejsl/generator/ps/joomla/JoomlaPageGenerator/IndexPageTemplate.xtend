@@ -6,6 +6,9 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
+import java.util.OptionalInt
+import java.util.stream.IntStream
 
 /**
  * This class contains the templates to generate the necessary code for view templates.
@@ -113,7 +116,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	        «helperAdmin.genAdminModelConstruct»
 	        «helperAdmin.genAdminModelGetItem»
 	        «helperAdmin.genAdminModelPopulateState»
-	        «helperAdmin.genAdminModelGetListQuery(ipage.filters)»
+	        «helperAdmin.genAdminModelGetListQuery()»
 	        «helperAdmin.genGetIdOfReferenceItem»
 	    }
 	'''
@@ -181,7 +184,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	        «ENDIF»
 	        «helperAdmin.genAdminModelConstruct»
 	        «helperAdmin.genAdminModelGetItem»
-	        «helperAdmin.genAdminModelGetListQuery(ipage.filters)»
+	        «helperAdmin.genAdminModelGetListQuery()»
 	        «helperAdmin.genAdminModelSaveOrder»
 	        «helperAdmin.genAdminModelPopulateState»
 	        «IF !ipage.entities.get(0).references.empty»
@@ -259,13 +262,15 @@ class IndexPageTemplate extends DynamicPageTemplate {
                         <option value="">JOPTION_SELECT_AUTHOR</option>
                     </field>
                     «FOR ExtendedAttribute attr : ipage.extendFiltersList»
+                    «var valueColumn = ipage.getValueColumn(attr, com.allExtendedEntity)»
+                    «var textColumn = ipage.getTextColumn(attr, com.allExtendedEntity)»
                     <field
                         name="«attr.name»"
                         type="«ipage.extendedEntityList.get(0).name»"
                         label="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "LABEL"), attr.name)»"
                         description="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
-                        valueColumn="«attr.entity.name».«attr.name»"
-                        textColumn="«attr.entity.name».«attr.name»"
+                        valueColumn="«valueColumn»"
+                        textColumn="«textColumn»"
                         onchange="this.form.submit();">
                         <option value="">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
                     </field>

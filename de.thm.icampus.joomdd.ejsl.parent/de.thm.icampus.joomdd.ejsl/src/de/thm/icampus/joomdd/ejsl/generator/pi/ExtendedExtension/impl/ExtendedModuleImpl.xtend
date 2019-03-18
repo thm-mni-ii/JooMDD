@@ -15,39 +15,41 @@ import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
 class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
-	
-	ExtendedPageReference extendedReference
-	String comName
-	String extensionName 
-	new(Module mod){
-		this.name = PlattformUtil.slugify(mod.name)
-		this.manifest = mod.manifest
-		this.languages = mod.languages
-		this.pageRef = mod.pageRef
-		extendedReference = new ExtendedPageReferenceImpl(pageRef)
-		comName = init(mod.pageRef.pagescr)
-		extensionName = "mod_" + this.name.toLowerCase
-	}
-	
-	def init(ComponentReference reference) {
-		if(reference == null)
-		  return null
-		 if(reference.ref != null)
-	    return PlattformUtil.slugify(reference.ref.name)
-	  if(reference.core != null)
-	  return PlattformUtil.slugify(reference.core.getName())
-	 
-	}
-	
-	override getExtendedPageReference() {
-		return extendedReference
-	}
 
-	override getExtendedComponentName() {
-		return comName
-	}
-	
-	override extensionName() {
-		return extensionName
-	}
+    ExtendedPageReference extendedReference
+    String comName
+    String extensionName
+
+    new(Module mod) {
+        this.name = PlattformUtil.slugify(mod.name)
+        this.manifest = mod.manifest
+        this.languages = mod.languages
+        this.pageRef = mod.pageRef
+        this.pageRef.pagescr.ref
+        extendedReference = new ExtendedPageReferenceImpl(pageRef)
+        comName = init(mod.pageRef.pagescr)
+        extensionName = "mod_" + this.name.toLowerCase
+    }
+
+    def init(ComponentReference reference) {
+        if (reference == null)
+            return null
+        if (reference.ref != null)
+            return PlattformUtil.slugify(reference.ref.name)
+        if (reference.core != null)
+            return PlattformUtil.slugify(reference.core.getName())
+
+    }
+
+    override getExtendedPageReference() {
+        return extendedReference
+    }
+
+    override getExtendedComponentName() {
+        return comName
+    }
+
+    override extensionName() {
+        return extensionName
+    }
 }

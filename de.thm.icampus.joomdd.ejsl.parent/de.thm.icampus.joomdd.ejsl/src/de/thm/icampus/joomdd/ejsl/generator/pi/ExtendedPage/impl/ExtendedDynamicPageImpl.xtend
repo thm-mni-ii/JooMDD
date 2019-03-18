@@ -15,6 +15,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterGroupI
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.impl.ExtendedParameterImpl
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
+import java.util.stream.IntStream
 
 class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamicPage {
 	
@@ -27,10 +29,9 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 	EList<ExtendedParameter> extendedLocalParameterList
 	EList<ExtendedAttribute>allAttributeOfFilterAndColum
 	boolean haveFile = false
-	
-	
 	EList<ExtendedEntity> extendedEntity
 	Boolean isDetailsPage = false
+	
 	new(DynamicPage page) {
 		instance = page
 		this.entities = page.entities
@@ -43,17 +44,15 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		this.links = page.links
 		this.preserve = page.preserve
 		initList()
-		sethaveFile()
+		setHaveFile()
 	}
 	
-	def sethaveFile() {
+	def setHaveFile() {
 	   for(ExtendedDetailPageField t: extendedEditFieldsList){
 	   	  if(t.type.equalsIgnoreCase("Imagepicker") || t.type.equalsIgnoreCase("Filepicker"))
 	   	  haveFile = true
 	   }
 	}
-	
-
 	
 	def initList() {
 		extendedTableColumnList = new BasicEList<ExtendedAttribute> 
@@ -62,15 +61,33 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		allAttributeOfFilterAndColum = new BasicEList<ExtendedAttribute>
 		extendedEntity = new BasicEList<ExtendedEntity>
 		
-		extendedTableColumnList.addAll((this.tablecolumns.map[ t |
-		    new ExtendedAttributeImpl(t, this.entities.get(0))
-		]))
-		extendedFiltersList.addAll((this.filters.map[ t | 
-		    new ExtendedAttributeImpl(t,this.entities.get(0))
-		]))
-		extendedEntity.addAll(this.entities.map[ t | 
-		    new ExtendedEntityImpl(t)
-		])
+        extendedEntity.addAll(this.entities.map[ t | 
+            new ExtendedEntityImpl(t)
+        ])
+        
+        // TODO: There might be more than one entity.
+        var extEntity = extendedEntity.get(0)
+        for (attribute : this.tablecolumns){
+            var extendedAttribute = extEntity.allExtendedAttributes.findFirst[ extAttr | 
+                extAttr.instance === attribute
+            ]
+            
+            if (extendedAttribute === null) {
+                extendedAttribute = new ExtendedAttributeImpl(attribute)
+            }
+            extendedTableColumnList.add(extendedAttribute)
+        }
+        
+        for (attribute : this.filters){
+            var extendedAttribute = extEntity.allExtendedAttributes.findFirst[ extAttr | 
+                extAttr.instance === attribute
+            ]
+            
+            if (extendedAttribute === null) {
+                extendedAttribute = new ExtendedAttributeImpl(attribute)
+            }
+            extendedFiltersList.add(extendedAttribute)
+        }
 		
 		if(instance instanceof DetailsPage){
 			this.isDetailsPage = true
@@ -103,7 +120,6 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		 	allAttributeOfFilterAndColum.add(colum)
 		}
 		allAttributeOfFilterAndColum.addAll(extendedFiltersList)
-		
 	}
 	
 	override getExtendedTableColumnList() {
@@ -150,6 +166,7 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 	override haveFiletoLoad() {
 		return haveFile
 	}
+	
 	override containsParamertergroup(String paramenterGroupName){
 		for(ExtendedParameterGroup d : extendedParameterGroupList){
 			if(d.name.equalsIgnoreCase(paramenterGroupName))
@@ -157,5 +174,44 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
 		}
 		return false
 	}
+	
+	override getTextColumn(ExtendedAttribute attribute, EList<ExtendedEntity> extendedEntityList) {
+        if (attribute.entity instanceof MappingEntity) {
+            var extendedEntity = extendedEntityList.findFirst[ extendedEntity |
+                extendedEntity.instance === attribute.entity
+            ]
+            
+            if (extendedEntity !== null) {
+                val reference = extendedEntity.allRefactoryReference.findFirst[ reference |
+                    reference.attribute.exists[ referenceAttribute |
+                        referenceAttribute.name.equals(attribute.name)
+                    ]
+                ]
+                
+                var indexOpt = IntStream.range(0, reference.attribute.size())
+                    .filter[i | reference.attribute.get(i).name.equals(attribute.name)]
+                    .findFirst();
+                
+                if (indexOpt.present === true) {
+                    var referencedAttribute = reference.attributerefereced.get(indexOpt.asInt)
+                    return '''«reference.entity.name».«referencedAttribute.name»'''
+                }
+                else {
+                    throw new UnsupportedOperationException
+                }
+            }
+            else {
+                throw new UnsupportedOperationException
+            }
+        }
+        else {
+            return '''«attribute.entity.name».«attribute.name»'''
+        }
+    }
+    
+    override getValueColumn(ExtendedAttribute attribute, EList<ExtendedEntity> extendedEntityList) {
+        this.getTextColumn(attribute, extendedEntityList)
+    }
+	
 	
 }

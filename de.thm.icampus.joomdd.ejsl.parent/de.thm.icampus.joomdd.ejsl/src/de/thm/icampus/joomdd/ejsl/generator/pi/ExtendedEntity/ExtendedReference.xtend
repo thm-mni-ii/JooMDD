@@ -11,6 +11,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Entity
  */
 interface ExtendedReference extends Reference {
 	
+    def void setParentProperties(Reference reference)
+    
 	/**
 	 * Returns all ExtendedAttributes specified in this ExtendedReference
 	 * 

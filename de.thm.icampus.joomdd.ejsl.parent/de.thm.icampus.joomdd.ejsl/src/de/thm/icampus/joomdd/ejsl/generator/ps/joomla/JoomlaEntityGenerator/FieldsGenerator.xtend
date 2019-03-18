@@ -273,26 +273,12 @@ class FieldsGenerator {
 	        ->from("$this->table AS «entFrom.name.toLowerCase»")
 	        ->order("$textColumn ASC");
 	    «Slug.createLeftJoins(entFrom.allExtendedReferences, com.name, entFrom.name)»
+	    «Slug.createQueryForNToM(entFrom, com.name)»
 	    $dbo->setQuery($query);
 	    $result = $dbo->loadObjectList();
 	    return $result;
 	}
 	'''
-	
-// private def CharSequence genAllSelectedDataForEntity() '''
-//     protected function getAllSelectedData($«entFrom.primaryKey.name», $valueColumn, $textColumn)
-//     {
-//         $dbo = Factory::getDbo();
-//         $query = $dbo->getQuery(true);
-//         $query->select(" $valueColumn AS value, $textColumn AS text,
-//         CASE WHEN «entFrom.primaryKey.name» = $«entFrom.primaryKey.name» THEN 1
-//         ELSE 0 AS checked
-//         ")->from("$this->table")->order("text AS ASC");
-//         $dbo->setQuery($query);
-//         $result = $dbo->loadObjectList();
-//         return $result;
-//     }
-// '''
 	
 	static def CharSequence genFieldsForUserView(ExtendedComponent component)'''
 		<?php

@@ -828,7 +828,15 @@ public class Slug  {
         '''$query->group('«entity.name».«entity.attributes.findFirst[a | a.isprimary].name»');'''
     }
     
+    def static createQueryForNToM(ExtendedEntity entity, String componentName) {
+        createQueryForNToM(entity, componentName, '''''', false)
+    }
+    
     def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator) {
+        createQueryForNToM(entity, componentName, separator, true)
+    }
+    
+    def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator, Boolean withSelect) {
         val entityName = entity.name
         var queries = newArrayList
         
@@ -853,12 +861,22 @@ public class Slug  {
                     '''
                 )
                 
-                var query = '''
-                $query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
+                var query = ''''''
+                
+                if (withSelect === true) {
+                    var querySelect = '''$query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');'''
+                    query += '''
+                    «querySelect»
+                    '''
+                }
+                
+                var queryJoin = '''
                 $query->join('LEFT', "«Slug.databaseName(componentName, referenceEntityName)» AS «referenceEntityName» ON
-                «joinOn»
-                ");
-                '''
+                    «joinOn»
+                ");'''
+                
+                query += '''«queryJoin»'''
+                
                 queries.add(query)
             }
         }
@@ -1365,5 +1383,71 @@ public class Slug  {
         ]
         
         return upperCaseKey
-    }   
+    }
+    
+    /**
+     * This function completes the query to get all items from the database.
+     */
+    def static getListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, ExtendedComponent extendedComponent, String separator) {
+        '''
+        $query->from('`#__«extendedComponent.name»_«indexpage.entities.get(0).name»` AS «indexpage.entities.get(0).name»');
+
+        // Join over the users for the checked out user
+        $query->select("uc.name AS editor");
+        $query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name».checked_out");
+
+        // Join over the user field 'created_by'
+        $query->select('created_by.name AS created_by');
+        $query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name».created_by');
+
+        // Join over the user field 'user'
+        $query->select('user.name AS user');
+        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name».created_by');
+        «Slug.createLeftJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, extendedComponent.name, indexpage.entities.get(0).name)»
+        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), extendedComponent.name, separator)»
+        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
+
+        // Filter by published state
+        if (is_numeric($published)) {
+            $query->where('«indexpage.entities.get(0).name».state = ' . (int) $published);
+        } elseif ($published === '') {
+            $query->where('(«indexpage.entities.get(0).name».state IN (0, 1))');
+        }
+
+        // Filter by User
+        if (!empty($created_by)) {
+            $query->where("«indexpage.entities.get(0).name».created_by = '" . $db->escape($created_by) . "'");
+        }
+        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
+
+        // Filter by «attr.name»
+        if (!empty($«attr.name»)) {
+            $query->where("«attr.entity.name».«attr.name» = '" . $db->escape($«attr.name») . "'");
+        }
+        «ENDFOR»
+
+        // Filter by search in attribute
+        if (!empty($search)) {
+            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
+                $query->where('«indexpage.entities.get(0).name».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
+            } else {
+                $search = $db->Quote('%' . $db->escape($search, true) . '%');
+                «IF !indexpage.extendFiltersList.empty»
+                $query->where("(«indexpage.extendFiltersList.map[ attr | 
+                    var column = indexpage.getTextColumn(attr, extendedComponent.allExtendedEntity)
+                    '''«column» LIKE $search'''
+                ].join(''' OR 
+                    ''')»)");
+                «ENDIF»
+            }
+        }
+
+        // Add the list ordering clause.
+        if ($orderCol && $orderDirn) {
+            $query->order($db->escape($orderCol . ' ' . $orderDirn));
+        }
+
+        return $query;
+        '''
+    }
 }

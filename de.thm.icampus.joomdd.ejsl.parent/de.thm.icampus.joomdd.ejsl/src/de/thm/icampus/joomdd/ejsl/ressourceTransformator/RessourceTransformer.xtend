@@ -42,6 +42,8 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import java.util.stream.Collectors
 import java.util.List
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -324,7 +326,7 @@ class RessourceTransformer {
 
                             var filterKey = newArrayList(
                                 extensionName,
-                                "JOPTION",
+                                "FILTER",
                                 "SELECT",
                                 reference.entity.name,
                                 reference.attributerefereced.get(0).name
@@ -357,6 +359,7 @@ class RessourceTransformer {
 
         if (ent.havePrimaryAttribute === false) {
             var Attribute id = EJSLFactory.eINSTANCE.createAttribute
+            
             id.name = defaultPrimaryAttributeName
             var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
             typeid.type = StandardTypeKinds.INTEGER
@@ -726,9 +729,9 @@ class RessourceTransformer {
 
         // TODO: There might be more than one entity.
         var firstEntity = page.entities.get(0)
-        var idAttribute = EcoreUtil2.copy(firstEntity.attributes.findFirst [ a |
+        var idAttribute = firstEntity.attributes.findFirst [ a |
             a.name.equals(defaultPrimaryAttributeName) && a.isIsprimary === true
-        ])
+        ]
 
         var pageFilterList = page.filters
         var pageTableColumnList = page.tablecolumns
@@ -741,26 +744,26 @@ class RessourceTransformer {
                 pageTableColumnList.add(idAttribute)
             }
         }
-
-        // The filter list is empty. We add all attributes from the table column list.
-        // We also add the id attribute (primary) if present.
+        
+        // The filter list is empty. We add all attributes from the entity.
+        // We also add the id attribute (primary) to the column list if present.
         if (pageFilterList.empty && pageTableColumnList.empty === false) {
             if (idAttribute !== null) {
                 pageTableColumnList.add(idAttribute)
             }
-            for (Attribute attr : page.tablecolumns) {
-                pageFilterList.add(EcoreUtil2.copy(attr))
+            for (Attribute attr : firstEntity.attributes) {
+                pageFilterList.add(attr)
             }
         }
 
-        // The table column list is empty. We add all attributes from the filter list.
-        // We also add the id attribute (primary) if present.
+        // The table column list is empty. We add all attributes from the entity.
+        // We also add the id attribute (primary) to the filter list if present.
         if (pageFilterList.empty === false && pageTableColumnList.empty) {
             if (idAttribute !== null) {
                 pageFilterList.add(idAttribute)
             }
-            for (Attribute attr : page.filters) {
-                pageTableColumnList.add(EcoreUtil2.copy(attr))
+            for (Attribute attr : firstEntity.attributes) {
+                pageTableColumnList.add(attr)
             }
         }
 
@@ -768,8 +771,8 @@ class RessourceTransformer {
         // This includes the id attribute (primary))
         if (pageFilterList.empty && pageTableColumnList.empty) {
             for (Attribute attr : firstEntity.attributes) {
-                pageFilterList.add(EcoreUtil2.copy(attr))
-                pageTableColumnList.add(EcoreUtil2.copy(attr))
+                pageFilterList.add(attr)
+                pageTableColumnList.add(attr)
             }
         }
     }
@@ -797,9 +800,17 @@ class RessourceTransformer {
                         var EList<Attribute> to_rename_attributeToEntity = new BasicEList<Attribute>
 
                         attributeFromEntity.addAll(
-                            ref.entity.references.filter[t|t.entity.name == ent.name].get(0).attributerefereced)
+                            ref.entity.references.filter[t |
+                                t.entity.name == ent.name
+                            ].get(0).attributerefereced
+                        )
+                        
                         to_rename_attributeToEntity.addAll(
-                            ref.entity.references.filter[t|t.entity.name == ent.name].get(0).attribute)
+                            ref.entity.references.filter[t |
+                                t.entity.name == ent.name
+                            ].get(0).attribute
+                        )
+                        
                         attributeToEntity.addAll(ref.attributerefereced)
                         to_rename_attributeFromEntity.addAll(ref.attribute);
                         copy_attributeFromEntity.addAll(copyAttribute(ent, attributeFromEntity))
@@ -809,8 +820,13 @@ class RessourceTransformer {
                         renameOldReference(to_rename_attributeToEntity, copy_attributeFromEntity)
                         mappingEntity.attributes.addAll(copy_attributeToEntity)
                         ent.attributes.removeAll(ref.attribute)
+                        
                         ref.entity.attributes.removeAll(
-                            ref.entity.references.filter[t|t.entity.name == ent.name].get(0).attribute)
+                            ref.entity.references.filter[t |
+                                t.entity.name.equals(ent.name)
+                            ].get(0).attribute
+                        )
+                        
                         mappingEntity.references.addAll(solveReference(ref, mappingEntity, ent, ref.entity))
 
                         newEntity.add(mappingEntity)
@@ -976,9 +992,19 @@ class RessourceTransformer {
 
     private def boolean deleteReferenceToEntity(Entity to, Entity from, Entity newEntity) {
         var Reference newref = EJSLFactory.eINSTANCE.createReference
-        var Reference oldRef = to.references.filter[t|t.entity.name == from.name].get(0)
-        newref.attribute.addAll(from.references.filter[t|t.entity.name == to.name].get(0).attributerefereced)
-        newref.attributerefereced.addAll(newEntity.attributes.filter[t|isAttributeOfEntity(t, to.name)])
+        var Reference oldRef = to.references.filter[t |
+                t.entity.name.equals(from.name) 
+        ].get(0)
+            
+        newref.attribute.addAll(from.references.filter[t |
+                t.entity.name.equals(to.name)
+            ].get(0).attributerefereced
+        )
+        
+        newref.attributerefereced.addAll(newEntity.attributes.filter[t |
+            isAttributeOfEntity(t, to.name)
+        ])
+        
         newref.entity = newEntity
         newref.lower = "1"
         newref.upper = "-1"
@@ -988,14 +1014,19 @@ class RessourceTransformer {
 
     }
 
-    private def Reference createNewReverseReference(Entity from, Entity to, Reference oldref) {
+    private def ExtendedReference createNewReverseReference(Entity from, Entity to, Reference oldRef) {
         var Reference newref = EJSLFactory.eINSTANCE.createReference
-        newref.attribute.addAll(to.attributes.filter[t|isContainInMappingEntity(t.name, to.name, from)])
+        newref.attribute.addAll(to.attributes.filter[t |
+            isContainInMappingEntity(t.name, to.name, from)
+        ])
         newref.entity = from
-        newref.attributerefereced.addAll(from.attributes.filter[t|isAttributeOfEntity(t, to.name)])
+        newref.attributerefereced.addAll(from.attributes.filter[t |
+            isAttributeOfEntity(t, to.name)
+        ])
         newref.lower = "1"
         newref.upper = "-1"
-        return newref
+        
+        return new ExtendedReferenceImpl(newref, to, oldRef)
     }
 
     def boolean isContainInMappingEntity(String attributeName, String toEntityname, Entity mappingEntity) {
