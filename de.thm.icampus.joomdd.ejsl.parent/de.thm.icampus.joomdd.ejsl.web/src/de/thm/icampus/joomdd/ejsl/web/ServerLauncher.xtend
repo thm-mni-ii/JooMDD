@@ -23,7 +23,7 @@ class ServerLauncher {
 		server.handler = new WebAppContext => [
 			resourceBase = 'WebRoot'
 			welcomeFiles = #["index.html"]
-			contextPath = "/echeck/"
+			contextPath = "/"
 			configurations = #[
 				new AnnotationConfiguration,
 				new WebXmlConfiguration,
