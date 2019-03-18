@@ -6,6 +6,8 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
+import java.util.ArrayList
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.TableColumn
 
 interface ExtendedDynamicPage extends DynamicPage {
 	
@@ -70,10 +72,10 @@ interface ExtendedDynamicPage extends DynamicPage {
 	/**
 	 * Returns the <table name>.<field name> representation in the database for the given attribute.
 	 */
-	def String getTextColumn(ExtendedAttribute attribute, EList<ExtendedEntity> extendedEntityList)
+	def TableColumn getTextColumn(ExtendedAttribute attribute, EList<ExtendedEntity> extendedEntityList)
 	
     /**
      * Returns the <table name>.<field name> representation in the database for the given attribute.
      */
-	def String getValueColumn(ExtendedAttribute attribute, EList<ExtendedEntity> extendedEntityList)
+	def TableColumn getValueColumn(ExtendedAttribute attribute, EList<ExtendedEntity> extendedEntityList)
 }

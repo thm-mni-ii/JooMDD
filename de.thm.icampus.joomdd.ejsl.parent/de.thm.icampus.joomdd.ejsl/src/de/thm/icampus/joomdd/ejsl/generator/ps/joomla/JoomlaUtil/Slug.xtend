@@ -828,15 +828,7 @@ public class Slug  {
         '''$query->group('«entity.name».«entity.attributes.findFirst[a | a.isprimary].name»');'''
     }
     
-    def static createQueryForNToM(ExtendedEntity entity, String componentName) {
-        createQueryForNToM(entity, componentName, '''''', false)
-    }
-    
     def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator) {
-        createQueryForNToM(entity, componentName, separator, true)
-    }
-    
-    def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator, Boolean withSelect) {
         val entityName = entity.name
         var queries = newArrayList
         
@@ -861,21 +853,12 @@ public class Slug  {
                     '''
                 )
                 
-                var query = ''''''
-                
-                if (withSelect === true) {
-                    var querySelect = '''$query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');'''
-                    query += '''
-                    «querySelect»
-                    '''
-                }
-                
-                var queryJoin = '''
+                var query = '''
+                $query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
                 $query->join('LEFT', "«Slug.databaseName(componentName, referenceEntityName)» AS «referenceEntityName» ON
                     «joinOn»
-                ");'''
-                
-                query += '''«queryJoin»'''
+                ");
+                '''
                 
                 queries.add(query)
             }
@@ -884,7 +867,17 @@ public class Slug  {
         return queries.join
     }
     
-    def static createLeftJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
+    /**
+     * This method will create the given join type by joinType for the given references
+     * 
+     * @param EList<ExtendedReference> extendedReference
+     * @param String componentName
+     * @param String entityName
+     * @param String joinType
+     * 
+     * @return String
+     */
+    def static createJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName, String joinType) {
         var HashMap<String, Integer> counterMap = newHashMap
         var output = ''''''
         counterMap.put(entityName,1)
@@ -894,7 +887,7 @@ public class Slug  {
             var counter = counterMap.getOrDefault(originDestinationEntityName, 0)
             val destinationEntityName = if (counter === 0) {ref.destinationEntity.name} else {'''«ref.destinationEntity.name»«counter»'''}
             output += '''
-            $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» AS «destinationEntityName» ON
+            $query->join('«joinType»', "«Slug.databaseName(componentName, ref.destinationEntity.name)» AS «destinationEntityName» ON
                 «ref.extendedAttributes.map[ attr | 
                     '''«entityName».«attr.name» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name»'''
                 ].join(''' AND
@@ -1449,5 +1442,31 @@ public class Slug  {
 
         return $query;
         '''
+    }
+    
+    /**
+     * This method will create INNER joins for the given references
+     * 
+     * @param EList<ExtendedReference> extendedReference
+     * @param String componentName
+     * @param String entityName
+     * 
+     * @return String
+     */
+    def static createInnerJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
+        Slug.createJoins(extendedReference, componentName, entityName, "INNER")
+    }
+    
+    /**
+     * This method will create LEFT joins for the given references
+     * 
+     * @param EList<ExtendedReference> extendedReference
+     * @param String componentName
+     * @param String entityName
+     * 
+     * @return String
+     */
+    def static createLeftJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
+        Slug.createJoins(extendedReference, componentName, entityName, "LEFT")
     }
 }
