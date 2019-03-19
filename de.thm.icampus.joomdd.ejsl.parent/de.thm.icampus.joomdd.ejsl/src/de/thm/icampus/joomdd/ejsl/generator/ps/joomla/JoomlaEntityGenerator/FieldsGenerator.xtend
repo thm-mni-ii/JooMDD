@@ -272,7 +272,8 @@ class FieldsGenerator {
 	    $query->select("DISTINCT $valueColumn as value, $textColumn as text")
 	        ->from("$this->table AS «entFrom.name»")
 	        ->order("$textColumn ASC");
-	    «Slug.createLeftJoins(entFrom.allExtendedReferences, com.name, entFrom.name)»
+
+	    «Slug.createSelectAndJoins(entFrom.allExtendedReferences, com.name, entFrom.name)»
 	    $dbo->setQuery($query);
 	    $result = $dbo->loadObjectList();
 	    return $result;

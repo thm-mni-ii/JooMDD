@@ -24,7 +24,7 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	    setParentProperties(attribute)
         instance = attribute
 	    
-		var attrEContainer = EcoreUtil2.getContainerOfType(attribute, Entity)
+		var attrEContainer = attribute.eContainer as Entity
 		entity = attrEContainer
 		genType = generatorType()
 		htmlType = generatorTypeHtmlType()
