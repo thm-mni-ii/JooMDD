@@ -92,6 +92,11 @@
                   Start Tour
               </button>
             </li>-->
+              <li class="nav-item">
+                  <div id="loginAlert" class="alert alert-dismissable fade show">
+                      <strong id="alertState"></strong><span id="alertText"></span>
+                  </div>
+              </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="https://github.com/icampus/JooMDD/blob/master/docu">Documentation</a>
             </li>
@@ -112,11 +117,6 @@
                     </div>
                  	<button id="loginBtn" type="button" class="btn btn-primary">Sign in</button>
                   </form>
-					<div>
-						<div id="loginAlert" class="alert alert-dismissable fade show">
-					     	<strong id="alertState"></strong><span id="alertText"></span>
-					    </div>
-					</div>
                   <div class="dropdown-divider"></div>
                   <a id="registrationFormBtn" class="dropdown-item" data-toggle="modal" data-target="#registrationForm" href="#">New around here? Sign up</a>
                 </div>
@@ -173,7 +173,7 @@
                 <span>Generate Code</span>
               </button>
               <span class="loader"></span>
-              
+
             </div>
             <hr id="spacer" class="section-heading-spacer">
             <div class="clearfix"></div>
@@ -232,7 +232,7 @@
                   </div>
                 </div>
               </div>
-              
+
               <button id="loadModel" class="btn btn-light btn-lg">
                 <i class="fas fa-arrow-left fa-fw"></i>
                 <span>Load Model to Editor</span>
