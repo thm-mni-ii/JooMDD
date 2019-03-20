@@ -29,8 +29,8 @@ require(["jquery"], function ($) {
             new TourPoint($('#platform'), `Here, you can choose the Joomla version for which the extension code will be generated.`),
             new TourPoint($('#generateCode'), `This is the generate button. Use this button to start the generation of your Joomla! extension(s). The generated code can be found in the file tree under 'src-gen'.`),
             new TourPoint($('#download'), `Use this button to download the selected node in the file tree as .zip. Alternatively, you can use the context menu (right-click) in the file tree to download a node.`)
-            
-            
+
+
             /*,
             new TourPoint($('#folder_tree > ul'), ``),
             new TourPoint($('div.ace_gutter'), `This status bar shows existing model violations. If there are violations, the code generator will not generaty any code.`),
@@ -141,12 +141,11 @@ require(["jquery"], function ($) {
         }
 
         endTour() {
-            
+
             this.tourPoints.forEach((tourPoint) => {
                 tourPoint.objects.undim();
-                tourPoint.objects.popover('disable');
             });
-            
+
         }
 
     }
@@ -330,27 +329,21 @@ require(["jquery"], function ($) {
 
     $(() => {
 
-        /*if (!isLoggedIn()) {
-            interactiveTour.startTour();
-        }*/
-
-        /* TODO Remove if check is implemented*/
         setTimeout(() => {
-            if (sessionStorage.getItem("joomddTour") != 1)
+            if (sessionStorage.getItem("joomddTour") !== "1")
             {
                 interactiveTour = new InteractiveTour();
-                
-                sessionStorage.setItem("joomddTour", 1)
+
+                sessionStorage.setItem("joomddTour", "1");
                 interactiveTour.startTour();
             }
 
         }, 1000);
 
-        /*$('#startTour').click(() => {
+        $("#startTour").click(() => {
             interactiveTour = new InteractiveTour();
+            sessionStorage.setItem("joomddTour", "1");
             interactiveTour.startTour();
-        });*/
-        
-
+        });
     });
 });
