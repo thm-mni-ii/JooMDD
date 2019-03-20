@@ -362,16 +362,16 @@ In order to specify the representation of attributes as fields within view forms
 
 HTML Type | Supported Attribute Types | HTML|
 ---|---|---
-Integer | Integer, Decimal, Currency | <img src="img/type_mappings/input.jpg" alt="Integer input" style="max-width:100%">
-Yes_No_Buttons | Boolean |  <img src="img/type_mappings/yes-no.jpg" alt="yes-no buttons input" style="max-width:100%">  
-Textarea | Text, Short_Text, Integer, Decimal, Currency, Time, Date, Datetime, Link, Image, File  |  <img src="img/type_mappings/textarea.jpg" alt="Textarea input" style="max-width:100%"> 
-Text_Field | Text, Short_Text, Integer, Decimal, Currency, Time, Date, Datetime, Link, Image, File | <img src="img/type_mappings/input.jpg" alt="text field input" style="max-width:100%"> 
-Link | Text, Short_Text, Link | <img src="img/type_mappings/input.jpg" alt="text field input" style="max-width:100%"> 
-Datepicker | Time, Date, Datetime, Text, Short_Text | <img src="img/type_mappings/datepicker.jpg" alt="datepicker input" style="max-width:100%"> 
-Imagepicker | Image, Text, Short_Text | <img src="img/type_mappings/imagepicker.jpg" alt="imagepicker input" style="max-width:100%"> 
-Filepicker | File, Text, Short_Texte |  <img src="img/type_mappings/filepicker.jpg" alt="filepicker input" style="max-width:100%"> 
-Editor | Text, Short_Text | <img src="img/type_mappings/editor.jpg" alt="editor input" style="max-width:100%"> 
-Select | Integer, Text, Short_Text | <img src="img/type_mappings/select.jpg" alt="select input" style="max-width:100%"> 
+Integer | Integer, Decimal, Currency | <img src="img/type_mappings/input.JPG" alt="Integer input" style="max-width:100%">
+Yes_No_Buttons | Boolean |  <img src="img/type_mappings/yes-no.JPG" alt="yes-no buttons input" style="max-width:100%">  
+Textarea | Text, Short_Text, Integer, Decimal, Currency, Time, Date, Datetime, Link, Image, File  |  <img src="img/type_mappings/textarea.JPG" alt="Textarea input" style="max-width:100%"> 
+Text_Field | Text, Short_Text, Integer, Decimal, Currency, Time, Date, Datetime, Link, Image, File | <img src="img/type_mappings/input.JPG" alt="text field input" style="max-width:100%"> 
+Link | Text, Short_Text, Link | <img src="img/type_mappings/input.JPG" alt="text field input" style="max-width:100%"> 
+Datepicker | Time, Date, Datetime, Text, Short_Text | <img src="img/type_mappings/datepicker.JPG" alt="datepicker input" style="max-width:100%"> 
+Imagepicker | Image, Text, Short_Text | <img src="img/type_mappings/imagepicker.JPG" alt="imagepicker input" style="max-width:100%"> 
+Filepicker | File, Text, Short_Texte |  <img src="img/type_mappings/filepicker.JPG" alt="filepicker input" style="max-width:100%"> 
+Editor | Text, Short_Text | <img src="img/type_mappings/editor.JPG" alt="editor input" style="max-width:100%"> 
+Select | Integer, Text, Short_Text | <img src="img/type_mappings/select.JPG" alt="select input" style="max-width:100%"> 
 Multiselect | Integer, Text, Short_Text | n.a
 Checkbox | Integer, Text, Short_Text | n.a. 
 Radiobutton | Integer, Text, Short_Text | n.a.
