@@ -108,6 +108,19 @@ require(["jquery"], function ($) {
         }
 
         startTour() {
+
+            this.tourPoints.forEach((tourPoint) => {
+                tourPoint.objects.popover({
+                    content: tourPoint.description,
+                    template: `<div class="popover" role="tooltip">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-header"></h3>
+                                    <div class="popover-body"></div>
+                                </div>`
+                });
+                tourPoint.objects.popover('enable');
+            });
+
             if (this.tourPoints.length > 0) {
                 this.position = 0;
                 this.showTourPoint();
@@ -144,6 +157,7 @@ require(["jquery"], function ($) {
 
             this.tourPoints.forEach((tourPoint) => {
                 tourPoint.objects.undim();
+                tourPoint.objects.popover('disable');
             });
 
         }
@@ -202,15 +216,6 @@ require(["jquery"], function ($) {
                 if (this._originalZIndex === "auto" || this._originalZIndex <= opts.curtainZIndex) {
                     $this.css('z-index', opts.curtainZIndex + 1);
                 }
-
-                $this.popover({
-                    content: intel,
-                    template: `<div class="popover" role="tooltip">
-                                    <div class="arrow"></div>
-                                    <h3 class="popover-header"></h3>
-                                    <div class="popover-body"></div>
-                                </div>`
-                });
 
                 $this.popover('show');
             });
