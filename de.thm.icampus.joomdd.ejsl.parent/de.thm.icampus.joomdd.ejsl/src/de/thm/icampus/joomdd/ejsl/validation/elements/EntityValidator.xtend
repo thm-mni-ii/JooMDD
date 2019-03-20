@@ -67,16 +67,18 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	def checkEntityAttributesAreUnique(Entity entity) {
 		var attributes = new HashSet<String>
 
-		for (attribute : entity.attributes) {
-			if (!attributes.add(attribute.getName)) {
-				error(
-					'Attribute names must be unique.',
-					attribute,
-					EJSLPackage.Literals.ATTRIBUTE__NAME,
-					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_ATTRIBUTE_AMBIGUOUS
-				)
+		if (entity.attributes !== null) {
+			for (attribute : entity.attributes) {
+				if (!attributes.add(attribute.getName)) {
+					error(
+						'Attribute names must be unique.',
+						attribute,
+						EJSLPackage.Literals.ATTRIBUTE__NAME,
+						de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_ATTRIBUTE_AMBIGUOUS
+					)
+				}
 			}
-		}
+		}	
 	}
 	
 	/**
@@ -100,16 +102,18 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	 */	
 	@Check
 	def checkAttributename(Entity entity) {
-		for (attribute : entity.attributes) {					
-			if(attribute.name == "ordering"||attribute.name =="state"||attribute.name =="checked_out" ||
-				attribute.name == "checked_out_time" ||attribute.name == "created_by"){ 				
-				warning("Attribute name should not be: " + attribute.name +"!",
-					attribute,
-					EJSLPackage.Literals.ATTRIBUTE__NAME,
-					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_ATTRIBUTE_AMBIGUOUS
-				)				
+		if (entity.attributes !== null) {
+			for (attribute : entity.attributes) {					
+				if(attribute.name == "ordering"||attribute.name =="state"||attribute.name =="checked_out" ||
+					attribute.name == "checked_out_time" ||attribute.name == "created_by"){ 				
+					warning("Attribute name should not be: " + attribute.name +"!",
+						attribute,
+						EJSLPackage.Literals.ATTRIBUTE__NAME,
+						de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_ATTRIBUTE_AMBIGUOUS
+					)				
+				}
 			}
-		}
+		}	
 	}
 	
 	/**
@@ -123,13 +127,15 @@ class EntityValidator extends AbstractDeclarativeValidator {
         
         if (ejslPart !== null){
     		for (entity : ejslPart.feature.entities) {
-    			if (Keywords.RESERVED_KEYWORDS.contains(entity.name)){
-    				error(
-    					'Entity name ' + entity.name + ' is a reserved keyword.',
-    								entity,
-    								EJSLPackage.Literals.ENTITY__NAME,
-    								de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_NAME_FORBIDDEN
-    				)
+    			if (entity !== null) {
+    				if (Keywords.RESERVED_KEYWORDS.contains(entity.name)){
+	    				error(
+	    					'Entity name ' + entity.name + ' is a reserved keyword.',
+	    					entity,
+	    					EJSLPackage.Literals.ENTITY__NAME,
+	    					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_NAME_FORBIDDEN
+	    				)
+    				}
     			}
     		}
     	}
@@ -148,41 +154,47 @@ class EntityValidator extends AbstractDeclarativeValidator {
 		if (ejslPart !== null){
             // Save all Entity names
 		    for (entity : ejslPart.getFeature.getEntities) {
-                entities.add(entity.name)
+		    	if (entity !== null) {
+		    		entities.add(entity.name)
+		    	}
             }
             
             // Run through all Entities
-            for (entity : ejslPart.getFeature.getEntities) {
-                
-                // Run through all attributes of that Entity
-                for (attribute : entity.attributes) {
-                    
-                    // Check for every attribute if there is a equal named Entity
-                    for (eName : entities) {
-                        
-                        if (attribute.name.toLowerCase == eName.toLowerCase) {          
-                            
-                            // Check if Reference exists
-                            for (references : entity.references){
-                                refs.add(references.entity.name.toLowerCase)
-                            }
-                            
-                            // When no Reference to that Entity exists, show a warning message
-                            if (refs.add(eName.toLowerCase)) {
-                                warning(
-                                    'Attribute ' + attribute.name + ' should have a Reference to matching Entity. Make sure referenced Entity is defined above',
-                                    attribute,
-                                    EJSLPackage.Literals.ATTRIBUTE__NAME,
-                                    de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_MISSING_REFERENCE
-                                )
-                            }
-                        }
-                        
-                        // Reset references
-                        refs.clear
-                    }
-                }
-            }
+			for (entity : ejslPart.getFeature.getEntities) {
+				if (entity !== null) {
+					// Run through all attributes of that Entity
+					for (attribute : entity.attributes) {
+						if (attribute !== null) {
+							// Check for every attribute if there is a equal named Entity
+							for (eName : entities) {
+
+								if (attribute.name.toLowerCase == eName.toLowerCase) {
+
+									// Check if Reference exists
+									for (references : entity.references) {
+										if (references !== null) {
+											refs.add(references.entity.name.toLowerCase)
+										}
+									}
+
+									// When no Reference to that Entity exists, show a warning message
+									if (refs.add(eName.toLowerCase)) {
+										warning(
+											'Attribute ' + attribute.name +' should have a Reference to matching Entity. Make sure referenced Entity is defined above',
+											attribute,
+											EJSLPackage.Literals.ATTRIBUTE__NAME,
+											de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_MISSING_REFERENCE
+										)
+									}
+								}
+
+								// Reset references
+								refs.clear
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	
@@ -202,28 +214,30 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	 @Check
 	 def validateMinValues(Reference reference){
 	 	if (reference.lower !== null) {
-	 	    if(!MINVALUES.contains(reference.lower)){
-            error(
-                    'The value for min has to be 0 or 1',
-                    reference,
-                    EJSLPackage.Literals.REFERENCE__LOWER,
-                    de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_LOWER_WRONG_VALUE
-                )
-            }   
-	 	}
+			if (!MINVALUES.contains(reference.lower)) {
+				error(
+					'The value for min has to be 0 or 1',
+					reference,
+					EJSLPackage.Literals.REFERENCE__LOWER,
+					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_LOWER_WRONG_VALUE
+				)
+			}
+		}
 	 }
 	 
 	 /**
 	  * Validates that max values are valid
 	  */
-	  def validateMaxValues(Reference reference){
-	  	if(!MAXVALUES.contains(reference.upper)){
-	 		error(
+	  def validateMaxValues(Reference reference) {
+		if (reference.upper !== null) {
+			if (!MAXVALUES.contains(reference.upper)) {
+				error(
 					'The value for min has to be 1 or -1',
 					reference,
 					EJSLPackage.Literals.REFERENCE__UPPER,
 					de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_REFERENCE_UPPER_WRONG_VALUE
 				)
-	 	}
+			}
+		}
 	}
 }

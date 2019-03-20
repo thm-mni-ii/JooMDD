@@ -49,15 +49,17 @@ class PageValidator extends AbstractDeclarativeValidator {
 
         if (ejslPart !== null) {
             for (page : ejslPart.feature.pages) {
-                if (!pages.add(page.getName)) {
-                    error(
-                        'Page names must be unique.',
-                        page,
-                        EJSLPackage.Literals.PAGE__NAME,
-                        de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_AMBIGUOUS
-                    )
-                }
-            }
+				if (page !== null) {
+					if (!pages.add(page.getName)) {
+						error(
+							'Page names must be unique.',
+							page,
+							EJSLPackage.Literals.PAGE__NAME,
+							de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_AMBIGUOUS
+						)
+					}
+				}
+			}
         }
     }
 
@@ -68,27 +70,34 @@ class PageValidator extends AbstractDeclarativeValidator {
     def checkMultipleEntitiesInIndexPageReferences(EJSLModel model) throws Exception {
         var mainEntities = new HashSet<Entity>
         var foundReferenceEntity = new HashSet<Entity>
+        var duplicateEntity = false;
         var ejslPart = model.ejslPart
 
         if (ejslPart !== null) {
             for (page : ejslPart.feature.pages) {
-
                 if (page instanceof IndexPage) {
 
-                    if (page.entities.size > 1) {
+                    if (page.entities !== null && page.entities.size > 1) {
                         // Save main entity
                         mainEntities.add(page.entities.get(0))
                         for (int i : 1 ..< page.entities.size) {
 
+							// Check for duplicate entity (will be caught by multiple entity usage rule)
+							if (page.entities.get(i).name.toLowerCase == mainEntities.get(0).name.toLowerCase) {
+								duplicateEntity = true;
+							}
+							
                             // Check if current entity has a reference to main entity
-                            for (referencedE : page.entities.get(i).references) {
-                                if (referencedE.entity instanceof Entity) {
-                                    if (referencedE.entity.name.toLowerCase == mainEntities.get(0).name.toLowerCase) {
-                                        foundReferenceEntity.add(referencedE.entity as Entity)
-                                    }
-                                }
-                            }
-                            if (foundReferenceEntity.empty) {
+							for (referencedE : page.entities.get(i).references) {
+								if (referencedE !== null) {
+									if (referencedE.entity instanceof Entity) {
+										if (referencedE.entity.name.toLowerCase == mainEntities.get(0).name.toLowerCase) {
+											foundReferenceEntity.add(referencedE.entity as Entity)
+										}
+									}
+								}
+							}
+                            if (foundReferenceEntity.empty && !duplicateEntity) {
                                 error(
                                     'Entity: \'' + page.entities.get(i).name + '\' of IndexPage: \'' + page.name +
                                         '\' has no reference to IndexPage main-entity: \'' +
@@ -96,10 +105,10 @@ class PageValidator extends AbstractDeclarativeValidator {
                                     page,
                                     EJSLPackage.Literals.DYNAMIC_PAGE__ENTITIES,
                                     i,
-                                    de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.
-                                        PAGE_MISSING_REFERENCE_TO_MAIN_ENTITY
+                                    de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_MISSING_REFERENCE_TO_MAIN_ENTITY
                                 )
                             }
+                            duplicateEntity = false;
                             foundReferenceEntity.clear
                         }
                     }
@@ -114,21 +123,29 @@ class PageValidator extends AbstractDeclarativeValidator {
      */
     @Check
     def checkDetailsPageFieldEntityReference(DetailsPage p) {
+    	
         // Check if editfields are used
         if (p.editfields.size > 0) {
             var refEntities = new HashSet<String>
 
             // Build map with all referenced entity and attribute names for an entity (Talk.Participant.name)
-            for (entity : p.entities) {
-                for (ref : entity.references) {
-                    for (attrRef : ref.attributerefereced) {
-                        if (attrRef.eContainer instanceof Entity) {
-                            val refEnt = attrRef.eContainer as Entity
-                            refEntities.add(entity.name + "." + refEnt.name + "." + attrRef.name)
-                        }
-                    }
-                }
-            }
+			if (p.entities !== null) {
+				for (entity : p.entities) {
+					if (entity.references !== null) {
+						for (ref : entity.references) {
+							if (ref.attributerefereced !== null) {
+								for (attrRef : ref.attributerefereced) {
+									if (attrRef.eContainer instanceof Entity) {
+										val refEnt = attrRef.eContainer as Entity
+										refEntities.add(entity.name + "." + refEnt.name + "." + attrRef.name)
+									}
+								}
+							}							
+						}
+					}
+				}
+			}
+            
 
             // Check if editfield type is set as reference in entity
             for (editf : p.editfields) {
@@ -141,8 +158,7 @@ class PageValidator extends AbstractDeclarativeValidator {
                                 'Field type of editfield has to be a reference in given entity.',
                                 editf,
                                 EJSLPackage.Literals.DETAILS_PAGE__EDITFIELDS.EOpposite,
-                                de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.
-                                    PAGE_DETAILSPAGE_EDITFIELDS_REFERENCE
+                                de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_DETAILSPAGE_EDITFIELDS_REFERENCE
                             )
                         }
                     }
@@ -157,26 +173,28 @@ class PageValidator extends AbstractDeclarativeValidator {
      */
     @Check
     def nonDeclaredFilterAttribute(DynamicPage p) throws Exception{
-        for (filt : p.filters) {
-            val enti = filt.eContainer
-            if (enti instanceof Entity) {
-                if (!p.entities.contains(enti)) {
-                    error(
-                        'Entity for the filter attribute must be declared before.',
-                        filt,
-                        EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
-                        de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_AMBIGUOUS
-                    )
-                }
-            } else {
-                error(
-                    'May trying to referencing a non existing entity for a filter.',
-                    filt,
-                    EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
-                    de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_AMBIGUOUS
-                )
-            }
-        }
+    	if (p.filters !== null) {
+    		for (filt : p.filters) {
+				val enti = filt.eContainer
+				if (enti instanceof Entity) {
+					if (!p.entities.contains(enti)) {
+						error(
+							'Entity for the filter attribute must be declared before.',
+							filt,
+							EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
+							de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_AMBIGUOUS
+						)
+					}
+				} else {
+					error(
+						'May trying to referencing a non existing entity for a filter.',
+						filt,
+						EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
+						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_AMBIGUOUS
+					)
+				}
+			}
+    	}
     }
 
     /**
@@ -184,26 +202,28 @@ class PageValidator extends AbstractDeclarativeValidator {
      */
     @Check
     def nonDeclaredColumnAttribute(DynamicPage p) throws Exception{
-        for (column : p.tablecolumns) {
-            val enti = column.eContainer
-            if (enti instanceof Entity) {
-                if (!p.entities.contains(enti)) {
-                    error(
-                        'Entity for the table column attribute must be declared before.',
-                        column,
-                        EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
-                        de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_TABLE_COLUMN_AMBIGUOUS
-                    )
-                }
-            } else {
-                error(
-                    'May trying to referencing a non existent Entity for a column.',
-                    column,
-                    EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
-                    de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_TABLE_COLUMN_AMBIGUOUS
-                )
-            }
-        }
+    	if (p.tablecolumns !== null) {
+    		for (column : p.tablecolumns) {
+				val enti = column.eContainer
+				if (enti instanceof Entity) {
+					if (!p.entities.contains(enti)) {
+						error(
+							'Entity for the table column attribute must be declared before.',
+							column,
+							EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
+							de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_TABLE_COLUMN_AMBIGUOUS
+						)
+					}
+				} else {
+					error(
+						'May trying to referencing a non existent Entity for a column.',
+						column,
+						EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
+						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_TABLE_COLUMN_AMBIGUOUS
+					)
+				}
+			}
+    	}   
     }
 
     /**
@@ -212,26 +232,28 @@ class PageValidator extends AbstractDeclarativeValidator {
     @Check
     def checkTableColumnsAreUnique(DynamicPage p) {
         var enticolumns = new HashSet<String>
-        for (column : p.tablecolumns) {
-            val enti = column.eContainer
-            if (enti instanceof Entity) {
-                if (!enticolumns.add(enti.name + column.name)) {
-                    error(
-                        'table column used multiple times in this Page.',
-                        column,
-                        EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
-                        PAGE_COLUMNS_USED_MULTIPLE_TIMES
-                    )
-                }
-            } else {
-                error(
-                    'May trying to referencing to a non existing entity for a column.',
-                    column,
-                    EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
-                    PAGE_COLUMNS_USED_MULTIPLE_TIMES
-                )
-            }
-        }
+        if (p.tablecolumns !== null) {
+        	for (column : p.tablecolumns) {
+				val enti = column.eContainer
+				if (enti instanceof Entity) {
+					if (!enticolumns.add(enti.name + column.name)) {
+						error(
+							'table column used multiple times in this Page.',
+							column,
+							EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
+							PAGE_COLUMNS_USED_MULTIPLE_TIMES
+						)
+					}
+				} else {
+					error(
+						'May trying to referencing to a non existing entity for a column.',
+						column,
+						EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS.EOpposite,
+						PAGE_COLUMNS_USED_MULTIPLE_TIMES
+					)
+				}
+			}
+        }     
     }
 
     /**
@@ -240,26 +262,28 @@ class PageValidator extends AbstractDeclarativeValidator {
     @Check
     def checkFiltersAreUnique(DynamicPage p) {
         var entifilters = new HashSet<String>
-        for (filter : p.filters) {
-            val enti = filter.eContainer
-            if (enti instanceof Entity) {
-                if (!entifilters.add(enti.name + filter.name)) {
-                    error(
-                        'Filter used multiple times in this Page!',
-                        p,
-                        EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
-                        de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_USED_MULTIPLE_TIMES
-                    )
-                }
-            } else {
-                error(
-                    'May trying to referencing to a non existing entity for a filter.',
-                    p,
-                    EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
-                    de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_USED_MULTIPLE_TIMES
-                )
-            }
-        }
+        if (p.filters !== null) {
+        	for (filter : p.filters) {
+				val enti = filter.eContainer
+				if (enti instanceof Entity) {
+					if (!entifilters.add(enti.name + filter.name)) {
+						error(
+							'Filter used multiple times in this Page!',
+							p,
+							EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
+							de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_USED_MULTIPLE_TIMES
+						)
+					}
+				} else {
+					error(
+						'May trying to referencing to a non existing entity for a filter.',
+						p,
+						EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS.EOpposite,
+						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_USED_MULTIPLE_TIMES
+					)
+				}
+			}
+        }   
     }
 
     /**
@@ -267,26 +291,39 @@ class PageValidator extends AbstractDeclarativeValidator {
      */
     @Check
     def checkDetailsPageFieldHTMLTypes(DetailsPage p) {
-        for (editfield : p.editfields) {
-            // get HTML type
-            val String x = editfield.htmltype.toString();
-            val String htmltype = x.substring(x.lastIndexOf(': ') + 2, x.length - 1);
-            // get attribute type
-            val String y = editfield.attribute.type.toString();
-            val String attrType = y.substring(y.lastIndexOf('type: ') + 6, y.indexOf(','));
-            var htmlTypeMapping = HTMLTypeMappings.HTMLTYPEMAP.get(htmltype)
+    	if (p.editfields !== null) {
+    		for (editfield : p.editfields) {
+    			
+				// get HTML type
+				var String x = new String();
+				var String htmltype = new String();
+				if (editfield.htmltype !== null) {
+					x = editfield.htmltype.toString();
+					htmltype = x.substring(x.lastIndexOf(': ') + 2, x.length - 1);
+				}
+				
+				// get attribute type
+				var String y = new String();
+				var String attrType = new String();
+				if (editfield.attribute !== null) {
+					y = editfield.attribute.type.toString();
+					attrType = y.substring(y.lastIndexOf('type: ') + 6, y.indexOf(','));
+				}
+				
+				var htmlTypeMapping = HTMLTypeMappings.HTMLTYPEMAP.get(htmltype)
 
-            if (htmlTypeMapping !== null) {
-                if ( ! htmlTypeMapping.contains(attrType)) {
-                    error(
-                        'Edit fields have to be mapped to a suitable HTML type',
-                        editfield,
-                        EJSLPackage.Literals.DETAILS_PAGE__EDITFIELDS.EOpposite,
-                        de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_EDITFIELDS_WRONG_HTML_TYPE
-                    )
-                }
-            }
-        }
+				if (htmlTypeMapping !== null) {
+					if (! htmlTypeMapping.contains(attrType)) {
+						error(
+							'Edit fields have to be mapped to a suitable HTML type',
+							editfield,
+							EJSLPackage.Literals.DETAILS_PAGE__EDITFIELDS.EOpposite,
+							de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_EDITFIELDS_WRONG_HTML_TYPE
+						)
+					}
+				}
+			}
+    	}     
     }
 
     /**
@@ -296,16 +333,18 @@ class PageValidator extends AbstractDeclarativeValidator {
     def checkPageLocalparametersAreUnique(Page p) {
         var params = new HashSet<String>
 
-        for (param : p.getLocalparameters) {
-            if (!params.add(param.name)) {
-                error(
-                    'Localparameter name must be unique per page.',
-                    param,
-                    EJSLPackage.Literals.PARAMETER__NAME,
-                    de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_LOCALPARAMETER_AMBIGOUS
-                )
-            }
-        }
+		if (p.localparameters !== null) {
+			for (param : p.getLocalparameters) {
+				if (!params.add(param.name)) {
+					error(
+						'Localparameter name must be unique per page.',
+						param,
+						EJSLPackage.Literals.PARAMETER__NAME,
+						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_LOCALPARAMETER_AMBIGOUS
+					)
+				}
+			}
+		}
     }
 
     /**
@@ -316,7 +355,7 @@ class PageValidator extends AbstractDeclarativeValidator {
         var params = new HashSet<String>
         var ejslPart = model.ejslPart
 
-        if (ejslPart !== null) {
+        if (ejslPart !== null && ejslPart.globalparameters !== null) {
             for (param : ejslPart.getGlobalparameters) {
                 if (!params.add(param.getName)) {
                     error(
@@ -338,16 +377,18 @@ class PageValidator extends AbstractDeclarativeValidator {
         var entities = new HashSet<String>
 
         var i = 0
-        for (entity : page.getEntities) {
-            if (!entities.add(entity.name)) {
-                warning(
-                    'Entity is used multiple times for this page.',
-                    EJSLPackage.Literals.DYNAMIC_PAGE__ENTITIES,
-                    i,
-                    de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_ENTITY_USED_MULTIPLE_TIMES
-                )
-            }
-            i++
-        }
+        if (page.entities !== null) {
+			for (entity : page.getEntities) {
+				if (!entities.add(entity.name)) {
+					warning(
+						'Entity is used multiple times for this page.',
+						EJSLPackage.Literals.DYNAMIC_PAGE__ENTITIES,
+						i,
+						de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_ENTITY_USED_MULTIPLE_TIMES
+					)
+				}
+				i++
+			}
+		} 
     }
 }

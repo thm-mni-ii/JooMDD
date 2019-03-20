@@ -49,14 +49,16 @@ class ManifestValidator extends AbstractDeclarativeValidator {
 	def checkManifestationAuthorsAreUnique(Manifestation manifest) {
 		var authors = new HashSet<String>
 
-		for (author : manifest.authors) {
-			if (!authors.add(author.name)) {
-				warning(
-					'Author name is used multiple times.',
-					author,
-					EJSLPackage.Literals.AUTHOR__NAME,
-					de.thm.icampus.joomdd.ejsl.validation.elements.ManifestValidator.MANIFEST_AUTHOR_AMBIGUOUS
-				)
+		if (manifest.authors !== null) {
+			for (author : manifest.authors) {
+				if (!authors.add(author.name)) {
+					warning(
+						'Author name is used multiple times.',
+						author,
+						EJSLPackage.Literals.AUTHOR__NAME,
+						de.thm.icampus.joomdd.ejsl.validation.elements.ManifestValidator.MANIFEST_AUTHOR_AMBIGUOUS
+					)
+				}
 			}
 		}
 	}
