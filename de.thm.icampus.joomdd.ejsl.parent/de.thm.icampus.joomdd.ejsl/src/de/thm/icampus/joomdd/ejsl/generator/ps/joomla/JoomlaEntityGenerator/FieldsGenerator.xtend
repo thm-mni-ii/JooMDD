@@ -270,10 +270,10 @@ class FieldsGenerator {
 	    $dbo = Factory::getDbo();
 	    $query = $dbo->getQuery(true);
 	    $query->select("DISTINCT $valueColumn as value, $textColumn as text")
-	        ->from("$this->table AS «entFrom.name.toLowerCase»")
+	        ->from("$this->table AS «entFrom.name»")
 	        ->order("$textColumn ASC");
-	    «Slug.createLeftJoins(entFrom.allExtendedReferences, com.name, entFrom.name)»
-	    «Slug.createQueryForNToM(entFrom, com.name)»
+
+	    «Slug.createSelectAndJoins(entFrom.allExtendedReferences, com.name, entFrom.name)»
 	    $dbo->setQuery($query);
 	    $result = $dbo->loadObjectList();
 	    return $result;
@@ -316,7 +316,6 @@ class FieldsGenerator {
 				access.generateFile(path + '''/«com.name.toLowerCase»reference.php''', genRefrenceField)
 
 			}
-
 		}
 		var File fieldEntity = new File(path + "/" + entFrom.name + ".php")
 		if (!fieldEntity.exists) {

@@ -15,16 +15,10 @@ class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 	EList <ExtendedAttribute> referencedExtendedAttributes
 	Entity toEntity
 	Entity fromEntity
-	Reference oldRef
 	
-	new(Reference e, Entity from){
+	new(Reference e, Entity from) {
 		newInstance(e, from)
 	}
-	
-	new(Reference e, Entity from, Reference oldRef){
-        this.oldRef = oldRef
-        newInstance(e, from)
-    }
     
     def newInstance(Reference reference, Entity from) {
         setParentProperties(reference)
@@ -85,5 +79,21 @@ class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 	}
 	override getSourceEntity() {
 		return this.fromEntity
-	}	
+	}
+	
+    override getReferenceIDAttribute() {
+        return this.attribute.get(1).name
+    }
+    
+    override getReferencedIDAttribute() {
+        return this.attributerefereced.get(1).name
+    }
+    
+     override getReferenceAttribute() {
+        return this.attribute.get(0).name
+    }
+    
+    override getReferencedAttribute() {
+        return this.attributerefereced.get(0).name
+    }
 }

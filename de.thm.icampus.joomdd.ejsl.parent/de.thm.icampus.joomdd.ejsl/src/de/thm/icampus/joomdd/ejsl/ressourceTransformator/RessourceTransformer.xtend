@@ -42,8 +42,8 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import java.util.stream.Collectors
 import java.util.List
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.IDAttribute
+import de.thm.icampus.joomdd.ejsl.eJSL.impl.AttributeImpl
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -69,12 +69,12 @@ class RessourceTransformer {
 
     def dotransformation() {
         var entityList = feature.entities
-        
-        entityList.forEach[ t |
+
+        entityList.forEach [ t |
             t.name = Util.slugify(t.name)
         ]
-        
-        feature.pages.forEach[ t |
+
+        feature.pages.forEach [ t |
             t.name = Util.slugify(t.name)
         ]
 
@@ -83,7 +83,7 @@ class RessourceTransformer {
         }
 
         addDefaultFilterAndColumns()
-        
+
         // TODO: Resolve multiple EntityAttribute in one reference
         completeReferenceOfEntity(entityList)
         resolveToNReferences(entityList)
@@ -98,23 +98,23 @@ class RessourceTransformer {
         jt.completeCMSExtension
         completePage(feature.pages)
     }
-    
+
     def resolveToNReferences(EList<Entity> entityList) {
         for (entity : entityList) {
-            var referenceList = entity.references.filter[ r | 
-                r.upper.equals("-1") && r.entity.references.exists[ referencedEntityRef | 
-                    referencedEntityRef.upper.equals("-1") && referencedEntityRef.entity.name.equals(entity.name) 
+            var referenceList = entity.references.filter [ r |
+                r.upper.equals("-1") && r.entity.references.exists [ referencedEntityRef |
+                    referencedEntityRef.upper.equals("-1") && referencedEntityRef.entity.name.equals(entity.name)
                 ] === false
-            ]
-            
+            ].toList
+
             var entityPrimaryAttribute = entity.searchPrimaryAttribute
-            var entityFirstUniqueAttribute = entity.attributes.findFirst[ a | a.isunique ]
-                        
+            var entityFirstUniqueAttribute = entity.attributes.findFirst[a|a.isunique]
+
             if (referenceList !== null && referenceList.empty === false) {
-                for (reference : referenceList){
+                for (reference : referenceList) {
                     var referenceEntity = reference.entity
                     var uniqueAttributeName = createUniqueName(entity.name, referenceEntity.attributes)
-                    
+
                     if (entityFirstUniqueAttribute !== null) {
                         // Create a new attribute
                         var newAttribute = EJSLFactory.eINSTANCE.createAttribute
@@ -125,9 +125,9 @@ class RessourceTransformer {
                         newAttribute.withattribute = null
                         newAttribute.id = false
                         newAttribute.isprimary = false
-                        
+
                         referenceEntity.attributes.add(newAttribute)
-                        
+
                         // Create a new reference which references back to the entity's unique attribute
                         var newReference = EJSLFactory.eINSTANCE.createReference
                         newReference.attribute.add(newAttribute)
@@ -135,22 +135,22 @@ class RessourceTransformer {
                         newReference.attributerefereced.add(entityFirstUniqueAttribute)
                         newReference.lower = '0'
                         newReference.upper = '1'
-                        
+
                         referenceEntity.references.add(newReference)
-                    }
-                    else {
+                    } else {
                         // Create a new attribute with id 
                         var newAttributeID = EJSLFactory.eINSTANCE.createAttribute
-                        newAttributeID.name = newArrayList(uniqueAttributeName, entity.name, entityPrimaryAttribute.name).join("_")
+                        newAttributeID.name = newArrayList(uniqueAttributeName, entity.name,
+                            entityPrimaryAttribute.name).join("_")
                         newAttributeID.preserve = false
                         newAttributeID.type = EcoreUtil2.copy(entityPrimaryAttribute.type)
                         newAttributeID.isunique = false
                         newAttributeID.withattribute = null
                         newAttributeID.id = false
                         newAttributeID.isprimary = false
-                        
+
                         referenceEntity.attributes.add(newAttributeID)
-                       
+
                         // Create a new reference which references back to the entity's primary key 
                         var newReferenceID = EJSLFactory.eINSTANCE.createReference
                         newReferenceID.attribute.add(newAttributeID)
@@ -158,46 +158,45 @@ class RessourceTransformer {
                         newReferenceID.attributerefereced.add(entityPrimaryAttribute)
                         newReferenceID.lower = '0'
                         newReferenceID.upper = '1'
-                        
+
                         referenceEntity.references.add(newReferenceID)
                     }
-                                        
+
                     // Remove attribute in reference
                     var referenceAttribute = reference.attribute.get(0)
-                    if (referenceAttribute.isIsprimary === false && referenceToExists(referenceAttribute) === false){
+                    if (referenceAttribute.isIsprimary === false && referenceToExists(referenceAttribute) === false) {
                         entity.attributes.remove(referenceAttribute)
                     }
                 }
-                
+
                 // Remove all moved references
                 entity.references.removeAll(referenceList)
             }
         }
     }
-    
+
     def referenceToExists(Attribute attribute) {
-        return EcoreUtil2.getAllContentsOfType(EcoreUtil2.getRootContainer(attribute), Reference).exists[ r | 
+        return EcoreUtil2.getAllContentsOfType(EcoreUtil2.getRootContainer(attribute), Reference).exists [ r |
             r.attributerefereced.get(0).name.equals(attribute.name)
         ]
     }
-    
+
     def createUniqueName(String originName, EList<Attribute> attributeList) {
         var newAttributeName = originName
         var counter = 1
-        while(attributeList.containsAttributeName(newAttributeName)){
+        while (attributeList.containsAttributeName(newAttributeName)) {
             newAttributeName = '''«originName»«counter»'''
             counter++
         }
-        
+
         return newAttributeName
     }
-    
-    private def containsAttributeName(EList<Attribute> attributeList, String name){
-        return attributeList.exists[ a | 
+
+    private def containsAttributeName(EList<Attribute> attributeList, String name) {
+        return attributeList.exists [ a |
             a.name.equalsIgnoreCase(name)
-        ]    
+        ]
     }
-    
 
     def createDefaultLanguageIfNoLanguageIsPresent(String defaultLanguage) {
         cmsextension.extensions.forEach [ cmsextension |
@@ -358,8 +357,8 @@ class RessourceTransformer {
     private def completeAttributeOfEntity(Entity ent) {
 
         if (ent.havePrimaryAttribute === false) {
-            var Attribute id = EJSLFactory.eINSTANCE.createAttribute
-            
+            var id = EJSLFactory.eINSTANCE.createAttribute
+
             id.name = defaultPrimaryAttributeName
             var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
             typeid.type = StandardTypeKinds.INTEGER
@@ -370,7 +369,7 @@ class RessourceTransformer {
             ent.attributes.add(id)
         }
 
-        for (Attribute attr : ent.attributes) {
+        for (attr : ent.attributes) {
             if (attr.id) {
                 attr.withattribute = ent.searchPrimaryAttribute
                 attr.id = false;
@@ -384,9 +383,9 @@ class RessourceTransformer {
      * 
      */
     private def Attribute searchPrimaryAttribute(Entity entity) {
-        var attribute = entity.attributes.findFirst[ a | a.isIsprimary ]
-        
-        if (attribute !== null){
+        var attribute = entity.attributes.findFirst[a|a.isIsprimary]
+
+        if (attribute !== null) {
             return attribute
         }
         return null
@@ -398,7 +397,7 @@ class RessourceTransformer {
      * @param String attributeNam  contains a attribute name
      */
     private def boolean haveAttribute(Entity entity, String attributeName) {
-        for (Attribute e : entity.attributes) {
+        for (e : entity.attributes) {
             if (e.name.equals(attributeName))
                 return true
         }
@@ -413,32 +412,32 @@ class RessourceTransformer {
     private def void completeReferenceOfEntity(EList<Entity> entityList) {
         for (entity : entityList) {
             for (Reference reference : entity.references) {
-                for (Attribute refAttribute : reference.attributerefereced) {
+                for (refAttribute : reference.attributerefereced) {
                     if (refAttribute.isprimary === false) {
                         refAttribute.isunique = true
                     }
-                    
+
                     if (refAttribute.withattribute === null) {
-                        var Attribute referencePrimaryAttribute = this.searchPrimaryAttribute(reference.entity)
+                        var referencePrimaryAttribute = this.searchPrimaryAttribute(reference.entity)
                         refAttribute.withattribute = referencePrimaryAttribute
                     }
                 }
-                
+
                 // TODO: review
                 if (reference.id) {
-                    var Attribute id = reference.entity.searchPrimaryAttribute
+                    var id = reference.entity.searchPrimaryAttribute
                     if (id !== null) {
                         reference.attributerefereced.add(id)
                         reference.id = false
                         if (reference.attributerefereced.size > 1) {
                             if (getAttributeReference(entity, reference.entity, id) === null) {
-                                reference.attribute.add(setNewGenAttribute(entity, reference, id))
+                                reference.attribute.add(setNewGenAttribute(entity, reference, id as AttributeImpl))
                             }
                         }
-    
+
                     }
                 }
-    
+
             }
         }
     }
@@ -448,27 +447,29 @@ class RessourceTransformer {
      * @param Entity ent contains a Entity
      */
     def void setReferenceAttribute(EList<Entity> entityList) {
-        for (ent : entityList){
+        for (ent : entityList) {
             for (Reference ref : ent.references) {
                 var Entity referenceEntity = ref.entity
                 var EList<Attribute> newAttribute = new BasicEList<Attribute>
-                for (Attribute attr : ref.attribute) {
-                    var Attribute uniqWith = attr.withattribute
+                for (attr : ref.attribute) {
+                    var uniqWith = attr.withattribute
                     if (uniqWith !== null && !ref.attribute.contains(uniqWith)) {
                         newAttribute.add(uniqWith)
                     }
                 }
-                
-                if (newAttribute.empty === false){
-                    ref.attribute.addAll(newAttribute.filter[t|!containsAttribute(t, ref.attribute)])    
+
+                if (newAttribute.empty === false) {
+                    ref.attribute.addAll(newAttribute.filter[ t |
+                        !containsAttribute(t, ref.attribute)
+                    ])
                 }
-    
+
                 var EList<Attribute> newReferenceArttibute = new BasicEList<Attribute>
-                for (Attribute attrRef : ref.attributerefereced) {
-                    var Attribute uniqWith = attrRef.withattribute
+                for (attrRef : ref.attributerefereced) {
+                    var uniqWith = attrRef.withattribute
                     if (uniqWith !== null) {
-                        var Attribute refAttrEnt = setNewGenAttribute(ent, ref, uniqWith)
-                        var Attribute hereAttr = ref.attribute.get(ref.attributerefereced.indexOf(attrRef))
+                        var refAttrEnt = setNewGenAttribute(ent, ref, uniqWith as AttributeImpl)
+                        var hereAttr = ref.attribute.get(ref.attributerefereced.indexOf(attrRef))
                         // hereAttr.isunique = true;
                         hereAttr.withattribute = refAttrEnt
                         newReferenceArttibute.add(uniqWith)
@@ -482,8 +483,7 @@ class RessourceTransformer {
     }
 
     def Boolean containsAttribute(Attribute attribute, EList<Attribute> list) {
-
-        for (Attribute attr : list) {
+        for (attr : list) {
             if (attr.name.equalsIgnoreCase(attribute.name))
                 return true
         }
@@ -496,11 +496,15 @@ class RessourceTransformer {
      * @param Reference ref      contains a refrence
      * @param Attribute attrRef  contains a attribute to clone
      */
-    def Attribute setNewGenAttribute(Entity ent, Reference ref, Attribute attrRef) {
+    def Attribute setNewGenAttribute(Entity ent, Reference ref, AttributeImpl attrRef) {
         var Entity referenceEntity = ref.entity
-        var Attribute newAttribute = EJSLFactory.eINSTANCE.createAttribute
-        var String refAttrName = ref.attribute.get(0).name
+        var Attribute newAttribute = new IDAttribute
+        var refAttr = ref.attribute.get(0)
         
+        // Mark this attribute as preserve.
+        // This prevents the generation of this attribute 
+        refAttr.preserve = true
+        var String refAttrName = refAttr.name
         newAttribute.name = newArrayList(refAttrName, referenceEntity.name, attrRef.name).join("_")
         newAttribute.type = Util.copyType(attrRef.type)
 
@@ -508,6 +512,7 @@ class RessourceTransformer {
             var StandardTypes typs = newAttribute.type as StandardTypes
             typs.notnull = false
         }
+        
         ent.attributes.add(newAttribute)
         ref.attribute.add(newAttribute)
 
@@ -521,7 +526,7 @@ class RessourceTransformer {
      * @param Attribute referenced        contains to referenced attribute
      */
     def Attribute getAttributeReference(Entity ent, Entity referencedEntity, Attribute referenced) {
-        for (Attribute a : ent.attributes) {
+        for (a : ent.attributes) {
             if (a.name.equalsIgnoreCase(referencedEntity.name + "_" + referenced.name))
                 return a;
         }
@@ -590,10 +595,10 @@ class RessourceTransformer {
      * @param Entity toEntity    contains the target entity
      */
     def Attribute searchReferenceOfID(Entity fromEntity, Entity toEntity) {
-        var Attribute id = searchPrimaryAttribute(toEntity)
+        var id = searchPrimaryAttribute(toEntity)
         for (Reference ref : fromEntity.references) {
-            var Attribute result = getAttributeReference(fromEntity, toEntity, id)
-            if (result != null)
+            var result = getAttributeReference(fromEntity, toEntity, id)
+            if (result !== null)
                 return result
         }
         return null
@@ -604,7 +609,7 @@ class RessourceTransformer {
      * @param Entity entity contains a entity
      */
     private def boolean havePrimaryAttribute(Entity entity) {
-        for (Attribute e : entity.attributes) {
+        for (e : entity.attributes) {
             if (e.isIsprimary)
                 return true
         }
@@ -614,7 +619,7 @@ class RessourceTransformer {
     def formatEntitiesAttribute(EList<Entity> list) {
         for (Entity ent : list) {
             ent.name = Util.slugify(ent.name)
-            for (Attribute attr : ent.attributes) {
+            for (attr : ent.attributes) {
                 attr.name = Util.slugify(attr.name)
                 var type = attr.type.getType()
                 if (attr.isIsprimary && type.equalsIgnoreCase("text")) {
@@ -670,7 +675,7 @@ class RessourceTransformer {
     }
 
     private def completeTableColumnAndEditedFields(DetailsPage page) {
-        for (Attribute attr : page.entities.get(0).attributes) {
+        for (attr : page.entities.get(0).attributes) {
             if (!page.tablecolumns.contains(attr)) {
                 page.tablecolumns.add(attr)
 
@@ -686,11 +691,11 @@ class RessourceTransformer {
 
     // @todo
     def completeDetailageField(DetailPageField field) {
-        var Attribute attr = field.attribute
+        var attr = field.attribute
 
         if (attr !== null) {
-            var Entity ent = field.attribute.eContainer as Entity
-            var Reference ref = ent.searchRefrenceOfAttribute(field.attribute)
+            var Entity ent = attr.eContainer as Entity
+            var Reference ref = ent.searchRefrenceOfAttribute(attr)
             if (ref !== null) {
                 field.fieldtype = ref.attributerefereced.get(ref.attribute.indexOf(attr))
             } else {
@@ -709,20 +714,21 @@ class RessourceTransformer {
     }
 
     def Reference searchRefrenceOfAttribute(Entity entity, Attribute attribute) {
-        for (Reference ref : entity.references) {
-            if (ref.attribute.contains(attribute)) {
-                return ref
-            }
-        }
-        return null
+        return entity.references.findFirst [ ref |
+            ref.attribute.contains(attribute)
+        ]
     }
 
     def DetailPageField existingAlreadyFieldWithAttr(EList<DetailPageField> list, Attribute attribute) {
-        for (DetailPageField df : list) {
-            if (df.attribute.name == attribute.name)
-                return df
+        var df = list.findFirst [ df |
+            df.attribute.name.equals(attribute.name)
+        ]
+
+        if (df !== null) {
+            var bla = "";
         }
-        return null
+
+        return df
     }
 
     private def completeColUmnAndFilterList(IndexPage page) {
@@ -744,14 +750,14 @@ class RessourceTransformer {
                 pageTableColumnList.add(idAttribute)
             }
         }
-        
+
         // The filter list is empty. We add all attributes from the entity.
         // We also add the id attribute (primary) to the column list if present.
         if (pageFilterList.empty && pageTableColumnList.empty === false) {
             if (idAttribute !== null) {
                 pageTableColumnList.add(idAttribute)
             }
-            for (Attribute attr : firstEntity.attributes) {
+            for (attr : firstEntity.attributes) {
                 pageFilterList.add(attr)
             }
         }
@@ -762,7 +768,7 @@ class RessourceTransformer {
             if (idAttribute !== null) {
                 pageFilterList.add(idAttribute)
             }
-            for (Attribute attr : firstEntity.attributes) {
+            for (attr : firstEntity.attributes) {
                 pageTableColumnList.add(attr)
             }
         }
@@ -770,7 +776,7 @@ class RessourceTransformer {
         // Both lists are empty. We add all attributes from the entity.
         // This includes the id attribute (primary))
         if (pageFilterList.empty && pageTableColumnList.empty) {
-            for (Attribute attr : firstEntity.attributes) {
+            for (attr : firstEntity.attributes) {
                 pageFilterList.add(attr)
                 pageTableColumnList.add(attr)
             }
@@ -778,12 +784,13 @@ class RessourceTransformer {
     }
 
     def void createMappingsTable(EList<Entity> entitiesList) {
-
         var EList<Entity> newEntity = new BasicEList<Entity>()
+        
         for (Entity ent : entitiesList) {
             var EList<Reference> toDeleteReference = new BasicEList<Reference>()
             var EList<Reference> toAddReference = new BasicEList<Reference>()
             var EList<Attribute> toDeleteAttribute = new BasicEList<Attribute>()
+            
             for (Reference ref : ent.references) {
                 if (ref.entity.haveNReferenTo(ent, ref.upper)) {
                     if (!ref.entity.existingReferenceBetweenEntity(ent, newEntity)) {
@@ -800,37 +807,40 @@ class RessourceTransformer {
                         var EList<Attribute> to_rename_attributeToEntity = new BasicEList<Attribute>
 
                         attributeFromEntity.addAll(
-                            ref.entity.references.filter[t |
+                            ref.entity.references.filter [ t |
                                 t.entity.name == ent.name
                             ].get(0).attributerefereced
                         )
-                        
+
                         to_rename_attributeToEntity.addAll(
-                            ref.entity.references.filter[t |
+                            ref.entity.references.filter [ t |
                                 t.entity.name == ent.name
                             ].get(0).attribute
                         )
-                        
+
                         attributeToEntity.addAll(ref.attributerefereced)
                         to_rename_attributeFromEntity.addAll(ref.attribute);
+                        
                         copy_attributeFromEntity.addAll(copyAttribute(ent, attributeFromEntity))
                         mappingEntity.attributes.addAll(copy_attributeFromEntity)
+                        
                         copy_attributeToEntity.addAll(copyAttribute(ref.entity, attributeToEntity))
                         renameOldReference(to_rename_attributeFromEntity, copy_attributeToEntity)
                         renameOldReference(to_rename_attributeToEntity, copy_attributeFromEntity)
                         mappingEntity.attributes.addAll(copy_attributeToEntity)
+                        
                         ent.attributes.removeAll(ref.attribute)
-                        
+
                         ref.entity.attributes.removeAll(
-                            ref.entity.references.filter[t |
+                            ref.entity.references.findFirst [ t |
                                 t.entity.name.equals(ent.name)
-                            ].get(0).attribute
+                            ].attribute
                         )
-                        
+
                         mappingEntity.references.addAll(solveReference(ref, mappingEntity, ent, ref.entity))
 
                         newEntity.add(mappingEntity)
-                        
+
                         deleteReferenceToEntity(ref.entity, ent, mappingEntity)
                         toDeleteReference.add(ref)
                         toAddReference.add(createNewReverseReference(mappingEntity, ent, ref))
@@ -859,34 +869,38 @@ class RessourceTransformer {
     def EList<Attribute> searchUniqueAttribute(Entity entity) {
         var EList<Attribute> attrList = new BasicEList<Attribute>()
 
-        for (Attribute at : entity.attributes) {
+        for (at : entity.attributes) {
             if (at.isIsprimary || at.isIsunique || at.withattribute !== null) {
                 attrList.add(at)
             }
         }
+        
         return attrList
     }
 
     def Attribute searchPKAttribute(Entity entity) {
-        for (Attribute attr : entity.attributes) {
+        for (attr : entity.attributes) {
             if (attr.isIsprimary) {
                 return attr;
             }
         }
+        
         return null
     }
 
     def void renameOldReference(EList<Attribute> torenameAttribute, EList<Attribute> newAttribute) {
         for (Page page : feature.pages.filter[t|t instanceof DynamicPage]) {
             var DynamicPage dynPage = page as DynamicPage
-            for (Attribute attr : torenameAttribute) {
+            
+            for (attr : torenameAttribute) {
                 if (dynPage.filters.contains(attr)) {
-                    var Attribute newAttr = newAttribute.get(torenameAttribute.indexOf(attr))
+                    var newAttr = newAttribute.get(torenameAttribute.indexOf(attr))
                     var oldAttrIndex = dynPage.filters.indexOf(attr)
                     dynPage.filters.set(oldAttrIndex, newAttr)
                 }
+                
                 if (dynPage.tablecolumns.contains(attr)) {
-                    var Attribute newAttr = newAttribute.get(torenameAttribute.indexOf(attr))
+                    var newAttr = newAttribute.get(torenameAttribute.indexOf(attr))
                     var oldAttrIndex = dynPage.tablecolumns.indexOf(attr)
                     dynPage.tablecolumns.set(oldAttrIndex, newAttr)
                 }
@@ -896,81 +910,103 @@ class RessourceTransformer {
 
     private def EList<Reference> solveReference(Reference reference, Entity mappingEntity, Entity fromEntity,
         Entity toEntity) {
+            
         var Reference nRef = EJSLFactory.eINSTANCE.createReference
-        nRef.attribute.addAll(mappingEntity.attributes.filter[t|isAttributeOfEntity(t, fromEntity.name)])
+        
+        nRef.attribute.addAll(mappingEntity.attributes.filter[ t |
+            isAttributeOfEntity(t, fromEntity.name)
+        ])
+        
         nRef.entity = fromEntity
+        
         nRef.attributerefereced.addAll(
-            toEntity.references.filter[t|t.entity.name == fromEntity.name].get(0).attributerefereced)
+            toEntity.references.filter[ t |
+                t.entity.name == fromEntity.name
+            ].get(0).attributerefereced)
+            
         nRef.lower = "1"
         nRef.upper = "1"
+        
         var Reference mRef = EJSLFactory.eINSTANCE.createReference
-        mRef.attribute.addAll(mappingEntity.attributes.filter[t|isAttributeOfEntity(t, toEntity.name)])
+        
+        mRef.attribute.addAll(mappingEntity.attributes.filter[ t |
+            isAttributeOfEntity(t, toEntity.name)
+        ])
+        
         mRef.entity = toEntity
         mRef.attributerefereced.addAll(reference.attributerefereced)
         mRef.lower = "1"
         mRef.upper = "1"
+        
         var EList<Reference> result = new BasicEList<Reference>()
+        
         result.add(nRef)
         result.add(mRef)
+        
         return result
 
     }
 
     private def isAttributeOfEntity(Attribute attribute, String entityName) {
-        if (attribute.name.startsWith(entityName + "_"))
+        if (attribute.name.startsWith(entityName + "_")) {
             return true
+        }
 
         return false
     }
 
     private def EList<Attribute> copyAttribute(Entity fromEntity, EList<Attribute> attributeOldList) {
         var EList<Attribute> result = new BasicEList<Attribute>
-        for (Attribute attribute : attributeOldList) {
+        for (attribute : attributeOldList) {
 
-            var Attribute newAttr = EJSLFactory.eINSTANCE.createAttribute
+            var newAttr = EJSLFactory.eINSTANCE.createAttribute
             newAttr.name = fromEntity.name + "_" + attribute.name
             newAttr.type = Util.copyType(attribute.type)
+            
             if (newAttr.type instanceof StandardTypes) {
                 var StandardTypes typ = newAttr.type as StandardTypes
                 typ.notnull = false
             }
+            
             newAttr.id = attribute.id
             // newAttr.isunique = attribute.isunique
+            
             if (attribute.isIsprimary)
                 // newAttr.isunique = true
                 newAttr.preserve = attribute.preserve
+                
             if (!this.containsAttribute(newAttr, result)) {
                 result.add(newAttr)
 
                 if (attribute.id && attribute.withattribute === null) {
-                    var Attribute newID = EJSLFactory.eINSTANCE.createAttribute
+                    var newID = new IDAttribute
                     newID.name = fromEntity.name + "_" + defaultPrimaryAttributeName
                     var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
                     typeid.type = StandardTypeKinds.INTEGER
                     typeid.notnull = true
                     newID.type = typeid
                     newAttr.withattribute = newID;
-                    
-                    if (!this.containsAttribute(newID, result)){
+
+                    if (!this.containsAttribute(newID, result)) {
                         result.add(newID)
                     }
                 }
-                
+
                 if (attribute.withattribute !== null) {
-                    var Attribute newUniq = EJSLFactory.eINSTANCE.createAttribute
+                    var newUniq = new IDAttribute
                     newUniq.name = fromEntity.name + "_" + attribute.withattribute.name
                     newUniq.type = Util.copyType(attribute.withattribute.type)
                     var type = newUniq.type
-                    if (type instanceof StandardTypes) {
-                        type.notnull = false    
-                    }
                     
+                    if (type instanceof StandardTypes) {
+                        type.notnull = false
+                    }
+
                     newAttr.withattribute = newUniq;
-                    if (!this.containsAttribute(newUniq, result))
+                    if (!this.containsAttribute(newUniq, result)) {
                         result.add(newUniq)
-
+                    }
                 }
-
             }
         }
 
@@ -980,57 +1016,62 @@ class RessourceTransformer {
     private def boolean existingReferenceBetweenEntity(Entity to, Entity from, EList<Entity> newEntityList) {
         var String mappingNameForward = to.name + "" + from.name
         var String mappingNameReverse = from.name + "" + to.name
-        if (newEntityList.size == 0)
+        
+        if (newEntityList.size == 0) {
             return false
-        for (Entity ent : newEntityList) {
-            if (ent.name.equals(mappingNameForward) || ent.name.equals(mappingNameReverse))
-                return true
         }
-        return false
+        
+        for (Entity ent : newEntityList) {
+            if (ent.name.equals(mappingNameForward) || ent.name.equals(mappingNameReverse)) {
+                return true
+            }
+        }
 
+        return false
     }
 
     private def boolean deleteReferenceToEntity(Entity to, Entity from, Entity newEntity) {
         var Reference newref = EJSLFactory.eINSTANCE.createReference
-        var Reference oldRef = to.references.filter[t |
-                t.entity.name.equals(from.name) 
+        var Reference oldRef = to.references.filter [ t |
+            t.entity.name.equals(from.name)
         ].get(0)
-            
-        newref.attribute.addAll(from.references.filter[t |
+
+        newref.attribute.addAll(
+            from.references.filter [ t |
                 t.entity.name.equals(to.name)
             ].get(0).attributerefereced
         )
-        
-        newref.attributerefereced.addAll(newEntity.attributes.filter[t |
+
+        newref.attributerefereced.addAll(newEntity.attributes.filter [ t |
             isAttributeOfEntity(t, to.name)
         ])
-        
+
         newref.entity = newEntity
         newref.lower = "1"
         newref.upper = "-1"
+
         to.references.remove(oldRef)
         to.references.add(newref)
-        return false
 
+        return false
     }
 
-    private def ExtendedReference createNewReverseReference(Entity from, Entity to, Reference oldRef) {
+    private def Reference createNewReverseReference(Entity from, Entity to, Reference oldRef) {
         var Reference newref = EJSLFactory.eINSTANCE.createReference
-        newref.attribute.addAll(to.attributes.filter[t |
+        newref.attribute.addAll(to.attributes.filter [ t |
             isContainInMappingEntity(t.name, to.name, from)
         ])
         newref.entity = from
-        newref.attributerefereced.addAll(from.attributes.filter[t |
+        newref.attributerefereced.addAll(from.attributes.filter [ t |
             isAttributeOfEntity(t, to.name)
         ])
         newref.lower = "1"
         newref.upper = "-1"
-        
-        return new ExtendedReferenceImpl(newref, to, oldRef)
+
+        return newref
     }
 
     def boolean isContainInMappingEntity(String attributeName, String toEntityname, Entity mappingEntity) {
-
         if (mappingEntity.attributes.filter [ t |
             t.name.equalsIgnoreCase(toEntityname + "_" + attributeName)
         ].size > 0)
@@ -1040,7 +1081,8 @@ class RessourceTransformer {
 
     private def boolean haveNReferenTo(Entity to, Entity from, String upperValue) {
         for (Reference ref : to.references) {
-            if (ref.entity.name == from.name && !upperValue.equalsIgnoreCase("1") && !ref.upper.equalsIgnoreCase("1"))
+            if (ref.entity.name.equals(from.name) && !upperValue.equalsIgnoreCase("1") &&
+                !ref.upper.equalsIgnoreCase("1"))
                 return true
         }
         return false
@@ -1048,7 +1090,7 @@ class RessourceTransformer {
 
     private def Reference getReferencedTo(Entity to, Entity from, String upperValue) {
         for (Reference ref : to.references) {
-            if (ref.entity.name == from.name)
+            if (ref.entity.name.equals(from.name))
                 return ref
         }
         return null
@@ -1060,7 +1102,7 @@ class RessourceTransformer {
         var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
         switch attribute.type {
             DatatypeReference: {
-                var Attribute ref = containsInrefrence(attribute, ent);
+                var ref = containsInrefrence(attribute, ent);
                 if (ref !== null && !attribute.isIsprimary) {
                     editField.fieldtype = ref
                 }
@@ -1088,19 +1130,24 @@ class RessourceTransformer {
 
     private def DetailPageField generateDetailsPAgeFields(Attribute attribute, Entity ent) {
         var StandardTypes temptyp = attribute.type as StandardTypes
+
         if (attribute.isIsprimary) {
             var ComplexHTMLTypes result = EJSLFactory.eINSTANCE.createComplexHTMLTypes
             result.htmltype = ComplexHTMLTypeKinds.get("Hidden")
+
             var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
             editField.attribute = attribute
             editField.htmltype = result
+
             return editField
         }
+
         var SimpleHTMLTypes result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
         var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
         editField.attribute = attribute
+
         // result.htmltype = SimpleHTMLTypeKinds.get(parsingType(temptyp))
-        var Attribute ref = containsInrefrence(attribute, ent);
+        var ref = containsInrefrence(attribute, ent);
         if (ref !== null && !attribute.isIsprimary) {
             editField.fieldtype = ref
         }
@@ -1154,7 +1201,6 @@ class RessourceTransformer {
             }
             case "Time": {
                 result.htmltype = SimpleHTMLTypeKinds.get("Datepicker")
-
             }
             case "Date": {
                 result.htmltype = SimpleHTMLTypeKinds.get("Datepicker")
@@ -1162,7 +1208,6 @@ class RessourceTransformer {
             }
             case "Datetime": {
                 result.htmltype = SimpleHTMLTypeKinds.get("Datepicker")
-
             }
             case "Link": {
                 result.htmltype = SimpleHTMLTypeKinds.get("Link")
@@ -1174,8 +1219,8 @@ class RessourceTransformer {
                 result.htmltype = SimpleHTMLTypeKinds.get("Filepicker")
             }
         }
-        return result
 
+        return result
     }
 
     private def DetailsPage createNewExtendedDetailsPageForExtensions(Entity entity) {

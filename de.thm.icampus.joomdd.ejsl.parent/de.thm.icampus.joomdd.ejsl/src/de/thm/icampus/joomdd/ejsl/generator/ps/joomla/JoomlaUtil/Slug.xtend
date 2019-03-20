@@ -828,15 +828,7 @@ public class Slug  {
         '''$query->group('«entity.name».«entity.attributes.findFirst[a | a.isprimary].name»');'''
     }
     
-    def static createQueryForNToM(ExtendedEntity entity, String componentName) {
-        createQueryForNToM(entity, componentName, '''''', false)
-    }
-    
     def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator) {
-        createQueryForNToM(entity, componentName, separator, true)
-    }
-    
-    def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator, Boolean withSelect) {
         val entityName = entity.name
         var queries = newArrayList
         
@@ -861,21 +853,12 @@ public class Slug  {
                     '''
                 )
                 
-                var query = ''''''
-                
-                if (withSelect === true) {
-                    var querySelect = '''$query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');'''
-                    query += '''
-                    «querySelect»
-                    '''
-                }
-                
-                var queryJoin = '''
+                var query = '''
+                $query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
                 $query->join('LEFT', "«Slug.databaseName(componentName, referenceEntityName)» AS «referenceEntityName» ON
                     «joinOn»
-                ");'''
-                
-                query += '''«queryJoin»'''
+                ");
+                '''
                 
                 queries.add(query)
             }
@@ -884,28 +867,42 @@ public class Slug  {
         return queries.join
     }
     
-    def static createLeftJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
+    /**
+     * This method will create the given join type by joinType for the given references
+     * 
+     * @param EList<ExtendedReference> extendedReference
+     * @param String componentName
+     * @param String entityName
+     * @param String joinType
+     * 
+     * @return String
+     */
+    def static createSelectAndJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
         var HashMap<String, Integer> counterMap = newHashMap
-        var output = ''''''
+        var ArrayList<String> output = newArrayList
         counterMap.put(entityName,1)
         
         for (ExtendedReference ref : extendedReference) {
             var originDestinationEntityName = ref.destinationEntity.name
             var counter = counterMap.getOrDefault(originDestinationEntityName, 0)
             val destinationEntityName = if (counter === 0) {ref.destinationEntity.name} else {'''«ref.destinationEntity.name»«counter»'''}
-            output += '''
+            output.add('''
+            // Select the referenced field «ref.referencedAttribute».
+            $query->select('«originDestinationEntityName».«ref.referencedAttribute» AS «ref.referenceAttribute»');
             $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» AS «destinationEntityName» ON
-                «ref.extendedAttributes.map[ attr | 
+                «ref.extendedAttributes.filter[attribute | !attribute.preserve].map[ attr | 
                     '''«entityName».«attr.name» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name»'''
                 ].join(''' AND
                 ''')»
             ");
-            '''
+            ''')
             counter++
             counterMap.put(originDestinationEntityName, counter)
         }
         
-        return output
+        return output.join('''
+
+        ''')
     } 
 	
 	def static CharSequence databaseName(String componentName, String entityName) {
@@ -1403,7 +1400,8 @@ public class Slug  {
         // Join over the user field 'user'
         $query->select('user.name AS user');
         $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name».created_by');
-        «Slug.createLeftJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, extendedComponent.name, indexpage.entities.get(0).name)»
+
+        «Slug.createSelectAndJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, extendedComponent.name, indexpage.entities.get(0).name)»
         «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), extendedComponent.name, separator)»
         «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
 

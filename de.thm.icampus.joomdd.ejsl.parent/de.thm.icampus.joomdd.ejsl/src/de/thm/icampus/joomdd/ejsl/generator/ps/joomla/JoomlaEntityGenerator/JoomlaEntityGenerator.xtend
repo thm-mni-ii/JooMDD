@@ -61,9 +61,9 @@ class JoomlaEntityGenerator {
     def generateSQLConstraints(ExtendedEntity entity, String extensionName)
         '''
         ALTER TABLE `«Slug.databaseName(extensionName, entity.name)»`
-            «entity.allRefactoryReference.filter[ r | !r.preserve && r.upper.equalsIgnoreCase("1") ].map[ r |
+            «entity.allRefactoryReference.filter[ reference | !reference.preserve && reference.upper.equalsIgnoreCase("1") ].map[ reference |
                 '''
-                ADD CONSTRAINT `«extensionName»_«entity.name»_ibfk_«entity.allRefactoryReference.indexOf(r)»` FOREIGN KEY(«Slug.transformAttributeListInString(r.attribute,  ',')») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(r.entity.name))»` («Slug.transformAttributeListInString(r.attributerefereced, ', ')»)
+                ADD CONSTRAINT `«extensionName»_«entity.name»_ibfk_«entity.allRefactoryReference.indexOf(reference)»` FOREIGN KEY(«reference.getReferenceIDAttribute») REFERENCES `«Slug.databaseName(extensionName, Slug.slugify(reference.entity.name))»` («reference.getReferencedIDAttribute»)
                 ON UPDATE CASCADE
                 ON DELETE CASCADE'''
             ].join(''', 
@@ -73,21 +73,23 @@ class JoomlaEntityGenerator {
 
     def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName) '''
         «IF isupdate»
-            DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
+        DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
         «ENDIF»
         CREATE TABLE  IF NOT EXISTS `«Slug.databaseName(componentName, table.name)»` (
-        «FOR a : table.allExtendedAttributes.filter[t | !t.isPreserve]»
+            «FOR a : table.allExtendedAttributes.filter[t | 
+                !t.isPreserve
+            ]»
             `«a.name»` «a.generatorType»,
-        «ENDFOR»
-        «FOR ExtendedAttribute a : table.ownExtendedAttributes»
+            «ENDFOR»
+            «FOR ExtendedAttribute a : table.ownExtendedAttributes»
             «IF a.isunique»
-                UNIQUE KEY («a.name»«if(a.withattribute !== null)''',«a.withattribute.name»'''»),
+            UNIQUE KEY («a.name»«if(a.withattribute !== null)''',«a.withattribute.name»'''»),
             «ENDIF»
-        «ENDFOR»
-        «FOR ref : table.references»
-            INDEX(«Slug.transformAttributeListInString(ref.attribute,  ', ')»),
-        «ENDFOR»
-        PRIMARY KEY (`«table.primaryKey.name»`)
+            «ENDFOR»
+            «FOR ref : table.allExtendedReferences»
+            INDEX(«ref.getReferenceIDAttribute»),
+            «ENDFOR»
+            PRIMARY KEY (`«table.primaryKey.name»`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     '''
 

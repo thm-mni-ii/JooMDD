@@ -266,7 +266,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     «var textColumn = ipage.getTextColumn(attr, com.allExtendedEntity)»
                     <field
                         name="«attr.name»"
-                        type="«ipage.extendedEntityList.get(0).name»"
+                        type="«textColumn.type»"
                         label="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "LABEL"), attr.name)»"
                         description="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
                         valueColumn="«valueColumn»"
