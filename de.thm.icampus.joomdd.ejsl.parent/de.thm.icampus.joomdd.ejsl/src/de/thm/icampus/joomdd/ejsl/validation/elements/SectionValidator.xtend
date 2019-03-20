@@ -28,17 +28,19 @@ class SectionValidator extends AbstractDeclarativeValidator {
 	def checkPagesAreUsedOnlyOncePerSection(Section section) {
 		var pages = new HashSet<String>
 
-		var i = 0
-		for (page : section.pageRef) {
-			if (!pages.add(page.page.name)) {
-				warning(
-					'Page is used multiple times for this section.',
-					EJSLPackage.Literals.PAGE_REFERENCE__PAGESCR,
-					i,
-					de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator.SECTION_PAGE_USED_MULTIPLE_TIMES
-				)
+		if (section.pageRef !== null) {
+			var i = 0
+			for (page : section.pageRef) {
+				if (!pages.add(page.page.name)) {
+					warning(
+						'Page is used multiple times for this section.',
+						EJSLPackage.Literals.PAGE_REFERENCE__PAGESCR,
+						i,
+						de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator.SECTION_PAGE_USED_MULTIPLE_TIMES
+					)
+				}
+				i++
 			}
-			i++
 		}
 	}
 	
@@ -50,30 +52,34 @@ class SectionValidator extends AbstractDeclarativeValidator {
 		var hasBackend = false
 		var hasFrontend = false
 
-		var i = 0
-		for (Section section : component.sections) {
-			if (section instanceof BackendSection) {	// differentiate for backend and frontend section
-				if (hasBackend) {
-					error(
-						'Component must not have more than one backend.',
-						EJSLPackage.Literals.COMPONENT__SECTIONS,
-						i,
-						de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator.SECTION_MORE_THAN_ONE_BACKEND
-					)
+		if (component.sections !== null) {
+			var i = 0
+			for (Section section : component.sections) {
+				
+				// differentiate between backend and frontend section
+				if (section instanceof BackendSection) {
+					if (hasBackend) {
+						error(
+							'Component must not have more than one backend.',
+							EJSLPackage.Literals.COMPONENT__SECTIONS,
+							i,
+							de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator.SECTION_MORE_THAN_ONE_BACKEND
+						)
+					}
+					hasBackend = true
+				} else {
+					if (hasFrontend) {
+						error(
+							'Component must not have more than one frontend.',
+							EJSLPackage.Literals.COMPONENT__SECTIONS,
+							i,
+							de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator.SECTION_MORE_THAN_ONE_FRONTEND
+						)
+					}
+					hasFrontend = true
 				}
-				hasBackend = true
-			} else {
-				if (hasFrontend) {
-					error(
-						'Component must not have more than one frontend.',
-						EJSLPackage.Literals.COMPONENT__SECTIONS,
-						i,
-						de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator.SECTION_MORE_THAN_ONE_FRONTEND
-					)
-				}
-				hasFrontend = true
+				i++;
 			}
-			i++;
 		}
 	}
 }
