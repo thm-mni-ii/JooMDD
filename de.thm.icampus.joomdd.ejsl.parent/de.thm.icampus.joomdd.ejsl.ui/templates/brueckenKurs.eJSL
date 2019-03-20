@@ -20,7 +20,7 @@ eJSLModel "Brueckenkurs"{
 					 } 
 				}   
 				references {
-					Reference { EntityAttribute = kursgruppe ReferencedEntity = Kurstermin ReferencedEntityAttribute =Kurstermin.Gruppename  min =0 max = 1}
+					Reference { entityAttribute = kursgruppe referencedEntity = Kurstermin referencedEntityAttribute =Kurstermin.Gruppename  min =0 max = 1}
 				}
 				
 			}  
@@ -56,7 +56,7 @@ eJSLModel "Brueckenkurs"{
 					}
 				}
 				references {
-					Reference { EntityAttribute = kurs ReferencedEntity = Kurstermin ReferencedEntityAttribute =Kurstermin.Gruppename min = 0 max = 1 }
+					Reference { entityAttribute = kurs referencedEntity = Kurstermin referencedEntityAttribute =Kurstermin.Gruppename min = 0 max = 1 }
 				}
 			}
 			Entity Kurstermin {
@@ -80,7 +80,7 @@ eJSLModel "Brueckenkurs"{
 				}
 				references {
 					Reference {
-						EntityAttribute = kurs ReferencedEntity = Kurs ReferencedEntityAttribute =Kurs.titel min = 0 max = 1
+						entityAttribute = kurs referencedEntity = Kurs referencedEntityAttribute =Kurs.titel min = 0 max = 1
 					}
 					
 				}
@@ -88,18 +88,18 @@ eJSLModel "Brueckenkurs"{
 		}
 		pages {
 			IndexPage Teilnehmerlistsadmin{
-				*Entities Teilnehemer
-				representation columns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe
+				*entities = Teilnehemer
+				representationColumns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe
 				filters = Teilnehemer.name , Teilnehemer.kursgruppe
 				links{
-					InternalcontextLink teilnehemer{
-						target = Teilnehmeredit linked attribute = Teilnehemer.name linkparameters{
+					InternalContextLink teilnehemer{
+						target = Teilnehmeredit linkedAttribute = Teilnehemer.name linkParameters{
 							Parameter id = *Attribute  ID
 							Parameter name = *Attribute "Teilnehemer.name"
 						}
 					}
-					InternalcontextLink gruppe{
-						target = Kursterminadminedit linked attribute = Teilnehemer.kursgruppe linkparameters{
+					InternalContextLink gruppe{
+						target = Kursterminadminedit linkedAttribute = Teilnehemer.kursgruppe linkParameters{
 							Parameter id = *Attribute  ID
 							Parameter name = *Attribute "Teilnehemer.kursgruppe"
 						}
@@ -107,46 +107,46 @@ eJSLModel "Brueckenkurs"{
 				}
 			}
 			DetailsPage Teilnehmeredit {
-				*Entities Teilnehemer
+				*entities = Teilnehemer
 				
 				editFields { 
 					Teilnehemer.name {
-						type =  Text_Field },
+						htmlType =  Text_Field },
 					Teilnehemer.vorname {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Teilnehemer.kursgruppe {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Teilnehemer.geburtsdatum {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Teilnehemer.adresse {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Teilnehemer.kursgruppe{
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						}
 				}
-				pageactions {     
+				pageActions {     
 					PageAction zurueck {
 						type = CANCEL position = top 
 					}
 				}
-				table columns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe , Teilnehemer.geburtsdatum, Teilnehemer.adresse
+				tableColumns = Teilnehemer.name , Teilnehemer.vorname, Teilnehemer.kursgruppe , Teilnehemer.geburtsdatum, Teilnehemer.adresse
 				links{
 					InternalLink zuruck{
-						target = Teilnehmerlistsadmin linked action = zurueck 
+						target = Teilnehmerlistsadmin linkedAction = zurueck 
 					}
 				}
 			} 
 			IndexPage Kurslistsadmin{ 
-				*Entities Kurs
-				representation columns = Kurs.titel,Kurs.creditpoint
+				*entities = Kurs
+				representationColumns = Kurs.titel,Kurs.creditpoint
 				filters = Kurs.titel,Kurs.creditpoint
 				links{
-					InternalcontextLink teilnehemer{
-						target = Kursedit linked attribute =Kurs.titel linkparameters{
+					InternalContextLink teilnehemer{
+						target = Kursedit linkedAttribute =Kurs.titel linkParameters{
 							Parameter id = *Attribute  ID
 							Parameter name = *Attribute "Kurs.titel"
 						}
@@ -154,21 +154,21 @@ eJSLModel "Brueckenkurs"{
 				}
 			}
 			DetailsPage Kursedit { 
-				*Entities Kurs
+				*entities = Kurs
 				
 				editFields {
 					Kurs.titel {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Kurs.creditpoint {
-						type =  Integer 
+						htmlType =  Integer 
 						},
 					Kurs.kurzfassung {
-						type =  Editor 
+						htmlType =  Editor 
 						}
 				}
 				
-				pageactions {
+				pageActions {
 					PageAction zurueck {
 						type = CANCEL position = top 
 					}
@@ -176,75 +176,75 @@ eJSLModel "Brueckenkurs"{
 				
 				links{
 					InternalLink zuruck{
-						target = Kurslistsadmin linked action = zurueck 
+						target = Kurslistsadmin linkedAction = zurueck 
 					}
 				}
 			} 
 			IndexPage Tutoradmin{
-				*Entities Tutor
-				representation columns = Tutor.name,Tutor.vorname, Tutor.kurs
+				*entities = Tutor
+				representationColumns = Tutor.name,Tutor.vorname, Tutor.kurs
 				filters = Tutor.name,Tutor.vorname, Tutor.kurs
 				links{
-					InternalcontextLink tutor{
-						target = Tutoredit linked attribute =Tutor.name linkparameters{
+					InternalContextLink tutor{
+						target = Tutoredit linkedAttribute =Tutor.name linkParameters{
 							Parameter id = *Attribute ID
 							Parameter name = *Attribute "Tutor.name"
 						}
 					}
-					InternalcontextLink kursll{
-						target = Kursedit linked attribute = Tutor.kurs linkparameters{
+					InternalContextLink kursll{
+						target = Kursedit linkedAttribute = Tutor.kurs linkParameters{
 							Parameter name = *Attribute "Tutor.kurs"
 						}
 					}
 				}
 			}
 			DetailsPage Tutoredit {
-				*Entities Tutor
+				*entities = Tutor
 				
 				editFields {
 					Tutor.name {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Tutor.vorname {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Tutor.kurs {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Tutor.geburtsdatum {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Tutor.geschlecht{
-						type =  Select 
+						htmlType =  Select 
 						values { Keins = "keins" , maennlich = "mann" , weiblich = "weiblich"}
 						} 
 				}
 				
-				pageactions {
+				pageActions {
 					PageAction zurueck {
 						type = CANCEL position = top 
 					}
 				}
-				table columns = Tutor.name,Tutor.vorname, Tutor.kurs
+				tableColumns = Tutor.name,Tutor.vorname, Tutor.kurs
 				links{
 					InternalLink zuruck{
-						target = Tutoradmin linked action = zurueck 
+						target = Tutoradmin linkedAction = zurueck 
 					}
 				}
 			}
 			IndexPage Kursterminadmin{
-				*Entities Kurstermin
-				representation columns = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
+				*entities = Kurstermin
+				representationColumns = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
 				filters = Kurstermin.Gruppename, Kurstermin.kurs , Kurstermin.Raum,Kurstermin.date
 				links{
-					InternalcontextLink tutor{
-						target = Kursterminadminedit linked attribute =Kurstermin.Gruppename linkparameters{
+					InternalContextLink tutor{
+						target = Kursterminadminedit linkedAttribute =Kurstermin.Gruppename linkParameters{
 							Parameter id = *Attribute  ID
 							Parameter name = *Attribute "Brueckenkurs.Kurstermin.Gruppename"
 						}
 					}
-					InternalcontextLink tutor{
-						target = Kursedit linked attribute =Kurstermin.kurs linkparameters{
+					InternalContextLink tutor{
+						target = Kursedit linkedAttribute =Kurstermin.kurs linkParameters{
 							Parameter id = *Attribute  ID
 							Parameter name = *Attribute "Kurstermin.kurs"
 						}
@@ -252,38 +252,38 @@ eJSLModel "Brueckenkurs"{
 				}
 			}
 			DetailsPage Kursterminadminedit {
-				*Entities Kurstermin
+				*entities = Kurstermin
 				
 				editFields {
 					Kurstermin.Gruppename {
-						type = Text_Field
+						htmlType = Text_Field
 						},
 					Kurstermin.kurs {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Kurstermin.Raum {
-						type =  Text_Field 
+						htmlType =  Text_Field 
 						},
 					Kurstermin.date{
-						type =  Datepicker 
+						htmlType =  Datepicker 
 						},
 					Kurstermin.tag {
-						type =  Text_Field 
-						field attributes {
+						htmlType =  Text_Field 
+						fieldAttributes {
 							format = "'%a %d %b %Y"
 						}
-						}
+					}
 				}
-				pageactions {
+				pageActions {
 					PageAction zurueck {
 						type = CANCEL position = top 
 					}
 				}
-			table columns = Kurstermin.Gruppename,Kurstermin.kurs,Kurstermin.Raum,Kurstermin.date,Kurstermin.tag
+			tableColumns = Kurstermin.Gruppename,Kurstermin.kurs,Kurstermin.Raum,Kurstermin.date,Kurstermin.tag
 				
 				links{
 					InternalLink zuruck{
-						target = Kursterminadmin linked action = zurueck 
+						target = Kursterminadmin linkedAction = zurueck 
 					}
 				}
 			}
@@ -295,8 +295,8 @@ eJSLModel "Brueckenkurs"{
 					authors {
 						Author "Dieudonne Timma"
 						{
-							authoremail ="dieudonnetimma@yahoo.fr"
-							authorurl = "www.google.de"
+							authorEmail ="dieudonnetimma@yahoo.fr"
+							authorURL = "www.google.de"
 						}
 					}
 				}languages {
@@ -308,7 +308,7 @@ eJSLModel "Brueckenkurs"{
 					}
 				}
 				sections {
-					Backend section {
+					BackendSection {
 						*Pages {
 							*Page : Brueckenkurs.Kursedit 
 							*Page : Brueckenkurs.Kurslistsadmin
@@ -319,7 +319,7 @@ eJSLModel "Brueckenkurs"{
 							*Page : Brueckenkurs.Tutoradmin
 							*Page : Brueckenkurs.Tutoredit
 						}
-					}Frontend section
+					}FrontendSection
 					{
 						*Pages {
 							*Page : Brueckenkurs.Kursedit 

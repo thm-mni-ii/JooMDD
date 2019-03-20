@@ -27,6 +27,7 @@ import org.eclipse.xtext.testing.util.ParseHelper
 
 @ExtendWith(InjectionExtension)
 @InjectWith(EJSLInjectorProvider)
+
 class EJSLParsingTest{
 	
 	//import reference model instances (All tests are based on this model) TODO make dynamic
@@ -149,9 +150,9 @@ class EJSLParsingTest{
 		}
 		for (i : 0 ..< instance.ejslPart.feature.entities.get(1).references.size){
 			references.add(
-				"EntityAttribute = " +
+				"entityAttribute = " +
 				instance.ejslPart.feature.entities.get(1).references.get(i).attribute.get(0).name + " " +
-				"*EntityReference = " +
+				"referencedEntityAttribute = " +
 				instance.ejslPart.feature.entities.get(1).references.get(i).entity.name + "." +
 				instance.ejslPart.feature.entities.get(1).references.get(i).attributerefereced.get(0).name
 			)
@@ -171,7 +172,7 @@ class EJSLParsingTest{
 		//check values
 		assertEquals("name, price, desc, value, porder, supplier", actualAttr);
 		assertEquals(
-			"EntityAttribute = porder *EntityReference = Prodorder.ordNr, EntityAttribute = supplier *EntityReference = supplier.name",
+			"entityAttribute = porder referencedEntityAttribute = Prodorder.ordNr, entityAttribute = supplier referencedEntityAttribute = supplier.name",
 			 actualRef
 		);
 		assertEquals("1 -1, 1 -1", actualRel);

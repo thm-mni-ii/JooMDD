@@ -12,7 +12,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 
-class TemplateLoader {
+class TemplateLoader { 
 	
 	static  def getTemplateFiles() {
 		val tModels = newArrayList()
