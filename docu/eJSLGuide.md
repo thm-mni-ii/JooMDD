@@ -272,9 +272,9 @@ sections {
     }
 }
 ```
-The core part of a component specification is placed within the `section` definition. Here you can specify which pages you will use in which part (frontend/backend) of the component. In the example, all defined pages are referenced in the backend section, whereas the `IndexPages` are also referenced in the frontend section. This information is sufficient for a sophisticated code generation of both section with all required files. Based on presented example, all further generated views will have their own model and controller file. However, it is also possible to specify a reuse of models - e.g. if the frontend view shall use the backend model. For further information of possible dependency modelling see the [Extension interaction(#extension-interaction)] section of this site.
-<img src="img/talksModule.png" alt="Conference talks module" style="max-width:100%;float:right">
+The core part of a component specification is placed within the `section` definition. Here you can specify which pages you will use in which part (frontend/backend) of the component. In the example, all defined pages are referenced in the backend section, whereas the `IndexPages` are also referenced in the frontend section. This information is sufficient for a sophisticated code generation of both section with all required files. Based on presented example, all further generated views will have their own model and controller file. However, it is also possible to specify a reuse of models - e.g. if the frontend view shall use the backend model. For further information of possible dependency modelling see the [Extension interaction](#extension-interaction) section of this site.
 
+<img src="img/talksModule.png" alt="Conference talks module" style="max-width:100%;float:right">
 ```
 Module Talks {
     Manifestation {...}
