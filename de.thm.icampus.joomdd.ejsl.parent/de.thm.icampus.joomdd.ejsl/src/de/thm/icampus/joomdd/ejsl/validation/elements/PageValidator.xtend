@@ -37,6 +37,7 @@ class PageValidator extends AbstractDeclarativeValidator {
     public static val PAGE_DETAILSPAGE_EDITFIELDS_REFERENCE = 'invalidEditfieldReference'
     public static val PAGE_EDITFIELDS_WRONG_HTML_TYPE = 'wrongHTMLType'
     public static val PAGE_DETAILSPAGE_MISSING_LINK_TO_INDEX = 'missingLinkToIndexPage'
+    public static val PAGE_REFERENCE_TO_ITSELF = 'pageReferenceToItself'
 
     public override register(EValidatorRegistrar registrar) {}
 
@@ -419,5 +420,32 @@ class PageValidator extends AbstractDeclarativeValidator {
 				)
      		}
      	}
-     }   
+     }
+     
+     /**
+      * Validate that a page has no reference to itself.
+      */
+      @Check
+      def checkPageSelfReferencing(DynamicPage page) {
+      	var hasSelfRef = false
+      	
+      	if (page.links !== null) {
+      		for (link : page.links) {
+      			if (link instanceof InternalLink) {
+      				var target = link as InternalLink
+      				if (target.target === page) {
+      					hasSelfRef = true
+      				}
+      			}
+      		}
+      	}
+      	if (hasSelfRef) {
+      		warning(
+					'A page should not have a reference to itself.',
+					page,
+					EJSLPackage.Literals.PAGE__LINKS.EOpposite,
+					de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_REFERENCE_TO_ITSELF
+				)
+      	}
+      }
 }
