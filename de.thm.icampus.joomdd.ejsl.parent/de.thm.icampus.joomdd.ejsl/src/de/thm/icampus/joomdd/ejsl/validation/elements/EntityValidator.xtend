@@ -10,6 +10,9 @@ import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 import java.util.Arrays
+import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
+import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypeKinds
+import de.thm.icampus.joomdd.ejsl.eJSL.impl.StandardTypesImpl
 
 /**
  * This class contains validation rules about entities.
@@ -27,6 +30,7 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	public static val ENTITY_MISSING_PRIMARY_ATTRIBUTE = 'missingPrimaryAttribute'
 	public static val ENTITY_REFERENCE_LOWER_WRONG_VALUE = 'wrongValueForLower'
 	public static val ENTITY_REFERENCE_UPPER_WRONG_VALUE = 'wrongValueForUpper'
+	public static val ENTITY_ATTRIBUTE_AUTOINC_PRIMARY = 'autoIncrementPrimaryOnly'
 	
 	public static final HashSet<String> MAXVALUES = {
 		return new HashSet(Arrays.asList('1', '-1'));
@@ -115,6 +119,28 @@ class EntityValidator extends AbstractDeclarativeValidator {
 			}
 		}	
 	}
+	
+	/**
+	 * Check auto increment is only set for primary attributes.
+	 */
+	 @Check
+	 def checkAutoIncrementOnlyForPrimaryAttr(Entity entity) {
+	 	if (entity.attributes !== null) {
+	 		for (attribute : entity.attributes) {
+	 			if (attribute.type instanceof StandardTypes) {
+	 				var type = attribute.type as StandardTypes
+	 				if (type.autoincrement && !attribute.isprimary) {
+	 					error(
+							'Auto increment is only allowed for primary attributes.',
+							attribute,
+							EJSLPackage.Literals.ATTRIBUTE__NAME,
+							de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_ATTRIBUTE_AUTOINC_PRIMARY
+						)
+	 				}
+	 			}
+	 		}
+	 	}
+	 }
 	
 	/**
 	 * Check entity name does not match a Xtext keyword
