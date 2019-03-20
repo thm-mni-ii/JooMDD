@@ -271,3 +271,7 @@ p.copyright {
 		max-height: 650px;
 	}
 }
+
+#loginAlert.alert {
+    margin-bottom: 0;
+}

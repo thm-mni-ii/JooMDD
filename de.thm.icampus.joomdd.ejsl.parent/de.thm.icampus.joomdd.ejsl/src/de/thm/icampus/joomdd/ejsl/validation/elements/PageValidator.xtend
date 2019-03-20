@@ -16,6 +16,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.SimpleHTMLTypeKinds
 import de.thm.icampus.joomdd.ejsl.eJSL.HTMLTypes
 import java.util.HashMap
 import java.util.Arrays
+import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 
 /**
  * This class contains custom validation rules about Pages
@@ -35,6 +36,8 @@ class PageValidator extends AbstractDeclarativeValidator {
     public static val PAGE_ENTITY_USED_MULTIPLE_TIMES = 'entityUsedMultipleTimes'
     public static val PAGE_DETAILSPAGE_EDITFIELDS_REFERENCE = 'invalidEditfieldReference'
     public static val PAGE_EDITFIELDS_WRONG_HTML_TYPE = 'wrongHTMLType'
+    public static val PAGE_DETAILSPAGE_MISSING_LINK_TO_INDEX = 'missingLinkToIndexPage'
+    public static val PAGE_REFERENCE_TO_ITSELF = 'pageReferenceToItself'
 
     public override register(EValidatorRegistrar registrar) {}
 
@@ -391,4 +394,58 @@ class PageValidator extends AbstractDeclarativeValidator {
 			}
 		} 
     }
+    
+    /**
+     * Validate that an internal link to an index page is specified for an details page.
+     */
+     @Check
+     def checkDetailsPageHasLinkToIndexPage(DetailsPage page) {
+     	var hasIndexLink = false
+     	
+     	if (page.links !== null) {
+     		for (link : page.links) {
+     			if (link instanceof InternalLink) {
+     				var index = link as InternalLink
+     				if (index.target instanceof IndexPage) {
+     					hasIndexLink = true;
+     				}
+     			}
+     		}
+     		if (!hasIndexLink) {
+     			error(
+					'A details page requires a link to an existing index page.',
+					page,
+					EJSLPackage.Literals.PAGE__LINKS,
+					de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_DETAILSPAGE_MISSING_LINK_TO_INDEX
+				)
+     		}
+     	}
+     }
+     
+     /**
+      * Validate that a page has no reference to itself.
+      */
+      @Check
+      def checkPageSelfReferencing(DynamicPage page) {
+      	var hasSelfRef = false
+      	
+      	if (page.links !== null) {
+      		for (link : page.links) {
+      			if (link instanceof InternalLink) {
+      				var target = link as InternalLink
+      				if (target.target === page) {
+      					hasSelfRef = true
+      				}
+      			}
+      		}
+      	}
+      	if (hasSelfRef) {
+      		warning(
+					'A page should not have a reference to itself.',
+					page,
+					EJSLPackage.Literals.PAGE__LINKS.EOpposite,
+					de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_REFERENCE_TO_ITSELF
+				)
+      	}
+      }
 }
