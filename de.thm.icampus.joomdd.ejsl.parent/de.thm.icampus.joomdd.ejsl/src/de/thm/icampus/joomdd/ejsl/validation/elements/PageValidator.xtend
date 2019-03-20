@@ -120,6 +120,30 @@ class PageValidator extends AbstractDeclarativeValidator {
             }
         }
     }
+    
+    /**
+     * Check that representation columns contain no attributes with upper = -1
+     */
+     @Check
+     def checkInvalidUpperAttibuteInRepresentationColumns(DynamicPage page) {
+     	//TODO
+     }
+     
+     /**
+      * Check that filter contain no attributes with upper = -1
+      */
+      @Check
+      def checkInvalidUpperAttributeInFilter(DynamicPage page) {
+      	//TODO
+      }
+      
+      /**
+       * Check that edit fields contain no attribute with upper = -1
+       */
+       @Check
+       def checkInvalidUpperAttributeInEditFields(DynamicPage page) {
+       	//TODO
+       }
 
     /**
      * Check if edit field type exists as entity reference
