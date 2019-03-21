@@ -24,7 +24,7 @@ To do: Plugin sites
 - [Installation Guide](docu/InstallationGuide.md)
 - [IDE plugin - Gettting started](docu/GettingStarted.md)
 - [Web editor - Getting Started](docu/WebEditorGettingStarted.md)
-- [How to use the modelling language](docu/eJSLGuide.md)
+- [How to use the modelling language](docu/eJSLGuide.md) (in combination with the Joomla-specific generator)
 
 # Contribution
 Please visit our [contribution guide](docu/Contribute.md) and feel free to open [new issues]().

@@ -4,28 +4,15 @@ import Util.TemplateLoader
 import com.google.inject.Inject
 import de.thm.icampus.joomdd.ejsl.eJSL.CMSExtension
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLModel
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedCMSExtension
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedCMSExtensionImpl
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.ComponentGenerator
+import de.thm.icampus.joomdd.ejsl.eJSL.Entity
 import de.thm.icampus.joomdd.ejsl.ressourceTransformator.RessourceTransformer
 import de.thm.icampus.joomdd.ejsl.tests.EJSLInjectorProvider
-import java.io.ByteArrayInputStream
-import java.io.File
-import java.io.InputStream
-import javax.xml.XMLConstants
-import javax.xml.transform.Source
-import javax.xml.transform.stream.StreamSource
-import javax.xml.validation.Schema
-import javax.xml.validation.SchemaFactory
-import javax.xml.validation.Validator
-import org.junit.jupiter.api.Test
-import static org.junit.jupiter.api.Assertions.*
-import de.thm.icampus.joomdd.ejsl.eJSL.Entity
-import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.InjectWith
-import org.junit.runner.RunWith
+import org.eclipse.xtext.testing.extensions.InjectionExtension
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
+
+import static org.junit.jupiter.api.Assertions.*
 
 @ExtendWith(InjectionExtension)
 @InjectWith(EJSLInjectorProvider)
