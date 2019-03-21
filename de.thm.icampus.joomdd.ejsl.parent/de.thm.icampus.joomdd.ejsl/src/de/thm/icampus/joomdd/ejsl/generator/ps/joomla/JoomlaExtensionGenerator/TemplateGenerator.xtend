@@ -29,8 +29,8 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		generateFile("css/" + "general.css", template.cssGeneral)
 		generateFile("css/" + "offline.css", template.cssGeneral)
 		generateFile("css/" + "error.css", template.cssGeneral)
-		generateFile("css/" + name + ".css", template.cssTemplate)
-		generateFile("css/" + name + "_rtl.css", template.cssTemplate)
+		generateFile("css/" + name.toLowerCase + ".css", template.cssTemplate)
+		generateFile("css/" + name.toLowerCase + "_rtl.css", template.cssTemplate)
 		generateEmptyDirectory("fonts")
 		generateFile("html/" + "modules.php", template.phpModule)
 		generateEmptyDirectory("javascript")
@@ -145,9 +145,9 @@ public class TemplateGenerator extends AbstractExtensionGenerator {
 		<head>
 		    <jdoc:include type="head" />
 		    <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/«name»/css/general.css" type="text/css" />
-		    <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template; ?>/css/«name».css" type="text/css" />
+		    <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template; ?>/css/«name.toLowerCase».css" type="text/css" />
 		    <?php if ($this->direction == 'rtl') : ?>
-		    <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/«name»_rtl.css" type="text/css" />
+		    <link rel="stylesheet" href="<?php echo $this->baseurl ?>/templates/<?php echo $this->template ?>/css/«name.toLowerCase»_rtl.css" type="text/css" />
 		    <?php endif; ?>
 		</head>
 		<body class="contentpane">

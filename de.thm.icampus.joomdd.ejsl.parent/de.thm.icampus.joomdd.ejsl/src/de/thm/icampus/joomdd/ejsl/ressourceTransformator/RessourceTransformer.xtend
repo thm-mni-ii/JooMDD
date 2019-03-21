@@ -93,7 +93,15 @@ class RessourceTransformer {
         createMappingsTable(entityList)
         formatEntitiesAttribute(entityList)
         completeDetailsPage();
-
+        
+        // Sets all reference attributes to preserve.
+        // This prevents the generation of this attribute 
+//        EcoreUtil2.getAllContentsOfType(feature, Reference).filter[ reference |
+//            reference.upper.equals("-1") === false
+//        ].forEach[ reference | 
+//            reference.attribute.get(0).preserve = true
+//        ];
+        
         var JoomlaTranformator jt = new JoomlaTranformator(modelInstance)
         jt.completeCMSExtension
         completePage(feature.pages)
@@ -723,11 +731,7 @@ class RessourceTransformer {
         var df = list.findFirst [ df |
             df.attribute.name.equals(attribute.name)
         ]
-
-        if (df !== null) {
-            var bla = "";
-        }
-
+        
         return df
     }
 
@@ -969,11 +973,7 @@ class RessourceTransformer {
             }
             
             newAttr.id = attribute.id
-            // newAttr.isunique = attribute.isunique
-            
-            if (attribute.isIsprimary)
-                // newAttr.isunique = true
-                newAttr.preserve = attribute.preserve
+            newAttr.preserve = attribute.preserve
                 
             if (!this.containsAttribute(newAttr, result)) {
                 result.add(newAttr)

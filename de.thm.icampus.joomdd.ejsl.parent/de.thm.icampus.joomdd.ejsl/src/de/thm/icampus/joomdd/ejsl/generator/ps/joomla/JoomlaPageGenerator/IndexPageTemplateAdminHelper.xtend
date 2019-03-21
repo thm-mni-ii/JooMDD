@@ -8,6 +8,10 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Table
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
 
 /**
  * This class contains the templates to generate the necessary code for backend view templates (index pages).
@@ -106,7 +110,11 @@ class IndexPageTemplateAdminHelper {
     	}
 	'''
 	
-	def CharSequence genAdminModelGetListQuery()'''
+	def CharSequence genAdminModelGetListQuery() {
+	var query = new Query(com)
+	var mainSelectColumn = new Column(indexpage.entities.get(0).name, '''*''')
+	query.mainSelect.add(new Select(mainSelectColumn))
+	'''
 	    /**
 	     * Build an SQL query to load the list data.
 	     *
@@ -133,12 +141,13 @@ class IndexPageTemplateAdminHelper {
 	            "distinct " .
 	            $this->getState(
 	                'list.select',
-	                '«indexpage.entities.get(0).name.toLowerCase».*'
+	                '«query.mainSelect.join(", ")»'
 	            )
 	        );
-	        «Slug.getListQuery(indexpage, mainEntity, com, '''<\/br>''')»
+	        «query.getListQuery(indexpage, mainEntity, '''<\/br>''')»
 	    }
-    '''    
+    '''
+    }    
     
 	def CharSequence genAdminModelGetItem()'''
 		/**
@@ -171,7 +180,7 @@ class IndexPageTemplateAdminHelper {
 	        $db = Factory::getDbo();
 	        $query = $db->getQuery(true);
 
-	        $statement = 'Update #__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase» Set `ordering` = CASE';
+	        $statement = 'Update #__«com.name»_«indexpage.entities.get(0).name» Set `ordering` = CASE';
 	        foreach ($dataID as $order => $profileID) {
 	            $statement .= ' WHEN «mainEntity.primaryKey.name» = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
 	        }
@@ -181,7 +190,7 @@ class IndexPageTemplateAdminHelper {
 
 	        if ($response) {
 	            $query = $db->getQuery(true);
-	            $query->select('`«mainEntity.primaryKey.name»`, `ordering`')->from('#__«com.name.toLowerCase»_«indexpage.entities.get(0).name.toLowerCase»');
+	            $query->select('`«mainEntity.primaryKey.name»`, `ordering`')->from('#__«com.name»_«indexpage.entities.get(0).name»');
 	            $db->setQuery($query);
 	            return $db->loadObjectList();
 	        }
@@ -315,7 +324,7 @@ class IndexPageTemplateAdminHelper {
                             <?php echo HTMLHelper::_(
                                 'grid.sort',
                                 '<i class="icon-menu-2"></i>',
-                                '«this.mainEntity.name.toLowerCase».ordering',
+                                '«this.mainEntity.name».ordering',
                                 $listDirn,
                                 $listOrder,
                                 null,
@@ -339,7 +348,7 @@ class IndexPageTemplateAdminHelper {
                             <?php echo HTMLHelper::_(
                                 'grid.sort',
                                 'JSTATUS',
-                                '«this.mainEntity.name.toLowerCase».state',
+                                '«this.mainEntity.name».state',
                                 $listDirn,
                                 $listOrder
                             ); ?>
@@ -351,7 +360,7 @@ class IndexPageTemplateAdminHelper {
                             <?php echo HTMLHelper::_(
                                 'grid.sort',
                                 '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
-                                '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»',
+                                '«this.mainEntity.name».«attr.name»',
                                 $listDirn,
                                 $listOrder
                             ); ?>
@@ -493,7 +502,7 @@ class IndexPageTemplateAdminHelper {
          *
          * Note. Calling getState in this method will result in recursion.
          */
-        protected function populateState($ordering = '«indexpage.entities.get(0).name.toLowerCase».«mainEntity.primaryKey.name»', $direction = 'asc')
+        protected function populateState($ordering = '«indexpage.entities.get(0).name».«mainEntity.primaryKey.name»', $direction = 'asc')
         {
             // Load the parameters.
             $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');

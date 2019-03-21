@@ -618,7 +618,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		
 		    //TODO: some code here
 		
-		    HTMLHelper::_('script', 'plg_quickicon_«plugin.name»/«plugin.name»check.js', false, true);
+		    HTMLHelper::_('script', 'plg_quickicon_«plugin.name.toLowerCase»/«plugin.name.toLowerCase»check.js', false, true);
 		
 		    return array(
 		        array(

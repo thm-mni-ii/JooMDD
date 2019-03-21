@@ -56,9 +56,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.extendedComp.name = Slug.slugify(extendedComp.name)
 		this.path = path
 		this.updatePath = updatePath
-		this.sitePath = path + "components/" + this.extendedComp.extensionName
-		this.adminPath = path + "administrator/components/" + this.extendedComp.extensionName
-		this.mediaPath =  path + "media/" + extendedComp.extensionName
+		this.sitePath = newArrayList(path, "components", this.extendedComp.extensionName).join("/").toLowerCase
+		this.adminPath = newArrayList(path, "administrator", "components", this.extendedComp.extensionName).join("/").toLowerCase
+		this.mediaPath = newArrayList(path, "media", extendedComp.extensionName).join("/").toLowerCase
 	}
 	
 	/**
@@ -96,22 +96,22 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	    extendedComp.languages.addAll(synteticSysLanguages.toList)
 
         // Generate the the installation path for a compoenent
-		generateFile(path + name + ".xml", extendedComp.xmlContent(indexPages))
+		generateFile(path + name.toLowerCase + ".xml", extendedComp.xmlContent(indexPages))
 		generateFile(path + "script.php", generateScript(extendedComp, name))
 
 		//Generate media folder
-		generateEmptyDirectory(mediaPath+"/images")
-		generateFile( mediaPath + "/js/setForeignKeys.js", genScriptForForeignKeys)
-		generateFile( mediaPath + "/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
+		generateEmptyDirectory(newArrayList(mediaPath, "images").join("/"))
+		generateFile(newArrayList(mediaPath, "js", "setforeignkeys.js").join("/"), genScriptForForeignKeys)
+		generateFile(newArrayList(mediaPath, "js", "setmultipleforeignkeys.js").join("/"), genScriptForMultipleForeignKeys)
 		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
 		
-		generateFile( mediaPath + "/js/bootsnip.js", help.genBootsnipJS)
-		generateFile( mediaPath + "/css/bootsnip.css",help.genBootsnipCSS)
+		generateFile(newArrayList(mediaPath, "js", "bootsnip.js").join("/"), help.genBootsnipJS)
+		generateFile(newArrayList(mediaPath, "css", "bootsnip.css").join("/"), help.genBootsnipCSS)
 		
 		//Generate images folder
 		for(detailsPages : indexPages.filter[t| t.detailsPage && t.haveFiletoLoad]) {
-			generateEmptyDirectory(mediaPath + "/" + detailsPages.name.toLowerCase + "/images")
-			generateEmptyDirectory(mediaPath + "/" + detailsPages.name.toLowerCase + "/files")
+			generateEmptyDirectory(newArrayList(mediaPath, detailsPages.name.toLowerCase, "images").join("/"))
+			generateEmptyDirectory(newArrayList(mediaPath, detailsPages.name.toLowerCase, "files").join("/"))
 		}
 
 		// Generate frontend section 
@@ -211,7 +211,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
                     <schemapath type="mysql">sql/updates/mysql</schemapath>
                 </schemas>
             </update>
-            <media destination="«name»" folder="media/«extendedComp.extensionName»">
+            <media destination="«extendedComp.extensionName»" folder="media/«extendedComp.extensionName»">
                 <folder>images</folder>
                 <folder>js</folder>
                 <folder>css</folder>
@@ -241,7 +241,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
         <!-- Administration Main File Copy Section -->
         <files folder="administrator/components/«extendedComp.extensionName»">
             <!-- Admin Main File Copy Section -->
-            <filename>«noPrefixName».php</filename>
+            <filename>«noPrefixName.toLowerCase».php</filename>
             <filename>controller.php</filename>
             <filename>access.xml</filename>
             <filename>config.xml</filename>
@@ -265,7 +265,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     def frontendManifest(ExtendedComponent component) '''
     <!-- Site Main File Copy Section -->
     <files folder="components/«extendedComp.extensionName»">
-        <filename>«noPrefixName».php</filename>
+        <filename>«noPrefixName.toLowerCase».php</filename>
         <filename>controller.php</filename>
         <!-- Additional Files -->
         <folder>views</folder>
@@ -281,9 +281,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	<languages>
 	    «FOR lang : component.languages»
 	    «IF !lang.sys»
-	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
+	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«extendedComp.extensionName».ini</language>
 	    «ELSE»
-	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
+	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«extendedComp.extensionName».sys.ini</language>
         «ENDIF»
         «ENDFOR»
 	</languages>
@@ -296,7 +296,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	private def void generateFrontendSection() {
 		// Generate frontend section
-		generateFile( sitePath + "/" + noPrefixName + ".php", extendedComp.phpSiteContent)
+		generateFile( sitePath + "/" + noPrefixName.toLowerCase + ".php", extendedComp.phpSiteContent)
 		generateFile( sitePath + "/controller.php", extendedComp.phpSiteControllerContent)
 		generateFile( sitePath + "/router.php", extendedComp.phpSiteRouterContent)
 		        
@@ -329,15 +329,15 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
   		}
   		// Generate sql folders
 		
-		generateFile( adminPath + "/" + noPrefixName + ".php", extendedComp.phpAdminContent)
+		generateFile( adminPath + "/" + noPrefixName.toLowerCase + ".php", extendedComp.phpAdminContent)
 		generateFile( adminPath + "/controller.php", extendedComp.phpAdminControllerContent)
 		generateFile( adminPath + "/access.xml", extendedComp.xmlAccessContent)
 		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
 		
 		var tempSlug = slug + "s"
-		generateFile(adminPath +"/views/" + tempSlug + "/view.html.php", 
+		generateFile(adminPath +"/views/" + tempSlug.toLowerCase + "/view.html.php", 
 		    extendedComp.phpAdminViewContent)
-		generateFile(adminPath +"/views/" + tempSlug + "/tmpl/default.php", 
+		generateFile(adminPath +"/views/" + tempSlug.toLowerCase + "/tmpl/default.php", 
 		    extendedComp.phpAdminTemplateContent
 		)
 		

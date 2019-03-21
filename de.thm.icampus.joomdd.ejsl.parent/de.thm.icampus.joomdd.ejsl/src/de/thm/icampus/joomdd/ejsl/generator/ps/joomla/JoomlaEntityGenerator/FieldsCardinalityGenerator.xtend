@@ -78,7 +78,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		{
 		    $html = array();
 		    $document = Factory::getDocument();
-		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setMultipleForeignKeys.js');
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setmultipleforeignkeys.js');
 		    $input = Factory::getApplication()->input;
 		    $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
 		    if (empty($«entFrom.primaryKey.name»)) {
@@ -222,8 +222,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		}
 	'''
 	override dogenerate(String path, IFileSystemAccess access) {
-		if(this.mainRef !== null)
-			access.generateFile(path+ "/"+getnameField +".php", genRefrenceField)
-		
+		if(this.mainRef !== null) {
+            access.generateFile(newArrayList(path, getnameField.toLowerCase + ".php").join("/"), genRefrenceField)
+		}
 	}
 }

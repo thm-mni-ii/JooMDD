@@ -11,6 +11,9 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageFi
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import java.nio.file.Files
 import java.nio.file.Path
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Table
 
 /**
  * This class contains the templates to generate the view fields.
@@ -126,7 +129,7 @@ class FieldsGenerator {
 		    $this->keysAndForeignKeys = json_decode($tempsAttr, true);
 		    $html = array();
 		    $document = Factory::getDocument();
-		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setForeignKeys.js');
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setforeignkeys.js');
 		    $input = Factory::getApplication()->input;
 		    
 		    $this->primary_key = $this->getAttribute("primary_key_name");
@@ -264,21 +267,29 @@ class FieldsGenerator {
 		}
 	'''
 	
-	private def genGetAllDataForEntity() '''
-	protected function getAllData($valueColumn, $textColumn)
-	{
-	    $dbo = Factory::getDbo();
-	    $query = $dbo->getQuery(true);
-	    $query->select("DISTINCT $valueColumn as value, $textColumn as text")
-	        ->from("$this->table AS «entFrom.name»")
-	        ->order("$textColumn ASC");
+	private def genGetAllDataForEntity() {
+	    var query = new Query(com)
+	    query.mainSelect.add(new Select('''$valueColumn''', '''value'''))
+        query.mainSelect.add(new Select('''$textColumn''', '''text'''))
+        
+        var mainEntityNameAlias = query.getUniqueAlias(entFrom.name)
+        query.mainTable = new Table('''$this->table''', mainEntityNameAlias)
+    	'''
+    	protected function getAllData($valueColumn, $textColumn)
+    	{
+    	    $dbo = Factory::getDbo();
+    	    $query = $dbo->getQuery(true);
+    	    $query->select("DISTINCT «query.mainSelect.join(", ")»")
+    	        ->from(«query.mainTable»)
+    	        ->order("$textColumn ASC");
 
-	    «Slug.createSelectAndJoins(entFrom.allExtendedReferences, com.name, entFrom.name)»
-	    $dbo->setQuery($query);
-	    $result = $dbo->loadObjectList();
-	    return $result;
+    	    «query.createSelectAndJoins(entFrom.allExtendedReferences, entFrom.name)»
+    	    $dbo->setQuery($query);
+    	    $result = $dbo->loadObjectList();
+    	    return $result;
+    	}
+    	'''
 	}
-	'''
 	
 	static def CharSequence genFieldsForUserView(ExtendedComponent component)'''
 		<?php
@@ -317,9 +328,9 @@ class FieldsGenerator {
 
 			}
 		}
-		var File fieldEntity = new File(path + "/" + entFrom.name + ".php")
+		var File fieldEntity = new File(path + "/" + entFrom.name.toLowerCase + ".php")
 		if (!fieldEntity.exists) {
-			access.generateFile(path + "/" + entFrom.name + ".php", genFieldsForEntity)
+			access.generateFile(path + "/" + entFrom.name.toLowerCase + ".php", genFieldsForEntity)
 		}
 		var File fieldUser = new File(path + '''/«com.name.toLowerCase»user.php''')
 		if (!fieldUser.exists) {
