@@ -124,15 +124,15 @@ class Query {
         $query->from('`«this.mainTable.name»` AS «this.mainTable.alias»');
 
         // Join over the users for the checked out user
-        $query->select(«ucSelect»);
+        $query->select("«ucSelect»");
         $query->join(«ucJoin»);
 
         // Join over the user field 'created_by'
-        $query->select(«createdBySelect»);
+        $query->select("«createdBySelect»");
         $query->join(«createdByJoin»);
 
         // Join over the user field 'user'
-        $query->select(«userSelect»);
+        $query->select("«userSelect»");
         $query->join(«userJoin»);
 
         «selectAndJoins»
@@ -259,7 +259,9 @@ class Query {
         var ArrayList<String> output = newArrayList
         
         // Iterate over all references that do not reference to a mapping table.
-        var createdSelectAndJoins = extendedReference.filter[reference | reference.destinationEntity instanceof MappingEntity === false].map[ ref |
+        var createdSelectAndJoins = extendedReference.filter[reference | 
+            reference.destinationEntity instanceof MappingEntity === false
+        ].map[ ref |
             val destinationEntityName = ref.destinationEntity.name
             val alias = getUniqueAlias(destinationEntityName)   
             var selectColumn = new Column(alias, ref.referencedAttribute)         
@@ -267,7 +269,7 @@ class Query {
             
             return '''
                     // Select the referenced field «ref.referencedAttribute».
-                    $query->select(«select»);
+                    $query->select("«select»");
                     «this.createJoin(ref, alias)»
                     '''
         ]

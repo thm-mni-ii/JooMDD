@@ -464,7 +464,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
     	        $orderDirn = $params_module->get('direction');
     
     	        // Select the required fields from the table.
-    	        $query->select("distinct «query.mainSelect.join(", ")»);
+    	        $query->select("distinct «query.mainSelect.join(", ")»");
     	        «query.getListQuery(indexpage, mainEntity, ",")»
     	    }
         '''

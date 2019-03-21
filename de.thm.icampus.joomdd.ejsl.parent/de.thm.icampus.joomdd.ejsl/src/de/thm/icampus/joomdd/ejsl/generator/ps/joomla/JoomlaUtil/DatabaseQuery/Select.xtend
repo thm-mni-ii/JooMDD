@@ -23,6 +23,6 @@ class Select {
     }
     
     override toString() {
-        '''"«this.column»«IF this.alias !== null» AS «this.alias»«ENDIF»"'''
+        '''«this.column»«IF this.alias !== null» AS «this.alias»«ENDIF»'''
     }
 }

@@ -280,7 +280,7 @@ class FieldsGenerator {
     	    $dbo = Factory::getDbo();
     	    $query = $dbo->getQuery(true);
     	    $query->select("DISTINCT «query.mainSelect.join(", ")»")
-    	        ->from(«query.mainTable»)
+    	        ->from("«query.mainTable»")
     	        ->order("$textColumn ASC");
 
     	    «query.createSelectAndJoins(entFrom.allExtendedReferences, entFrom.name)»
