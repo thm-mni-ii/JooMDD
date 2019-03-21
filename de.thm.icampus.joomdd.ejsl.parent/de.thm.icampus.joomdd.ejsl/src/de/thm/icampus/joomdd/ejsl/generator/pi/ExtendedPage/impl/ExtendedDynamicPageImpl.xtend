@@ -187,10 +187,6 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
                 reference.referenceAttribute.equals(attribute.name)
             ]
 
-            if (attribute.name.equals("Name")) {
-                var bla = ""
-            }
-
             if (reference !== null) {
                 // An attribute with a reference
                 var referencedAttributeName = reference.referencedAttribute

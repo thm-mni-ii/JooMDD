@@ -108,17 +108,21 @@ class Query {
 
         ''')
         
-        var searchFilter = indexpage.extendedTableColumnList.map[ filterAttribute | 
+        var searchFilterStatementList = newArrayList
+        for (filterAttribute : indexpage.extendedTableColumnList) {
             var whereColumn = getWhereColumnName(filterAttribute)
-            var whereStatement = '''"«whereColumn» LIKE $search"'''
-    
-            return '''
-                    // Search by «whereColumn»
-                    $query->where(«whereStatement»);
+            searchFilterStatementList.add('''
+            // Search by «whereColumn»
+            "«whereColumn» LIKE $search"''')
+        }
+        var searchFilter = '''
+                    $query->andWhere(
+                        array(
+                            «searchFilterStatementList.join(''',
+                        ''')»
+                        )
+                    );
                     '''
-        ].join('''
-
-        ''')
         
         return '''
         $query->from('`«this.mainTable.name»` AS «this.mainTable.alias»');
@@ -176,7 +180,7 @@ class Query {
     
     def private Column getWhereColumnName(ExtendedAttribute attribute) {
         var join = this.joinList.findFirst[ join |
-            if (join.reference !== null) {
+            if (join.reference !== null && join.reference.entity instanceof MappingEntity === false) {
                 return join.reference.referenceAttribute.equals(attribute.name)
             } else {
                 return false
