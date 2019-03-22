@@ -18,6 +18,7 @@ import java.util.HashMap
 import java.util.Arrays
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import org.eclipse.xtext.EcoreUtil2
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 
 /**
  * This class contains custom validation rules about Pages
@@ -40,6 +41,8 @@ class PageValidator extends AbstractDeclarativeValidator {
     public static val PAGE_DETAILSPAGE_MISSING_LINK_TO_INDEX = 'missingLinkToIndexPage'
     public static val PAGE_REFERENCE_TO_ITSELF = 'pageReferenceToItself'
     public static val PAGE_REPRESENTATION_COLUMN_ENTITY_REF = 'pageRepresentationColumnEntityReference'
+    public static val PAGE_FILTER_ATTRIBUTE_ENTITY_REF = 'pageFilterAttributeEntityReference'
+    public static val PAGE_DETAILSPAGE_EDITFIELD_ATTRIBUTE_ENTITY_REF = 'pageEditFieldAttributeEntityReference'
 
     public override register(EValidatorRegistrar registrar) {}
 
@@ -187,16 +190,97 @@ class PageValidator extends AbstractDeclarativeValidator {
       */
       @Check
       def checkInvalidUpperAttributeInFilter(DynamicPage page) {
-      	//TODO
+      	
+     	if (page.filters !== null) {
+     		
+     		// table filter counter for error highlighting
+     		var filterCount = 0
+     		
+     		// Go trough all filter attributes
+     		for (filter : page.filters) {
+     			
+     			// Get attribute(filter) and entity of filter.
+     			if (filter.eContainer instanceof Entity) {
+     				
+     				var entity = filter.eContainer as Entity
+     				if (entity.references !== null) {
+     					
+     					// Find Attribute equal to column.attribute and check upper for -1
+     					for (eRef : entity.references) {
+     						
+     						if ((eRef.attribute.contains(filter) && eRef.upper == '-1') && eRef.eContainer instanceof Entity) {
+     							
+     							var refEntity = eRef.entity
+     							var manyToMany = false
+     							
+     							// Check if any n:m relation exists
+     							if (refEntity.references !== null) {
+
+     								for (refEntityRef : refEntity.references) {
+     									if (refEntityRef.upper == '-1' && refEntityRef.entity == entity) {
+     										manyToMany = true
+     									}
+									}
+     							}
+     							
+     							// error when no n:m relation for found -1 attribute exists
+     							if (!manyToMany) {
+     								 error(
+										'Entity attributes that are used in a one to many relation are not allowed as filter columns.',
+										page,
+										EJSLPackage.Literals.DYNAMIC_PAGE__FILTERS,
+										filterCount,
+										de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_FILTER_ATTRIBUTE_ENTITY_REF
+                            		)
+								}
+     						}
+     					}
+     				}
+     			}
+     			filterCount ++
+     		}
+     	}
       }
       
       /**
        * Check that edit fields contain no attribute with upper = -1
-       * even if it's used in a n:m relation.
+       * (even if it's used in a n:m relation).
        */
        @Check
-       def checkInvalidUpperAttributeInEditFields(DynamicPage page) {
-       	//TODO
+       def checkInvalidUpperAttributeInEditFields(DetailsPage page) {
+
+       	if (page.editfields !== null) {
+     		
+     		// field counter for error highlighting
+     		var fieldCount = 0
+     		
+     		// Go trough all edit field attributes
+     		for (field : page.editfields) {
+     			
+     			// Get attribute and entity of field.
+     			if (field.attribute instanceof Attribute) {
+     				
+     				var entity = field.attribute.eContainer as Entity
+     				if (entity.references !== null) {
+     					
+     					// Find Attribute equal to field.attribute and check upper for -1
+     					for (eRef : entity.references) {
+     						
+     						if ((eRef.attribute.contains(field.attribute) && eRef.upper == '-1') && eRef.eContainer instanceof Entity) {
+								error(
+									'Entity attributes that are used in a one to many or many to many relation are not allowed as edit fields.',
+									page,
+									EJSLPackage.Literals.DETAILS_PAGE__EDITFIELDS,
+									fieldCount,
+									de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_DETAILSPAGE_EDITFIELD_ATTRIBUTE_ENTITY_REF
+								)
+     						}
+     					}
+     				}
+     			}
+     			fieldCount ++
+     		}
+     	}
        }
 
     /**
