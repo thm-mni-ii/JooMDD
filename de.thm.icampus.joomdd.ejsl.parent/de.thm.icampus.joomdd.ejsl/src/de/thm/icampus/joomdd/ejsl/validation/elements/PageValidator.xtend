@@ -17,6 +17,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.HTMLTypes
 import java.util.HashMap
 import java.util.Arrays
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
+import org.eclipse.xtext.EcoreUtil2
 
 /**
  * This class contains custom validation rules about Pages
@@ -38,6 +39,7 @@ class PageValidator extends AbstractDeclarativeValidator {
     public static val PAGE_EDITFIELDS_WRONG_HTML_TYPE = 'wrongHTMLType'
     public static val PAGE_DETAILSPAGE_MISSING_LINK_TO_INDEX = 'missingLinkToIndexPage'
     public static val PAGE_REFERENCE_TO_ITSELF = 'pageReferenceToItself'
+    public static val PAGE_REPRESENTATION_COLUMN_ENTITY_REF = 'pageRepresentationColumnEntityReference'
 
     public override register(EValidatorRegistrar registrar) {}
 
@@ -123,14 +125,65 @@ class PageValidator extends AbstractDeclarativeValidator {
     
     /**
      * Check that representation columns contain no attributes with upper = -1
+     * as long as it's not used in a n:m relation.
      */
      @Check
      def checkInvalidUpperAttibuteInRepresentationColumns(DynamicPage page) {
-     	//TODO
+     	
+     	if (page.tablecolumns !== null) {
+     		
+     		// table column counter for error highlighting
+     		var columnCount = 0
+     		
+     		// Go trough all representation columns
+     		for (column : page.tablecolumns) {
+     			
+     			// Get attribute(column) and entity of rep. col.
+     			if (column.eContainer instanceof Entity) {
+     				
+     				var entity = column.eContainer as Entity
+     				if (entity.references !== null) {
+     					
+     					// Find Attribute equal to column.attribute and check upper for -1
+     					for (eRef : entity.references) {
+     						
+     						if ((eRef.attribute.contains(column) && eRef.upper == '-1') && eRef.eContainer instanceof Entity) {
+     							
+     							var refEntity = eRef.entity
+     							var manyToMany = false
+     							
+     							// Check if any n:m relation exists
+     							if (refEntity.references !== null) {
+
+     								for (refEntityRef : refEntity.references) {
+     									if (refEntityRef.upper == '-1' && refEntityRef.entity == entity) {
+     										manyToMany = true
+     									}
+									}
+     							}
+     							
+     							// error when no n:m relation for found -1 attribute exists
+     							if (!manyToMany) {
+     								 error(
+										'Entity attributes that are used in a one to many relation are not allowed as representation columns.',
+										page,
+										EJSLPackage.Literals.DYNAMIC_PAGE__TABLECOLUMNS,
+										columnCount,
+										de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator.PAGE_REPRESENTATION_COLUMN_ENTITY_REF
+                            		)
+								}
+     						}
+     					}
+     				}
+     			}
+     			columnCount ++
+     		}
+     	}
      }
      
      /**
       * Check that filter contain no attributes with upper = -1
+      * as long as it's not used in a n:m relation.
       */
       @Check
       def checkInvalidUpperAttributeInFilter(DynamicPage page) {
@@ -139,6 +192,7 @@ class PageValidator extends AbstractDeclarativeValidator {
       
       /**
        * Check that edit fields contain no attribute with upper = -1
+       * even if it's used in a n:m relation.
        */
        @Check
        def checkInvalidUpperAttributeInEditFields(DynamicPage page) {
