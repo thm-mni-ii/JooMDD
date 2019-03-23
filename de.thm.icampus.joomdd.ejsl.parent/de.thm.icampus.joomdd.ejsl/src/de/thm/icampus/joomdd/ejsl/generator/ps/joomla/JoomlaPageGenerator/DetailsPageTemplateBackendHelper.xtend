@@ -16,12 +16,14 @@ class DetailsPageTemplateBackendHelper {
 	private ExtendedComponent  com
 	private String sec
 	private ExtendedEntity mainEntity
+	String componentHelperClassName
+	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
-		
 		dpage = dp
 		com = cp
 		sec = section
 		mainEntity = dp.extendedEntityList.get(0)
+		this.componentHelperClassName = '''Com«com.name.toFirstUpper»Helper'''
 	}
 		
 	def CharSequence generateAdminModelprepareTableFunction() '''
@@ -153,7 +155,7 @@ class DetailsPageTemplateBackendHelper {
 		    } else {
 		        $checkedOut = false;
 		    }
-		    $canDo = «com.name.toFirstUpper»Helper::getActions();
+		    $canDo = «componentHelperClassName»::getActions();
 
 		    JToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
 

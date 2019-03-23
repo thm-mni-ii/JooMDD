@@ -16,27 +16,29 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
  * 
  * @author Dieudonne Timma, Dennis Priefer
  */
-class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DynamicPageTemplate {
+class DetailsPageTemplate extends DynamicPageTemplate {
 	
 	private ExtendedDynamicPage dpage
 	private ExtendedComponent  com
 	private String sec
-	private de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplateBackendHelper backHelp
-	private de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplateFrontEndHelper frontHelp
+	private DetailsPageTemplateBackendHelper backHelp
+	private DetailsPageTemplateFrontEndHelper frontHelp
 	private String path
 	private String pagename
 	private ExtendedEntity mainEntity
+    String componentHelperClassName
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {
 		dpage = dp
 		com = cp
 		sec = section
-		backHelp = new   de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplateBackendHelper(dpage, com, sec)
-		frontHelp = new   de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator.DetailsPageTemplateFrontEndHelper(dpage, com, sec)
+		backHelp = new DetailsPageTemplateBackendHelper(dpage, com, sec)
+		frontHelp = new DetailsPageTemplateFrontEndHelper(dpage, com, sec)
 		this.path = path
 		pagename = Slug.slugify(dpage.name.toLowerCase)
 		this.fsa = fsa
 		mainEntity = dp.extendedEntityList.get(0)
+        this.componentHelperClassName = '''Com«com.name.toFirstUpper»Helper'''
 	}
 	
 	def void generateView() {
@@ -266,7 +268,7 @@ class DetailsPageTemplate extends   de.thm.icampus.joomdd.ejsl.generator.ps.joom
 		                } else {
 		                    $path = $params->get("«dpage.name.toLowerCase»_file_path");
 		                }
-		                $data[$keys]=«com.name.toFirstUpper»Helper::uploadFiles($file,$path,$item->$keys);
+		                $data[$keys] = «this.componentHelperClassName»::uploadFiles($file,$path,$item->$keys);
 		            }
 		        }
 		    }

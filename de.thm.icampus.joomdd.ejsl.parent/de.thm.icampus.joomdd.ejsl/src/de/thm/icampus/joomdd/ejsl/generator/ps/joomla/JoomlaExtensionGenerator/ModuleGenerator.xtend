@@ -50,7 +50,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		this.ComponentInformation(module)
 		this.extMod.formatName
 		this.path = path
-		this.helperClassName = '''«module.name.toFirstUpper»Helper'''
+		this.helperClassName = '''Mod«module.name.toFirstUpper»Helper'''
 	}
 	
 	def void formatName(Module module) {
@@ -480,7 +480,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	 **/
 	public static function getList($params_module = null)
 	{
-	    $model = «extMod.name.toFirstUpper»Helper::getModel();
+	    $model = «helperClassName»::getModel();
 	    $state = $params_module->get('state');
 	    if (!empty($state)) {
 	        $model->setState('filter.state', $state);
