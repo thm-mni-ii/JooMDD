@@ -17,9 +17,9 @@ class Query {
     @Accessors(PUBLIC_SETTER, PUBLIC_GETTER)
     Table mainTable
     
-    @Accessors(PUBLIC_SETTER, PUBLIC_GETTER)
     ArrayList<Select> mainSelect = newArrayList
         
+    @Accessors(PUBLIC_GETTER)
     ArrayList<Join> joinList = newArrayList
   
     HashMap<String, Integer> aliasList = newHashMap
@@ -28,6 +28,9 @@ class Query {
         
     new(ExtendedComponent component) {
        this.component = component
+    }
+    
+    new() {
     }
     
     def getUniqueAlias(String alias) {
@@ -301,5 +304,14 @@ class Query {
     
     def createGroupBy(ExtendedEntity entity) {
         '''$query->group('«this.mainTable.alias».«entity.attributes.findFirst[a | a.isprimary].name»');'''
+    }
+    
+    def addToMainSelect(Select select) {
+        this.mainSelect.add(select)
+    }
+    
+    def String getMainSelect() {
+        return this.mainSelect.join(''',
+        ''')
     }
 }

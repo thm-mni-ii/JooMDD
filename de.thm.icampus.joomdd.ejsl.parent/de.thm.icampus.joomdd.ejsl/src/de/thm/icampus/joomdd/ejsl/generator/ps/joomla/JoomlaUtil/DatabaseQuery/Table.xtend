@@ -1,6 +1,7 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery
 
 import org.eclipse.xtend.lib.annotations.Accessors
+import java.util.ArrayList
 
 class Table {
     @Accessors(PUBLIC_GETTER)
@@ -14,7 +15,11 @@ class Table {
         this.alias = alias
     }
     
+    new (String name) {
+        this.name = name
+    }
+    
     override toString() {
-        '''«name» AS «alias»'''
+        '''«name»«IF this.alias !== null» AS «alias»«ENDIF»'''
     }
 }

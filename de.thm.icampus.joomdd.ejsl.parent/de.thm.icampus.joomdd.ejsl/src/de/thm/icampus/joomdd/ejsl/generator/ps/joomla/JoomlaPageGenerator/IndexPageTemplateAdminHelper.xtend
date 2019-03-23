@@ -113,7 +113,7 @@ class IndexPageTemplateAdminHelper {
 	def CharSequence genAdminModelGetListQuery() {
 	var query = new Query(com)
 	var mainSelectColumn = new Column(indexpage.entities.get(0).name, '''*''')
-	query.mainSelect.add(new Select(mainSelectColumn))
+	query.addToMainSelect(new Select(mainSelectColumn))
 	'''
 	    /**
 	     * Build an SQL query to load the list data.
@@ -141,7 +141,7 @@ class IndexPageTemplateAdminHelper {
 	            "distinct " .
 	            $this->getState(
 	                'list.select',
-	                '«query.mainSelect.join(", ")»'
+	                '«query.mainSelect»'
 	            )
 	        );
 	        «query.getListQuery(indexpage, mainEntity, '''<\/br>''')»

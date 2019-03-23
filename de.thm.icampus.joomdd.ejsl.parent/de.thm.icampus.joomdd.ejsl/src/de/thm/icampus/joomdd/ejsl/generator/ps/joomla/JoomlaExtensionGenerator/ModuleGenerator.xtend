@@ -440,7 +440,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	
 	def CharSequence genAdminModelGetListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, ExtendedComponent extendedComponent) {
     	var query = new Query(extendedComponent)
-    	query.mainSelect.add(new Select(indexpage.entities.get(0).name, '''*'''))
+    	query.addToMainSelect(new Select(indexpage.entities.get(0).name, '''*'''))
     	'''
     	    /**
     	     * Build an SQL query to load the list data.
@@ -464,7 +464,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
     	        $orderDirn = $params_module->get('direction');
     
     	        // Select the required fields from the table.
-    	        $query->select("distinct «query.mainSelect.join(", ")»");
+    	        $query->select("distinct «query.mainSelect»");
     	        «query.getListQuery(indexpage, mainEntity, ",")»
     	    }
         '''
