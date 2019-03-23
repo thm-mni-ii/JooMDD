@@ -85,7 +85,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                 clear="false"
                 description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", page.extendedEntityList.get(0).name, page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name, "DESC"), StaticLanguage.getCommonDescriptionFor(page.extendedEntityList.get(0).ownExtendedAttributes.get(0).name))»"
                 valueColumn="«page.extendedEntityList.get(0).primaryKey.name»"
-                textColumn="«page.extendedEntityList.get(0).getFirstUniqueKey().name.toLowerCase»">
+                textColumn="«page.extendedEntityList.get(0).getFirstUniqueKey().name»">
                 <option value="">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "OPTION", "SELECT", page.extendedEntityList.get(0).getFirstUniqueKey().name), page.extendedEntityList.get(0).getFirstUniqueKey().name)»</option>
             </field>
         </fieldset>
@@ -161,7 +161,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                     type="«component.name.toLowerCase»user"
                     label="JGLOBAL_FIELD_CREATED_BY_LABEL"
                     description="JGLOBAL_FIELD_CREATED_BY_DESC"
-                    entity = "«page.extendedEntityList.get(0).name.toLowerCase»">
+                    entity="«page.extendedEntityList.get(0).name»">
                     <option value="">JSELECT</option>
                 </field>
                 «FOR ExtendedAttribute attr : page.extendFiltersList»
@@ -171,8 +171,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                         type="«page.extendedEntityList.get(0).name.toLowerCase»"
                         label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", page.name, attr.name, "LABEL"), attr.name)»"
                         description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", page.name, attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»»"
-                     alueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
-                        textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
+                        valueColumn="«attr.entity.name».«attr.name»"
+                        textColumn="«attr.entity.name».«attr.name»">
                         <option value="">JSELECT</option>
                     </field>
                 «ENDFOR»

@@ -11,6 +11,11 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageFi
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import java.nio.file.Files
 import java.nio.file.Path
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Table
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Join
 
 /**
  * This class contains the templates to generate the view fields.
@@ -99,18 +104,29 @@ class FieldsGenerator {
 	    }
 	}
 	'''
-    def private genGetData_item()'''
-	protected function getDataItem($id)
-	{
-	    $db = JFactory::getDbo();
-	    $query = $db->getQuery(true);
-	    $query->select("*")->from($this->referenceStruct->table)
-	          ->where($this->primary_key . " = " . $id);
-	    $db->setQuery($query);
-	    return $db->loadObject();
+    def private genGetData_item() {
+        var query = new Query
+        var column = new Column('''*''')
+        var select = new Select(column)
+        query.addToMainSelect(select)
+        
+        var whereColumn = new Column('''$this->primary_key''')
+        var whereStatement = '''«whereColumn» = $id'''
+        
+        return '''
+    	protected function getDataItem($id)
+    	{
+    	    $db = JFactory::getDbo();
+    	    $query = $db->getQuery(true);
+    	    $query->select("«query.mainSelect»")
+    	          ->from("«query.mainTable»")
+    	          ->where("«whereStatement»");
+    	    $db->setQuery($query);
+    	    return $db->loadObject();
+    	}
+    	'''
 	}
 	
-	'''
 	private def CharSequence genGetInput() '''
 		/**
 		 * Method to get the field input markup.
@@ -126,7 +142,7 @@ class FieldsGenerator {
 		    $this->keysAndForeignKeys = json_decode($tempsAttr, true);
 		    $html = array();
 		    $document = Factory::getDocument();
-		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setForeignKeys.js');
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setforeignkeys.js');
 		    $input = Factory::getApplication()->input;
 		    
 		    $this->primary_key = $this->getAttribute("primary_key_name");
@@ -169,6 +185,7 @@ class FieldsGenerator {
 		}
 	'''
 
+    // @todo: Use classes in DatabaseQuery 
 	private def CharSequence genGetReferencedata() '''
 	/**
 	*Read Selected  Items
@@ -199,6 +216,7 @@ class FieldsGenerator {
 	}
 	'''
 
+    // @todo: Use classes in DatabaseQuery 
 	private def CharSequence genGetAllData() '''
 		protected function getAllData()
 		{
@@ -264,50 +282,80 @@ class FieldsGenerator {
 		}
 	'''
 	
-	private def genGetAllDataForEntity() '''
-	protected function getAllData($valueColumn, $textColumn)
-	{
-	    $dbo = Factory::getDbo();
-	    $query = $dbo->getQuery(true);
-	    $query->select("DISTINCT $valueColumn as value, $textColumn as text")
-	        ->from("$this->table AS «entFrom.name»")
-	        ->order("$textColumn ASC");
+	private def genGetAllDataForEntity() {
+	    var query = new Query(com)
+	    query.addToMainSelect(new Select('''$valueColumn''', '''value'''))
+        query.addToMainSelect(new Select('''$textColumn''', '''text'''))
+        
+        var mainEntityNameAlias = query.getUniqueAlias(entFrom.name)
+        query.mainTable = new Table('''$this->table''', mainEntityNameAlias)
+    	'''
+    	protected function getAllData($valueColumn, $textColumn)
+    	{
+    	    $dbo = Factory::getDbo();
+    	    $query = $dbo->getQuery(true);
+    	    $query->select("DISTINCT «query.mainSelect»")
+    	        ->from("«query.mainTable»")
+    	        ->order("$textColumn ASC");
 
-	    «Slug.createSelectAndJoins(entFrom.allExtendedReferences, com.name, entFrom.name)»
-	    $dbo->setQuery($query);
-	    $result = $dbo->loadObjectList();
-	    return $result;
+    	    «query.createSelectAndJoins(entFrom.allExtendedReferences, entFrom.name)»
+    	    $dbo->setQuery($query);
+    	    $result = $dbo->loadObjectList();
+    	    return $result;
+    	}
+    	'''
 	}
-	'''
 	
-	static def CharSequence genFieldsForUserView(ExtendedComponent component)'''
-		<?php
-		«Slug.generateFileDoc(component)»
-		
-		«Slug.generateRestrictedAccess()»
-		
-		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
-		
-		FormHelper::loadFieldClass('list');
-		
-		class JFormField«component.name.toFirstUpper»user extends JFormFieldList
-		{
-		    protected function getOptions()
-		    {
-		        $entity = $this->getAttribute('entity');
-		        $table = "#__«component.name»_" . $entity;
-		        $dbo = Factory::getDbo();
-		        $query = $dbo->getQuery(true);
-		        $query->select("DISTINCT a.created_by AS value, b.name AS text")
-		            ->from("$table AS a ")
-		            ->leftJoin("#__users AS b ON a.created_by = b.id")
-		            ->order("b.name ASC");
-		        $dbo->setQuery($query);
-		        $dataList = $dbo->loadObjectList();
-		        return array_merge(parent::getOptions(), $dataList);
-		    }
-		}
-	'''
+	static def CharSequence genFieldsForUserView(ExtendedComponent component) {
+        var query = new Query
+        query.mainTable = new Table('''$table''', '''a''')
+        
+        // Select create_by
+        var createdByColumn = new Column(query.mainTable.alias, '''created_by''')
+        var createdByselect = new Select(createdByColumn, '''value''')
+        query.addToMainSelect(createdByselect)
+        
+        // Select name
+        var nameColumn = new Column(query.mainTable.alias, '''name''')
+        var nameSelect = new Select(nameColumn, '''text''')
+        query.addToMainSelect(nameSelect)
+        
+        // Join users
+        var usersJoinTable = new Table('''#__users''', '''b''')
+        var usersJoinFromColumn = new Column(query.mainTable.alias, '''created_by''')
+        var usersJoinToColumn = new Column('''b''', '''id''')
+        var usersJoin = new Join(usersJoinTable, usersJoinFromColumn, usersJoinToColumn)
+        query.joinList.add(usersJoin)
+	   
+	   return '''
+    		<?php
+    		«Slug.generateFileDoc(component)»
+    		
+    		«Slug.generateRestrictedAccess()»
+    		
+    		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
+    		
+    		FormHelper::loadFieldClass('list');
+    		
+    		class JFormField«component.name.toFirstUpper»user extends JFormFieldList
+    		{
+    		    protected function getOptions()
+    		    {
+    		        $entity = $this->getAttribute('entity');
+    		        $table = "#__«component.name»_" . $entity;
+    		        $dbo = Factory::getDbo();
+    		        $query = $dbo->getQuery(true);
+    		        $query->select("DISTINCT «query.mainSelect»")
+    		               ->from("«query.mainTable»")
+    		               ->join(«usersJoin»)
+    		               ->order("«nameColumn» ASC");
+    		        $dbo->setQuery($query);
+    		        $dataList = $dbo->loadObjectList();
+    		        return array_merge(parent::getOptions(), $dataList);
+    		    }
+    		}
+    	'''
+	}
 
 	def dogenerate(String path, IFileSystemAccess access) {
 		if (this.mainRef !== null) {
@@ -317,9 +365,9 @@ class FieldsGenerator {
 
 			}
 		}
-		var File fieldEntity = new File(path + "/" + entFrom.name + ".php")
+		var File fieldEntity = new File(path + "/" + entFrom.name.toLowerCase + ".php")
 		if (!fieldEntity.exists) {
-			access.generateFile(path + "/" + entFrom.name + ".php", genFieldsForEntity)
+			access.generateFile(path + "/" + entFrom.name.toLowerCase + ".php", genFieldsForEntity)
 		}
 		var File fieldUser = new File(path + '''/«com.name.toLowerCase»user.php''')
 		if (!fieldUser.exists) {

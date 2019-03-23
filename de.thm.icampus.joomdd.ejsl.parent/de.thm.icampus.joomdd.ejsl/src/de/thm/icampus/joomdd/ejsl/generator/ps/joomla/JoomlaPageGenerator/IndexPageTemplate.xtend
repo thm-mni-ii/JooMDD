@@ -257,7 +257,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                         type="«com.name.toLowerCase»user"
                         label="JGLOBAL_FIELD_CREATED_BY_LABEL"
                         description="JGLOBAL_FIELD_CREATED_BY_DESC"
-                        entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
+                        entity="«ipage.extendedEntityList.get(0).name»"
                         onchange="this.form.submit();">
                         <option value="">JOPTION_SELECT_AUTHOR</option>
                     </field>

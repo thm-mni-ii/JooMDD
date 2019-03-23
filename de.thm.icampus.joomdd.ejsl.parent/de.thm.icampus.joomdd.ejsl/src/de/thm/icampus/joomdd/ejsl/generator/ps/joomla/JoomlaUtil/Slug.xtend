@@ -45,6 +45,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import de.thm.icampus.joomdd.ejsl.eJSL.impl.KeyValuePairImpl
 import org.eclipse.emf.ecore.EPackage
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.IDAttribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -824,89 +826,10 @@ public class Slug  {
 		return ''	
 	}
 
-    def static createGroupBy(ExtendedEntity entity) {
-        '''$query->group('«entity.name».«entity.attributes.findFirst[a | a.isprimary].name»');'''
-    }
-    
-    def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator) {
-        val entityName = entity.name
-        var queries = newArrayList
-        
-        for (extendedReference : entity.allExtendedReferences){
-            var isNToM = extendedReference.destinationEntity instanceof MappingEntity
-            
-            if (isNToM) {
-                val reference = extendedReference.destinationEntity.references.findFirst[ r | 
-                    r.entity.name.equals(entityName) === false
-                ]
-                
-                val referenceEntityName = reference.entity.name
-                var referencedAttributeName = reference.attributerefereced.get(0).name
-                
-                var attribute = reference.attribute
-                var attributeRefererenced = reference.attributerefereced
-                
-                var joinOn = Streams.zip(attribute.stream(), attributeRefererenced.stream(), [att, attRef | 
-                     '''«referenceEntityName».«attRef.name» = «extendedReference.entity.name».«att.name»'''
-                ]).collect(Collectors.toList()).join(
-                    ''' AND 
-                    '''
-                )
-                
-                var query = '''
-                $query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
-                $query->join('LEFT', "«Slug.databaseName(componentName, referenceEntityName)» AS «referenceEntityName» ON
-                    «joinOn»
-                ");
-                '''
-                
-                queries.add(query)
-            }
-        }
-        
-        return queries.join
-    }
-    
-    /**
-     * This method will create the given join type by joinType for the given references
-     * 
-     * @param EList<ExtendedReference> extendedReference
-     * @param String componentName
-     * @param String entityName
-     * @param String joinType
-     * 
-     * @return String
-     */
-    def static createSelectAndJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
-        var HashMap<String, Integer> counterMap = newHashMap
-        var ArrayList<String> output = newArrayList
-        counterMap.put(entityName,1)
-        
-        for (ExtendedReference ref : extendedReference) {
-            var originDestinationEntityName = ref.destinationEntity.name
-            var counter = counterMap.getOrDefault(originDestinationEntityName, 0)
-            val destinationEntityName = if (counter === 0) {ref.destinationEntity.name} else {'''«ref.destinationEntity.name»«counter»'''}
-            output.add('''
-            // Select the referenced field «ref.referencedAttribute».
-            $query->select('«originDestinationEntityName».«ref.referencedAttribute» AS «ref.referenceAttribute»');
-            $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» AS «destinationEntityName» ON
-                «ref.extendedAttributes.filter[attribute | !attribute.preserve].map[ attr | 
-                    '''«entityName».«attr.name» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name»'''
-                ].join(''' AND
-                ''')»
-            ");
-            ''')
-            counter++
-            counterMap.put(originDestinationEntityName, counter)
-        }
-        
-        return output.join('''
-
-        ''')
-    } 
+     
 	
-	def static CharSequence databaseName(String componentName, String entityName) {
-		return "#__" + componentName + "_" + entityName
+	def static databaseName(String componentName, String entityName) {
+		return '''#__«componentName»_«entityName»'''
 	}
 	
 	def static Boolean isAttributeLinked(ExtendedAttribute attr, DynamicPage page) {
@@ -1380,72 +1303,5 @@ public class Slug  {
         ]
         
         return upperCaseKey
-    }
-    
-    /**
-     * This function completes the query to get all items from the database.
-     */
-    def static getListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, ExtendedComponent extendedComponent, String separator) {
-        '''
-        $query->from('`#__«extendedComponent.name»_«indexpage.entities.get(0).name»` AS «indexpage.entities.get(0).name»');
-
-        // Join over the users for the checked out user
-        $query->select("uc.name AS editor");
-        $query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name».checked_out");
-
-        // Join over the user field 'created_by'
-        $query->select('created_by.name AS created_by');
-        $query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name».created_by');
-
-        // Join over the user field 'user'
-        $query->select('user.name AS user');
-        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name».created_by');
-
-        «Slug.createSelectAndJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, extendedComponent.name, indexpage.entities.get(0).name)»
-        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), extendedComponent.name, separator)»
-        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
-
-        // Filter by published state
-        if (is_numeric($published)) {
-            $query->where('«indexpage.entities.get(0).name».state = ' . (int) $published);
-        } elseif ($published === '') {
-            $query->where('(«indexpage.entities.get(0).name».state IN (0, 1))');
-        }
-
-        // Filter by User
-        if (!empty($created_by)) {
-            $query->where("«indexpage.entities.get(0).name».created_by = '" . $db->escape($created_by) . "'");
-        }
-        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-
-        // Filter by «attr.name»
-        if (!empty($«attr.name»)) {
-            $query->where("«attr.entity.name».«attr.name» = '" . $db->escape($«attr.name») . "'");
-        }
-        «ENDFOR»
-
-        // Filter by search in attribute
-        if (!empty($search)) {
-            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
-                $query->where('«indexpage.entities.get(0).name».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
-            } else {
-                $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                «IF !indexpage.extendFiltersList.empty»
-                $query->where("(«indexpage.extendFiltersList.map[ attr | 
-                    var column = indexpage.getTextColumn(attr, extendedComponent.allExtendedEntity)
-                    '''«column» LIKE $search'''
-                ].join(''' OR 
-                    ''')»)");
-                «ENDIF»
-            }
-        }
-
-        // Add the list ordering clause.
-        if ($orderCol && $orderDirn) {
-            $query->order($db->escape($orderCol . ' ' . $orderDirn));
-        }
-
-        return $query;
-        '''
     }
 }

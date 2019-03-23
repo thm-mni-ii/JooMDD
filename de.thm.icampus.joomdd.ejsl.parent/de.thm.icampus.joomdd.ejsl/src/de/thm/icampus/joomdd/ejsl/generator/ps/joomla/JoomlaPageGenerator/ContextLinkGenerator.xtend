@@ -20,8 +20,8 @@ public class ContextLinkGenerator extends AbstractLinkGenerator {
 	}
 	
 	override generateLink(String sect, String compname) 
-	'''«if (sect.isEmpty) '' else sect +"/"»'index.php?option=«Slug.nameExtensionBind("com",compname).toLowerCase»&view=«lk.target.name.toLowerCase»' «genLinkOption(lk.linkparameters)»'''
+	'''«if (sect.isEmpty) '' else sect +"/"»'index.php?option=«Slug.nameExtensionBind("com",compname)»&view=«lk.target.name»' «genLinkOption(lk.linkparameters)»'''
 	
 	def CharSequence genLinkOption(EList<LinkParameter> params)
-	'''«params.map[ lp | '''. '&«lp.name»=«IF lp.attvalue !== null»' . «valueF + lp.attvalue.name.toLowerCase»«ELSE»«lp.value»'«ENDIF»''' ].join»'''
+	'''«params.map[ lp | '''. '&«lp.name»=«IF lp.attvalue !== null»' . «valueF + lp.attvalue.name»«ELSE»«lp.value»'«ENDIF»''' ].join»'''
 }

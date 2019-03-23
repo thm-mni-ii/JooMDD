@@ -299,6 +299,6 @@ class TableGeneratorTemplate {
 	'''
 	
 	def dogenerate(String path, IFileSystemAccess access) {
-		access.generateFile(path + "/" + this.ent.name + ".php", genClassTable)
+		access.generateFile(path + "/" + this.ent.name.toLowerCase + ".php", genClassTable)
 	}
 }

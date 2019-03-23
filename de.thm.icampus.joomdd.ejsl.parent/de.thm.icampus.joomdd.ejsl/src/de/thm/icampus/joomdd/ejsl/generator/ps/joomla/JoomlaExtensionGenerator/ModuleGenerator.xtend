@@ -21,6 +21,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import org.apache.log4j.Logger
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla module.
@@ -199,7 +201,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    type="«module.name.toLowerCase»user"
 		                    label="JGLOBAL_FIELD_CREATED_BY_LABEL"
 		                    description="JGLOBAL_FIELD_CREATED_BY_DESC"
-		                    entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»">
+		                    entity="«dynpage.extendedEntityList.get(0).name»">
 		                    <option value="">JOPTION_SELECT_AUTHOR</option>
 		                </field>
 		                «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
@@ -210,8 +212,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
 		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FILTER", attr.name, "LABEL"), attr.name)»"
 		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
-		                    valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
-		                    textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
+		                    valueColumn="«attr.entity.name».«attr.name»"
+		                    textColumn="«attr.entity.name».«attr.name»">
 		                    <option value="">«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "JOPTION", "SELECT", attr.name), attr.name)»</option>
 		                </field>
 		                «ENDIF»
@@ -310,7 +312,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		for(Link lk: listLink) {
             if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
-                return '''HTMLHelper::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
+                return '''HTMLHelper::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name»)'''
             }
 		}
 		return "$" + result;
@@ -436,33 +438,37 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 	}
 	
-	def CharSequence genAdminModelGetListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, ExtendedComponent extendedComponent)'''
-	    /**
-	     * Build an SQL query to load the list data.
-	     *
-	     * @return  JDatabaseQuery
-	     * @since 1.6
-	     * @generated
-	     */
-	    private static function getListQuery($params_module = null)
-	    {
-	        // Create a new query object.
-	        $db = Factory::getDbo();
-	        $query = $db->getQuery(true);
-	        $published = $params_module->get('state');
-	        $created_by = $params_module->get('created_by');
-	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-	        $«attr.name» = $params_module->get('«attr.name»');
-	        «ENDFOR»
-	        $search = $params_module->get('search');
-	        $orderCol = $params_module->get('ordering');
-	        $orderDirn = $params_module->get('direction');
-
-	        // Select the required fields from the table.
-	        $query->select("distinct «indexpage.entities.get(0).name.toLowerCase».*");
-	        «Slug.getListQuery(indexpage, mainEntity, extendedComponent, ",")»
-	    }
-    '''
+	def CharSequence genAdminModelGetListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, ExtendedComponent extendedComponent) {
+    	var query = new Query(extendedComponent)
+    	query.addToMainSelect(new Select(indexpage.entities.get(0).name, '''*'''))
+    	'''
+    	    /**
+    	     * Build an SQL query to load the list data.
+    	     *
+    	     * @return  JDatabaseQuery
+    	     * @since 1.6
+    	     * @generated
+    	     */
+    	    private static function getListQuery($params_module = null)
+    	    {
+    	        // Create a new query object.
+    	        $db = Factory::getDbo();
+    	        $query = $db->getQuery(true);
+    	        $published = $params_module->get('state');
+    	        $created_by = $params_module->get('created_by');
+    	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
+    	        $«attr.name» = $params_module->get('«attr.name»');
+    	        «ENDFOR»
+    	        $search = $params_module->get('search');
+    	        $orderCol = $params_module->get('ordering');
+    	        $orderDirn = $params_module->get('direction');
+    
+    	        // Select the required fields from the table.
+    	        $query->select("distinct «query.mainSelect»");
+    	        «query.getListQuery(indexpage, mainEntity, ",")»
+    	    }
+        '''
+    }
 	
 	def genModel() '''
 	/**
