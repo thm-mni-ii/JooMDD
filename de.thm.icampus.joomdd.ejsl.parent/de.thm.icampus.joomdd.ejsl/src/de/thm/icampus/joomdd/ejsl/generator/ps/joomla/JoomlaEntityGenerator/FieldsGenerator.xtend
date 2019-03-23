@@ -304,7 +304,7 @@ class FieldsGenerator {
 	}
 	
 	static def CharSequence genFieldsForUserView(ExtendedComponent component) {
-        var query = new Query
+	    var query = new Query
         query.mainTable = new Table('''$table''', '''a''')
         
         // Select create_by
@@ -312,19 +312,21 @@ class FieldsGenerator {
         var createdByselect = new Select(createdByColumn, '''value''')
         query.addToMainSelect(createdByselect)
         
-        // Select name
-        var nameColumn = new Column(query.mainTable.alias, '''name''')
-        var nameSelect = new Select(nameColumn, '''text''')
-        query.addToMainSelect(nameSelect)
-        
         // Join users
         var usersJoinTable = new Table('''#__users''', '''b''')
         var usersJoinFromColumn = new Column(query.mainTable.alias, '''created_by''')
         var usersJoinToColumn = new Column('''b''', '''id''')
         var usersJoin = new LeftJoin(usersJoinTable, usersJoinFromColumn, usersJoinToColumn)
         query.joinList.add(usersJoin)
+        
+        // Select name
+        var nameColumn = new Column(usersJoinTable.alias, '''name''')
+        var nameSelect = new Select(nameColumn, '''text''')
+        query.addToMainSelect(nameSelect)
+        
+        var orderColumn = new Column('''«usersJoinTable.alias»''', '''name''')
 	   
-	   return '''
+	    return '''
     		<?php
     		«Slug.generateFileDoc(component)»
     		
@@ -345,7 +347,7 @@ class FieldsGenerator {
     		        $query->select("DISTINCT «query.mainSelect»")
     		               ->from("«query.mainTable»")
     		               ->join(«usersJoin»)
-    		               ->order("«nameColumn» ASC");
+    		               ->order("«orderColumn» ASC");
     		        $dbo->setQuery($query);
     		        $dataList = $dbo->loadObjectList();
     		        return array_merge(parent::getOptions(), $dataList);

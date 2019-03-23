@@ -52,6 +52,7 @@ class LeftJoin {
     }
     
     override toString() {
-        '''"«this.type»", "«this.toTable» ON «this.fromColumn» = «this.toColumn»"'''
+        '''"«this.type»", "«this.toTable»
+           ON «this.fromColumn» = «this.toColumn»"'''
     }
 }
