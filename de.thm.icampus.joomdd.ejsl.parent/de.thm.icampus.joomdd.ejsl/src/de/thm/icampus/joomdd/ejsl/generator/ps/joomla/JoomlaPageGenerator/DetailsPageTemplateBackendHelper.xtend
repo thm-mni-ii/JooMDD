@@ -12,10 +12,11 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
  * @author Dieudonne Timma, Dennis Priefer
  */
 class DetailsPageTemplateBackendHelper {
-	private ExtendedDynamicPage dpage
-	private ExtendedComponent  com
-	private String sec
-	private ExtendedEntity mainEntity
+	
+	ExtendedDynamicPage dpage
+	ExtendedComponent  com
+	String sec
+	ExtendedEntity mainEntity
 	String componentHelperClassName
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){

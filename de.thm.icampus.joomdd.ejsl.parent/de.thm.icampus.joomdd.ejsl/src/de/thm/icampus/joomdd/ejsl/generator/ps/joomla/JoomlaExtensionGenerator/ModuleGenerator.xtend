@@ -32,9 +32,9 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.S
 public class ModuleGenerator extends AbstractExtensionGenerator {  
 			 
 	PageGeneratorHandler pageClient
-	var modelOfComponent = '\'<modelOfComponent>\''
-	var modelPath = '\'/components/com_<nameOfComponent>/models\''
-	var String modelOfComponent2 = null;
+	String modelOfComponent = '\'<modelOfComponent>\''
+	String modelPath = '\'/components/com_<nameOfComponent>/models\''
+	String modelOfComponent2 = null;
 	
 	ExtendedModule extMod
 	ExtendedDynamicPage dynpage

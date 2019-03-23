@@ -28,7 +28,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.LanguageGenerat
  */
 public class PackageGenerator extends AbstractExtensionGenerator {
 	
-	private ExtensionGeneratorHandler extClient
+	ExtensionGeneratorHandler extClient
 	ExtendedExtensionPackage pkg
 	String rootPath
 	

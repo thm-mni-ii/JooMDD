@@ -18,14 +18,14 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
  */
 class DetailsPageTemplate extends DynamicPageTemplate {
 	
-	private ExtendedDynamicPage dpage
-	private ExtendedComponent  com
-	private String sec
-	private DetailsPageTemplateBackendHelper backHelp
-	private DetailsPageTemplateFrontEndHelper frontHelp
-	private String path
-	private String pagename
-	private ExtendedEntity mainEntity
+	ExtendedDynamicPage dpage
+	ExtendedComponent  com
+	String sec
+	DetailsPageTemplateBackendHelper backHelp
+	DetailsPageTemplateFrontEndHelper frontHelp
+	String path
+	String pagename
+	ExtendedEntity mainEntity
     String componentHelperClassName
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {

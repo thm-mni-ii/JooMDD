@@ -15,10 +15,11 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
  * @author Dieudonne Timma, Dennis Priefer
  */
 class DetailsPageTemplateFrontEndHelper {
-	private ExtendedDynamicPage dpage
-	private ExtendedComponent  com
-	private String sec
-	private ExtendedEntity mainEntity
+	
+	ExtendedDynamicPage dpage
+	ExtendedComponent  com
+	String sec
+	ExtendedEntity mainEntity
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section) {
 		dpage = dp

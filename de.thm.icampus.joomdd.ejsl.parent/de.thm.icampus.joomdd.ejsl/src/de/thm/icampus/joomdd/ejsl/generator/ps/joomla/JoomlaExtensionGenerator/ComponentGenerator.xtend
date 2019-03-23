@@ -1,24 +1,22 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator;
 
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.LanguageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
-import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 import java.util.Calendar
+import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
-import org.eclipse.xtext.generator.IFileSystemAccess2
-import java.util.LinkedList
 import org.eclipse.xtext.EcoreUtil2
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
+import org.eclipse.xtext.generator.IFileSystemAccess2
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla component.
@@ -27,13 +25,13 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
  */
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
-	private String slug
-	private ExtendedComponent extendedComp
-	private String class_name
-	private String updatePath
-	private String sitePath 
-	private String adminPath
-	private String mediaPath 
+	String slug
+	ExtendedComponent extendedComp
+	String class_name
+	String updatePath
+	String sitePath 
+	String adminPath
+	String mediaPath 
  
     /**
      * this Constructor collects the initial parameters to generate a component

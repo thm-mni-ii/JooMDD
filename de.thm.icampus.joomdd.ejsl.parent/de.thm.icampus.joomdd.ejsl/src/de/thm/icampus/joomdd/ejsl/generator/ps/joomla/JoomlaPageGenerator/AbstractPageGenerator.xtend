@@ -20,6 +20,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
  * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 abstract public class AbstractPageGenerator {
+    
 	@Accessors IFileSystemAccess2 fsa
 	@Accessors String name
 	@Accessors String path = ""

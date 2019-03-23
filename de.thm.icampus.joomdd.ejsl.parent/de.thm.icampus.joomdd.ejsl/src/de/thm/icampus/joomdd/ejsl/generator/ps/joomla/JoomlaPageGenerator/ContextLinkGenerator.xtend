@@ -11,6 +11,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
  * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 public class ContextLinkGenerator extends AbstractLinkGenerator {
+	
 	ContextLink lk
 	String valueF
 	
