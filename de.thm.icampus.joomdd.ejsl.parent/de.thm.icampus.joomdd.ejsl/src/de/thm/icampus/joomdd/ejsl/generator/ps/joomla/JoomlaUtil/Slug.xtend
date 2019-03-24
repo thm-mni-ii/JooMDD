@@ -854,19 +854,19 @@ public class Slug  {
             		    InternalLink: {
             		        if ((lk as InternalLink).target instanceof DetailsPage) {
             		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
-            		                '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name»'''
-            		   	        } else {
+                                    '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
+                                } else {
             		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
             		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
             		    	
             			            if (idRef !== null) {
-            				            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
+            				            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
             				        } else {
-            				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
+            				 	        '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
             		 	            }
             		 	        }
                             } else {
-            		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
+            		            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
             		        }
                         }
                     }»
@@ -1303,5 +1303,50 @@ public class Slug  {
         ]
         
         return upperCaseKey
+    }
+    
+    def static generateFilterFields(
+        ExtendedDynamicPage page,
+        ExtendedComponent component,
+        boolean simpleDefaultValue,
+        boolean addFieldPath,
+        boolean filterParams,
+        boolean addOnSubmit
+    ) {
+        
+        var extendedFilterList = page.extendFiltersList.toList
+        
+        if (filterParams === true) {
+            extendedFilterList = extendedFilterList.filter[ attribute |
+                !attribute.name.equalsIgnoreCase("params")
+            ].toList
+        }
+        
+        return '''
+            «FOR ExtendedAttribute attr : extendedFilterList»
+            «var valueColumn = page.getValueColumn(attr, component.allExtendedEntity)»
+            «var textColumn = page.getTextColumn(attr, component.allExtendedEntity)»
+            <field
+                «IF addFieldPath === true»
+                addfieldpath="components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
+                «ENDIF»
+                name="«attr.name»"
+                type="«textColumn.type»"
+                label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+                description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»»"
+                valueColumn="«valueColumn»"
+                textColumn="«textColumn»"
+                «IF addOnSubmit == true»
+                onchange="this.form.submit();"
+                «ENDIF»
+            >
+                «IF simpleDefaultValue === true»
+                <option value="">JSELECT</option>
+                «ELSE»
+                <option value="">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
+                «ENDIF»
+            </field>
+            «ENDFOR»
+            '''
     }
 }

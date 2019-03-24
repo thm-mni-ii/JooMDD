@@ -265,6 +265,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     <files folder="components/«extendedComp.extensionName»">
         <filename>«noPrefixName.toLowerCase».php</filename>
         <filename>controller.php</filename>
+        <filename>router.php</filename>
         <!-- Additional Files -->
         <folder>views</folder>
         <folder>models</folder>
@@ -298,7 +299,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile( sitePath + "/controller.php", extendedComp.phpSiteControllerContent)
 		generateFile( sitePath + "/router.php", extendedComp.phpSiteRouterContent)
 		        
-        var EntityGenerator entitygen = new EntityGenerator(extendedComp,sitePath + "/",fsa,false)
+        var EntityGenerator entitygen = new EntityGenerator(extendedComp,sitePath + "/", fsa, false)
 		entitygen.dogenerate()
 
 		var EList<ExtendedPage> tempPageList = new BasicEList()
@@ -308,9 +309,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		}
 		
 		var PageGenerator pgGen 
-        pgGen = new PageGenerator(extendedComp, tempPageList,fsa,sitePath,"site",false)
+        pgGen = new PageGenerator(extendedComp, tempPageList, fsa, sitePath, "site", false)
 		pgGen.dogenerate
-		generateUpdatePages(tempPageList,"site")
+		generateUpdatePages(tempPageList, "site")
 	}
 	
     /**

@@ -131,7 +131,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	'''
 	def private genGetAllData() {
 	    var query = new Query
-	    query.mainTable = new Table('''$this->referenceStruct["foreignTable"]''', '''b''')
+	    query.mainTable = new Table('''$foreignTable''', '''b''')
 	    for(attribute : foreignReference.attribute) {
 	        var column = new Column(query.mainTable.alias, foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attribute)).name)
 	        var select = new Select(column, attribute.name)
@@ -144,6 +144,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
     	return '''
     		protected function getAllData()
     		{
+    		    $foreignTable = $this->referenceStruct['foreignTable'];
     		    $db = Factory::getDbo();
     		    $queryALL = $db->getQuery(true);
     		    $queryALL->select("«query.mainSelect»")
@@ -177,8 +178,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		
 		    $query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name» ,«ENDFOR»
 		    (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
-		        ->from($this->referenceStruct["foreignTable"] . " as A")
-		        ->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
+		        ->from($this->referenceStruct['foreignTable'] . " as A")
+		        ->leftJoin("(select * from " . $this->referenceStruct['mappingTable'] . " as C where 
 		            «FOR attr : mainRef.extendedAttributes»
 		            «IF attr != mainRef.extendedAttributes.last»
 		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name» = '$item->«attr.name»' AND 
@@ -204,7 +205,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	    var query = new Query
 	    var selectColumn = new Column('''*''')
 	    query.addToMainSelect(new Select(selectColumn))
-        query.mainTable = new Table('''$this->referenceStruct["table"]''')
+        query.mainTable = new Table('''$table''')
         
         var whereColumn = new Column(entFrom.primaryKey.name)
         var whereStatement = '''«whereColumn» = $«entFrom.primaryKey.name»'''
@@ -213,6 +214,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
     		protected function getDataItem($«entFrom.primaryKey.name»)
     		{
     		    $db = Factory::getDbo();
+    		    $table = $this->referenceStruct['table'];
     		    $query = $db->getQuery(true);
     		    $query->select("«query.mainSelect»")
     		           ->from("«query.mainTable»")

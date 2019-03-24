@@ -252,7 +252,7 @@ class IndexPageTemplateSiteHelper {
 	            <td class="center">
 	                <a class="btn btn-micro <?php echo $class; ?>"
 	                    «IF details !== null»
-	                    href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name)»&task=«details.name»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state) : '#'; ?>">
+	                    href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name.toLowerCase)»&task=«details.name»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state) : '#'; ?>">
 	                    «ENDIF»
 	                    <?php if ($item->state == 1) : ?>
 	                    <i class="icon-publish"></i>
