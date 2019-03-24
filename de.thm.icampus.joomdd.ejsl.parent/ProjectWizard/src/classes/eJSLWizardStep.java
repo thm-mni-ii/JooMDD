@@ -100,7 +100,7 @@ public class eJSLWizardStep extends ModuleWizardStep {
         JPanel descriptionPanel = new JPanel(new BorderLayout());
         JPanel previewPanel = new JPanel((new BorderLayout()));
 
-        JLabel joomddlogo = new JLabel(IconLoader.getIcon("/icons/Logo_b_small.png"));
+        JLabel joomddlogo = new JLabel(IconLoader.getIcon("/icons/joomdd.png"));
 
         JLabel autosaveWarning = new JLabel(IconLoader.getIcon("/icons/Infomation.png"));
         autosaveWarning.setText(
