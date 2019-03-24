@@ -1304,4 +1304,49 @@ public class Slug  {
         
         return upperCaseKey
     }
+    
+    def static generateFilterFields(
+        ExtendedDynamicPage page,
+        ExtendedComponent component,
+        boolean simpleDefaultValue,
+        boolean addFieldPath,
+        boolean filterParams,
+        boolean addOnSubmit
+    ) {
+        
+        var extendedFilterList = page.extendFiltersList.toList
+        
+        if (filterParams === true) {
+            extendedFilterList = extendedFilterList.filter[ attribute |
+                !attribute.name.equalsIgnoreCase("params")
+            ].toList
+        }
+        
+        return '''
+            «FOR ExtendedAttribute attr : extendedFilterList»
+            «var valueColumn = page.getValueColumn(attr, component.allExtendedEntity)»
+            «var textColumn = page.getTextColumn(attr, component.allExtendedEntity)»
+            <field
+                «IF addFieldPath === true»
+                addfieldpath="components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
+                «ENDIF»
+                name="«attr.name»"
+                type="«textColumn.type»"
+                label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+                description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»»"
+                valueColumn="«valueColumn»"
+                textColumn="«textColumn»"
+                «IF addOnSubmit == true»
+                onchange="this.form.submit();"
+                «ENDIF»
+            >
+                «IF simpleDefaultValue === true»
+                <option value="">JSELECT</option>
+                «ELSE»
+                <option value="">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
+                «ENDIF»
+            </field>
+            «ENDFOR»
+            '''
+    }
 }

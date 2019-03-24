@@ -162,18 +162,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                     entity="«page.extendedEntityList.get(0).name»">
                     <option value="">JSELECT</option>
                 </field>
-                «FOR ExtendedAttribute attr : page.extendFiltersList»
-                    <field
-                        addfieldpath="components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
-                        name="«attr.name»"
-                        type="«page.extendedEntityList.get(0).name.toLowerCase»"
-                        label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", page.name, attr.name, "LABEL"), attr.name)»"
-                        description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", page.name, attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»»"
-                        valueColumn="«attr.entity.name».«attr.name»"
-                        textColumn="«attr.entity.name».«attr.name»">
-                        <option value="">JSELECT</option>
-                    </field>
-                «ENDFOR»
+                «Slug.generateFilterFields(page, component, true, true, false, false)»
             </fieldset>
         «ENDIF»
     '''

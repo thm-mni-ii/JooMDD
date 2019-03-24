@@ -73,7 +73,7 @@ class FieldsGenerator {
 
 		    «genGetReferencedata»
 		
-		    «genGetData_item»
+		    «genGetDataItem»
 		
 		    «genGenerateJsonValue»
 		
@@ -101,8 +101,10 @@ class FieldsGenerator {
 	    }
 	}
 	'''
-    def private genGetData_item() {
+    def private genGetDataItem() {
         var query = new Query
+        query.mainTable = new Table('''$table''')
+        
         var column = new Column('''*''')
         var select = new Select(column)
         query.addToMainSelect(select)
@@ -113,6 +115,7 @@ class FieldsGenerator {
         return '''
     	protected function getDataItem($id)
     	{
+    	    $table = $this->referenceStruct->table;
     	    $db = JFactory::getDbo();
     	    $query = $db->getQuery(true);
     	    $query->select("«query.mainSelect»")

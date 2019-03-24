@@ -607,7 +607,7 @@ class DetailsPageTemplateFrontEndHelper {
 	'''
 	
 	def generateSiteViewLayoutShow(String editPageName) '''
-	<?php if ($this->item ) : ?>
+	<?php if ($this->item) : ?>
 
 	    <div class="item_fields">
 	        <table class="table">
@@ -654,7 +654,7 @@ class DetailsPageTemplateFrontEndHelper {
 		<tr>
 		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
 		    <td>
-		        <img id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>'src='<?php echo $image_path . '/'. $this->item->«attr.name.toLowerCase»; ?>' />
+		        <img id='<?php  echo $this->item->«attr.name»; ?>' name= '<?php  echo $this->item->«attr.name»; ?>'src='<?php echo $image_path . '/'. $this->item->«attr.name»; ?>' />
 		    </td>
 		</tr>'''
 		}
@@ -663,8 +663,8 @@ class DetailsPageTemplateFrontEndHelper {
 		<tr>
 		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
 		    <td>
-		        <a id='<?php  echo $this->item->«attr.name.toLowerCase»; ?>' name= '<?php  echo $this->item->«attr.name.toLowerCase»; ?>' href="<?php echo $file_path . '/'. $this->item->«attr.name.toLowerCase»; ?>">
-		            <img src='<?php echo $iconpath . '/'. explode('.',$this->item->«attr.name.toLowerCase»)[0]; ?>' />'<?php  echo $this->item->«attr.name.toLowerCase»; ?>'
+		        <a id='<?php  echo $this->item->«attr.name»; ?>' name= '<?php  echo $this->item->«attr.name»; ?>' href="<?php echo $file_path . '/'. $this->item->«attr.name»; ?>">
+		            <img src='<?php echo $iconpath . '/'. explode('.',$this->item->«attr.name»)[0]; ?>' />'<?php  echo $this->item->«attr.name»; ?>'
 		        </a>
 		    </td>
 		</tr>'''
@@ -674,8 +674,8 @@ class DetailsPageTemplateFrontEndHelper {
 		<tr>
 		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?></th>
 		    <td>
-		        <a href="<?php echo $this->item->«attr.name.toLowerCase»; ?>">
-		            <?php echo $this->item->«attr.name.toLowerCase»; ?>
+		        <a href="<?php echo $this->item->«attr.name»; ?>">
+		            <?php echo $this->item->«attr.name»; ?>
 		        </a>
 		    </td>
 		</tr>'''
@@ -687,7 +687,7 @@ class DetailsPageTemplateFrontEndHelper {
 		        <?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?>
 		    </th>
 		    <td>
-		        <?php echo $this->item->«attr.name.toLowerCase»; ?>
+		        <?php echo $this->item->«attr.name»; ?>
 		    </td>
 		</tr>'''
 		}

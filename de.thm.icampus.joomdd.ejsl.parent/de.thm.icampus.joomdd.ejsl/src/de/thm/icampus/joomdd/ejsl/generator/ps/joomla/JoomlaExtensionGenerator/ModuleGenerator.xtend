@@ -205,6 +205,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    entity="«dynpage.extendedEntityList.get(0).name»">
 		                    <option value="">JOPTION_SELECT_AUTHOR</option>
 		                </field>
+		                «Slug.generateFilterFields(dynpage, extMod.component, true, true, true, false)»
 		                «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
 		                «IF !attr.name.equalsIgnoreCase("params")»
 		                <field
@@ -282,7 +283,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		        <?php else : ?>
 		            «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
 		            «IF !attr.name.equalsIgnoreCase("params")»
-		            <?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
+		            <?php $«attr.name» = $item->«attr.name»;?>
 		            <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
 		            «ENDIF»
 		            «ENDFOR»
@@ -297,7 +298,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    <div class="«extMod.pageRef.page.name»item">
 		        «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
 		        «IF !attr.name.equalsIgnoreCase("params")»
-		        <?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
+		        <?php $«attr.name» = $item->«attr.name»;?>
 		        <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
 		        «ENDIF»
 		        «ENDFOR»
@@ -313,7 +314,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		for(Link lk: listLink) {
             if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
-                return '''HTMLHelper::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name»)'''
+                return '''HTMLHelper::_(
+                    'link',
+                    «Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")»,
+                    $item->«attribute.name»
+                )'''
             }
 		}
 		return "$" + result;
