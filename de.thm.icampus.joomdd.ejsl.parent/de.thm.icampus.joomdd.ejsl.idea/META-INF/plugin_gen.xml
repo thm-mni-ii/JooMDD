@@ -22,6 +22,8 @@
 	</extensions>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<psi.treeChangePreprocessor implementation="de.thm.icampus.joomdd.ejsl.idea.lang.psi.EJSLCodeBlockModificationListener"/>
+
 		<fileTypeFactory implementation="de.thm.icampus.joomdd.ejsl.idea.lang.EJSLFileTypeFactory"/>
 		<stubElementTypeHolder class="de.thm.icampus.joomdd.ejsl.idea.lang.EJSLElementTypeProvider"/>
 		<lang.ast.factory 

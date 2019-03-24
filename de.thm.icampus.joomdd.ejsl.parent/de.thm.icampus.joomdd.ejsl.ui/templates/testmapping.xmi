@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ASCII"?>
+<eJSL:EJSLModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:eJSL="http://www.thm.de/icampus/joomdd/ejsl/EJSL" name="TestMapping">
+  <ejslPart xsi:type="eJSL:CMSExtension">
+    <feature>
+      <entities name="Users">
+        <attributes name="^firstname" isunique="true" id="true">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text" notnull="true"/>
+        </attributes>
+        <attributes name="lastvorname">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text" notnull="true"/>
+        </attributes>
+        <attributes name="groups">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <references attribute="//@ejslPart/@feature/@entities.0/@attributes.2" entity="//@ejslPart/@feature/@entities.1" attributerefereced="//@ejslPart/@feature/@entities.1/@attributes.0" lower="1" upper="-1"/>
+      </entities>
+      <entities name="Groups">
+        <attributes name="name" isunique="true" id="true">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text" notnull="true"/>
+        </attributes>
+        <attributes name="users">
+          <type xsi:type="eJSL:StandardTypes" type="Short_Text"/>
+        </attributes>
+        <references attribute="//@ejslPart/@feature/@entities.1/@attributes.1" entity="//@ejslPart/@feature/@entities.0" attributerefereced="//@ejslPart/@feature/@entities.0/@attributes.0" lower="1" upper="-1"/>
+      </entities>
+    </feature>
+  </ejslPart>
+</eJSL:EJSLModel>

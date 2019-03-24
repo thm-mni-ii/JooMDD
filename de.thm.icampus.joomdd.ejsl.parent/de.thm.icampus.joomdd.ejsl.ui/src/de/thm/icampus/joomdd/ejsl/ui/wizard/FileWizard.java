@@ -30,7 +30,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 public class FileWizard extends BasicNewFileResourceWizard implements INewWizard {
 
 	private static final String PAGE_NAME = "Custom Plug-in Project Wizard 1"; //$NON-NLS-1$
-	private static final String WIZARD_NAME = "New eJSL File"; //$NON-NLS-1$
+	private static final String WIZARD_NAME = "New JooMDD Model File"; //$NON-NLS-1$
 	private WizardNewFileCreationPage _pageOne;
 	private TemplateSelectionPage _pageTwo;
 	private URL imgFolder;
@@ -79,12 +79,12 @@ public class FileWizard extends BasicNewFileResourceWizard implements INewWizard
 		super.addPages();
 		_pageOne = (WizardNewFileCreationPage)super.getPage("newFilePage1");
 		_pageOne.setFileName("Model.eJSL");
-		_pageOne.setTitle("New eJSL Model File");
-		_pageOne.setDescription("Create a new eJSL File.");
+		_pageOne.setTitle("New JooMDD Model File");
+		_pageOne.setDescription("Create a new JooMDD Model File (.eJSL).");
 		_pageOne.setFileExtension("eJSL");
 		
-		_pageTwo.setTitle("EJSL Template");
-		_pageTwo.setDescription("Select an EJSL template.");
+		_pageTwo.setTitle("JooMDD Showcase Models");
+		_pageTwo.setDescription("Select an Example Model.");
 		 
 		addPage(_pageTwo);
 	}

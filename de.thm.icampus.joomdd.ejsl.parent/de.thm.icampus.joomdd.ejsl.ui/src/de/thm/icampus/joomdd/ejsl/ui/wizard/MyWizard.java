@@ -40,7 +40,7 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 	private static final String PAGE_NAME_1 = "Custom Plug-in Project Wizard 1"; //$NON-NLS-1$
 	private static final String PAGE_NAME_2 = "Custom Plug-in Project Wizard 2"; //$NON-NLS-1$
 	private static final String PAGE_NAME_3 = "Custom Plug-in Project Wizard 3"; //$NON-NLS-1$
-	private static final String WIZARD_NAME = "New EJSL Project"; //$NON-NLS-1$
+	private static final String WIZARD_NAME = "New JooMDD Project"; //$NON-NLS-1$
 	
 	private WizardNewProjectCreationPage _pageOne;
 	private TemplateSelectionPage _pageTwo;
@@ -100,12 +100,12 @@ public class MyWizard extends Wizard implements INewWizard, IExecutableExtension
 	
 	@Override
 	 public void addPages() {		 
-		 _pageOne.setTitle("EJSL Project");
-		 _pageOne.setDescription("Create a new EJSL project.");
+		 _pageOne.setTitle("JooMDD Project");
+		 _pageOne.setDescription("Create a new JooMDD Project.");
 	
-		 _pageTwo.setTitle("EJSL Template");
-		 _pageTwo.setDescription("Select an EJSL template.");
-		 _pageTree.setTitle("EJSL Template");
+		 _pageTwo.setTitle("JooMDD Showcase Models");
+		 _pageTwo.setDescription("Select an Example Model.");
+		 _pageTree.setTitle("Generator Settings");
 		 _pageTree.setDescription("Select Generator Configuration.");
 		 
 		 addPage(_pageOne);

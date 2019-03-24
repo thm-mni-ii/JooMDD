@@ -437,7 +437,7 @@
 	<extension point="org.eclipse.ui.newWizards">
 	  <category 
           id="de.thm.icampus.joomdd.ejsl.ui.MyWizard" 
-          name="eJSL Wizard">
+          name="JooMDD Wizard">
       </category> 
       <!--<category 
           id="org.eclipse.faq.examples.WizardSubCategory" 
@@ -450,7 +450,7 @@
             finalPerspective="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
             icon="img/eJSL.PNG"
             id="de.thm.icampus.joomdd.ejsl.ui.wizard.EJSLNewProjectWizard"
-            name="EJSL Project"
+            name="JooMDD Project"
             preferredPerspectives="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
             project="true">
       </wizard>
@@ -460,7 +460,7 @@
             finalPerspective="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
             icon="img/eJSL.PNG"
             id="de.thm.icampus.joomdd.ejsl.ui.wizard.newEJSLFile"
-            name="EJSL File"
+            name="JooMDD Model File"
             preferredPerspectives="de.thm.icampus.joomdd.ejsl.ui.eJSLperspective"
             project="false">
       </wizard>

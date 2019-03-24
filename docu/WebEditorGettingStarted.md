@@ -13,9 +13,15 @@ Contents:
   - [Create a module for an existing component](#create-a-module-for-an-existing-component)
     - [1. Upload of an extension package](#1-upload-of-an-extension-package)
     - [2. Model extraction](#2-model-extraction)
-    - [3. Augmentation of the legacy model](#3-augmentation-of-the-legacy-model)
+    - [3. Load model to editor](#3-load-model-to-editor)
     - [4. Augmentation of the legacy model](#4-augmentation-of-the-legacy-model)
     - [5. Generation of the new module](#5-generation-of-the-new-module)
+  - [Migrate your existing J3 component to J4](#migrate-your-existing-j3-component-to-j4)
+    - [1. Upload of an extension package](#1-upload-of-an-extension-package-1)
+    - [2. Model extraction](#2-model-extraction-1)
+    - [3. Load model to the editor](#3-load-model-to-the-editor)
+    - [4. Refactoring of the legacy model](#4-refactoring-of-the-legacy-model)
+    - [5. Generation of the new component](#5-generation-of-the-new-component)
 
 ## The eJSL language ##
  <img src="img/eJSL_Logo_trans.png" alt="eJSLLogo" height="100" style="max-width:100%;float:right;">
@@ -33,7 +39,7 @@ In order to support new modellers, the model editor provides common features lik
 
 At the top of the editor, you can find buttons for saving your model and generate extension code for Joomla 3 or Joomla 4. In addition, you can find a dropdown with example models which can directly be loaded into the model editor.
 
-On the right hand side you find a menu for manuipulating the source tree. You can add new models, download the selected node from the source tree, and load selected models to the editor. Additionally, you can upload existing legacy extensions and extract model information from them.
+On the right hand side you find a menu for manipulating the source tree. You can add new models, download the selected node from the source tree, and load selected models to the editor. Additionally, you can upload existing legacy extensions and extract model information from them. So, you are able to migrate your J3 extensions to the new J4 structure.
 
 The source tree lists all existing model files (src), uploaded extensions, and generated code. Generated code is structured as follows: 
 
@@ -76,8 +82,25 @@ documentation [here](https://wiki.thm.de/Reverse-Engineering_(Joomla-Code_zu_eJS
 Instead of executing the .jar file and using the GUI it is also possible to execute the application via CLI using the following arguments: 
 **-m &lt;path to manifest file&gt; -o &lt;output path&gt; -no-gui**
 
-### 3. Augmentation of the legacy model ###
+### 3. Load model to editor ###
 
 ### 4. Augmentation of the legacy model ###
 
 ### 5. Generation of the new module ###
+
+## Migrate your existing J3 component to J4 ##
+
+### 1. Upload of an extension package ###
+
+### 2. Model extraction ###
+In addition, we provide **jext2eJSL** to create eJSL-based models based on existing Joomla 3.x extension packages.
+We are currently working on the documentation of jext2eJSL. If you are interested in using the tool, see the current (german) 
+documentation [here](https://wiki.thm.de/Reverse-Engineering_(Joomla-Code_zu_eJSL-Instanzmodell)).
+Instead of executing the .jar file and using the GUI it is also possible to execute the application via CLI using the following arguments: 
+**-m &lt;path to manifest file&gt; -o &lt;output path&gt; -no-gui**
+
+### 3. Load model to the editor ###
+
+### 4. Refactoring of the legacy model ###
+
+### 5. Generation of the new component ###
