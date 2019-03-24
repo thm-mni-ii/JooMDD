@@ -5,7 +5,6 @@ eJSLModel "Shop" {
 				attributes {
 					Attribute name {
 						type = Short_Text
-						Unique attribute with ID
 					}
 					Attribute adress {  
 						type = Short_Text
@@ -22,7 +21,6 @@ eJSLModel "Shop" {
 				attributes {
 					Attribute name {
 						type = Short_Text
-						Unique attribute with ID
 					}
 					Attribute price {
 						type = Text
@@ -44,17 +42,17 @@ eJSLModel "Shop" {
 				}
 				references {  
 					Reference {
-						EntityAttribute = porder 
-						ReferencedEntity =  Prodorder
-						ReferencedEntityAttribute = Prodorder.ordNr    
+						entityAttribute = porder 
+						referencedEntity =  Prodorder
+						referencedEntityAttribute = Prodorder.ordNr    
 						min = 1
 						max = -1
 						  
 					}   
 					Reference {
-						EntityAttribute = supplier
-						ReferencedEntity = supplier
-						ReferencedEntityAttribute = supplier.name
+						entityAttribute = supplier
+						referencedEntity = supplier
+						referencedEntityAttribute = supplier.name
 						min = 1
 						max = -1
 					}
@@ -65,7 +63,6 @@ eJSLModel "Shop" {
 				attributes { 
 					Attribute ordNr {
 						type = Integer
-					Primary attribute
 					}
 					Attribute customer {
 						type = Short_Text
@@ -78,20 +75,19 @@ eJSLModel "Shop" {
 						type = Short_Text
 						Unique attribute 
 					}
-					
 				}
 				references {
 					Reference {
-						EntityAttribute = product
-						ReferencedEntity = Product
-						ReferencedEntityAttribute = Product.name
+						entityAttribute = product
+						referencedEntity = Product
+						referencedEntityAttribute = Product.name
 						min = 1
 						max = -1
 					}
 					Reference {
-						EntityAttribute = customer 
-						ReferencedEntity = customer
-						ReferencedEntityAttribute = customer.lName
+						entityAttribute = customer 
+						referencedEntity = customer
+						referencedEntityAttribute = customer.lName
 						min = 1
 						max = -1
 					}
@@ -112,7 +108,6 @@ eJSLModel "Shop" {
 				attributes {
 					Attribute name {
 						type = Short_Text
-						Unique attribute with ID
 					}
 					Attribute bank {
 						type = Short_Text
@@ -132,23 +127,23 @@ eJSLModel "Shop" {
 				}
 				references {
 					Reference {
-						EntityAttribute = bank
-						ReferencedEntity = creditInstitute
-						ReferencedEntityAttribute = creditInstitute.name
+						entityAttribute = bank
+						referencedEntity = creditInstitute
+						referencedEntityAttribute = creditInstitute.name
 						min = 1
 						max = 1
 					}  
 					Reference {
-						EntityAttribute = location
-						ReferencedEntity = location
-						ReferencedEntityAttribute = location.postCode
+						entityAttribute = location
+						referencedEntity = location
+						referencedEntityAttribute = location.postCode
 						min = 1
 						max = 1 
 					}
 					Reference {
-						EntityAttribute = product
-						ReferencedEntity = Product
-						ReferencedEntityAttribute = Product.name
+						entityAttribute = product
+						referencedEntity = Product
+						referencedEntityAttribute = Product.name
 						min = 1
 						max = -1
 					}
@@ -158,7 +153,6 @@ eJSLModel "Shop" {
 				attributes {
 					Attribute lName {
 						type = Short_Text
-						Unique attribute with ID
 					}
 					Attribute sName {
 						type = Short_Text
@@ -181,16 +175,16 @@ eJSLModel "Shop" {
 				}
 				references {
 					Reference {
-						EntityAttribute = bank
-						ReferencedEntity = creditInstitute
-						ReferencedEntityAttribute = creditInstitute.name
+						entityAttribute = bank
+						referencedEntity = creditInstitute
+						referencedEntityAttribute = creditInstitute.name
 						min = 1
 						max = 1
 					}
 					Reference {
-						EntityAttribute = prodorder 
-						ReferencedEntity = Prodorder
-						ReferencedEntityAttribute = Prodorder.ordNr
+						entityAttribute = prodorder 
+						referencedEntity = Prodorder
+						referencedEntityAttribute = Prodorder.ordNr
 						min = 1
 						max = -1
 					}
@@ -200,117 +194,117 @@ eJSLModel "Shop" {
 		}
 		pages {
 			IndexPage Customers {  
-				*Entities customer
-				representation columns = customer.sName, customer.lName, customer.adress
+				*entities = customer
+				representationColumns = customer.sName, customer.lName, customer.adress
 				filters = customer.lName, customer.adress links {
-					InternalcontextLink Details {
-						target = Customer linked attribute = customer.lName
-						linkparameters {
+					InternalContextLink Details {
+						target = Customer linkedAttribute = customer.lName
+						linkParameters {
 							Parameter name = *Attribute "customer.lName"
 						}
 					} 
 				}
 			}
 			DetailsPage Customer {
-				*Entities customer links {
+				*entities = customer links {
 					InternalLink Index {
-						target = Customers linked attribute = customer.lName
+						target = Customers linkedAttribute = customer.lName
 					}
 				}
 			}
 			IndexPage Products {
-				*Entities Product
-				representation columns = Product.name, Product.price, Product.desc
+				*entities = Product
+				representationColumns = Product.name, Product.price, Product.desc
 				filters = Product.name, Product.price links {
-					InternalcontextLink Details { 
-						target = product linked attribute = Product.name
-						linkparameters {
+					InternalContextLink Details { 
+						target = product linkedAttribute = Product.name
+						linkParameters {
 							Parameter name = *Attribute  "Product.name"
 						}
 					}
 				}
 			}
 			DetailsPage product { 
-				*Entities Product links { 
+				*entities = Product links { 
 					InternalLink Index {
-						target = Products linked attribute = Product.name
+						target = Products linkedAttribute = Product.name
 					}
 				}
 			}
 			IndexPage CreditInstitutes {
-				*Entities creditInstitute
-				representation columns = creditInstitute.name, creditInstitute.adress, creditInstitute.iBan
+				*entities = creditInstitute
+				representationColumns = creditInstitute.name, creditInstitute.adress, creditInstitute.iBan
 				filters = creditInstitute.name, creditInstitute.adress, creditInstitute.iBan links {
-					InternalcontextLink Details {
-						target = CreditInstitute linked attribute = creditInstitute.name
-						linkparameters {
+					InternalContextLink Details {
+						target = CreditInstitute linkedAttribute = creditInstitute.name
+						linkParameters {
 							Parameter name = *Attribute  "creditInstitute.name"
 						}
 					}
 				}
 			}
 			DetailsPage CreditInstitute {
-				*Entities creditInstitute links {
+				*entities = creditInstitute links {
 					InternalLink Index {
-						target = CreditInstitutes linked attribute = creditInstitute.name
+						target = CreditInstitutes linkedAttribute = creditInstitute.name
 					}
 				}
 			}
 			IndexPage Prodorders {                  
-				*Entities Prodorder
-				representation columns = Prodorder.ordNr, Prodorder.date 
+				*entities = Prodorder
+				representationColumns = Prodorder.ordNr, Prodorder.date 
 				filters = Prodorder.ordNr, Prodorder.date, Prodorder.customer
 				links { 
-					InternalcontextLink Details {
-						target = Prodorder linked attribute = Prodorder.ordNr
-						linkparameters {
+					InternalContextLink Details {
+						target = Prodorder linkedAttribute = Prodorder.ordNr
+						linkParameters {
 							Parameter ordNr = *Attribute  "Prodorder.ordNr"
 						}
 					}
 				}
 			}
 			DetailsPage Prodorder {
-				*Entities Prodorder links {
+				*entities = Prodorder links {
 					InternalLink Index {
-						target = Prodorders linked attribute = Prodorder.ordNr
+						target = Prodorders linkedAttribute = Prodorder.ordNr
 					}
 				}
 			}
 			IndexPage Locations {
-				*Entities location
-				representation columns = location.postCode, location.name
+				*entities = location
+				representationColumns = location.postCode, location.name
 				filters = location.postCode, location.name links {
-					InternalcontextLink Details {
-						target = Location linked attribute = location.name
-						linkparameters {
+					InternalContextLink Details {
+						target = Location linkedAttribute = location.name
+						linkParameters {
 							Parameter name = *Attribute  "location.name"
 						}
 					}
 				}
 			}
 			DetailsPage Location {
-				*Entities location links {
+				*entities = location links {
 					InternalLink Index {
-						target = Locations linked attribute = location.name
+						target = Locations linkedAttribute = location.name
 					}
 				}
 			}
 			IndexPage Suppliers {
-				*Entities supplier
-				representation columns = supplier.name, supplier.adress, supplier.location
+				*entities = supplier
+				representationColumns = supplier.name, supplier.adress, supplier.location
 				filters = supplier.name, supplier.adress, supplier.location links {
-					InternalcontextLink Details {
-						target = Supplier linked attribute = supplier.name
-						linkparameters {
+					InternalContextLink Details {
+						target = Supplier linkedAttribute = supplier.name
+						linkParameters {
 							Parameter name = *Attribute  "supplier.name"
 						}
 					}
 				}
 			}
 			DetailsPage Supplier {
-				*Entities supplier links {
+				*entities = supplier links {
 					InternalLink Index {
-						target = Suppliers linked attribute = supplier.name
+						target = Suppliers linkedAttribute = supplier.name
 					}
 				}
 			}
@@ -320,8 +314,8 @@ eJSLModel "Shop" {
 				Manifestation {
 					authors {
 						Author "John Doe" {
-							authoremail = "John.Doe@example.de"
-							authorurl = "www.example.de"
+							authorEmail = "John.Doe@example.de"
+							authorURL = "www.example.de"
 							
 						}
 					}
@@ -337,7 +331,7 @@ eJSLModel "Shop" {
 					}
 				}
 				sections { 
-					Frontend section {
+					FrontendSection {
 						*Pages {
 							*Page : Customer
 							*Page : Products
@@ -345,7 +339,7 @@ eJSLModel "Shop" {
 							*Page : Customers
 						}
 					}  
-					Backend section {      
+					BackendSection {      
 						*Pages { 
 							*Page : Customers
 							*Page : Customer
@@ -367,8 +361,8 @@ eJSLModel "Shop" {
 				Manifestation { 
 					authors {
 						Author "John Doe" {
-							authoremail = "John.Doe@example.de"
-							authorurl = "www.example.de"
+							authorEmail = "John.Doe@example.de"
+							authorURL = "www.example.de"
 							
 						}
 					}
@@ -385,12 +379,12 @@ eJSLModel "Shop" {
 				}        
 				*Page :Shop.Customers from :  ExampleShop data backendDAO
 			}  
-			Extension package Shop {  
+			ExtensionPackage Shop {  
 				Manifestation {              
 					authors {     
 						Author "John Doe" {      
-							authoremail = "John.Doe@example.de"
-							authorurl = "www.example.de"
+							authorEmail = "John.Doe@example.de"
+							authorURL = "www.example.de"
 							
 						}
 					}
@@ -409,8 +403,8 @@ eJSLModel "Shop" {
 				Manifestation {
 					authors {
 						Author "John Doe" {
-							authoremail = "John.Doe@example.de"
-							authorurl = "www.example.de"
+							authorEmail = "John.Doe@example.de"
+							authorURL = "www.example.de"
 							
 						}
 					}
@@ -426,7 +420,7 @@ eJSLModel "Shop" {
 					}
 				}   
 				sections {      
-					Frontend section {
+					FrontendSection {
 						*Pages {
 							*Page : Customer
 							*Page : Products
@@ -434,7 +428,7 @@ eJSLModel "Shop" {
 							*Page : Customers
 						}
 					}  
-					Backend section {      
+					BackendSection {      
 						*Pages { 
 							*Page : Customers
 							*Page : Customer
@@ -456,8 +450,8 @@ eJSLModel "Shop" {
 				Manifestation { 
 					authors {
 						Author "John Doe" {
-							authoremail = "John.Doe@example.de"
-							authorurl = "www.example.de"
+							authorEmail = "John.Doe@example.de"
+							authorURL = "www.example.de"
 							
 						}     
 					} 
