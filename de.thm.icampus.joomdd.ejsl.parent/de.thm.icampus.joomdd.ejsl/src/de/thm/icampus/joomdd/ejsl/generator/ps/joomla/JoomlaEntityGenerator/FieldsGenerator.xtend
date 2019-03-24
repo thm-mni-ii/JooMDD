@@ -284,8 +284,11 @@ class FieldsGenerator {
 	
 	private def genGetAllDataForEntity() {
 	    var query = new Query(com)
-	    query.addToMainSelect(new Select('''$valueColumn''', '''value'''))
-        query.addToMainSelect(new Select('''$textColumn''', '''text'''))
+	    
+	    var valueColumn = new Column('''$valueColumn''')
+        var textColumn = new Column('''$textColumn''')
+	    query.addToMainSelect(new Select(valueColumn, '''value'''))
+        query.addToMainSelect(new Select(textColumn, '''text'''))
         
         var mainEntityNameAlias = query.getUniqueAlias(entFrom.name)
         query.mainTable = new Table('''$this->table''', mainEntityNameAlias)
@@ -296,6 +299,8 @@ class FieldsGenerator {
     	    $query = $dbo->getQuery(true);
     	    $query->select("DISTINCT «query.mainSelect»")
     	        ->from("«query.mainTable»")
+    	        ->where("«textColumn» IS NOT NULL")
+    	        ->where("«textColumn» <> ''")
     	        ->order("$textColumn ASC");
 
     	    «query.createSelectAndJoins(entFrom.allExtendedReferences, entFrom.name)»
