@@ -23,6 +23,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla module.
@@ -32,9 +33,9 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.S
 public class ModuleGenerator extends AbstractExtensionGenerator {  
 			 
 	PageGeneratorHandler pageClient
-	var modelOfComponent = '\'<modelOfComponent>\''
-	var modelPath = '\'/components/com_<nameOfComponent>/models\''
-	var String modelOfComponent2 = null;
+	String modelOfComponent = '\'<modelOfComponent>\''
+	String modelPath = '\'/components/com_<nameOfComponent>/models\''
+	String modelOfComponent2 = null;
 	
 	ExtendedModule extMod
 	ExtendedDynamicPage dynpage
@@ -50,7 +51,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		this.ComponentInformation(module)
 		this.extMod.formatName
 		this.path = path
-		this.helperClassName = '''«module.name.toFirstUpper»Helper'''
+		this.helperClassName = '''Mod«module.name.toFirstUpper»Helper'''
 	}
 	
 	def void formatName(Module module) {
@@ -440,33 +441,34 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	
 	def CharSequence genAdminModelGetListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, ExtendedComponent extendedComponent) {
     	var query = new Query(extendedComponent)
-    	query.addToMainSelect(new Select(indexpage.entities.get(0).name, '''*'''))
+    	var selectColumn = new Column(indexpage.entities.get(0).name, '''*''')
+    	query.addToMainSelect(new Select(selectColumn))
     	'''
-    	    /**
-    	     * Build an SQL query to load the list data.
-    	     *
-    	     * @return  JDatabaseQuery
-    	     * @since 1.6
-    	     * @generated
-    	     */
-    	    private static function getListQuery($params_module = null)
-    	    {
-    	        // Create a new query object.
-    	        $db = Factory::getDbo();
-    	        $query = $db->getQuery(true);
-    	        $published = $params_module->get('state');
-    	        $created_by = $params_module->get('created_by');
-    	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-    	        $«attr.name» = $params_module->get('«attr.name»');
-    	        «ENDFOR»
-    	        $search = $params_module->get('search');
-    	        $orderCol = $params_module->get('ordering');
-    	        $orderDirn = $params_module->get('direction');
-    
-    	        // Select the required fields from the table.
-    	        $query->select("distinct «query.mainSelect»");
-    	        «query.getListQuery(indexpage, mainEntity, ",")»
-    	    }
+	    /**
+	     * Build an SQL query to load the list data.
+	     *
+	     * @return  JDatabaseQuery
+	     * @since 1.6
+	     * @generated
+	     */
+	    private static function getListQuery($params_module = null)
+	    {
+	        // Create a new query object.
+	        $db = Factory::getDbo();
+	        $query = $db->getQuery(true);
+	        $published = $params_module->get('state');
+	        $created_by = $params_module->get('created_by');
+	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
+	        $«attr.name» = $params_module->get('«attr.name»');
+	        «ENDFOR»
+	        $search = $params_module->get('search');
+	        $orderCol = $params_module->get('ordering');
+	        $orderDirn = $params_module->get('direction');
+
+	        // Select the required fields from the table.
+	        $query->select("distinct «query.mainSelect»");
+	        «query.getListQuery(indexpage, mainEntity, ",")»
+	    }
         '''
     }
 	
@@ -480,7 +482,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	 **/
 	public static function getList($params_module = null)
 	{
-	    $model = «extMod.name.toFirstUpper»Helper::getModel();
+	    $model = «helperClassName»::getModel();
 	    $state = $params_module->get('state');
 	    if (!empty($state)) {
 	        $model->setState('filter.state', $state);

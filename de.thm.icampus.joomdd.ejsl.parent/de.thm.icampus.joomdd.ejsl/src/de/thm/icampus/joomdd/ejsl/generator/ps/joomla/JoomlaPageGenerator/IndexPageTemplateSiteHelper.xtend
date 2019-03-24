@@ -15,11 +15,12 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
  * @author Dieudonne Timma, Dennis Priefer
  */
 class IndexPageTemplateSiteHelper {
+    
     ExtendedDynamicPage indexpage
-	private ExtendedComponent  com
-	private String sec
-	private ExtendedDynamicPage details
-	private ExtendedEntity mainEntity
+	ExtendedComponent  com
+	String sec
+	ExtendedDynamicPage details
+	ExtendedEntity mainEntity
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section) {
 		indexpage = dp

@@ -13,17 +13,37 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
-class Query {    
+/**
+ * Represents a database query,
+ * containing the select, origin table, joins and aliases.
+ */
+class Query {   
+    
+    /**
+     * The main table, used in the from clause.
+     */
     @Accessors(PUBLIC_SETTER, PUBLIC_GETTER)
     Table mainTable
     
+    /**
+     * The columns to select.
+     */
     ArrayList<Select> mainSelect = newArrayList
-        
+    
+    /**
+     * A list of joins to get referenced columns.
+     */
     @Accessors(PUBLIC_GETTER)
-    ArrayList<Join> joinList = newArrayList
+    ArrayList<LeftJoin> joinList = newArrayList
   
+    /**
+     * A list of table aliases.
+     */
     HashMap<String, Integer> aliasList = newHashMap
-        
+    
+    /**
+     * The component which holds the data.
+     */
     ExtendedComponent component
         
     new(ExtendedComponent component) {
@@ -33,6 +53,13 @@ class Query {
     new() {
     }
     
+    /**
+     * This methods is responsible to create unique aliases.
+     * 
+     * @param String alias
+     * 
+     * @return String
+     */
     def getUniqueAlias(String alias) {
         var aliasCounter = aliasList.getOrDefault(alias, 0)
         var uniqueAlias = alias
@@ -49,6 +76,12 @@ class Query {
     
     /**
      * This function completes the query to get all items from the database.
+     * 
+     * @param ExtendedDynamicPage indexpage
+     * @param ExtendedEntity mainEntity
+     * @param String separator
+     * 
+     * @return String
      */
     def getListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, String separator) {
         var mainEntityNameAlias = this.getUniqueAlias(indexpage.entities.get(0).name)
@@ -62,7 +95,7 @@ class Query {
         var ucJoinTable = new Table('''#__users''', ucAlias)
         var ucJoinFromColumn = new Column(this.mainTable.alias, '''checked_out''')
         var ucJoinToColumn = new Column(ucAlias, '''id''')
-        var ucJoin = new Join(ucJoinTable, ucJoinFromColumn, ucJoinToColumn)
+        var ucJoin = new LeftJoin(ucJoinTable, ucJoinFromColumn, ucJoinToColumn)
         this.joinList.add(ucJoin)
         
         // created_by
@@ -73,7 +106,7 @@ class Query {
         var createdByJoinTable = new Table('''#__users''', createdByAlias)
         var createdByJoinFromColumn = new Column(this.mainTable.alias, '''created_by''')
         var createdByJoinToColumn = new Column(createdByAlias, '''id''')
-        var createdByJoin = new Join(createdByJoinTable, createdByJoinFromColumn, createdByJoinToColumn)
+        var createdByJoin = new LeftJoin(createdByJoinTable, createdByJoinFromColumn, createdByJoinToColumn)
         this.joinList.add(createdByJoin)
         
         // user
@@ -84,7 +117,7 @@ class Query {
         var userJoinTable = new Table('''#__users''', userAlias)
         var userJoinFromColumn = new Column(this.mainTable.alias, '''created_by''')
         var userJoinToColumn = new Column(userAlias, '''id''')
-        var userJoin = new Join(userJoinTable, userJoinFromColumn, userJoinToColumn)
+        var userJoin = new LeftJoin(userJoinTable, userJoinFromColumn, userJoinToColumn)
         this.joinList.add(userJoin)
         
         var selectAndJoins = this.createSelectAndJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, indexpage.entities.get(0).name)
@@ -181,6 +214,14 @@ class Query {
         '''
     }
     
+    /**
+     * This method takes care to get the right aliases for the given attribute.
+     * In case the attribute is a referenced attribute we have to use the referenced table alias.
+     * 
+     * @param ExtendedAttribute attribute
+     * 
+     * @return Column
+     */
     def private Column getWhereColumnName(ExtendedAttribute attribute) {
         var join = this.joinList.findFirst[ join |
             if (join.reference !== null && join.reference.entity instanceof MappingEntity === false) {
@@ -204,6 +245,15 @@ class Query {
         return column
     }
     
+    /**
+     * This method creates the select and joins to get a column form a referenced table
+     * with a mapping table inbetween.
+     * 
+     * @param ExtendedEntity entity
+     * @param String separator
+     * 
+     * @return String
+     */
     def createQueryForNToM(ExtendedEntity entity, String separator) {
         val entityName = entity.name
         var queries = newArrayList
@@ -262,9 +312,7 @@ class Query {
      * 
      * @return String
      */
-    def createSelectAndJoins(EList<ExtendedReference> extendedReference, String entityName) {
-        var ArrayList<String> output = newArrayList
-        
+    def createSelectAndJoins(EList<ExtendedReference> extendedReference, String entityName) {        
         // Iterate over all references that do not reference to a mapping table.
         var createdSelectAndJoins = extendedReference.filter[reference | 
             reference.destinationEntity instanceof MappingEntity === false
@@ -286,15 +334,32 @@ class Query {
         ''')
     }
     
+    /**
+     * This method creates a left join from the main table to the given referenced table.
+     * 
+     * @param ExtendedReference reference
+     * @param String toAlias
+     * 
+     * @return String
+     */
     def private createJoin(ExtendedReference reference, String toAlias) {
         createJoin(reference, toAlias, this.mainTable.alias)
     }
     
+    /**
+     * This method creates a left join from the given table to the given referenced table.
+     * 
+     * @param ExtendedReference reference
+     * @param String toAlias
+     * @param String fromAlias
+     * 
+     * @return String
+     */
     def private createJoin(ExtendedReference reference, String toAlias, String fromAlias) {
         var toTable = new Table(Slug.databaseName(this.component.name, reference.destinationEntity.name), toAlias)
         var fromColumn = new Column(fromAlias, reference.referenceIDAttribute)
         var toColumn = new Column(toAlias, reference.referencedIDAttribute)
-        var join = new Join(toTable, fromColumn, toColumn, reference)
+        var join = new LeftJoin(toTable, fromColumn, toColumn, reference)
         this.joinList.add(join)
         
         return '''
@@ -302,14 +367,33 @@ class Query {
                 '''
     }
     
+    /**
+     * Creates the group statement for a database query.
+     * 
+     * @param ExtendedEntity entity
+     * 
+     * @return String
+     */
     def createGroupBy(ExtendedEntity entity) {
         '''$query->group('«this.mainTable.alias».«entity.attributes.findFirst[a | a.isprimary].name»');'''
     }
     
+    /**
+     * Adds the given select to the select list.
+     * 
+     * @param Select select
+     * 
+     * @return boolean
+     */
     def addToMainSelect(Select select) {
         this.mainSelect.add(select)
     }
     
+    /**
+     * Gets a comma separated list of all stored selects.
+     * 
+     * @return String
+     */
     def String getMainSelect() {
         return this.mainSelect.join(''',
         ''')

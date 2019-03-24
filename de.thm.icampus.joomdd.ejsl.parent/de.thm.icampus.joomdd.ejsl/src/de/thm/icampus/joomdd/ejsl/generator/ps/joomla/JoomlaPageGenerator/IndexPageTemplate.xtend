@@ -18,13 +18,13 @@ import java.util.stream.IntStream
  */
 class IndexPageTemplate extends DynamicPageTemplate {
 
-	private ExtendedDynamicPage ipage
-	private ExtendedComponent com
-	private String sec
-	private IndexPageTemplateAdminHelper helperAdmin
-	private IndexPageTemplateSiteHelper frontHelp
-	private String path
-	private String pagename
+	ExtendedDynamicPage ipage
+	ExtendedComponent com
+	String sec
+	IndexPageTemplateAdminHelper helperAdmin
+	IndexPageTemplateSiteHelper frontHelp
+	String path
+	String pagename
 
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {
 		ipage = dp

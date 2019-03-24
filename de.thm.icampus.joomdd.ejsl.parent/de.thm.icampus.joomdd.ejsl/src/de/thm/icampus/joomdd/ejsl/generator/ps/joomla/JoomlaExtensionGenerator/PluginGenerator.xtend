@@ -1,12 +1,10 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Language
-import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.AbstractExtensionGenerator
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import java.util.Calendar
 import org.eclipse.xtext.generator.IFileSystemAccess2
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla plugins.
@@ -15,8 +13,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
  */
 public class PluginGenerator extends AbstractExtensionGenerator {
 	
-	private String slug;
-	private ExtendedPlugin plugin;
+	String slug;
+	ExtendedPlugin plugin;
 	
 	new(ExtendedPlugin plugin, IFileSystemAccess2 fsa, String path)
 	{

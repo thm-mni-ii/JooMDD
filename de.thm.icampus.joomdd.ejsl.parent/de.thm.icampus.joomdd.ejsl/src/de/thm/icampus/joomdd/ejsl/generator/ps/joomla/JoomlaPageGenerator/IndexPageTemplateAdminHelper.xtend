@@ -1,16 +1,13 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator
 
-import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Table
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
 
 /**
@@ -19,11 +16,13 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.C
  * @author Dieudonne Timma, Dennis Priefer
  */
 class IndexPageTemplateAdminHelper {
+    
     ExtendedDynamicPage indexpage
-	private ExtendedComponent  com
-	private String sec
-	private String details
-	private ExtendedEntity mainEntity
+	ExtendedComponent  com
+	String sec
+	String details
+	ExtendedEntity mainEntity
+    String componentHelperClassName
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		indexpage = dp
@@ -32,6 +31,7 @@ class IndexPageTemplateAdminHelper {
 		var ExtendedDynamicPage dt = Slug.getPageForDetails(indexpage,com)
 		details =  if( dt === null)"<Put the name Of DetailsPage>" else dt.name
 		mainEntity = dp.extendedEntityList.get(0)
+        this.componentHelperClassName = '''Com«com.name.toFirstUpper»Helper'''
 	}
 	
 	def CharSequence genAdminControllerContructer()'''
@@ -219,7 +219,7 @@ class IndexPageTemplateAdminHelper {
 	        if (count($errors = $this->get('Errors'))) {
 	            throw new Exception(implode("\n", $errors));
 	        }
-	         «com.name.toFirstUpper»Helper::addSubmenu('«indexpage.name.toLowerCase»');
+	        «componentHelperClassName»::addSubmenu('«indexpage.name.toLowerCase»');
 	        $this->addToolbar();
 	        $this->sidebar = JHtmlSidebar::render();
 	        parent::display($tpl);
@@ -238,7 +238,7 @@ class IndexPageTemplateAdminHelper {
 	        require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
 
 	        $state = $this->get('State');
-	        $canDo = «com.name.toFirstUpper»Helper::getActions($state->get('filter.category_id'));
+	        $canDo = «componentHelperClassName»::getActions($state->get('filter.category_id'));
 
 	        JToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
 

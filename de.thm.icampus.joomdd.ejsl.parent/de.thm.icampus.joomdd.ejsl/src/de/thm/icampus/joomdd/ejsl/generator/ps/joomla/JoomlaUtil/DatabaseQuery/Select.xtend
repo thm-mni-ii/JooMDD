@@ -1,8 +1,18 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery
 
+/**
+ * Represents a database select.
+ */
 class Select {
+    
+    /**
+     * The column to select
+     */
     Column column = null
     
+    /**
+     * The columns alias in the select statement.
+     */
     String alias = null
     
     new(Column column) {

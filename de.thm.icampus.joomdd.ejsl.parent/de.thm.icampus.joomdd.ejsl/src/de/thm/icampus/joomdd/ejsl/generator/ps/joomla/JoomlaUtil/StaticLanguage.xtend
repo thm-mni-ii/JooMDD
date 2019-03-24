@@ -2,6 +2,10 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil
 
 import org.eclipse.xtend.lib.annotations.Accessors
 
+/**
+ * This static class contains all constant language statements
+ * that will be used during the generation process.
+ */
 class StaticLanguage {
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue HOME = new StaticLanguageValue("HOME", "Home")
@@ -102,6 +106,13 @@ class StaticLanguage {
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue INSTALL_TEXT = new StaticLanguageValue("INSTALL_TEXT", "Successfully installed.")
     
+    /**
+     * This method adds "Description for" to the given attribute.
+     * 
+     * @param String attribute
+     * 
+     * @return String
+     */
     def static String getCommonDescriptionFor(String attribute) {
         return '''Description for «attribute»'''
     }

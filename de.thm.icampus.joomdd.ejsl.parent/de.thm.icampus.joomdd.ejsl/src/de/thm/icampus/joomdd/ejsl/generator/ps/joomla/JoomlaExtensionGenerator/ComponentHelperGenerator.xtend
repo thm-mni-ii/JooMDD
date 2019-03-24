@@ -10,12 +10,14 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
  * 
  * @author Dieudonne Timma, Dennis Priefer
  */
-class ComponentHelperGenerator extends AbstractExtensionGenerator{
-//	
-	
+class ComponentHelperGenerator extends AbstractExtensionGenerator {
+    
 	ExtendedComponent extendeComp
+    String componentHelperClassName
+    
 	new(ExtendedComponent component) {
 		extendeComp = component
+        this.componentHelperClassName = '''Com«component.name.toFirstUpper»Helper'''
 	}
  
     override generate() '''
@@ -29,9 +31,9 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		jimport('joomla.filesystem.file');
 		
 		/**
-		 * «extendeComp.name.toUpperCase»  helper.
+		 * «extendeComp.name.toUpperCase» helper.
 		 */
-		class «extendeComp.name.toFirstUpper»Helper
+		class «this.componentHelperClassName»
 		{
 		    «genAddMenu»
 		    «genGetAction»

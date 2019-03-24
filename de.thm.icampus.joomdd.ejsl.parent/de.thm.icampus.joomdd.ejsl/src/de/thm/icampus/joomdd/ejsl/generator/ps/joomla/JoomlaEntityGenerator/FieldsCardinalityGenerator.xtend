@@ -18,7 +18,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.T
  * @author Dieudonne Timma, Dennis Priefer
  */
 class FieldsCardinalityGenerator extends FieldsGenerator {
-	
+    
 	Reference foreignReference
 	
 	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {

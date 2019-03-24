@@ -1,21 +1,18 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator
 
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
-import java.io.File
-import org.eclipse.xtext.generator.IFileSystemAccess
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
-import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
-import java.nio.file.Files
-import java.nio.file.Path
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.LeftJoin
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Table
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Join
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import java.io.File
+import org.eclipse.xtext.generator.IFileSystemAccess
 
 /**
  * This class contains the templates to generate the view fields.
@@ -28,7 +25,7 @@ class FieldsGenerator {
 	public ExtendedComponent com
 	public String nameField
 	public ExtendedEntity entFrom
-	private ExtendedDetailPageField field
+	ExtendedDetailPageField field
 
 	public new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
 		mainRef = ref
@@ -307,7 +304,7 @@ class FieldsGenerator {
 	}
 	
 	static def CharSequence genFieldsForUserView(ExtendedComponent component) {
-        var query = new Query
+	    var query = new Query
         query.mainTable = new Table('''$table''', '''a''')
         
         // Select create_by
@@ -315,19 +312,21 @@ class FieldsGenerator {
         var createdByselect = new Select(createdByColumn, '''value''')
         query.addToMainSelect(createdByselect)
         
-        // Select name
-        var nameColumn = new Column(query.mainTable.alias, '''name''')
-        var nameSelect = new Select(nameColumn, '''text''')
-        query.addToMainSelect(nameSelect)
-        
         // Join users
         var usersJoinTable = new Table('''#__users''', '''b''')
         var usersJoinFromColumn = new Column(query.mainTable.alias, '''created_by''')
         var usersJoinToColumn = new Column('''b''', '''id''')
-        var usersJoin = new Join(usersJoinTable, usersJoinFromColumn, usersJoinToColumn)
+        var usersJoin = new LeftJoin(usersJoinTable, usersJoinFromColumn, usersJoinToColumn)
         query.joinList.add(usersJoin)
+        
+        // Select name
+        var nameColumn = new Column(usersJoinTable.alias, '''name''')
+        var nameSelect = new Select(nameColumn, '''text''')
+        query.addToMainSelect(nameSelect)
+        
+        var orderColumn = new Column('''«usersJoinTable.alias»''', '''name''')
 	   
-	   return '''
+	    return '''
     		<?php
     		«Slug.generateFileDoc(component)»
     		
@@ -348,7 +347,7 @@ class FieldsGenerator {
     		        $query->select("DISTINCT «query.mainSelect»")
     		               ->from("«query.mainTable»")
     		               ->join(«usersJoin»)
-    		               ->order("«nameColumn» ASC");
+    		               ->order("«orderColumn» ASC");
     		        $dbo->setQuery($query);
     		        $dataList = $dbo->loadObjectList();
     		        return array_merge(parent::getOptions(), $dataList);

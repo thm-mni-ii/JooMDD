@@ -2,7 +2,6 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaPageGenerator;
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
 import de.thm.icampus.joomdd.ejsl.eJSL.Entity
-import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
@@ -12,12 +11,11 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageFi
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.IDAttribute
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
-import de.thm.icampus.joomdd.ejsl.eJSL.Reference
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.IDAttribute
 
 /**
  * This class contains the templates to generate the necessary code for views.

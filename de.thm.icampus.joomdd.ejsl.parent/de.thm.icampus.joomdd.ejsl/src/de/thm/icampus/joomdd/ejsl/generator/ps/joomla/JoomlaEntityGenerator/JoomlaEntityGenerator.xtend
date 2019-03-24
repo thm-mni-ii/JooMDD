@@ -1,5 +1,6 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator
 
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
@@ -7,9 +8,6 @@ import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess
-import org.eclipse.emf.common.util.BasicEList
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
-import de.thm.icampus.joomdd.ejsl.eJSL.Reference
 
 /**
  * This class contains the templates to generate the fiel cardinalities.
