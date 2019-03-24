@@ -401,12 +401,12 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("Text", "Route", "Session", "Factory"))»
+		«Slug.generateUses(newArrayList("Text", "Route", "Session", "Factory", "ControllerLegacy"))»
 		
 		/**
 		 * «dpage.name.toFirstUpper» controller class to «if(isedit)  "Edit" else "Show"» a Item .
 		 */
-		class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends «com.name.toFirstUpper»Controller
+		class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends BaseController
 		{
 		    «IF isedit»
 		    «frontHelp.generateSiteControllerSave»

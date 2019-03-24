@@ -854,19 +854,19 @@ public class Slug  {
             		    InternalLink: {
             		        if ((lk as InternalLink).target instanceof DetailsPage) {
             		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
-            		                '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name»'''
-            		   	        } else {
+                                    '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
+                                } else {
             		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
             		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
             		    	
             			            if (idRef !== null) {
-            				            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
+            				            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
             				        } else {
-            				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
+            				 	        '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
             		 	            }
             		 	        }
                             } else {
-            		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
+            		            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
             		        }
                         }
                     }»

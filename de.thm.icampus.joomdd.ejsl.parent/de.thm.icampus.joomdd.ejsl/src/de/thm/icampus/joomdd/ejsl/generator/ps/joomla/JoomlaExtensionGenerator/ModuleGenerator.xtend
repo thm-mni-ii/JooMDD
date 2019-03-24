@@ -206,20 +206,6 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    <option value="">JOPTION_SELECT_AUTHOR</option>
 		                </field>
 		                «Slug.generateFilterFields(dynpage, extMod.component, true, true, true, false)»
-		                «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
-		                «IF !attr.name.equalsIgnoreCase("params")»
-		                <field
-		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/models/fields"
-		                    name="«attr.name»"
-		                    type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
-		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FILTER", attr.name, "LABEL"), attr.name)»"
-		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
-		                    valueColumn="«attr.entity.name».«attr.name»"
-		                    textColumn="«attr.entity.name».«attr.name»">
-		                    <option value="">«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "JOPTION", "SELECT", attr.name), attr.name)»</option>
-		                </field>
-		                «ENDIF»
-		                «ENDFOR»
 		            </fieldset>
 		        «ENDIF»
 		        </fields>
