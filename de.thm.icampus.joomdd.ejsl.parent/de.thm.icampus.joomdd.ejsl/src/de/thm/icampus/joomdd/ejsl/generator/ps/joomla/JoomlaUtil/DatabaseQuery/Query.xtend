@@ -294,7 +294,7 @@ class Query {
             query = '''
                 
                 // Select the referenced field «destinationAlias».«referencedAttributeName»
-                $query->select('GROUP_CONCAT(DISTINCT «destinationAlias».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
+                $query->select('GROUP_CONCAT(«destinationAlias».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
                 «query»'''
             queries.add(query)
         }
