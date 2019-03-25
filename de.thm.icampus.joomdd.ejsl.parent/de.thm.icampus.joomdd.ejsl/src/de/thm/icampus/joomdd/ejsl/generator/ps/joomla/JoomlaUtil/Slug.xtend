@@ -1019,7 +1019,7 @@ public class Slug  {
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
    	        return '''
-   		    <field name="«param.name»"
+   		       <field name="«param.name»"
    		            type="list" 
    		            «IF type.equalsIgnoreCase("multiselect")»
    		            multiple
@@ -1125,7 +1125,7 @@ public class Slug  {
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
-   		            />
+   		        />
    		        '''
    		    }
    		}

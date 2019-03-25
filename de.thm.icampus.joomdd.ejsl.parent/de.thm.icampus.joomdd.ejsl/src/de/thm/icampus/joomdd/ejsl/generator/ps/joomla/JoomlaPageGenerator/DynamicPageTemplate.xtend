@@ -459,21 +459,21 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                                 «kvpair.name» = "«kvpair.value»"
                             «ENDFOR»
                             />
-                            «FOR ExtendedReference refItem : listOfref»
-                                «var languageKey = Slug.getNReferenceLanguageKey(component, refItem, entity.name)»
-                                <field name="«refItem.entity.name»_id"
-                                    type="«entity.name»To«refItem.entity.name»"
-                                    id="«refItem.entity.name»_id"
-                                    label="«Slug.addLanguage(component.languages, newArrayList(languageKey, "LABEL"), refItem.entity.name)»"
-                                    description="«Slug.addLanguage(component.languages, newArrayList(languageKey, "DESC"), StaticLanguage.getCommonDescriptionFor(refItem.entity.name))»"
+                        «FOR ExtendedReference refItem : listOfref»
+                            «var languageKey = Slug.getNReferenceLanguageKey(component, refItem, entity.name)»
+                            <field name="«refItem.entity.name»_id"
+                                type="«entity.name»To«refItem.entity.name»"
+                                id="«refItem.entity.name»_id"
+                                label="«Slug.addLanguage(component.languages, newArrayList(languageKey), refItem.entity.name)»"
+                                description="«Slug.addLanguage(component.languages, newArrayList(languageKey), StaticLanguage.getCommonDescriptionFor(refItem.entity.name))»"
+                            />
+                            «FOR Attribute attr: Slug.getOtherAttribute(refItem)»
+                                <field name="«attr.name»"
+                                    type="hidden"
+                                    id="«attr.name»"
                                 />
-                                «FOR Attribute attr: Slug.getOtherAttribute(refItem)»
-                                    <field name="«attr.name»"
-                                        type="hidden"
-                                        id="«attr.name»"
-                                    />
-                                «ENDFOR»
                             «ENDFOR»
+                        «ENDFOR»
                     '''
                 }
                 default: {
