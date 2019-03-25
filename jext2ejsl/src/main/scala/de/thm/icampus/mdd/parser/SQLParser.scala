@@ -189,51 +189,7 @@ class SQLParser {
     * @return a list of create-statement-strings
     */
   def extractStatements(content: String): List[String] = {
-//    var statements: mutable.MutableList[String] = mutable.MutableList
-//    var sanitizedContent = content.replace("`", "")
-//    /**
-//     * jSQLParser is not able to handle "primary key [name] ([name])," so the first name occurence got to be removed
-//     *
-//     * BEGIN - important
-//     * do not combine this expressions! one run with replaceAll required per exp, otherwise you'll burn your CPU ;-)
-//     */
-//    val namedPKMatcher = Pattern.compile(namedPKRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-//    while (namedPKMatcher.find()) {
-//      // 1 := "primary key"; 5: "([name])"
-//      sanitizedContent = namedPKMatcher.replaceAll(namedPKMatcher.group(1) + namedPKMatcher.group(5))
-//    }
-//    val namedPKCommaMatcher = Pattern.compile(namedPKCommaRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-//    while (namedPKCommaMatcher.find()) {
-//      // 1 := "primary key"; 5: "([name]),"
-//      sanitizedContent = namedPKCommaMatcher.replaceAll(namedPKCommaMatcher.group(1) + namedPKCommaMatcher.group(5))
-//    }
-//    /**
-//     * END - important
-//     */
-//
-//    val ukeyMatcher = Pattern.compile(ukeyRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-//    while (ukeyMatcher.find()) {
-//      if (!ukeyMatcher.group(5).isEmpty) {
-//        sanitizedContent = ukeyMatcher.replaceAll(ukeyMatcher.group(1) + ukeyMatcher.group(5) + ukeyMatcher.group(6))
-//      }
-//    }
-//
-//
-//    val createMatcher = Pattern.compile(createTableRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-//    var tableName: String = null
-//    var tableContent: String = null
-//    var ifNotExists: String = null
-//
-//    while (createMatcher.find()) {
-//      tableName = createMatcher.group(8).trim
-//      tableContent = createMatcher.group(0).trim
-//      ifNotExists = createMatcher.group(4)
-//      if (tableName.contains("\"") == false && tableName.contains("'") == false) {
-//        tableContent = tableContent.replace(tableName, s"`$tableName`")
-//      }
-//
-//      statements += tableContent
-//    }
+
 
     val allStatements = content.split("(?<=;)").map(_.trim)
     val createPattern = Pattern.compile(createTableRE, Pattern.MULTILINE | Pattern.CASE_INSENSITIVE | Pattern.DOTALL)

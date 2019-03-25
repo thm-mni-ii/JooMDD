@@ -2,6 +2,9 @@ package de.thm.icampus.mdd.model.extensions
 
 class CustomPage extends Page {
 
+  var modelPath: String=""
+  var viewPath: String = ""
+  var viewFolder :String =""
   var name: String =""
   var globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]
   def this(name: String, globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]){

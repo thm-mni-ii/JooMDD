@@ -2,6 +2,7 @@ package de.thm.icampus.mdd.model.extensions
 import de.thm.icampus.mdd.model.sql.{Entity}
 
 class IndexPage extends DynamicPage {
+
   var  name: String =""
   var entity: String=""
   var globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]
