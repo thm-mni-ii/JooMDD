@@ -5,6 +5,7 @@ import de.thm.icampus.mdd.model.sql.{Entity}
 class DetailsPage extends DynamicPage {
   var  name: String =""
   var entity: String=""
+  var tablePath: String = "";
   var globalParamNames: Set[JParamGroup] = Set.empty[JParamGroup]
   var representationColumns: Set[String] = Set.empty[String]
   var  editAttribute: Set[DetailsPageAttribute] = Set.empty[DetailsPageAttribute]
@@ -21,6 +22,7 @@ class DetailsPage extends DynamicPage {
     this.isEdit = isEdit
 
   }
+
   override def equals (obj:Any): Boolean={
    obj match{
      case f : DetailsPage =>{
