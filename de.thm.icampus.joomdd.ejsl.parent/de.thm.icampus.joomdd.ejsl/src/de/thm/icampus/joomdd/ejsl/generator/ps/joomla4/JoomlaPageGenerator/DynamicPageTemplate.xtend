@@ -226,7 +226,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	        <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL__LABEL">
 	            «generateParameter(page.extendedGlobalParametersListe, component)»
 	        </fieldset>
-	        «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»<fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
+	        «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»
+	        <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»">
 	            «generateParameter(e.extendedParameterList, component)»
 	            «generateParameter(e.extendedParameterList,component)»
 	        </fieldset>
@@ -290,7 +291,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
 	        <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL__LABEL">
 	            «generateParameter(page.extendedGlobalParametersListe, component)»
 	        </fieldset>
-	        «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»<fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
+	        «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»
+	        <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»">
 	            «generateParameter(e.extendedParameterList, component)»
 	            «generateParameter(e.extendedParameterList,component)»
 	        </fieldset>
