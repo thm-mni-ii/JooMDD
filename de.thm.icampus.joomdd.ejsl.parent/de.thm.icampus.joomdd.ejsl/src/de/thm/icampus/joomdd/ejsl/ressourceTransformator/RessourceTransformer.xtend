@@ -1124,7 +1124,7 @@ class RessourceTransformer {
     private def DetailPageField generateDetailsPAgeFields(Attribute attribute, Entity ent) {
         var StandardTypes temptyp = attribute.type as StandardTypes
 
-        if (attribute.isIsprimary === true) {
+        if (attribute.isIsprimary === true && temptyp.autoincrement === true) {
             var result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
             result.htmltype = SimpleHTMLTypeKinds.TEXT_FIELD_NE
 

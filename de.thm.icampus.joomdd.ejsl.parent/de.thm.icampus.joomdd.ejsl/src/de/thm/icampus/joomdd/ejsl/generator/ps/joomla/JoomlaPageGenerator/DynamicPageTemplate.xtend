@@ -415,7 +415,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
             field.extendedAttribute.instance instanceof FKAttribute === false) {
             return '''
                 <field name="«field.attribute.name»"
-                    type="hidden"
+                    «Slug.getTypeName(field.type)»
                     id="«field.attribute.name»"
                     label="«fieldLabel»"
                     description="«fieldDescription»"
