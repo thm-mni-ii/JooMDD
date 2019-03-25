@@ -93,7 +93,17 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
         if (instance instanceof DetailsPage) {
             this.isDetailsPage = true
             var DetailsPage dpg = instance as DetailsPage
-            extendedEditFieldsList.addAll(dpg.editfields.map [ t |
+            
+            // There might be more than one entity.
+            val referenceAttributeNameList = this.extendedEntity.get(0).allExtendedReferences.filter[reference |
+                reference.entity instanceof MappingEntity === false
+            ].map[ reference |
+                reference.referenceAttribute
+            ].toList
+            
+            extendedEditFieldsList.addAll(dpg.editfields.filter[ field |
+                referenceAttributeNameList.contains(field.attribute.name) === false
+            ].map [ t |
                 new ExtendedDetailPageFieldImpl(t)
             ])
         }

@@ -193,24 +193,17 @@ class FieldsGenerator {
 	*/
 	protected function getReferencedata($data)
 	{
-	    $caseCheck = "";
-	    foreach ($this->keysAndForeignKeys as $k => $v) {
-	        $fk =  $v["key"];
-	        $caseCheck .= " b." . $v["ref"] . " = '" .$data->$fk . "' and";
-	    }
-	    $caseCheck = rtrim($caseCheck, "and");
+	    $fk = $this->keysAndForeignKeys["key"];
+	    $caseCheck = "b." . $this->keysAndForeignKeys["ref"] . " = " . $data->$fk;
+	    $valueColumn = $this->getAttribute("valueColumn");
 	    $db = JFactory::getDbo();
 	    $query = $db->getQuery(true);
-	    $query->select("distinct (case when"
-	        . $caseCheck .
-	        "then 'selected'
-	        else ' ' end) as selected");
-	    foreach ($this->keysAndForeignKeys as $key => $value) {
-	        $query->select(" b." . $value["ref"]);
-	    }
+	    $query->select("distinct (case when $caseCheck then 'selected' else ' ' end) as selected");
+	    $query->select(" b." . $this->keysAndForeignKeys["ref"]);
+	    $query->select(" b." . $valueColumn);
 	    $query->from($this->referenceStruct->foreignTable . " as b ")
 	        ->where("b.state = 1")
-	        ->order("b." . $this->keysAndForeignKeys[0]["ref"]. " ASC");
+	        ->order("b.$valueColumn ASC");
 	    $db->setQuery($query);
 	    return $db->loadObjectList();
 	}
@@ -220,14 +213,13 @@ class FieldsGenerator {
 	private def CharSequence genGetAllData() '''
 		protected function getAllData()
 		{
+		    $valueColumn = $this->getAttribute("valueColumn");
 		    $db = JFactory::getDbo();
 		    $query = $db->getQuery(true);
-		    foreach ($this->keysAndForeignKeys as $k => $v) {
-		        $query->select("b." . $v["ref"]);
-		    }
+		    $query->select(" b." . $this->keysAndForeignKeys["ref"]);
 		    $query->from($this->referenceStruct->foreignTable . " as b")
 		    ->where("b.state = 1")
-		    ->order("b." . $this->keysAndForeignKeys[0]["ref"] . " ASC");
+		    ->order("b.$valueColumn ASC");
 		    $db->setQuery($query);
 		    return $db->loadObjectList();
 		}
@@ -237,9 +229,8 @@ class FieldsGenerator {
 		public function generateJsonValue($data)
 		{
 		    $result  = array();
-		    foreach ($this->keysAndForeignKeys as $key => $value) {
-		        $result["jform_" .  $value["key"]] = $data->{$value["ref"]};
-		    }
+		    $value = $this->keysAndForeignKeys;
+		    $result["jform_" .  $value["key"]] = $data->{$value["ref"]};
 		    return json_encode($result);
 		}
 	'''
@@ -248,7 +239,8 @@ class FieldsGenerator {
 		public function generateStringValue($data)
 		{
 		    $result = array();
-		    $result[] = $data->{$this->keysAndForeignKeys[0]["ref"]} . " ";
+		    $valueColumn = $this->getAttribute("valueColumn");
+		    $result[] = $data->{$valueColumn} . " ";
 		    return implode($result);
 		}
 	'''

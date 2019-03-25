@@ -11,11 +11,13 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageFi
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameter
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.IDAttribute
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
 
 /**
  * This class contains the templates to generate the necessary code for views.
@@ -39,30 +41,30 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
         	 «IF !page.containsParamertergroup("params") »
         	     <fields name="params">
         	       «genSettingForIndexPage(pagename,page,component)»
-        	     «ELSE»
-        	         <fields name="request">
-        	         «genSettingForDetailsPage(pagename,page,component)»
-        	         </fields>
-        	         <fields name="params">
-        	         «ENDIF»
-                «IF page.extendedLocalParametersListe.length>0 && !page.containsParamertergroup("local") »
-                    <fieldset name="local" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, page.name), StaticLanguage.PARAMS_LOCAL_LABEL)»">
-                        «generateParameter(page.extendedLocalParametersListe, component)»
-                    </fieldset>
-                «ENDIF»
-                «IF page.extendedGlobalParametersListe.length>0 &&  !page.containsParamertergroup("global")»
-                    <fieldset name="global" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, page.name), StaticLanguage.PARAMS_GLOBAL_LABEL)»">
-                        «generateParameter(page.extendedGlobalParametersListe, component)»
-                    </fieldset>
-                «ENDIF»
-                «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»
-                    <fieldset name="«e.name.toLowerCase»"  label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name), e.name)»"> 
-                        «generateParameter(e.extendedParameterList, component)»
-                    </fieldset>
-                «ENDFOR»
-                </fields>
-                </metadata>
-              '''
+        	 «ELSE»
+        	     <fields name="request">
+        	     «genSettingForDetailsPage(pagename,page,component)»
+        	     </fields>
+        	     <fields name="params">
+        	 «ENDIF»
+        	       «IF page.extendedLocalParametersListe.length>0 && !page.containsParamertergroup("local") »
+        	           <fieldset name="local" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, page.name), StaticLanguage.PARAMS_LOCAL_LABEL)»">
+        	               «generateParameter(page.extendedLocalParametersListe, component)»
+        	           </fieldset>
+        	       «ENDIF»
+        	       «IF page.extendedGlobalParametersListe.length>0 &&  !page.containsParamertergroup("global")»
+        	           <fieldset name="global" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, page.name), StaticLanguage.PARAMS_GLOBAL_LABEL)»">
+        	               «generateParameter(page.extendedGlobalParametersListe, component)»
+        	           </fieldset>
+        	       «ENDIF»
+        	       «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»
+        	           <fieldset name="«e.name.toLowerCase»"  label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name), e.name)»"> 
+        	               «generateParameter(e.extendedParameterList, component)»
+        	           </fieldset>
+        	       «ENDFOR»
+        	       </fields>
+        	       </metadata>
+    	     '''
 
     /**
      * Generate the setting parameters for the configuration of a menu item. The admin can select an item.
@@ -186,14 +188,11 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     def CharSequence xmlAdminFields(ExtendedDynamicPage page, ExtendedComponent component, String name) '''
         <?xml version="1.0" encoding="utf-8"?>
         <form>
-            <field name="«page.extendedEntityList.get(0).primaryKey.name»" type="hidden" default="0" label="JGOBAL_FIELD_ID_LABEL"
-                readonly="true" class="readonly"
-                description="JGLOBAL_FIELD_ID_DESC" /> 
             <field name="created_by" type="hidden" default="" 
                 label="JGLOBAL_FIELD_CREATED_BY_LABEL"
                 description="JGLOBAL_FIELD_CREATED_BY_DESC"  /> 
             «FOR ExtendedEntity e : page.extendedEntityList»
-                «FOR ExtendedAttribute attr : e.ownExtendedAttributes.filter[t | !t.isIsprimary]»
+                «FOR ExtendedAttribute attr : e.ownExtendedAttributes»
                     «writeAttribute(e, attr, component, page)»
                 «ENDFOR»
             «ENDFOR»
@@ -206,8 +205,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                     «generateParameter(page.extendedGlobalParametersListe, component)»
                 </fieldset>
                 «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»<fieldset name="«e.name.toLowerCase»"  label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name), e.name)»" 
-                        «generateParameter(e.extendedParameterList, component)»
-                        «generateParameter(e.extendedParameterList,component)»
+                            «generateParameter(e.extendedParameterList, component)»
+                            «generateParameter(e.extendedParameterList,component)»
                     </fieldset>
                 «ENDFOR»
             </fields>
@@ -294,7 +293,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                                 <option value="«kv.name»">«Slug.addLanguage(component.languages, newArrayList("com", component.name, page.name, attr.name, kv.value, "OPTION"), kv.value)»</option>
                             «ENDFOR»
                         </field> 
-                    ''')
+                ''')
             }
             case "imagepicker": {
                 result.append('''
@@ -399,21 +398,21 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
         var String type = getHtmlTypeOfAttribute(page, field.extendedAttribute, entity, component)
         var Entity refEntity = field.fieldtype.eContainer as Entity
         var ExtendedReference ref = entity.searchRefWithAttr(field.attribute, refEntity)
-        
+
         var fieldName = field.attribute.name
-        
-        if (ref !== null) {
+
+        if (ref !== null && ref.entity instanceof MappingEntity === false) {
             fieldName = ref.referenceAttribute
         }
-                
+
         var fieldLabel = Slug.addLanguage(component.languages,
-            newArrayList("com", component.name, "FORM", "LBL", entity.name, fieldName, "LABEL"),
-            fieldName)
+            newArrayList("com", component.name, "FORM", "LBL", entity.name, fieldName, "LABEL"), fieldName)
         var fieldDescription = Slug.addLanguage(component.languages,
             newArrayList("com", component.name, "FORM", "LBL", entity.name, fieldName, "DESC"),
             StaticLanguage.getCommonDescriptionFor(fieldName))
-        
-        if (field.extendedAttribute.theBaseElementOfUniquePair && field.extendedAttribute.instance instanceof IDAttribute === false) {
+
+        if (field.extendedAttribute.theBaseElementOfUniquePair &&
+            field.extendedAttribute.instance instanceof FKAttribute === false) {
             return '''
                 <field name="«field.attribute.name»"
                     type="hidden"
@@ -436,7 +435,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                             label="«fieldLabel»"
                             description="«fieldDescription»"
                             tables="{'table':'#__«component.name»_«entity.name»', 'foreignTable':'#__«component.name»_«ref.entity.name»'}"
-                            referenced_keys="{«writeRefrence(ref)» }"
+                            referenced_keys="«writeRefrence(ref)»"
+                            valueColumn="«ref.referencedAttribute»"
                             primary_key_name="«entity.primaryKey.name»"
                                  «FOR KeyValuePair kvpair : field.attributes»
                                      «kvpair.name» = "«kvpair.value»"
@@ -456,7 +456,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                             description="«fieldDescription»"
                             «FOR KeyValuePair kvpair : field.attributes»
                                 «kvpair.name» = "«kvpair.value»"
-                                «ENDFOR»
+                            «ENDFOR»
                             />
                             «FOR ExtendedReference refItem : listOfref»
                                 «var languageKey = Slug.getNReferenceLanguageKey(component, refItem, entity.name)»
@@ -473,7 +473,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                                     />
                                 «ENDFOR»
                             «ENDFOR»
-                        '''
+                    '''
                 }
                 default: {
                 }
@@ -484,13 +484,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     }
 
     def String writeRefrence(ExtendedReference reference) {
-        var result = newArrayList
-        
-        for(var i = 0; i < reference.attribute.size; i++) {
-            result.add(''''«i»':{ 'key': '«reference.referenceIDAttribute»', 'ref': '«reference.attributerefereced.get(i).name»'}''')
-        }
-        
-        return result.join(", ")
+        return '''{ 'key': '«reference.referenceIDAttribute»', 'ref': '«reference.referencedIDAttribute»'}'''
     }
 
     /**
@@ -506,18 +500,23 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     public def String getHtmlTypeOfAttribute(ExtendedDynamicPage dynP, ExtendedAttribute attr, ExtendedEntity en,
         ExtendedComponent com) {
         var StringBuffer buff = new StringBuffer
-        for (ExtendedReference ref : en.allExtendedReferences.filter[t|t.upper.equalsIgnoreCase("1")]) {
+        
+        for (ExtendedReference ref : en.allExtendedReferences.filter[ t |
+            t.upper.equalsIgnoreCase("1")
+        ]) {
             if (ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)) {
                 buff.append('''type="«en.name + "to" +ref.entity.name»"''')
                 return buff.toString
             }
         }
+        
         if (!dynP.extendedEditedFieldsList.empty) {
             var ExtendedDetailPageField field = Slug.getEditedFieldsForattribute(dynP, attr)
             if (field !== null && field.type !== null) {
                 return Slug.getTypeName(field.type, field.extendedAttribute)
             }
         }
+        
         buff.append('''type="hidden"''')
         return buff.toString.toLowerCase;
     }

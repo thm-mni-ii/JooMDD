@@ -241,11 +241,6 @@ class DetailsPageTemplateBackendHelper {
 		                <fieldset class="adminform">
 		                    <input
 		                        type="hidden"
-		                        name="jform[«mainEntity.primaryKey.name»]"
-		                        value="<?php echo $this->item->«mainEntity.primaryKey.name»; ?>"
-		                    />
-		                    <input
-		                        type="hidden"
 		                        name="jform[ordering]"
 		                        value="<?php echo $this->item->ordering; ?>"
 		                    />

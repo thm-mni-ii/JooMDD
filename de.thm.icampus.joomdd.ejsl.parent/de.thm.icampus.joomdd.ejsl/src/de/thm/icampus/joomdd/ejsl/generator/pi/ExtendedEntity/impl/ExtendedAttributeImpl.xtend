@@ -132,11 +132,11 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 		    result = result + "NOT NULL "
 		}
 
-		if (eJSlType.^default!= null){
+		if (eJSlType.^default!= null) {
 		    result = result + "DEFAULT " + '''"«eJSlType.^default.toString()»"'''
 		}
 			
-		if (eJSlType.autoincrement || isprimary){
+		if (eJSlType.autoincrement) {
 		    result = result + " AUTO_INCREMENT "
 		}	
 
@@ -166,4 +166,12 @@ class ExtendedAttributeImpl extends AttributeImpl implements ExtendedAttribute {
 	override isTheBaseElementOfUniquePair() {
 		return isTheBaseElement
 	}
+
+    override isAutoIncrement() {
+        if (this.type instanceof StandardTypes) {
+            return type.autoincrement
+        } else {
+            return false
+        }
+    }
 }
