@@ -173,7 +173,7 @@ class FieldsGenerator {
 		                   class='form-control'
 		                   name='" . $this->name. "select'
 		               >";
-		    $html[] = "<option>". Text::_("JOPTION_SELECT_" . strtoupper($this->fieldname)). "</option>";
+		    $html[] = "<option>". Text::_("JSELECT"). "</option>";
 		    foreach ($selectData as $selected) {
 		        $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
 		        . $this->generateStringValue($selected) ."</option>";
@@ -194,11 +194,16 @@ class FieldsGenerator {
 	protected function getReferencedata($data)
 	{
 	    $fk = $this->keysAndForeignKeys["key"];
-	    $caseCheck = "b." . $this->keysAndForeignKeys["ref"] . " = " . $data->$fk;
 	    $valueColumn = $this->getAttribute("valueColumn");
 	    $db = JFactory::getDbo();
 	    $query = $db->getQuery(true);
-	    $query->select("distinct (case when $caseCheck then 'selected' else ' ' end) as selected");
+	    if ($data->$fk === null) {
+	        $caseSelected = "' '";
+	    } else {
+	        $caseCheck = "b." . $this->keysAndForeignKeys["ref"] . " = " . $data->$fk;
+	        $caseSelected = "(case when $caseCheck then 'selected' else ' ' end)";
+	    }
+	    $query->select("distinct $caseSelected as selected");
 	    $query->select(" b." . $this->keysAndForeignKeys["ref"]);
 	    $query->select(" b." . $valueColumn);
 	    $query->from($this->referenceStruct->foreignTable . " as b ")
@@ -216,7 +221,8 @@ class FieldsGenerator {
 		    $valueColumn = $this->getAttribute("valueColumn");
 		    $db = JFactory::getDbo();
 		    $query = $db->getQuery(true);
-		    $query->select(" b." . $this->keysAndForeignKeys["ref"]);
+		    $query->select("b." . $this->keysAndForeignKeys["ref"]);
+		    $query->select("b.$valueColumn");
 		    $query->from($this->referenceStruct->foreignTable . " as b")
 		    ->where("b.state = 1")
 		    ->order("b.$valueColumn ASC");
