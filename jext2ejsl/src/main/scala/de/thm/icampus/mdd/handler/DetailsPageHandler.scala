@@ -16,7 +16,7 @@ import scala.io.Source
 import scala.xml.{Node, XML}
 //tim
 object DetailsPageHandler {
-  val toIgnoreAttribute = List("state","created_by","ordering","checked_out_time","checked_out","published","params","asset_id","rules","filter")
+  val toIgnoreAttribute = List("state","required","created_by","ordering","checked_out_time","checked_out","published","params","asset_id","rules","filter")
   val toIgnoreFiedlAttr= List("label","description","type","name")
   def searchExpressionAfterFrom(fromName: String, from: Expression): Expression = {
 
@@ -547,12 +547,7 @@ object DetailsPageHandler {
         createAttribut(tg)
       }).toSet)
       val setAttr = attrAsXML \\"fieldset"
-    /**var f = setAttr.map(t =>{
-        var sAttr = t \\ "field"
-      allattr=  allattr.++(sAttr.map(tg => {
-        createAttribut(tg)
-      }))
-      })*/
+
       return allattr
 
     }
@@ -606,14 +601,17 @@ object DetailsPageHandler {
         // println(tableName)
       }
     }
+
     if (tableName == "") {
       var tempTablePAth = new File (backendPath.toString + "/tables/" + modelFilename)
       if (tempTablePAth.exists()) {
         tableName = pageName
       }
+
     }
+    var tablePath:File = null ;
     if (tableName != "" ) {
-      val tablePath = new File (backendPath.toString + "/tables/" + (tableName.toLowerCase + ".php"))
+      tablePath = new File (backendPath.toString + "/tables/" + (tableName.toLowerCase + ".php"))
       if (tablePath.exists()) {
         val tableContentText = Source.fromFile(tablePath).mkString
         val tableContentParsed = PHPParser.parse(tableContentText)
@@ -725,10 +723,20 @@ object DetailsPageHandler {
       if (Files.exists(paramsPath.toPath)) {
         pageParams = readParams(paramsPath.toPath)
       }
-      return new DetailsPage(pageName,dbTable.toString.split("_").last,isEdit,pageParams,column,formAttributes)
+      var resultDetailsPage = new DetailsPage(pageName,dbTable.toString.split("_").last,isEdit,pageParams,column,formAttributes)
+      resultDetailsPage.modelPath = (modelPath ).toString + File.separator  + modelFilename
+      resultDetailsPage.viewPath = (viewFolder).toString + File.separator  + "view.html.php"
+
+      if(tablePath != null && tablePath.exists())
+        resultDetailsPage.tablePath = tablePath.getAbsolutePath
+
+      return resultDetailsPage
     }
 
-
-    return new CustomPage(pageName)
+    var resultCustom = new CustomPage(pageName)
+    resultCustom.modelPath = (modelPath ).toString + File.separator  + pageName + ".php"
+    resultCustom.viewPath = (viewFolder).toString + File.separator  +"view.html.php"
+    resultCustom.viewFolder = (viewFolder).toString
+    return resultCustom
   }
 }

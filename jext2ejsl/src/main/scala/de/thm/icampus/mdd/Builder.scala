@@ -7,7 +7,7 @@ import de.thm.icampus.mdd.implicits.Conversions._
 import de.thm.icampus.mdd.model.EJSLModel
 import de.thm.icampus.mdd.model.extensions.Extension
 import de.thm.icampus.mdd.model.extensions.PackageExtension
-import de.thm.icampus.mdd.templates.EJSLModelTemplate
+import de.thm.icampus.mdd.generator.EJSLModelTemplate
 
 import scala.io.{Codec, Source}
 import scala.xml.{Elem, XML}

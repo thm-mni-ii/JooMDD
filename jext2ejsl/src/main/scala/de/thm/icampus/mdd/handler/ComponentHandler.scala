@@ -2,6 +2,7 @@ package de.thm.icampus.mdd.handler
 
 import java.nio.file.{Files, Path}
 
+import de.thm.icampus.mdd.handler.DetailsPageHandler.readMemberCallStaticAccAttr
 import de.thm.icampus.mdd.implicits.Conversions._
 import de.thm.icampus.mdd.parser.SQLParser
 import de.thm.mni.ii.phpparser.PHPParser
@@ -11,6 +12,8 @@ import de.thm.icampus.mdd.model.{Language, Manifest}
 import de.thm.icampus.mdd.model.extensions._
 import de.thm.icampus.mdd.model.sql.Table
 import de.thm.icampus.mdd.model.sql.Entity
+import de.thm.mni.ii.phpparser.ast.Expressions.{MemberCallPropertyAcc, SimpleAssignmentExp}
+
 import scala.io.{Codec, Source}
 import scala.xml.{Elem, XML}
 
@@ -51,6 +54,7 @@ object ComponentHandler extends Handler {
 
   def handle(extensionRoot: Path, xmlManifest: Elem)(implicit codec: Codec = Codec.UTF8): ComponentExtension = {
     val manifest: Manifest = Manifest.fromXml(xmlManifest)
+
     val languages: Set[Language] = Language.fromXmlManifest(xmlManifest, extensionRoot)
 
     val xmlName = (xmlManifest \ "name").text.toLowerCase // com_name -> name
@@ -71,11 +75,20 @@ object ComponentHandler extends Handler {
       val viewsPath = frontendPath + "views"
       val modelpath = frontendPath + "models"
 
-      Files.newDirectoryStream(viewsPath).foreach {
+      var viewFiles = Files.newDirectoryStream(viewsPath)
+      viewFiles.foreach {
         case viewFolder: Path if Files.isDirectory(viewFolder) ⇒ {
+          val viewName: String = viewFolder.getFileName.toString
+          val ViewFilename = viewName + "/view.html.php"
           val pageName: String = viewFolder.getFileName.toString
-          val modelFilename = pageName + ".php"
-          if (Files.exists(modelpath + modelFilename)) {
+          var modelFilename = pageName + ".php"
+          var existModelName = Files.exists(modelpath + modelFilename)
+          if(!existModelName && Files.exists(viewsPath + ViewFilename)){
+             modelFilename = searchModelNameInView(viewsPath,ViewFilename) + ".php"
+            existModelName = Files.exists(modelpath + modelFilename)
+          }
+
+          if (existModelName) {
             val ts = Source.fromFile(modelpath + modelFilename).mkString
             val fileResult = PHPParser.parse(ts)
             val fileClass = DetailsPageHandler.searchClass(fileResult)
@@ -99,19 +112,23 @@ object ComponentHandler extends Handler {
               }
               case "JModelLegacy" =>{
                 var litsQ = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
-                var buildQ = DetailsPageHandler.searchMethod("getListQuery",bodyClass)
+                var buildQ = DetailsPageHandler.searchMethod("buildQuery",bodyClass)
                 if(litsQ != null | buildQ != null){
                   frontEndPages = frontEndPages.+(IndexPageHandler.createIndexpage(bodyClass, pageName, modelpath, viewFolder))
                 }else{
                   frontEndPages = frontEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,true,modelpath,backendPath,modelFilename,pageName, viewFolder))
                 }
               }
-              case _ =>  frontEndPages = frontEndPages.+(new CustomPage(className))
+              case _ =>{
+
+                frontEndPages = frontEndPages.+(new CustomPage(pageName))
+              }
             }
           }
         }
           case ignored: Path ⇒ println("Ignore File: " + ignored)
         }
+      viewFiles.close();
       }
 
 
@@ -133,11 +150,20 @@ object ComponentHandler extends Handler {
       )
 
 
-      Files.newDirectoryStream(viewsPath).foreach{
+      var viewsFiles = Files.newDirectoryStream(viewsPath)
+      viewsFiles.foreach{
         case viewFolder: Path if Files.isDirectory(viewFolder) ⇒ {
+          val viewName: String = viewFolder.getFileName.toString
+          val ViewFilename = viewName + "/view.html.php"
           val pageName: String = viewFolder.getFileName.toString
-          val modelFilename = pageName + ".php"
-          if (Files.exists(modelpath + modelFilename)) {
+          var modelFilename = pageName + ".php"
+          var existModelName = Files.exists(modelpath + modelFilename)
+          if(!existModelName && Files.exists(viewsPath + ViewFilename)){
+            modelFilename = searchModelNameInView(viewsPath,ViewFilename) + ".php"
+            existModelName = Files.exists(modelpath + modelFilename)
+          }
+
+          if (existModelName) {
             val ts = Source.fromFile(modelpath + modelFilename).mkString
             val fileResult = PHPParser.parse(ts)
             val fileClass = DetailsPageHandler.searchClass(fileResult)
@@ -168,12 +194,13 @@ object ComponentHandler extends Handler {
                   backEndPages = backEndPages.+(DetailsPageHandler.createDetailsPage(bodyClass,true,modelpath,backendPath,modelFilename,pageName, viewFolder))
                 }
               }
-              case _=> backEndPages = backEndPages.+(new CustomPage(className))
+              case _=> backEndPages = backEndPages.+(new CustomPage(pageName))
             }
           }
         }
         case ignored: Path ⇒ println("Ignore File: " + ignored)
       }
+      viewsFiles.close();
     }
 
 
@@ -186,34 +213,13 @@ object ComponentHandler extends Handler {
       paramGroups = paramGroups ++ IndexPageHandler.readParams(frontendConfigPath)
     }
 
-    /*
-    // Read admin forms xml definitions and fill html type in entities
-    val xmlFormsRootPath = backendPath + "models" + "forms"
 
-    // -- Search for entities as xml form and read the html type for each attribute defined in entities (read from sql)
-         entities.foreach(entity ⇒ {
-         val entityPath = xmlFormsRootPath + s"${entity.name}.xml"
-          if (Files.exists(entityPath)) {
-            val entityString = Source.fromFile(entityPath).mkString
-            val entityXML = XML.loadString(entityString)
-            val fields = entityXML \\ "field"
-            //val fieldNameToType =
-
-          } else {
-            println(s"Ignore html entity in '$entityPath' reason 'not found' ")
-          }
-        })*/
     entities.foreach(s=> s.setExtentionName(extensionName))
    if(!frontEndPages.isEmpty)
    frontEndPages.forEach(e => setEntity(e,entities))
     if(!backEndPages.isEmpty)
     backEndPages.foreach(d=> setEntity(d,entities))
-    //val allParamsSet = frontEndPages.map(p=> p.globalParamNames.map(x => x.name).toList).toList
-    //val globalSet = searchGloSet(allParamsSet)
-    //val allParamssObject = frontEndPages.map(p=> p.globalParamNames.map(x => )).toList
-    //var frontPageParams : Set[JParamGroup] = Set.empty[JParamGroup]
-   //frontEndPages.foreach(f => (f.globalParamNames.foreach(df=>if(!jgroupExist(frontPageParams,df))frontPageParams = frontPageParams .+(df))))
-    //val genParam = backEndPages.filter(d => frontPageParams.contains(d))
+
 
     var frontEndPagesEnd = Set.empty[Page]
     val d = frontEndPages.foreach(pg =>{
@@ -229,11 +235,33 @@ object ComponentHandler extends Handler {
        extensionName,
       manifest,
       languages,
-      Frontend(frontEndPagesEnd),
-      Backend(backEndPages),
+      new Frontend(frontEndPagesEnd),
+      new Backend(backEndPages),
       entities,
       paramGroups
     )
   }
 
+  def searchModelNameInView(viewsPath:Path, ViewFilename:String):String={
+    val viewContenString = Source.fromFile(viewsPath + ViewFilename).mkString
+    val viewContentAst = PHPParser.parse(viewContenString)
+    val ViewClass = DetailsPageHandler.searchClass(viewContentAst)
+    val bodyClass = ViewClass.body
+    var getDisplayFunkt  = DetailsPageHandler.searchMethod("display",bodyClass)
+    if(getDisplayFunkt != null) {
+      val allStmtsItem = getDisplayFunkt.body match {
+        case Some(e) => e
+      }
+      var displayModelStatment = DetailsPageHandler.searchStatmentAfterMember("this","getModel",allStmtsItem.stmnts,true)
+      if(displayModelStatment != null){
+        var expm = displayModelStatment._1.exp.asInstanceOf[SimpleAssignmentExp]
+        val call = expm.exp.asInstanceOf[MemberCallPropertyAcc]
+        if (call.args.size != 0) {
+          var tempModelName = readMemberCallStaticAccAttr(call.from, call.member, call.args, getDisplayFunkt, "this", "getModel", 0)
+          tempModelName
+        }
+      }
+    }
+    ""
+  }
 }

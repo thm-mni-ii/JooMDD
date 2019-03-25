@@ -468,7 +468,14 @@ object IndexPageHandler {
                     if (Files.exists(paramsPath.toPath)) {
                        pageParams = readParams(paramsPath.toPath)
                     }
-                    return new IndexPage(pageName,dbTablew.toString.split("_").last,pageParams,colums.toSet,filters.toSet)
+                    var resultIndexPage = new IndexPage(pageName,dbTablew.toString.split("_").last,pageParams,colums.toSet,filters.toSet)
+                    resultIndexPage.modelPath = (modelpath ).toString + File.separator  + pageName + ".php"
+                    resultIndexPage.viewPath = (viewFolder).toString + File.separator  +"view.html.php"
+                    resultIndexPage.viewLayoutPath = viewFolder.toString + File.separator +"tmpl"+ File.separator + "default.php"
+
+
+                    return resultIndexPage
+
 
                   }
                 }
@@ -480,7 +487,11 @@ object IndexPageHandler {
       }
 
     }
-   return new CustomPage(pageName)
+   var resultCustom = new CustomPage(pageName)
+   resultCustom.modelPath = (modelpath ).toString + File.separator  + pageName + ".php"
+   resultCustom.viewPath = (viewFolder).toString + File.separator  +"view.html.php"
+   resultCustom.viewFolder = (viewFolder).toString
+   return resultCustom
   }
   val toIgnoreFiedlAttr= List("label","description","type","name")
   def createParam(tg: Node):JParam  = {
