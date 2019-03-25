@@ -82,15 +82,23 @@ class ExtendedReferenceImpl extends ReferenceImpl implements ExtendedReference {
 	}
 	
     override getReferenceIDAttribute() {
-        return this.attribute.get(1).name
+        if (this.attribute.size === 1) {
+            return this.getReferenceAttribute
+        } else {
+            return this.attribute.get(1).name
+        }
+    }
+    
+    override getReferenceAttribute() {
+        return this.attribute.get(0).name
     }
     
     override getReferencedIDAttribute() {
-        return this.attributerefereced.get(1).name
-    }
-    
-     override getReferenceAttribute() {
-        return this.attribute.get(0).name
+        if (this.attributerefereced.size === 1) {
+            return this.getReferencedAttribute
+        } else {
+            return this.attributerefereced.get(1).name
+        }
     }
     
     override getReferencedAttribute() {

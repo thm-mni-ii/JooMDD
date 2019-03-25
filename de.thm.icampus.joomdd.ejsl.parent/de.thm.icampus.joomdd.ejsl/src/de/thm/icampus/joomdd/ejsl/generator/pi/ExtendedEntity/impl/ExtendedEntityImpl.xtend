@@ -188,11 +188,12 @@ class ExtendedEntityImpl extends EntityImpl implements ExtendedEntity {
     }
 
     override searchRefWithAttr(Attribute attribute, Entity entity) {
-        for (ExtendedReference ref : this.allExtendedReferences) {
+        
+       for (ExtendedReference ref : this.allExtendedReferences) {
             if (ref.attribute.contains(attribute) && ref.entity === entity) {
                 return ref
             }
-        }
+        }  
 
         return null
     }

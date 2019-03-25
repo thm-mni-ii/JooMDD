@@ -45,8 +45,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import de.thm.icampus.joomdd.ejsl.eJSL.impl.KeyValuePairImpl
 import org.eclipse.emf.ecore.EPackage
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.IDAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -129,7 +129,9 @@ public class Slug  {
 			    result='''type="filepicker"'''
 			}
 			case "Text_Field_NE":{
-			    result='''type="text" '''
+			    result='''
+			    type="text"
+			    readonly="true"'''
 			} 
 			case "Editor":{
 			    result='''type="editor" '''
@@ -202,30 +204,34 @@ public class Slug  {
 	
 	def static CharSequence generateEntytiesInputAttribute(EList<ExtendedDetailPageField> fields, ExtendedEntity entity) {
 		var StringBuffer buff = new StringBuffer()
-		var notShow = newArrayList("state","created_by","asset_id","ordering","checked_out_time","checked_out", "published", "params")
-		notShow.add(entity.primaryKey.name)
-		
+		var notShow = newArrayList(
+		    "state",
+		    "created_by",
+		    "asset_id",
+		    "ordering",
+		    "checked_out_time",
+		    "checked_out",
+		    "published",
+		    "params"
+		)
+
 		for (ExtendedDetailPageField fielditem: fields) {
 			if (!notShow.contains(fielditem.extendedAttribute.name)) {
-				buff.append(inputFeldTemplate(fielditem.extendedAttribute))
+				buff.append(fieldTemplateLabelInput(fielditem.extendedAttribute))
 				notShow.add(fielditem.extendedAttribute.name)
 			}	
 		}
-		
-		for (ExtendedAttribute attr: entity.ownExtendedAttributes){
-			if (!notShow.contains(attr.name)) {
-				buff.append(inputHiddenFeldTemplate(attr))
-			}
-		}
-		
+
 		return buff.toString
 	}
 			
-	def static CharSequence inputHiddenFeldTemplate(ExtendedAttribute attr) '''
-	    <div class="controls"><?php echo $this->form->getInput('«attr.name»'); ?></div>
+	def static CharSequence fieldTemplateInput(ExtendedAttribute attr) '''
+	    <div class="controls">
+	        <?php echo $this->form->getInput('«attr.name»'); ?>
+	    </div>
 	'''
 		
-	def static CharSequence inputFeldTemplate(ExtendedAttribute attr) '''
+	def static CharSequence fieldTemplateLabelInput(ExtendedAttribute attr) '''
 	    <div class="control-group">
 	        <div class="control-label">
 	            <?php echo $this->form->getLabel('«attr.name»'); ?>
@@ -235,7 +241,7 @@ public class Slug  {
 	        </div>
 	    </div>
 	'''
-	
+		
 	def static ExtendedDynamicPage getPageForDetails(ExtendedDynamicPage inpage, ExtendedComponent com) {
 		if (inpage.links.empty) {
 			for (ExtendedPageReference pg : com.backEndExtendedPagerefence) {
