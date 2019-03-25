@@ -204,10 +204,11 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                 <fieldset name="global" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, page.name), StaticLanguage.PARAMS_GLOBAL_LABEL)»">
                     «generateParameter(page.extendedGlobalParametersListe, component)»
                 </fieldset>
-                «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»<fieldset name="«e.name.toLowerCase»"  label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name), e.name)»" 
+                «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»
+                <fieldset name="«e.name.toLowerCase»" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name), e.name)»">
                             «generateParameter(e.extendedParameterList, component)»
                             «generateParameter(e.extendedParameterList,component)»
-                    </fieldset>
+                </fieldset>
                 «ENDFOR»
             </fields>
             <fields>
