@@ -42,6 +42,9 @@ public class TemplateConfigurationPage extends WizardPage implements SelectionLi
 		container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
 		
+		// TODO: options for J3 or J4 support (issue #114)
+		//createGeneratorOptions() ;
+		
 		createFilebrowser(container);
 		
 		setControl(container);

@@ -2,10 +2,12 @@ package de.thm.icampus.mdd
 
 import java.io.{File, PrintWriter}
 import java.nio.file.{Path, Paths}
+
 import javax.swing.{JFileChooser, JOptionPane}
 import javax.swing.filechooser.FileNameExtensionFilter
-
 import de.thm.icampus.mdd.Builder.EJSLModelFunctionWrapper
+import de.thm.icampus.mdd.evaluation.Evaluator
+import de.thm.icampus.mdd.model.EJSLModel
 
 import scala.util.{Failure, Success, Try}
 
@@ -16,6 +18,8 @@ object Main extends App {
 
   val noGui = arguments.contains(NoGUI)
 
+   val eva = arguments.contains(EvMod)
+  val evaAll = arguments.contains(EvModALL)
   try {
 
     val manifestPath : Path = if(noGui) {
@@ -38,12 +42,24 @@ object Main extends App {
     new PrintWriter(outputPath.toString) {
       write(eJSLModel.toTemplate); close()
     }
-
     if(!noGui){
       JOptionPane.showMessageDialog(null, "Model Saved in: " + outputPath)
     }
 
     println("Model Saved in: " + outputPath)
+
+    if(eva){
+      var evaluationPath = manifestPath.getParent.toAbsolutePath.toString + File.separator + eJSLModel.name + ".html"
+      Evaluator.evaluationOftheComponentsInModel(eJSLModel, evaluationPath)
+      println("Metric data  saved in: " + evaluationPath)
+    }
+    if(evaAll){
+      var evaluationPath = manifestPath.getParent.toAbsolutePath.toString + File.separator + eJSLModel.name + ".json"
+      Evaluator.evaluationOftheComponentsInModelJSON(eJSLModel, evaluationPath)
+      println("Metric data details saved in: " + evaluationPath)
+    }
+
+
 
   } catch {
     case e: Exception ⇒ {
@@ -76,6 +92,8 @@ object Main extends App {
   case object NoGUI extends ConsoleArgument
   case class OutputPath(path: Path) extends ConsoleArgument
   case class ManifestPath(path: Path) extends ConsoleArgument
+  case object EvMod extends ConsoleArgument
+  case object EvModALL extends ConsoleArgument
 
 
   /**
@@ -117,6 +135,8 @@ object Main extends App {
       }
     }
     case ("-ng" | "-no-gui") :: tail => resolveArguments(tail, arguments :+ NoGUI)
+    case ("-eva") :: tail => resolveArguments(tail, arguments :+ EvMod)
+    case ("-evaAll") :: tail => resolveArguments(tail, arguments :+ EvModALL)
     case ("-h" | "-help") :: tail =>
       print(s"""
          |jext2ejsl
@@ -153,5 +173,7 @@ object Main extends App {
       sys.exit(1)
     }
   }
+
+
 
 }

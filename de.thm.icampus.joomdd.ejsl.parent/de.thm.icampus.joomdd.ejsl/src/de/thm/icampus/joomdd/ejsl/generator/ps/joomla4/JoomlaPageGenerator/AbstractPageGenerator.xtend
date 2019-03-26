@@ -85,7 +85,7 @@ abstract public class AbstractPageGenerator {
 		        «generateParameter(page.extendedGlobalParamater, component)»
 		        «generateParameter(page.extendedLocalParameter, component)»
 		        «FOR ExtendedParameterGroup e : page.extendedParameterGroup »
-		        <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»" 
+		        <fieldset name="«e.name.toLowerCase»" label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»">
 		            «generateParameter(e.extendedParameterList, component)»
 		            «generateParameter(e.extendedParameterList,component)»
 		        </fieldset>

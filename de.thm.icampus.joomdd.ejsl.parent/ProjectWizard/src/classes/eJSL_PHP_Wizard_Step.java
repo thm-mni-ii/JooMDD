@@ -136,7 +136,7 @@ public class eJSL_PHP_Wizard_Step implements ProjectGeneratorPeer<Object> {
         JPanel descriptionPanel = new JPanel(new BorderLayout());
         JPanel previewPanel = new JPanel((new BorderLayout()));
 
-        JLabel joomddlogo = new JLabel(IconLoader.getIcon("/icons/Logo_b_php_small.png"));
+        JLabel joomddlogo = new JLabel(IconLoader.getIcon("/icons/joomdd.png"));
         
         JLabel autosaveWarning = new JLabel(IconLoader.getIcon("/icons/Infomation.png"));
         autosaveWarning.setText(

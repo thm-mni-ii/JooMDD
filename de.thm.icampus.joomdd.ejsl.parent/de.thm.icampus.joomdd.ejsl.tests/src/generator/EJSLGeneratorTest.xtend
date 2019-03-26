@@ -21,7 +21,7 @@ class EJSLGeneratorTest {
 	@Inject	
 	
 	@Test
-	public def checkEntityMappin(){
+	def checkEntityMappin(){
 		 var EJSLModel model = TemplateLoader.loadXMIModel("testmapping")
 		 
 		 var RessourceTransformer trans = new RessourceTransformer(model)

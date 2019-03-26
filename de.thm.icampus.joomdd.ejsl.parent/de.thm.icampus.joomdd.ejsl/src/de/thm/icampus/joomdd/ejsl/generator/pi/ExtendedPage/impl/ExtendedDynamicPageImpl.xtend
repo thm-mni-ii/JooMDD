@@ -93,7 +93,17 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
         if (instance instanceof DetailsPage) {
             this.isDetailsPage = true
             var DetailsPage dpg = instance as DetailsPage
-            extendedEditFieldsList.addAll(dpg.editfields.map [ t |
+            
+            // There might be more than one entity.
+            val referenceAttributeNameList = this.extendedEntity.get(0).allExtendedReferences.filter[reference |
+                reference.entity instanceof MappingEntity === false
+            ].map[ reference |
+                reference.referenceAttribute
+            ].toList
+            
+            extendedEditFieldsList.addAll(dpg.editfields.filter[ field |
+                referenceAttributeNameList.contains(field.attribute.name) === false
+            ].map [ t |
                 new ExtendedDetailPageFieldImpl(t)
             ])
         }
@@ -181,26 +191,18 @@ class ExtendedDynamicPageImpl extends DynamicPageImpl implements ExtendedDynamic
         ]
 
         if (extendedEntity !== null) {
-            val reference = extendedEntity.allRefactoryReference.findFirst [ reference |
-                reference.attribute.exists [ referenceAttribute |
-                    referenceAttribute.name.equals(attribute.name)
-                ]
+            val reference = extendedEntity.allRefactoryReference.filter[ reference |
+                reference.entity instanceof MappingEntity === false
+            ].findFirst [ reference |
+                reference.referenceAttribute.equals(attribute.name)
             ]
 
             if (reference !== null) {
                 // An attribute with a reference
-                var indexOpt = IntStream.range(0, reference.attribute.size()).filter [ i |
-                    reference.attribute.get(i).name.equals(attribute.name)
-                ].findFirst();
-
-                if (indexOpt.present === true) {
-                    var referencedAttribute = reference.attributerefereced.get(indexOpt.asInt)
-                    var type = attribute.entity.name
-                    
-                    return new TableColumn(reference.entity.name, referencedAttribute.name, type)
-                } else {
-                    throw new UnsupportedOperationException
-                }
+                var referencedAttributeName = reference.referencedAttribute
+                var type = attribute.entity.name
+                
+                return new TableColumn(reference.entity.name, referencedAttributeName, type)
             } else {
                 // An attribute with no reference
                 return new TableColumn(attribute.entity.name, attribute.name)

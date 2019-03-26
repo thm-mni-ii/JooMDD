@@ -7,6 +7,10 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
 import java.io.File
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Table
 
 /**
  * This class contains the templates to generate the fiel cardinalities.
@@ -14,7 +18,7 @@ import java.io.File
  * @author Dieudonne Timma, Dennis Priefer
  */
 class FieldsCardinalityGenerator extends FieldsGenerator {
-	
+    
 	Reference foreignReference
 	
 	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
@@ -63,7 +67,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		
 		    «genAttributValue»
 		
-		    «genGetData_item»
+		    «genGetDataItem»
 		
 		    «getAllReferenceData»
 		
@@ -78,7 +82,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		{
 		    $html = array();
 		    $document = Factory::getDocument();
-		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setMultipleForeignKeys.js');
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setmultipleforeignkeys.js');
 		    $input = Factory::getApplication()->input;
 		    $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
 		    if (empty($«entFrom.primaryKey.name»)) {
@@ -125,26 +129,33 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    return implode($html);
 		}
 	'''
-	def private genGetAllData()'''
-		protected function getAllData()
-		{
-		    $db = Factory::getDbo();
-		    $queryALL = $db->getQuery(true);
-		    $queryALL->select("
-		    «FOR foreignAttr : foreignReference.attribute»
-		    «IF foreignAttr != foreignReference.attribute.last»
-		    b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name» , 
-		    «ELSE»
-		    b.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name»
-		    «ENDIF»
-		    «ENDFOR»")
-		        ->from($this->referenceStruct["foreignTable"] . ' as b')
-		        ->where("state = 1")
-		        ->order(" «foreignReference.attributerefereced.get(0).name»  ASC");
-		    $db->setQuery($queryALL);
-		    return $db->loadObjectList();
-		}
-	'''
+	def private genGetAllData() {
+	    var query = new Query
+	    query.mainTable = new Table('''$foreignTable''', '''b''')
+	    for(attribute : foreignReference.attribute) {
+	        var column = new Column(query.mainTable.alias, foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attribute)).name)
+	        var select = new Select(column, attribute.name)
+            query.addToMainSelect(select)
+	    }
+	    
+	    var whereColumn = new Column(query.mainTable.alias, '''state''')
+	    var whereStatement = '''«whereColumn» = 1'''
+	    
+    	return '''
+    		protected function getAllData()
+    		{
+    		    $foreignTable = $this->referenceStruct['foreignTable'];
+    		    $db = Factory::getDbo();
+    		    $queryALL = $db->getQuery(true);
+    		    $queryALL->select("«query.mainSelect»")
+    		        ->from("«query.mainTable»")
+    		        ->where("«whereStatement»")
+    		        ->order("«foreignReference.attributerefereced.get(0).name»  ASC");
+    		    $db->setQuery($queryALL);
+    		    return $db->loadObjectList();
+    		}
+    	'''
+	}
 	def private genAttributValue()'''
 		protected function attributValue($referenceData)
 		{
@@ -157,6 +168,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    return json_encode($values);
 		}
 	'''
+	
+	// @todo: Use query classes from DatabaseQuery
 	def private getAllReferenceData()'''
 		protected function getAllReferenceData($item)
 		{
@@ -165,8 +178,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		
 		    $query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name» ,«ENDFOR»
 		    (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
-		        ->from($this->referenceStruct["foreignTable"] . " as A")
-		        ->leftJoin("(select * from " . $this->referenceStruct["mappingTable"] . " as C where 
+		        ->from($this->referenceStruct['foreignTable'] . " as A")
+		        ->leftJoin("(select * from " . $this->referenceStruct['mappingTable'] . " as C where 
 		            «FOR attr : mainRef.extendedAttributes»
 		            «IF attr != mainRef.extendedAttributes.last»
 		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name» = '$item->«attr.name»' AND 
@@ -188,17 +201,30 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    return $db->loadObjectList();
 		}
 	'''
-	def private genGetData_item()'''
-		protected function getDataItem($«entFrom.primaryKey.name»)
-		{
-		    $db = Factory::getDbo();
-		    $query = $db->getQuery(true);
-		    $query->select("*")->from($this->referenceStruct["table"])
-		        ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
-		    $db->setQuery($query);
-		    return $db->loadObject();
-		}
-	'''
+	def private genGetDataItem() {
+	    var query = new Query
+	    var selectColumn = new Column('''*''')
+	    query.addToMainSelect(new Select(selectColumn))
+        query.mainTable = new Table('''$table''')
+        
+        var whereColumn = new Column(entFrom.primaryKey.name)
+        var whereStatement = '''«whereColumn» = $«entFrom.primaryKey.name»'''
+        
+    	return '''
+    		protected function getDataItem($«entFrom.primaryKey.name»)
+    		{
+    		    $db = Factory::getDbo();
+    		    $table = $this->referenceStruct['table'];
+    		    $query = $db->getQuery(true);
+    		    $query->select("«query.mainSelect»")
+    		           ->from("«query.mainTable»")
+    		           ->where("«whereStatement»");
+    		    $db->setQuery($query);
+    		    return $db->loadObject();
+    		}
+    	'''
+	}
+	
 	def private genGenerateJsonValue()'''
 		public function generateJsonValue($data)
 		{
@@ -222,8 +248,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		}
 	'''
 	override dogenerate(String path, IFileSystemAccess access) {
-		if(this.mainRef !== null)
-			access.generateFile(path+ "/"+getnameField +".php", genRefrenceField)
-		
+		if(this.mainRef !== null) {
+            access.generateFile(newArrayList(path, getnameField.toLowerCase + ".php").join("/"), genRefrenceField)
+		}
 	}
 }

@@ -19,6 +19,7 @@ class ExtentionScriptGenerator {
 	Extension ex
 	ExtendedComponent com
 	String extName
+	
 	new(ExtendedComponent extensions, String name) {
 		ex = extensions
 		com = extensions

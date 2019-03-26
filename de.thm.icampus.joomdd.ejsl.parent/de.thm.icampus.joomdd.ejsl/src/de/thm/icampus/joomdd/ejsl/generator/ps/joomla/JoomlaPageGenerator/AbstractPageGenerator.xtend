@@ -20,6 +20,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
  * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 abstract public class AbstractPageGenerator {
+    
 	@Accessors IFileSystemAccess2 fsa
 	@Accessors String name
 	@Accessors String path = ""
@@ -86,7 +87,7 @@ abstract public class AbstractPageGenerator {
 		        «generateParameter(page.extendedGlobalParamater, component)»
 		        «generateParameter(page.extendedLocalParameter, component)»
 		        «FOR ExtendedParameterGroup e : page.extendedParameterGroup »
-		        <fieldset name="«e.name.toLowerCase»"  label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name, "LABEL"), e.name)»" 
+		        <fieldset name="«e.name.toLowerCase»" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name, "LABEL"), e.name)»">
 		            «generateParameter(e.extendedParameterList, component)»
 		            «generateParameter(e.extendedParameterList,component)»
 		        </fieldset>

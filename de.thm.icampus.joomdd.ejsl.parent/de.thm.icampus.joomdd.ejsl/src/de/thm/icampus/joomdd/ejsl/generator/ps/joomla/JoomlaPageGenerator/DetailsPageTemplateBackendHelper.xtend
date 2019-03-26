@@ -12,16 +12,19 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
  * @author Dieudonne Timma, Dennis Priefer
  */
 class DetailsPageTemplateBackendHelper {
-	private ExtendedDynamicPage dpage
-	private ExtendedComponent  com
-	private String sec
-	private ExtendedEntity mainEntity
+	
+	ExtendedDynamicPage dpage
+	ExtendedComponent  com
+	String sec
+	ExtendedEntity mainEntity
+	String componentHelperClassName
+	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
-		
 		dpage = dp
 		com = cp
 		sec = section
 		mainEntity = dp.extendedEntityList.get(0)
+		this.componentHelperClassName = '''Com«com.name.toFirstUpper»Helper'''
 	}
 		
 	def CharSequence generateAdminModelprepareTableFunction() '''
@@ -153,7 +156,7 @@ class DetailsPageTemplateBackendHelper {
 		    } else {
 		        $checkedOut = false;
 		    }
-		    $canDo = «com.name.toFirstUpper»Helper::getActions();
+		    $canDo = «componentHelperClassName»::getActions();
 
 		    JToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
 
@@ -236,11 +239,6 @@ class DetailsPageTemplateBackendHelper {
 		        <div class="row-fluid">
 		            <div class="span10 form-horizontal">
 		                <fieldset class="adminform">
-		                    <input
-		                        type="hidden"
-		                        name="jform[«mainEntity.primaryKey.name»]"
-		                        value="<?php echo $this->item->«mainEntity.primaryKey.name»; ?>"
-		                    />
 		                    <input
 		                        type="hidden"
 		                        name="jform[ordering]"

@@ -6,7 +6,7 @@ import java.util.regex.Pattern
 
 import de.thm.icampus.mdd.implicits.Conversions._
 import de.thm.icampus.mdd.implicits.OptionUtils._
-import de.thm.icampus.mdd.model.sql.{Attribute, Reference,Entity}
+import de.thm.icampus.mdd.model.sql.{Attribute, Entity, Reference}
 import net.sf.jsqlparser.JSQLParserException
 import net.sf.jsqlparser.parser.CCJSqlParserManager
 import net.sf.jsqlparser.statement.Statement
@@ -16,6 +16,9 @@ import scala.collection.JavaConversions._
 import scala.collection.mutable
 import scala.io.Source
 import net.sf.jsqlparser.parser.ParseException
+import net.sf.jsqlparser.statement.alter.Alter
+
+import scala.collection.JavaConverters._
 
 /**
  * Parse SQL files.
@@ -39,6 +42,7 @@ class SQLParser {
   val comment = "(--[^\\r\\n]*)|(\\/\\*\\*[\\w\\W]*\\*\\/)"
   // used to remove the "...if not exists... "
   val createTableRE = s"$tabOrSpaceRE?create$tabOrSpaceRE+table$tabOrSpaceRE+(if$tabOrSpaceRE+not$tabOrSpaceRE+exists$tabOrSpaceRE+)?([^\\(]*)$tabOrSpaceRE?\\([^;]*;$$"
+  val alterTable= s"$tabOrSpaceRE?alter$tabOrSpaceRE+table([\\t]|\\s)+([^\\(]*)([\\t]|\\s)?\\([^;]*;$$"
   // important! do not combine this expressions! one run with replaceAll required per exp, otherwise you'll burn your CPU ;-)
   val namedPKRE =      s"($tabOrSpaceRE?primary$tabOrSpaceRE+key$tabOrSpaceRE+)[^\\(]*(\\([^\\)]*\\))$$"
   val namedPKCommaRE = s"($tabOrSpaceRE?primary$tabOrSpaceRE+key$tabOrSpaceRE+)[^\\(]*(\\([^\\)]*\\),)$$"
@@ -73,15 +77,19 @@ class SQLParser {
     return null
   }
 
+
   def parseFile(path: Path): List[Entity] = {
     var tables: List[Entity] = List.empty[Entity]
     val sqlAsString = Source.fromFile(path).mkString
     val noCommentContent = sqlAsString.replaceAll(comment,"")
     val sqlAsStringWithoutJoomlaPlaceholder = noCommentContent.replaceAll("#__", "").replaceAll("ON DELETE CASCADE", "").replaceAll("ON UPDATE CASCADE", "")
 
-    val statements: List[String] = extractStatements(sqlAsStringWithoutJoomlaPlaceholder)
+    var statements: List[String] = extractStatements(sqlAsStringWithoutJoomlaPlaceholder)
+    val statementsAlter: List[String] = extractALterStatements(sqlAsStringWithoutJoomlaPlaceholder);
+
     val parser: CCJSqlParserManager = new CCJSqlParserManager
     val preparedStatements = statements.map(prepareStatement)
+    val preparedAltStmts = statementsAlter.map(prepareStatement)
 
     for (statementString <- preparedStatements) {
       val stmtString = statementString.replaceAll("(UNIQUE INDEX)|(unique index)","UNIQUE KEY")
@@ -114,6 +122,11 @@ class SQLParser {
 
         }
       }
+    }
+    // add Reference
+
+    for (altStatementString <- preparedAltStmts) {
+      parseAltStatments(parser.parse(new StringReader(altStatementString)), tables)
     }
 
     tables.filter(d => d!=null)toList
@@ -167,7 +180,30 @@ class SQLParser {
       }))
       new Entity(tableName, columns.filter(r=> !toIgnore.contains(r.name)).toList,reference)
     }
+
     case _ => null
+  }
+  def parseAltStatments(statement: Statement, tables: List[Entity])= {
+    statement  match {
+      case altSTM: Alter => {
+        var reference: List[Reference] = List.empty[Reference]
+        val table = altSTM.getTable.getName();
+        val entityList = tables.filter(ent => ent.name.equals(table))
+        if(entityList.size > 0)
+        {
+        var entity = entityList.get(0)
+        val foreigIndex = altSTM.getAlterExpressions.filter( t => t.getIndex.isInstanceOf[ForeignKeyIndex] )
+        foreigIndex.forEach(exp =>{
+          var foreignKeys = exp.getIndex.asInstanceOf[ForeignKeyIndex]
+          val column = foreignKeys.getColumnsNames.asScala
+          val refColums = foreignKeys.getReferencedColumnNames.asScala
+          val reftab = foreignKeys.getTable.getName
+          entity.setOneReference(new Reference(column.toList,reftab, refColums.toList));
+        })
+        }
+      }
+      case _=> null
+    }
   }
 
   def getPrimaryKey(indizes: List[Index]): String = {
@@ -189,54 +225,26 @@ class SQLParser {
     * @return a list of create-statement-strings
     */
   def extractStatements(content: String): List[String] = {
-//    var statements: mutable.MutableList[String] = mutable.MutableList
-//    var sanitizedContent = content.replace("`", "")
-//    /**
-//     * jSQLParser is not able to handle "primary key [name] ([name])," so the first name occurence got to be removed
-//     *
-//     * BEGIN - important
-//     * do not combine this expressions! one run with replaceAll required per exp, otherwise you'll burn your CPU ;-)
-//     */
-//    val namedPKMatcher = Pattern.compile(namedPKRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-//    while (namedPKMatcher.find()) {
-//      // 1 := "primary key"; 5: "([name])"
-//      sanitizedContent = namedPKMatcher.replaceAll(namedPKMatcher.group(1) + namedPKMatcher.group(5))
-//    }
-//    val namedPKCommaMatcher = Pattern.compile(namedPKCommaRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-//    while (namedPKCommaMatcher.find()) {
-//      // 1 := "primary key"; 5: "([name]),"
-//      sanitizedContent = namedPKCommaMatcher.replaceAll(namedPKCommaMatcher.group(1) + namedPKCommaMatcher.group(5))
-//    }
-//    /**
-//     * END - important
-//     */
-//
-//    val ukeyMatcher = Pattern.compile(ukeyRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-//    while (ukeyMatcher.find()) {
-//      if (!ukeyMatcher.group(5).isEmpty) {
-//        sanitizedContent = ukeyMatcher.replaceAll(ukeyMatcher.group(1) + ukeyMatcher.group(5) + ukeyMatcher.group(6))
-//      }
-//    }
-//
-//
-//    val createMatcher = Pattern.compile(createTableRE, Pattern.MULTILINE|Pattern.CASE_INSENSITIVE).matcher(sanitizedContent)
-//    var tableName: String = null
-//    var tableContent: String = null
-//    var ifNotExists: String = null
-//
-//    while (createMatcher.find()) {
-//      tableName = createMatcher.group(8).trim
-//      tableContent = createMatcher.group(0).trim
-//      ifNotExists = createMatcher.group(4)
-//      if (tableName.contains("\"") == false && tableName.contains("'") == false) {
-//        tableContent = tableContent.replace(tableName, s"`$tableName`")
-//      }
-//
-//      statements += tableContent
-//    }
+
 
     val allStatements = content.split("(?<=;)").map(_.trim)
     val createPattern = Pattern.compile(createTableRE, Pattern.MULTILINE | Pattern.CASE_INSENSITIVE | Pattern.DOTALL)
+
+    val statements = allStatements.filter(s => createPattern.matcher(s).matches())
+    statements.toList
+  }
+  /**
+    * Extracts all alter-statement-strings of an sql string.
+    * Skips all other statements.
+    *
+    * @param content cotains all statements
+    * @return a list of create-statement-strings
+    */
+  def extractALterStatements(content: String): List[String] = {
+
+
+    val allStatements = content.split("(?<=;)").map(_.trim)
+    val createPattern = Pattern.compile(alterTable, Pattern.MULTILINE | Pattern.CASE_INSENSITIVE | Pattern.DOTALL)
 
     val statements = allStatements.filter(s => createPattern.matcher(s).matches())
     statements.toList

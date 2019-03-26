@@ -42,8 +42,8 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import java.util.stream.Collectors
 import java.util.List
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
-import de.thm.icampus.joomdd.ejsl.generator.pi.util.IDAttribute
 import de.thm.icampus.joomdd.ejsl.eJSL.impl.AttributeImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -93,7 +93,7 @@ class RessourceTransformer {
         createMappingsTable(entityList)
         formatEntitiesAttribute(entityList)
         completeDetailsPage();
-
+                
         var JoomlaTranformator jt = new JoomlaTranformator(modelInstance)
         jt.completeCMSExtension
         completePage(feature.pages)
@@ -217,7 +217,7 @@ class RessourceTransformer {
                     }
                 }
                 Plugin: {
-                    // TODO                    
+                    // TODO
                 }
                 Library: {
                     // TODO
@@ -366,7 +366,7 @@ class RessourceTransformer {
             typeid.autoincrement = true
             id.type = typeid
             id.isprimary = true
-            ent.attributes.add(id)
+            ent.attributes.add(0, id)
         }
 
         for (attr : ent.attributes) {
@@ -498,7 +498,7 @@ class RessourceTransformer {
      */
     def Attribute setNewGenAttribute(Entity ent, Reference ref, AttributeImpl attrRef) {
         var Entity referenceEntity = ref.entity
-        var Attribute newAttribute = new IDAttribute
+        var Attribute newAttribute = new FKAttribute
         var refAttr = ref.attribute.get(0)
         
         // Mark this attribute as preserve.
@@ -680,9 +680,10 @@ class RessourceTransformer {
                 page.tablecolumns.add(attr)
 
             }
+            
             var DetailPageField df = existingAlreadyFieldWithAttr(page.editfields, attr)
             if (df !== null) {
-                completeDetailageField(df)
+                completeDetailpageField(df)
             } else {
                 page.editfields.add(parseAttributeType(attr))
             }
@@ -690,7 +691,7 @@ class RessourceTransformer {
     }
 
     // @todo
-    def completeDetailageField(DetailPageField field) {
+    def completeDetailpageField(DetailPageField field) {
         var attr = field.attribute
 
         if (attr !== null) {
@@ -702,7 +703,7 @@ class RessourceTransformer {
                 if (field.fieldtype !== null) {
                     field.fieldtype = null
                     var ComplexHTMLTypes result = EJSLFactory.eINSTANCE.createComplexHTMLTypes
-                    result.htmltype = ComplexHTMLTypeKinds.get("Hidden")
+                    result.htmltype = ComplexHTMLTypeKinds.get("hidden")
                     field.htmltype = result
                 }
             }
@@ -723,11 +724,7 @@ class RessourceTransformer {
         var df = list.findFirst [ df |
             df.attribute.name.equals(attribute.name)
         ]
-
-        if (df !== null) {
-            var bla = "";
-        }
-
+        
         return df
     }
 
@@ -969,17 +966,13 @@ class RessourceTransformer {
             }
             
             newAttr.id = attribute.id
-            // newAttr.isunique = attribute.isunique
-            
-            if (attribute.isIsprimary)
-                // newAttr.isunique = true
-                newAttr.preserve = attribute.preserve
+            newAttr.preserve = attribute.preserve
                 
             if (!this.containsAttribute(newAttr, result)) {
                 result.add(newAttr)
 
                 if (attribute.id && attribute.withattribute === null) {
-                    var newID = new IDAttribute
+                    var newID = new FKAttribute
                     newID.name = fromEntity.name + "_" + defaultPrimaryAttributeName
                     var StandardTypes typeid = EJSLFactory.eINSTANCE.createStandardTypes
                     typeid.type = StandardTypeKinds.INTEGER
@@ -993,7 +986,7 @@ class RessourceTransformer {
                 }
 
                 if (attribute.withattribute !== null) {
-                    var newUniq = new IDAttribute
+                    var newUniq = new FKAttribute
                     newUniq.name = fromEntity.name + "_" + attribute.withattribute.name
                     newUniq.type = Util.copyType(attribute.withattribute.type)
                     var type = newUniq.type
@@ -1058,13 +1051,13 @@ class RessourceTransformer {
 
     private def Reference createNewReverseReference(Entity from, Entity to, Reference oldRef) {
         var Reference newref = EJSLFactory.eINSTANCE.createReference
-        newref.attribute.addAll(to.attributes.filter [ t |
-            isContainInMappingEntity(t.name, to.name, from)
-        ])
+        var toReference = from.references.findFirst[ reference |
+            reference.entity.name.equals(to.name)
+        ]
+        
+        newref.attribute.addAll(toReference.attributerefereced)
+        newref.attributerefereced.addAll(toReference.attribute)
         newref.entity = from
-        newref.attributerefereced.addAll(from.attributes.filter [ t |
-            isAttributeOfEntity(t, to.name)
-        ])
         newref.lower = "1"
         newref.upper = "-1"
 
@@ -1131,9 +1124,9 @@ class RessourceTransformer {
     private def DetailPageField generateDetailsPAgeFields(Attribute attribute, Entity ent) {
         var StandardTypes temptyp = attribute.type as StandardTypes
 
-        if (attribute.isIsprimary) {
-            var ComplexHTMLTypes result = EJSLFactory.eINSTANCE.createComplexHTMLTypes
-            result.htmltype = ComplexHTMLTypeKinds.get("Hidden")
+        if (attribute.isIsprimary === true && temptyp.autoincrement === true) {
+            var result = EJSLFactory.eINSTANCE.createSimpleHTMLTypes
+            result.htmltype = SimpleHTMLTypeKinds.TEXT_FIELD_NE
 
             var DetailPageField editField = EJSLFactory.eINSTANCE.createDetailPageField
             editField.attribute = attribute

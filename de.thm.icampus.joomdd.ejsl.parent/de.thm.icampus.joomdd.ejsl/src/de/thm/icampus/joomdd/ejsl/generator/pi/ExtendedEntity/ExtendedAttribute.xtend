@@ -61,4 +61,10 @@ interface ExtendedAttribute extends Attribute {
 	 */
 	def boolean isTheBaseElementOfUniquePair()
 	
+	/**
+     * Returns true if the attribute is auto increment.
+     * 
+     * @return boolean
+     */
+    def boolean isAutoIncrement()
 }

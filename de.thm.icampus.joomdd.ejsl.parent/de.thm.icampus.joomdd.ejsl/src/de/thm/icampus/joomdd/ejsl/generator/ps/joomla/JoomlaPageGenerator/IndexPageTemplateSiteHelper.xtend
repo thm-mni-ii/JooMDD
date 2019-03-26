@@ -15,11 +15,12 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
  * @author Dieudonne Timma, Dennis Priefer
  */
 class IndexPageTemplateSiteHelper {
+    
     ExtendedDynamicPage indexpage
-	private ExtendedComponent  com
-	private String sec
-	private ExtendedDynamicPage details
-	private ExtendedEntity mainEntity
+	ExtendedComponent  com
+	String sec
+	ExtendedDynamicPage details
+	ExtendedEntity mainEntity
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section) {
 		indexpage = dp
@@ -187,7 +188,7 @@ class IndexPageTemplateSiteHelper {
 	                            <?php echo HTMLHelper::_(
 	                                'grid.sort',
 	                                '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
-	                                '«this.mainEntity.name.toLowerCase».«attr.name.toLowerCase»',
+	                                '«this.mainEntity.name».«attr.name»',
 	                                $listDirn,
 	                                $listOrder
 	                            ); ?>
@@ -251,7 +252,7 @@ class IndexPageTemplateSiteHelper {
 	            <td class="center">
 	                <a class="btn btn-micro <?php echo $class; ?>"
 	                    «IF details !== null»
-	                    href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state) : '#'; ?>">
+	                    href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name.toLowerCase)»&task=«details.name»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state) : '#'; ?>">
 	                    «ENDIF»
 	                    <?php if ($item->state == 1) : ?>
 	                    <i class="icon-publish"></i>

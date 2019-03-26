@@ -18,13 +18,13 @@ import java.util.stream.IntStream
  */
 class IndexPageTemplate extends DynamicPageTemplate {
 
-	private ExtendedDynamicPage ipage
-	private ExtendedComponent com
-	private String sec
-	private IndexPageTemplateAdminHelper helperAdmin
-	private IndexPageTemplateSiteHelper frontHelp
-	private String path
-	private String pagename
+	ExtendedDynamicPage ipage
+	ExtendedComponent com
+	String sec
+	IndexPageTemplateAdminHelper helperAdmin
+	IndexPageTemplateSiteHelper frontHelp
+	String path
+	String pagename
 
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {
 		ipage = dp
@@ -257,7 +257,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                         type="«com.name.toLowerCase»user"
                         label="JGLOBAL_FIELD_CREATED_BY_LABEL"
                         description="JGLOBAL_FIELD_CREATED_BY_DESC"
-                        entity = "«ipage.extendedEntityList.get(0).name.toLowerCase»"
+                        entity="«ipage.extendedEntityList.get(0).name»"
                         onchange="this.form.submit();">
                         <option value="">JOPTION_SELECT_AUTHOR</option>
                     </field>
@@ -275,6 +275,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                         <option value="">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
                     </field>
                     «ENDFOR»
+                    «Slug.generateFilterFields(ipage, com, false, false, false, true)»
                 </fields>
                 <fields name="list">
                     <field name="limit" id="limit" class="input-medium" default="25" onchange="this.form.submit();" type="limitbox" >

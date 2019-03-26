@@ -45,6 +45,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import de.thm.icampus.joomdd.ejsl.eJSL.impl.KeyValuePairImpl
 import org.eclipse.emf.ecore.EPackage
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -127,7 +129,9 @@ public class Slug  {
 			    result='''type="filepicker"'''
 			}
 			case "Text_Field_NE":{
-			    result='''type="text" '''
+			    result='''
+			    type="text"
+			    readonly="true"'''
 			} 
 			case "Editor":{
 			    result='''type="editor" '''
@@ -200,30 +204,34 @@ public class Slug  {
 	
 	def static CharSequence generateEntytiesInputAttribute(EList<ExtendedDetailPageField> fields, ExtendedEntity entity) {
 		var StringBuffer buff = new StringBuffer()
-		var notShow = newArrayList("state","created_by","asset_id","ordering","checked_out_time","checked_out", "published", "params")
-		notShow.add(entity.primaryKey.name)
-		
+		var notShow = newArrayList(
+		    "state",
+		    "created_by",
+		    "asset_id",
+		    "ordering",
+		    "checked_out_time",
+		    "checked_out",
+		    "published",
+		    "params"
+		)
+
 		for (ExtendedDetailPageField fielditem: fields) {
 			if (!notShow.contains(fielditem.extendedAttribute.name)) {
-				buff.append(inputFeldTemplate(fielditem.extendedAttribute))
+				buff.append(fieldTemplateLabelInput(fielditem.extendedAttribute))
 				notShow.add(fielditem.extendedAttribute.name)
 			}	
 		}
-		
-		for (ExtendedAttribute attr: entity.ownExtendedAttributes){
-			if (!notShow.contains(attr.name)) {
-				buff.append(inputHiddenFeldTemplate(attr))
-			}
-		}
-		
+
 		return buff.toString
 	}
 			
-	def static CharSequence inputHiddenFeldTemplate(ExtendedAttribute attr) '''
-	    <div class="controls"><?php echo $this->form->getInput('«attr.name»'); ?></div>
+	def static CharSequence fieldTemplateInput(ExtendedAttribute attr) '''
+	    <div class="controls">
+	        <?php echo $this->form->getInput('«attr.name»'); ?>
+	    </div>
 	'''
 		
-	def static CharSequence inputFeldTemplate(ExtendedAttribute attr) '''
+	def static CharSequence fieldTemplateLabelInput(ExtendedAttribute attr) '''
 	    <div class="control-group">
 	        <div class="control-label">
 	            <?php echo $this->form->getLabel('«attr.name»'); ?>
@@ -233,7 +241,7 @@ public class Slug  {
 	        </div>
 	    </div>
 	'''
-	
+		
 	def static ExtendedDynamicPage getPageForDetails(ExtendedDynamicPage inpage, ExtendedComponent com) {
 		if (inpage.links.empty) {
 			for (ExtendedPageReference pg : com.backEndExtendedPagerefence) {
@@ -824,89 +832,10 @@ public class Slug  {
 		return ''	
 	}
 
-    def static createGroupBy(ExtendedEntity entity) {
-        '''$query->group('«entity.name».«entity.attributes.findFirst[a | a.isprimary].name»');'''
-    }
-    
-    def static createQueryForNToM(ExtendedEntity entity, String componentName, String separator) {
-        val entityName = entity.name
-        var queries = newArrayList
-        
-        for (extendedReference : entity.allExtendedReferences){
-            var isNToM = extendedReference.destinationEntity instanceof MappingEntity
-            
-            if (isNToM) {
-                val reference = extendedReference.destinationEntity.references.findFirst[ r | 
-                    r.entity.name.equals(entityName) === false
-                ]
-                
-                val referenceEntityName = reference.entity.name
-                var referencedAttributeName = reference.attributerefereced.get(0).name
-                
-                var attribute = reference.attribute
-                var attributeRefererenced = reference.attributerefereced
-                
-                var joinOn = Streams.zip(attribute.stream(), attributeRefererenced.stream(), [att, attRef | 
-                     '''«referenceEntityName».«attRef.name» = «extendedReference.entity.name».«att.name»'''
-                ]).collect(Collectors.toList()).join(
-                    ''' AND 
-                    '''
-                )
-                
-                var query = '''
-                $query->select('GROUP_CONCAT(DISTINCT «referenceEntityName».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
-                $query->join('LEFT', "«Slug.databaseName(componentName, referenceEntityName)» AS «referenceEntityName» ON
-                    «joinOn»
-                ");
-                '''
-                
-                queries.add(query)
-            }
-        }
-        
-        return queries.join
-    }
-    
-    /**
-     * This method will create the given join type by joinType for the given references
-     * 
-     * @param EList<ExtendedReference> extendedReference
-     * @param String componentName
-     * @param String entityName
-     * @param String joinType
-     * 
-     * @return String
-     */
-    def static createSelectAndJoins(EList<ExtendedReference> extendedReference, String componentName, String entityName) {
-        var HashMap<String, Integer> counterMap = newHashMap
-        var ArrayList<String> output = newArrayList
-        counterMap.put(entityName,1)
-        
-        for (ExtendedReference ref : extendedReference) {
-            var originDestinationEntityName = ref.destinationEntity.name
-            var counter = counterMap.getOrDefault(originDestinationEntityName, 0)
-            val destinationEntityName = if (counter === 0) {ref.destinationEntity.name} else {'''«ref.destinationEntity.name»«counter»'''}
-            output.add('''
-            // Select the referenced field «ref.referencedAttribute».
-            $query->select('«originDestinationEntityName».«ref.referencedAttribute» AS «ref.referenceAttribute»');
-            $query->join('LEFT', "«Slug.databaseName(componentName, ref.destinationEntity.name)» AS «destinationEntityName» ON
-                «ref.extendedAttributes.filter[attribute | !attribute.preserve].map[ attr | 
-                    '''«entityName».«attr.name» = «destinationEntityName».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name»'''
-                ].join(''' AND
-                ''')»
-            ");
-            ''')
-            counter++
-            counterMap.put(originDestinationEntityName, counter)
-        }
-        
-        return output.join('''
-
-        ''')
-    } 
+     
 	
-	def static CharSequence databaseName(String componentName, String entityName) {
-		return "#__" + componentName + "_" + entityName
+	def static databaseName(String componentName, String entityName) {
+		return '''#__«componentName»_«entityName»'''
 	}
 	
 	def static Boolean isAttributeLinked(ExtendedAttribute attr, DynamicPage page) {
@@ -931,19 +860,19 @@ public class Slug  {
             		    InternalLink: {
             		        if ((lk as InternalLink).target instanceof DetailsPage) {
             		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
-            		                '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name»'''
-            		   	        } else {
+                                    '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
+                                } else {
             		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
             		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
             		    	
             			            if (idRef !== null) {
-            				            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
+            				            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
             				        } else {
-            				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
+            				 	        '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
             		 	            }
             		 	        }
                             } else {
-            		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
+            		            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
             		        }
                         }
                     }»
@@ -1090,7 +1019,7 @@ public class Slug  {
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
    	        return '''
-   		    <field name="«param.name»"
+   		       <field name="«param.name»"
    		            type="list" 
    		            «IF type.equalsIgnoreCase("multiselect")»
    		            multiple
@@ -1196,7 +1125,7 @@ public class Slug  {
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
-   		            />
+   		        />
    		        '''
    		    }
    		}
@@ -1382,70 +1311,48 @@ public class Slug  {
         return upperCaseKey
     }
     
-    /**
-     * This function completes the query to get all items from the database.
-     */
-    def static getListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, ExtendedComponent extendedComponent, String separator) {
-        '''
-        $query->from('`#__«extendedComponent.name»_«indexpage.entities.get(0).name»` AS «indexpage.entities.get(0).name»');
-
-        // Join over the users for the checked out user
-        $query->select("uc.name AS editor");
-        $query->join("LEFT", "#__users AS uc ON uc.id=«indexpage.entities.get(0).name».checked_out");
-
-        // Join over the user field 'created_by'
-        $query->select('created_by.name AS created_by');
-        $query->join('LEFT', '#__users AS created_by ON created_by.id = «indexpage.entities.get(0).name».created_by');
-
-        // Join over the user field 'user'
-        $query->select('user.name AS user');
-        $query->join('LEFT', '#__users AS user ON user.id =  «indexpage.entities.get(0).name».created_by');
-
-        «Slug.createSelectAndJoins(indexpage.extendedEntityList.get(0).allExtendedReferences, extendedComponent.name, indexpage.entities.get(0).name)»
-        «Slug.createQueryForNToM(indexpage.extendedEntityList.get(0), extendedComponent.name, separator)»
-        «Slug.createGroupBy(indexpage.extendedEntityList.get(0))»
-
-        // Filter by published state
-        if (is_numeric($published)) {
-            $query->where('«indexpage.entities.get(0).name».state = ' . (int) $published);
-        } elseif ($published === '') {
-            $query->where('(«indexpage.entities.get(0).name».state IN (0, 1))');
+    def static generateFilterFields(
+        ExtendedDynamicPage page,
+        ExtendedComponent component,
+        boolean simpleDefaultValue,
+        boolean addFieldPath,
+        boolean filterParams,
+        boolean addOnSubmit
+    ) {
+        
+        var extendedFilterList = page.extendFiltersList.toList
+        
+        if (filterParams === true) {
+            extendedFilterList = extendedFilterList.filter[ attribute |
+                !attribute.name.equalsIgnoreCase("params")
+            ].toList
         }
-
-        // Filter by User
-        if (!empty($created_by)) {
-            $query->where("«indexpage.entities.get(0).name».created_by = '" . $db->escape($created_by) . "'");
-        }
-        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-
-        // Filter by «attr.name»
-        if (!empty($«attr.name»)) {
-            $query->where("«attr.entity.name».«attr.name» = '" . $db->escape($«attr.name») . "'");
-        }
-        «ENDFOR»
-
-        // Filter by search in attribute
-        if (!empty($search)) {
-            if (stripos($search, '«mainEntity.primaryKey.name»:') === 0) {
-                $query->where('«indexpage.entities.get(0).name».«mainEntity.primaryKey.name» = ' . (int) substr($search, 3));
-            } else {
-                $search = $db->Quote('%' . $db->escape($search, true) . '%');
-                «IF !indexpage.extendFiltersList.empty»
-                $query->where("(«indexpage.extendFiltersList.map[ attr | 
-                    var column = indexpage.getTextColumn(attr, extendedComponent.allExtendedEntity)
-                    '''«column» LIKE $search'''
-                ].join(''' OR 
-                    ''')»)");
+        
+        return '''
+            «FOR ExtendedAttribute attr : extendedFilterList»
+            «var valueColumn = page.getValueColumn(attr, component.allExtendedEntity)»
+            «var textColumn = page.getTextColumn(attr, component.allExtendedEntity)»
+            <field
+                «IF addFieldPath === true»
+                addfieldpath="components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
                 «ENDIF»
-            }
-        }
-
-        // Add the list ordering clause.
-        if ($orderCol && $orderDirn) {
-            $query->order($db->escape($orderCol . ' ' . $orderDirn));
-        }
-
-        return $query;
-        '''
+                name="«attr.name»"
+                type="«textColumn.type»"
+                label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+                description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»»"
+                valueColumn="«valueColumn»"
+                textColumn="«textColumn»"
+                «IF addOnSubmit == true»
+                onchange="this.form.submit();"
+                «ENDIF»
+            >
+                «IF simpleDefaultValue === true»
+                <option value="">JSELECT</option>
+                «ELSE»
+                <option value="">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
+                «ENDIF»
+            </field>
+            «ENDFOR»
+            '''
     }
 }

@@ -6,6 +6,10 @@ import de.thm.icampus.mdd.model.extensions.ParseName
  * Created by alexheinz1110 on 14.08.15.
  */
 class Entity{
+  def setOneReference(ref: Reference): Unit ={
+    this.reference = this.reference :+ ref
+  }
+
   var name: String =""
   var attributes: List[Attribute] =List.empty[Attribute]
   var reference :List[Reference] = List.empty[Reference]

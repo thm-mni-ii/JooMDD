@@ -13,11 +13,9 @@ import de.thm.icampus.joomdd.ejsl.eJSL.ContextLink
 import de.thm.icampus.joomdd.ejsl.eJSL.DetailsPage
 import de.thm.icampus.joomdd.ejsl.eJSL.DynamicPage
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLModel
-import de.thm.icampus.joomdd.ejsl.eJSL.Extension
 import de.thm.icampus.joomdd.ejsl.eJSL.FrontendSection
 import de.thm.icampus.joomdd.ejsl.eJSL.IndexPage
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
-import de.thm.icampus.joomdd.ejsl.eJSL.Link
 import static org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.eclipse.xtext.testing.extensions.InjectionExtension
@@ -33,7 +31,6 @@ class EJSLParsingTest{
 	//import reference model instances (All tests are based on this model) TODO make dynamic
 	public val models = TemplateLoader.getTemplateFiles()
 	public String reference = 	TemplateLoader.getOneTemplateFile("Shop")
-	
 	
 	@Inject
 	ParseHelper<EJSLModel> parseHelper;
@@ -74,7 +71,6 @@ class EJSLParsingTest{
 		
 		//join them into a comma separated string
 		val actualAttr = Joiner.on(", ").join(attributes)
-		val actualType = Joiner.on(", ").join(types)
 		val actualUniq = Joiner.on(", ").join(unique)
 		val actualPri = Joiner.on(", ").join(primary)
 	
@@ -101,7 +97,6 @@ class EJSLParsingTest{
 	
 	@Test
 	def void featureExists() {
-		
 		//parse the reference model
 		val instance = parseHelper.parse(reference)
 		
@@ -269,7 +264,7 @@ class EJSLParsingTest{
 		val pageDetails = ((instance.ejslPart.feature.pages.get(1) as DynamicPage) as DetailsPage)
 		
 		//check values of index page
-		val pageIndexLink = ((pageIndex.links.get(0) as Link) as InternalLink) as ContextLink
+		val pageIndexLink = (pageIndex.links.get(0) as InternalLink) as ContextLink
 		assertEquals("Details", pageIndexLink.name)
 		assertEquals("Customer", pageIndexLink.target.name)
 		assertEquals("lName", pageIndexLink.linkedAttribute.name)
@@ -277,10 +272,10 @@ class EJSLParsingTest{
 		
 		//check reference
 		assertSame(pageIndexLink.target, pageDetails, "Failure: Reference to DetailsPage failed")
-		assertSame(((pageDetails.links.get(0) as Link) as InternalLink).target, pageIndex, "Failure: Reference to IndexPage failed")
+		assertSame((pageDetails.links.get(0) as InternalLink).target, pageIndex, "Failure: Reference to IndexPage failed")
 		
 		//check values of Details page
-		val pageDetailsLink = ((pageDetails.links.get(0) as Link) as InternalLink)
+		val pageDetailsLink = (pageDetails.links.get(0) as InternalLink)
 		assertEquals("Customer", pageDetails.name)
 		assertEquals("Customers", pageDetailsLink.target.name)
 		assertEquals("customer", pageDetails.entities.get(0).name)
@@ -304,7 +299,7 @@ class EJSLParsingTest{
 		val instance = parseHelper.parse(reference)
 		
 		//get extension
-		val cmp = ((((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension) as Component)
+		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Component)
 		assertNotNull(cmp, "Parsing-Error expected component is Null")
 	}
 	
@@ -315,7 +310,7 @@ class EJSLParsingTest{
 		val instance = parseHelper.parse(reference)
 		
 		//get extension
-		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension)
+		val cmp = (instance.ejslPart as CMSExtension).extensions.get(0)
 		assertNotNull(cmp.manifest, "Parsing-Error expected manifest is Null")
 	}
 	
@@ -326,7 +321,7 @@ class EJSLParsingTest{
 		val instance = parseHelper.parse(reference)
 		
 		//get extension
-		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension)
+		val cmp = (instance.ejslPart as CMSExtension).extensions.get(0)
 		assertNotNull(cmp.languages, "Parsing-Error expected languages are Null")
 	}
 	
@@ -337,7 +332,7 @@ class EJSLParsingTest{
 		val instance = parseHelper.parse(reference)
 		
 		//get extension
-		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension) as Component
+		val cmp = (instance.ejslPart as CMSExtension).extensions.get(0) as Component
 		assertNotNull(cmp.sections, "Parsing-Error expected sections are Null")
 	}
 	
@@ -348,7 +343,7 @@ class EJSLParsingTest{
 		val instance = parseHelper.parse(reference)
 		
 		//get extension
-		val cmp = (((instance.ejslPart as CMSExtension).extensions.get(0)) as Extension) as Component
+		val cmp = (instance.ejslPart as CMSExtension).extensions.get(0) as Component
 		
 		//test component values
 		assertEquals("ExampleShop", cmp.name)

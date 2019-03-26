@@ -35,6 +35,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaExtensionGenerator.A
  * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 public class ExtensionGeneratorHandler {
+    
     AbstractExtensionGenerator extensionsgenerator
     IFileSystemAccess2 fsa
     Extension ext
