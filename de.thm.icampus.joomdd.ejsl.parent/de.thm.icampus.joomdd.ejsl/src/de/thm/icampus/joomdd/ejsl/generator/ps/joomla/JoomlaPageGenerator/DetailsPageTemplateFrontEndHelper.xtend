@@ -204,7 +204,7 @@ class DetailsPageTemplateFrontEndHelper {
 	        }
 
 	        // Redirect to the list screen.
-	        $menu = &JSite::getMenu();
+	        $menu = Factory::getApplication()->getMenu();
 	        $item = $menu->getActive();
 	        $this->setRedirect(Route::_($item->link, false));
 	    } else {
