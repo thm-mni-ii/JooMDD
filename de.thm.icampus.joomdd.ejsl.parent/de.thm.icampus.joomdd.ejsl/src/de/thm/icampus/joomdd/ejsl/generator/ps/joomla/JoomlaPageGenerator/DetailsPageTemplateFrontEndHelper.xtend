@@ -8,6 +8,10 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguage
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
 
 /**
  * This class contains the templates to generate the necessary code for frontend views.
@@ -455,7 +459,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    }
 		«ENDIF»
 
-		// Check for errors.
+	    // Check for errors.
 	    if (count($errors = $this->get('Errors'))) {
 	        throw new Exception(implode("\n", $errors));
 	    }
@@ -547,7 +551,6 @@ class DetailsPageTemplateFrontEndHelper {
 	        <div class="row-fluid">
 	            <div class="span10 form-horizontal">
 	                <fieldset class="adminform">
-	                    <?php echo $this->form->getInput('«mainEntity.primaryKey.name»'); ?>
 	                    <?php echo $this->form->getInput('ordering'); ?>
 	                    <input type="hidden" name="jform[state]" value="<?php echo $this->item->state; ?>" />
 	                    «IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
@@ -621,7 +624,7 @@ class DetailsPageTemplateFrontEndHelper {
 	                <th><?php echo Text::_('JGLOBAL_FIELD_CREATED_BY_LABEL'); ?></th>
 	                <td><?php echo Factory::getUser($this->item->created_by)->name; ?></td>
 	            </tr>
-	            «FOR ExtendedAttribute a: dpage.extendedTableColumnList.filter[t | !t.isprimary]»
+	            «FOR ExtendedAttribute a: dpage.extendedTableColumnList.filter[t | !t.isprimary && t.instance instanceof FKAttribute === false]»
 	            «attributShowTemplate(a, dpage.entities.get(0) )»
 	            «ENDFOR»
 	        </table>
@@ -693,4 +696,60 @@ class DetailsPageTemplateFrontEndHelper {
 		}
 	} »
 	'''	
+	
+	def CharSequence generateModelGetItemFunction() '''
+        /**
+         * Method to get a single record.
+         *
+         * @param   integer  The id of the primary key.
+         *
+         * @return  mixed   Object on success, false on failure.
+         * @since 1.6
+         * @generated
+         */
+        public function getItem($pk = null)
+        {
+            $app = Factory::getApplication();
+            $pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
+            $item = $this->getData($pk);
+            return $item;
+        }
+    '''
+    
+    def CharSequence generateModelGetDataFunction() {
+        var query = new Query(com)
+        var mainSelectColumn = new Column(dpage.entities.get(0).name, '''*''')
+        query.addToMainSelect(new Select(mainSelectColumn))
+        
+        return '''
+            /**
+             * Method to get the data of a single item.
+             *
+             * @param   integer  The id of the primary key.
+             *
+             * @return  mixed   Object on success, false on failure.
+             * @since 1.6
+             * @generated
+             */
+            public function getData($pk)
+            {
+                // Create a new query object.
+                $db = $this->getDbo();
+                $query = $db->getQuery(true);
+                // Select the required fields from the table.
+                $query->select(
+                    "distinct " .
+                    $this->getState(
+                    'list.select',
+                    '«query.mainSelect»'
+                    )
+                );
+                «query.getListQuery(dpage, mainEntity, '''<\/br>''', false)»
+                
+                $db->setQuery($query);
+                
+                return $db->loadObject();
+            }
+        '''
+    }
 }
