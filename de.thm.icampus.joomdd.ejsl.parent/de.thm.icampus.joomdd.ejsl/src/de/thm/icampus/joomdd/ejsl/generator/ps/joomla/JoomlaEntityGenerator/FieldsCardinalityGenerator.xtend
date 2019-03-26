@@ -6,11 +6,11 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
-import java.io.File
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Table
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
 
 /**
  * This class contains the templates to generate the fiel cardinalities.
@@ -19,7 +19,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.T
  */
 class FieldsCardinalityGenerator extends FieldsGenerator {
     
-	Reference foreignReference
+	ExtendedReference foreignReference
 	
 	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
 		super(ref, component, from)
@@ -27,7 +27,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	}
 	
 	private def setForeignElemente(){
-		foreignReference = (mainRef.entity.references.filter[t | t.entity.name != entFrom.instance.name]).get(0)
+		foreignReference = new ExtendedReferenceImpl((mainRef.entity.references.filter[t | t.entity.name != entFrom.instance.name]).get(0), mainRef.entity)
 	}
 	
 	public override CharSequence genRefrenceField()'''
@@ -44,21 +44,11 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		        "mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
 		        "foreignTable"=> "«Slug.databaseName(com.name,foreignReference.entity.name)»");
 		    protected $keysAndForeignKeys= array( "table" => array(
-		        «FOR attr : mainRef.extendedAttributes»
-		        «IF attr != mainRef.extendedAttributes.last»
-		        "«attr.name»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name»",
-		        «ELSE»
-		        "«attr.name»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name»"
-		        «ENDIF»
-		        «ENDFOR»
+		        "«mainRef.referenceAttribute»" => "«mainRef.referencedAttribute»",
+		        "«mainRef.referenceIDAttribute»" => "«mainRef.referencedIDAttribute»"
 		    ),"foreignTable" => array(
-		        «FOR attr : foreignReference.attribute»
-		        «IF attr != foreignReference.attribute.last»
-		        "«attr.name»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name»",
-		        «ELSE»
-		        "«attr.name»" => "«foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(attr)).name»"
-                «ENDIF»
-                «ENDFOR»
+		        "«foreignReference.referenceAttribute»" => "«foreignReference.referencedAttribute»",
+		        "«foreignReference.referenceIDAttribute»" => "«foreignReference.referencedIDAttribute»"
 		    ));
 		
 		    «genGetInput»
@@ -177,24 +167,11 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    $query = $db->getQuery(true);
 		
 		    $query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name» ,«ENDFOR»
-		    (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0   then 'selected' else ' ' end) as selected ")
+		    (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0 then 'selected' else ' ' end) as selected ")
 		        ->from($this->referenceStruct['foreignTable'] . " as A")
-		        ->leftJoin("(select * from " . $this->referenceStruct['mappingTable'] . " as C where 
-		            «FOR attr : mainRef.extendedAttributes»
-		            «IF attr != mainRef.extendedAttributes.last»
-		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name» = '$item->«attr.name»' AND 
-		            «ELSE»
-		            C.«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name» = '$item->«attr.name»'
-		            «ENDIF»
-		            «ENDFOR»
-		            ) as B on 
-		            «FOR foreignAttr : foreignReference.attribute»
-		            «IF foreignAttr != foreignReference.attribute.last»
-		            A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» = B.«foreignAttr.name» AND 
-		            «ELSE»
-		            A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» = B.«foreignAttr.name»")
-		            «ENDIF»
-		            «ENDFOR»
+		        ->leftJoin("(select * from " . $this->referenceStruct['mappingTable'] . " as C 
+		            where C.«mainRef.referencedIDAttribute» = '$item->«mainRef.referenceIDAttribute»') as B 
+		            on A.« foreignReference.referencedIDAttribute» = B.«foreignReference.referenceIDAttribute»")
 		        ->where("A.state = 1")
 		        ->order("A.«foreignReference.attributerefereced.get(0).name»");
 		    $db->setQuery($query);

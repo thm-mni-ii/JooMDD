@@ -8,6 +8,7 @@ import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
 
 /**
  * This class contains the templates to generate the fiel cardinalities.
@@ -69,27 +70,44 @@ class JoomlaEntityGenerator {
         ;
         '''
 
-    def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName) '''
-        «IF isupdate»
-        DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
-        «ENDIF»
-        CREATE TABLE  IF NOT EXISTS `«Slug.databaseName(componentName, table.name)»` (
-            «FOR a : table.allExtendedAttributes.filter[t | 
+    def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName) {
+        
+        var List<ExtendedAttribute> filteredAllExtendedAttributes
+        
+        if (table.instance instanceof MappingEntity) {
+            val referenceAttributeList = table.references.map[ reference |
+                reference.attribute.get(0).name
+            ]
+        
+            filteredAllExtendedAttributes = table.allExtendedAttributes.filter[ t |
+                !t.isPreserve && referenceAttributeList.contains(t.name) === false
+            ].toList
+        } else {
+            filteredAllExtendedAttributes = table.allExtendedAttributes.filter[ t |
                 !t.isPreserve
-            ]»
-            `«a.name»` «a.generatorType»,
-            «ENDFOR»
-            «FOR ExtendedAttribute a : table.ownExtendedAttributes»
-            «IF a.isunique»
-            UNIQUE KEY («a.name»«if(a.withattribute !== null)''',«a.withattribute.name»'''»),
+            ].toList
+        }
+        
+        return '''
+            «IF isupdate»
+            DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
             «ENDIF»
-            «ENDFOR»
-            «FOR ref : table.allExtendedReferences»
-            INDEX(«ref.getReferenceIDAttribute»),
-            «ENDFOR»
-            PRIMARY KEY (`«table.primaryKey.name»`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-    '''
+            CREATE TABLE  IF NOT EXISTS `«Slug.databaseName(componentName, table.name)»` (
+                «FOR a : filteredAllExtendedAttributes»
+                `«a.name»` «a.generatorType»,
+                «ENDFOR»
+                «FOR ExtendedAttribute a : table.ownExtendedAttributes»
+                «IF a.isunique»
+                UNIQUE KEY («a.name»«if(a.withattribute !== null)''',«a.withattribute.name»'''»),
+                «ENDIF»
+                «ENDFOR»
+                «FOR ref : table.allExtendedReferences»
+                INDEX(«ref.getReferenceIDAttribute»),
+                «ENDFOR»
+                PRIMARY KEY (`«table.primaryKey.name»`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        '''
+    }
 
     public def CharSequence sqlAdminSqlUninstallContent(String extensionName) {
         var LinkedList<ExtendedEntity> visited = new LinkedList<ExtendedEntity>;
