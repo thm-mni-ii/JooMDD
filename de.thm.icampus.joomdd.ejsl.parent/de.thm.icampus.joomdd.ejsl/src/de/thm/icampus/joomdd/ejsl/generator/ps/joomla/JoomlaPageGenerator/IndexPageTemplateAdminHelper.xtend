@@ -111,10 +111,11 @@ class IndexPageTemplateAdminHelper {
 	'''
 	
 	def CharSequence genAdminModelGetListQuery() {
-	var query = new Query(com)
-	var mainSelectColumn = new Column(indexpage.entities.get(0).name, '''*''')
-	query.addToMainSelect(new Select(mainSelectColumn))
-	'''
+	    var query = new Query(com)
+    	var mainSelectColumn = new Column(indexpage.entities.get(0).name, '''*''')
+    	query.addToMainSelect(new Select(mainSelectColumn))
+    	
+	    return '''
 	    /**
 	     * Build an SQL query to load the list data.
 	     *
@@ -144,9 +145,11 @@ class IndexPageTemplateAdminHelper {
 	                '«query.mainSelect»'
 	            )
 	        );
-	        «query.getListQuery(indexpage, mainEntity, '''<\/br>''')»
+	        «query.getListQuery(indexpage, mainEntity, '''<\/br>''', true)»
+	        
+	        return $query;
 	    }
-    '''
+        '''
     }    
     
 	def CharSequence genAdminModelGetItem()'''

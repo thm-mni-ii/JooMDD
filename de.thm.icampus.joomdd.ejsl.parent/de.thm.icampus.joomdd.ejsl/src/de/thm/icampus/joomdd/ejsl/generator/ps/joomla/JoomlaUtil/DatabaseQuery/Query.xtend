@@ -83,7 +83,7 @@ class Query {
      * 
      * @return String
      */
-    def getListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, String separator) {
+    def getListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, String separator, boolean forList) {
         var mainEntityNameAlias = this.getUniqueAlias(indexpage.entities.get(0).name)
         this.mainTable = new Table('''#__«this.component.name»_«indexpage.entities.get(0).name»''', mainEntityNameAlias)
         
@@ -180,6 +180,7 @@ class Query {
 
         «this.createGroupBy(indexpage.extendedEntityList.get(0))»
 
+        «IF forList === true»
         // Filter by published state
         if (is_numeric($published)) {
             $query->where(«whereState»);
@@ -209,8 +210,9 @@ class Query {
         if ($orderCol && $orderDirn) {
             $query->order($db->escape($orderCol . ' ' . $orderDirn));
         }
-
-        return $query;
+        «ELSE»
+        $query->where("«this.mainTable.alias».«mainEntity.primaryKey.name» = $pk");
+        «ENDIF»
         '''
     }
     

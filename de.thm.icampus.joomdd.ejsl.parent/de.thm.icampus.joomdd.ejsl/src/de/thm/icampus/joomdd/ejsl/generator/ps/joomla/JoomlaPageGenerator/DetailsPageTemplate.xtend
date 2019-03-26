@@ -434,7 +434,9 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		{
 		    «frontHelp.generateSiteModelPopulatestate()»
 
-		    «generateModelGetItemFunction»
+		    «frontHelp.generateModelGetItemFunction»
+		    
+		    «frontHelp.generateModelGetDataFunction»
 
 		    «frontHelp.generateSiteModelCheckin()»
 
