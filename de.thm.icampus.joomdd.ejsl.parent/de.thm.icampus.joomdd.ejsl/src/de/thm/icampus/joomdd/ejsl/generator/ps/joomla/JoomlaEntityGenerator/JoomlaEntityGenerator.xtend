@@ -88,6 +88,11 @@ class JoomlaEntityGenerator {
             ].toList
         }
         
+        // Remove duplicate attribute names.
+        var referenceIDAttributeList = table.allExtendedReferences.stream.map[ reference |
+            reference.getReferenceIDAttribute
+        ].distinct.toArray
+        
         return '''
             «IF isupdate»
             DROP TABLE IF EXISTS `«Slug.databaseName(componentName, table.name)»`;
@@ -101,7 +106,7 @@ class JoomlaEntityGenerator {
                 UNIQUE KEY («a.name»«if(a.withattribute !== null)''',«a.withattribute.name»'''»),
                 «ENDIF»
                 «ENDFOR»
-                «FOR referenceIDAttribute : table.allExtendedReferences.stream.map[ reference | reference.getReferenceIDAttribute ].distinct.toArray»
+                «FOR referenceIDAttribute : referenceIDAttributeList»
                 INDEX(«referenceIDAttribute»),
                 «ENDFOR»
                 PRIMARY KEY (`«table.primaryKey.name»`)
