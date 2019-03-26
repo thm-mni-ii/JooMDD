@@ -62,8 +62,8 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
         	               «generateParameter(e.extendedParameterList, component)»
         	           </fieldset>
         	       «ENDFOR»
-        	       </fields>
-        	       </metadata>
+            </fields>
+        </metadata>
     	     '''
 
     /**
