@@ -101,8 +101,8 @@ class JoomlaEntityGenerator {
                 UNIQUE KEY («a.name»«if(a.withattribute !== null)''',«a.withattribute.name»'''»),
                 «ENDIF»
                 «ENDFOR»
-                «FOR ref : table.allExtendedReferences»
-                INDEX(«ref.getReferenceIDAttribute»),
+                «FOR referenceIDAttribute : table.allExtendedReferences.stream.map[ reference | reference.getReferenceIDAttribute ].distinct.toArray»
+                INDEX(«referenceIDAttribute»),
                 «ENDFOR»
                 PRIMARY KEY (`«table.primaryKey.name»`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
