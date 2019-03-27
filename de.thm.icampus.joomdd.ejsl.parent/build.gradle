@@ -556,15 +556,11 @@ task createFeatureSDKJar(type: Jar) {
 }
 
 task createArtifactsXML(type: Copy) {
+    def lastversion = getLastVersion();
     from '../eclipsePluginSkeletons/artifacts.xml'
     into '../eclipsePluginSkeletons/tmp'
-    
-    doLast {
-        def lastversion = getLastVersion();
-        def artifactsFile = file( '../eclipsePluginSkeletons/artifacts.xml' );
-        def contents = artifactsFile.getText( 'UTF-8' );
-        contents = contents.replaceAll( 'VersionPlaceholder', lastversion );
-        file("../eclipsePluginSkeletons/tmp/artifacts.xml").text = contents;
+    filter { String line ->
+        line.replace("VersionPlaceholder", lastversion)
     }
 }
 
@@ -580,15 +576,11 @@ task createArtifactsJar(type: Jar, dependsOn:["createArtifactsXML"]) {
 } 
 
 task createContentXML(type: Copy) {
+    def lastversion = getLastVersion();
     from '../eclipsePluginSkeletons/content.xml'
     into '../eclipsePluginSkeletons/tmp'
-    
-    doLast {
-        def lastversion = getLastVersion();
-        def artifactsFile = file( '../eclipsePluginSkeletons/content.xml' );
-        def contents = artifactsFile.getText( 'UTF-8' );
-        contents = contents.replaceAll( 'VersionPlaceholder', lastversion );
-        file("../eclipsePluginSkeletons/tmp/content.xml").text = contents;
+    filter { String line ->
+        line.replace("VersionPlaceholder", lastversion)
     }
 }
 
