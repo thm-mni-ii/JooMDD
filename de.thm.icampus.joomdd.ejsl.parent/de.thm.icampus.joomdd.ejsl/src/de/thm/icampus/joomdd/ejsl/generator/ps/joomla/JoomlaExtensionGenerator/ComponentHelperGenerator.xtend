@@ -22,7 +22,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
  
     override generate() '''
 		<?php
-		«Slug.generateFileDoc(extendeComp)»
+		«Slug.generateFileDocAdmin(extendeComp)»
 		
 		«Slug.generateRestrictedAccess()»
 		

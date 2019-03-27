@@ -10,19 +10,19 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
  * 
  * @author Dieudonne Timma, Dennis Priefer
  */
-class ComponentHelperGenerator extends AbstractExtensionGenerator{
-//	
-	
+class ComponentHelperGenerator extends AbstractExtensionGenerator {
+    
 	ExtendedComponent extendeComp
+    String componentHelperClassName
+    
 	new(ExtendedComponent component) {
 		extendeComp = component
+        this.componentHelperClassName = '''Com«component.name.toFirstUpper»Helper'''
 	}
  
     override generate() '''
 		<?php
-		«Slug.generateFileDoc(extendeComp)»
-		
-		«Slug.generateNamespace(extendeComp.name, "Administrator", "Helper")»
+		«Slug.generateFileDocAdmin(extendeComp)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -31,9 +31,9 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		jimport('joomla.filesystem.file');
 		
 		/**
-		 * «extendeComp.name.toUpperCase»  helper.
+		 * «extendeComp.name.toUpperCase» helper.
 		 */
-		class «extendeComp.name.toFirstUpper»Helper
+		class «this.componentHelperClassName»
 		{
 		    «genAddMenu»
 		    «genGetAction»
@@ -52,10 +52,11 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		public static function addSubmenu($vName = '')
 		{
 		    «FOR ExtendedPageReference pg : extendeComp.backEndExtendedPagerefence.filter[t| t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage]»
-		    \JHtmlSidebar::addEntry(
-		        Text::_('«Slug.nameExtensionBind("com",extendeComp.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»'),
+		    JHtmlSidebar::addEntry(
+		        Text::_('«Slug.addLanguage(extendeComp.languages, newArrayList("com", extendeComp.name, "TITLE", pg.extendedPage.name), pg.extendedPage.name)»'),
 		        'index.php?option=«Slug.nameExtensionBind("com",extendeComp.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»',
-		        $vName == '«pg.extendedPage.name.toLowerCase»');
+		        $vName == '«pg.extendedPage.name.toLowerCase»'
+		    );
 		    «ENDFOR»
 		}
 		'''
@@ -80,8 +81,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		    $actions = array(
 		        'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete');
 		
-		    foreach ($actions as $action)
-		    {
+		    foreach ($actions as $action) {
 		        $result->set($action, $user->authorise($action, $assetName));
 		    }
 		
@@ -108,10 +108,19 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 		        $index =1;
 		        $file["name"] = $index."_".$file["name"];
 		        $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
-		        while(JFile::exists($file['filepath'])) {
+		        while (JFile::exists($file['filepath'])) {
 		            $index = $index +1;
 		            $file["name"] = $index."_".$file["name"];
-		            $file['filepath'] = JPath::clean(implode(DIRECTORY_SEPARATOR, array(JPATH_ROOT, $target, $file['name'])));
+		            $file['filepath'] = JPath::clean(
+		                implode(
+		                    DIRECTORY_SEPARATOR,
+		                    array(
+		                        JPATH_ROOT,
+		                        $target,
+		                        $file['name']
+		                    )
+		                )
+		            );
 		        }
 		    }
 		    $object_file = new CMSObject($file);
@@ -132,17 +141,16 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
     def CharSequence genBootsnipJS()'''
 	(function ( $ ) {
 	
-	    $.fn.imagePicker = function( options ) {
+	    $.fn.imagePicker = function (options) {
 	
 	        // Define plugin options
 	        var settings = $.extend({
 	            // Classes for styling the input
 	            class: "btn btn-success"
-	
-	        }, options );
+	        }, options);
 	
 	        // Create an input inside each matched element
-	        return this.each(function() {
+	        return this.each(function () {
 	
 	            $(this).children('#add').html(create_btn(this, settings));
 	        });
@@ -150,17 +158,16 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 	    };
 	
 	    // Private function for creating the input element
-	    function create_btn(that, settings) {
-	
+	    function create_btn(that, settings)
+	    {
 	        // var add = $(that).children('#add');
 	        var preview = $(that).children('#preview');
 	
-	        if(settings.file != '' &&settings.file != ' '){
+	        if (settings.file != '' &&settings.file != ' ') {
 	            var preview = create_preview(that, settings.file, settings.value, settings);
 	            $(that).children('#add').attr('class','hidden');
 	            $(that).children('#preview').html(preview);
 	            return;
-	
 	        }
 	        // The input icon element
 	        var picker_btn_icon = $('<span class="">'+settings.showLabel+'</span>');
@@ -174,13 +181,13 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 	            .append(picker_btn_input);
 	
 	        // File load listener
-	        picker_btn_input.change(function(event) {
+	        picker_btn_input.change(function (event) {
 	            if ($(this).prop('files')[0]) {
 	                // Use FileReader to get file
 	                var reader = new FileReader();
 	
 	                // Create a preview once image has loaded
-	                reader.onload = function(e) {
+	                reader.onload = function (e) {
 	                    var input = event.target;
 	                    var file = input.files[0];
 	                    var preview = create_preview(that, e.target.result,file.name , settings);
@@ -198,13 +205,14 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 	    };
 	
 	    // Private function for creating a preview element
-	    function create_preview(that, src, filename, settings) {
-	        var picker_preview_image ;
+	    function create_preview(that, src, filename, settings)
+	    {
+	        var picker_preview_image;
 	        // The preview image
-	        if(settings.fieldtype == "image"){
+	        if (settings.fieldtype == "image") {
 	            picker_preview_image = $('<img src="'+src+'" class="img-responsive img-rounded" /><br/><a href="'+settings.file+'">'+filename+'</a>');
-	        }else{
-	            var format = src.split(".").getLast() ;
+	        } else {
+	            var format = src.split(".").getLast();
 	            picker_preview_image = $('<div class="imgOutline thumbnail height-80 width-80 center"style="margin-left: 40px;margin-bottom:10px;" >'+
 	                '<div class="height-50">'+
 	                '<a style="display: block; width: 100%; height: 100%" href="'+src+'">'+
@@ -220,7 +228,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 	            .append(picker_preview_remove);
 	
 	        // Remove image listener
-	        picker_preview_remove.click(function() {
+	        picker_preview_remove.click(function () {
 	            settings.file="";
 	            var btn = create_btn(that, settings);
 	            $(that).children('#preview').html('');
@@ -234,37 +242,36 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator{
 	
 	}( jQuery ));
 	
-	jQuery(document).ready(function() {
-	    jQuery('.img-picker').each(function(){
+	jQuery(document).ready(function () {
+	    jQuery('.img-picker').each(function () {
 	        jQuery(this).imagePicker({name: jQuery(this).attr("name"),value: jQuery(this).attr("value"), file:jQuery(this).attr("file"),
 	            deleteLabel:jQuery(this).attr("deleteLabel"), showLabel:jQuery(this).attr("showLabel"),accept:jQuery(this).attr("accept"),
 	            fieldtype:jQuery(this).attr("fieldtype"), iconpath:jQuery(this).attr("iconpath") })});
 	});
-
     '''
       
     def CharSequence genBootsnipCSS()'''
-		.img-upload-btn { 
-		    position: relative; 
-		    overflow: hidden; 
+		.img-upload-btn {
+		    position: relative;
+		    overflow: hidden;
 		    padding-top: 95%;
 		}
-		.img-upload-btn input[type=file] { 
-		    position: absolute; 
-		    top: 0; 
-		    right: 0; 
+		.img-upload-btn input[type=file] {
+		    position: absolute;
+		    top: 0;
+		    right: 0;
 		    max-width: 100%;
 		    max-height: 100%;
-		    font-size: 100px; 
-		    text-align: right; 
-		    filter: alpha(opacity=0); 
-		    opacity: 0; 
-		    outline: none; 
-		    background: white; 
-		    cursor: inherit; 
-		    display: block; 
+		    font-size: 100px;
+		    text-align: right;
+		    filter: alpha(opacity=0);
+		    opacity: 0;
+		    outline: none;
+		    background: white;
+		    cursor: inherit;
+		    display: block;
 		}
-		.img-upload-btn i { 
+		.img-upload-btn i {
 		    position: absolute;
 		    height: 16px;
 		    width: 16px;

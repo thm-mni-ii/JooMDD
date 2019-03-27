@@ -384,7 +384,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpSiteContent(Component component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocSite(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -411,7 +411,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpSiteControllerContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocSite(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -448,7 +448,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -474,7 +474,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminControllerContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -508,7 +508,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	def CharSequence phpAdminSimpleModelContent(ExtendedComponent component,ExtendedPage pageref) '''
 		<?php
 		
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -525,7 +525,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminTemplateContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -559,7 +559,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminViewContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -736,7 +736,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     */
 	def CharSequence phpSiteRouterContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocSite(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -794,7 +794,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 *  
 	 */
 	def CharSequence genScriptForForeignKeys()'''
-		«Slug.generateFileDoc(extendedComp)»
+		«Slug.generateFileDocAdmin(extendedComp)»
 		
 		/**
 		 * This function set the value of reference for a foreign attribute
@@ -814,7 +814,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 *  
 	 */
 	def CharSequence genScriptForMultipleForeignKeys()'''
-	    «Slug.generateFileDoc(extendedComp)»
+	    «Slug.generateFileDocAdmin(extendedComp)»
 
 	    jQuery(document).ready(function () {
 	        jQuery("select[generated='true']").each(function () {

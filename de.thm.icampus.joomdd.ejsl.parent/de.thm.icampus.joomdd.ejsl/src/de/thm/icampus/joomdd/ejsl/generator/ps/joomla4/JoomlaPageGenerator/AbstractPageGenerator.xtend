@@ -12,6 +12,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtend.lib.annotations.Accessors
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.StaticLanguage
 
 /**
  * Abstract class for Joomla page generator classes.
@@ -19,6 +20,7 @@ import org.eclipse.xtend.lib.annotations.Accessors
  * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 abstract public class AbstractPageGenerator {
+    
 	@Accessors IFileSystemAccess2 fsa
 	@Accessors String name
 	@Accessors String path = ""
@@ -74,18 +76,18 @@ abstract public class AbstractPageGenerator {
     def CharSequence xmlSiteTemplateContent(String pagename, ExtendedStaticPage page, ExtendedComponent component) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<metadata>
-		    <layout title="«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_TITLE" option="View">
-		        <message><![CDATA[«Slug.nameExtensionBind("com", component.name).toUpperCase»_VIEW_«pagename.toUpperCase»_DESC]]></message>
+		    <layout title="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "VIEW", pagename, "TITLE"), pagename)»" option="View">
+		        <message><![CDATA[«Slug.addLanguage(component.languages, newArrayList("com", component.name, "VIEW", pagename, "DESC"), StaticLanguage.getCommonDescriptionFor(pagename))»]]></message>
 		    </layout>
 		    <fields
 		        name="request"
-		        addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/Field"
+		        addfieldpath="administrator/components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
 		    >
 		
 		        «generateParameter(page.extendedGlobalParamater, component)»
 		        «generateParameter(page.extendedLocalParameter, component)»
 		        «FOR ExtendedParameterGroup e : page.extendedParameterGroup »
-		        <fieldset name="«e.name.toLowerCase»" label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»">
+		        <fieldset name="«e.name.toLowerCase»" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FIELDSET", page.name, e.name, "LABEL"), e.name)»">
 		            «generateParameter(e.extendedParameterList, component)»
 		            «generateParameter(e.extendedParameterList,component)»
 		        </fieldset>

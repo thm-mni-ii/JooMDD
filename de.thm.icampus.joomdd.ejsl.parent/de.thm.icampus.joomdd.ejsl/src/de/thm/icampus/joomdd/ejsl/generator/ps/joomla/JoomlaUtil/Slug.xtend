@@ -364,16 +364,14 @@ public class Slug  {
 	     */
 	'''
 	
-    def static CharSequence generateFileDoc( Component component)'''
+    def static CharSequence generateFileDocSite( Component component)'''
 	    /**
 	     «IF component.manifest === null»
 	     * @category    Joomla component
-	     * @package     Joomla.Administrator
+	     * @package     Joomla.Site
 	     * @subpackage  com_«component.name»
 	     * @name «component.name»«ELSE»
 	     * @version «component.manifest.version»
-	     * @category    Joomla component
-	     * @package     Joomla.Administrator
 	     * @subpackage  com_«component.name»
 	     * @name «component.name»
 	     «IF component.manifest !== null»
@@ -384,8 +382,27 @@ public class Slug  {
 	     «ENDIF»
 	     */
 	'''
+	
+	def static CharSequence generateFileDocAdmin( Component component)'''
+        /**
+         «IF component.manifest === null»
+         * @category    Joomla component
+         * @package     Joomla.Administrator
+         * @subpackage  com_«component.name»
+         * @name «component.name»«ELSE»
+         * @version «component.manifest.version»
+         * @subpackage  com_«component.name»
+         * @name «component.name»
+         «IF component.manifest !== null»
+         «generateAuthorsDocumentation(component.manifest.authors)»
+         * @copyright   «component.manifest.copyright»
+         * @license     «component.manifest.license»
+         «ENDIF»
+         «ENDIF»
+         */
+    '''
 
-    def static CharSequence generateFileDoc( Extension ext)'''
+    def static CharSequence generateFileDoc(Extension ext)'''
 		/**
 		 * @version «ext.manifest.version»
 		 * @category Joomla component

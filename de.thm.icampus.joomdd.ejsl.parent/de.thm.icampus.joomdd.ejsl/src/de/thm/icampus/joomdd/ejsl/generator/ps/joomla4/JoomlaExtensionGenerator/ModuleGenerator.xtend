@@ -13,6 +13,17 @@ import java.util.Calendar
 import org.eclipse.emf.common.util.EList
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.PageGeneratorHandler
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
+import de.thm.icampus.joomdd.ejsl.eJSL.DataAccessKinds
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
+import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
+import org.apache.log4j.Logger
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.StaticLanguage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Column
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla module.
@@ -22,14 +33,14 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.PageGeneratorHandler
 public class ModuleGenerator extends AbstractExtensionGenerator {  
 			 
 	PageGeneratorHandler pageClient
-	var modelOfComponent = '\'<modelOfComponent>\''
-	var modelPath = '\'/components/com_<nameOfComponent>/Model\''
-	var String modelOfComponent2 = null;
-		
-
+	String modelOfComponent = '\'<modelOfComponent>\''
+	String modelPath = '\'/components/com_<nameOfComponent>/models\''
+	String modelOfComponent2 = null;
+	
 	ExtendedModule extMod
 	ExtendedDynamicPage dynpage
 	String com
+	String helperClassName
 
 	new(ExtendedModule module, IFileSystemAccess2 fsa, String path) {
 		this.fsa = fsa
@@ -40,6 +51,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		this.ComponentInformation(module)
 		this.extMod.formatName
 		this.path = path
+		this.helperClassName = '''Mod«module.name.toFirstUpper»Helper'''
 	}
 	
 	def void formatName(Module module) {
@@ -59,8 +71,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		generateFile(path + name + ".php", this.extMod.phpContent)
 		generateFile(path + "helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage))
 		generateFile(path + "tmpl/default.php", defaultTemplate())
+		
 		var LanguageGenerator lang = new LanguageGenerator(fsa)
-		lang.genModuletLanguage(extMod, path)
+		lang.genModuleLanguage(extMod, path)
        
 		return ''
 	}
@@ -108,7 +121,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    </description>
 		    <!-- Listing of all files that should be installed for the module -->
 		    <files>
-		        <filename module="«name»">«name».php</filename>
+		        <filename module="«name»">«name.toLowerCase».php</filename>
 		        <filename>helper.php</filename>
 		        <folder>
 		            <filename>tmpl/default.php</filename>
@@ -122,9 +135,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    <languages>
 		        «FOR lang : module.languages»
 		        «IF lang.sys == false»
-		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name».ini</language>
+		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name.toLowerCase».ini</language>
 		        «ELSE»
-		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name».sys.ini</language>
+		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name.toLowerCase».sys.ini</language>
 		        «ENDIF»
 		        «ENDFOR»
 		    </languages>
@@ -134,45 +147,44 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		            <fieldset name="basic">
 		                «IF dynpage !== null»
 		                <field name="ordering" type="list"
-		                    label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ORDERING"
-		                    description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_ORDERING_DESC"
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.ORDERING_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.ORDERING_DESC)»"
 		                    class="inputbox"
-		                    default="id">
-		                    <option value="id">ID</option>
+		                    default="«dynpage.extendFiltersList.get(0).name.toLowerCase»">
 		                    «FOR ExtendedAttribute attr: dynpage.extendFiltersList»
-		                    <option value="«attr.name.toLowerCase»">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_FORM_LBL_«attr.name.toUpperCase»</option>
+		                    <option value="«attr.name.toLowerCase»">«Slug.addLanguage(module.languages, newArrayList("mod", module.name, "FORM", "LBL", attr.name), attr.name)»</option>
 		                    «ENDFOR»
 		                </field>
 		                «ENDIF»
 		                <field name="direction" type="list"
-		                    label="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_DIRECTION"
-		                    description="«Slug.nameExtensionBind("mod",module.name).toUpperCase»_JFIELD_DIRECTION_DESC"
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_DESC)»"
 		                    class="inputbox"
 		                    size="1"
 		                    default="ASC">
-		                    <option value="ASC">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_ASC</option>
-		                    <option value="DESC">«Slug.nameExtensionBind("mod",module.name).toUpperCase»_DESC</option>
+		                    <option value="ASC">«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_ASC)»</option>
+		                    <option value="DESC">«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.DIRECTION_DESCENDING)»</option>
 		                </field>
 		                <field
 		                    name="start"
 		                    type="int"
 		                    default="0"
-		                    label="MOD_«module.name.toUpperCase»_START_LABEL"
-		                    description="MOD_«module.name.toUpperCase»_START_DESC" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.START_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.START_DESC)»" />
 		                <field
 		                    name="limit"
 		                    type="int"
 		                    default="10"
-		                    label="MOD_«module.name.toUpperCase»_LIMIT_LABEL"
-		                    description="MOD_«module.name.toUpperCase»_LIMIT_DESC" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.LIMIT_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.LIMIT_DESC)»" />
 		                <field
 		                    name="search"
 		                    type="text"
-		                    label="MOD_«module.name.toUpperCase»_SEARCH_LABEL"
-		                    description="MOD_«module.name.toUpperCase»_SEARCH_DESC" />
+		                    label="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.SEARCH_LABEL)»"
+		                    description="«Slug.addLanguage(module.languages, newArrayList("mod", module.name), StaticLanguage.SEARCH_DESC)»" />
 		                <field name="state" type="list"
-		                    label="MOD_«module.name.toUpperCase»_JSTATUS"
-		                    description="MOD_«module.name.toUpperCase»_JFIELD_PUBLISHED_DESC"
+		                    label="JSTATUS"
+		                    description="JFIELD_PUBLISHED_DESC"
 		                    class="inputbox"
 		                    size="1"
 		                    default="1">
@@ -183,30 +195,17 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                </field>
 		            </fieldset>
 		            «IF com !== null && dynpage !==null»
-		            <fieldset name="filter">
+		            <fieldset name="filter" label="JSEARCH_FILTER_LABEL">
 		                <field
 		                    name="created_by"
-		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/Field"
-		                    type="componentuser"
-		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
-		                    description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_CREATED_BY"
-		                    entity = "«dynpage.extendedEntityList.get(0).name.toLowerCase»">
-		                    <option value="">JOPTION_SELECT_CREATED_BY</option>
+		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com", com).toLowerCase»/models/fields"
+		                    type="«module.name.toLowerCase»user"
+		                    label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+		                    description="JGLOBAL_FIELD_CREATED_BY_DESC"
+		                    entity="«dynpage.extendedEntityList.get(0).name»">
+		                    <option value="">JOPTION_SELECT_AUTHOR</option>
 		                </field>
-		                «FOR ExtendedAttribute attr : dynpage.extendFiltersList»
-		                «IF !attr.name.equalsIgnoreCase("params")»
-		                <field
-		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com",com).toLowerCase»/Field"
-		                    name="«attr.name»"
-		                    type="«dynpage.extendedEntityList.get(0).name.toLowerCase»"
-		                    label="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-		                    description="«Slug.nameExtensionBind("mod", module.name).toUpperCase»_FILTER_«attr.name.toUpperCase»"
-		                    valueColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»"
-		                    textColumn="«attr.entity.name.toLowerCase».«attr.name.toLowerCase»">
-		                    <option value="">JOPTION_SELECT_«attr.name.toUpperCase»</option>
-		                </field>
-		                «ENDIF»
-		                «ENDFOR»
+		                «Slug.generateFilterFields(dynpage, extMod.languages, extMod.component, '''mod_«extMod.name»''', true, true, true, false)»
 		            </fieldset>
 		        «ENDIF»
 		        </fields>
@@ -217,26 +216,26 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
     // ToDo: Check if parameter is necessary. The module is already given as member of the class....
 	def CharSequence phpContent(ExtendedModule module) {
-	'''
-		<?php
-		«Slug.generateFileDoc(extMod)»
-		
-		«Slug.generateRestrictedAccess()»
-		
-		«Slug.generateUses(newArrayList("ModuleHelper"))»
-		
-		// Include the «extMod.name» functions only once
-		require_once __DIR__ . '/helper.php';
-		«IF module.pageRef.pagescr !== null»
-		require_once JPATH_ADMINISTRATOR . '/components/com_«module.extendedComponentName.toLowerCase»/Helper/«module.extendedComponentName.toLowerCase».php';
-		«ENDIF»
-		// Models, Functions should be implementated here
-		// «module.name.substring(0,1).toUpperCase + module.name.substring(1).toLowerCase»Helper::updateReset();
-		$items = «module.name.toFirstUpper»Helper::getList($params);
-		$model = «module.name.toFirstUpper»Helper::getModel();
-		$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-		require ModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
-	'''
+		var section =  module.extendedPageReference.sect
+		'''
+			<?php
+			«Slug.generateFileDoc(extMod)»
+			
+			«Slug.generateRestrictedAccess()»
+			
+			«Slug.generateUses(newArrayList("ModuleHelper"))»
+			
+			// Include the «extMod.name» functions only once
+			require_once __DIR__ . '/helper.php';
+			// Models, Functions should be implementated here
+			// «helperClassName»::updateReset();
+			$items = «helperClassName»::getList($params);
+			«IF section === DataAccessKinds.BACKEND_DAO || section === DataAccessKinds.FRONTEND_DAO»
+			$model = «helperClassName»::getModel();
+			«ENDIF»
+			$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
+			require ModuleHelper::getLayoutPath('«name.toLowerCase»', $params->get('layout', 'default'));
+		'''
 	}
 	
 	 def CharSequence defaultTemplate() {
@@ -254,31 +253,43 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		/**
 		 * if component helper shall be used
 		 *
-		 * require_once JPATH_ROOT . '/components/com_<nameOfComponent>/Helper/<nameOfComponentHelper.php>';
+		 * require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php>';
 		 * $baseurl = Uri::base();
 		 */
 		?>
 		
+		<?php if (count($items) !== 1) : ?>
 		<ul class="«extMod.name»<?php echo $moduleclass_sfx; ?>">
-		
 		    <?php foreach ($items as $item) : ?>
-		    <li><div class="«extMod.pageRef.page.name»item">
-		    <?php if (empty($item)) : ?>
-		        <?php // itemlist is empty ;?>
-		        <!DOCTYPE html><title></title>
-		    «IF !(dynpage.entities.isEmpty)»
-		    <?php else : ?>
+		    <li>
+		        <div class="«extMod.pageRef.page.name»item">
+		        <?php if (empty($item)) : ?>
+		            <?php // itemlist is empty ;?>
+		        «IF !(dynpage.entities.isEmpty)»
+		        <?php else : ?>
+		            «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+		            «IF !attr.name.equalsIgnoreCase("params")»
+		            <?php $«attr.name» = $item->«attr.name»;?>
+		            <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
+		            «ENDIF»
+		            «ENDFOR»
+		        «ENDIF»
+		        <?php endif; ?>
+		        </div>
+		    </li>
+		    <?php endforeach; ?>
+		</ul>
+		<?php else : 
+		    $item = array_shift($items); ?>
+		    <div class="«extMod.pageRef.page.name»item">
 		        «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
 		        «IF !attr.name.equalsIgnoreCase("params")»
-		        <?php $«attr.name» = $item->«attr.name.toLowerCase»;?>
+		        <?php $«attr.name» = $item->«attr.name»;?>
 		        <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
 		        «ENDIF»
 		        «ENDFOR»
-		    «ENDIF»
-		    <?php endif; ?>
-		    </div></li>
-		    <?php endforeach; ?>
-		</ul>
+		    </div>
+		<?php endif; ?>
 		'''
 	}
 	
@@ -289,7 +300,11 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		for(Link lk: listLink) {
             if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
-                return '''HTMLHelper::_('link',«Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")», $item->«attribute.name.toLowerCase»)'''
+                return '''HTMLHelper::_(
+                    'link',
+                    «Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")»,
+                    $item->«attribute.name»
+                )'''
             }
 		}
 		return "$" + result;
@@ -302,7 +317,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelLegacy"))»
+		«Slug.generateUses(newArrayList("ModelLegacy", "Factory"))»
 		
 		/**
 		 * Helper for «extMod.name»
@@ -312,10 +327,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 * @since
 		 *
 		 */
-		class «modul.name.substring(0,1).toUpperCase + modul.name.substring(1).toLowerCase»Helper
+		class «helperClassName»
 		{
 		    «genGetList»
-		    «genGetModel()»
 		}
 		'''
 	}
@@ -347,19 +361,111 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	
     def ComponentInformation (ExtendedModule modul) {
         if( modul.pageRef.pagescr !== null) {
-            var String section =  modul.extendedPageReference.extendedPage.name
+            var section =  modul.extendedPageReference.sect
             var String compName =  modul.extendedComponentName
-            if(section.equalsIgnoreCase('backend')) {
-                modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/Model'"
-            } else {
-                modelPath = "'/components/com_" + compName.toLowerCase + "/Model'"
+            
+            switch (section) {
+            	case BACKEND_DAO: {
+                	modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"
+            	}
+				case FRONTEND_DAO: {
+                	modelPath = "'/components/com_" + compName.toLowerCase + "/models'"
+				}
             }
+            
             modelOfComponent = ("\"" + compName.toFirstUpper + "\"")
             modelOfComponent2 = ("\"" +compName.toFirstUpper + "Model\"")
         }
     }
 	
-	public def genGetList()'''
+	public def genGetList() {
+        if( extMod.pageRef.pagescr !== null) {
+            var section =  extMod.extendedPageReference.sect
+            switch (section) {
+            	case BACKEND_DAO: {
+                	genModel
+            	}
+            	case DATABASE: {
+            		genQuery
+            	}
+				case FRONTEND_DAO: {
+                	genModel
+				}
+				case WEBSERVICE: {
+					''''''
+				}
+            }
+        }
+		
+	}
+	
+	def genQuery() {
+		var extendedComponent = new ExtendedComponentImpl(extMod.pageRef.pagescr.ref)
+		var extendedDynamicPage = extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance
+		var indexpage = extendedDynamicPage
+		var ExtendedEntity mainEntity = extendedDynamicPage.extendedEntityList.get(0)
+
+		return '''
+		/**
+		 * @param
+		 *
+		 * @return
+		 *
+		 * @since
+		 **/
+		public static function getList($params_module = null)
+		{
+		    $db = Factory::getDbo();
+		    $start = $params_module->get('start');
+		    $limit = $params_module->get('limit');
+		    
+		    $query = «helperClassName»::getListQuery($params_module);
+		    $db->setQuery($query, $start, $limit);
+		    
+		    $items = $db->loadObjectList();
+		    return $items;
+		}
+		
+		«genAdminModelGetListQuery(indexpage, mainEntity, extendedComponent)»
+		'''
+	}
+	
+	def CharSequence genAdminModelGetListQuery(ExtendedDynamicPage indexpage, ExtendedEntity mainEntity, ExtendedComponent extendedComponent) {
+    	var query = new Query(extendedComponent)
+    	var selectColumn = new Column(indexpage.entities.get(0).name, '''*''')
+    	query.addToMainSelect(new Select(selectColumn))
+    	'''
+	    /**
+	     * Build an SQL query to load the list data.
+	     *
+	     * @return  JDatabaseQuery
+	     * @since 1.6
+	     * @generated
+	     */
+	    private static function getListQuery($params_module = null)
+	    {
+	        // Create a new query object.
+	        $db = Factory::getDbo();
+	        $query = $db->getQuery(true);
+	        $published = $params_module->get('state');
+	        $created_by = $params_module->get('created_by');
+	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
+	        $«attr.name» = $params_module->get('«attr.name»');
+	        «ENDFOR»
+	        $search = $params_module->get('search');
+	        $orderCol = $params_module->get('ordering');
+	        $orderDirn = $params_module->get('direction');
+
+	        // Select the required fields from the table.
+	        $query->select("distinct «query.mainSelect»");
+	        «query.getListQuery(indexpage, mainEntity, ",", true)»
+	        
+	        return $query;
+	    }
+        '''
+    }
+	
+	def genModel() '''
 	/**
 	 * @param
 	 *
@@ -369,7 +475,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	 **/
 	public static function getList($params_module = null)
 	{
-	    $model = «extMod.name.toFirstUpper»Helper::getModel();
+	    $model = «helperClassName»::getModel();
 	    $state = $params_module->get('state');
 	    if (!empty($state)) {
 	        $model->setState('filter.state', $state);
@@ -419,5 +525,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
 	    return $items;
 	}
+	
+	«genGetModel»
 	'''
 } 

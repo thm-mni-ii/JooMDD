@@ -10,7 +10,6 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.Fie
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsCardinalityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsFileloaderGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.TableGeneratorTemplate
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 
 /**
  * This class represents the interface between the JooMDD generator and the Joomla-specific entity generator templates. 
@@ -25,7 +24,7 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 	
 	public def generateJoomlaComponenteElements(ExtendedComponent comp, String path, boolean isBackendSection){
 		 
-		generateFields( comp,  path, isBackendSection)
+		generateFields( comp,  path)
 		if(isBackendSection) {
 		    generateTable( comp,  path)
 		    generateSQL( comp,  path)
@@ -33,51 +32,44 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 		
 	}
 	private def generateSQL(ExtendedComponent comp, String path) {
-		var  JoomlaEntityGenerator entgen = new JoomlaEntityGenerator(comp.allExtendedEntity,  comp.name, false)
+		var  JoomlaEntityGenerator entgen = new JoomlaEntityGenerator(comp.allExtendedEntity, comp.name, false)
 		
 		generateFile(path + "sql/install.mysql.utf8.sql", entgen.dogenerate)
 		generateFile(path + "sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(comp.name))
 		entgen.update = true
-		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''',entgen.generateUpdateScript(comp.name))
+		// generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''', entgen.generateUpdateScript(comp.name))
+		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''', entgen.generateUpdateScript(comp.name))
 	}
 	
-	private def generateFields(ExtendedComponent comp, String path, boolean isBackendSection){
+	private def generateFields(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(comp, ent)
-			if (isBackendSection) {
-				generateFile( path + "Field/" + Slug.capitalize(ent.name.toLowerCase) + "Field.php",fieldEntity.genAdministratorFieldsForEntity)
-			}
-			else {
-				generateFile( path + "Field/" + Slug.capitalize(ent.name.toLowerCase) + "Field.php",fieldEntity.genSiteFieldsForEntity)
-			}
+			generateFile( path + "models/fields/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
 			for(ExtendedReference ref: ent.allExtendedReferences){
 				switch ref.upper{
 				    case "1":{
 					    var FieldsGenerator fields = new FieldsGenerator(ref,comp, ent)
-						fields.dogenerate(path+ "Field/" , fsa)
+						fields.dogenerate(path+ "models/fields/" , fsa)
 					}
 					case "*" , case "-1":{
-					    var FieldsCardinalityGenerator fields = new FieldsCardinalityGenerator(ref,comp, ent)
-						fields.dogenerate(path+ "Field/" , fsa)
+					    var FieldsCardinalityGenerator fieldCs = new FieldsCardinalityGenerator(ref,comp, ent)
+						fieldCs.dogenerate(path+ "models/fields/" , fsa)
 					}
 				}
 			}
 		}
-		/*if (isBackendSection)
-			generateFile(path + "Field/" + comp.name.toLowerCase.toFirstUpper+"userField.php", FieldsGenerator.genAdministratorFieldsForUserView(comp) )
-		else
-			generateFile(path + "Field/" + comp.name.toLowerCase.toFirstUpper+"userField.php", FieldsGenerator.genSiteFieldsForUserView(comp) )*/
+		generateFile(path + "models/fields/" + comp.name.toLowerCase+"user.php", FieldsGenerator.genFieldsForUserView(comp) )
 		if(comp.hasFileToload) {
 		    var fileloader = new FieldsFileloaderGenerator(comp)
-		    generateFile(path + "Field/" + "FileloaderField.php",  fileloader.generateFileloader)
-		    generateFile(path + "Field/" + "ImageloaderField.php", fileloader.generateImageloader )
+		    generateFile(path + "models/fields/" + "fileloader.php",  fileloader.generateFileloader)
+		    generateFile(path + "models/fields/" + "imageloader.php", fileloader.generateImageloader )
 		}
 		
 	}
 	private def generateTable(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var TableGeneratorTemplate table = new TableGeneratorTemplate(comp, ent)
-			generateFile(path + "Table/"+ent.name.toLowerCase.toFirstUpper+"Table.php", table.genClassTable)
+			generateFile(path + "tables/"+ent.name.toLowerCase+".php", table.genClassTable)
 		}
 	}
 	

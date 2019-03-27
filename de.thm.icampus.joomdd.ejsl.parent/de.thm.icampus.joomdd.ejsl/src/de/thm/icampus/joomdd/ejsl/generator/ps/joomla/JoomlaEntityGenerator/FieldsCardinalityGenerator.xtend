@@ -32,7 +32,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	
 	public override CharSequence genRefrenceField()'''
 		<?php
-		«Slug.generateFileDoc(com)»
+		«Slug.generateFileDocAdmin(com)»
 		
 		«Slug.generateRestrictedAccess()»
 		

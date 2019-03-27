@@ -7,6 +7,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import org.eclipse.emf.common.util.EList
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary code for frontend view templates (index pages).
@@ -14,11 +15,12 @@ import org.eclipse.emf.common.util.EList
  * @author Dieudonne Timma, Dennis Priefer
  */
 class IndexPageTemplateSiteHelper {
+    
     ExtendedDynamicPage indexpage
-	private ExtendedComponent  com
-	private String sec
-	private ExtendedDynamicPage details
-	private ExtendedEntity mainEntity
+	ExtendedComponent  com
+	String sec
+	ExtendedDynamicPage details
+	ExtendedEntity mainEntity
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section) {
 		indexpage = dp
@@ -83,7 +85,7 @@ class IndexPageTemplateSiteHelper {
 
 	        // Check for errors.
 	        if (count($errors = $this->get('Errors'))) {
-	            throw new \Exception(implode("\n", $errors));
+	            throw new Exception(implode("\n", $errors));
 	        }
 
 	        $this->_prepareDocument();
@@ -107,7 +109,7 @@ class IndexPageTemplateSiteHelper {
 	    if ($menu) {
 	        $this->params->def('page_heading', $this->params->get('page_title', $menu->title));
 	    } else {
-	        $this->params->def('page_heading', Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DEFAULT_PAGE_TITLE'));
+	        $this->params->def('page_heading', Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, indexpage.name), indexpage.name)»'));
 	    }
 	    $title = $this->params->get('page_title', '');
 	    if (empty($title)) {
@@ -134,7 +136,7 @@ class IndexPageTemplateSiteHelper {
 	'''
 
 	public def CharSequence genViewTemplateInit()'''
-		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/Helper/html');
+		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 		HTMLHelper::_('bootstrap.tooltip');
 		HTMLHelper::_('behavior.multiselect');
 		HTMLHelper::_('formbehavior.chosen', 'select');
@@ -149,49 +151,69 @@ class IndexPageTemplateSiteHelper {
 		$canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		$canChange = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 		$canDelete = $user->authorise('core.delete', '«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+		$columns = «extendedTableColumnListSize»;
 		?>
 	'''
 
+	def getExtendedTableColumnListSize() {
+		return indexpage.extendedTableColumnList.size;
+	}
+
 	public def CharSequence genViewTemplateHead()'''
-	<form action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>" method="post" name="adminForm" id="adminForm">
+	<form
+	    action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>"
+	    method="post"
+	    name="adminForm"
+	    id="adminForm"
+	>
 	    <?php
 	        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
 	    ?>
-	    <table class="table table-striped">
-	        <thead>
-	            <tr>
-	                <?php if (isset($this->items[0]->state) && $canEdit) : ?>
-	                <th width="1%" class="nowrap center">
-	                    <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
-	                </th>
-	                <?php endif; ?>
-	                «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
-	                <th class='left'>
-	                    <?php echo HTMLHelper::_('grid.sort', '«Slug.nameExtensionBind("com", com.name).toUpperCase»_FORM_LBL_« (attr.entity).name.toUpperCase»_«attr.name.toUpperCase»', 'a.«attr.name.toLowerCase»', $listDirn, $listOrder); ?>
-	                </th>
-	                «ENDFOR»
-	                <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit) : ?>
-	                <th width="1%" class="nowrap center hidden-phone">
-	                    <?php echo HTMLHelper::_('grid.sort', 'JGRID_HEADING_«mainEntity.primaryKey.name»', 'a.«mainEntity.primaryKey.name»', $listDirn, $listOrder); ?>
-	                </th>
-	                <?php endif; ?>
-	            </tr>
-	        </thead>
-	        <tbody>
-	            «genViewTemplateBody()»
-	        </tbody>
-	        <tfoot>
-	            <tr>
-	                <td colspan="<?php echo $this->pagination->pagesStop + 5 ;?>">
-	                    <?php echo $this->pagination->getListFooter(); ?>
-	                </td>
-	            </tr>
-	        </tfoot>
-	    </table>
+	    <?php if (empty($this->items)) : ?>
+	        <div class="alert alert-no-items">
+	            <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
+	        </div>
+	    <?php else : ?>
+	        <table class="table table-striped">
+	            <thead>
+	                <tr>
+	                    <?php if ((isset($this->items[0]) && property_exists($this->items[0], 'state')) && $canEdit) : ?>
+	                        <th width="1%" class="nowrap center">
+	                        <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+	                        </th>
+	                        <?php $columns++;?>
+	                    <?php endif; ?>
+	                        «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
+	                        <th class='left'>
+	                            <?php echo HTMLHelper::_(
+	                                'grid.sort',
+	                                '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
+	                                '«this.mainEntity.name».«attr.name»',
+	                                $listDirn,
+	                                $listOrder
+	                            ); ?>
+	                        </th>
+	                        «ENDFOR»
+	                </tr>
+	            </thead>
+	            <tbody>
+	                «genViewTemplateBody()»
+	            </tbody>
+	            <tfoot>
+	                <tr>
+	                    <td colspan="<?php echo $columns;?>">
+	                        <?php echo $this->pagination->getListFooter(); ?>
+	                    </td>
+	                </tr>
+	            </tfoot>
+	        </table>
+	    <?php endif; ?>
 	    «IF details !== null»
-	    <?php if ($canCreate): ?>
-	    <a href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>" class="btn btn-success btn-small">
-	        <iclass="icon-plus"></i> <?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD_ITEM'); ?>
+	    <?php if ($canCreate) : ?>
+	    <a
+	        href="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«details.name.toLowerCase»edit&layout=edit&«mainEntity.primaryKey.name»=0', false, 2); ?>"
+	        class="btn btn-success btn-small">
+	        <i class="icon-plus"></i> <?php echo Text::_('JGLOBAL_FIELD_ADD'); ?>
 	    </a>
 	    <?php endif; ?>
 	    «ENDIF»
@@ -209,7 +231,7 @@ class IndexPageTemplateSiteHelper {
 	    «IF details !== null»
 	    function deleteItem() {
 	        var item_id = jQuery(this).attr('data-item-id');
-	        if (confirm("<?php echo Text::_('«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE_MESSAGE'); ?>")) {
+	        if (confirm("<?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.DELETE_MESSAGE)»'); ?>")) {
 	            window.location.href = '<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.remove&«mainEntity.primaryKey.name»=') ?>' + item_id;
 	        }
 	    }
@@ -230,7 +252,7 @@ class IndexPageTemplateSiteHelper {
 	            <td class="center">
 	                <a class="btn btn-micro <?php echo $class; ?>"
 	                    «IF details !== null»
-	                    href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«details.name.toLowerCase»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state) : '#'; ?>">
+	                    href="<?php echo ($canEdit || $canChange) ? Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name.toLowerCase)»&task=«details.name»edit.publish&«mainEntity.primaryKey.name»=' . $item->«mainEntity.primaryKey.name» . '&state=' .$item->state) : '#'; ?>">
 	                    «ENDIF»
 	                    <?php if ($item->state == 1) : ?>
 	                    <i class="icon-publish"></i>
@@ -241,11 +263,6 @@ class IndexPageTemplateSiteHelper {
 	            </td>
 	        <?php endif; ?>
 	        «genSiteModelAttributeReference(indexpage.extendedTableColumnList, indexpage,com)»
-	        <?php if (isset($this->items[0]->«mainEntity.primaryKey.name») && $canEdit) : ?>
-	            <td class="center hidden-phone">
-	                <?php echo (int)$item->«mainEntity.primaryKey.name»; ?>
-	            </td>
-	        <?php endif; ?>
 	        </tr>
 	    <?php endforeach; ?>
 	'''
@@ -254,11 +271,12 @@ class IndexPageTemplateSiteHelper {
         «FOR ExtendedAttribute attr : column»
         <td>
             «IF Slug.isAttributeLinked(attr, indexpage)»
-            <a href="<?php echo Route::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->")»); ?>">
-                <?php echo $this->escape($item->«attr.name.toLowerCase»); ?>
+            <a href="<?php echo Route::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->").trim»); ?>"
+            >
+                <?php echo $this->escape($item->«attr.name»); ?>
             </a>
             «ELSE»
-            <?php echo $item->«attr.name.toLowerCase»; ?>
+            <?php echo $item->«attr.name»; ?>
             «ENDIF»
         </td>
 		«ENDFOR»

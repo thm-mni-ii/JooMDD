@@ -19,6 +19,7 @@ import java.util.Calendar
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.LanguageGenerator
 
 /**
  * This class generates a Joomla package.
@@ -27,7 +28,7 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
  */
 public class PackageGenerator extends AbstractExtensionGenerator {
 	
-	private ExtensionGeneratorHandler extClient
+	ExtensionGeneratorHandler extClient
 	ExtendedExtensionPackage pkg
 	String rootPath
 	
@@ -47,7 +48,7 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         for (ext : this.pkg.extensions) {
         	this.extClient = new ExtensionGeneratorHandler(fsa, 
         	    ext, 
-        	   path + "packages/tocompress/" + ext.name.toLowerCase +"/",  
+        	    path + "packages/tocompress/" + ext.name.toLowerCase +"/", 
         	    rootPath,
         	    "",
         	    false
@@ -60,6 +61,10 @@ public class PackageGenerator extends AbstractExtensionGenerator {
         if(success) {
             Slug.deleteFolder(rootPath + path + "packages/tocompress")
         }
+        
+        var LanguageGenerator lang = new LanguageGenerator(fsa)
+        lang.genPackageLanguage(pkg, path)
+        
         return ''
 	}
 	
@@ -135,9 +140,9 @@ public class PackageGenerator extends AbstractExtensionGenerator {
 	public def void scanDirectory(ZipOutputStream zos, byte[]buffer, String  src, String path) {
         var File dir = new File(src);
         var  File[] files = dir.listFiles();
-        
-	if (files !== null) 
-	{
+	
+        if (files !== null)
+        { 
 		for (File f : files) {
 		    if (! f.isDirectory()) {
 			if(path.isEmpty) {

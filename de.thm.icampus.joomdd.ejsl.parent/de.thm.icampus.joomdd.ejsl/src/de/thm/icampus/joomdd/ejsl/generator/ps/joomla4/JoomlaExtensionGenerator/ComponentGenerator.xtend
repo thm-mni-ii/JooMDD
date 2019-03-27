@@ -1,21 +1,22 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator;
 
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.AbstractExtensionGenerator
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.EntityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.LanguageGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.PageGenerator
 import java.util.Calendar
+import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.EList
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.generator.IFileSystemAccess2
-import java.util.LinkedList
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla component.
@@ -24,13 +25,13 @@ import java.util.LinkedList
  */
 public class ComponentGenerator extends AbstractExtensionGenerator {
 
-	private String slug
-	private ExtendedComponent extendedComp
-	private String class_name
-	private String updatePath
-	private String sitePath 
-	private String adminPath
-	private String mediaPath 
+	String slug
+	ExtendedComponent extendedComp
+	String class_name
+	String updatePath
+	String sitePath 
+	String adminPath
+	String mediaPath 
  
     /**
      * this Constructor collects the initial parameters to generate a component
@@ -53,9 +54,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.extendedComp.name = Slug.slugify(extendedComp.name)
 		this.path = path
 		this.updatePath = updatePath
-		this.sitePath = path + "components/" + this.extendedComp.extensionName
-		this.adminPath = path + "administrator/components/" + this.extendedComp.extensionName
-		this.mediaPath =  path + "media/" + extendedComp.extensionName
+		this.sitePath = newArrayList(path, "components", this.extendedComp.extensionName).join("/").toLowerCase
+		this.adminPath = newArrayList(path, "administrator", "components", this.extendedComp.extensionName).join("/").toLowerCase
+		this.mediaPath = newArrayList(path, "media", extendedComp.extensionName).join("/").toLowerCase
 	}
 	
 	/**
@@ -63,8 +64,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 * 
 	 */
 	override generate() {
-		println("component path " +path);
-
 		var List<ExtendedDynamicPage>  indexPages = new LinkedList<ExtendedDynamicPage>()
 		for(ExtendedPageReference ext : extendedComp.backEndExtendedPagerefence) {
             if(ext.extendedPage.extendedDynamicPageInstance !== null) {
@@ -72,44 +71,67 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
             } 
   		}
 
+	    val languages = extendedComp.languages.filter[ language | 
+	    	language.sys === false
+	    ]
+	    
+	    val sysLanguages = extendedComp.languages.filter[ language | 
+	    	language.sys
+	    ]
+	    
+	    var filteredLanguages = languages.filter[ language | 
+	    	sysLanguages.exists[ sysLanguage | 
+	    		sysLanguage.name.equals(language.name)
+	    	] === false
+	    ]
+	    
+	    var synteticSysLanguages = filteredLanguages.map[ language |
+	    	var tmpLanguage = EcoreUtil2.copy(language)
+	    	tmpLanguage.sys = true
+	    	tmpLanguage
+	    ]
+	    
+	    extendedComp.languages.addAll(synteticSysLanguages.toList)
+
         // Generate the the installation path for a compoenent
-		generateFile(path + name + ".xml", extendedComp.xmlContent(indexPages))
+		generateFile(path + name.toLowerCase + ".xml", extendedComp.xmlContent(indexPages))
 		generateFile(path + "script.php", generateScript(extendedComp, name))
 
-		// Generate language folders and files
-		var LanguageGenerator langgen = new LanguageGenerator(fsa)
-		langgen.genComponentLanguage(extendedComp,path)
-
 		//Generate media folder
-		generateEmptyDirectory(mediaPath+"/images")
-		generateFile( mediaPath + "/js/setForeignKeys.js", genScriptForForeignKeys)
-		generateFile( mediaPath + "/js/setMultipleForeignKeys.js", genScriptForMultipleForeignKeys)
+		generateEmptyDirectory(newArrayList(mediaPath, "images").join("/"))
+		generateFile(newArrayList(mediaPath, "js", "setforeignkeys.js").join("/"), genScriptForForeignKeys)
+		generateFile(newArrayList(mediaPath, "js", "setmultipleforeignkeys.js").join("/"), genScriptForMultipleForeignKeys)
 		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
 		
-		generateFile( mediaPath + "/js/bootsnip.js", help.genBootsnipJS)
-		generateFile( mediaPath + "/css/bootsnip.css",help.genBootsnipCSS)
+		generateFile(newArrayList(mediaPath, "js", "bootsnip.js").join("/"), help.genBootsnipJS)
+		generateFile(newArrayList(mediaPath, "css", "bootsnip.css").join("/"), help.genBootsnipCSS)
 		
 		//Generate images folder
 		for(detailsPages : indexPages.filter[t| t.detailsPage && t.haveFiletoLoad]) {
-			generateEmptyDirectory(mediaPath + "/" + detailsPages.name.toLowerCase + "/images")
-			generateEmptyDirectory(mediaPath + "/" + detailsPages.name.toLowerCase + "/files")
+			generateEmptyDirectory(newArrayList(mediaPath, detailsPages.name.toLowerCase, "images").join("/"))
+			generateEmptyDirectory(newArrayList(mediaPath, detailsPages.name.toLowerCase, "files").join("/"))
 		}
 
 		// Generate frontend section 
-		if (extendedComp.frontEndExtendedPagerefence !== null) {
+		if (extendedComp.frontEndExtendedPagerefence !== null && extendedComp.frontEndExtendedPagerefence.empty === false) {
 			generateFrontendSection
 		}
 	    // Generate backend section 
-		if (extendedComp.backEndExtendedPagerefence !== null) {
+		if (extendedComp.backEndExtendedPagerefence !== null  && extendedComp.backEndExtendedPagerefence.empty === false) {
 			generateBackendSection
 		}
+		
+        // Generate language folders and files
+        var LanguageGenerator langgen = new LanguageGenerator(fsa)
+        langgen.genComponentLanguage(extendedComp,path)
+        
 		return ""
 	}
 
 	
 	/**
 	 * Generates the manifest file for a Joomla component. 
-	 * For more information see the site: https://docs.joomla.org/J3.x:Developing_an_MVC_Component/
+	 * For more information see the site: https://docs.joomla4.org/J3.x:Developing_an_MVC_Component/
 	 * Developing_a_Basic_Component#helloworld.xml
 	 * 
 	 * @param ExtendedComponent         component	Containt a component
@@ -117,128 +139,155 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 * 
 	 * @return  Charsequence code for the manifest file
 	 */
-	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) '''
-		<?xml version="1.0" encoding="utf-8"?>
-		<extension type="component" version="3.5" method="upgrade">
-		    <name>«component.name»</name>
-		    «Slug.generateAuthors(component.manifest.authors)»
-		    «IF (component.manifest.creationdate !== null)»
-		    <creationDate>«component.manifest.creationdate»</creationDate>
-		    «ELSE»
-		    <creationDate>«Calendar::instance.get(Calendar::YEAR)»</creationDate>
-		    «ENDIF»
-		    «IF (component.manifest.copyright !== null)»
-		    <copyright>«component.manifest.copyright»</copyright>
-		    «ENDIF»
-		
-		    «IF (component.manifest.license !== null)»
-		    <license>«component.manifest.license»</license>
-		    «ENDIF»
-		    «IF (component.manifest.version !== null)»
-		    <version>«component.manifest.version»</version>
-		    «ELSE»
-		    <version>1.0.1</version>
-		    «ENDIF»
-		    «IF (component.manifest.description !== null)»
-		    <description>«component.manifest.description»</description>
-		    «ENDIF»
-		
-		    <scriptfile>script.php</scriptfile>
-		    <!-- Install Section -->
-		    <install>
-		        <sql>
-		            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
-		        </sql>
-		    </install>
-		
-		    <!-- Uninstall Section -->
-		    <uninstall>
-		        <sql>
-		            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
-		        </sql> 
-		    </uninstall>
-		
-		    <!-- Update Section -->
-		    <update>
-		        <schemas>
-		            <schemapath type="mysql">sql/updates/mysql</schemapath>
-		        </schemas>
-		    </update>
-		    <media destination="«name»" folder="media/«extendedComp.extensionName»">
-		        <folder>images</folder>
-		        <folder>js</folder>
-		        <folder>css</folder>
-		        «FOR page : dymPages.filter[t | t !== null && t.detailsPage && t.haveFiletoLoad]»
-		        <folder>«page.name.toLowerCase»</folder>
-		        «ENDFOR»
-		    </media>
-		
-		    <!-- Site Main File Copy Section -->
-		    <files folder="components/«extendedComp.extensionName»">
-		        <filename>dispatcher.php</filename>
-		        <!-- Additional Files -->
-		        <folder>View</folder>
-		        <folder>Model</folder>
-		        <folder>language</folder>
-		        <folder>Controller</folder>
-		        <folder>tmpl</folder>
-		        <folder>forms</folder>
-		        <folder>Field</folder>
-		    </files>
-		    
-		    <languages>
-		        «FOR lang : component.languages»
-		        «IF !lang.sys»
-		        <language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
-		        «ELSE»
-		        <language tag="«lang.name»">components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
-		        «ENDIF»
-		        «ENDFOR»
-		    </languages>
-		
-		    <administration>
-		        <!-- Administration Menu Section -->
-		        <menu>«Slug.nameExtensionBind("com",component.name).toUpperCase»</menu>
-		        <submenu>
-		            «FOR page : dymPages.filter[t | !t.detailsPage]»
-		            <menu link="option=«Slug.nameExtensionBind("com",component.name).toLowerCase»&amp;view=«page.name.toLowerCase»" 
-		                alias="«Slug.nameExtensionBind("com", component.name).toUpperCase»_ALIAS_«page.name.toUpperCase»"
-		                view="«page.name.toLowerCase»">«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«page.name.toUpperCase»</menu>
-		    «ENDFOR»
-		        </submenu>
-		        <!-- Administration Main File Copy Section -->
-		        <files folder="administrator/components/«extendedComp.extensionName»">
-		            <!-- Admin Main File Copy Section -->
-		            <filename>dispatcher.php</filename>
-		            <filename>access.xml</filename>
-		            <filename>config.xml</filename>
-		            <!-- SQL Files Section -->
-		            <folder>sql</folder>
-		            <!-- Table Files Section -->
-		            <folder>Table</folder>
-		            <!-- Model Files Section -->
-		            <folder>Model</folder>
-		            <!-- View Files Section -->
-		            <folder>View</folder>
-		            <folder>language</folder>
-		            <folder>Controller</folder>
-		            <folder>Helper</folder>
-		            <folder>tmpl</folder>
-		            <folder>forms</folder>
-		            <folder>Field</folder>
-		        </files>
-		
-		        <languages>
-		            «FOR lang : component.languages»
-		            «IF !lang.sys»
-		            <language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».ini</language>
-		            «ELSE»
-		            <language tag="«lang.name»">administrator/components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«this.name».sys.ini</language>
-		            «ENDIF»
-		            «ENDFOR»
-		        </languages>
-		    </administration>
-		</extension>
+	def CharSequence xmlContent(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) {
+	    
+	    var sectionManifest = newArrayList
+	    
+	    // Check for a frontend section
+	    if (component.frontEndExtendedPagerefence.empty === false) {
+	        var frontendManifest = frontendManifest(component)
+	        sectionManifest.add(frontendManifest)
+	    }
+	    
+        // Check for a backend section
+        if (component.backEndExtendedPagerefence.empty === false) {
+            sectionManifest.add(backendManifest(component, dymPages))
+        }
+        else
+        {
+            // Joomla requires at least an empty administration tag
+            sectionManifest.add('''
+                <administration>
+                </administration>
+            ''')
+        }
+        
+	    '''
+        <?xml version="1.0" encoding="utf-8"?>
+        <extension type="component" version="4.0" method="upgrade">
+            <name>«component.name»</name>
+            «Slug.generateAuthors(component.manifest.authors)»
+            «IF (component.manifest.creationdate !== null)»
+            <creationDate>«component.manifest.creationdate»</creationDate>
+            «ELSE»
+            <creationDate>«Calendar::instance.get(Calendar::YEAR)»</creationDate>
+            «ENDIF»
+            «IF (component.manifest.copyright !== null)»
+            <copyright>«component.manifest.copyright»</copyright>
+            «ENDIF»
+        
+            «IF (component.manifest.license !== null)»
+            <license>«component.manifest.license»</license>
+            «ENDIF»
+            «IF (component.manifest.version !== null)»
+            <version>«component.manifest.version»</version>
+            «ELSE»
+            <version>1.0.1</version>
+            «ENDIF»
+            «IF (component.manifest.description !== null)»
+            <description>«component.manifest.description»</description>
+            «ENDIF»
+            <namespace>Joomla\Component\«noPrefixName.toFirstUpper»</namespace>
+            <scriptfile>script.php</scriptfile>
+            <!-- Install Section -->
+            <install>
+                <sql>
+                    <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+                </sql>
+            </install>
+        
+            <!-- Uninstall Section -->
+            <uninstall>
+                <sql>
+                    <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+                </sql> 
+            </uninstall>
+        
+            <!-- Update Section -->
+            <update>
+                <schemas>
+                    <schemapath type="mysql">sql/updates/mysql</schemapath>
+                </schemas>
+            </update>
+            <media destination="«extendedComp.extensionName»" folder="media/«extendedComp.extensionName»">
+                <folder>images</folder>
+                <folder>js</folder>
+                <folder>css</folder>
+                «FOR page : dymPages.filter[t | t !== null && t.detailsPage && t.haveFiletoLoad]»
+                <folder>«page.name.toLowerCase»</folder>
+                «ENDFOR»
+            </media>
+            «FOR section : sectionManifest»
+
+            «section»
+            «ENDFOR»
+        </extension>
+        '''
+	}
+    
+    def backendManifest(ExtendedComponent component, List<ExtendedDynamicPage> dymPages) '''
+    <administration>
+        <!-- Administration Menu Section -->
+        <menu>«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»</menu>
+        <submenu>
+            «FOR page : dymPages.filter[t | !t.detailsPage]»
+            <menu link="option=«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»&amp;view=«page.name.toLowerCase»" 
+                alias="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "ALIAS", page.name), page.name)»"
+                view="«page.name.toLowerCase»">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "TITLE", page.name), page.name)»</menu>
+            «ENDFOR»
+        </submenu>
+        <files folder="administrator/components/«extendedComp.extensionName»">
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>«noPrefixName.toLowerCase».xml</filename>
+            <folder>Controller</folder>
+            <folder>Extension</folder>
+            <folder>Field</folder>
+            <folder>forms</folder>
+            <folder>Helper</folder>
+            <folder>helpers</folder>
+            <folder>Model</folder>
+            <folder>Service</folder>
+            <folder>services</folder>
+            <folder>Table</folder>
+            <folder>sql</folder>
+            <folder>tmpl</folder>
+            <folder>View</folder>
+            <folder>language</folder>
+        </files>
+
+        «componentManifestLanguages(component, true)»
+    </administration>
+    '''
+    
+    def frontendManifest(ExtendedComponent component) '''
+    <!-- Site Main File Copy Section -->
+    <files folder="components/«extendedComp.extensionName»">
+        <filename>router.php</filename>
+        <folder>Controller</folder>
+        <folder>Dispatcher</folder>
+        <folder>forms</folder>
+        <folder>Helper</folder>
+        <folder>helpers</folder>
+        <folder>Model</folder>
+        <folder>Service</folder>
+        <folder>tmpl</folder>
+        <folder>View</folder>
+        <folder>language</folder>
+    </files>
+    «componentManifestLanguages(component, false)»
+    '''
+
+	private def componentManifestLanguages(ExtendedComponent component, boolean admin) '''
+	<languages>
+	    «FOR lang : component.languages»
+	    «IF !lang.sys»
+	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«extendedComp.extensionName».ini</language>
+	    «ELSE»
+	    <language tag="«lang.name»">«IF admin»administrator/«ENDIF»components/«extendedComp.extensionName»/language/«lang.name»/«lang.name».«extendedComp.extensionName».sys.ini</language>
+        «ENDIF»
+        «ENDFOR»
+	</languages>
 	'''
 
     /**
@@ -248,12 +297,11 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	private def void generateFrontendSection() {
 		// Generate frontend section
-		//generateFile( sitePath + "/" + noPrefixName + ".php", extendedComp.phpSiteContent)
-		generateFile( sitePath + "/Controller/DisplayController.php", extendedComp.phpSiteControllerContent)
-		generateFile( sitePath + "/dispatcher.php", extendedComp.phpSiteDispatcherContent)
+        generateFile( sitePath + "/Controller/DisplayController.php", extendedComp.phpSiteControllerContent)
+        generateFile( sitePath + "/Disptacher/Dispatcher.php", extendedComp.phpSiteDispatcherContent)
 		generateFile( sitePath + "/router.php", extendedComp.phpSiteRouterContent)
 		        
-        var EntityGenerator entitygen = new EntityGenerator(extendedComp,sitePath + "/",fsa,false)
+        var EntityGenerator entitygen = new EntityGenerator(extendedComp,sitePath + "/", fsa, false)
 		entitygen.dogenerate()
 
 		var EList<ExtendedPage> tempPageList = new BasicEList()
@@ -263,34 +311,41 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		}
 		
 		var PageGenerator pgGen 
-        pgGen = new PageGenerator(extendedComp, tempPageList,fsa,sitePath,"site",false)
+        pgGen = new PageGenerator(extendedComp, tempPageList, fsa, sitePath, "site", false)
 		pgGen.dogenerate
-		generateUpdatePages(tempPageList,"site")
+		generateUpdatePages(tempPageList, "site")
 	}
 	
 	def CharSequence phpSiteDispatcherContent(ExtendedComponent component) '''
-		<?php
-		/**
-		 *
-		 */
-		 
-		«Slug.generateRestrictedAccess»
-		
-		use Joomla\CMS\Dispatcher\Dispatcher;
-		
-		/**
-		 * Dispatcher class
-		 */
-		class «class_name»Dispatcher extends Dispatcher
-		{
-			/**
-			 * The extension namespace
-			 *
-			 * @var    string
-			 */
-			protected $namespace = 'Joomla\\Component\\«component.name»';
-		}
-	'''
+        <?php
+        «Slug.generateFileDocSite(component)»
+        
+        «Slug.generateNamespace(noPrefixName, "Site", "Dispatcher")»
+        
+        «Slug.generateRestrictedAccess»
+        
+        «Slug.generateUses(newArrayList("ComponentDispatcher", "Text"))»
+        
+        /**
+         * ComponentDispatcher class for com_«noPrefixName»
+         *
+         * @since  4.0.0
+         */
+        class Dispatcher extends ComponentDispatcher
+        {
+            /**
+             * Dispatch a controller task. Redirecting the user if appropriate.
+             *
+             * @return  void
+             *
+             * @since   4.0.0
+             */
+            public function dispatch()
+            {
+                parent::dispatch();
+            }
+        }
+    '''
 	
     /**
      * Generates all the folders and files for the frontend of a component.
@@ -304,25 +359,22 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
                 indexPages.add(ext.extendedPage.extendedDynamicPageInstance)   
 			}
   		}
-  		// Generate sql folders
-		
-		//generateFile( adminPath + "/" + noPrefixName + ".php", extendedComp.phpAdminContent)
+  		
 		generateFile( adminPath + "/Controller/DisplayController.php", extendedComp.phpAdminControllerContent)
-		generateFile( adminPath + "/dispatcher.php", extendedComp.phpAdminDispatcherContent)
 		generateFile( adminPath + "/access.xml", extendedComp.xmlAccessContent)
 		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
 		
 		var tempSlug = slug
-		generateFile(adminPath + "/View/" + Slug.capitalize(tempSlug) + "/HtmlView.php", 
-		    extendedComp.phpAdminViewContent)
-		generateFile(adminPath + "/tmpl/" + tempSlug + "/default.php", 
-		    extendedComp.phpAdminTemplateContent
-		)
+        generateFile(adminPath + "/View/" + tempSlug.toFirstUpper + "/HtmlView.php", 
+            extendedComp.phpAdminViewContent)
+        generateFile(adminPath + "/tmpl/" + tempSlug + "/default.php", 
+            extendedComp.phpAdminTemplateContent
+        )
 		
-		var de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.ComponentHelperGenerator help = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.ComponentHelperGenerator(extendedComp)
-		generateFile( adminPath + "/Helper/" + Slug.capitalize(extendedComp.name.toLowerCase) + "Helper.php", 
-		    help.generate
-		)
+		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
+		generateFile( adminPath + "/Helper/" + extendedComp.name.toLowerCase.toFirstUpper + "Helper.php", 
+            help.generate
+        )
 
 		var EntityGenerator entitygen
 		entitygen = new EntityGenerator(extendedComp, adminPath + "/", fsa, true)
@@ -339,30 +391,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateUpdatePages(tempPageList, "admin")
 		
 	}
-	
-	def CharSequence phpAdminDispatcherContent(ExtendedComponent component) '''
-		<?php
-		/**
-		 *
-		 */
-		 
-		«Slug.generateRestrictedAccess»
-		
-		use Joomla\CMS\Dispatcher\Dispatcher;
-		
-		/**
-		 * Dispatcher class
-		 */
-		class «class_name»Dispatcher extends Dispatcher
-		{
-			/**
-			 * The extension namespace
-			 *
-			 * @var    string
-			 */
-			protected $namespace = 'Joomla\\Component\\«component.name»';
-		}
-	'''
 	
 	/**
 	 * Generates the update part of the component, this contains only the folder which is needed
@@ -386,8 +414,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      * @return Charsequence
      */
 	def CharSequence phpSiteContent(Component component) '''
-		<?php		
-		«Slug.generateFileDoc(component)»
+		<?php
+		«Slug.generateFileDocSite(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -414,13 +442,13 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpSiteControllerContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocSite(component)»
 		
 		«Slug.generateNamespace(component.name, "Site", "Controller")»
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ControllerLegacy", "Factory"))»
+		«Slug.generateUses(newArrayList("BaseController", "Factory"))»
 		
 		/**
 		 * General Controller of «component.name» component
@@ -436,10 +464,15 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		    {
 		        // set default view if not set
 		        $input = Factory::getApplication()->input;
-		        $input->set('view', $input->getCmd('view', '«component.name»'));
-		
+		        $vName = $input->getCmd('view', '«component.name»');
+		        $input->set('view', $vName);
+
+		        $safeurlparams = array();
+
 		        // call parent behavior
-		        parent::display($cachable);
+		        parent::display($cachable, $safeurlparams);
+
+		        return $this;
 		    }
 		}
 	'''
@@ -453,7 +486,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -465,7 +498,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		}
 		
 		// Get an instance of the controller prefixed by «Slug::nameExtensionBind("com",component.name )»
-		$controller	= BaseController::getInstance('«component.name.toFirstUpper»');
+		$controller = BaseController::getInstance('«component.name.toFirstUpper»');
 		$controller->execute(Factory::getApplication()->input->get('task'));
 		$controller->redirect();
 	'''
@@ -479,26 +512,26 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
      */
 	def CharSequence phpAdminControllerContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateNamespace(component.name, "Administrator", "Controller")»
-		
+
 		«Slug.generateRestrictedAccess()»
-		
-		«Slug.generateUses(newArrayList("ControllerLegacy", "Factory"))»
-		
+
+		«Slug.generateUses(newArrayList("BaseController", "Factory"))»
+
 		/**
 		 * General Controller of «class_name» component
 		 */
 		class DisplayController extends BaseController
 		{
-			/**
-			 * The default view.
-			 *
-			 * @var    string
-			 * @since  1.6
-			 */
-			protected $default_view = '«component.name»';
+		    /**
+		     * The default view.
+		     *
+		     * @var    string
+		     * @since  1.6
+		     */
+		    protected $default_view = '«component.name»';
 		}
 	'''
 
@@ -510,36 +543,35 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		<?php
 		«Slug.generateNamespace(component.name, "Administrator", "Model")»
 		
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("ModelAdmin"))»
 		
 		class «pageref.name.toFirstUpper»Model extends AdminModel
-		{
-		}
+        {
+        }
 	'''
 	 
 	/**
 	 * Returns the code for the layout of the main view of the component
 	 * @param Component component content the instance of a component
 	 */
-	def CharSequence phpAdminTemplateContent(Component component) '''
+	def CharSequence phpAdminTemplateContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocAdmin(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("Text"))»
 		?>
-		<p class="text-center"> <h1><?php echo "Welcome to ". Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . " ". Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'); ?> </h1>
+		<p class="text-center"> <h1><?php echo "Welcome to ". Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»') . " ". Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), StaticLanguage.HOME)»'); ?> </h1>
 		    <h4>«component.manifest.description»</h4>
 		</p> 
 		<div id="cpanel" class='cpanel'>
-		    <?php 
-		    foreach ($this->views as $view)
-		    {
+		    <?php
+		    foreach ($this->views as $view) {
 		    ?>
 		        <div class="icon">
 		            <h3>
@@ -562,12 +594,12 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 */
 	def CharSequence phpAdminViewContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
-		
+		«Slug.generateFileDocAdmin(component)»
+
 		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name)»
-		
+
 		«Slug.generateRestrictedAccess()»
-		
+
 		«Slug.generateUses(newArrayList("ViewLegacy", "Text", "Factory", "Html"))»
 
 		 
@@ -576,7 +608,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 */
 		class HtmlView extends BaseHtmlView
 		{
-		
 		    /** Method to get display
 		     *
 		     * @param   Object  $tpl (template)
@@ -593,7 +624,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		
 		        $document = Factory::getDocument();
 		
-		        HTMLHelper::_('bootstrap.startTabSet');
+		        HTMLHelper::_('tabs.start');
 		
 		        $application = Factory::getApplication("administrator");
 		        $this->option = $application->scope;
@@ -612,8 +643,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    private function addToolBar()
 		    {
-		        \JToolBarHelper::title(Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»') . ': ' . Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_HOME'), 'logo');
-		        \JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
+		        JToolBarHelper::title(Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»') . ': ' . Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), StaticLanguage.HOME)»'), 'logo');
+		        JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
 		    }
 		
 		    /**
@@ -626,7 +657,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        $views = array();
 		        «FOR ExtendedPageReference pg : component.backEndExtendedPagerefence.filter[t | t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage ]»
 		        $views['«pg.extendedPage.name.toLowerCase»'] = array();
-		        $views['«pg.extendedPage.name.toLowerCase»']['title'] = Text::_('«Slug.nameExtensionBind("com", component.name).toUpperCase»_TITLE_«pg.extendedPage.name.toUpperCase»');
+		        $views['«pg.extendedPage.name.toLowerCase»']['title'] = Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name, "TITLE", pg.extendedPage.name), pg.extendedPage.name)»');
 		        $views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»";
 		    «ENDFOR»
 		    $this->views = $views;
@@ -684,37 +715,37 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            type="text"
 		            size="50"
 		            default="10"
-		            label="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_LABEL"
-		            description="«name.toUpperCase»_FIELD_MAXIMUM_SIZE_DESC" />
+		            label="JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT"
+		            description="JGLOBAL_MAXIMUM_UPLOAD_SIZE_LIMIT" />
 		        <field
 		            name="accept_format"
 		            type="text"
 		            size="50"
 		            default="bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png,ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
-		            label="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_LABEL"
-		            description="«name.toUpperCase»_FIELD_ACCEPT_FORMAT_DESC" />
+		            label="COM_MEDIA_FIELD_LEGAL_EXTENSIONS_LABEL"
+		            description="COM_MEDIA_FIELD_LEGAL_EXTENSIONS_DESC" />
 		        «FOR detailsPage : dynPages.filter[t | t.isDetailsPage && t.haveFiletoLoad]»
 		        <field
 		            name="«detailsPage.name.toLowerCase»_file_path"
 		            type="text"
 		            size="50"
 		            default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/files"
-		            label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_FILE_FOLDER_LABEL"
-		            description="«name.toUpperCase»_«detailsPage.name.toUpperCase»PATH_FILE_FOLDER_DESC" />
+		            label="COM_MEDIA_FIELD_PATH_FILE_FOLDER_LABEL"
+		            description="COM_MEDIA_FIELD_PATH_FILE_FOLDER_DESC" />
 		        <field
 		            name="«detailsPage.name.toLowerCase»_image_path"
 		            type="text"
 		            size="50"
 		            default="media/«name.toLowerCase»/«detailsPage.name.toLowerCase»/images"
-		            label="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_LABEL"
-		            description="«name.toUpperCase»_«detailsPage.name.toUpperCase»_PATH_IMAGE_FOLDER_DESC" />
+		            label="COM_MEDIA_FIELD_PATH_IMAGE_FOLDER_LABEL"
+		            description="COM_MEDIA_FIELD_PATH_IMAGE_FOLDER_DESC" />
 		         «ENDFOR»
 		     «ENDIF»
 		    </fieldset>
 		    «FOR g : component.extendedParameterGroupList»
-		    <fieldset name="«g.name.toLowerCase»" label="«g.name.toUpperCase»_LABEL" description="«g.name.toUpperCase»_DESC">
+		    <fieldset name="«g.name.toLowerCase»" label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, g.name, "LABEL"), g.name)»" description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, g.name, "DESC"), StaticLanguage.getCommonDescriptionFor(g.name))»">
 		        «FOR p:g.extendedParameterList»
-		       «Slug.writeParameter(p,component)»
+		        «Slug.writeParameter(p,component)»
 		        «ENDFOR»
 		    </fieldset>
 		    «ENDFOR»
@@ -728,7 +759,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            label="JCONFIG_PERMISSIONS_LABEL"
 		            filter="rules"
 		            validate="rules"
-		            component="«Slug.nameExtensionBind("com",extendedComp.name)»"
+		            component="«Slug.nameExtensionBind("com", extendedComp.name)»"
 		            section="component" />
 		    </fieldset>
 		</config>
@@ -741,7 +772,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     */
 	def CharSequence phpSiteRouterContent(ExtendedComponent component) '''
 		<?php
-		«Slug.generateFileDoc(component)»
+		«Slug.generateFileDocSite(component)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -749,7 +780,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		 * @param   array  A named array
 		 * @return  array
 		 */
-		public function «component.name.toFirstUpper»BuildRoute(&$query)
+		function «component.name.toFirstUpper»BuildRoute(&$query)
 		{
 		    $segments = array();
 		
@@ -772,8 +803,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		/**
 		 * @param  array  A named array
 		 *
+		 * @return array
 		 */
-		public function «component.name.toFirstUpper»ParseRoute($segments)
+		function «component.name.toFirstUpper»ParseRoute($segments)
 		{
 		    $vars = array();
 		
@@ -798,14 +830,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 *  
 	 */
 	def CharSequence genScriptForForeignKeys()'''
-		«Slug.generateFileDoc(extendedComp)»
+		«Slug.generateFileDocAdmin(extendedComp)»
+		
 		/**
-		 * this function set the value of reference for a foreign attribute 
+		 * This function set the value of reference for a foreign attribute
 		 */
-		function setValueForeignKeys(element) {
+		function setValueForeignKeys(element)
+		{
 		    var data = JSON.parse(element.value);
 		    var item;
-		    for(item in data) {
+		    for (item in data) {
 		        jQuery("#"+item).attr("value",data[item]);
 		    }
 		}
@@ -816,41 +850,42 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	 *  
 	 */
 	def CharSequence genScriptForMultipleForeignKeys()'''
-	    «Slug.generateFileDoc(extendedComp)»
+	    «Slug.generateFileDocAdmin(extendedComp)»
 
-	    jQuery(document).ready(function() {
-	        jQuery("select[generated='true']").each(function() {
+	    jQuery(document).ready(function () {
+	        jQuery("select[generated='true']").each(function () {
 	            jQuery(this).trigger('onchange');
 	        })
 	    });
 
 	    /**
-	     * this function set the values of references for many foreign attributes 
+	     * This function set the values of references for many foreign attributes
 	     */
-	    function setMultipleValueForeignKeys(element) {
+	    function setMultipleValueForeignKeys(element)
+	    {
 	        var data = [];
 	        var id = "#" + element.id + " option:selected";
 	        jQuery(id).each(function () {
 	            data.push(JSON.parse(jQuery(this).prop("value")));
 	        });
-	        if(data.length == 0) {
+	        if (data.length == 0) {
 	            return;
 	        }
 	        var allkeys = Object.keys(data[0])
 	        var all_item = [];
-	        for(var a = 0; a< allkeys.length; a++) {
+	        for (var a = 0; a< allkeys.length; a++) {
 	            all_item[allkeys[a]] = [];
 	        }
-	        for(var i =0; i<data.length; i++) {
+	        for (var i =0; i<data.length; i++) {
 	            var attr_obj = data[i];
 	            var attr_obj_keys = Object.keys(attr_obj);
-	            for(var j =0; j< attr_obj_keys.length; j++) {
+	            for (var j =0; j< attr_obj_keys.length; j++) {
 	                var attr_key_value = attr_obj_keys[j];
 	                var attr_value = attr_obj[attr_key_value][0];
 	                all_item[attr_key_value].push(attr_value);
 	            }
 	        }
-	        for(var c =0; c < allkeys.length; c++) {
+	        for (var c =0; c < allkeys.length; c++) {
 	            var value = all_item[allkeys[c]];
 	            jQuery("#"+ allkeys[c]).attr("value",JSON.stringify(value));
 	        }

@@ -55,7 +55,7 @@ class FieldsGenerator {
 
 	public def CharSequence genRefrenceField() '''
 		<?php
-		«Slug.generateFileDoc(com)»
+		«Slug.generateFileDocAdmin(com)»
 
 		«Slug.generateRestrictedAccess()»
 
@@ -82,7 +82,7 @@ class FieldsGenerator {
 	'''
 	public def CharSequence genEmptyField()'''
 	<?php
-	«Slug.generateFileDoc(com)»
+	«Slug.generateFileDocAdmin(com)»
 	
 	«Slug.generateRestrictedAccess()»
 	
@@ -253,7 +253,7 @@ class FieldsGenerator {
 	
 	public def CharSequence genFieldsForEntity()'''
 		<?php
-		«Slug.generateFileDoc(com)»
+		«Slug.generateFileDocAdmin(com)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -334,7 +334,7 @@ class FieldsGenerator {
 	   
 	    return '''
     		<?php
-    		«Slug.generateFileDoc(component)»
+    		«Slug.generateFileDocAdmin(component)»
     		
     		«Slug.generateRestrictedAccess()»
     		

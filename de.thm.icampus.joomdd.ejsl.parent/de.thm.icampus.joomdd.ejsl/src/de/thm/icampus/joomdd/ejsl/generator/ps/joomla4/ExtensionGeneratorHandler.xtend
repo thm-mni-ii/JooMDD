@@ -35,6 +35,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.
  * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 public class ExtensionGeneratorHandler {
+    
     AbstractExtensionGenerator extensionsgenerator
     IFileSystemAccess2 fsa
     Extension ext
@@ -49,7 +50,7 @@ public class ExtensionGeneratorHandler {
         this.path = path
         this.rootpath = rootPath
         this.modelName = modelName
-                
+        
         if (addPlatformPath === false)
         {
         	platformPath = ""

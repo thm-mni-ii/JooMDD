@@ -56,7 +56,7 @@ public class PageGeneratorHandler {
 		}
 	}
 		
-	private def generateModel(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess2 fsa) {
+	private def  generateModel(ExtendedDynamicPage page, ExtendedComponent component, String sec, String path,IFileSystemAccess2 fsa) {
 		if(page.detailsPage) {
 			var de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.DetailsPageTemplate dp = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.DetailsPageTemplate(page, component, sec, path,fsa)
 			dp.generateModel()
@@ -68,12 +68,15 @@ public class PageGeneratorHandler {
 
 	def void generateExtension(){
 		if (extPage.extendedDynamicPageInstance !== null) {
+			var String viewPath = pathExt + "/views";
 			var ExtendedDynamicPage dynPage = extPage.extendedDynamicPageInstance as ExtendedDynamicPage
-			generateView(dynPage, com, sectionExt, pathExt, fsa)
-			generateController(dynPage, com, sectionExt, pathExt, fsa)
-			generateModel(dynPage, com, sectionExt, pathExt, fsa)
+			generateView(dynPage, com, sectionExt, viewPath, fsa)
+			var String controllerpath = pathExt + "/controllers"
+			generateController(dynPage, com, sectionExt, controllerpath, fsa)
+			var String modelpath = pathExt + "/models"
+			generateModel(dynPage, com, sectionExt, modelpath, fsa)
 			if(extPage.extendedDynamicPageInstance.isDetailsPage){
-				generateUnknownFields(pathExt)
+				generateUnknownFields(modelpath)
 			}
 		} else if (extPage.staticPageInstance !== null) {
 			generateStaticPage(extPage.staticPageInstance)
@@ -82,21 +85,23 @@ public class PageGeneratorHandler {
 	
 	def void generatePages(){
 		if (extPage.extendedDynamicPageInstance !== null && !extPage.extendedDynamicPageInstance.preserve ) {
-			pathExt = pathExt + extPage.name;
+			var String viewPath = pathExt + extPage.name+ "/views";
 			var ExtendedDynamicPage dynPage = extPage.extendedDynamicPageInstance as ExtendedDynamicPage
-			generateView(dynPage, com, sectionExt, pathExt, fsa)
-			generateController(dynPage, com, sectionExt, pathExt, fsa)
-			generateModel(dynPage, com, sectionExt, pathExt, fsa)
+			generateView(dynPage, com, sectionExt, viewPath, fsa)
+			var String controllerpath = pathExt +extPage.name  + "/controllers" 
+			generateController(dynPage, com, sectionExt, controllerpath, fsa)
+			var String modelpath = pathExt + extPage.name  + "/models"
+			generateModel(dynPage, com, sectionExt, modelpath, fsa)
 			if(extPage.extendedDynamicPageInstance.isDetailsPage){
-				generateUnknownFields(pathExt + extPage.name)
+				generateUnknownFields(modelpath)
 			}
 		} else if (extPage.staticPageInstance !== null && !extPage.staticPageInstance.preserve ) {
 			generateStaticPage(extPage.staticPageInstance)
 		}
 	}
 	
-	def void generateUnknownFields(String extPath){
-	    var String fieldsPath = extPath +"/Field"
+	def void generateUnknownFields(String modelPath){
+	    var String fieldsPath = modelPath +"/fields"
 		val joomlafields = #["menuitem","accesslevel","cachehandler","calendar","captcha","category","checkbox","checkboxes","chromestyle","color","contentlanguage","contenttype","componentlayout","contentlanguage","databaseconnection","editor","editors","email","file","filelist","folderlist","groupedlist","headertag","helpsite","hidden","imagelist","integer","language","list","media","menu","menuitem","meter","modulelayout","moduleorder","moduleposition","moduletag","note","number","password","plugins","predefinedlist","radio","range","repeatable","rules","sessionhandler","spacer","sql","subform","tag","tel","templatestyle","text","textarea","timezone","url","user","useractive","usergroup","usergrouplist","userstate"] 
 
 		for(ExtendedDetailPageField field: extPage.extendedDynamicPageInstance.extendedEditedFieldsList){

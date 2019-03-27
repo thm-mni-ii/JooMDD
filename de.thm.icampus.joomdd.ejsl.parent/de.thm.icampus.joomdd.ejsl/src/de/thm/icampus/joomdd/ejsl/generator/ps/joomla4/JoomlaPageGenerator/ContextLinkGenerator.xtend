@@ -11,6 +11,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
  * @author Dennis Priefer, Dieudonne Timma Meyatchie
  */
 public class ContextLinkGenerator extends AbstractLinkGenerator {
+	
 	ContextLink lk
 	String valueF
 	
@@ -19,13 +20,9 @@ public class ContextLinkGenerator extends AbstractLinkGenerator {
 		valueF= valueFeatures
 	}
 	
-	override generateLink(String sect, String compname) '''
-	«if (sect.isEmpty) '' else sect +"/"»'index.php?option=«Slug.nameExtensionBind("com",compname).toLowerCase»&view=«lk.target.name.toLowerCase»' «genLinkOption(lk.linkparameters)»'''
+	override generateLink(String sect, String compname) 
+	'''«if (sect.isEmpty) '' else sect +"/"»'index.php?option=«Slug.nameExtensionBind("com",compname)»&view=«lk.target.name»' «genLinkOption(lk.linkparameters)»'''
 	
-	def CharSequence genLinkOption(EList<LinkParameter> params)'''
-	    «FOR LinkParameter lp : params»
-	        . '&«lp.name»=' . «if(lp.attvalue !== null) valueF + lp.attvalue.name.toLowerCase else lp.value»
-	    «ENDFOR»
-	'''
-	
-} // ContextLink
+	def CharSequence genLinkOption(EList<LinkParameter> params)
+	'''«params.map[ lp | '''. '&«lp.name»=«IF lp.attvalue !== null»' . «valueF + lp.attvalue.name»«ELSE»«lp.value»'«ENDIF»''' ].join»'''
+}

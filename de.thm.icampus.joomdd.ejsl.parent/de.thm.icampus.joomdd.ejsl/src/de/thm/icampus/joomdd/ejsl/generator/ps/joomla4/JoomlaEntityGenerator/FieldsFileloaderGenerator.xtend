@@ -1,10 +1,10 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator
 
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator.FieldsGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
 
 /**
  * This class contains the templates for field file loaders.
@@ -26,9 +26,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 	 */
 	 def CharSequence generateFileloader()'''
 		<?php
-		«Slug.generateFileDoc(com)»
-		
-		«Slug.generateNamespace(com.name, "Administrator", "Field")»
+		«Slug.generateFileDocAdmin(com)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -39,7 +37,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class FileloaderField extends FormField
+		class JFormFieldFileloader extends FormField
 		{
 		    protected function getInput()
 		    {
@@ -55,10 +53,10 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		       $document = Factory::getDocument();
 			   $iconpath = Uri::root() . 'media/media/images/mime-icon-32/';
 			   $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
-		       $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
+			   $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
 			   $document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
-			   $html []="<div class='img-picker' fieldtype='file' name='" . $this->name . "'  value='" . $this->value . "'  accept='" . $format . ""' file='" . $file . "' iconpath='" . $iconpath . "' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
-			   deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
+			   $html []="<div class='img-picker' fieldtype='file' name='" . $this->name . "'  value='" . $this->value . "'  accept='" . $format . "' file='" . $file . "' iconpath='" . $iconpath . "' showLabel='".Text::_("JGLOBAL_FIELD_ADD")."' 
+			   deleteLabel='".Text::_("JACTION_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
 			return implode($html);
 		    }
 		}
@@ -68,9 +66,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 	 */
 	def CharSequence generateImageloader()'''
 		<?php
-		«Slug.generateNamespace(com.name, "Administrator", "Field")»
-		
-		«Slug.generateFileDoc(com)»
+		«Slug.generateFileDocAdmin(com)»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -81,7 +77,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class ImageloaderField extends FormField
+		class JFormFieldImageloader extends FormField
 		{
 		    protected function getInput()
 		    {
@@ -93,14 +89,13 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		        if (!empty($this->value)) {
 		            $file=  Uri::root()  .$path . '/'. $this->value;
 		        }
-		
 		        $document = Factory::getDocument();
-				$document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
-				$document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
-				$document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
-				$html []="<div class='img-picker' fieldtype='image' iconpath=' '  name='$this->name' value='" . $this->value . "' accept='image/*' file='" . $file. "' showLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_ADD")."' 
-				deleteLabel='".Text::_("«Slug.nameExtensionBind("com", com.name).toUpperCase»_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
-				return implode($html);
+		        $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/bootsnip.js');
+		        $document->addStyleSheet( Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/css/bootsnip.css');
+		        $document->addStyleSheet( Uri::root() . 'media/jui/css/bootstrap.min.css');
+		        $html []="<div class='img-picker' fieldtype='image' iconpath=' '  name='$this->name' value='" . $this->value . "' accept='image/*' file='" . $file. "' showLabel='".Text::_("JGLOBAL_FIELD_ADD")."' 
+		        deleteLabel='".Text::_("JACTION_DELETE")."'><div id='add'></div><div id='preview'></div></div>";
+		        return implode($html);
 		    }
 		}
 	'''
