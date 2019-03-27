@@ -43,22 +43,23 @@ Through a click on the Finish-Button the required project structure becomes gene
 for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
 is created within the src folder which can be used for a straightforward introduction.
 
-<img src="img/eclipse_pw_1.png" alt="Eclipse Project Wizard" style="max-width:100%">
-<img src="img/eclipse_pw_2.png" alt="Eclipse Project Wizard 2" style="max-width:100%">
-<img src="img/eclipse_pw_3.png" alt="Eclipse Project Wizard 3" style="max-width:100%">
-<img src="img/eclipse_pw_4.png" alt="Eclipse Project Wizard 4"style="max-width:100%">
-
+<img src="img/eclipse_gs_1.png" alt="Eclipse Project Wizard" style="max-width:100%">
+<img src="img/eclipse_gs_2.png" alt="Eclipse Project Wizard 2" style="max-width:100%">
+<img src="img/eclipse_gs_3.png" alt="Eclipse Project Wizard 3" style="max-width:100%">
+<img src="img/eclipse_gs_4.png" alt="Eclipse Project Wizard 4"style="max-width:100%">
+<img src="img/eclipse_gs_5.png" alt="Eclipse Project Wizard 5"style="max-width:100%">
+<img src="img/eclipse_gs_6.png" alt="Eclipse Project Wizard 6"style="max-width:100%">
 #### PhpStorm ####
 Create a new project and within the "new Project" dialogue click on the *eJSL* section.
 
-<img src="img/php_pw_1.png" alt="PhpStorm Project Wizard" style="max-width:100%;">
+<img src="img/phpstorm_gs_1.png" alt="PhpStorm Project Wizard" style="max-width:100%;">
 
 Select a model example template and subsequently give you project a name.
 Through a click on the create-Button the required project structure becomes generated containing source folders 
 for your models (*src*) and for the code generated based on your models (*src-gen*). The chosen example model 
 is created within the src folder which can be used for a straightforward introduction.
 
-<img src="img/php_pw_2.png" alt="PhpStorm Project Wizard 2" style="max-width:100%">
+<img src="img/phpstorm_gs_2.png" alt="PhpStorm Project Wizard 2" style="max-width:100%">
 
 #### IntelliJ ####
 Create a new project and within the "new Project" dialogue click on the *eJSL* section. 
