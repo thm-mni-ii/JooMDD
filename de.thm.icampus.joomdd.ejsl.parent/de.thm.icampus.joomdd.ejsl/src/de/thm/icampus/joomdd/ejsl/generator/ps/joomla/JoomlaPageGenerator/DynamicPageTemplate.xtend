@@ -164,7 +164,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
                     entity="«page.extendedEntityList.get(0).name»">
                     <option value="">JSELECT</option>
                 </field>
-                «Slug.generateFilterFields(page, component, true, true, false, false)»
+                «Slug.generateFilterFields(page, component.languages, component, '''com_«component.name»''', true, true, false, false)»
             </fieldset>
         «ENDIF»
     '''
