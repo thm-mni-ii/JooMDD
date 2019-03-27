@@ -492,14 +492,11 @@ task cleanEJSLUpdateSite(type: Delete){
 	delete('../updateSites/Eclipse/features/')
 	delete('../updateSites/Eclipse/plugins/')
 	
-	//delete('../updateSites/Eclipse/content.jar')
-	//delete('../updateSites/Eclipse/artifacts.jar')
+	delete('../updateSites/Eclipse/content.jar')
+	delete('../updateSites/Eclipse/artifacts.jar')
 }
 
-
-
 ant.importBuild 'build.xml'
-
 
 task runAntBuild(dependsOn: "antBuildEclipse"){
 	description 'Runs build.xml Ant script for Eclipse Update Site'
@@ -558,15 +555,56 @@ task createFeatureSDKJar(type: Jar) {
     from "./de.thm.icampus.joomdd.ejsl.sdk/feature.xml"
 }
 
-task createEclPluginToReleases(dependsOn:["copyEclPluginToReleasesTMP", "createPluginUIJar", "createFeatureSDKJar"]) {
-	description ''
-	group ('JooMDD_Help_Task')
-	
-	createPluginUIJar.mustRunAfter copyEclPluginToReleasesTMP
-	
-	doLast {
-		delete('../updateSites/tmp/')
-	}
+task createArtifactsXML(type: Copy) {
+    def lastversion = getLastVersion();
+    from '../eclipsePluginSkeletons/artifacts.xml'
+    into '../eclipsePluginSkeletons/tmp'
+    filter { String line ->
+        line.replace("VersionPlaceholder", lastversion)
+    }
+}
+
+//create a single Jar with all dependencies
+task createArtifactsJar(type: Jar, dependsOn:["createArtifactsXML"]) {    
+    destinationDir = file( '../updateSites/Eclipse' )
+    archiveFileName = 'artifacts.jar'
+    from '../eclipsePluginSkeletons/tmp/artifacts.xml'
+    
+    doLast {
+        delete('../eclipsePluginSkeletons/tmp/')
+    }
+} 
+
+task createContentXML(type: Copy) {
+    def lastversion = getLastVersion();
+    from '../eclipsePluginSkeletons/content.xml'
+    into '../eclipsePluginSkeletons/tmp'
+    filter { String line ->
+        line.replace("VersionPlaceholder", lastversion)
+    }
+}
+
+//create a single Jar with all dependencies
+task createContentJar(type: Jar, dependsOn:["createContentXML"]) {    
+    destinationDir = file( '../updateSites/Eclipse' )
+    archiveFileName = 'content.jar'
+    from '../eclipsePluginSkeletons/tmp/content.xml'
+    
+    doLast {
+        delete('../eclipsePluginSkeletons/tmp/')
+    }
+} 
+
+task createEclPluginToReleases(dependsOn:["copyEclPluginToReleasesTMP", "createPluginUIJar", "createFeatureSDKJar", "createArtifactsJar", "createContentJar"]) {
+    description ''
+    group ('JooMDD_Help_Task')
+        
+    createPluginUIJar.mustRunAfter copyEclPluginToReleasesTMP
+    
+    doLast {
+        delete('../updateSites/tmp/')
+        delete('../eclipsePluginSkeletons/tmp/')
+    }
 }
 
 task JooMDDDeployEclipse(dependsOn:["cleanEJSLUpdateSite","updateAllVersions","antBuildEclipse"]){
