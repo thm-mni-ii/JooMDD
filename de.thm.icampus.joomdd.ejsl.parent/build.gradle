@@ -431,7 +431,7 @@ task updateEJSLUpdateSiteVersion{
 		
 		list.feature[0].replaceNode{
 			feature(
-				url:"features/de.thm.icampus.joomdd.ejsl.sdk-"+version+".jar",
+				url:"features/de.thm.icampus.joomdd.ejsl.sdk_"+version+".jar",
 				id:"de.thm.icampus.joomdd.ejsl.sdk",
 				version : version,
 			){
@@ -519,6 +519,9 @@ task copyEclPluginToPlugin(type: Copy){
    	from './de.thm.icampus.joomdd.ejsl/build/libs/'
    	include '*' + version + '*.jar*'
    	into '../updateSites/Eclipse/plugins'
+   	rename { String fileName ->
+        fileName.replace("-" + version, "_" + version)
+    }
 }
 
 task copyUIImgTMP(type: Copy){
@@ -541,8 +544,7 @@ task createPluginUIJar(type: Jar) {
 	def lastversion = getLastVersion()
 
 	destinationDir = file("../updateSites/Eclipse/plugins")
-    baseName = 'de.thm.icampus.joomdd.ejsl.ui'
-    version = lastversion
+    archiveFileName = 'de.thm.icampus.joomdd.ejsl.ui_' + lastversion + '.jar'
     from "../updateSites/tmp"
 }
 
@@ -552,8 +554,7 @@ task createFeatureSDKJar(type: Jar) {
 	def lastversion = getLastVersion()	
 
 	destinationDir = file("../updateSites/Eclipse/features")
-    baseName = 'de.thm.icampus.joomdd.ejsl.sdk'
-    version = lastversion
+    archiveFileName = 'de.thm.icampus.joomdd.ejsl.sdk_' + lastversion + '.jar'
     from "./de.thm.icampus.joomdd.ejsl.sdk/feature.xml"
 }
 
