@@ -458,7 +458,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 
 	        // Select the required fields from the table.
 	        $query->select("distinct «query.mainSelect»");
-	        «query.getListQuery(indexpage, mainEntity, ",")»
+	        «query.getListQuery(indexpage, mainEntity, ",", true)»
+	        
+	        return $query;
 	    }
         '''
     }
