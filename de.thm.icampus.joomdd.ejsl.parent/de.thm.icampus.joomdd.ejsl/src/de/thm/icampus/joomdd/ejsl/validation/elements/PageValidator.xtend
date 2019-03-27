@@ -247,7 +247,7 @@ class PageValidator extends AbstractDeclarativeValidator {
       }
       
       /**
-       * Check that edit fields contain no attribute with upper = -1
+       * Check that edit fields contain no attribute with upper = -1 or 1
        * (even if it's used in a n:m relation).
        */
        @Check
@@ -267,10 +267,10 @@ class PageValidator extends AbstractDeclarativeValidator {
      				var entity = field.attribute.eContainer as Entity
      				if (entity.references !== null) {
      					
-     					// Find Attribute equal to field.attribute and check upper for -1
+     					// Find Attribute equal to field.attribute and check upper for -1 or 1
      					for (eRef : entity.references) {
      						
-     						if ((eRef.attribute.contains(field.attribute) && eRef.upper == '-1') && eRef.eContainer instanceof Entity) {
+     						if ((eRef.attribute.contains(field.attribute) && (eRef.upper == '-1' || eRef.upper == '1')) && eRef.eContainer instanceof Entity) {
 								error(
 									'Entity attributes that are used in a one to many or many to many relation are not allowed as edit fields.',
 									page,
