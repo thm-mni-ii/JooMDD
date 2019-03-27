@@ -14,17 +14,17 @@ trait DetailsPageTemplate extends BasicTemplate {
     val valuOpt = ?(editAttr.value.nonEmpty,
 s"""
          |values {
-         |${editAttr.value.map(d => s""" Key ${d._1} = "${d._2}"""").toList.mkString(",\n")} }"""
+         |${editAttr.value.map(d => s"""${d._1} = "${d._2}"""").toList.mkString(",\n")} }"""
     )
     val fieldOpt = ?(editAttr.attribute.nonEmpty,
 s"""
-         |  field attributes {
-         |   ${editAttr.attribute.map(d => s"""Key ${d._1} = "${d._2}" """).toList.mkString(",\n")} }"""
+         |  fieldAttributes {
+         |   ${editAttr.attribute.map(d => s"""${d._1} = "${d._2}" """).toList.mkString(",\n")} }"""
     )
     toTemplate(
 s"""
          |  ${editAttr.entity +"."+editAttr.name} {
-         |  type = ${editAttr.typeName}
+         |  htmlType = ${editAttr.typeName}
          |  $valuOpt
          |  $fieldOpt
          |  }
@@ -35,14 +35,19 @@ s"""
   def detailsPagePartial(detailsPage: DetailsPage, newline: Boolean = true, indent: Int = 0) = {
     val paramGroupOpt = ?(detailsPage.globalParamNames.nonEmpty,
 s"""
-          |*ParameterGroups ${detailsPage.globalParamNames.filter(d => d.params.nonEmpty).map(f => f.name).toList.mkString(", ")}"""
+          |*parameterGroups = ${detailsPage.globalParamNames.filter(d => d.params.nonEmpty).map(f => f.name).toList.mkString(", ")}"""
     )
     val columnpOpt = ?(detailsPage.representationColumns.nonEmpty,
 s"""
-         | table columns = ${detailsPage.representationColumns.map(f=> detailsPage.entity +"."+f).toList.mkString(", ")}"""
+         | tableColumns = ${detailsPage.representationColumns.map(f=> detailsPage.entity +"."+f).toList.mkString(", ")}"""
     )
     val editFieldpOpt = ?(detailsPage.editAttribute.nonEmpty,
 s"""
+         | editFields ${ rep (detailsPage.editAttribute,editAttribuPartial,indent,",")}"""
+    )
+
+    val links = ?(detailsPage.editAttribute.nonEmpty,
+      s"""
          | editFields ${ rep (detailsPage.editAttribute,editAttribuPartial,indent,",")}"""
     )
 
@@ -50,7 +55,7 @@ s"""
     toTemplate(
 s"""
          |DetailsPage ${detailsPage.name} {
-         | *Entities ${detailsPage.entity}
+         | *entities = ${detailsPage.entity}
          |    $editFieldpOpt
          |    $paramGroupOpt
          |    $columnpOpt

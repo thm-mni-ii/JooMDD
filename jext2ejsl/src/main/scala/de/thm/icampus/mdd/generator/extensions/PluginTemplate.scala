@@ -14,7 +14,7 @@ trait PluginTemplate extends BasicTemplate with ManifestTemplate with LanguageTe
          |Plugin ${plugin.name}
          |    ${manifestPartial(plugin.manifest, newline = false, indent = 1)}
          |    languages ${rep(plugin.languages, languagePartial)}
-         |    Plugintype = ${plugin.pluginType}
+         |    pluginType = ${plugin.pluginType}
          |}""", newline, indent)
   }
 

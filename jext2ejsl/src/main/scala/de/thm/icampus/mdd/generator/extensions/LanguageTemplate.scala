@@ -12,7 +12,7 @@ trait LanguageTemplate extends BasicTemplate {
     toTemplate(
       s"""
          |Language ${language.name} {
-         |    keyvaluepairs ${rep(language.entries, keyValuePairPartial)}
+         |    keyValuePairs ${rep(language.entries, keyValuePairPartial)}
          |}""", newline, indent)
   }
 

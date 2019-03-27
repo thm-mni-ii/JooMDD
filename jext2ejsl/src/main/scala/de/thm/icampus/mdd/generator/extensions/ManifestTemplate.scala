@@ -27,8 +27,8 @@ trait ManifestTemplate extends BasicTemplate {
     toTemplate(
       s"""
          |Author "${author.name}" {
-         |    authoremail = "${author.email}"
-         |    authorurl = "${author.url}"
+         |    authorEmail = "${author.email}"
+         |    authorURL = "${author.url}"
          |}""", newline, indent)
   }
 

@@ -24,9 +24,9 @@ trait EntityTemplate extends BasicTemplate{
     toTemplate(
       s"""
          |Reference {
-         |   EntityAttribute = ${ref.attribute.mkString(",")}
-         |   ReferencedEntity = ${ref.entity}
-         |   ReferencedEntityAttribute = ${ref.reference.mkString(" ")}
+         |   entityAttribute = ${ref.attribute.mkString(",")}
+         |   referencedEntity = ${ref.entity}
+         |   referencedEntityAttribute = ${ref.reference.mkString(" ")}
          |   min = ${ref.lower}
          |   max = ${ref.upper} }
        """

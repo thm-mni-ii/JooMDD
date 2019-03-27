@@ -12,11 +12,11 @@ trait IndexPageTemplate extends BasicTemplate {
   def indexPagePartial(indexPage: IndexPage, newline: Boolean = true, indent: Int = 0) = {
     val paramGroupOpt = ?(indexPage.globalParamNames.nonEmpty,
       s"""
-         |*ParameterGroups ${indexPage.globalParamNames.filter(d => d.params.nonEmpty).map(f => f.name).toList.mkString(", ")}"""
+         |*parameterGroups = ${indexPage.globalParamNames.filter(d => d.params.nonEmpty).map(f => f.name).toList.mkString(", ")}"""
     )
     val columnpOpt = ?(indexPage.representationColumns.nonEmpty,
       s"""
-         | representation columns = ${indexPage.representationColumns.map(d=>indexPage.entity +"."+d).toList.mkString(",")}"""
+         | representationColumns = ${indexPage.representationColumns.map(d=>indexPage.entity +"."+d).toList.mkString(",")}"""
     )
     val filterOpt = ?(indexPage.filters.nonEmpty,
       s"""
@@ -26,7 +26,7 @@ trait IndexPageTemplate extends BasicTemplate {
     toTemplate(
       s"""
          |IndexPage ${indexPage.name} {
-         |    *Entities ${indexPage.entity}
+         |    *entities = ${indexPage.entity}
          |    $paramGroupOpt
          |    ${columnpOpt}
          |    ${filterOpt}
