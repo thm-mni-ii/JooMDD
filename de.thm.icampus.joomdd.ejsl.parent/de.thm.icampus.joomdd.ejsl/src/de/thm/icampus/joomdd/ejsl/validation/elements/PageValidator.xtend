@@ -19,6 +19,10 @@ import java.util.Arrays
 import de.thm.icampus.joomdd.ejsl.eJSL.InternalLink
 import org.eclipse.xtext.EcoreUtil2
 import de.thm.icampus.joomdd.ejsl.eJSL.Attribute
+import de.thm.icampus.joomdd.ejsl.eJSL.SimpleHTMLTypes
+import de.thm.icampus.joomdd.ejsl.eJSL.ComplexHTMLTypes
+import de.thm.icampus.joomdd.ejsl.eJSL.DatatypeReference
+import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 
 /**
  * This class contains custom validation rules about Pages
@@ -460,25 +464,47 @@ class PageValidator extends AbstractDeclarativeValidator {
     		for (editfield : p.editfields) {
     			
 				// get HTML type
-				var String x = new String();
-				var String htmltype = new String();
+                var String htmlTypeKindName = ""
+                var String attributeTypeKindName = ""
+                
 				if (editfield.htmltype !== null) {
-					x = editfield.htmltype.toString();
-					htmltype = x.substring(x.lastIndexOf(': ') + 2, x.length - 1);
+				    var htmlType = editfield.htmltype
+					
+					switch htmlType {
+					    SimpleHTMLTypes: {
+					        var htmlTypeKind = htmlType.htmltype
+					        htmlTypeKindName = htmlTypeKind.getName
+					    }
+					    ComplexHTMLTypes: {
+					        var htmlTypeKind = htmlType.htmltype
+                            htmlTypeKindName = htmlTypeKind.getName
+					    }
+					    default: {
+                            return					        
+					    }
+					}
 				}
 				
-				// get attribute type
-				var String y = new String();
-				var String attrType = new String();
-				if (editfield.attribute !== null) {
-					y = editfield.attribute.type.toString();
-					attrType = y.substring(y.lastIndexOf('type: ') + 6, y.indexOf(','));
-				}
-				
-				var htmlTypeMapping = HTMLTypeMappings.HTMLTYPEMAP.get(htmltype)
+                // get attribute type
+                if (editfield.attribute !== null) {
+                    var attributeType = editfield.attribute.type
+                    
+                    switch attributeType {
+                        StandardTypes: {
+                            var standardTypeKind = attributeType.type
+                            attributeTypeKindName = standardTypeKind.getName
+                        }
+                        default: {
+                            return
+                        }
+                    }
+                }
+                    
+				var htmlTypeMapping = HTMLTypeMappings.HTMLTYPEMAP.get(htmlTypeKindName)
 
 				if (htmlTypeMapping !== null) {
-					if (! htmlTypeMapping.contains(attrType)) {
+                    
+					if (! htmlTypeMapping.contains(attributeTypeKindName)) {
 						error(
 							'Edit fields have to be mapped to a suitable HTML type',
 							editfield,
