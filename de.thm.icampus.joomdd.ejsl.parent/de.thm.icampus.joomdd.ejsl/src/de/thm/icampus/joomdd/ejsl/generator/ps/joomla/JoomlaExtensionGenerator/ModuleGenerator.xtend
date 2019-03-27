@@ -121,7 +121,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    </description>
 		    <!-- Listing of all files that should be installed for the module -->
 		    <files>
-		        <filename module="«name»">«name».php</filename>
+		        <filename module="«name»">«name.toLowerCase».php</filename>
 		        <filename>helper.php</filename>
 		        <folder>
 		            <filename>tmpl/default.php</filename>
@@ -135,9 +135,9 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    <languages>
 		        «FOR lang : module.languages»
 		        «IF lang.sys == false»
-		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name».ini</language>
+		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name.toLowerCase».ini</language>
 		        «ELSE»
-		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name».sys.ini</language>
+		        <language tag="«lang.name»">language/«lang.name»/«lang.name».«name.toLowerCase».sys.ini</language>
 		        «ENDIF»
 		        «ENDFOR»
 		    </languages>
@@ -234,7 +234,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			$model = «helperClassName»::getModel();
 			«ENDIF»
 			$moduleclass_sfx = htmlspecialchars($params->get('moduleclass_sfx'));
-			require ModuleHelper::getLayoutPath('«name»', $params->get('layout', 'default'));
+			require ModuleHelper::getLayoutPath('«name.toLowerCase»', $params->get('layout', 'default'));
 		'''
 	}
 	
