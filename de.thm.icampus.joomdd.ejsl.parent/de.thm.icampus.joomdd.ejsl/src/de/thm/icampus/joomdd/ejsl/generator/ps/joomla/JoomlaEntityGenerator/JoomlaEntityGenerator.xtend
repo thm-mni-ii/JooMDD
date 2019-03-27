@@ -72,7 +72,9 @@ class JoomlaEntityGenerator {
 
     def CharSequence generateSQLTable(ExtendedEntity table, boolean isupdate, String componentName) {
         
-        var List<ExtendedAttribute> filteredAllExtendedAttributes
+        var List<ExtendedAttribute> filteredAllExtendedAttributes = table.allExtendedAttributes.filter[ t |
+                !t.isPreserve
+            ].toList
         
         if (table.instance instanceof MappingEntity) {
             val referenceAttributeList = table.references.map[ reference |
@@ -80,11 +82,7 @@ class JoomlaEntityGenerator {
             ]
         
             filteredAllExtendedAttributes = table.allExtendedAttributes.filter[ t |
-                !t.isPreserve && referenceAttributeList.contains(t.name) === false
-            ].toList
-        } else {
-            filteredAllExtendedAttributes = table.allExtendedAttributes.filter[ t |
-                !t.isPreserve
+                referenceAttributeList.contains(t.name) === false
             ].toList
         }
         
