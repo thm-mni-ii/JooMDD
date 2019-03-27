@@ -275,7 +275,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
                         <option value="">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
                     </field>
                     «ENDFOR»
-                    «Slug.generateFilterFields(ipage, com, false, false, false, true)»
+                    «Slug.generateFilterFields(ipage, com.languages, com, '''com_«com.name»''', false, false, false, true)»
                 </fields>
                 <fields name="list">
                     <field name="limit" id="limit" class="input-medium" default="25" onchange="this.form.submit();" type="limitbox" >

@@ -195,7 +195,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                </field>
 		            </fieldset>
 		            «IF com !== null && dynpage !==null»
-		            <fieldset name="filter">
+		            <fieldset name="filter" label="JSEARCH_FILTER_LABEL">
 		                <field
 		                    name="created_by"
 		                    addfieldpath="administrator/components/«Slug.nameExtensionBind("com", com).toLowerCase»/models/fields"
@@ -205,7 +205,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		                    entity="«dynpage.extendedEntityList.get(0).name»">
 		                    <option value="">JOPTION_SELECT_AUTHOR</option>
 		                </field>
-		                «Slug.generateFilterFields(dynpage, extMod.component, true, true, true, false)»
+		                «Slug.generateFilterFields(dynpage, extMod.languages, extMod.component, '''mod_«extMod.name»''', true, true, true, false)»
 		            </fieldset>
 		        «ENDIF»
 		        </fields>
