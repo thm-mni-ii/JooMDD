@@ -12,7 +12,7 @@ trait CustomPageTemplate extends BasicTemplate{
     toTemplate(
       s"""
          |CustomPage ${customPage.name} {
-         |  Page type: custom
+         |  pageType = custom
          |}""", newline, indent)
   }
 

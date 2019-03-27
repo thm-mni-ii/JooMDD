@@ -15,10 +15,10 @@ trait ComponentTemplate extends BasicTemplate with ManifestTemplate with Languag
          |    ${manifestPartial(component.manifest, newline = false, indent = 1)}
          |    languages ${rep(/*component.languages*/List(), languagePartial)}
          |    sections {
-         |        Frontend section {
+         |        FrontendSection {
          |            *Pages ${rep(component.frontend.pages, shortPagePartial, sep="\n", indent=3)}
          |        }
-         |        Backend section {
+         |        BackendSection {
          |            *Pages ${rep(component.backend.pages, shortPagePartial, sep="\n", indent=3)}
          |        }
          |    }

@@ -24,7 +24,7 @@ trait ParamTemplate extends BasicTemplate {
     )
     val fieldOpt = ?(param.attrlist.nonEmpty,
       s"""
-         |  field attributes {
+         |  fieldAttributes {
          |  ${param.attrlist.map(d => s""" ${d._1} = "${d._2}" """).toList.mkString(",\n")} }"""
     )
     toTemplate(

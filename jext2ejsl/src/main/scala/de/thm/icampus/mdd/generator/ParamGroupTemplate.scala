@@ -11,7 +11,7 @@ trait ParamGroupTemplate extends BasicTemplate {
   def paramGroupPartial(paramGroup: JParamGroup, newline: Boolean = true, indent: Int = 0) = {
     val paramOpt = ? (paramGroup.params.nonEmpty,
       s"""
-         |Parameters ${rep(paramGroup.params,simpleParamPartial, sep="\n")}""")
+         |parameters ${rep(paramGroup.params,simpleParamPartial, sep="\n")}""")
     val paramNameOpt = ? (paramGroup.params.nonEmpty,
       s"""
          | ParameterGroup ${paramGroup.name} {""")
@@ -44,7 +44,7 @@ trait ParamGroupTemplate extends BasicTemplate {
     )
     val fieldOpt = ?(param.attrlist.nonEmpty,
       s"""
-         |  field attributes {
+         |  fieldAttributes {
          |  ${param.attrlist.map(d => s""" ${d._1} = "${d._2}" """).toList.mkString(",\n")} }"""
     )
     toTemplate(

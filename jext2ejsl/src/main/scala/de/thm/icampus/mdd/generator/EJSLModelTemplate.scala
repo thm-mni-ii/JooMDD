@@ -13,13 +13,13 @@ object EJSLModelTemplate extends BasicTemplate with ParamTemplate with ParamGrou
   def ejslModelPartial(model: EJSLModel, newline: Boolean = true, indent: Int = 0) : String = {
     val globalParamOpt = ? (model.globalParams.nonEmpty,
       s"""
-         |globalparameters ${rep(model.globalParams,paramPartial, sep="\n")}""")
+         |globalParameters ${rep(model.globalParams,paramPartial, sep="\n")}""")
     val dataTypeOpt = ? (model.datatypes.nonEmpty,
       s"""
-         |datatypes ${rep(model.datatypes,datatypePartial, sep=",\n")}""")
+         |dataTypes ${rep(model.datatypes,datatypePartial, sep=",\n")}""")
     val paramGrouOPt = ?(model.paramGroups.nonEmpty,
       s"""
-             |parametergroups ${rep(model.paramGroups, paramGroupPartial)}
+             |parameterGroups ${rep(model.paramGroups, paramGroupPartial)}
               """)
 
     toTemplate(
