@@ -49,6 +49,7 @@ is created within the src folder which can be used for a straightforward introdu
 <img src="img/eclipse_gs_4.png" alt="Eclipse Project Wizard 4"style="max-width:100%">
 <img src="img/eclipse_gs_5.png" alt="Eclipse Project Wizard 5"style="max-width:100%">
 <img src="img/eclipse_gs_6.png" alt="Eclipse Project Wizard 6"style="max-width:100%">
+
 #### PhpStorm ####
 Create a new project and within the "new Project" dialogue click on the *eJSL* section.
 
