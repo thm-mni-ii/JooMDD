@@ -14,12 +14,12 @@
     <template>
     	<name> Simple Model</name>
     	<description>Abstract model for simple start.</description>
-    	<src>Model.eJSL</src>
+    	<src>Simple.eJSL</src>
     </template>
      <template>
     	<name>Game Model</name>
     	<description>Abstract model for simple start.</description>
-    	<src>Simple.eJSL</src>
+    	<src>game.eJSL</src>
     </template>
      <template>
         <name>Shop</name>
