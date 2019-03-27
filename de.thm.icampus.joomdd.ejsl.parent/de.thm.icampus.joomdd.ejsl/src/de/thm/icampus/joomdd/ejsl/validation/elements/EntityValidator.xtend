@@ -12,6 +12,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import java.util.Arrays
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypeKinds
+import de.thm.icampus.joomdd.ejsl.eJSL.StandardTypes
 import de.thm.icampus.joomdd.ejsl.eJSL.impl.StandardTypesImpl
 
 /**
@@ -31,6 +32,7 @@ class EntityValidator extends AbstractDeclarativeValidator {
 	public static val ENTITY_REFERENCE_LOWER_WRONG_VALUE = 'wrongValueForLower'
 	public static val ENTITY_REFERENCE_UPPER_WRONG_VALUE = 'wrongValueForUpper'
 	public static val ENTITY_ATTRIBUTE_AUTOINC_PRIMARY = 'autoIncrementPrimaryOnly'
+	public static val ENTITY_ATTRIBUTE_TYPE_TEXT_NOT_UNIQUE = 'entityAttributeTypeTextNotUnique'
 	
 	public static final HashSet<String> MAXVALUES = {
 		return new HashSet(Arrays.asList('1', '-1'));
@@ -119,6 +121,41 @@ class EntityValidator extends AbstractDeclarativeValidator {
 			}
 		}	
 	}
+	
+	/**
+	 * Check that attributes with type set to 'Text' are not used as unique attributes.
+	 */
+	 @Check
+	 def checkAttributeTypeTextNotUnique(Entity entity) {
+	 	if (entity.attributes !== null) {
+	 		for (attribute : entity.attributes) {
+	 			if (attribute.isunique) {
+	 				
+	 				var attributeType = attribute.type
+	 				var attributeTypeKindName = ""
+	 				
+	 				switch attributeType {
+                        StandardTypes: {
+                            var standardTypeKind = attributeType.type
+                            attributeTypeKindName = standardTypeKind.getName
+                        }
+                        default: {
+                            return
+                        }
+                    }
+                    
+                    if (attributeTypeKindName == "Text") {
+                    	error(
+							'Attributes from type Text cannot be used as unique attribute.',
+							attribute,
+							EJSLPackage.Literals.ATTRIBUTE__ISUNIQUE,
+							de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator.ENTITY_ATTRIBUTE_TYPE_TEXT_NOT_UNIQUE
+						)
+                    }
+	 			}
+	 		}
+	 	}
+	 }
 	
 	/**
 	 * Check auto increment is only set for primary attributes.
