@@ -47,6 +47,7 @@ import org.eclipse.emf.ecore.EPackage
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
+import java.util.List
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -1313,7 +1314,9 @@ public class Slug  {
     
     def static generateFilterFields(
         ExtendedDynamicPage page,
+        EList<Language> languages,
         ExtendedComponent component,
+        String extensionName,
         boolean simpleDefaultValue,
         boolean addFieldPath,
         boolean filterParams,
@@ -1334,12 +1337,12 @@ public class Slug  {
             «var textColumn = page.getTextColumn(attr, component.allExtendedEntity)»
             <field
                 «IF addFieldPath === true»
-                addfieldpath="components/«Slug.nameExtensionBind("com",component.name).toLowerCase»/models/fields"
+                addfieldpath="components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
                 «ENDIF»
                 name="«attr.name»"
                 type="«textColumn.type»"
-                label="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", attr.name, "LABEL"), attr.name)»"
-                description="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»»"
+                label="«Slug.addLanguage(languages, newArrayList(extensionName, "FILTER", attr.name, "LABEL"), attr.name)»"
+                description="«Slug.addLanguage(languages, newArrayList(extensionName, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
                 valueColumn="«valueColumn»"
                 textColumn="«textColumn»"
                 «IF addOnSubmit == true»
@@ -1349,7 +1352,7 @@ public class Slug  {
                 «IF simpleDefaultValue === true»
                 <option value="">JSELECT</option>
                 «ELSE»
-                <option value="">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
+                <option value="">«Slug.addLanguage(languages, newArrayList(extensionName, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
                 «ENDIF»
             </field>
             «ENDFOR»
