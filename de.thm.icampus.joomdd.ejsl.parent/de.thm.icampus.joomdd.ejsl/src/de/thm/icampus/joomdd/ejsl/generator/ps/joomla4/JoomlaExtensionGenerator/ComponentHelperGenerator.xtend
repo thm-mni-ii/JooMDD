@@ -23,11 +23,13 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
     override generate() '''
 		<?php
 		«Slug.generateFileDocAdmin(extendeComp)»
-		
+
+		«Slug.generateNamespace(extendeComp.name, "Administrator", "Helper")»
+
 		«Slug.generateRestrictedAccess()»
-		
+
 		«Slug.generateUses(newArrayList("Text", "Factory", "Object"))»
-		
+
 		jimport('joomla.filesystem.file');
 		
 		/**
@@ -77,17 +79,18 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 		    $result = new CMSObject;
 
 		    $assetName = '«Slug::nameExtensionBind('com', extendeComp.name)»';
-		
+
 		    $actions = array(
 		        'core.admin', 'core.manage', 'core.create', 'core.edit', 'core.edit.own', 'core.edit.state', 'core.delete');
-		
+
 		    foreach ($actions as $action) {
 		        $result->set($action, $user->authorise($action, $assetName));
 		    }
-		
+
 		    return $result;
 		}
 	'''
+	
 	 /**
 	  * Content template to save a file on the server
 	  */
@@ -124,7 +127,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 		        }
 		    }
 		    $object_file = new CMSObject($file);
-		
+
 		    if (!JFile::upload($object_file->tmp_name, $object_file->filepath)) {
 		        return false;
 		    }
@@ -140,29 +143,29 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 	
     def CharSequence genBootsnipJS()'''
 	(function ( $ ) {
-	
+
 	    $.fn.imagePicker = function (options) {
-	
+
 	        // Define plugin options
 	        var settings = $.extend({
 	            // Classes for styling the input
 	            class: "btn btn-success"
 	        }, options);
-	
+
 	        // Create an input inside each matched element
 	        return this.each(function () {
-	
+
 	            $(this).children('#add').html(create_btn(this, settings));
 	        });
-	
+
 	    };
-	
+
 	    // Private function for creating the input element
 	    function create_btn(that, settings)
 	    {
 	        // var add = $(that).children('#add');
 	        var preview = $(that).children('#preview');
-	
+
 	        if (settings.file != '' &&settings.file != ' ') {
 	            var preview = create_preview(that, settings.file, settings.value, settings);
 	            $(that).children('#add').attr('class','hidden');
@@ -171,21 +174,21 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 	        }
 	        // The input icon element
 	        var picker_btn_icon = $('<span class="">'+settings.showLabel+'</span>');
-	
+
 	        // The actual file input which stays hidden
 	        var picker_btn_input = $('<input type="file" accept="'+ settings.accept +'" name="'+settings.name+'" />');
-	
+
 	        // The actual element displayed
 	        var picker_btn = $('<div class="'+settings.class+' img-upload-btn"></div>')
 	            .append(picker_btn_icon)
 	            .append(picker_btn_input);
-	
+
 	        // File load listener
 	        picker_btn_input.change(function (event) {
 	            if ($(this).prop('files')[0]) {
 	                // Use FileReader to get file
 	                var reader = new FileReader();
-	
+
 	                // Create a preview once image has loaded
 	                reader.onload = function (e) {
 	                    var input = event.target;
@@ -195,15 +198,15 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 	                    $(that).children('#preview').removeAttr('class');
 	                    $(that).children('#preview').html(preview);
 	                }
-	
+
 	                // Load image
 	                reader.readAsDataURL(picker_btn_input.prop('files')[0]);
 	            }
 	        });
-	
+
 	        return picker_btn
 	    };
-	
+
 	    // Private function for creating a preview element
 	    function create_preview(that, src, filename, settings)
 	    {
@@ -221,12 +224,12 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 	        }
 	        // The remove image button
 	        var picker_preview_remove = $('<button class="btn btn-danger"><span >'+settings.deleteLabel + '</span></button>');
-	
+
 	        // The preview element
 	        var picker_preview = $('<div class="text-center"></div>')
 	            .append(picker_preview_image)
 	            .append(picker_preview_remove);
-	
+
 	        // Remove image listener
 	        picker_preview_remove.click(function () {
 	            settings.file="";
@@ -236,10 +239,10 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 	            $(that).children('#add').removeAttr('class','');
 	            $(that).children('#add').html(btn);
 	        });
-	
+
 	        return picker_preview;
 	    };
-	
+
 	}( jQuery ));
 	
 	jQuery(document).ready(function () {

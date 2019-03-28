@@ -34,7 +34,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 			 
 	PageGeneratorHandler pageClient
 	String modelOfComponent = '\'<modelOfComponent>\''
-	String modelPath = '\'/components/com_<nameOfComponent>/models\''
+	String modelPath = '\'/components/com_<nameOfComponent>/Model\''
 	String modelOfComponent2 = null;
 	
 	ExtendedModule extMod
@@ -81,7 +81,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	def CharSequence xmlContent(ExtendedModule module) {
 		'''
 		<?xml version="1.0" encoding="utf-8"?>
-		<extension type="module" version="3.8" client="site" method="upgrade">
+		<extension type="module" version="4.0" client="site" method="upgrade">
 		    <name>«module.name.toFirstUpper»</name>
 		    <creationDate>
 		        «if (module.manifest.creationdate !== null) {
@@ -122,7 +122,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    <!-- Listing of all files that should be installed for the module -->
 		    <files>
 		        <filename module="«name»">«name.toLowerCase».php</filename>
-		        <filename>helper.php</filename>
+		        <folger>Helper</folder>
 		        <folder>
 		            <filename>tmpl/default.php</filename>
 		        </folder>
@@ -220,6 +220,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 			<?php
 			«Slug.generateFileDoc(extMod)»
+			
+			 «Slug.generateModuleNamespace(module.name, "Site", "Helper")»
 			
 			«Slug.generateRestrictedAccess()»
 			

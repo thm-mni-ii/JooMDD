@@ -421,6 +421,10 @@ public class Slug  {
         namespace Joomla\Component\«name.toFirstUpper»\«section.toFirstUpper»\«context.toFirstUpper»;
     '''
     
+    def static CharSequence generateModuleNamespace(String name, String section, String context) '''
+        namespace Joomla\Module\«name.toFirstUpper»\«section.toFirstUpper»\«context.toFirstUpper»;
+    '''
+    
 	def static CharSequence generateRestrictedAccess() '''
 		defined('_JEXEC') or die('Restricted access');
 	'''
