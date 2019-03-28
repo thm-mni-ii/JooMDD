@@ -14,7 +14,7 @@
     <template>
     	<name> Simple Model</name>
     	<description>Abstract model for simple start.</description>
-    	<src>Simple.eJSL</src>
+    	<src>Model.eJSL</src>
     </template>
      <template>
     	<name>Game Model</name>
