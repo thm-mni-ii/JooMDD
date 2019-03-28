@@ -60,7 +60,7 @@ Latest versions of JooMDD plugins can be found in the [releases](https://github.
 # Acknowledgements
 The following developers helped to improve the infrastrcuture by giving helpful advice and/or implemented helpful infrastructure parts: 
 
-@roland-d, @PeterTHM, @lpln07, @Schmidie64, @eXsiLe95, @andrej-sajenko
+[@roland-d](https://github.com/roland-d), [@PeterTHM](https://github.com/PeterTHM), [@lpln07](https://github.com/lpln07), [@Schmidie64](https://github.com/Schmidie64), [@eXsiLe95](https://github.com/eXsiLe95), [@andrej-sajenko](https://github.com/andrej-sajenko), [@Max-St](https://github.com/Max-St)
 
 # License
 
