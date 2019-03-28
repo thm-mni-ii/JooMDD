@@ -229,6 +229,71 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
     '''
 
     /**
+     * Generate the manifest file for the formular of a details page.
+     * 
+     * @param String              pagename  contains the page name
+     * @param ExtendedDynamicPage page      contains the extended instance of a dynamicpage
+     * @parem ExtendedComponent   component contains the instance of a component 
+     */
+    def CharSequence xmlSiteFields(ExtendedDynamicPage page, ExtendedComponent component, String name) '''
+    <?xml version="1.0" encoding="utf-8"?>
+    <form addfieldprefix="Joomla\Component\«component.name»\Site\Field">
+        <field name="«page.extendedEntityList.get(0).primaryKey.name»" type="hidden" default="0" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_ID"
+            readonly="true" class="readonly"
+            description="JGLOBAL_FIELD_ID_DESC" /> 
+        <field name="created_by" type="hidden" default="" 
+            label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"
+            description="«Slug.nameExtensionBind("com", component.name).toUpperCase»_FORM_LBL_NONE_CREATED_BY"  /> 
+        «FOR ExtendedEntity e : page.extendedEntityList»
+        «FOR ExtendedAttribute attr : e.ownExtendedAttributes.filter[t | !t.isIsprimary]»
+        «writeAttribute(e,attr,component,page)»
+        «ENDFOR»
+        «FOR ExtendedReference ref : e.allExtendedReferences.filter[t | (t.upper.equals("*") || t.upper.equals("-1"))]» 
+        «var Entity foreign = Slug.getOtherEntityToMapping(ref)»
+        <field name="«ref.entity.name.toLowerCase»_id"
+            type ="«e.name.toLowerCase»To«ref.entity.name.toLowerCase»"
+            id="«ref.entity.name.toLowerCase»_id"
+            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»"
+            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FORM_LBL_«e.name.toUpperCase»_«foreign.name.toUpperCase»_DESCRIPTION"/>
+        «FOR Attribute attr: Slug.getOtherAttribute(ref)»
+        <field name="«attr.name.toLowerCase»"
+            type ="hidden"
+            id="«attr.name.toLowerCase»"/>
+        «ENDFOR»
+        «ENDFOR»
+        «ENDFOR»
+        <fields name="params">
+            <fieldset name="local" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_LOCAL__LABEL">
+                «generateParameter(page.extendedLocalParametersListe, component)»
+            </fieldset>
+            <fieldset name="global" label="«Slug.nameExtensionBind("com", component.name).toUpperCase»_«page.name.toUpperCase»_PARAMS_GLOBAL__LABEL">
+                «generateParameter(page.extendedGlobalParametersListe, component)»
+            </fieldset>
+            «FOR ExtendedParameterGroup e : page.extendedParametersGroupsListe»
+            <fieldset name="«e.name.toLowerCase»"  label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_FIELDSET_«page.name.toUpperCase»_«e.name.toUpperCase»">
+                «generateParameter(e.extendedParameterList, component)»
+                «generateParameter(e.extendedParameterList,component)»
+            </fieldset>
+            «ENDFOR»
+        </fields>
+        <fields>
+            <fieldset name="accesscontrol">
+                <field name="asset_id" type="hidden" filter="unset" />
+                <field name="rules"
+                    type="rules"
+                    label="JFIELD_RULES_LABEL"
+                    translate_label="false"
+                    filter="rules"
+                    validate="rules"
+                    class="inputbox"
+                    component="«Slug.nameExtensionBind("com",component.name).toLowerCase»"
+                    section="«page.name.toLowerCase»"/>
+            </fieldset>
+        </fields>
+    </form>
+    '''
+
+    /**
      * parse the attribute type and generate the template for the manifest file and create a field, when it don't exist
      * @param ExtendedEntity      entity     contains the instance of a entity
      * @param ExtendedAttribute   attr       contains a attribute of 

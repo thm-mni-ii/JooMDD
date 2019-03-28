@@ -24,6 +24,11 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	IndexPageTemplateAdminHelper helperAdmin
 	IndexPageTemplateSiteHelper frontHelp
 	String path
+    String modelPath
+    String viewPath
+    String tmplPath
+    String controllerPath
+    String formPath
 	String pagename
 
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {
@@ -33,18 +38,23 @@ class IndexPageTemplate extends DynamicPageTemplate {
 		helperAdmin = new IndexPageTemplateAdminHelper(ipage,com,sec)
 		frontHelp = new IndexPageTemplateSiteHelper(ipage,com,sec)
 		this.path = path
+        this.modelPath = path + "/Model"
+        this.viewPath = path + "/View"
+        this.tmplPath = path + "/tmpl"
+        this.controllerPath = path + "/Controller"
+        this.formPath = path + "/forms"
 		pagename = Slug.slugify(dp.name.toLowerCase)
 		this.fsa = fsa
 	}
 	
 	def void generateView() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(path+"/" + pagename +"/"+ "view.html.php", generateViewBackend())
-	        generateFile(path+"/" + pagename+"/" + "tmpl"+"/" + "default.php" , generateAdminViewLayoutBackend())
+	        generateFile(viewPath+"/" + pagename.toFirstUpper +"/"+ "HtmlView.php", generateViewBackend())
+	        generateFile(tmplPath+"/" + pagename+"/" + "default.php" , generateAdminViewLayoutBackend())
 	    } else {
-	        generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView())
-	        generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow())
-	        generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, ipage,com))
+	        generateFile(viewPath+"/" + pagename.toFirstUpper+"/" + "HtmlView.php", generateSiteView())
+	        generateFile(tmplPath +"/"+ pagename+"/"  + "default.php" , generateSiteViewLayoutShow())
+	        generateFile(tmplPath +"/"+ pagename+"/" + "default.xml" , xmlSiteTemplateContent(pagename, ipage,com))
 	    }
 	}
 	
@@ -58,30 +68,30 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''	
 	 
 	def void generateController() {
-	    if(sec.equalsIgnoreCase("admin")){
-	        generateFile(path+"/" + pagename + ".php", generateAdminController())
-	    } else {
-	        generateFile(path+"/" + pagename + ".php", generateSiteController())
-	    }
+		if (sec.equalsIgnoreCase("admin")) {
+			generateFile(controllerPath + "/" + pagename.toFirstUpper + "Controller.php", generateAdminController())
+		} else {
+			generateFile(controllerPath + "/" + pagename.toFirstUpper + "Controller.php", generateSiteController())
+		}
 	}
 	
 	def CharSequence generateSiteController() '''
 	    «generateFileDoc(ipage, com)»
 	    
-	    «Slug.generateRestrictedAccess()»
+	    «Slug.generateNamespace(com.name, "Site", "Controller")»
 	    
-	    require_once JPATH_COMPONENT.'/controller.php';
+	    «Slug.generateRestrictedAccess()»
 	    
 	    /**
 	     * Sliders list controller class.
 	     */
-	    class «com.name.toFirstUpper»Controller«ipage.name.toFirstUpper» extends «com.name.toFirstUpper»Controller
+	    class «ipage.name.toFirstUpper»Controller extends DisplayController
 	    {
 	        /**
 	         * Proxy for getModel.
 	         * @since  1.6
 	         */
-	        public function getModel($name = '«ipage.name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
+	        public function getModel($name = '«ipage.name.toFirstUpper»', $prefix = 'Site', $config = array())
 	        {
 	            $model = parent::getModel($name, $prefix, array('ignore_request' => true));
 
@@ -91,26 +101,30 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	'''
 	
 	def void generateModel() {
-	    if (sec.compareTo("admin")==0) {
-	        generateFile(path+"/" + pagename + ".php", generateAdminModel())
-	        generateFile(path+"/forms/"+ "filter_" + pagename + ".xml",  generateAdminModelForms())
-	    } else {
-	        generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)
-	        generateFile(path + "/forms"+"/" +"filter_" + pagename + ".xml", generateAdminModelForms)
-	    } 
+		if (sec.compareTo("admin") == 0) {
+			generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateAdminModel())
+			generateFile(formPath + "/filter_" + pagename + ".xml", generateModelForms("Administrator"))
+		} else {
+			generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateSiteModelShow)
+			generateFile(formPath + "/filter_" + pagename + ".xml", generateModelForms("Site"))
+		}
 	}
 	
 	
 	def CharSequence generateSiteModelShow() '''
 	    «generateFileDoc(ipage, com)»
+	    
+	    «Slug.generateNamespace(com.name, "Site", "Model")»
+	    
 	    «Slug.generateRestrictedAccess()»
+	    
 	    «Slug.generateUses(newArrayList("ModelList", "ComponentHelper", "Factory"))»
 	    
 	    /**
 	     * Methods supporting a list of Data.
 	     * @generated
 	     */
-	    class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends ListModel
+	    class «ipage.name.toFirstUpper»Model extends ListModel
 	    {
 	        «Slug.genLinkedInfo(ipage,com)»
 	        «helperAdmin.genAdminModelConstruct»
@@ -123,6 +137,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	
 	def CharSequence generateViewBackend() '''
 	    «generateFileDoc(ipage, com)»
+	    
+	    «Slug.generateNamespace(com.name, "Administrator", "View\\" + pagename)»
 	    
 	    «Slug.generateRestrictedAccess()»
 	    
@@ -139,7 +155,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	     * @package com_«Slug.slugify(com.name)»."admin"
 	     * @generated
 	     */
-	    class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends HtmlView
+	    class HtmlView extends BaseHtmlView
 	    {
 	        protected $items;
 	        protected $pagination;
@@ -169,6 +185,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateAdminModel()'''
 	    «generateFileDoc(ipage, com)»
 	    
+	    «Slug.generateNamespace(com.name, "Administrator", "Model")»
+	    
 	    «Slug.generateRestrictedAccess()»
 
 	    «Slug.generateUses(newArrayList("ModelList", "ComponentHelper", "Factory"))»
@@ -177,7 +195,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	     * Methods supporting a list of Data.
 	     * @generated
 	     */
-	    class «com.name.toFirstUpper»Model«ipage.name.toFirstUpper» extends ListModel
+	    class «ipage.name.toFirstUpper»Model extends ListModel
 	    {
 	        «IF !ipage.entities.get(0).references.empty»
 	        «Slug.genLinkedInfo(ipage,com)»
@@ -233,9 +251,9 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	    }
     '''
     
-    def CharSequence generateAdminModelForms() '''
+    def CharSequence generateModelForms(String section) '''
         <?xml version="1.0" encoding="utf-8"?>
-            <form>
+            <form addfieldprefix="Joomla\Component\«com.name.toFirstUpper»\«section»\Field">
                 <fields name="filter">
                     <field
                         name="search"

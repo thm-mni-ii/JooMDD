@@ -119,6 +119,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		            "Place Description here"
 		        }»
 		    </description>
+		    <namespace>Joomla\Module\«module.name.toFirstUpper»</namespace>
 		    <!-- Listing of all files that should be installed for the module -->
 		    <files>
 		        <filename module="«name»">«name.toLowerCase».php</filename>
@@ -368,10 +369,10 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
             
             switch (section) {
             	case BACKEND_DAO: {
-                	modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/models'"
+                	modelPath = "'/administrator/components/com_" + compName.toLowerCase + "/Model'"
             	}
 				case FRONTEND_DAO: {
-                	modelPath = "'/components/com_" + compName.toLowerCase + "/models'"
+                	modelPath = "'/components/com_" + compName.toLowerCase + "/Model'"
 				}
             }
             

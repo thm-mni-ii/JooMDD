@@ -3,7 +3,7 @@ package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import org.eclipse.xtext.generator.IFileSystemAccess
 
 /**
@@ -26,6 +26,8 @@ class TableGeneratorTemplate {
 	public def CharSequence genClassTable() '''
 		<?php
 		«Slug.generateFileDocAdmin(com)»
+		
+		«Slug.generateNamespace(com.name, "Administrator", "Table")»
 		
 		«Slug.generateRestrictedAccess()»
 		

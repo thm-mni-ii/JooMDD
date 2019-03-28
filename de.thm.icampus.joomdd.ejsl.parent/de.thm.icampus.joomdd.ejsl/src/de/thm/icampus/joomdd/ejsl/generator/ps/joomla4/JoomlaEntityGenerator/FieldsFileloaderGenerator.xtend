@@ -1,10 +1,10 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator
 
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaEntityGenerator.FieldsGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsGenerator
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 
 /**
  * This class contains the templates for field file loaders.
@@ -27,6 +27,8 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 	 def CharSequence generateFileloader()'''
 		<?php
 		«Slug.generateFileDocAdmin(com)»
+		
+		«Slug.generateNamespace(com.name, "Administrator", "Field")»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -67,11 +69,13 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 	def CharSequence generateImageloader()'''
 		<?php
 		«Slug.generateFileDocAdmin(com)»
-		
+
+	    «Slug.generateNamespace(com.name, "Administrator", "Field")»
+
 		«Slug.generateRestrictedAccess()»
-		
+
 		«Slug.generateUses(newArrayList("Text", "ComponentHelper", "Uri", "FormField", "Factory"))»
-		
+
 		/**
 		 * This class contain a input field to load a document or image.
 		 * The parameter for configuration of the path, type, or format are

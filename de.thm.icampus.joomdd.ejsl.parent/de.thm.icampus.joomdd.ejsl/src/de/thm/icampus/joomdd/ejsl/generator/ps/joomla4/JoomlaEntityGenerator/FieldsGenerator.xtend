@@ -5,12 +5,12 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.LeftJoin
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Table
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.LeftJoin
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Table
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import java.io.File
 import org.eclipse.xtext.generator.IFileSystemAccess
 
@@ -57,6 +57,8 @@ class FieldsGenerator {
 		<?php
 		«Slug.generateFileDocAdmin(com)»
 
+        «Slug.generateNamespace(com.name, "Administrator", "Field")»
+
 		«Slug.generateRestrictedAccess()»
 
 		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
@@ -80,27 +82,31 @@ class FieldsGenerator {
 		    «gengenerateStringValue»
 		}
 	'''
+	
 	public def CharSequence genEmptyField()'''
-	<?php
-	«Slug.generateFileDocAdmin(com)»
-	
-	«Slug.generateRestrictedAccess()»
-	
-	«Slug.generateUses(newArrayList("FormField"))»
-	
-	class JFormField«nameField.toFirstUpper» extends JFormField
-	{
-	    protected function getInput()
-	    {
-	        $html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
-	        «FOR KeyValuePair kv: field.attributes»
-	        «kv.name» = '«kv.value»'
-	        «ENDFOR»
-	        />";
-	        return implode($html);
-	    }
-	}
+    	<?php
+    	«Slug.generateFileDocAdmin(com)»
+    	
+    	«Slug.generateNamespace(com.name, "Administrator", "Field")»
+    	
+    	«Slug.generateRestrictedAccess()»
+    	
+    	«Slug.generateUses(newArrayList("FormField"))»
+    	
+    	class JFormField«nameField.toFirstUpper» extends JFormField
+    	{
+    	    protected function getInput()
+    	    {
+    	        $html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
+    	        «FOR KeyValuePair kv: field.attributes»
+    	        «kv.name» = '«kv.value»'
+    	        «ENDFOR»
+    	        />";
+    	        return implode($html);
+    	    }
+    	}
 	'''
+	
     def private genGetDataItem() {
         var query = new Query
         query.mainTable = new Table('''$table''')
@@ -251,9 +257,11 @@ class FieldsGenerator {
 		}
 	'''
 	
-	public def CharSequence genFieldsForEntity()'''
+	public def CharSequence genFieldsForEntity(String section)'''
 		<?php
 		«Slug.generateFileDocAdmin(com)»
+		
+		«Slug.generateNamespace(com.name, '''"«section»"''', "Field")»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -336,6 +344,8 @@ class FieldsGenerator {
     		<?php
     		«Slug.generateFileDocAdmin(component)»
     		
+    		«Slug.generateNamespace(component.name, "Administrator", "Field")»
+    		
     		«Slug.generateRestrictedAccess()»
     		
     		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
@@ -372,7 +382,7 @@ class FieldsGenerator {
 		}
 		var File fieldEntity = new File(path + "/" + entFrom.name.toLowerCase + ".php")
 		if (!fieldEntity.exists) {
-			access.generateFile(path + "/" + entFrom.name.toLowerCase + ".php", genFieldsForEntity)
+			access.generateFile(path + "/" + entFrom.name.toLowerCase + ".php", genFieldsForEntity("Administrator"))
 		}
 		var File fieldUser = new File(path + '''/«com.name.toLowerCase»user.php''')
 		if (!fieldUser.exists) {

@@ -24,7 +24,12 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	DetailsPageTemplateBackendHelper backHelp
 	DetailsPageTemplateFrontEndHelper frontHelp
 	String path
+	String modelPath
+    String viewPath
+    String tmplPath
+    String controllerPath
 	String pagename
+	String formPath
 	ExtendedEntity mainEntity
     String componentHelperClassName
 	
@@ -35,6 +40,11 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		backHelp = new DetailsPageTemplateBackendHelper(dpage, com, sec)
 		frontHelp = new DetailsPageTemplateFrontEndHelper(dpage, com, sec)
 		this.path = path
+        this.modelPath = path + "/Model"
+        this.viewPath = path + "/View"
+        this.tmplPath = path + "/tmpl"
+        this.controllerPath = path + "/Controller"
+        this.formPath = path + "/forms"
 		pagename = Slug.slugify(dpage.name.toLowerCase)
 		this.fsa = fsa
 		mainEntity = dp.extendedEntityList.get(0)
@@ -43,8 +53,8 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	
 	def void generateView() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(path+"/" + pagename +"/"+ "view.html.php", generateAdminViewClass())
-	        generateFile(path+"/" + pagename+"/" + "tmpl"+"/" + "edit.php" , generateAdminViewLayout())
+	        generateFile(viewPath + "/" + pagename.toFirstUpper + "/" + "HtmlView.php", generateAdminViewClass())
+	        generateFile(tmplPath + "/" + pagename + "/" + "edit.php" , generateAdminViewLayout())
 		 } else {
 		     if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {
 		         generateFrontEndEditView(pagename+"edit")
@@ -60,41 +70,41 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	}
 	
 	def void generateFrontEndShowView(String editPagename) {
-	    generateFile(path+"/" + pagename+"/" + "view.html.php", generateSiteView(false, ''))
-	    generateFile(path +"/"+ pagename+"/"  + "tmpl"+"/" + "default.php" , generateSiteViewLayoutShow(editPagename))
-	    generateFile(path +"/"+ pagename+"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
+	    generateFile(viewPath + "/" + pagename.toFirstUpper + "/" + "HtmlView.php", generateSiteView(false, ''))
+	    generateFile(tmplPath + "/" + pagename + "/" + "default.php" , generateSiteViewLayoutShow(editPagename))
+	    generateFile(tmplPath + "/" + pagename + "/" + "default.xml" , xmlSiteTemplateContent(pagename, dpage,com))
 	}
 	
 	def void generateFrontEndEditView(String editPagename) {
-	    generateFile(path+"/" + editPagename+"/"+ "view.html.php", generateSiteView(true,editPagename))
-	    generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.php" , generateSiteViewLayoutEdit(editPagename))
-	    generateFile(path+"/" + editPagename +"/" + "tmpl"+"/" + "default.xml" , xmlSiteTemplateContent(editPagename, dpage, com)) 
+	    generateFile(viewPath + "/" + editPagename.toFirstUpper + "/" + "HtmlView.php", generateSiteView(true,editPagename))
+	    generateFile(tmplPath + "/" + editPagename + "/" + "default.php" , generateSiteViewLayoutEdit(editPagename))
+	    generateFile(tmplPath + "/" + editPagename + "/" + "default.xml" , xmlSiteTemplateContent(editPagename, dpage, com)) 
 	}
 	
 	def void generateController() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(path+"/" + pagename + ".php", generateAdminController())
+	        generateFile(controllerPath + "/" + pagename.toFirstUpper + "Controller.php", generateAdminController())
 	    } else {
-	        generateFile(path+"/" + pagename +"edit" +".php", generateSiteController(true))
-	        generateFile(path+"/" + pagename+ ".php", generateSiteController(false))
+	        generateFile(controllerPath + "/" + pagename.toFirstUpper +"edit" +"Controller.php", generateSiteController(true))
+	        generateFile(controllerPath + "/" + pagename.toFirstUpper+ "Controller.php", generateSiteController(false))
 	    }
 	}
 	
 	def void generateModel() {
 	    if(sec.equalsIgnoreCase("admin")) {
-	        generateFile(path+"/" + pagename + ".php", generateAdminModel())
-	        generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+	        generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateAdminModel())
+	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
 	    } else {
-	        generateFile(path + "/forms"+"/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlAdminFields(dpage,com,com.name))
+	        generateFile(formPath + "/" + dpage.extendedEntityList.get(0).name.toLowerCase + ".xml", xmlSiteFields(dpage,com,com.name))
 		 	
 		 	if(!dpage.extendedTableColumnList.empty && !dpage.extendedEditedFieldsList.isEmpty) {	
-		 	    generateFile(path+"/" + pagename+"edit"+ ".php", generateSiteModelEdit(pagename+"edit"))
-		 	    generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)		  
+		 	    generateFile(modelPath + "/" + pagename.toFirstUpper + "edit" + "Model.php", generateSiteModelEdit(pagename+"edit"))
+		 	    generateFile(modelPath + "/" + pagename.toFirstUpper  + "Model.php", generateSiteModelShow)		  
 		 	} else {
 		 	    if (!dpage.extendedEditedFieldsList.isEmpty) {
-		 	        generateFile(path+"/" + pagename+ ".php", generateSiteModelEdit(pagename))
+		 	        generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateSiteModelEdit(pagename))
 		 	    } else {
-		 	        generateFile(path+"/" + pagename  + ".php", generateSiteModelShow)		  
+		 	        generateFile(modelPath + "/" + pagename.toFirstUpper + "Model.php", generateSiteModelShow)		  
 		 	    }
 		 	}
 		}
@@ -103,9 +113,11 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateAdminController()'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Administrator", "Controller")»
+		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ControllerForm", "Text", "ComponentHelper", "HelperMedia", "Route", "Factory"))»
+		«Slug.generateUses(newArrayList("ControllerForm", "Text", "ComponentHelper", "HelperMedia", "Route", "Factory", "MVCFactoryInterface"))»
 
 		jimport('joomla.filesystem.file');
 		/**
@@ -122,7 +134,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		        «ELSE»
 		        $this->view_list = '<Put the View Name>';
 		        «ENDIF»
-		        parent::__construct();
+		        parent::__construct($config, $factory, $app, $input);
 		    }
 		    «IF dpage.haveFiletoLoad»
 		    «backHelp.genAdminControllerSave()»
@@ -165,7 +177,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		{
 		    $app = Factory::getApplication();
 		    $pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
-		    $table = $this->getTable();
+		    $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»', 'Administrator');
 		    if ($pk > 0) {
 		        try {
 		            // Attempt to load the row.
@@ -182,8 +194,13 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 
 		    if (property_exists($item, 'params')) {
 		        $registry = new Registry;
-		        $registry->loadString($item->params);
-		        $item->params = $registry->toArray();
+		        if($item->params !== null) {
+		            $registry->loadString($item->params);
+		            $item->params = $registry->toArray();
+		        }
+		        else {
+		            $item->params = array();
+		        }
 		    }
 
 		    return $item;
@@ -220,16 +237,17 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateAdminModel()'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Administrator", "Model")»
+		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "Form", "Factory","ComponentHelper"))»
-		
-		require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
+		«Slug.generateUses(newArrayList("ModelAdmin", "ArrayHelper", "Registry", "Table", "Form", "Factory"))»
+		use Joomla\Component\«com.name.toLowerCase»\Administrator\Helper\«com.name.toLowerCase.toFirstUpper»Helper;
 
 		/**
 		 * The model to schow the details of «dpage.name.toFirstUpper»
 		 */
-		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends AdminModel
+		class «dpage.name.toFirstUpper»Model extends AdminModel
 		{
 		    /**
 		     * @var    string  The prefix to use with controller messages.
@@ -338,6 +356,8 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	def generateAdminViewClass()'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Administrator", "View\\" + dpage.name.toFirstUpper)»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text"))»
@@ -345,7 +365,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		/**
 		 * View to edit a «dpage.name»
 		 */
-		class «com.name.toFirstUpper»View«dpage.name.toFirstUpper» extends HtmlView
+		class HtmlView extends BaseHtmlView
 		{
 		    protected $state;
 		    protected $item;
@@ -361,7 +381,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		
 		«Slug.generateUses(newArrayList("Text", "Route", "Factory", "Html"))»
 		
-		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
+		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/Helper/html');
 		HTMLHelper::_('behavior.tooltip');
 		HTMLHelper::_('behavior.formvalidation');
 		HTMLHelper::_('formbehavior.chosen', 'select');
@@ -399,14 +419,16 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateSiteController(Boolean isedit)'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Site", "Controller")»
+		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("Text", "Route", "Session", "Factory", "ControllerLegacy"))»
+		«Slug.generateUses(newArrayList("Text", "Route", "Session", "Factory"))»
 		
 		/**
 		 * «dpage.name.toFirstUpper» controller class to «if(isedit)  "Edit" else "Show"» a Item .
 		 */
-		class «com.name.toFirstUpper»Controller«if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper» extends BaseController
+		class «if(isedit) dpage.name.toFirstUpper + "Edit" else dpage.name.toFirstUpper»Controller extends DisplayController
 		{
 		    «IF isedit»
 		    «frontHelp.generateSiteControllerSave»
@@ -421,6 +443,8 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateSiteModelShow()'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Site", "Model")»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("ModelItem", "Factory", "ArrayHelper", "Registry", "Table", "Text"))»
@@ -430,7 +454,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		/**
 		 * Model to show a Dataitem
 		 */
-		class «com.name.toFirstUpper»Model«dpage.name.toFirstUpper» extends ItemModel
+		class «dpage.name.toFirstUpper»Model extends ItemModel
 		{
 		    «frontHelp.generateSiteModelPopulatestate()»
 
@@ -454,16 +478,18 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateSiteModelEdit(String editPageName)'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Site", "Model")»
+		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ModelForm", "Factory", "ArrayHelper", "Registry", "Table", "Form", "Text","ComponentHelper"))»
+		«Slug.generateUses(newArrayList("ModelForm", "Factory", "ArrayHelper", "Registry", "Table", "Form", "Text"))»
 		
 		jimport('joomla.event.dispatcher');
 		
 		/**
 		 * Model to Edit  a Dataitem
 		 */
-		class «com.name.toFirstUpper»Model«editPageName.toFirstUpper» extends FormModel
+		class «editPageName.toFirstUpper»Model extends FormModel
 		{
 		    «frontHelp.generateSiteModelPopulatestate()»
 
@@ -490,6 +516,8 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateSiteView(Boolean isedit, String editPageName)'''
 		«generateFileDoc(dpage,com)»
 		
+		«Slug.generateNamespace(com.name, "Site", "View\\" + if(isedit) editPageName.toFirstUpper else dpage.name.toFirstUpper)»
+		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text"))»
@@ -497,7 +525,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		/**
 		 * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»
 		 */
-		class «com.name.toFirstUpper»View« if(isedit)editPageName.toFirstUpper else dpage.name.toFirstUpper  » extends HtmlView
+		class HtmlView extends BaseHtmlView
 		{
 		    protected $state;
 		    protected $item;

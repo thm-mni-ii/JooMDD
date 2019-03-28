@@ -98,7 +98,7 @@ abstract public class AbstractExtensionGenerator  {
      * @param content   the to-be-written contents
      */
 	def protected void generateFile(String fileName, CharSequence content) {
-		fsa.generateFile(fileName.toLowerCase, content)
+		fsa.generateFile(fileName, content)
 	}
 
 	def CharSequence generateScript(ExtendedComponent ext, String extName ){

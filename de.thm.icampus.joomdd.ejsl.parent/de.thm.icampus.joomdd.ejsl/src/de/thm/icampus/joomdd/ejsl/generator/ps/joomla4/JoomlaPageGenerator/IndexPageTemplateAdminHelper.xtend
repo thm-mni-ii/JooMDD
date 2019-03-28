@@ -44,9 +44,9 @@ class IndexPageTemplateAdminHelper {
 	 * @since   1.6
 	 * @generated
 	 */
-	public function __construct($config = array())
+	public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
 	{
-	    parent::__construct($config);
+	    parent::__construct($config, $factory, $app, $input);
 	}
 	'''
 	
@@ -55,7 +55,7 @@ class IndexPageTemplateAdminHelper {
 	 * Overwrite the  getModel.
 	 * @since 1.6
 	 */
-	public function getModel($name = '«details.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Model', $config = array())
+	public function getModel($name = '«details.toFirstUpper»', $prefix = 'Administrator', $config = array())
 	{
 	    $model = parent::getModel($name, $prefix, array('ignore_request' => true));
 	    return $model;

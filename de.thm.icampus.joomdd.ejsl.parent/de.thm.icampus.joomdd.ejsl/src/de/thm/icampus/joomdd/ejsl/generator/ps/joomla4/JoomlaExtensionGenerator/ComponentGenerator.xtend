@@ -5,8 +5,8 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPageReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDynamicPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
-import de.thm.icampus.joomdd.ejsl.generator.ps.EntityGenerator
-import de.thm.icampus.joomdd.ejsl.generator.ps.PageGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.EntityGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.PageGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.LanguageGenerator
 import java.util.Calendar
 import java.util.LinkedList
@@ -298,7 +298,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 	private def void generateFrontendSection() {
 		// Generate frontend section
         generateFile( sitePath + "/Controller/DisplayController.php", extendedComp.phpSiteControllerContent)
-        generateFile( sitePath + "/Disptacher/Dispatcher.php", extendedComp.phpSiteDispatcherContent)
+        generateFile( sitePath + "/Dispatcher/Dispatcher.php", extendedComp.phpSiteDispatcherContent)
 		generateFile( sitePath + "/router.php", extendedComp.phpSiteRouterContent)
 		        
         var EntityGenerator entitygen = new EntityGenerator(extendedComp,sitePath + "/", fsa, false)
