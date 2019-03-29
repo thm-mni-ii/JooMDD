@@ -138,7 +138,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	def CharSequence generateViewBackend() '''
 	    «generateFileDoc(ipage, com)»
 	    
-	    «Slug.generateNamespace(com.name, "Administrator", "View\\" + pagename)»
+	    «Slug.generateNamespace(com.name, "Administrator", "View\\" + pagename.toFirstUpper)»
 	    
 	    «Slug.generateRestrictedAccess()»
 	    

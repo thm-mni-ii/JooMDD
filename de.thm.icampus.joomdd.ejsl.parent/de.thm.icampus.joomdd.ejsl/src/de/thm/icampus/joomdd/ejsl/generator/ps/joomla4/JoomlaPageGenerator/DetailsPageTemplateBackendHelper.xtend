@@ -158,15 +158,15 @@ class DetailsPageTemplateBackendHelper {
 		    }
 		    $canDo = «componentHelperClassName»::getActions();
 
-		    JToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
+		    \JToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
 
 		    // If not checked out, allow to save the item.
 		    if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
-		        JToolBarHelper::apply('«dpage.name.toLowerCase».apply', 'JTOOLBAR_APPLY');
-		        JToolBarHelper::save('«dpage.name.toLowerCase».save', 'JTOOLBAR_SAVE');
+		        \JToolBarHelper::apply('«dpage.name.toLowerCase».apply', 'JTOOLBAR_APPLY');
+		        \JToolBarHelper::save('«dpage.name.toLowerCase».save', 'JTOOLBAR_SAVE');
 		    }
 		    if (!$checkedOut && ($canDo->get('core.create'))) {
-		        JToolBarHelper::custom(
+		        \JToolBarHelper::custom(
 		            '«dpage.name.toLowerCase».save2new',
 		            'save-new.png',
 		            'save-new_f2.png',
@@ -176,7 +176,7 @@ class DetailsPageTemplateBackendHelper {
 		    }
 		    // If an existing item, can save to a copy.
 		    if (!$isNew && $canDo->get('core.create')) {
-		        JToolBarHelper::custom(
+		        \JToolBarHelper::custom(
 		            '«dpage.name.toLowerCase».save2copy',
 		            'save-copy.png',
 		            'save-copy_f2.png',
@@ -185,9 +185,9 @@ class DetailsPageTemplateBackendHelper {
 		        );
 		    }
 		    if (empty($this->item->id)) {
-		        JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CANCEL');
+		        \JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CANCEL');
 		    } else {
-		        JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CLOSE');
+		        \JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CLOSE');
 		    }
 		}
 	'''

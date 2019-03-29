@@ -239,7 +239,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
         <files folder="administrator/components/«extendedComp.extensionName»">
             <filename>access.xml</filename>
             <filename>config.xml</filename>
-            <filename>«noPrefixName.toLowerCase».xml</filename>
             <folder>Controller</folder>
             <folder>Extension</folder>
             <folder>Field</folder>
@@ -376,6 +375,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
             help.generate
         )
 
+        // Generate services
+        generateFile( adminPath + "/services/provider.php", 
+            serviceContent
+        )
+        
+        // Generate extension
+        generateFile( adminPath + "/Extension/" + noPrefixName.toFirstUpper + "Component.php", 
+            extensionContent
+        )
+
 		var EntityGenerator entitygen
 		entitygen = new EntityGenerator(extendedComp, adminPath + "/", fsa, true)
 		entitygen.dogenerate()
@@ -391,6 +400,120 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateUpdatePages(tempPageList, "admin")
 		
 	}
+	
+	def String extensionContent() '''
+    	<?php
+    	/**
+    	 * @package     Joomla.Administrator
+    	 * @subpackage  «this.name»
+    	 *
+    	 * @copyright   Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+    	 * @license     GNU General Public License version 2 or later; see LICENSE.txt
+    	 */
+    	
+    	namespace Joomla\Component\«noPrefixName.toFirstUpper»\Administrator\Extension;
+    	
+    	defined('JPATH_PLATFORM') or die;
+    	
+    	use Joomla\CMS\Association\AssociationServiceInterface;
+    	use Joomla\CMS\Association\AssociationServiceTrait;
+    	use Joomla\CMS\Extension\BootableExtensionInterface;
+    	use Joomla\CMS\Extension\MVCComponent;
+    	use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
+    	use Joomla\Component\«noPrefixName.toFirstUpper»\Administrator\Service\HTML\Menus;
+    	use Psr\Container\ContainerInterface;
+    	
+    	/**
+    	 * Component class for com_menus
+    	 *
+    	 * @since  4.0.0
+    	 */
+    	class «noPrefixName.toFirstUpper»Component extends MVCComponent implements
+    	    BootableExtensionInterface, AssociationServiceInterface
+    	{
+    	    use AssociationServiceTrait;
+    	    use HTMLRegistryAwareTrait;
+    	
+    	    /**
+    	     * Booting the extension. This is the function to set up the environment of the extension like
+    	     * registering new class loaders, etc.
+    	     *
+    	     * If required, some initial set up can be done from services of the container, eg.
+    	     * registering HTML services.
+    	     *
+    	     * @param   ContainerInterface  $container  The container
+    	     *
+    	     * @return  void
+    	     *
+    	     * @since   4.0.0
+    	     */
+    	    public function boot(ContainerInterface $container)
+    	    {
+
+    	    }
+    	}
+    	'''
+	
+	def String serviceContent() '''
+    	<?php
+    	/**
+    	 * @package     Joomla.Administrator
+    	 * @subpackage  com_contact
+    	 *
+    	 * @copyright   Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+    	 * @license     GNU General Public License version 2 or later; see LICENSE.txt
+    	 */
+    	
+    	defined('_JEXEC') or die;
+    	
+    	use Joomla\CMS\Association\AssociationExtensionInterface;
+    	use Joomla\CMS\Categories\CategoryFactoryInterface;
+    	use Joomla\CMS\Dispatcher\ComponentDispatcherFactoryInterface;
+    	use Joomla\CMS\Extension\ComponentInterface;
+    	use Joomla\CMS\Extension\Service\Provider\ComponentDispatcherFactory;
+    	use Joomla\CMS\Extension\Service\Provider\MVCFactory;
+    	use Joomla\CMS\HTML\Registry;
+    	use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
+    	use Joomla\Component\«noPrefixName.toFirstUpper»\Administrator\Helper\AssociationsHelper;
+    	use Joomla\Component\«noPrefixName.toFirstUpper»\Administrator\Extension\«noPrefixName.toFirstUpper»Component;
+    	use Joomla\DI\Container;
+    	use Joomla\DI\ServiceProviderInterface;
+    	/**
+    	 * The contact service provider.
+    	 *
+    	 * @since  4.0.0
+    	 */
+    	return new class implements ServiceProviderInterface
+    	{
+    	    /**
+    	     * Registers the service provider with a DI container.
+    	     *
+    	     * @param   Container  $container  The DI container.
+    	     *
+    	     * @return  void
+    	     *
+    	     * @since   4.0.0
+    	     */
+    	    public function register(Container $container)
+    	    {
+    	        $container->registerServiceProvider(new MVCFactory('\\Joomla\\Component\\«noPrefixName.toFirstUpper»'));
+    	        $container->registerServiceProvider(new ComponentDispatcherFactory('\\Joomla\\Component\\«noPrefixName.toFirstUpper»'));
+    	
+    	        $container->set(
+    	            ComponentInterface::class,
+    	            function (Container $container)
+    	            {
+    	                $component = new «noPrefixName.toFirstUpper»Component($container->get(ComponentDispatcherFactoryInterface::class));
+    	
+    	                $component->setRegistry($container->get(Registry::class));
+    	                $component->setMVCFactory($container->get(MVCFactoryInterface::class));
+    	
+    	                return $component;
+    	            }
+    	        );
+    	    }
+    	};
+    	'''
 	
 	/**
 	 * Generates the update part of the component, this contains only the folder which is needed
@@ -532,6 +655,77 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     * @since  1.6
 		     */
 		    protected $default_view = '«component.name»';
+		    
+		    /**
+		     * The extension for which the categories apply.
+		     *
+		     * @var    string
+		     * @since  1.6
+		     */
+		    protected $extension;
+		
+		    /**
+		     * Constructor.
+		     *
+		     * @param   array                $config   An optional associative array of configuration settings.
+		     * @param   MVCFactoryInterface  $factory  The factory.
+		     * @param   CMSApplication       $app      The JApplication for the dispatcher
+		     * @param   \JInput              $input    Input
+		     *
+		     * @since   3.0
+		     */
+		    public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
+		    {
+		        parent::__construct($config, $factory, $app, $input);
+		
+		        // Guess the Text message prefix. Defaults to the option.
+		        if (empty($this->extension))
+		        {
+		            $this->extension = $this->input->get('extension', '«this.name»');
+		        }
+		    }
+		
+		    /**
+		     * Method to display a view.
+		     *
+		     * @param   boolean  $cachable   If true, the view output will be cached
+		     * @param   array    $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link \JFilterInput::clean()}.
+		     *
+		     * @return  \Joomla\Component\Categories\Administrator\Controller\DisplayController  This object to support chaining.
+		     *
+		     * @since   1.5
+		     */
+		    public function display($cachable = false, $urlparams = array())
+		    {
+		        // Get the document object.
+		        $document = $this->app->getDocument();
+		
+		        // Set the default view name and format from the Request.
+		        $vName   = $this->input->get('view', '«noPrefixName.toFirstLower»');
+		        $vFormat = $document->getType();
+		        $lName   = $this->input->get('layout', 'default', 'string');
+		        $id      = $this->input->getInt('id');
+		
+		        // Get and render the view.
+		        if ($view = $this->getView($vName, $vFormat))
+		        {
+		            // Get the model for the view.
+		            $model = $this->getModel($vName, 'Administrator', array('name' => $vName . '.' . substr($this->extension, 4)));
+		
+		            // Push the model into the view (as default).
+		            $view->setModel($model, true);
+		            $view->setLayout($lName);
+		
+		            // Push document object into the view.
+		            $view->document = $document;
+		
+		            // Load the submenu.
+		            //CategoriesHelper::addSubmenu($model->getState('filter.extension'));
+		            $view->display();
+		        }
+		
+		        return $this;
+		    }
 		}
 	'''
 
@@ -596,7 +790,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		<?php
 		«Slug.generateFileDocAdmin(component)»
 
-		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name)»
+		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name.toFirstUpper)»
 
 		«Slug.generateRestrictedAccess()»
 
@@ -643,8 +837,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     */
 		    private function addToolBar()
 		    {
-		        JToolBarHelper::title(Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»') . ': ' . Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), StaticLanguage.HOME)»'), 'logo');
-		        JToolBarHelper::preferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
+		        \JToolBarHelper::itle(Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»') . ': ' . Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), StaticLanguage.HOME)»'), 'logo');
+		        \JToolBarHelper::eferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
 		    }
 		
 		    /**

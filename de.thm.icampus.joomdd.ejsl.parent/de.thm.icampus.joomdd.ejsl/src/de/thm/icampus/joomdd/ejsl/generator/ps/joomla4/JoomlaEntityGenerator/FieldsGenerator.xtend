@@ -261,7 +261,7 @@ class FieldsGenerator {
 		<?php
 		«Slug.generateFileDocAdmin(com)»
 		
-		«Slug.generateNamespace(com.name, '''"«section»"''', "Field")»
+		«Slug.generateNamespace(com.name, '''«section»''', "Field")»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -269,7 +269,7 @@ class FieldsGenerator {
 		
 		FormHelper::loadFieldClass('list');
 		
-		class JFormField«entFrom.name.toFirstLower» extends JFormFieldList
+		class «entFrom.name.toFirstLower»Field extends JFormFieldList
 		{
 		    protected $table = "«Slug.databaseName(com.name, entFrom.name)»";
 		    

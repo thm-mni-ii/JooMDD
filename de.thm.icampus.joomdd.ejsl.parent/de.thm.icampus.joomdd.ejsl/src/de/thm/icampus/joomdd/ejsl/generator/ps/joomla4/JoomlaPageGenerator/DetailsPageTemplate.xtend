@@ -124,7 +124,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		 * «dpage.name.toFirstUpper» controller class.
 		 * @generated
 		 */
-		class «com.name.toFirstUpper»Controller«dpage.name.toFirstUpper» extends FormController
+		class «dpage.name.toFirstUpper»Controller extends FormController
 		{
 		    public function __construct()
 		    {
