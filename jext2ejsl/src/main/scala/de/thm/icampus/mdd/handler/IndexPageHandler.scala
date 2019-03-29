@@ -416,7 +416,7 @@ object IndexPageHandler {
                 if(ept.isInstanceOf[MemberCallPropertyAcc]){
                   val r = ept.asInstanceOf[MemberCallPropertyAcc]
                   if(r.args.size >0){
-                    dbName = DetailsPageHandler.readMemberCallStaticAccAttr(r.from,r.member,r.args,getListItemFunkDT,queryVar,"from",0).toLowerCase
+                    dbName = DetailsPageHandler.readMemberCallStaticAccAttr(r.from,r.member,r.args,getListItemFunkDT,queryVar,"from",0)
 
                     val sqlParsew = "#[a-zA-Z0-9\\_]*".r
                     val tableAsArr = dbName.split(" ")

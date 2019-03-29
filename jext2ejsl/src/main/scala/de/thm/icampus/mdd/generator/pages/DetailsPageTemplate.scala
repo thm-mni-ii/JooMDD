@@ -41,6 +41,7 @@ s"""
 s"""
          | tableColumns = ${detailsPage.representationColumns.map(f=> detailsPage.entity +"."+f).toList.mkString(", ")}"""
     )
+
     val editFieldpOpt = ?(detailsPage.editAttribute.nonEmpty,
 s"""
          | editFields ${ rep (detailsPage.editAttribute,editAttribuPartial,indent,",")}"""
@@ -51,15 +52,18 @@ s"""
          | editFields ${ rep (detailsPage.editAttribute,editAttribuPartial,indent,",")}"""
     )
 
-
+// TODO: put it back to template  |  $paramGroupOpt | $columnpOpt
     toTemplate(
 s"""
          |DetailsPage ${detailsPage.name} {
-         | *entities = ${detailsPage.entity}
+         |    *entities = ${detailsPage.entity}
          |    $editFieldpOpt
-         |    $paramGroupOpt
-         |    $columnpOpt
+         |    links{
+         |        InternalContextLink index {
+         |            target = <Refer to a target here>
+         |        }
          |    }
+         |}
          |""", newline, indent)
   }
  private  def simpleParamGroupNamePartial(paramGroup:JParamGroup , newline: Boolean = true, indent: Int = 0) = {

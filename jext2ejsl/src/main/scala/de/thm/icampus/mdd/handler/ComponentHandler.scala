@@ -57,7 +57,7 @@ object ComponentHandler extends Handler {
 
     val languages: Set[Language] = Language.fromXmlManifest(xmlManifest, extensionRoot)
 
-    val xmlName = (xmlManifest \ "name").text.toLowerCase // com_name -> name
+    val xmlName = (xmlManifest \ "name").text // com_name -> name
     val extensionName = if(xmlName.startsWith("com_")) xmlName.substring(4) else xmlName
 
     val frontendSuffix = xmlManifest \ "files" \@ "folder"

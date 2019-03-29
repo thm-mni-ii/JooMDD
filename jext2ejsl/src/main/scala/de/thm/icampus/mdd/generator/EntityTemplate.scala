@@ -54,7 +54,6 @@ trait EntityTemplate extends BasicTemplate{
          |    $notNullOpt
          |    $defaultOpt
          |    $autoIntOpt
-         |    $isunique $uniquewith
          |    $isPrimaryOpt
          |}""", newline, indent)
   }
