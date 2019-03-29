@@ -57,7 +57,6 @@ s"""
 s"""
          |DetailsPage ${detailsPage.name} {
          |    *entities = ${detailsPage.entity}
-         |    $editFieldpOpt
          |    links{
          |        InternalContextLink index {
          |            target = <Refer to a target here>

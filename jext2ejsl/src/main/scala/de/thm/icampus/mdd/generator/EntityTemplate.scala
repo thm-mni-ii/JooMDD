@@ -17,7 +17,6 @@ trait EntityTemplate extends BasicTemplate{
       s"""
          |Entity ${entity.name} {
          |    attributes ${rep(entity.attributes, attributePartial)}
-         |    $ref
          |}""", newline, indent)
   }
   def referencePartial(ref: Reference, newline: Boolean = true, indent: Int = 0) = {
@@ -27,7 +26,6 @@ trait EntityTemplate extends BasicTemplate{
          |   entityAttribute = ${ref.attribute.mkString(",")}
          |   referencedEntity = ${ref.entity}
          |   referencedEntityAttribute = ${ref.reference.mkString(" ")}
-         |   min = ${ref.lower}
          |   max = ${ref.upper} }
        """
     , newline, indent)
