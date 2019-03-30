@@ -18,7 +18,7 @@ object Main extends App {
 
   val noGui = arguments.contains(NoGUI)
 
-   val eva = arguments.contains(EvMod)
+  val eva = arguments.contains(EvMod)
   val evaAll = arguments.contains(EvModALL)
   try {
 

@@ -18,7 +18,16 @@ Based on these models the JooMDD code generator creates installable extension co
 Installable extension packages for Joomla 3.x and Joomla 4.
 
 # Quick Start
-To do: Plugin sites
+The easiest and quickest way to try out JooMDD is to use our [***JooMDD web editor***](https://tinyurl.com/joomdd-web).
+
+If you want to use JooMDD within your IDE (Eclipse, PhpStorm, IntelliJ IDEA), you caan use one of the following update sites to install the respective IDE plugins:
+
+- **Eclipse:**  <https://raw.githubusercontent.com/icampus/JooMDD/master/Eclipse/JooMDDUpdateSite/site.xml>
+- **PhpStorm:**
+<https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/updatePlugins.xml>
+- **IntelliJ IDEA:** 
+<https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJIDEA/ideaRepository/updatePlugins.xml>
+
 
 # Documentation
 - [Installation Guide](docu/InstallationGuide.md)
@@ -36,7 +45,7 @@ In this project, we follow the [Semantic Versioning Guidelines](https://semver.o
 
 Latest versions of JooMDD plugins can be found in the [releases](https://github.com/priefyou/JooMDD/releases) section.
 
-# Creators
+# Main Contributors
 **Dennis Priefer**
 - [Twitter](https://twitter.com/Priefyou)
 - [Github](https://github.com/priefyou)
@@ -47,6 +56,11 @@ Latest versions of JooMDD plugins can be found in the [releases](https://github.
 **Wolf Rost**
 - [Twitter](https://twitter.com/rost_wolf)
 - [Github](https://github.com/Wolf-Rost)
+
+# Acknowledgements
+The following developers helped to improve the infrastrcuture by giving helpful advice and/or implemented helpful infrastructure parts: 
+
+[@roland-d](https://github.com/roland-d), [@PeterTHM](https://github.com/PeterTHM), [@lpln07](https://github.com/lpln07), [@Schmidie64](https://github.com/Schmidie64), [@eXsiLe95](https://github.com/eXsiLe95), [@andrej-sajenko](https://github.com/andrej-sajenko), [@Max-St](https://github.com/Max-St)
 
 # License
 
