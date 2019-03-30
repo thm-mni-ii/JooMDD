@@ -244,9 +244,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
             <folder>Field</folder>
             <folder>forms</folder>
             <folder>Helper</folder>
-            <folder>helpers</folder>
             <folder>Model</folder>
-            <folder>Service</folder>
+«««            <folder>Service</folder>
             <folder>services</folder>
             <folder>Table</folder>
             <folder>sql</folder>
@@ -266,10 +265,10 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
         <folder>Controller</folder>
         <folder>Dispatcher</folder>
         <folder>forms</folder>
-        <folder>Helper</folder>
-        <folder>helpers</folder>
+«««        <folder>Helper</folder>
+«««        <folder>helpers</folder>
         <folder>Model</folder>
-        <folder>Service</folder>
+«««        <folder>Service</folder>
         <folder>tmpl</folder>
         <folder>View</folder>
         <folder>language</folder>
@@ -362,14 +361,8 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateFile( adminPath + "/Controller/DisplayController.php", extendedComp.phpAdminControllerContent)
 		generateFile( adminPath + "/access.xml", extendedComp.xmlAccessContent)
 		generateFile( adminPath + "/config.xml", extendedComp.xmlConfigContent(indexPages))
-		
-		var tempSlug = slug
-        generateFile(adminPath + "/View/" + tempSlug.toFirstUpper + "/HtmlView.php", 
-            extendedComp.phpAdminViewContent)
-        generateFile(adminPath + "/tmpl/" + tempSlug + "/default.php", 
-            extendedComp.phpAdminTemplateContent
-        )
-		
+				
+		// Generate Helper
 		var ComponentHelperGenerator help = new ComponentHelperGenerator(extendedComp)
 		generateFile( adminPath + "/Helper/" + extendedComp.name.toLowerCase.toFirstUpper + "Helper.php", 
             help.generate
@@ -400,6 +393,31 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		generateUpdatePages(tempPageList, "admin")
 		
 	}
+    
+    def helpersContent() '''
+    <?php
+    /**
+     * @package     Joomla.Administrator
+     * @subpackage  com_content
+     *
+     * @copyright   Copyright (C) 2005 - 2019 Open Source Matters, Inc. All rights reserved.
+     * @license     GNU General Public License version 2 or later; see LICENSE.txt
+     */
+    
+    defined('_JEXEC') or die;
+    
+    /**
+     * Content component helper.
+     *
+     * @since       1.6
+     *
+     * @deprecated  5.0 Use \Joomla\Component\Content\Administrator\Helper\«noPrefixName.toFirstUpper»Helper instead
+     */
+    class «noPrefixName.toFirstUpper»Helper extends \Joomla\Component\Content\Administrator\Helper\«noPrefixName.toFirstUpper»Helper
+    {
+
+    }
+    '''
 	
 	def String extensionContent() '''
     	<?php
@@ -641,7 +659,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 
 		«Slug.generateRestrictedAccess()»
 
-		«Slug.generateUses(newArrayList("BaseController", "Factory"))»
+		«Slug.generateUses(newArrayList("BaseController", "Factory", "MVCFactoryInterface"))»
 
 		/**
 		 * General Controller of «class_name» component
@@ -654,7 +672,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		     * @var    string
 		     * @since  1.6
 		     */
-		    protected $default_view = '«component.name»';
+		    protected $default_view = '«this.extendedComp.getBackEndExtendedPagerefence.get(0).extendedPage.name»';
 		    
 		    /**
 		     * The extension for which the categories apply.
@@ -701,7 +719,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        $document = $this->app->getDocument();
 		
 		        // Set the default view name and format from the Request.
-		        $vName   = $this->input->get('view', '«noPrefixName.toFirstLower»');
+		        $vName   = $this->input->get('view', '«this.extendedComp.getBackEndExtendedPagerefence.get(0).extendedPage.name»');
 		        $vFormat = $document->getType();
 		        $lName   = $this->input->get('layout', 'default', 'string');
 		        $id      = $this->input->getInt('id');
@@ -720,7 +738,6 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		            $view->document = $document;
 		
 		            // Load the submenu.
-		            //CategoriesHelper::addSubmenu($model->getState('filter.extension'));
 		            $view->display();
 		        }
 		
@@ -747,118 +764,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
         {
         }
 	'''
-	 
-	/**
-	 * Returns the code for the layout of the main view of the component
-	 * @param Component component content the instance of a component
-	 */
-	def CharSequence phpAdminTemplateContent(ExtendedComponent component) '''
-		<?php
-		«Slug.generateFileDocAdmin(component)»
-		
-		«Slug.generateRestrictedAccess()»
-		
-		«Slug.generateUses(newArrayList("Text"))»
-		?>
-		<p class="text-center"> <h1><?php echo "Welcome to ". Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»') . " ". Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), StaticLanguage.HOME)»'); ?> </h1>
-		    <h4>«component.manifest.description»</h4>
-		</p> 
-		<div id="cpanel" class='cpanel'>
-		    <?php
-		    foreach ($this->views as $view) {
-		    ?>
-		        <div class="icon">
-		            <h3>
-		                <a href='<?php echo $view['url']; ?>'
-		                    <span><?php echo $view['title']; ?></span>
-		                </a>
-		            </h3>
-		            <br />
-		        </div>
-		    <?php
-		    }
-		    ?>
-		</div>  
-		<p>This component is generated with the Joomdd tools, for more information <a target="_blank" href="https://github.com/icampus/JooMDD">see here</a></p>	
-	  '''
-    
-	/**
-	 * Returns the code for the main view of a component
-	 * @param Component component content the instance of a component
-	 */
-	def CharSequence phpAdminViewContent(ExtendedComponent component) '''
-		<?php
-		«Slug.generateFileDocAdmin(component)»
-
-		«Slug.generateNamespace(component.name, "Administrator", "View\\" + class_name.toFirstUpper)»
-
-		«Slug.generateRestrictedAccess()»
-
-		«Slug.generateUses(newArrayList("ViewLegacy", "Text", "Factory", "Html"))»
-
-		 
-		/**
-		 * «class_name» View
-		 */
-		class HtmlView extends BaseHtmlView
-		{
-		    /** Method to get display
-		     *
-		     * @param   Object  $tpl (template)
-		     *
-		     * @return  void
-		     */
-		    public function display($tpl = null)
-		    {
-		        if (!Factory::getUser()->authorise('core.administrator')) {
-		            return JError::raiseWarning(404, Text::_('JERROR_ALERTNOAUTHOR'));
-		        }
-		
-		        HTMLHelper::_('behavior.tooltip');
-		
-		        $document = Factory::getDocument();
-		
-		        HTMLHelper::_('tabs.start');
-		
-		        $application = Factory::getApplication("administrator");
-		        $this->option = $application->scope;
-		
-		        $this->addToolBar();
-		
-		        $this->addViews();
-		
-		        parent::display($tpl);
-		    }
-		
-		    /**
-		     * creates a joomla administrator tool bar
-		     *
-		     * @return  void
-		     */
-		    private function addToolBar()
-		    {
-		        \JToolBarHelper::itle(Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»') . ': ' . Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name), StaticLanguage.HOME)»'), 'logo');
-		        \JToolBarHelper::eferences('«Slug.nameExtensionBind("com", component.name).toLowerCase»');
-		    }
-		
-		    /**
-		 * creates html elements for the main menu
-		 *
-		 * @return    void
-		 */
-		    private function addViews()
-		    {
-		        $views = array();
-		        «FOR ExtendedPageReference pg : component.backEndExtendedPagerefence.filter[t | t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage ]»
-		        $views['«pg.extendedPage.name.toLowerCase»'] = array();
-		        $views['«pg.extendedPage.name.toLowerCase»']['title'] = Text::_('«Slug.addLanguage(component.languages, newArrayList("com", component.name, "TITLE", pg.extendedPage.name), pg.extendedPage.name)»');
-		        $views['«pg.extendedPage.name.toLowerCase»']['url'] = "index.php?option=«Slug.nameExtensionBind("com", component.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»";
-		    «ENDFOR»
-		    $this->views = $views;
-		    }
-		}
-	  '''
-    
+	        
 	/**
 	 *Generates the code for the access manifest of a component
 	 * @param ExtendedComponent component content the instance of a component

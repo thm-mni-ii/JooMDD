@@ -13,11 +13,9 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 class ComponentHelperGenerator extends AbstractExtensionGenerator {
     
 	ExtendedComponent extendeComp
-    String componentHelperClassName
     
 	new(ExtendedComponent component) {
 		extendeComp = component
-        this.componentHelperClassName = '''Com«component.name.toFirstUpper»Helper'''
 	}
  
     override generate() '''
@@ -35,9 +33,8 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 		/**
 		 * «extendeComp.name.toUpperCase» helper.
 		 */
-		class «this.componentHelperClassName»
+		class «this.extendeComp.componentHelperClassName»
 		{
-		    «genAddMenu»
 		    «genGetAction»
 		    «genUploadFile»
 		}
@@ -54,7 +51,7 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 		public static function addSubmenu($vName = '')
 		{
 		    «FOR ExtendedPageReference pg : extendeComp.backEndExtendedPagerefence.filter[t| t.extendedPage.extendedDynamicPageInstance !== null && !t.extendedPage.extendedDynamicPageInstance.isDetailsPage]»
-		    JHtmlSidebar::addEntry(
+		    \JHtmlSidebar::addEntry(
 		        Text::_('«Slug.addLanguage(extendeComp.languages, newArrayList("com", extendeComp.name, "TITLE", pg.extendedPage.name), pg.extendedPage.name)»'),
 		        'index.php?option=«Slug.nameExtensionBind("com",extendeComp.name).toLowerCase»&view=«pg.extendedPage.name.toLowerCase»',
 		        $vName == '«pg.extendedPage.name.toLowerCase»'

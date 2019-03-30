@@ -22,7 +22,6 @@ class IndexPageTemplateAdminHelper {
 	String sec
 	String details
 	ExtendedEntity mainEntity
-    String componentHelperClassName
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		indexpage = dp
@@ -31,7 +30,6 @@ class IndexPageTemplateAdminHelper {
 		var ExtendedDynamicPage dt = Slug.getPageForDetails(indexpage,com)
 		details =  if( dt === null)"<Put the name Of DetailsPage>" else dt.name
 		mainEntity = dp.extendedEntityList.get(0)
-        this.componentHelperClassName = '''Com«com.name.toFirstUpper»Helper'''
 	}
 	
 	def CharSequence genAdminControllerContructer()'''
@@ -222,7 +220,7 @@ class IndexPageTemplateAdminHelper {
 	        if (count($errors = $this->get('Errors'))) {
 	            throw new Exception(implode("\n", $errors));
 	        }
-	        «componentHelperClassName»::addSubmenu('«indexpage.name.toLowerCase»');
+
 	        $this->addToolbar();
 	        $this->sidebar = \JHtmlSidebar::render();
 	        parent::display($tpl);
@@ -238,34 +236,32 @@ class IndexPageTemplateAdminHelper {
 	     */
 	    protected function addToolbar()
 	    {
-	        require_once JPATH_COMPONENT . '/helpers/«com.name.toLowerCase».php';
-
 	        $state = $this->get('State');
-	        $canDo = «componentHelperClassName»::getActions($state->get('filter.category_id'));
+	        $canDo = «com.componentHelperClassName»::getActions($state->get('filter.category_id'));
 
-	        \JToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
+	        ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
 
 	        //Check if the form exists before showing the add/edit buttons
 	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«  details.toLowerCase»';
 	        if (file_exists($formPath)) {
 	            if ($canDo->get('core.create')) {
-	                \JToolBarHelper::addNew('«details.toLowerCase».add', 'JTOOLBAR_NEW');
+	                ToolBarHelper::addNew('«details.toLowerCase».add', 'JTOOLBAR_NEW');
 	            }
 	            if ($canDo->get('core.edit') && isset($this->items[0])) {
-	                \JToolBarHelper::editList('«details.toLowerCase».edit', 'JTOOLBAR_EDIT');
+	                ToolBarHelper::editList('«details.toLowerCase».edit', 'JTOOLBAR_EDIT');
 	            }
 	        }
 	        if ($canDo->get('core.edit.state')) {
 	            if (isset($this->items[0]->state)) {
-	                \JToolBarHelper::divider();
-	                \JToolBarHelper::custom(
+	                ToolBarHelper::divider();
+	                ToolBarHelper::custom(
 	                    '«indexpage.name.toLowerCase».publish',
 	                    'publish.png',
 	                    'publish_f2.png',
 	                    'JTOOLBAR_PUBLISH',
 	                    true
 	                );
-	                \JToolBarHelper::custom(
+	                ToolBarHelper::custom(
 	                    '«indexpage.name.toLowerCase».unpublish',
 	                    'unpublish.png',
 	                    'unpublish_f2.png',
@@ -274,14 +270,14 @@ class IndexPageTemplateAdminHelper {
 	                );
 	            } elseif (isset($this->items[0])) {
 	                //If this component does not use state then show a direct delete button as we can not trash
-	                \JToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_DELETE');
+	                ToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_DELETE');
 	            }
 	            if (isset($this->items[0]->state)) {
-	                \JToolBarHelper::divider();
-	                \JToolBarHelper::archiveList('«indexpage.name.toLowerCase».archive', 'JTOOLBAR_ARCHIVE');
+	                ToolBarHelper::divider();
+	                ToolBarHelper::archiveList('«indexpage.name.toLowerCase».archive', 'JTOOLBAR_ARCHIVE');
 	            }
 	            if (isset($this->items[0]->checked_out)) {
-	                \JToolBarHelper::custom(
+	                ToolBarHelper::custom(
 	                    '«indexpage.name.toLowerCase».checkin',
 	                    'checkin.png',
 	                    'checkin_f2.png',
@@ -293,15 +289,15 @@ class IndexPageTemplateAdminHelper {
 	        //Show trash and delete for components that uses the state field
 	        if (isset($this->items[0]->state)) {
 	            if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
-	                \JToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_EMPTY_TRASH');
-	                \JToolBarHelper::divider();
+	                ToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_EMPTY_TRASH');
+	                ToolBarHelper::divider();
 	            } elseif ($canDo->get('core.edit.state')) {
-	                \JToolBarHelper::trash('«indexpage.name.toLowerCase».trash', 'JTOOLBAR_TRASH');
-	                \JToolBarHelper::divider();
+	                ToolBarHelper::trash('«indexpage.name.toLowerCase».trash', 'JTOOLBAR_TRASH');
+	                ToolBarHelper::divider();
 	            }
 	        }
 	        if ($canDo->get('core.admin')) {
-	            \JToolBarHelper::preferences('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
+	            ToolBarHelper::preferences('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
 	        }
 	        \JHtmlSidebar::setAction('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»');
 	    }

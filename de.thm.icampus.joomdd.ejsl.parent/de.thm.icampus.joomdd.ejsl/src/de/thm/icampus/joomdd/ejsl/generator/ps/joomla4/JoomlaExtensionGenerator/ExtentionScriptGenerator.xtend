@@ -139,7 +139,7 @@ class ExtentionScriptGenerator {
 		 */
 		public function update($parent)
 		{
-		    echo '<p>' . Text::sprintf('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.UPDATE_TEXT)»', $parent->get('manifest')->version) . '</p>';
+		    echo '<p>' . Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name), StaticLanguage.UPDATE_TEXT)»')  . '</p>';
 		}
 	'''
 	def CharSequence genUnsinstall() '''

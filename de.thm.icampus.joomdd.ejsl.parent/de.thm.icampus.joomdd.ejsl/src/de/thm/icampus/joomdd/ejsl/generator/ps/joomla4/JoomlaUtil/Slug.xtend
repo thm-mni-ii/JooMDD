@@ -444,6 +444,12 @@ public class Slug  {
 				case 'DataSet' : { "use Joomla\\Data\\DataSet;" }
 				case 'DataDumpable' : { "use Joomla\\Data\\DumpableInterface;" }
 				
+				case 'ListField' : { "use Joomla\\CMS\\Form\\Field\\ListField;" }
+				
+				case 'ToolbarHelper' : { "use Joomla\\CMS\\Toolbar\\ToolbarHelper;" }
+				
+				case 'MVCFactoryInterface' : { 'use Joomla\\CMS\\MVC\\Factory\\MVCFactoryInterface;' }
+				
 				case 'ArrayHelper' : { "use Joomla\\Utilities\\ArrayHelper;" }
 				
 				case 'ComponentDispatcher' : { "use Joomla\\CMS\\Dispatcher\\ComponentDispatcher;" }
@@ -470,7 +476,7 @@ public class Slug  {
 				case 'ViewCategories' : { "use Joomla\\CMS\\MVC\\View\\CategoriesView;" }
 				case 'ViewCategory' : { "use Joomla\\CMS\\MVC\\View\\CategoryView;" }
 				case 'ViewCategoryfeed' : { "use Joomla\\CMS\\MVC\\View\\CategoryFeedView;" }
-				case 'ViewLegacy' : { "use Joomla\\CMS\\MVC\\View\\HtmlView;" }
+				case 'ViewLegacy' : { "use Joomla\\CMS\\MVC\\View\\HtmlView as BaseHtmlView;" }
 				case 'ControllerAdmin' : { "use Joomla\\CMS\\MVC\\Controller\\AdminController;" }
 				case 'BaseController' : { "use Joomla\\CMS\\MVC\\Controller\\BaseController;" }
 				case 'ControllerForm' : { "use Joomla\\CMS\\MVC\\Controller\\FormController;" }

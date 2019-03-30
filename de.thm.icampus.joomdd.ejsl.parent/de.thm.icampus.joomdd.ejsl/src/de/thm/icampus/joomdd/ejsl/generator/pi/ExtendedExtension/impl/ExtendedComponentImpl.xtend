@@ -28,6 +28,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.Slug
+import org.eclipse.xtend.lib.annotations.Accessors
 
 class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	
@@ -40,6 +41,10 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	EList <ExtendedDynamicPage> allDynamicPage
 	String extensionName 
 	boolean hasFileOrImageLoader = false;
+	
+	@Accessors(PUBLIC_GETTER)
+	String componentHelperClassName
+	
 	new(Component comp){
 		instance = comp
 		this.name = PlattformUtil.slugify(comp.name)
@@ -48,6 +53,7 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 		this.globalParamter = comp.globalParamter
 		this.sections = comp.sections
 		extensionName = "com_" + this.name.toLowerCase
+        this.componentHelperClassName = '''«this.name.toFirstUpper»Helper'''
 		
 		initListen()
 	}
@@ -173,4 +179,16 @@ class ExtendedComponentImpl extends ComponentImpl implements ExtendedComponent {
 	override hasFileToload(){
 		return hasFileOrImageLoader;
 	}
+
+    override getBackendSection() {
+        return this.instance.sections.findFirst[ section | 
+            section instanceof BackendSection
+        ]
+    }
+    
+    override getFrontendSection() {
+        return this.instance.sections.findFirst[ section | 
+            section instanceof FrontendSection
+        ]
+    }
 }

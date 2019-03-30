@@ -265,11 +265,11 @@ class FieldsGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
+		«Slug.generateUses(newArrayList("FormHelper", "Factory", "ListField"))»
 		
 		FormHelper::loadFieldClass('list');
 		
-		class «entFrom.name.toFirstLower»Field extends JFormFieldList
+		class «entFrom.name.toFirstLower»Field extends ListField
 		{
 		    protected $table = "«Slug.databaseName(com.name, entFrom.name)»";
 		    

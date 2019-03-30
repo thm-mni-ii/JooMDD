@@ -31,7 +31,6 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 	String pagename
 	String formPath
 	ExtendedEntity mainEntity
-    String componentHelperClassName
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section, String path,IFileSystemAccess2 fsa) {
 		dpage = dp
@@ -48,7 +47,6 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		pagename = Slug.slugify(dpage.name.toLowerCase)
 		this.fsa = fsa
 		mainEntity = dp.extendedEntityList.get(0)
-        this.componentHelperClassName = '''Com«com.name.toFirstUpper»Helper'''
 	}
 	
 	def void generateView() {
@@ -286,7 +284,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		                } else {
 		                    $path = $params->get("«dpage.name.toLowerCase»_file_path");
 		                }
-		                $data[$keys] = «this.componentHelperClassName»::uploadFiles($file,$path,$item->$keys);
+		                $data[$keys] = «this.com.componentHelperClassName»::uploadFiles($file,$path,$item->$keys);
 		            }
 		        }
 		    }
@@ -360,7 +358,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text"))»
+		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text", "ToolbarHelper", "Html"))»
 		
 		/**
 		 * View to edit a «dpage.name»
@@ -520,7 +518,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text"))»
+		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text", "Html"))»
 		
 		/**
 		 * View to « if(isedit) "Edit" else "Show"» «dpage.extendedEntityList.get(0).name»

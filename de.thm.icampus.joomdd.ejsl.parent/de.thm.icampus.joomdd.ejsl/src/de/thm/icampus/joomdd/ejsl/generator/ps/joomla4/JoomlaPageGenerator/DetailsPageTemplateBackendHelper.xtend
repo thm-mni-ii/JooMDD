@@ -17,14 +17,12 @@ class DetailsPageTemplateBackendHelper {
 	ExtendedComponent  com
 	String sec
 	ExtendedEntity mainEntity
-	String componentHelperClassName
 	
 	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
 		dpage = dp
 		com = cp
 		sec = section
 		mainEntity = dp.extendedEntityList.get(0)
-		this.componentHelperClassName = '''Com«com.name.toFirstUpper»Helper'''
 	}
 		
 	def CharSequence generateAdminModelprepareTableFunction() '''
@@ -156,17 +154,17 @@ class DetailsPageTemplateBackendHelper {
 		    } else {
 		        $checkedOut = false;
 		    }
-		    $canDo = «componentHelperClassName»::getActions();
+		    $canDo = «this.com.componentHelperClassName»::getActions();
 
-		    \JToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
+		    ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
 
 		    // If not checked out, allow to save the item.
 		    if (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.create')))) {
-		        \JToolBarHelper::apply('«dpage.name.toLowerCase».apply', 'JTOOLBAR_APPLY');
-		        \JToolBarHelper::save('«dpage.name.toLowerCase».save', 'JTOOLBAR_SAVE');
+		        ToolBarHelper::apply('«dpage.name.toLowerCase».apply', 'JTOOLBAR_APPLY');
+		        ToolBarHelper::save('«dpage.name.toLowerCase».save', 'JTOOLBAR_SAVE');
 		    }
 		    if (!$checkedOut && ($canDo->get('core.create'))) {
-		        \JToolBarHelper::custom(
+		        ToolBarHelper::custom(
 		            '«dpage.name.toLowerCase».save2new',
 		            'save-new.png',
 		            'save-new_f2.png',
@@ -176,7 +174,7 @@ class DetailsPageTemplateBackendHelper {
 		    }
 		    // If an existing item, can save to a copy.
 		    if (!$isNew && $canDo->get('core.create')) {
-		        \JToolBarHelper::custom(
+		        ToolBarHelper::custom(
 		            '«dpage.name.toLowerCase».save2copy',
 		            'save-copy.png',
 		            'save-copy_f2.png',
@@ -185,9 +183,9 @@ class DetailsPageTemplateBackendHelper {
 		        );
 		    }
 		    if (empty($this->item->id)) {
-		        \JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CANCEL');
+		        ToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CANCEL');
 		    } else {
-		        \JToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CLOSE');
+		        ToolBarHelper::cancel('«dpage.name.toLowerCase».cancel', 'JTOOLBAR_CLOSE');
 		    }
 		}
 	'''
