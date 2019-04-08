@@ -124,19 +124,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		 */
 		class «dpage.name.toFirstUpper»Controller extends FormController
 		{
-		    public function __construct()
-		    {
-		        «var IndexPage inPage = Slug.getPageForAll(dpage, com) »
-		        «IF inPage !== null»
-		        $this->view_list = '«Slug.getPageForAll(dpage, com).name.toLowerCase»';
-		        «ELSE»
-		        $this->view_list = '<Put the View Name>';
-		        «ENDIF»
-		        parent::__construct($config, $factory, $app, $input);
-		    }
-		    «IF dpage.haveFiletoLoad»
-		    «backHelp.genAdminControllerSave()»
-		    «ENDIF»
+
 		}
 	'''
 	
@@ -359,6 +347,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("ViewLegacy", "Factory", "Text", "ToolbarHelper", "Html"))»
+		use Joomla\Component\«com.name.toFirstUpper»\Administrator\Helper\«com.componentHelperClassName»;
 		
 		/**
 		 * View to edit a «dpage.name»
@@ -389,28 +378,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
 		$document = Factory::getDocument();
 		$document->addStyleSheet('components/«Slug.nameExtensionBind("com", com.name.toLowerCase)»/assets/css/«com.name.toLowerCase».css');
 		?>
-		<script type="text/javascript">
-		    js = jQuery.noConflict();
-		    js(document).ready(function() {
-		
-		    });
-		
-		    Joomla.submitbutton = function(task)
-		    {
-		        if (task == '«dpage.name.toLowerCase».cancel') {
-		            Joomla.submitform(task, document.getElementById('«dpage.name.toLowerCase»-form'));
-		        } else {
-		            if (
-		                task != '«dpage.name.toLowerCase».cancel'
-		                && document.formvalidator.isValid(document.id('«dpage.name.toLowerCase»-form'))
-		            ) {
-		                Joomla.submitform(task, document.getElementById('«dpage.name.toLowerCase»-form'));
-		            } else {
-		                alert('<?php echo $this->escape(Text::_('JGLOBAL_VALIDATION_FORM_FAILED')); ?>');
-		            }
-		        }
-		    }
-		</script>
+
 		«backHelp.generateAdminViewLayoutForm()»
 	'''
 	

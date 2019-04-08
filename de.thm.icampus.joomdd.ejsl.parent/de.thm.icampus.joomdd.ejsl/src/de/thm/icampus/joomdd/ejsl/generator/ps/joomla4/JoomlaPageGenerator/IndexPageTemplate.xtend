@@ -142,7 +142,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
 	    
 	    «Slug.generateRestrictedAccess()»
 	    
-	    «Slug.generateUses(newArrayList("ViewLegacy", "Text", "ToolbarHelper", "Html"))»
+	    «Slug.generateUses(newArrayList("Factory", "ViewLegacy", "Text", "ToolbarHelper", "Html", "Toolbar"))»
+	    use Joomla\Component\«com.name.toFirstUpper»\Administrator\Extension\«com.name.toFirstUpper»Component;
 	    use Joomla\Component\«com.name.toFirstUpper»\Administrator\Helper\«com.componentHelperClassName»;
 	    
 	    /**

@@ -16,302 +16,325 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.
  * @author Dieudonne Timma, Dennis Priefer
  */
 class IndexPageTemplateAdminHelper {
-    
+
     ExtendedDynamicPage indexpage
-	ExtendedComponent  com
-	String sec
-	String details
-	ExtendedEntity mainEntity
-	
-	new(ExtendedDynamicPage dp, ExtendedComponent cp, String section){
-		indexpage = dp
-		com = cp
-		sec = section
-		var ExtendedDynamicPage dt = Slug.getPageForDetails(indexpage,com)
-		details =  if( dt === null)"<Put the name Of DetailsPage>" else dt.name
-		mainEntity = dp.extendedEntityList.get(0)
-	}
-	
-	def CharSequence genAdminControllerContructer()'''
-	/**
-	 * Constructor.
-	 *
-	 * @param   array  $config  An optional associative array of configuration settings.
-	 * @return  «com.name.toFirstUpper»Controller«indexpage.name.toFirstUpper»
-	 * @see     JController
-	 * @since   1.6
-	 * @generated
-	 */
-	public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
-	{
-	    parent::__construct($config, $factory, $app, $input);
-	}
-	'''
-	
-	public def genAdminControllerGetModel()'''
-	/**
-	 * Overwrite the  getModel.
-	 * @since 1.6
-	 */
-	public function getModel($name = '«details.toFirstUpper»', $prefix = 'Administrator', $config = array())
-	{
-	    $model = parent::getModel($name, $prefix, array('ignore_request' => true));
-	    return $model;
-	}
-	'''
-	
-	def CharSequence genAdminControllerSaveOrdering()'''
-	/**
-	 * save the order.
-	 *
-	 * @return  Integer
-	 * @generated
-	 */
-	public function saveordering()
-	{
-	    $app = Factory::getApplication();
-	    $ids = $app->input->get('cid', array(), 'array');
-	    $model = $this->getModel('«indexpage.name.toLowerCase»');
-	    $result = $model->saveOrdering($ids);
-	    if ($result) {
-	        echo new JsonResponse($result);
-	    }
-	}
-	'''
-	
-	def CharSequence genAdminModelConstruct()'''
-    	/**
-    	 * Constructor.
-    	 *
-    	 * @param    array    An optional associative array of configuration settings.
-    	 * @see        JController
-    	 * @since    1.6
-    	 * @generated
-    	 */
-    	public function __construct($config = array())
-    	{
-    	    if (empty($config['filter_fields'])) {
-    	        $config['filter_fields'] = array(
-    	            '«mainEntity.primaryKey.name»', '«indexpage.entities.get(0).name».«mainEntity.primaryKey.name»',
-    	            'ordering', '«indexpage.entities.get(0).name».ordering',
-    	            'state', '«indexpage.entities.get(0).name».state',
-    	            'created_by', '«indexpage.entities.get(0).name».created_by',
-    	            'published', '«indexpage.entities.get(0).name».published',
-    	            «indexpage.allAttributeOfFilterAndColum.map[ attr | 
+    ExtendedComponent com
+    String sec
+    String details
+    ExtendedEntity mainEntity
+
+    new(ExtendedDynamicPage dp, ExtendedComponent cp, String section) {
+        indexpage = dp
+        com = cp
+        sec = section
+        var ExtendedDynamicPage dt = Slug.getPageForDetails(indexpage, com)
+        details = if(dt === null) "<Put the name Of DetailsPage>" else dt.name
+        mainEntity = dp.extendedEntityList.get(0)
+    }
+
+    def CharSequence genAdminControllerContructer() '''
+        /**
+         * Constructor.
+         *
+         * @param   array  $config  An optional associative array of configuration settings.
+         * @return  «com.name.toFirstUpper»Controller«indexpage.name.toFirstUpper»
+         * @see     JController
+         * @since   1.6
+         * @generated
+         */
+        public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
+        {
+            parent::__construct($config, $factory, $app, $input);
+        }
+    '''
+
+    public def genAdminControllerGetModel() '''
+        /**
+         * Overwrite the  getModel.
+         * @since 1.6
+         */
+        public function getModel($name = '«details.toFirstUpper»', $prefix = 'Administrator', $config = array())
+        {
+            $model = parent::getModel($name, $prefix, array('ignore_request' => true));
+            return $model;
+        }
+    '''
+
+    def CharSequence genAdminControllerSaveOrdering() '''
+        /**
+         * save the order.
+         *
+         * @return  Integer
+         * @generated
+         */
+        public function saveordering()
+        {
+            $app = Factory::getApplication();
+            $ids = $app->input->get('cid', array(), 'array');
+            $model = $this->getModel('«indexpage.name.toLowerCase»');
+            $result = $model->saveOrdering($ids);
+            if ($result) {
+                echo new JsonResponse($result);
+            }
+        }
+    '''
+
+    def CharSequence genAdminModelConstruct() '''
+        /**
+         * Constructor.
+         *
+         * @param    array    An optional associative array of configuration settings.
+         * @see        JController
+         * @since    1.6
+         * @generated
+         */
+        public function __construct($config = array())
+        {
+            if (empty($config['filter_fields'])) {
+                $config['filter_fields'] = array(
+                    '«mainEntity.primaryKey.name»', '«indexpage.entities.get(0).name».«mainEntity.primaryKey.name»',
+                    'ordering', '«indexpage.entities.get(0).name».ordering',
+                    'state', '«indexpage.entities.get(0).name».state',
+                    'created_by', '«indexpage.entities.get(0).name».created_by',
+                    'published', '«indexpage.entities.get(0).name».published',
+                    «indexpage.allAttributeOfFilterAndColum.map[ attr | 
     	                var column = indexpage.getTextColumn(attr, com.allExtendedEntity)
     	                ''''«attr.name»', '«column»'«»'''
     	            ].join(''',
     	            ''')»
-    	        );
-    	    }
-    	    parent::__construct($config);
-    	}
-	'''
-	
-	def CharSequence genAdminModelGetListQuery() {
-	    var query = new Query(com)
-    	var mainSelectColumn = new Column(indexpage.entities.get(0).name, '''*''')
-    	query.addToMainSelect(new Select(mainSelectColumn))
-    	
-	    return '''
-	    /**
-	     * Build an SQL query to load the list data.
-	     *
-	     * @return  JDatabaseQuery
-	     * @since 1.6
-	     * @generated
-	     */
-	    protected function getListQuery()
-	    {
-	        // Create a new query object.
-	        $db = $this->getDbo();
-	        $query = $db->getQuery(true);
-	        $published = $this->getState('filter.state');
-	        $created_by = $this->getState('filter.created_by');
-	        «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
-	        $«attr.name» = $this->getState('filter.«attr.name»');
-	        «ENDFOR»
-	        $search = $this->getState('filter.search');
-	        $orderCol = $this->state->get('list.ordering');
-	        $orderDirn = $this->state->get('list.direction');
+                );
+            }
+            parent::__construct($config);
+        }
+    '''
 
-	        // Select the required fields from the table.
-	        $query->select(
-	            "distinct " .
-	            $this->getState(
-	                'list.select',
-	                '«query.mainSelect»'
-	            )
-	        );
-	        «query.getListQuery(indexpage, mainEntity, '''<\/br>''', true)»
-	        
-	        return $query;
-	    }
-        '''
-    }    
-    
-	def CharSequence genAdminModelGetItem()'''
-		/**
-		 * Method to get a single record.
-		 *
-		 * @param   integer  The id of the primary key.
-		 *
-		 * @return  mixed    Object on success, false on failure.
-		 * @since   1.6
-		 * @generated
-		 */
-		public function getItems()
-		{
-		    $items = parent::getItems();
-		    return $items;
-		}
-	'''
+    def CharSequence genAdminModelGetListQuery() {
+        var query = new Query(com)
+        var mainSelectColumn = new Column(indexpage.entities.get(0).name, '''*''')
+        query.addToMainSelect(new Select(mainSelectColumn))
 
-	def CharSequence genAdminModelSaveOrder()'''
-	    /**
-	     * Function to save the new Order of the Profile
-	     *
-	     * @param   Array  $dataID  content the ID in the new Ordering
-	     *
-	     * @return  array  including headers
-	     * @generated
-	     */
-	    public function saveOrdering($dataID)
-	    {
-	        $db = Factory::getDbo();
-	        $query = $db->getQuery(true);
+        return '''
+            /**
+             * Build an SQL query to load the list data.
+             *
+             * @return  JDatabaseQuery
+             * @since 1.6
+             * @generated
+             */
+            protected function getListQuery()
+            {
+                // Create a new query object.
+                $db = $this->getDbo();
+                $query = $db->getQuery(true);
+                $published = $this->getState('filter.state');
+                $created_by = $this->getState('filter.created_by');
+                «FOR ExtendedAttribute attr : indexpage.extendFiltersList»
+                    $«attr.name» = $this->getState('filter.«attr.name»');
+                «ENDFOR»
+                $search = $this->getState('filter.search');
+                $orderCol = $this->state->get('list.ordering');
+                $orderDirn = $this->state->get('list.direction');
+            
+                // Select the required fields from the table.
+                $query->select(
+                "distinct " .
+                $this->getState(
+                    'list.select',
+                    '«query.mainSelect»'
+                )
+                );
+                «query.getListQuery(indexpage, mainEntity, '''<\/br>''', true)»
+                
+                return $query;
+            }
+           '''
+    }
 
-	        $statement = 'Update #__«com.name»_«indexpage.entities.get(0).name» Set `ordering` = CASE';
-	        foreach ($dataID as $order => $profileID) {
-	            $statement .= ' WHEN «mainEntity.primaryKey.name» = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
-	        }
-	        $statement .= ' ELSE ' . 0 . ' END Where «mainEntity.primaryKey.name» IN(' . implode(',', $dataID) . ')';
-	        $db->setQuery($statement);
-	        $response = $db->execute();
+    def CharSequence genAdminModelGetItem() '''
+        /**
+         * Method to get a single record.
+         *
+         * @param   integer  The id of the primary key.
+         *
+         * @return  mixed    Object on success, false on failure.
+         * @since   1.6
+         * @generated
+         */
+        public function getItems()
+        {
+            $items = parent::getItems();
+            return $items;
+        }
+    '''
 
-	        if ($response) {
-	            $query = $db->getQuery(true);
-	            $query->select('`«mainEntity.primaryKey.name»`, `ordering`')->from('#__«com.name»_«indexpage.entities.get(0).name»');
-	            $db->setQuery($query);
-	            return $db->loadObjectList();
-	        }
-	        return false;
-	    }
-	'''
+    def CharSequence genAdminModelSaveOrder() '''
+        /**
+         * Function to save the new Order of the Profile
+         *
+         * @param   Array  $dataID  content the ID in the new Ordering
+         *
+         * @return  array  including headers
+         * @generated
+         */
+        public function saveOrdering($dataID)
+        {
+            $db = Factory::getDbo();
+            $query = $db->getQuery(true);
+        
+            $statement = 'Update #__«com.name»_«indexpage.entities.get(0).name» Set `ordering` = CASE';
+            foreach ($dataID as $order => $profileID) {
+            $statement .= ' WHEN «mainEntity.primaryKey.name» = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
+            }
+            $statement .= ' ELSE ' . 0 . ' END Where «mainEntity.primaryKey.name» IN(' . implode(',', $dataID) . ')';
+            $db->setQuery($statement);
+            $response = $db->execute();
+        
+            if ($response) {
+            $query = $db->getQuery(true);
+            $query->select('`«mainEntity.primaryKey.name»`, `ordering`')->from('#__«com.name»_«indexpage.entities.get(0).name»');
+            $db->setQuery($query);
+            return $db->loadObjectList();
+            }
+            return false;
+        }
+    '''
 
-	def CharSequence genAdminViewDisplay()'''
-	    /**
-	     * loads model data into view context
-	     *
-	     * @param   string  $tpl  the name of the template to be used
-	     *
-	     * @return void
-	     * @generated
-	     */
-	    public function display($tpl = null)
-	    {
-	        $this->state = $this->get('State');
-	        $this->items = $this->get('Items');
-	        $this->pagination = $this->get('Pagination');
-	        $this->filterForm    = $this->get('FilterForm');
-	        $this->activeFilters = $this->get('ActiveFilters');
-	    
-	        // Check for errors.
-	        if (count($errors = $this->get('Errors'))) {
-	            throw new Exception(implode("\n", $errors));
-	        }
+    def CharSequence genAdminViewDisplay() '''
+        /**
+         * loads model data into view context
+         *
+         * @param   string  $tpl  the name of the template to be used
+         *
+         * @return void
+         * @generated
+         */
+        public function display($tpl = null)
+        {
+            $this->state = $this->get('State');
+            $this->items = $this->get('Items');
+            $this->pagination = $this->get('Pagination');
+            $this->filterForm    = $this->get('FilterForm');
+            $this->activeFilters = $this->get('ActiveFilters');
+        
+            // Check for errors.
+            if (count($errors = $this->get('Errors'))) {
+                throw new Exception(implode("\n", $errors));
+            }
+        
+            $this->addToolbar();
+            $this->sidebar = \JHtmlSidebar::render();
+            parent::display($tpl);
+        }
+    '''
 
-	        $this->addToolbar();
-	        $this->sidebar = \JHtmlSidebar::render();
-	        parent::display($tpl);
-	    }
-	'''
-	
-	def CharSequence genAdminViewAddtoolbar()'''
-	    /**
-	     * Add the page title and toolbar.
-	     *
-	     * @since 1.6
-	     * @generated
-	     */
-	    protected function addToolbar()
-	    {
-	        $state = $this->get('State');
-	        $canDo = «com.componentHelperClassName»::getActions($state->get('filter.category_id'));
+    def CharSequence genAdminViewAddtoolbar() '''
+        /**
+         * Add the page title and toolbar.
+         *
+         * @since 1.6
+         * @generated
+         */
+        protected function addToolbar()
+        {
+            $state = $this->get('State');
+            $canDo = «com.componentHelperClassName»::getActions('«Slug.nameExtensionBind("com", com.name)»', '«details»', $this->state->get('filter.category_id'));
+            $user  = Factory::getUser();
+        
+            // Get the toolbar object instance
+            $toolbar = Toolbar::getInstance('toolbar');
 
-	        ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
+            ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
+        
+            if ($canDo->get('core.create') || count($user->getAuthorisedCategories('com_content', 'core.create')) > 0)
+            {
+                $toolbar->addNew('«details».add');
+            }
+        
+            if ($canDo->get('core.edit.state') || $canDo->get('core.execute.transition'))
+            {
+                $dropdown = $toolbar->dropdownButton('status-group')
+                    ->text('JTOOLBAR_CHANGE_STATUS')
+                    ->toggleSplit(false)
+                    ->icon('fa fa-globe')
+                    ->buttonClass('btn btn-info')
+                    ->listCheck(true);
 
-	        //Check if the form exists before showing the add/edit buttons
-	        $formPath = JPATH_COMPONENT_ADMINISTRATOR . '/views/«  details.toLowerCase»';
-	        if (file_exists($formPath)) {
-	            if ($canDo->get('core.create')) {
-	                ToolBarHelper::addNew('«details.toLowerCase».add', 'JTOOLBAR_NEW');
-	            }
-	            if ($canDo->get('core.edit') && isset($this->items[0])) {
-	                ToolBarHelper::editList('«details.toLowerCase».edit', 'JTOOLBAR_EDIT');
-	            }
-	        }
-	        if ($canDo->get('core.edit.state')) {
-	            if (isset($this->items[0]->state)) {
-	                ToolBarHelper::divider();
-	                ToolBarHelper::custom(
-	                    '«indexpage.name.toLowerCase».publish',
-	                    'publish.png',
-	                    'publish_f2.png',
-	                    'JTOOLBAR_PUBLISH',
-	                    true
-	                );
-	                ToolBarHelper::custom(
-	                    '«indexpage.name.toLowerCase».unpublish',
-	                    'unpublish.png',
-	                    'unpublish_f2.png',
-	                    'JTOOLBAR_UNPUBLISH',
-	                    true
-	                );
-	            } elseif (isset($this->items[0])) {
-	                //If this component does not use state then show a direct delete button as we can not trash
-	                ToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_DELETE');
-	            }
-	            if (isset($this->items[0]->state)) {
-	                ToolBarHelper::divider();
-	                ToolBarHelper::archiveList('«indexpage.name.toLowerCase».archive', 'JTOOLBAR_ARCHIVE');
-	            }
-	            if (isset($this->items[0]->checked_out)) {
-	                ToolBarHelper::custom(
-	                    '«indexpage.name.toLowerCase».checkin',
-	                    'checkin.png',
-	                    'checkin_f2.png',
-	                    'JTOOLBAR_CHECKIN',
-	                    true
-	                );
-	            }
-	        }
-	        //Show trash and delete for components that uses the state field
-	        if (isset($this->items[0]->state)) {
-	            if ($state->get('filter.state') == -2 && $canDo->get('core.delete')) {
-	                ToolBarHelper::deleteList('', '«indexpage.name.toLowerCase».delete', 'JTOOLBAR_EMPTY_TRASH');
-	                ToolBarHelper::divider();
-	            } elseif ($canDo->get('core.edit.state')) {
-	                ToolBarHelper::trash('«indexpage.name.toLowerCase».trash', 'JTOOLBAR_TRASH');
-	                ToolBarHelper::divider();
-	            }
-	        }
-	        if ($canDo->get('core.admin')) {
-	            ToolBarHelper::preferences('«Slug.nameExtensionBind("com",com.name).toLowerCase»');
-	        }
-	        \JHtmlSidebar::setAction('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»');
-	    }
-	'''
+                $childBar = $dropdown->getChildToolbar();
 
-	def private CharSequence genAdminViewLayoutFilters()'''
-	    <?php
-	        echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
-	    ?>
-	'''
-    
-    def private CharSequence genAdminViewLayoutData(EList<ExtendedAttribute>column)'''
+
+                if ($canDo->get('core.execute.transition'))
+                {
+                    $childBar->publish('«indexpage.name».publish')->listCheck(true);
+
+                    $childBar->unpublish('«indexpage.name».unpublish')->listCheck(true);
+                }
+
+                if ($canDo->get('core.edit.state'))
+                {
+                    $childBar->standardButton('featured')
+                        ->text('JFEATURE')
+                        ->task('«indexpage.name».featured')
+                        ->listCheck(true);
+
+                    $childBar->standardButton('unfeatured')
+                        ->text('JUNFEATURE')
+                        ->task('«indexpage.name».unfeatured')
+                        ->listCheck(true);
+                }
+
+                if ($canDo->get('core.execute.transition'))
+                {
+                    $childBar->archive('«indexpage.name».archive')->listCheck(true);
+                }
+
+                if ($canDo->get('core.edit.state'))
+                {
+                    $childBar->checkin('«indexpage.name».checkin')->listCheck(true);
+                }
+
+                if ($canDo->get('core.execute.transition'))
+                {
+                    $childBar->trash('«indexpage.name».trash')->listCheck(true);
+                }
+           }
+
+            // Add a batch button
+            if ($user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name)»')
+                && $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name)»')
+                && $user->authorise('core.execute.transition', '«Slug.nameExtensionBind("com", com.name)»'))
+            {
+                $toolbar->popupButton('batch')
+                    ->text('JTOOLBAR_BATCH')
+                    ->selector('collapseModal')
+                    ->listCheck(true);
+            }
+
+            if ($this->state->get('filter.condition') == «com.name.toFirstUpper»Component::CONDITION_TRASHED && $canDo->get('core.delete'))
+            {
+                $toolbar->delete('«indexpage.name».delete')
+                    ->text('JTOOLBAR_EMPTY_TRASH')
+                    ->message('JGLOBAL_CONFIRM_DELETE')
+                    ->listCheck(true);
+            }
+
+            if ($user->authorise('core.admin', '«Slug.nameExtensionBind("com", com.name)»') || $user->authorise('core.options', '«Slug.nameExtensionBind("com", com.name)»'))
+            {
+                $toolbar->preferences('«Slug.nameExtensionBind("com", com.name)»');
+            }
+
+            $toolbar->help('JHELP_CONTENT_ARTICLE_MANAGER');
+        }
+    '''
+
+    def private CharSequence genAdminViewLayoutFilters() '''
+        <?php
+            echo LayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+        ?>
+    '''
+
+    def private CharSequence genAdminViewLayoutData(EList<ExtendedAttribute> column) '''
         <?php if (empty($this->items)) : ?>
-            <div class="alert alert-no-items">
+            <div class="alert alert-warning">
                 <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
         <?php else : ?>
@@ -355,15 +378,15 @@ class IndexPageTemplateAdminHelper {
                         <?php $columns++; ?>
                         <?php endif; ?>
                         «FOR ExtendedAttribute attr : column»
-                        <th class='left'>
-                            <?php echo HTMLHelper::_(
-                                'grid.sort',
-                                '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
-                                '«this.mainEntity.name».«attr.name»',
-                                $listDirn,
-                                $listOrder
-                            ); ?>
-                        </th>
+                            <th class='left'>
+                                <?php echo HTMLHelper::_(
+                                    'grid.sort',
+                                    '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
+                                    '«this.mainEntity.name».«attr.name»',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
+                            </th>
                         «ENDFOR»
                     </tr>
                 </thead>
@@ -431,12 +454,12 @@ class IndexPageTemplateAdminHelper {
             </table>
         <?php endif; ?>
     '''
-    
-    def getextendedTableColumnListSize(){
-    	return indexpage.extendedTableColumnList.size
+
+    def getextendedTableColumnListSize() {
+        return indexpage.extendedTableColumnList.size
     }
-    
-    def  CharSequence genAdminViewLayoutForm()''' 
+
+    def CharSequence genAdminViewLayoutForm() ''' 
         <form
             action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>"
             method="post"
@@ -461,7 +484,7 @@ class IndexPageTemplateAdminHelper {
         </form>
     '''
 
-    def CharSequence genAdminViewLayoutHeader()'''
+    def CharSequence genAdminViewLayoutHeader() '''
         $user = Factory::getUser();
         $userId = $user->get('id');
         $listOrder = $this->state->get('list.ordering');
@@ -494,8 +517,8 @@ class IndexPageTemplateAdminHelper {
              }
         </script>
     '''
- 
-    public def CharSequence genAdminModelPopulateState()'''
+
+    public def CharSequence genAdminModelPopulateState() '''
         /**
          * Method to auto-populate the model state.
          *
@@ -506,13 +529,13 @@ class IndexPageTemplateAdminHelper {
             // Load the parameters.
             $params = ComponentHelper::getParams('«Slug.nameExtensionBind("com", com.name.toLowerCase)»');
             $this->setState('params', $params);
-
+        
             // List state information.
             parent::populateState($ordering, $direction);
         }
     '''
 
-    public def CharSequence genGetIdOfReferenceItem ()'''
+    public def CharSequence genGetIdOfReferenceItem() '''
         /**
          * Method to get the id of Reference
          * @param  String  $linkName    containt the name of a Attribute
@@ -533,31 +556,32 @@ class IndexPageTemplateAdminHelper {
             foreach ($attribute as $index => $attributItem) {
                 $query->where($attributItem . " like '".$attrvalue->$index."'");
             }
-
+        
             $db->setQuery($query);
             $result = $db->loadObject();
             return intval($result->$key);
         }
     '''
-    
-    public  def CharSequence genAdminModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, ExtendedComponent com )'''
+
+    public def CharSequence genAdminModelAttributeReference(EList<ExtendedAttribute> column,
+        ExtendedDynamicPage indexpage, ExtendedComponent com) '''
         «FOR ExtendedAttribute attr : column»
-        «IF Slug.isAttributeLinked(attr, indexpage)»
-        <td>
-        <?php if ($canEdit) : ?>
-            <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»); ?>"
-            >
-                <?php echo $this->escape($item->«attr.name»); ?>
-            </a>
-        <?php else : ?>
-            <?php echo $this->escape($item->«attr.name»); ?>
-        <?php endif;?>
-        </td>
-        «ELSE»
-        <td>
-            <?php echo $item->«attr.name»; ?>
-        </td>
-        «ENDIF»
+            «IF Slug.isAttributeLinked(attr, indexpage)»
+                <td>
+                <?php if ($canEdit) : ?>
+                    <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»); ?>"
+                    >
+                        <?php echo $this->escape($item->«attr.name»); ?>
+                    </a>
+                <?php else : ?>
+                    <?php echo $this->escape($item->«attr.name»); ?>
+                <?php endif;?>
+                </td>
+            «ELSE»
+                <td>
+                    <?php echo $item->«attr.name»; ?>
+                </td>
+            «ENDIF»
         «ENDFOR»
     '''
 }

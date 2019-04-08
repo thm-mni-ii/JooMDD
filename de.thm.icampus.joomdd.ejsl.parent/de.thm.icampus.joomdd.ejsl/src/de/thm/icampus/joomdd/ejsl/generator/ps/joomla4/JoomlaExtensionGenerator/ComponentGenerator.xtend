@@ -231,9 +231,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
         <menu>«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»</menu>
         <submenu>
             «FOR page : dymPages.filter[t | !t.detailsPage]»
-            <menu link="option=«Slug.addLanguage(component.languages, newArrayList("com", component.name), component.name)»&amp;view=«page.name.toLowerCase»" 
+            <menu link="option=«newArrayList("com", component.name).join("_")»&amp;view=«page.name»" 
                 alias="«Slug.addLanguage(component.languages, newArrayList("com", component.name, "ALIAS", page.name), page.name)»"
-                view="«page.name.toLowerCase»">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "TITLE", page.name), page.name)»</menu>
+                view="«page.name»">«Slug.addLanguage(component.languages, newArrayList("com", component.name, "TITLE", page.name), page.name)»</menu>
             «ENDFOR»
         </submenu>
         <files folder="administrator/components/«extendedComp.extensionName»">
@@ -451,6 +451,46 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
     	{
     	    use AssociationServiceTrait;
     	    use HTMLRegistryAwareTrait;
+    	
+    	    /**
+    	     * The trashed condition
+    	     *
+    	     * @since   4.0.0
+    	     */
+    	    const CONDITION_NAMES = [
+    	        self::CONDITION_PUBLISHED   => 'JPUBLISHED',
+    	        self::CONDITION_UNPUBLISHED => 'JUNPUBLISHED',
+    	        self::CONDITION_ARCHIVED    => 'JARCHIVED',
+    	        self::CONDITION_TRASHED     => 'JTRASHED',
+    	    ];
+    	
+    	    /**
+    	     * The archived condition
+    	     *
+    	     * @since   4.0.0
+    	     */
+    	    const CONDITION_ARCHIVED = 2;
+    	
+    	    /**
+    	     * The published condition
+    	     *
+    	     * @since   4.0.0
+    	     */
+    	    const CONDITION_PUBLISHED = 1;
+    	
+    	    /**
+    	     * The unpublished condition
+    	     *
+    	     * @since   4.0.0
+    	     */
+    	    const CONDITION_UNPUBLISHED = 0;
+    	
+    	    /**
+    	     * The trashed condition
+    	     *
+    	     * @since   4.0.0
+    	     */
+    	    const CONDITION_TRASHED = -2;
     	
     	    /**
     	     * Booting the extension. This is the function to set up the environment of the extension like
@@ -773,13 +813,16 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		<?xml version="1.0" encoding="utf-8"?>
 		<access component="«name»">
 		    <section name="component">
-		     <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
-		     <action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
-		     <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
-		     <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
-		     <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
-		     <action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
-		     <action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+		        <action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+		        <action name="core.options" title="JACTION_OPTIONS" />
+		        <action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+		        <action name="core.create" title="JACTION_CREATE" description="JACTION_CREATE_COMPONENT_DESC" />
+		        <action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+		        <action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+		        <action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+		        <action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+		        <action name="core.edit.value" title="JACTION_EDITVALUE" />
+		        <action name="core.execute.transition" title="JACTION_EXECUTETRANSITION" />
 		    </section>
 		    «xmlAccessContentPage()»
 		</access>

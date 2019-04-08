@@ -36,7 +36,7 @@ class TableGeneratorTemplate {
 		/**
 		 * «tName.toFirstUpper» Table class
 		 */
-		class «com.name.toFirstUpper»Table«tName.toFirstUpper» extends Table
+		class «tName.toFirstUpper»Table extends Table
 		{
 		    public $foreigntableOption = array();
 		
