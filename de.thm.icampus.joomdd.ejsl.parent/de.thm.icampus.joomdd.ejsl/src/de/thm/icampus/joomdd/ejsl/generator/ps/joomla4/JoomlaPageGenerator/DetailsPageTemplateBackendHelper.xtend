@@ -152,7 +152,7 @@ class DetailsPageTemplateBackendHelper {
             $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
         
             // Built the actions for new and existing records.
-            $canDo = «this.com.getComponentHelperClassName»::getActions('«Slug.nameExtensionBind("com", com.name)»', '«dpage.name»', $this->item->id);
+            $canDo = «this.com.getComponentHelperClassName»::getActions('«Slug.nameExtensionBind("com", com.name)»', '«dpage.name»', $this->item->«mainEntity.primaryKey.name»);
         
             ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
         

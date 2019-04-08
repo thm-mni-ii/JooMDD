@@ -32,23 +32,7 @@ class IndexPageTemplateAdminHelper {
         mainEntity = dp.extendedEntityList.get(0)
     }
 
-    def CharSequence genAdminControllerContructer() '''
-        /**
-         * Constructor.
-         *
-         * @param   array  $config  An optional associative array of configuration settings.
-         * @return  «com.name.toFirstUpper»Controller«indexpage.name.toFirstUpper»
-         * @see     JController
-         * @since   1.6
-         * @generated
-         */
-        public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
-        {
-            parent::__construct($config, $factory, $app, $input);
-        }
-    '''
-
-    public def genAdminControllerGetModel() '''
+    def genAdminControllerGetModel() '''
         /**
          * Overwrite the  getModel.
          * @since 1.6
@@ -210,20 +194,21 @@ class IndexPageTemplateAdminHelper {
          */
         public function display($tpl = null)
         {
-            $this->state = $this->get('State');
-            $this->items = $this->get('Items');
-            $this->pagination = $this->get('Pagination');
+            $this->state         = $this->get('State');
+            $this->items         = $this->get('Items');
+            $this->pagination    = $this->get('Pagination');
             $this->filterForm    = $this->get('FilterForm');
             $this->activeFilters = $this->get('ActiveFilters');
         
             // Check for errors.
             if (count($errors = $this->get('Errors'))) {
-                throw new Exception(implode("\n", $errors));
+                throw new \JViewGenericdataexception(implode("\n", $errors), 500);
             }
         
             $this->addToolbar();
             $this->sidebar = \JHtmlSidebar::render();
-            parent::display($tpl);
+            
+            return parent::display($tpl);
         }
     '''
 
@@ -236,8 +221,7 @@ class IndexPageTemplateAdminHelper {
          */
         protected function addToolbar()
         {
-            $state = $this->get('State');
-            $canDo = «com.componentHelperClassName»::getActions('«Slug.nameExtensionBind("com", com.name)»', '«details»', $this->state->get('filter.category_id'));
+            $canDo = «com.componentHelperClassName»::getActions('«Slug.nameExtensionBind("com", com.name)»', '«details»', $this->state->get('filter.«mainEntity.primaryKey.name»'));
             $user  = Factory::getUser();
         
             // Get the toolbar object instance
@@ -339,36 +323,34 @@ class IndexPageTemplateAdminHelper {
             </div>
         <?php else : ?>
             <table class="table table-striped" id="«indexpage.name.toFirstUpper»List">
+                <caption id="captionTable" class="sr-only">
+                    <?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("COM", com.name, "TABLE", "CAPTION"), '''Table of «indexpage.name»''')»'); ?>, <?php echo Text::_('JGLOBAL_SORTED_BY'); ?>
+                </caption>
                 <thead>
                     <tr>
                         <?php if (isset($this->items[0]) && property_exists($this->items[0], 'ordering')) : ?>
-                        <th width="1%" class="nowrap center hidden-phone">
+                        <th scope="col" style="width:1%" class="text-center d-none d-md-table-cell">
                             <?php echo HTMLHelper::_(
-                                'grid.sort',
-                                '<i class="icon-menu-2"></i>',
+                                'searchtools.sort',
+                                '',
                                 '«this.mainEntity.name».ordering',
                                 $listDirn,
                                 $listOrder,
                                 null,
                                 'asc',
-                                'JGRID_HEADING_ORDERING'
+                                'JGRID_HEADING_ORDERING',
+                                'icon-menu-2'
                             ); ?>
                         </th>
                         <?php $columns++; ?>
                         <?php endif; ?>
-                        <th width="1%" class="hidden-phone">
-                            <input
-                                type="checkbox"
-                                name="checkall-toggle"
-                                value=""
-                                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
-                                onclick="Joomla.checkAll(this)"
-                            />
-                        </th>
+                        <td style="width:1%" class="text-center">
+                            <?php echo HTMLHelper::_('grid.checkall'); ?>
+                        </td>
                         <?php if (isset($this->items[0]) && property_exists($this->items[0], 'state')) : ?>
-                        <th width="1%" class="nowrap center">
+                        <th scope="col" style="width:1%; min-width:85px" class="text-center">
                             <?php echo HTMLHelper::_(
-                                'grid.sort',
+                                'searchtools.sort',
                                 'JSTATUS',
                                 '«this.mainEntity.name».state',
                                 $listDirn,
@@ -378,9 +360,9 @@ class IndexPageTemplateAdminHelper {
                         <?php $columns++; ?>
                         <?php endif; ?>
                         «FOR ExtendedAttribute attr : column»
-                            <th class='left'>
+                            <th scope="col">
                                 <?php echo HTMLHelper::_(
-                                    'grid.sort',
+                                    'searchtools.sort',
                                     '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
                                     '«this.mainEntity.name».«attr.name»',
                                     $listDirn,
@@ -461,25 +443,29 @@ class IndexPageTemplateAdminHelper {
 
     def CharSequence genAdminViewLayoutForm() ''' 
         <form
-            action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>"
+            action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name)»&view=«indexpage.name»'); ?>"
             method="post"
             name="adminForm"
             id="adminForm">
-            <?php if (!empty($this->sidebar)) : ?>
-            <div id="j-sidebar-container" class="span2">
-                <?php echo $this->sidebar; ?>
-            </div>
-            <div id="j-main-container" class="span10">
-            <?php else : ?>
-            <div id="j-main-container">
-            <?php endif;?>
-                «genAdminViewLayoutFilters»
-                «genAdminViewLayoutData(indexpage.extendedTableColumnList)»
-                <input type="hidden" name="task" value="" />
-                <input type="hidden" name="boxchecked" value="0" />
-                <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-                <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-                <?php echo HTMLHelper::_('form.token'); ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <?php if (!empty($this->sidebar)) : ?>
+                    <div id="j-sidebar-container" class="span2">
+                        <?php echo $this->sidebar; ?>
+                    </div>
+                    <div id="j-main-container" class="j-main-container span10">
+                    <?php else : ?>
+                    <div id="j-main-container" class="j-main-container">
+                    <?php endif;?>
+                        «genAdminViewLayoutFilters»
+                        «genAdminViewLayoutData(indexpage.extendedTableColumnList)»
+                        <input type="hidden" name="task" value="" />
+                        <input type="hidden" name="boxchecked" value="0" />
+                        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+                        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+                        <?php echo HTMLHelper::_('form.token'); ?>
+                    </div>
+                </div>
             </div>
         </form>
     '''
@@ -493,32 +479,13 @@ class IndexPageTemplateAdminHelper {
         $saveOrder = $listOrder == '«this.mainEntity.name.toLowerCase».ordering';
         $model = $this->getModel();
         if ($saveOrder) {
-            $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
-            HTMLHelper::_(
-                'sortablelist.sortable',
-                '«indexpage.name.toFirstUpper»List',
-                'adminForm',
-                strtolower($listDirn),
-                $saveOrderingUrl
-            );
+            $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component&' . Session::getFormToken() . '=1';
+            HTMLHelper::_('draggablelist.draggable');
         }
         ?>
-        <script type="text/javascript">
-            Joomla.orderTable = function() {
-                table = document.getElementById("sortTable");
-                direction = document.getElementById("directionTable");
-                order = table.options[table.selectedIndex].value;
-                if (order != '<?php echo $listOrder; ?>') {
-                    dirn = 'asc';
-                } else {
-                    dirn = direction.options[direction.selectedIndex].value;
-                }
-                Joomla.tableOrdering(order, dirn, '');
-             }
-        </script>
     '''
 
-    public def CharSequence genAdminModelPopulateState() '''
+    def CharSequence genAdminModelPopulateState() '''
         /**
          * Method to auto-populate the model state.
          *
@@ -584,4 +551,32 @@ class IndexPageTemplateAdminHelper {
             «ENDIF»
         «ENDFOR»
     '''
+    
+    def genAdminViewSortFields(EList<ExtendedAttribute> column) {
+        var sortFields = newArrayList(
+            ''''«this.mainEntity.name».ordering' => Text::_('JGRID_HEADING_ORDERING')''',
+            ''''«this.mainEntity.name».state' => Text::_('JSTATUS')'''
+        )
+        
+        sortFields.addAll(column.map[ attr |
+            ''''«this.mainEntity.name».«attr.name»' => Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»')'''
+        ])
+        
+        return '''
+        /**
+         * Returns an array of fields the table can be sorted by
+         *
+         * @return  array  Array containing the field name to sort by as the key and display text as value
+         *
+         * @since   3.0
+         */
+        protected function getSortFields()
+        {
+            return array(
+                «sortFields.join(''',
+                ''')»
+            );
+        }
+        '''
+    }
 }
