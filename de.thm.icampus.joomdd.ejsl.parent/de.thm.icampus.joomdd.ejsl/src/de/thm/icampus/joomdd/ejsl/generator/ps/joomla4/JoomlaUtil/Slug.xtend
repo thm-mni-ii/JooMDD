@@ -37,6 +37,17 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.LinkGeneratorHandler
 import java.util.ArrayList
 import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
+import com.google.common.collect.Streams
+import java.util.stream.Collectors
+import java.util.HashMap
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
+import de.thm.icampus.joomdd.ejsl.eJSL.Language
+import de.thm.icampus.joomdd.ejsl.eJSL.impl.KeyValuePairImpl
+import org.eclipse.emf.ecore.EPackage
+import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
+import java.util.List
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -59,7 +70,7 @@ public class Slug  {
 		res = res.replaceAll("ü", "ue")
 		res = res.replaceAll("ß", "ss")
 		res = res.replaceAll("[^-\\w]+", '')
-		res = res.toLowerCase()
+
 		trim(res, "_".charAt(0))
 	}
 	
@@ -88,13 +99,13 @@ public class Slug  {
 		var i = 0
 		
 		while ((i=i+1) < split.size) {
-			res.append(split.get(i).toLowerCase.toFirstUpper)
+			res.append(split.get(i).toFirstUpper)
 		}
 		
 		return res.toString
 	}
 	
-def static String getTypeName(String type) {
+	def static String getTypeName(String type) {
 		var String result =""
 		switch type {
 		    case "Integer":{
@@ -119,7 +130,9 @@ def static String getTypeName(String type) {
 			    result='''type="filepicker"'''
 			}
 			case "Text_Field_NE":{
-			    result='''type="text" '''
+			    result='''
+			    type="text"
+			    readonly="true"'''
 			} 
 			case "Editor":{
 			    result='''type="editor" '''
@@ -192,45 +205,44 @@ def static String getTypeName(String type) {
 	
 	def static CharSequence generateEntytiesInputAttribute(EList<ExtendedDetailPageField> fields, ExtendedEntity entity) {
 		var StringBuffer buff = new StringBuffer()
-		var notShow = newArrayList("state","created_by","asset_id","ordering","checked_out_time","checked_out", "published", "params")
-		notShow.add(entity.primaryKey.name)
-		
+		var notShow = newArrayList(
+		    "state",
+		    "created_by",
+		    "asset_id",
+		    "ordering",
+		    "checked_out_time",
+		    "checked_out",
+		    "published",
+		    "params"
+		)
+
 		for (ExtendedDetailPageField fielditem: fields) {
 			if (!notShow.contains(fielditem.extendedAttribute.name)) {
-				buff.append(inputFeldTemplate(fielditem.extendedAttribute))
+				buff.append(fieldTemplateLabelInput(fielditem.extendedAttribute))
 				notShow.add(fielditem.extendedAttribute.name)
 			}	
 		}
-		
-		for (ExtendedAttribute attr: entity.ownExtendedAttributes){
-			if (!notShow.contains(attr.name)) {
-				buff.append(inputHiddenFeldTemplate(attr))
-			}
-		}
-		
+
 		return buff.toString
 	}
 			
-	def static CharSequence inputHiddenFeldTemplate(ExtendedAttribute attr) '''
-	    <div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
-	'''
-		
-	def static CharSequence inputFeldTemplate(ExtendedAttribute attr) '''
-	    <div class="control-group">
-	        <div class="control-label"><?php echo $this->form->getLabel('«attr.name.toLowerCase»'); ?></div>
-	        <div class="controls"><?php echo $this->form->getInput('«attr.name.toLowerCase»'); ?></div>
+	def static CharSequence fieldTemplateInput(ExtendedAttribute attr) '''
+	    <div class="controls">
+	        <?php echo $this->form->getInput('«attr.name»'); ?>
 	    </div>
 	'''
-
-	def static String generateKeysName(Component com, String name){
-		if(name!==null)
-		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(name).toUpperCase
-	}
-	
-	def static String generateKeysNamePage(Component com, Page page ,String name){
-		return "COM_" + com.name.toUpperCase + "_FIELD_" + Slug.slugify(page.name).toUpperCase + "_" + Slug.slugify(name).toUpperCase
-	}
-	
+		
+	def static CharSequence fieldTemplateLabelInput(ExtendedAttribute attr) '''
+	    <div class="control-group">
+	        <div class="control-label">
+	            <?php echo $this->form->getLabel('«attr.name»'); ?>
+	        </div>
+	        <div class="controls">
+	            <?php echo $this->form->getInput('«attr.name»'); ?>
+	        </div>
+	    </div>
+	'''
+		
 	def static ExtendedDynamicPage getPageForDetails(ExtendedDynamicPage inpage, ExtendedComponent com) {
 		if (inpage.links.empty) {
 			for (ExtendedPageReference pg : com.backEndExtendedPagerefence) {
@@ -242,6 +254,7 @@ def static String getTypeName(String type) {
 				}
 			}
 		}
+		
 		for (Link lk: inpage.links) {
 		    switch lk {
 		        ContextLink: {
@@ -273,6 +286,7 @@ def static String getTypeName(String type) {
 				}
 			}
 		}
+		
 		for (Link lk: inpage.links) {
 			switch lk {
 			    ContextLink: {
@@ -350,16 +364,14 @@ def static String getTypeName(String type) {
 	     */
 	'''
 	
-    def static CharSequence generateFileDoc( Component component)'''
+    def static CharSequence generateFileDocSite( Component component)'''
 	    /**
 	     «IF component.manifest === null»
 	     * @category    Joomla component
-	     * @package     Joomla.Administrator
+	     * @package     Joomla.Site
 	     * @subpackage  com_«component.name»
 	     * @name «component.name»«ELSE»
 	     * @version «component.manifest.version»
-	     * @category    Joomla component
-	     * @package     Joomla.Administrator
 	     * @subpackage  com_«component.name»
 	     * @name «component.name»
 	     «IF component.manifest !== null»
@@ -370,8 +382,27 @@ def static String getTypeName(String type) {
 	     «ENDIF»
 	     */
 	'''
+	
+	def static CharSequence generateFileDocAdmin( Component component)'''
+        /**
+         «IF component.manifest === null»
+         * @category    Joomla component
+         * @package     Joomla.Administrator
+         * @subpackage  com_«component.name»
+         * @name «component.name»«ELSE»
+         * @version «component.manifest.version»
+         * @subpackage  com_«component.name»
+         * @name «component.name»
+         «IF component.manifest !== null»
+         «generateAuthorsDocumentation(component.manifest.authors)»
+         * @copyright   «component.manifest.copyright»
+         * @license     «component.manifest.license»
+         «ENDIF»
+         «ENDIF»
+         */
+    '''
 
-    def static CharSequence generateFileDoc( Extension ext)'''
+    def static CharSequence generateFileDoc(Extension ext)'''
 		/**
 		 * @version «ext.manifest.version»
 		 * @category Joomla component
@@ -387,9 +418,13 @@ def static String getTypeName(String type) {
 	'''
 	
 	def static CharSequence generateNamespace(String name, String section, String context) '''
-		namespace Joomla\Component\«name»\«section»\«context»;
-	'''
-	
+        namespace Joomla\Component\«name.toFirstUpper»\«section.toFirstUpper»\«context.toFirstUpper»;
+    '''
+    
+    def static CharSequence generateModuleNamespace(String name, String section, String context) '''
+        namespace Joomla\Module\«name.toFirstUpper»\«section.toFirstUpper»\«context.toFirstUpper»;
+    '''
+    
 	def static CharSequence generateRestrictedAccess() '''
 		defined('_JEXEC') or die('Restricted access');
 	'''
@@ -409,7 +444,15 @@ def static String getTypeName(String type) {
 				case 'DataSet' : { "use Joomla\\Data\\DataSet;" }
 				case 'DataDumpable' : { "use Joomla\\Data\\DumpableInterface;" }
 				
+				case 'ListField' : { "use Joomla\\CMS\\Form\\Field\\ListField;" }
+				
+				case 'ToolbarHelper' : { "use Joomla\\CMS\\Toolbar\\ToolbarHelper;" }
+				
+				case 'MVCFactoryInterface' : { 'use Joomla\\CMS\\MVC\\Factory\\MVCFactoryInterface;' }
+				
 				case 'ArrayHelper' : { "use Joomla\\Utilities\\ArrayHelper;" }
+				
+				case 'ComponentDispatcher' : { "use Joomla\\CMS\\Dispatcher\\ComponentDispatcher;" }
 				
 				case 'ApplicationAdministrator' : { "use Joomla\\CMS\\Application\\AdministratorApplication;" }
 				case 'ApplicationHelper' : { "use Joomla\\CMS\\Application\\ApplicationHelper;" }
@@ -435,7 +478,7 @@ def static String getTypeName(String type) {
 				case 'ViewCategoryfeed' : { "use Joomla\\CMS\\MVC\\View\\CategoryFeedView;" }
 				case 'ViewLegacy' : { "use Joomla\\CMS\\MVC\\View\\HtmlView as BaseHtmlView;" }
 				case 'ControllerAdmin' : { "use Joomla\\CMS\\MVC\\Controller\\AdminController;" }
-				case 'ControllerLegacy' : { "use Joomla\\CMS\\MVC\\Controller\\BaseController;" }
+				case 'BaseController' : { "use Joomla\\CMS\\MVC\\Controller\\BaseController;" }
 				case 'ControllerForm' : { "use Joomla\\CMS\\MVC\\Controller\\FormController;" }
 				case 'TableInterface' : { "use Joomla\\CMS\\Table\\TableInterface;" }
 				case 'Table' : { "use Joomla\\CMS\\Table\\Table;" }
@@ -738,7 +781,7 @@ def static String getTypeName(String type) {
 				case 'FormRuleTel' : { "use Joomla\\CMS\\Form\\Rule\\TelRule;" }
 				case 'FormRuleUrl' : { "use Joomla\\CMS\\Form\\Rule\\UrlRule;" }
 				case 'FormRuleUsername' : { "use Joomla\\CMS\\Form\\Rule\\UsernameRule;" }
-				case 'FormController' : { "use Joomla\\CMS\\MVC\\Controller\\FormController;"}
+				
 				case 'Microdata' : { "use Joomla\\CMS\\Microdata\\Microdata;" }
 				
 				case 'Factory' : { "use Joomla\\CMS\\Factory;" }
@@ -812,8 +855,6 @@ def static String getTypeName(String type) {
 				
 				case 'Html' : { "use Joomla\\CMS\\HTML\\HTMLHelper;" }
 				
-				case 'MVCFactoryInterface' : { "use Joomla\\CMS\\MVC\\Factory\\MVCFactoryInterface;"}
-				
 				default: { "use " + className + ";"}
 			}»
 		«ENDFOR»
@@ -825,9 +866,10 @@ def static String getTypeName(String type) {
 		return ''	
 	}
 
+     
 	
-	def static CharSequence databaseName(String componentName, String entityName) {
-		return "#__" + componentName.toLowerCase + "_" + entityName.toLowerCase
+	def static databaseName(String componentName, String entityName) {
+		return '''#__«componentName»_«entityName»'''
 	}
 	
 	def static Boolean isAttributeLinked(ExtendedAttribute attr, DynamicPage page) {
@@ -841,45 +883,36 @@ def static String getTypeName(String type) {
 		return false
 	}
 	
-	def static CharSequence linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures) '''
-	    «FOR Link lk: page.links»
-	    «IF lk.linkedAttribute !== null»
-	    «IF lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)»
-	    «switch lk {
-		    ExternalLink : {
-			    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»'''
-		    }
-		    InternalLink: {
-		        if ((lk as InternalLink).target instanceof DetailsPage) {
-		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
-		                if (!(lk instanceof ContextLink)) {
-		                    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
-		                } else {
-		                    if ((lk as ContextLink).linkparameters.filter[t | t.id].size == 0) {
-		                        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
-		                    } else {
-		    		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»  . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
-		   			        }
-		   		        }
-		   	        } else {
-		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
-		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
-		    	
-			            if (idRef !== null) {
-				            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
-				        } else {
-				 	        '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name.toLowerCase»",$item)'''
-		 	            }
-		 	        }
-                } else {
-		            '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name.toLowerCase»'''
-		        }
-            }
-        }»
-	    «ENDIF»
-	    «ENDIF»
-	    «ENDFOR»
-	'''
+	def static String linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures) 
+	'''«FOR Link lk: page.links»
+    	    «IF lk.linkedAttribute !== null»
+        	    «IF lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)»
+            	    «switch lk {
+            		    ExternalLink : {
+            			    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»'''
+            		    }
+            		    InternalLink: {
+            		        if ((lk as InternalLink).target instanceof DetailsPage) {
+            		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
+                                    '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
+                                } else {
+            		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
+            		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
+            		    	
+            			            if (idRef !== null) {
+            				            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
+            				        } else {
+            				 	        '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
+            		 	            }
+            		 	        }
+                            } else {
+            		            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
+            		        }
+                        }
+                    }»
+        	    «ENDIF»
+    	    «ENDIF»
+	    «ENDFOR»'''
 	
 	def static Entity getEntityForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage) {
 		for (ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences) {
@@ -925,19 +958,24 @@ def static String getTypeName(String type) {
 	}
 	
 	static def CharSequence genLinkedInfo(DynamicPage page, Component com)'''
- 	    private  $entitiesRef = array(
- 	    «FOR Link linkItem: page.links»
- 	    «switch linkItem {
- 		    InternalLink :{
- 			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
- 				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
- 				    '''
- 				    "«linkItem.name.toLowerCase»" => array("db"=> "#__«com.name.toLowerCase»_«ref.entity.name.toLowerCase»","refattr" => array(«Slug.generateAttributeAndRefernce(ref)»
- 				    ), "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name.toLowerCase»"),'''	
- 			    }				
- 		    }	
- 	    }»
- 	    «ENDFOR»
+ 	    private $entitiesRef = array(
+ 	        «FOR Link linkItem: page.links»
+ 	        «switch linkItem {
+     		    InternalLink :{
+     			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
+     				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
+     				    '''
+     				    "«linkItem.name»" => array(
+     				        "db"=> "#__«com.name»_«ref.entity.name»",
+     				        "refattr" => array(
+     				            «Slug.generateAttributeAndRefernce(ref)»
+     				        ),
+     				        "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name»"
+     				    ),'''	
+     			    }				
+     		    }	
+     	    }»
+     	    «ENDFOR»
  	    null);
  	'''
 	
@@ -948,9 +986,10 @@ def static String getTypeName(String type) {
 			var int index = reference.attribute.indexOf(attr)
 			var Attribute referenced = reference.attributerefereced.get(index)
 			if(attr != reference.attribute.last)
-			result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»",''')
+			    result.append('''"«attr.name»"=>"«referenced.name»",
+			    ''')
 			else{
-				result.append('''"«attr.name.toLowerCase»"=>"«referenced.name.toLowerCase»"''')
+				result.append('''"«attr.name»"=>"«referenced.name»"''')
 			}
 			
 		}
@@ -958,22 +997,14 @@ def static String getTypeName(String type) {
 	}
 	
 	static def CharSequence transformAttributeListInString(EList<Attribute>attributes, String separeSign) {
-		var StringBuffer result = new StringBuffer()
-		for (attr: attributes) {
-			if (attr != attributes.last) {
-			result.append(attr.name.toLowerCase + separeSign)
-			} else {
-				result.append(Slug.slugify(attr.name))
-			}
-		}
-		return result.toString
+		return attributes.map[ a | Slug.slugify(a.name)].join(separeSign)
 	}
 	
 	static def CharSequence transformAttributeListInString(String postWord, EList<Attribute>attributes, String separeSign){
 		var StringBuffer result = new StringBuffer()
 		for (attr: attributes) {
 			if (attr != attributes.last) {
-			    result.append(postWord + Slug.slugify(attr.name).toLowerCase + separeSign)
+			    result.append(postWord + Slug.slugify(attr.name) + separeSign)
 			} else {
 				result.append(postWord+ Slug.slugify(attr.name))
 			}
@@ -985,7 +1016,7 @@ def static String getTypeName(String type) {
 		var StringBuffer result = new StringBuffer()
 		for (attr: attributes) {
 			if (attr != attributes.last) {
-			    result.append(postWord + Slug.slugify(attr.name).toLowerCase + afterWord + separeSign)
+			    result.append(postWord + Slug.slugify(attr.name) + afterWord + separeSign)
 			} else {
 				result.append(postWord+ Slug.slugify(attr.name)+afterWord)
 			}
@@ -997,7 +1028,7 @@ def static String getTypeName(String type) {
 		var StringBuffer result = new StringBuffer()
 		for (attr: attributes) {
 			if (attr != attributes.last) {
-			    result.append(quotationMark+postWord + Slug.slugify(attr.name).toLowerCase+quotationMark + separeSign)
+			    result.append(quotationMark+postWord + Slug.slugify(attr.name)+quotationMark + separeSign)
 			} else {
 				result.append(quotationMark+postWord+ Slug.slugify(attr.name) +quotationMark)
 			}
@@ -1016,35 +1047,38 @@ def static String getTypeName(String type) {
 				val String[] type_temp_array = type.split('''"'''.toString())
    		val String type_temp = type_temp_array.get(1)
    		
+   		var fieldLabel = addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, "LABEL"), param.name)
+   		var fieldDescription = addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, "DESC"), StaticLanguage.getCommonDescriptionFor(param.name))
+   		
    		switch(type_temp){
    		    case "multiselect" , case "select", case "list": {
    	        return '''
-   		    <field name="«param.name.toLowerCase»"
+   		       <field name="«param.name»"
    		            type="list" 
    		            «IF type.equalsIgnoreCase("multiselect")»
    		            multiple
    		            «ENDIF»
-   		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            id="«param.name»"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
    		            >
    		            «FOR KeyValuePair kv: param.values»
-   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		            <option value="«kv.value»">«addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
    		            «ENDFOR»
    		        </field> 
    		        '''
    		    }
    		    case "imagepicker": {
    		        return '''
-   		        <field name="«param.name.toLowerCase»"
-   		            type ="imageloader"
+   		        <field name="«param.name»"
+   		            type="imageloader"
    		            accept="image/*"
-   		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            id="«param.name»"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
@@ -1053,11 +1087,11 @@ def static String getTypeName(String type) {
    		    }
    		    case "filepicker": {
    		        return '''
-   		        <field name="«param.name.toLowerCase»"
-   		            type ="fileloader"
-   		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		        <field name="«param.name»"
+   		            type="fileloader"
+   		            id="«param.name»"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
   		            «ENDFOR»
@@ -1066,45 +1100,45 @@ def static String getTypeName(String type) {
    		    }
    		    case "checkbox": {
    		       return ''' 
-   		        <field name="«param.name.toLowerCase»"
+   		        <field name="«param.name»"
    		            type="checkboxes" 
-   		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            id="«param.name»"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
    		            >
    		            «FOR KeyValuePair kv: param.values»
-   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+   		            <option value="«kv.value»">«addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
    		            «ENDFOR»
    		        </field> 
    		        '''
    		    }
    		    case "radiobutton": {
    		        return ''' 
-	   		        <field name="«param.name.toLowerCase»"
+	   		        <field name="«param.name»"
 	   		            type="radio"
-	   		            id="«param.name.toLowerCase»"
-	   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-	   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+	   		            id="«param.name»"
+	   		            label="«fieldLabel»"
+	   		            description="«fieldDescription»"
 	   		            «FOR KeyValuePair kvpair : param.attributes»
 	   		            «kvpair.name» = "«kvpair.value»"
 	   		            «ENDFOR»
 	   		            >
 	   		            «FOR KeyValuePair kv: param.values»
-	   		            <option value="«kv.value»">«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_«kv.name.toUpperCase»_OPTION</option>
+	   		            <option value="«kv.value»">«addLanguage(component.languages, newArrayList("com", component.name, "PARAM", param.name, kv.name, "OPTION"), kv.name)»</option>
 	   		            «ENDFOR»
 	   		        </field> 
    		        '''
    		    }
    		    case "Yes_No_Buttons": {
    		        return ''' 
-   		        <field name="«param.name.toLowerCase»"
+   		        <field name="«param.name»"
    		            type="radio" 
-   		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            id="«param.name»"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            default="0"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
@@ -1117,15 +1151,15 @@ def static String getTypeName(String type) {
    		    }
    		    default: {
    		        return '''  
-   		        <field name="«param.name.toLowerCase»"
+   		        <field name="«param.name»"
    		            «type»
-   		            id="«param.name.toLowerCase»"
-   		            label="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»"
-   		            description="«Slug.nameExtensionBind("com",component.name).toUpperCase»_PARAM_«param.name.toUpperCase»_DESC"
+   		            id="«param.name»"
+   		            label="«fieldLabel»"
+   		            description="«fieldDescription»"
    		            «FOR KeyValuePair kvpair : param.attributes»
    		            «kvpair.name» = "«kvpair.value»"
    		            «ENDFOR»
-   		            />
+   		        />
    		        '''
    		    }
    		}
@@ -1150,36 +1184,86 @@ def static String getTypeName(String type) {
 	
 	def static Entity getOtherEntityToMapping(ExtendedReference reference) {
 	    var Entity toEntity = reference.destinationEntity
-	    var Reference ref = (toEntity.references.filter[t | !t.entity.name.equalsIgnoreCase(reference.sourceEntity.name)]).get(0)
+	    var g = (toEntity.references.filter[t | 
+	        ! t.entity.name.equalsIgnoreCase(reference.sourceEntity.name)
+	    ])
+	    var Reference ref = g.get(0)
 	    return ref.entity
 	}
 	
-	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference, ExtendedComponent com) '''
-	    <?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-	    <?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
-	    <div class="control-group">
-	        <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
-	        <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
-	    </div>
-	    «FOR attribute: Slug.getOtherAttribute(reference)»
-	    <div class="control-group">
-	        <div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
-	    </div>
-	    «ENDFOR»
-	    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-	    <?php endif; ?>
-	'''
+	def static getNReferenceLanguageKey(ExtendedComponent component, ExtendedReference reference, String entityName) {
+		var otherEntity = Slug.getOtherEntityToMapping(reference)
+		var extensionName = Slug.nameExtensionBind("com", component.name)
+
+		var referenceEntityName = otherEntity.references.findFirst [ r |
+			r.entity.name.equals(reference.entity.name)
+		]
+		var attributedReferenceName = referenceEntityName.attributerefereced.get(0).name
+
+		var languageKey = newArrayList(
+			extensionName,
+			"FORM",
+			"LBL",
+			entityName,
+			attributedReferenceName
+		).join("_")
+
+		return Slug.slugify(languageKey).toUpperCase
+	}
+	
+	def static CharSequence generateEntytiesBackendInputRefrence(ExtendedReference reference, ExtendedComponent com) {
+	   var languageKey = getNReferenceLanguageKey(com, reference, reference.getSourceEntity.name)
+	   var otherEntity = Slug.getOtherEntityToMapping(reference)   
+	    
+	   return '''
+    	    <?php if (Factory::getUser()->authorise('core.admin', '«com.name»')) : ?>
+    	    <?php echo HTMLHelper::_(
+    	        'bootstrap.addTab',
+    	        'myTab',
+    	        '«otherEntity.name»',
+    	        Text::_('«languageKey»', true)
+    	    ); ?>
+    	    <div class="control-group">
+    	        <div class="control-label">
+    	            <?php echo $this->form->getLabel('«reference.entity.name»_id'); ?>
+    	        </div>
+    	        <div class="controls">
+    	            <?php echo $this->form->getInput('«reference.entity.name»_id'); ?>
+    	        </div>
+    	    </div>
+    	    «FOR attribute: Slug.getOtherAttribute(reference)»
+    	    <div class="control-group">
+    	        <div class="controls">
+    	            <?php echo $this->form->getInput('«attribute.name»'); ?>
+    	        </div>
+    	    </div>
+    	    «ENDFOR»
+    	    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+    	    <?php endif; ?>
+    	'''
+    }
 	
 	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
-		<?php if (Factory::getUser()->authorise('core.admin','«com.name.toLowerCase»')) : ?>
-		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', '«Slug.getOtherEntityToMapping(reference).name.toLowerCase»', Text::_('«Slug.nameExtensionBind("com",com.name).toUpperCase»_«Slug.getOtherEntityToMapping(reference).name.toUpperCase»', true)); ?>
+		<?php if (Factory::getUser()->authorise('core.admin', '«com.name»')) : ?>
+		<?php echo HTMLHelper::_(
+		    'bootstrap.addTab',
+		    'myTab',
+		    '«Slug.getOtherEntityToMapping(reference).name»',
+		    Text::_('«addLanguage(com.languages, newArrayList("com", com.name, Slug.getOtherEntityToMapping(reference).name), Slug.getOtherEntityToMapping(reference).name)»', true)
+		); ?>
 		<div class="control-group">
-		    <div class="control-label"><?php echo $this->form->getLabel('«reference.entity.name.toLowerCase»_id'); ?></div>
-		    <div class="controls"><?php echo $this->form->getInput('«reference.entity.name.toLowerCase»_id'); ?></div>
+		    <div class="control-label">
+		        <?php echo $this->form->getLabel('«reference.entity.name»_id'); ?>
+		    </div>
+		    <div class="controls">
+		        <?php echo $this->form->getInput('«reference.entity.name»_id'); ?>
+		    </div>
 		</div>
 		«FOR attribute: Slug.getOtherAttribute(reference)»
 		<div class="control-group">
-		    <div class="controls"><?php echo $this->form->getInput('«attribute.name.toLowerCase»'); ?></div>
+		    <div class="controls">
+		        <?php echo $this->form->getInput('«attribute.name»'); ?>
+		    </div>
 		</div>
 		«ENDFOR»
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
@@ -1205,7 +1289,106 @@ def static String getTypeName(String type) {
 	    root.delete
 	}
 	
-	def static String capitalize(String input) {
-		return input.toFirstUpper
-	}
+	/**
+     * You can use this function to add a static language variable.
+     * These are variables that have a constant value. 
+     */
+    def static String addLanguage(EList<Language> languages, ArrayList<String> keyArray, StaticLanguageValue staticLanguageValue) {
+        keyArray.add(staticLanguageValue.key)
+        return addLanguage(languages, keyArray, staticLanguageValue.value)
+    }
+    
+    /**
+     * You can add language key-value pairs using this function.
+     * The given key (array) will only be added if the key does not exist already.
+     * 
+     * @param ArrayList keyArray
+     * @param String    value
+     * @return String   Returns the to upper case representation of the given keyArray
+     */
+    def static String addLanguage(EList<Language> languages, ArrayList<String> keyArray, String value) {
+        val String upperCaseKey = keyArray.map[ k | 
+            Slug.slugify(k)
+        ].join("_").toUpperCase
+        var String tmpValue = value
+        
+        // Use the key as value when the value is empty.
+        if (value.trim.empty === true) {
+            tmpValue = upperCaseKey        
+        }
+        
+        // We need this (constant) variable for the loop below.
+        val String languageValue = tmpValue
+        
+        // Iterate over each language and add the key if it does not exist.
+        languages.forEach[ l | 
+            // Add the new key only if it does not exist already
+            var alreadyDefinedKey = l.keyvaluepairs.findFirst[ kv | 
+                kv.name.equalsIgnoreCase(upperCaseKey)
+            ]
+            if (alreadyDefinedKey === null)
+            {
+                // Create the new key-value pair and add it to the language
+                var keyValuePair  = EJSLFactory.eINSTANCE.createKeyValuePair
+                keyValuePair.name = upperCaseKey
+                keyValuePair.value = languageValue
+                l.keyvaluepairs.add(keyValuePair)
+            }
+            else
+            {
+                if (alreadyDefinedKey.value.equalsIgnoreCase(languageValue) === false) {
+                    println('''The given key «upperCaseKey» with the value «languageValue» is already defined with another value «alreadyDefinedKey.value»''')
+                }
+            }
+        ]
+        
+        return upperCaseKey
+    }
+    
+    def static generateFilterFields(
+        ExtendedDynamicPage page,
+        EList<Language> languages,
+        ExtendedComponent component,
+        String extensionName,
+        boolean simpleDefaultValue,
+        boolean addFieldPath,
+        boolean filterParams,
+        boolean addOnSubmit
+    ) {
+        
+        var extendedFilterList = page.extendFiltersList.toList
+        
+        if (filterParams === true) {
+            extendedFilterList = extendedFilterList.filter[ attribute |
+                !attribute.name.equalsIgnoreCase("params")
+            ].toList
+        }
+        
+        return '''
+            «FOR ExtendedAttribute attr : extendedFilterList»
+            «var valueColumn = page.getValueColumn(attr, component.allExtendedEntity)»
+            «var textColumn = page.getTextColumn(attr, component.allExtendedEntity)»
+            <field
+                «IF addFieldPath === true»
+                addfieldpath="components/«Slug.nameExtensionBind("com", component.name).toLowerCase»/models/fields"
+                «ENDIF»
+                name="«attr.name»"
+                type="«textColumn.type»"
+                label="«Slug.addLanguage(languages, newArrayList(extensionName, "FILTER", attr.name, "LABEL"), attr.name)»"
+                description="«Slug.addLanguage(languages, newArrayList(extensionName, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
+                valueColumn="«valueColumn»"
+                textColumn="«textColumn»"
+                «IF addOnSubmit == true»
+                onchange="this.form.submit();"
+                «ENDIF»
+            >
+                «IF simpleDefaultValue === true»
+                <option value="">JSELECT</option>
+                «ELSE»
+                <option value="">«Slug.addLanguage(languages, newArrayList(extensionName, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
+                «ENDIF»
+            </field>
+            «ENDFOR»
+            '''
+    }
 }

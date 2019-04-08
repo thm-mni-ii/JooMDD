@@ -16,6 +16,7 @@ class TableGeneratorTemplate {
 	ExtendedComponent com
 	String tName
 	ExtendedEntity ent
+	
 	new(ExtendedComponent component, ExtendedEntity entity) {
 		com = component
 		tName = entity.name
@@ -24,7 +25,7 @@ class TableGeneratorTemplate {
 	
 	public def CharSequence genClassTable() '''
 		<?php
-		«Slug.generateFileDoc(com)»
+		«Slug.generateFileDocAdmin(com)»
 		
 		«Slug.generateNamespace(com.name, "Administrator", "Table")»
 		
@@ -56,8 +57,8 @@ class TableGeneratorTemplate {
 		    «genLoadAllPrimaryKeys»
 		
 		    «genPublish»
-		
 		    «IF ent.getAllExtendedReferencesToEntity.size > 0»
+
 		    «genDelete»
 		    «ENDIF»
 		}
@@ -69,9 +70,9 @@ class TableGeneratorTemplate {
  		*
  		* @param object Database connector object
  		*/
- 		public function __construct(&$db) 
+ 		public function __construct(&$db)
  		{
- 		    parent::__construct('#__«com.name.toLowerCase»_«ent.name.toLowerCase»', '«ent.primaryKey.name»', $db);
+ 		    parent::__construct('#__«com.name»_«ent.name»', '«ent.primaryKey.name»', $db);
  		    $this->initTheForeignTableOption();
  		}
  	'''
@@ -85,7 +86,7 @@ class TableGeneratorTemplate {
  		        "prefix" => "«com.name.toFirstUpper»Table",
  		        "foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
  		        "refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
- 		        "name" => "#__«com.name.toLowerCase»_«ref.sourceEntity.name.toLowerCase»",
+ 		        "name" => "#__«com.name»_«ref.sourceEntity.name»",
  		        "foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.destinationEntity).name.toLowerCase»'
  		    );
  		    array_push($this->foreigntableOption, $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)»);
@@ -107,15 +108,29 @@ class TableGeneratorTemplate {
 		{
 		    $input = Factory::getApplication()->input;
 		    $task = $input->getString('task', '');
-		    if (($task == 'save' || $task == 'apply') && (!Factory::getUser()->authorise('core.edit.state','«Slug.nameExtensionBind("com", com.name).toLowerCase».«tName.toLowerCase».'.$array['id']) && $array['state'] == 1)) {
+		    if (($task == 'save' || $task == 'apply')
+		        && (!Factory::getUser()->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase» . «tName.toLowerCase».'.$array['id'])
+		        && $array['state'] == 1)) {
 		        $array['state'] = 0;
 		    }
 		    if ($array['«ent.primaryKey.name»'] == 0) {
 		        $array['created_by'] = Factory::getUser()->id;
 		    }
 		
+		    «var referenceAttributeUniqueList = ent.allRefactoryReference.map[ r | 
+		        r.attribute.map[ a | a.name ].toList
+		    ].flatten.toSet»
+		    «FOR name : referenceAttributeUniqueList»
+		    if (array_key_exists(
+		        '«name»',
+		        $array
+		    ) && empty($array['«name»'])
+		    ) {
+		        $array['«name»'] = null;
+		    }
+
+		    «ENDFOR»
 		    //Support for file field: file
-		    $input = Factory::getApplication()->input;
 		
 		    if (isset($array['params']) && is_array($array['params'])) {
 		        $registry = new Registry();
@@ -134,7 +149,7 @@ class TableGeneratorTemplate {
 		        $this->setRules($array['rules']);
 		    }
 
-			return parent::bind($array, $ignore);
+		    return parent::bind($array, $ignore);
 		}
 	'''
  
@@ -168,7 +183,8 @@ class TableGeneratorTemplate {
  
 	public def CharSequence genGetAssetParentID()'''
 		/**
-		 * Returns the parent asset's id. If you have a tree structure, retrieve the parent's id using the external key field
+		 * Returns the parent asset's id.
+		 * If you have a tree structure, retrieve the parent's id using the external key field
 		 *
 		 * @see Table::_getAssetParentId
 		 */
@@ -199,8 +215,13 @@ class TableGeneratorTemplate {
 		    if (isset($this->foreigntableOption)) {
 		        foreach ($this->foreigntableOptio as $key => $dbtable) {
 		            $instance_table = Table::getInstance($dbtable['type'], $dbtable['prefix']);
-		            $allForeignKeys = $this->loadAllPrimaryKeyofRef($pk, $dbtable['refkey']
-		                , $dbtable['name'], $dbtable['foreignkey'],$dbtable["foreignId"]);
+		            $allForeignKeys = $this->loadAllPrimaryKeyofRef(
+		                $pk,
+		                $dbtable['refkey'],
+		                $dbtable['name'],
+		                $dbtable['foreignkey'],
+		                $dbtable["foreignId"]
+		            );
 		            foreach ($allForeignKeys as $keyOf) {
 		                $result = $instance_table->delete($keyOf);
 		            }
@@ -221,13 +242,13 @@ class TableGeneratorTemplate {
 	'''
 	
 	public def CharSequence genLoadAllPrimaryKeys()'''
-		public function loadAllPrimaryKeyofRef($pk, $keylist, $foreigntable, $foreignkeys,$foreignId)
+		public function loadAllPrimaryKeyofRef($pk, $keylist, $foreigntable, $foreignkeys, $foreignId)
 		{
 		    $this->load($pk);
 		    $query = $this->_db->getQuery(true);
 		    $query->select($foreignId)
 		        ->from("#__" . $foreigntable);
-		    foreach ($keylist as $index=>$value) {
+		    foreach ($keylist as $index => $value) {
 		        $query->where($this->_db->quoteName($foreignkeys[$index]) . "=" .
 		        $this->_db->quoteName($this->$value));
 		    }
@@ -242,8 +263,7 @@ class TableGeneratorTemplate {
 		{
 		    $k = $this->_tbl_keys;
 		    if (!is_null($pks)) {
-		        foreach ($pks AS $key => $pk)
-		        {
+		        foreach ($pks as $key => $pk) {
 		            if (!is_array($pk)) {
 		                $pks[$key] = array($this->_tbl_key => $pk);
 		            }
@@ -256,7 +276,7 @@ class TableGeneratorTemplate {
 		    // If there are no primary keys set check to see if the instance key is set.
 		    if (empty($pks)) {
 		        $pk = array();
-		        foreach ($this->_tbl_keys AS $key) {
+		        foreach ($this->_tbl_keys as $key) {
 		            if ($this->$key) {
 		                $pk[$this->$key] = $this->$key;
 		            } else {
@@ -266,7 +286,7 @@ class TableGeneratorTemplate {
 		        $pks = array($pk);
 		    }
 		
-		    foreach ($pks AS $pk) {
+		    foreach ($pks as $pk) {
 		        // Update the state state for rows with the given primary keys.
 		        $query = $this->_db->getQuery(true)
 		            ->update($this->_tbl)
@@ -281,6 +301,6 @@ class TableGeneratorTemplate {
 	'''
 	
 	def dogenerate(String path, IFileSystemAccess access) {
-		access.generateFile(path + "/" + this.ent.name.toFirstUpper + "Table.php", genClassTable)
+		access.generateFile(path + "/" + this.ent.name.toLowerCase + ".php", genClassTable)
 	}
 }

@@ -17,8 +17,9 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
  * @author Dieudonne Timma, Dennis Priefer
  */
 public class LibraryGenerator extends AbstractExtensionGenerator {
+    
 	@Accessors ExtendedLibrary library
-	private String subpackageName;
+	String subpackageName;
 
 	new(ExtendedLibrary library, IFileSystemAccess2 access, String path) {
 		this.library = library

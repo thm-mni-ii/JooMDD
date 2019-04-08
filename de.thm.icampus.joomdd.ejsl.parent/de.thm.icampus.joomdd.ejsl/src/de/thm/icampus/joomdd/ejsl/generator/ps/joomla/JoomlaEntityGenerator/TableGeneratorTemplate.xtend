@@ -25,7 +25,7 @@ class TableGeneratorTemplate {
 	
 	public def CharSequence genClassTable() '''
 		<?php
-		«Slug.generateFileDoc(com)»
+		«Slug.generateFileDocAdmin(com)»
 		
 		«Slug.generateRestrictedAccess()»
 		

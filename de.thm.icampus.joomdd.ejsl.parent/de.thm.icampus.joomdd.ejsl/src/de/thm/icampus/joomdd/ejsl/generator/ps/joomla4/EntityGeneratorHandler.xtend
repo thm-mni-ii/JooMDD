@@ -10,7 +10,6 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.Fie
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsCardinalityGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsFileloaderGenerator
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.TableGeneratorTemplate
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 
 /**
  * This class represents the interface between the JooMDD generator and the Joomla-specific entity generator templates. 
@@ -33,22 +32,23 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 		
 	}
 	private def generateSQL(ExtendedComponent comp, String path) {
-		var  JoomlaEntityGenerator entgen = new JoomlaEntityGenerator(comp.allExtendedEntity,  comp.name, false)
+		var  JoomlaEntityGenerator entgen = new JoomlaEntityGenerator(comp.allExtendedEntity, comp.name, false)
 		
 		generateFile(path + "sql/install.mysql.utf8.sql", entgen.dogenerate)
 		generateFile(path + "sql/uninstall.mysql.utf8.sql", entgen.sqlAdminSqlUninstallContent(comp.name))
 		entgen.update = true
-		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''',entgen.generateUpdateScript(comp.name))
+		// generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''', entgen.generateUpdateScript(comp.name))
+		generateFile(path + '''sql/updates/mysql/«comp.manifest.version».mysql.utf8.sql''', entgen.generateUpdateScript(comp.name))
 	}
 	
 	private def generateFields(ExtendedComponent comp, String path, boolean isBackendSection){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(comp, ent)
 			if (isBackendSection) {
-				generateFile( path + "Field/" + Slug.capitalize(ent.name.toLowerCase) + "Field.php",fieldEntity.genAdministratorFieldsForEntity)
+				generateFile( path + "Field/" + ent.name.toLowerCase.toFirstUpper + "Field.php", fieldEntity.genFieldsForEntity("Administrator"))
 			}
 			else {
-				generateFile( path + "Field/" + Slug.capitalize(ent.name.toLowerCase) + "Field.php",fieldEntity.genSiteFieldsForEntity)
+				generateFile( path + "Field/" + ent.name.toLowerCase.toFirstUpper + "Field.php", fieldEntity.genFieldsForEntity("Site"))
 			}
 			for(ExtendedReference ref: ent.allExtendedReferences){
 				switch ref.upper{
@@ -63,10 +63,7 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 				}
 			}
 		}
-		/*if (isBackendSection)
-			generateFile(path + "Field/" + comp.name.toLowerCase.toFirstUpper+"userField.php", FieldsGenerator.genAdministratorFieldsForUserView(comp) )
-		else
-			generateFile(path + "Field/" + comp.name.toLowerCase.toFirstUpper+"userField.php", FieldsGenerator.genSiteFieldsForUserView(comp) )*/
+		
 		if(comp.hasFileToload) {
 		    var fileloader = new FieldsFileloaderGenerator(comp)
 		    generateFile(path + "Field/" + "FileloaderField.php",  fileloader.generateFileloader)

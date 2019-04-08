@@ -1,8 +1,7 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Language
-import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
-import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.AbstractExtensionGenerator
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import java.util.Calendar
 import org.eclipse.xtext.generator.IFileSystemAccess2
@@ -14,10 +13,10 @@ import org.eclipse.xtext.generator.IFileSystemAccess2
  */
 public class PluginGenerator extends AbstractExtensionGenerator {
 	
-	private String slug;
-	private Plugin plugin;
+	String slug;
+	ExtendedPlugin plugin;
 	
-	new(Plugin plugin, IFileSystemAccess2 fsa, String path)
+	new(ExtendedPlugin plugin, IFileSystemAccess2 fsa, String path)
 	{
 		this.fsa = fsa;
 		this.slug = Slug.slugify(plugin.name);
@@ -26,7 +25,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		this.path = path
 	}
 	
-	def static PluginGenerator getGenerator(Plugin plugin, IFileSystemAccess2 fsa, String path) {
+	def static PluginGenerator getGenerator(ExtendedPlugin plugin, IFileSystemAccess2 fsa, String path) {
 		return new PluginGenerator(plugin, fsa,path)
 	}
 	
@@ -58,7 +57,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		«ENDFOR»
 	'''
 	
-	def CharSequence phpContent(Plugin plugin) '''
+	def CharSequence phpContent(ExtendedPlugin plugin) '''
 		<?php
 		/**
 		 * @version $Id: «plugin.name» version date author
@@ -83,7 +82,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		}
 	'''
 	
-	def CharSequence events(Plugin plugin)
+	def CharSequence events(ExtendedPlugin plugin)
 	{
 		switch (plugin.type) {
 			case AUTHENTICATE:
@@ -113,7 +112,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		}
 	}
 	
-	def CharSequence authenticateEvents(Plugin plugin) '''
+	def CharSequence authenticateEvents(ExtendedPlugin plugin) '''
 		public function onUserAuthenticate($credentials, $options, &$response)
 		{
 		    $response->type = '«plugin.name.toString.toFirstUpper»';
@@ -121,22 +120,22 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		}
 	'''
 	
-	def CharSequence captchaEvents(Plugin plugin) '''
+	def CharSequence captchaEvents(ExtendedPlugin plugin) '''
 		//TODO: place code here
 	'''
 	
-	def CharSequence contentEvents(Plugin plugin) '''
+	def CharSequence contentEvents(ExtendedPlugin plugin) '''
 		public function onContentPrepare($context, &$article, &$params, $page = 0)
 		{
 		    // TODO: place code here
 		}
 	'''
 	
-	def CharSequence contactEvents(Plugin plugin) '''
+	def CharSequence contactEvents(ExtendedPlugin plugin) '''
 		//TODO: place code here
 	'''
 	
-	def CharSequence editorsEvents(Plugin plugin) '''
+	def CharSequence editorsEvents(ExtendedPlugin plugin) '''
 		/**
 		 * Initialises the Editor.
 		 *
@@ -252,7 +251,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		}
 	'''
 	
-	def CharSequence extensionsEvents(Plugin plugin) '''
+	def CharSequence extensionsEvents(ExtendedPlugin plugin) '''
 		/**
 		 * Load the language file on instantiation.
 		 *
@@ -264,7 +263,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		//TODO: place code here
 	'''
 	
-	def CharSequence finderEvents(Plugin plugin) '''
+	def CharSequence finderEvents(ExtendedPlugin plugin) '''
 		/**
 		 * The plugin identifier.
 		 *
@@ -543,7 +542,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		protected function setup()
 		{
 		    // Load dependent classes.
-		    require_once JPATH_SITE . '/components/com_«plugin.name»/Helper/route.php';
+		    require_once JPATH_SITE . '/components/com_«plugin.name»/helpers/route.php';
 		
 		    return true;
 		}
@@ -594,9 +593,9 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		}
 	'''
 	
-	def CharSequence quickiconsEvents(Plugin plugin)'''
+	def CharSequence quickiconsEvents(ExtendedPlugin plugin)'''
 		/**
-		 * Load the language file on instantiation.
+		 * Loads the language file on instantiation.
 		 *
 		 * @var    boolean
 		 * @since  3.1
@@ -617,14 +616,14 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		
 		    //TODO: some code here
 		
-		    HTMLHelper::_('script', 'plg_quickicon_«plugin.name»/«plugin.name»check.js', false, true);
+		    HTMLHelper::_('script', 'plg_quickicon_«plugin.name.toLowerCase»/«plugin.name.toLowerCase»check.js', false, true);
 		
 		    return array(
 		        array(
 		            'link' => '',
 		            'image' => '',
 		            'icon' => '',
-		            'text' => Text::_('PLG_QUICKICON_«plugin.name.toString.toUpperCase»_CHECKING'),
+		            'text' => Text::_('«Slug.addLanguage(plugin.languages, newArrayList("plg", plugin.name, "QUICKICON", "CHECKING"), "")»'),
 		            'id' => 'plg_quickicon_«plugin.name»',
 		            'group' => 'MOD_QUICKICON_MAINTENANCE'
 		        )
@@ -632,7 +631,7 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		}
 	'''
 	
-	def CharSequence searchEvents(Plugin plugin) '''
+	def CharSequence searchEvents(ExtendedPlugin plugin) '''
 		/**
 		 * Load the language file on instantiation.
 		 *
@@ -792,11 +791,11 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		}
 	'''
 	
-	def CharSequence systemEvents(Plugin plugin) '''
+	def CharSequence systemEvents(ExtendedPlugin plugin) '''
 		//TODO: place code here
 	'''
 	
-	def CharSequence userEvents(Plugin plugin) '''
+	def CharSequence userEvents(ExtendedPlugin plugin) '''
 		/**
 		 * Load the language file on instantiation.
 		 *
@@ -808,11 +807,11 @@ public class PluginGenerator extends AbstractExtensionGenerator {
 		//TODO: place code here
 	'''
 	
-	def CharSequence xmlrpcEvents(Plugin plugin) '''
+	def CharSequence xmlrpcEvents(ExtendedPlugin plugin) '''
 		//TODO: place code here
 	'''
 	
-	def CharSequence xmlContent(Plugin plugin) '''
+	def CharSequence xmlContent(ExtendedPlugin plugin) '''
 		<?xml version="1.0" encoding="utf-8"?>
 		<extension version="3.1" type="plugin" group="«plugin.type»">
 		    <name>«plugin.name»</name>

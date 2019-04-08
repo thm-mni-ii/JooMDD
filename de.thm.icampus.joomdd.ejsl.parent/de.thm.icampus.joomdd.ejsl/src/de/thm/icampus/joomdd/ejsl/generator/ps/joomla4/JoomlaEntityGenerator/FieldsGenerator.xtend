@@ -1,14 +1,18 @@
 package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator
 
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedAttribute
+import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedEntity
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.ExtendedReference
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.LeftJoin
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Query
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Select
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Table
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
 import java.io.File
 import org.eclipse.xtext.generator.IFileSystemAccess
-import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedDetailPageField
-import de.thm.icampus.joomdd.ejsl.eJSL.KeyValuePair
 
 /**
  * This class contains the templates to generate the view fields.
@@ -21,7 +25,7 @@ class FieldsGenerator {
 	public ExtendedComponent com
 	public String nameField
 	public ExtendedEntity entFrom
-	private ExtendedDetailPageField field
+	ExtendedDetailPageField field
 
 	public new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
 		mainRef = ref
@@ -49,28 +53,21 @@ class FieldsGenerator {
 		return nameField
 	}
 
-	public def CharSequence genAdministratorRefrenceField() '''
+	public def CharSequence genRefrenceField() '''
 		<?php
-		«Slug.generateFileDoc(com)»
-		
-		«Slug.generateNamespace(com.name, "Administrator", "Field")»
+		«Slug.generateFileDocAdmin(com)»
+
+        «Slug.generateNamespace(com.name, "Administrator", "Field")»
 
 		«Slug.generateRestrictedAccess()»
 
 		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
 
-		class «nameField.toFirstUpper»Field extends FormField
+		class JFormField«com.name.toFirstUpper»reference extends FormField
 		{
-		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
-		        "foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
-		    protected $keysAndForeignKeys= array(
-		        «FOR attr : mainRef.extendedAttributes»
-		        «IF attr != mainRef.extendedAttributes.last»
-		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
-		        «ELSE»
-		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
-                «ENDIF»
-		        «ENDFOR»);
+		    public $referenceStruct = array();
+		    public $keysAndForeignKeys = array();
+		    public $primary_key ="id";
 
 		    «genGetInput»
 
@@ -78,44 +75,7 @@ class FieldsGenerator {
 
 		    «genGetReferencedata»
 		
-		    «genGetData_item»
-		
-		    «genGenerateJsonValue»
-		
-		    «gengenerateStringValue»
-		}
-	'''
-	
-	public def CharSequence genSiteRefrenceField() '''
-		<?php
-		«Slug.generateFileDoc(com)»
-		
-		«Slug.generateNamespace(com.name, "Site", "Field")»
-
-		«Slug.generateRestrictedAccess()»
-
-		«Slug.generateUses(newArrayList("Text", "FormField", "Factory", "Uri"))»
-
-		class «nameField.toFirstUpper»Field extends FormField
-		{
-		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
-		        "foreignTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»");
-		    protected $keysAndForeignKeys= array(
-		        «FOR attr : mainRef.extendedAttributes»
-		        «IF attr != mainRef.extendedAttributes.last»
-		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»",
-		        «ELSE»
-		        "«attr.name.toLowerCase»" => "«mainRef.referencedExtendedAttributes.get(mainRef.extendedAttributes.indexOf(attr)).name.toLowerCase»"
-                «ENDIF»
-		        «ENDFOR»);
-
-		    «genGetInput»
-
-		    «genGetAllData»
-
-		    «genGetReferencedata»
-		
-		    «genGetData_item»
+		    «genGetDataItem»
 		
 		    «genGenerateJsonValue»
 		
@@ -124,58 +84,84 @@ class FieldsGenerator {
 	'''
 	
 	public def CharSequence genEmptyField()'''
-	<?php
-	«Slug.generateNamespace(com.name, "Administrator", "Field")»
-	
-	«Slug.generateFileDoc(com)»
-	
-	«Slug.generateRestrictedAccess()»
-	
-	«Slug.generateUses(newArrayList("FormField"))»
-	
-	class JFormField«nameField.toFirstUpper» extends JFormField
-	{
-	    protected function getInput()
-	    {
-	        $html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
-	        «FOR KeyValuePair kv: field.attributes»
-	        «kv.name» = '«kv.value»'
-	        «ENDFOR»
-	        />";
-	        return implode($html);
-	    }
-	}
+    	<?php
+    	«Slug.generateFileDocAdmin(com)»
+    	
+    	«Slug.generateNamespace(com.name, "Administrator", "Field")»
+    	
+    	«Slug.generateRestrictedAccess()»
+    	
+    	«Slug.generateUses(newArrayList("FormField"))»
+    	
+    	class JFormField«nameField.toFirstUpper» extends JFormField
+    	{
+    	    protected function getInput()
+    	    {
+    	        $html[]="<input type='text' value='" . $this->value. "' name='" . $this->name. "' id='" . $this->«field.attribute.name.toLowerCase». "'
+    	        «FOR KeyValuePair kv: field.attributes»
+    	        «kv.name» = '«kv.value»'
+    	        «ENDFOR»
+    	        />";
+    	        return implode($html);
+    	    }
+    	}
 	'''
-    def private genGetData_item()'''
-	protected function getData_item($«entFrom.primaryKey.name»)
-	{
-	    $db = Factory::getDbo();
-	    $query = $db->getQuery(true);
-	    $query->select("*")->from($this->referenceStruct["table"])
-	        ->where("«entFrom.primaryKey.name» = " . $«entFrom.primaryKey.name»);
-	    $db->setQuery($query);
-	    return $db->loadObject();
+	
+    def private genGetDataItem() {
+        var query = new Query
+        query.mainTable = new Table('''$table''')
+        
+        var column = new Column('''*''')
+        var select = new Select(column)
+        query.addToMainSelect(select)
+        
+        var whereColumn = new Column('''$this->primary_key''')
+        var whereStatement = '''«whereColumn» = $id'''
+        
+        return '''
+    	protected function getDataItem($id)
+    	{
+    	    $table = $this->referenceStruct->table;
+    	    $db = JFactory::getDbo();
+    	    $query = $db->getQuery(true);
+    	    $query->select("«query.mainSelect»")
+    	          ->from("«query.mainTable»")
+    	          ->where("«whereStatement»");
+    	    $db->setQuery($query);
+    	    return $db->loadObject();
+    	}
+    	'''
 	}
 	
-	'''
 	private def CharSequence genGetInput() '''
 		/**
 		 * Method to get the field input markup.
 		 *
-		 * @return	string	The field input markup.
+		 * @return  string  The field input markup.
 		 * @since 1.6
 		 */
 		protected function getInput()
 		{
+		    $tempsTable = str_replace("'", "\"", $this->getAttribute("tables"));
+		    $tempsAttr = str_replace("'", "\"", $this->getAttribute("referenced_keys"));
+		    $this->referenceStruct = json_decode($tempsTable);
+		    $this->keysAndForeignKeys = json_decode($tempsAttr, true);
 		    $html = array();
 		    $document = Factory::getDocument();
-		    $document->addScript( Uri::root() . '/media/«Slug.nameExtensionBind("com",com.name).toLowerCase»/js/setForeignKeys.js');
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setforeignkeys.js');
 		    $input = Factory::getApplication()->input;
-		    $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
-		    if (empty($«entFrom.primaryKey.name»)) {
+		    
+		    $this->primary_key = $this->getAttribute("primary_key_name");
+		    $id = intval($input->get($this->primary_key));
+		    if (empty($id)) {
 		        $alldata = $this->getAllData();
-		        $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select'  class='form-control' >";
-		        $html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
+		        $html[] = "<select
+		                       required
+		                       onchange='setValueForeignKeys(this)'
+		                       id='" . $this->id . "select'
+		                       class='form-control'
+		                   >";
+		        $html[] = "<option>". Text::_('JSELECT'). "</option>";
 		        foreach ($alldata as $data) {
 		            $html[] = "<option  value='". $this->generateJsonValue($data) ."'>"
 		            . $this->generateStringValue($data) ."</option>";
@@ -184,10 +170,16 @@ class FieldsGenerator {
 		        $html[]="<input type='hidden' value='' name='" . $this->name. "' id='" . $this->id . "'/>";
 		        return implode($html);
 		    }
-		    $data = $this->getData_item($«entFrom.primaryKey.name»);
+		    $data = $this->getDataItem($id);
 		    $selectData = $this->getReferencedata($data);
-		    $html[] = "<select required onchange='setValueForeignKeys(this)' id='" . $this->«entFrom.primaryKey.name» . "select' class='form-control' name='" . $this->name. "select'>";
-		    $html[] = "<option>". Text::_("JOPTION_SELECT_«mainRef.extendedAttributes.get(0).name.toUpperCase»"). "</option>";
+		    $html[] = "<select
+		                   required
+		                   onchange='setValueForeignKeys(this)'
+		                   id='" . $this->id. "select'
+		                   class='form-control'
+		                   name='" . $this->name. "select'
+		               >";
+		    $html[] = "<option>". Text::_("JSELECT"). "</option>";
 		    foreach ($selectData as $selected) {
 		        $html[] = "<option $selected->selected value='". $this->generateJsonValue($selected) ."'>"
 		        . $this->generateStringValue($selected) ."</option>";
@@ -199,6 +191,7 @@ class FieldsGenerator {
 		}
 	'''
 
+    // @todo: Use classes in DatabaseQuery 
 	private def CharSequence genGetReferencedata() '''
 	/**
 	*Read Selected  Items
@@ -206,39 +199,39 @@ class FieldsGenerator {
 	*/
 	protected function getReferencedata($data)
 	{
-	    $db = Factory::getDbo();
+	    $fk = $this->keysAndForeignKeys["key"];
+	    $valueColumn = $this->getAttribute("valueColumn");
+	    $db = JFactory::getDbo();
 	    $query = $db->getQuery(true);
-	    $query->select("distinct (case when 
-	        «FOR ExtendedAttribute attr: mainRef.referencedExtendedAttributes»
-	        «IF attr != mainRef.referencedExtendedAttributes.last»
-	        b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»' and 
-	        «ELSE»
-	        b.«attr.name» = '$data->«mainRef.extendedAttributes.get(mainRef.referencedExtendedAttributes.indexOf(attr)).name»'
-	        «ENDIF»
-	        «ENDFOR»
-	        then 'selected'
-	        else ' ' end) as selected");
-	    foreach ($this->keysAndForeignKeys as $key => $value) {
-	        $query->select(" b.$value");
+	    if ($data->$fk === null) {
+	        $caseSelected = "' '";
+	    } else {
+	        $caseCheck = "b." . $this->keysAndForeignKeys["ref"] . " = " . $data->$fk;
+	        $caseSelected = "(case when $caseCheck then 'selected' else ' ' end)";
 	    }
-
-	    $query->from( $this->referenceStruct["foreignTable"] . " as b ")
+	    $query->select("distinct $caseSelected as selected");
+	    $query->select(" b." . $this->keysAndForeignKeys["ref"]);
+	    $query->select(" b." . $valueColumn);
+	    $query->from($this->referenceStruct->foreignTable . " as b ")
 	        ->where("b.state = 1")
-	        ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
+	        ->order("b.$valueColumn ASC");
 	    $db->setQuery($query);
 	    return $db->loadObjectList();
 	}
 	'''
 
+    // @todo: Use classes in DatabaseQuery 
 	private def CharSequence genGetAllData() '''
 		protected function getAllData()
 		{
-		    $db = Factory::getDbo();
+		    $valueColumn = $this->getAttribute("valueColumn");
+		    $db = JFactory::getDbo();
 		    $query = $db->getQuery(true);
-		    $query->select("«Slug.transformAttributeListInString("b.",mainRef.attributerefereced,',')»")
-		        ->from($this->referenceStruct["foreignTable"] . " as b")
-		        ->where("b.state = 1")
-		        ->order("b.«mainRef.attributerefereced.get(0).name.toLowerCase»" . " ASC");
+		    $query->select("b." . $this->keysAndForeignKeys["ref"]);
+		    $query->select("b.$valueColumn");
+		    $query->from($this->referenceStruct->foreignTable . " as b")
+		    ->where("b.state = 1")
+		    ->order("b.$valueColumn ASC");
 		    $db->setQuery($query);
 		    return $db->loadObjectList();
 		}
@@ -248,9 +241,8 @@ class FieldsGenerator {
 		public function generateJsonValue($data)
 		{
 		    $result  = array();
-		    foreach ($this->keysAndForeignKeys as $key => $value) {
-		        $result["jform_$key"] = $data->{$value};
-		    }
+		    $value = $this->keysAndForeignKeys;
+		    $result["jform_" .  $value["key"]] = $data->{$value["ref"]};
 		    return json_encode($result);
 		}
 	'''
@@ -259,47 +251,26 @@ class FieldsGenerator {
 		public function generateStringValue($data)
 		{
 		    $result = array();
-		
-		    $result[] = $data->{array_values($this->keysAndForeignKeys)[0]} . " ";
-		
+		    $valueColumn = $this->getAttribute("valueColumn");
+		    $result[] = $data->{$valueColumn} . " ";
 		    return implode($result);
 		}
 	'''
 	
-	public def CharSequence genAdministratorFieldsForEntity()'''
+	public def CharSequence genFieldsForEntity(String section)'''
 		<?php
-		«Slug.generateFileDoc(com)»
+		«Slug.generateFileDocAdmin(com)»
 		
-		«Slug.generateNamespace(com.name, "Administrator", "Field")»
+		«Slug.generateNamespace(com.name, '''«section»''', "Field")»
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
+		«Slug.generateUses(newArrayList("FormHelper", "Factory", "ListField"))»
 		
 		FormHelper::loadFieldClass('list');
 		
-		class «entFrom.name.toFirstUpper»Field extends \JFormFieldList{
-		    protected $table = "«Slug.databaseName(com.name, entFrom.name)»";
-		    
-		    «genGetOptionsForEntity»
-		    
-		    «genGetAllDataForEntity»
-		}
-	'''
-	
-	public def CharSequence genSiteFieldsForEntity()'''
-		<?php
-		«Slug.generateFileDoc(com)»
-		
-		«Slug.generateNamespace(com.name, "Site", "Field")»
-		
-		«Slug.generateRestrictedAccess()»
-		
-		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
-		
-		FormHelper::loadFieldClass('list');
-		
-		class «entFrom.name.toFirstUpper»Field extends \JFormFieldList{
+		class «entFrom.name.toFirstLower»Field extends ListField
+		{
 		    protected $table = "«Slug.databaseName(com.name, entFrom.name)»";
 		    
 		    «genGetOptionsForEntity»
@@ -313,140 +284,109 @@ class FieldsGenerator {
 		{
 		    $valueColumn = $this->getAttribute('valueColumn');
 		    $textColumn = $this->getAttribute('textColumn');
-		    return  array_merge(parent::getOptions(),$this->getAllData($valueColumn, $textColumn));
+		    return array_merge(parent::getOptions(), $this->getAllData($valueColumn, $textColumn));
 		}
 	'''
 	
-	private def genGetAllDataForEntity() '''
-	protected function getAllData($valueColumn, $textColumn)
-	{
-	    $dbo = Factory::getDbo();
-	    $query = $dbo->getQuery(true);
-	    $query->select("DISTINCT $valueColumn as value, $textColumn as text")
-	        ->from("$this->table AS «entFrom.name.toLowerCase»")
-	        «FOR ExtendedReference ref:entFrom.allExtendedReferences »
-	        ->join('LEFT', "«Slug.databaseName(com.name,ref.destinationEntity.name)» as  «ref.destinationEntity.name.toLowerCase» ON
-	            «FOR ExtendedAttribute attr: ref.extendedAttributes»
-	            «IF ref.extendedAttributes.last != attr»
-	            «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase» AND
-	            «ELSE»
-	            «entFrom.name.toLowerCase».«attr.name.toLowerCase» = «ref.destinationEntity.name.toLowerCase».«ref.referencedExtendedAttributes.get(ref.extendedAttributes.indexOf((attr))).name.toLowerCase»
-	            «ENDIF»
-	            «ENDFOR»
-	        ")
-	        «ENDFOR»
-	        ->order("$textColumn ASC");
-	    $dbo->setQuery($query);
-	    $result = $dbo->loadObjectList();
-	    return $result;
+	private def genGetAllDataForEntity() {
+	    var query = new Query(com)
+	    
+	    var valueColumn = new Column('''$valueColumn''')
+        var textColumn = new Column('''$textColumn''')
+	    query.addToMainSelect(new Select(valueColumn, '''value'''))
+        query.addToMainSelect(new Select(textColumn, '''text'''))
+        
+        var mainEntityNameAlias = query.getUniqueAlias(entFrom.name)
+        query.mainTable = new Table('''$this->table''', mainEntityNameAlias)
+    	'''
+    	protected function getAllData($valueColumn, $textColumn)
+    	{
+    	    $dbo = Factory::getDbo();
+    	    $query = $dbo->getQuery(true);
+    	    $query->select("DISTINCT «query.mainSelect»")
+    	        ->from("«query.mainTable»")
+    	        ->where("«textColumn» IS NOT NULL")
+    	        ->where("«textColumn» <> ''")
+    	        ->order("$textColumn ASC");
+
+    	    «query.createSelectAndJoins(entFrom.allExtendedReferences, entFrom.name)»
+    	    $dbo->setQuery($query);
+    	    $result = $dbo->loadObjectList();
+    	    return $result;
+    	}
+    	'''
 	}
-	'''
 	
-// private def CharSequence genAllSelectedDataForEntity() '''
-//     protected function getAllSelectedData($«entFrom.primaryKey.name», $valueColumn, $textColumn)
-//     {
-//         $dbo = Factory::getDbo();
-//         $query = $dbo->getQuery(true);
-//         $query->select(" $valueColumn AS value, $textColumn AS text,
-//         CASE WHEN «entFrom.primaryKey.name» = $«entFrom.primaryKey.name» THEN 1
-//         ELSE 0 AS checked
-//         ")->from("$this->table")->order("text AS ASC");
-//         $dbo->setQuery($query);
-//         $result = $dbo->loadObjectList();
-//         return $result;
-//     }
-// '''
-	
-	static def CharSequence genAdministratorFieldsForUserView(ExtendedComponent component)'''
-		<?php
-		«Slug.generateFileDoc(component)»
-		
-		«Slug.generateNamespace(component.name, "Administrator", "Field")»
-		
-		«Slug.generateRestrictedAccess()»
-		
-		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
-		
-		FormHelper::loadFieldClass('list');
-		
-		class ComponentuserField extends \JFormFieldList
-		{
-		    
-		    protected function getOptions()
-		    {
-		        $entity = $this->getAttribute('entity');
-		        $table = "#__«component.name.toLowerCase»_" . $entity;
-		        $dbo = Factory::getDbo();
-		        $query = $dbo->getQuery(true);
-		        $query->select("DISTINCT a.created_by AS value, b.name AS text")
-		            ->from("$table AS a ")
-		            ->leftJoin("#__users AS b ON a.created_by = b.id")
-		            ->order("b.name ASC");
-		        $dbo->setQuery($query);
-		        $dataList = $dbo->loadObjectList();
-		        return  array_merge(parent::getOptions(),$dataList);
-		    }
-		}
-	'''
-	
-	static def CharSequence genSiteFieldsForUserView(ExtendedComponent component)'''
-		<?php
-		«Slug.generateFileDoc(component)»
-		
-		«Slug.generateNamespace(component.name, "Site", "Field")»
-		
-		«Slug.generateRestrictedAccess()»
-		
-		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
-		
-		FormHelper::loadFieldClass('list');
-		
-		class ComponentuserField extends \JFormFieldList
-		{
-		    
-		    protected function getOptions()
-		    {
-		        $entity = $this->getAttribute('entity');
-		        $table = "#__«component.name.toLowerCase»_" . $entity;
-		        $dbo = Factory::getDbo();
-		        $query = $dbo->getQuery(true);
-		        $query->select("DISTINCT a.created_by AS value, b.name AS text")
-		            ->from("$table AS a ")
-		            ->leftJoin("#__users AS b ON a.created_by = b.id")
-		            ->order("b.name ASC");
-		        $dbo->setQuery($query);
-		        $dataList = $dbo->loadObjectList();
-		        return  array_merge(parent::getOptions(),$dataList);
-		    }
-		}
-	'''
-	
-	def public dogenerate(String path, IFileSystemAccess access) {
-		if (path.contains("administrator/components")) {
-			if(this.mainRef !== null)
-				access.generateFile(path+ "/"+Slug.capitalize(getnameField) +"Field.php", genAdministratorRefrenceField)
-			var File fieldEntity = new File (path+ "/"+Slug.capitalize(entFrom.name) +"Field.php")
-			if(!fieldEntity.exists){
-				access.generateFile(path+ "/"+Slug.capitalize(entFrom.name) +"Field.php", genAdministratorFieldsForEntity)
-			}
-			var File fieldUser = new File (path+ "/ComponentuserField.php")
-			if(!fieldUser.exists){
-				access.generateFile(path+ "/ComponentuserField.php", FieldsGenerator.genAdministratorFieldsForUserView(com))
-			}
-		}
-		else {
-			if(this.mainRef !== null)
-				access.generateFile(path+ "/"+Slug.capitalize(getnameField) +"Field.php", genSiteRefrenceField)
-			var File fieldEntity = new File (path+ "/"+Slug.capitalize(entFrom.name) +"Field.php")
-			if(!fieldEntity.exists){
-				access.generateFile(path+ "/"+Slug.capitalize(entFrom.name) +"Field.php", genSiteFieldsForEntity)
-			}
-			var File fieldUser = new File (path+ "/ComponentuserField.php")
-			if(!fieldUser.exists){
-				access.generateFile(path+ "/ComponentuserField.php", FieldsGenerator.genSiteFieldsForUserView(com))
-			}
-		}
-		
+	static def CharSequence genFieldsForUserView(ExtendedComponent component) {
+	    var query = new Query
+        query.mainTable = new Table('''$table''', '''a''')
+        
+        // Select create_by
+        var createdByColumn = new Column(query.mainTable.alias, '''created_by''')
+        var createdByselect = new Select(createdByColumn, '''value''')
+        query.addToMainSelect(createdByselect)
+        
+        // Join users
+        var usersJoinTable = new Table('''#__users''', '''b''')
+        var usersJoinFromColumn = new Column(query.mainTable.alias, '''created_by''')
+        var usersJoinToColumn = new Column('''b''', '''id''')
+        var usersJoin = new LeftJoin(usersJoinTable, usersJoinFromColumn, usersJoinToColumn)
+        query.joinList.add(usersJoin)
+        
+        // Select name
+        var nameColumn = new Column(usersJoinTable.alias, '''name''')
+        var nameSelect = new Select(nameColumn, '''text''')
+        query.addToMainSelect(nameSelect)
+        
+        var orderColumn = new Column('''«usersJoinTable.alias»''', '''name''')
+	   
+	    return '''
+    		<?php
+    		«Slug.generateFileDocAdmin(component)»
+    		
+    		«Slug.generateNamespace(component.name, "Administrator", "Field")»
+    		
+    		«Slug.generateRestrictedAccess()»
+    		
+    		«Slug.generateUses(newArrayList("FormHelper", "Factory"))»
+    		
+    		FormHelper::loadFieldClass('list');
+    		
+    		class JFormField«component.name.toFirstUpper»user extends JFormFieldList
+    		{
+    		    protected function getOptions()
+    		    {
+    		        $entity = $this->getAttribute('entity');
+    		        $table = "#__«component.name»_" . $entity;
+    		        $dbo = Factory::getDbo();
+    		        $query = $dbo->getQuery(true);
+    		        $query->select("DISTINCT «query.mainSelect»")
+    		               ->from("«query.mainTable»")
+    		               ->join(«usersJoin»)
+    		               ->order("«orderColumn» ASC");
+    		        $dbo->setQuery($query);
+    		        $dataList = $dbo->loadObjectList();
+    		        return array_merge(parent::getOptions(), $dataList);
+    		    }
+    		}
+    	'''
 	}
 
+	def dogenerate(String path, IFileSystemAccess access) {
+		if (this.mainRef !== null) {
+			var File field = new File(path + '''/«com.name.toLowerCase»reference.php''')
+			if (!field.exists) {
+				access.generateFile(path + '''/«com.name.toLowerCase»reference.php''', genRefrenceField)
+
+			}
+		}
+		var File fieldEntity = new File(path + "/" + entFrom.name.toLowerCase + ".php")
+		if (!fieldEntity.exists) {
+			access.generateFile(path + "/" + entFrom.name.toLowerCase + ".php", genFieldsForEntity("Administrator"))
+		}
+		var File fieldUser = new File(path + '''/«com.name.toLowerCase»user.php''')
+		if (!fieldUser.exists) {
+			access.generateFile(path + '''/«com.name.toLowerCase»user.php''', FieldsGenerator.genFieldsForUserView(com))
+		}
+	}
 }

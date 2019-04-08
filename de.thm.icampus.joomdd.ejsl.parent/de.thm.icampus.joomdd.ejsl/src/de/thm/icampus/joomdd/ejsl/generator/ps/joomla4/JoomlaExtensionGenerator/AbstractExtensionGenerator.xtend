@@ -15,7 +15,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaExtensionGenerator.
 abstract public class AbstractExtensionGenerator  {
 
 	@Accessors IFileSystemAccess2 fsa
-	@Accessors String name
+	@Accessors String name 
 	@Accessors String path = ""
 	public Extension ext
 
@@ -83,7 +83,7 @@ abstract public class AbstractExtensionGenerator  {
 		while (p.endsWith("/")) {
 			p = p.substring(0, p.length - 1);
 		}
-		generateFile(p + "/index.html", indexHtml)
+		generateFile(p.toLowerCase + "/index.html", indexHtml)
 	}
 
 	def static CharSequence indexHtml() '''

@@ -7,6 +7,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.util.ExtendedParameterGroup
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
 import java.util.ArrayList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.StaticLanguageValue
+import de.thm.icampus.joomdd.ejsl.eJSL.Section
 
 interface ExtendedComponent extends Component {
 	
@@ -18,4 +19,20 @@ interface ExtendedComponent extends Component {
 	def Component getInstance()
 	def String extensionName()
 	def boolean hasFileToload()
+	
+	/**
+	 * Get the backend section of this component.
+	 * 
+	 * @return Section
+	 */
+	def Section getBackendSection()
+	
+	/**
+     * Get the frontend section of this component.
+     * 
+     * @return Section
+     */
+	def Section getFrontendSection()
+	
+	def String getComponentHelperClassName()
 }

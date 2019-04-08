@@ -1,0 +1,120 @@
+package de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0
+
+import de.thm.icampus.joomdd.ejsl.eJSL.Component
+import de.thm.icampus.joomdd.ejsl.eJSL.Extension
+import de.thm.icampus.joomdd.ejsl.eJSL.ExtensionPackage
+import de.thm.icampus.joomdd.ejsl.eJSL.Library
+import de.thm.icampus.joomdd.ejsl.eJSL.Module
+import de.thm.icampus.joomdd.ejsl.eJSL.Plugin
+import de.thm.icampus.joomdd.ejsl.eJSL.Template
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedComponent
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedComponentImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedModuleImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedModule
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedPluginImpl
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedPlugin
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedLibrary
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedLibraryImpl
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0.JoomlaUtil.Slug
+import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedExtensionPackage
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.impl.ExtendedExtensionPackageImpl
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0.JoomlaExtensionGenerator.PackageGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0.JoomlaExtensionGenerator.ComponentGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0.JoomlaExtensionGenerator.ModuleGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0.JoomlaExtensionGenerator.PluginGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0.JoomlaExtensionGenerator.LibraryGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0.JoomlaExtensionGenerator.TemplateGenerator
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4alpha0.JoomlaExtensionGenerator.AbstractExtensionGenerator
+
+/**
+ * This class represents the interface between the JooMDD generator and the Joomla-specific generator templates. 
+ * Depending on the required extension type it calls the specific extension type classes which contain the templates 
+ * and generate the specific code.
+ * 
+ * @author Dennis Priefer, Dieudonne Timma Meyatchie
+ */
+public class ExtensionGeneratorHandler {
+    AbstractExtensionGenerator extensionsgenerator
+    IFileSystemAccess2 fsa
+    Extension ext
+    String path
+    String rootpath
+    String platformPath = "j4/"
+    String modelName
+
+    new(IFileSystemAccess2 access, Extension extens, String path, String rootPath, String modelName, Boolean addPlatformPath) {
+        fsa = access
+        ext = extens
+        this.path = path
+        this.rootpath = rootPath
+        this.modelName = modelName
+                
+        if (addPlatformPath === false)
+        {
+        	platformPath = ""
+        }
+    }
+
+    public def AbstractExtensionGenerator getExtensiongenerator() {
+        return this.extensionsgenerator
+    }
+
+    def void setExtensiongenerator(AbstractExtensionGenerator value) {
+        this.extensionsgenerator = value
+    }
+
+    def void setPath(String path) {
+        this.path = path
+    }
+
+    public def CharSequence generateExtension() {
+        switch ext {
+            ExtensionPackage: {
+                var ExtendedExtensionPackage tempext 
+                tempext = new ExtendedExtensionPackageImpl(ext as ExtensionPackage)
+                extensionsgenerator = new PackageGenerator(tempext, fsa,
+                    path + platformPath + Slug.nameExtensionBind("pkg", tempext.name).toLowerCase, rootpath)
+            }
+            Component: {
+                var ExtendedComponent tempext = new ExtendedComponentImpl(ext as Component)
+                extensionsgenerator = new ComponentGenerator(tempext, fsa,
+                    path + platformPath + this.modelName + "/new/" +
+                        Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/",
+                    path + platformPath + this.modelName + "/update/" +
+                        Slug.nameExtensionBind("com", tempext.name).toLowerCase + "/")
+            }
+            Module: {
+                var ExtendedModule tempext = new ExtendedModuleImpl(ext as Module)
+                extensionsgenerator = new ModuleGenerator(tempext, fsa,
+                    path + platformPath + Slug.nameExtensionBind("mod", tempext.name).toLowerCase)
+            }
+            Plugin: {
+                var ExtendedPlugin tempext = new ExtendedPluginImpl(ext as Plugin)
+                extensionsgenerator = new PluginGenerator(tempext, fsa,
+                    path + platformPath + Slug.nameExtensionBind("plg", tempext.name).toLowerCase)
+            }
+            Library: {
+                var ExtendedLibrary tempext = new ExtendedLibraryImpl(ext as Library)
+                extensionsgenerator = new LibraryGenerator(tempext, fsa,
+                    path + platformPath + Slug.nameExtensionBind("lib", tempext.name).toLowerCase)
+            }
+            Template: {
+                var Template tempext = ext as Template
+                extensionsgenerator = new TemplateGenerator(tempext, 
+                	fsa, path + platformPath + tempext.name.toLowerCase
+                )
+            }
+            default: {
+                System.out.println("ExtensionGeneratorHandler default")
+            }
+        }
+
+        return extensionsgenerator.generate
+    }
+
+    def setExtension(Extension extensions) {
+        this.ext = extensions;
+    }
+
+}
