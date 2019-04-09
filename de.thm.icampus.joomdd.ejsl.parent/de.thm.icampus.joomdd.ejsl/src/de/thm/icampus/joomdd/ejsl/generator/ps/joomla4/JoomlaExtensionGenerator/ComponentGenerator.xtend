@@ -264,6 +264,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
         <filename>router.php</filename>
         <folder>Controller</folder>
         <folder>Dispatcher</folder>
+        <folder>Field</folder>
         <folder>forms</folder>
 «««        <folder>Helper</folder>
 «««        <folder>helpers</folder>

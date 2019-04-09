@@ -245,10 +245,9 @@ class DetailsPageTemplateFrontEndHelper {
 	'''
 	
 	def CharSequence generateSiteModelgetTable()'''
-	public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array())
+	public function getTable($name = '«dpage.entities.get(0).name»', $prefix = '', $config = array())
 	{
-	    $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-	    return Table::getInstance($type, $prefix, $config);
+	    return parent::getTable($name, $prefix, $config);
 	}
 	'''
 	

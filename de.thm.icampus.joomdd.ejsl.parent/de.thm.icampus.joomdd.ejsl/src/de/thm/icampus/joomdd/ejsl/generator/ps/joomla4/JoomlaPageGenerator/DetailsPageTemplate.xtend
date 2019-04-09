@@ -200,7 +200,7 @@ class DetailsPageTemplate extends DynamicPageTemplate {
         {
             $app = Factory::getApplication();
             $pk = (!empty($pk)) ? $pk : $app->input->getInt("«mainEntity.primaryKey.name»");
-            $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»', 'Administrator');
+            $table = $this->getTable('«dpage.entities.get(0).name.toFirstUpper»');
             if ($pk > 0) {
                 try {
                     // Attempt to load the row.
