@@ -257,6 +257,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
     def CharSequence generateAdminController() '''
         «generateFileDoc(ipage, com)»
         
+        «Slug.generateNamespace(com.name, "Administrator", "Controller")»
+        
         «Slug.generateRestrictedAccess()»
         
         «Slug.generateUses(newArrayList("ControllerAdmin", "ResponseJson", "Factory"))»
