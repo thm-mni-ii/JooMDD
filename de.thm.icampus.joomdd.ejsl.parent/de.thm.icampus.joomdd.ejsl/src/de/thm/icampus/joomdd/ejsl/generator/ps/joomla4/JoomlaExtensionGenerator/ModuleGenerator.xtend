@@ -301,7 +301,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
             if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
                 return '''HTMLHelper::_(
                     'link',
-                    «Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")»,
+                    «Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName, "$item->")»,
                     $item->«attribute.name»
                 )'''
             }
