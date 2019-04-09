@@ -46,7 +46,7 @@ class DetailsPageTemplateFrontEndHelper {
 
 	    // Initialise variables.
 	    $app = Factory::getApplication();
-	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
+	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit');
 
 	    // Get the user data.
 	    $data = Factory::getApplication()->input->get('jform', array(), 'array');
@@ -151,7 +151,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    $editId = (int) $app->getUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»');
 	
 	    // Get the model.
-	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
+	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit');
 
 	    // Check in the item
 	    if ($editId) {
@@ -177,7 +177,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    //Checking if the user can remove object
 	    $user = Factory::getUser();
 	    if ($user->authorise('core.delete', 'com_«com.name.toLowerCase»')) {
-	        $model = $this->getModel('«dpage.name.toFirstUpper»', '«com.name.toFirstUpper»Model');
+	        $model = $this->getModel('«dpage.name.toFirstUpper»');
 	
 	        // Get the user data.
 	        $id = $app->input->getInt('«mainEntity.primaryKey.name»', 0);

@@ -69,7 +69,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	override generate() {
 		generateFile(path + name + ".xml", this.extMod.xmlContent)
 		generateFile(path + name + ".php", this.extMod.phpContent)
-		generateFile(path + "helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage))
+		generateFile('''«path»Helper/«helperClassName».php''', helperPHP(extMod, extMod.pageRef.page as DynamicPage))
 		generateFile(path + "tmpl/default.php", defaultTemplate())
 		
 		var LanguageGenerator lang = new LanguageGenerator(fsa)
@@ -123,7 +123,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    <!-- Listing of all files that should be installed for the module -->
 		    <files>
 		        <filename module="«name»">«name.toLowerCase».php</filename>
-		        <folger>Helper</folder>
+		        <folder>Helper</folder>
 		        <folder>
 		            <filename>tmpl/default.php</filename>
 		        </folder>
@@ -221,17 +221,13 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 			<?php
 			«Slug.generateFileDoc(extMod)»
-			
-			 «Slug.generateModuleNamespace(module.name, "Site", "Helper")»
-			
+
 			«Slug.generateRestrictedAccess()»
 			
 			«Slug.generateUses(newArrayList("ModuleHelper"))»
+			use Joomla\Module\«module.name.toFirstUpper»\Site\Helper\«helperClassName»;
 			
-			// Include the «extMod.name» functions only once
-			require_once __DIR__ . '/helper.php';
 			// Models, Functions should be implementated here
-			// «helperClassName»::updateReset();
 			$items = «helperClassName»::getList($params);
 			«IF section === DataAccessKinds.BACKEND_DAO || section === DataAccessKinds.FRONTEND_DAO»
 			$model = «helperClassName»::getModel();
@@ -317,6 +313,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 		<?php
 		«Slug.generateFileDoc(extMod)»
+		
+		«Slug.generateModuleNamespace(modul.name, "Site", "Helper")»
 		
 		«Slug.generateRestrictedAccess()»
 		
