@@ -29,25 +29,25 @@ class StaticLanguage {
     static StaticLanguageValue ORDERING_DESC = new StaticLanguageValue("ORDERING_DESC", "Ordering description")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEM_SAVED_SUCCESSFULLY = new StaticLanguageValue("ITEM_SAVED_SUCCESSFULLY", "The data is successfully saved.")
+    static StaticLanguageValue ITEM_SAVED_SUCCESSFULLY = new StaticLanguageValue("ITEM_SAVED_SUCCESSFULLY", "The items are successfully saved.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEM_DELETED_SUCCESSFULLY = new StaticLanguageValue("ITEM_DELETED_SUCCESSFULLY", "The data is successfully deleted.")
+    static StaticLanguageValue ITEM_DELETED_SUCCESSFULLY = new StaticLanguageValue("ITEM_DELETED_SUCCESSFULLY", "The items are successfully deleted.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue DELETE_MESSAGE = new StaticLanguageValue("DELETE_MESSAGE", "Do you want to delete the data?")
+    static StaticLanguageValue DELETE_MESSAGE = new StaticLanguageValue("DELETE_MESSAGE", "Do you want to delete the item?")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEMS_PUBLISHED = new StaticLanguageValue("ITEMS_PUBLISHED", "The data is successfully published.")
+    static StaticLanguageValue ITEMS_PUBLISHED = new StaticLanguageValue("ITEMS_PUBLISHED", "The items are successfully published.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEMS_UNPUBLISHED = new StaticLanguageValue("ITEMS_UNPUBLISHED", "The data is successfully unpublished.")
+    static StaticLanguageValue ITEMS_UNPUBLISHED = new StaticLanguageValue("ITEMS_UNPUBLISHED", "The items are successfully unpublished.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEMS_ARCHIVED = new StaticLanguageValue("ITEMS_ARCHIVED", "The data is successfully archived.")
+    static StaticLanguageValue ITEMS_ARCHIVED = new StaticLanguageValue("ITEMS_ARCHIVED", "The items are successfully archived.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEMS_TRASHED = new StaticLanguageValue("ITEMS_TRASHED", "The data is successfully trashed.")
+    static StaticLanguageValue ITEMS_TRASHED = new StaticLanguageValue("ITEMS_TRASHED", "The items are successfully trashed.")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue TEMPLATE_LAYOUT_DESC = new StaticLanguageValue("TEMPLATE_LAYOUT_DESC", "Choice a layout for the indexpage.")
