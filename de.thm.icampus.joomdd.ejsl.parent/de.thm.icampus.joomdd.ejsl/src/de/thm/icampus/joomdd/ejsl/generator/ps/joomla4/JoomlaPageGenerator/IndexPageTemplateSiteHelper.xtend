@@ -159,7 +159,7 @@ class IndexPageTemplateSiteHelper {
 		return indexpage.extendedTableColumnList.size;
 	}
 
-	public def CharSequence genViewTemplateHead()'''
+	def CharSequence genViewTemplateHead()'''
 	<form
 	    action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com",com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>"
 	    method="post"
@@ -174,19 +174,28 @@ class IndexPageTemplateSiteHelper {
 	            <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
 	        </div>
 	    <?php else : ?>
-	        <table class="table table-striped">
+	        <table class="table table-striped" id="«indexpage.name.toFirstUpper»List">
+	            <caption id="captionTable" class="sr-only">
+	                <?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("COM", com.name, "TABLE", "CAPTION"), '''Table of «indexpage.name»''')»'); ?>, <?php echo Text::_('JGLOBAL_SORTED_BY'); ?>
+	            </caption>
 	            <thead>
 	                <tr>
 	                    <?php if ((isset($this->items[0]) && property_exists($this->items[0], 'state')) && $canEdit) : ?>
-	                        <th width="1%" class="nowrap center">
-	                        <?php echo HTMLHelper::_('grid.sort', 'JSTATUS', 'a.state', $listDirn, $listOrder); ?>
+	                        <th scope="col" style="width:1%; min-width:85px" class="text-center">
+	                            <?php echo HTMLHelper::_(
+	                                'searchtools.sort',
+	                                'JSTATUS',
+	                                '«this.mainEntity.name».state',
+	                                $listDirn,
+	                                $listOrder
+	                            ); ?>
 	                        </th>
 	                        <?php $columns++;?>
 	                    <?php endif; ?>
 	                        «FOR ExtendedAttribute attr: indexpage.extendedTableColumnList»
-	                        <th class='left'>
+	                        <th scope="col">
 	                            <?php echo HTMLHelper::_(
-	                                'grid.sort',
+	                                'searchtools.sort',
 	                                '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
 	                                '«this.mainEntity.name».«attr.name»',
 	                                $listDirn,

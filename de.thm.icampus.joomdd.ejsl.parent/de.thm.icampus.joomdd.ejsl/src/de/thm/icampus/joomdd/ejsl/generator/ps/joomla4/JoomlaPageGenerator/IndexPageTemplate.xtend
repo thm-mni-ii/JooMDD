@@ -283,6 +283,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
     def CharSequence generateSiteView() '''
         «generateFileDoc(ipage.instance,com)»
         
+        «Slug.generateNamespace(com.name, "Site", "View\\" + ipage.name.toFirstUpper)»
+        
         «Slug.generateRestrictedAccess()»
         
         «Slug.generateUses(newArrayList("ViewLegacy", "Text", "Factory"))»
@@ -290,7 +292,7 @@ class IndexPageTemplate extends DynamicPageTemplate {
         /**
          * View to  Show the Data
          */
-        class «com.name.toFirstUpper»View«ipage.name.toFirstUpper» extends HtmlView
+        class HtmlView extends BaseHtmlView
         {
             protected $state;
             protected $item;

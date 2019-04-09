@@ -8,6 +8,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedStaticPage
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaEntityGenerator.FieldsGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.StaticPageTemplate
 
 /**
  * This class represents the interface between the JooMDD generator and the Joomla-specific generator templates. 
@@ -32,7 +33,7 @@ public class PageGeneratorHandler {
 	}
 	
 	private def  void generateStaticPage(ExtendedStaticPage sp) {
-		var de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.StaticPageTemplate static = new de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaPageGenerator.StaticPageTemplate(sp,com,sectionExt,pathExt,fsa)
+		var StaticPageTemplate static = new StaticPageTemplate(sp, com, sectionExt, pathExt, fsa)
 		static.generate
 	}
 
