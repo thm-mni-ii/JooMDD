@@ -11,18 +11,20 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
  * @author Dieudonne Timma, Dennis Priefer
  * 
  */
-public class StaticPageTemplate extends AbstractPageGenerator {
+class StaticPageTemplate extends AbstractPageGenerator {
 	
 	ExtendedStaticPage staticpage
 	ExtendedComponent comp
 	String sect
+	String namespaceSection
 	
 	new (ExtendedStaticPage page, ExtendedComponent component, String section, String path,IFileSystemAccess2 access ){
 		staticpage = page
 		comp = component
-		sect = section
+		this.sect = section
 		this.path = path + "/" +path + staticpage.name
 		this.fsa = access
+		this.namespaceSection = if (this.sect.equals("admin")) "Administrator" else "Site"
 	}
 	
 	def void generate() {
@@ -37,6 +39,8 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	def CharSequence generateView() '''
 	    «generateFileDoc(staticpage.instance, comp)»
 	    
+	    «Slug.generateNamespace(comp.name, this.namespaceSection, "View\\" + staticpage.name.toFirstUpper)»
+
 	    «Slug.generateRestrictedAccess()»
 	    
 	    «Slug.generateUses(newArrayList("ViewLegacy", "Text"))»
@@ -45,7 +49,7 @@ public class StaticPageTemplate extends AbstractPageGenerator {
 	     * HTML View class for the «comp.name.toFirstUpper» Component
 	     *
 	     */
-	    class «comp.name.toFirstUpper»View«staticpage.name.toFirstUpper» extends HtmlView
+	    class HtmlView extends BaseHtmlView
 	    {
 	        /**
 	         * Display the «staticpage.name.toFirstUpper» view

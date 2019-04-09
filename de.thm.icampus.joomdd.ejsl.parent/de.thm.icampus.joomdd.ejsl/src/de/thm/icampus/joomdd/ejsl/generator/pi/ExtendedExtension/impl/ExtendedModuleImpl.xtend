@@ -30,17 +30,14 @@ class ExtendedModuleImpl extends ModuleImpl implements ExtendedModule {
     }
 
     def init(ComponentReference reference) {
-        if (reference == null)
-        {
+        if (reference == null) {
             this.comName = null
             this.component = null
-        }
-        else if (reference.ref != null) {
+        } else if (reference.ref !== null) {
             this.comName = PlattformUtil.slugify(reference.ref.name)
             this.component = new ExtendedComponentImpl(reference.ref)
-        }
-        else (reference.core != null) {
-            this.comName = PlattformUtil.slugify(reference.core.getName())
+        } else {
+            this.comName = PlattformUtil.slugify(reference.core.getName)
         }
     }
 

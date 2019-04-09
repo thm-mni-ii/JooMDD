@@ -106,15 +106,16 @@ class TableGeneratorTemplate {
 		 */
 		public function bind($array, $ignore = '')
 		{
-		    $input = Factory::getApplication()->input;
+		    $app = Factory::getApplication();
+		    $input = $app->input;
 		    $task = $input->getString('task', '');
 		    if (($task == 'save' || $task == 'apply')
-		        && (!Factory::getUser()->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase» . «tName.toLowerCase».'.$array['id'])
+		        && (!$app->getIdentity()->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase» . «tName.toLowerCase».'.$array['id'])
 		        && $array['state'] == 1)) {
 		        $array['state'] = 0;
 		    }
 		    if ($array['«ent.primaryKey.name»'] == 0) {
-		        $array['created_by'] = Factory::getUser()->id;
+		        $array['created_by'] = $app->getIdentity()->id;
 		    }
 		
 		    «var referenceAttributeUniqueList = ent.allRefactoryReference.map[ r | 

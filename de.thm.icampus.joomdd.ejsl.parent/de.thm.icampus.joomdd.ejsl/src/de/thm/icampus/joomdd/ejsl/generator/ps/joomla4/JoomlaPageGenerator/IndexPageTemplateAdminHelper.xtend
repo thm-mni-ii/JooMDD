@@ -9,6 +9,7 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Select
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary code for backend view templates (index pages).
@@ -32,23 +33,7 @@ class IndexPageTemplateAdminHelper {
         mainEntity = dp.extendedEntityList.get(0)
     }
 
-    def CharSequence genAdminControllerContructer() '''
-        /**
-         * Constructor.
-         *
-         * @param   array  $config  An optional associative array of configuration settings.
-         * @return  «com.name.toFirstUpper»Controller«indexpage.name.toFirstUpper»
-         * @see     JController
-         * @since   1.6
-         * @generated
-         */
-        public function __construct($config = array(), MVCFactoryInterface $factory = null, $app = null, $input = null)
-        {
-            parent::__construct($config, $factory, $app, $input);
-        }
-    '''
-
-    public def genAdminControllerGetModel() '''
+    def genAdminControllerGetModel() '''
         /**
          * Overwrite the  getModel.
          * @since 1.6
@@ -76,6 +61,8 @@ class IndexPageTemplateAdminHelper {
             if ($result) {
                 echo new JsonResponse($result);
             }
+            
+            return $result;
         }
     '''
 
@@ -92,7 +79,6 @@ class IndexPageTemplateAdminHelper {
         {
             if (empty($config['filter_fields'])) {
                 $config['filter_fields'] = array(
-                    '«mainEntity.primaryKey.name»', '«indexpage.entities.get(0).name».«mainEntity.primaryKey.name»',
                     'ordering', '«indexpage.entities.get(0).name».ordering',
                     'state', '«indexpage.entities.get(0).name».state',
                     'created_by', '«indexpage.entities.get(0).name».created_by',
@@ -137,11 +123,11 @@ class IndexPageTemplateAdminHelper {
             
                 // Select the required fields from the table.
                 $query->select(
-                "distinct " .
-                $this->getState(
-                    'list.select',
-                    '«query.mainSelect»'
-                )
+                    "distinct " .
+                    $this->getState(
+                        'list.select',
+                        '«query.mainSelect»'
+                    )
                 );
                 «query.getListQuery(indexpage, mainEntity, '''<\/br>''', true)»
                 
@@ -178,23 +164,26 @@ class IndexPageTemplateAdminHelper {
          */
         public function saveOrdering($dataID)
         {
-            $db = Factory::getDbo();
-            $query = $db->getQuery(true);
+            $db = $this->getDbo();
         
             $statement = 'Update #__«com.name»_«indexpage.entities.get(0).name» Set `ordering` = CASE';
+
             foreach ($dataID as $order => $profileID) {
-            $statement .= ' WHEN «mainEntity.primaryKey.name» = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
+                $statement .= ' WHEN «mainEntity.primaryKey.name» = ' . intval($profileID) . ' THEN ' . (intval($order) + 1);
             }
+
             $statement .= ' ELSE ' . 0 . ' END Where «mainEntity.primaryKey.name» IN(' . implode(',', $dataID) . ')';
             $db->setQuery($statement);
             $response = $db->execute();
         
             if ($response) {
-            $query = $db->getQuery(true);
-            $query->select('`«mainEntity.primaryKey.name»`, `ordering`')->from('#__«com.name»_«indexpage.entities.get(0).name»');
-            $db->setQuery($query);
-            return $db->loadObjectList();
+                $query = $db->getQuery(true);
+                $query->select('`«mainEntity.primaryKey.name»`, `ordering`')->from('#__«com.name»_«indexpage.entities.get(0).name»');
+                $db->setQuery($query);
+
+                return $db->loadObjectList();
             }
+
             return false;
         }
     '''
@@ -210,121 +199,107 @@ class IndexPageTemplateAdminHelper {
          */
         public function display($tpl = null)
         {
-            $this->state = $this->get('State');
-            $this->items = $this->get('Items');
-            $this->pagination = $this->get('Pagination');
+            $this->state         = $this->get('State');
+            $this->items         = $this->get('Items');
+            $this->pagination    = $this->get('Pagination');
             $this->filterForm    = $this->get('FilterForm');
             $this->activeFilters = $this->get('ActiveFilters');
         
             // Check for errors.
             if (count($errors = $this->get('Errors'))) {
-                throw new Exception(implode("\n", $errors));
+                throw new \JViewGenericdataexception(implode("\n", $errors), 500);
             }
         
             $this->addToolbar();
             $this->sidebar = \JHtmlSidebar::render();
-            parent::display($tpl);
+            
+            return parent::display($tpl);
         }
     '''
 
-    def CharSequence genAdminViewAddtoolbar() '''
-        /**
-         * Add the page title and toolbar.
-         *
-         * @since 1.6
-         * @generated
-         */
-        protected function addToolbar()
-        {
-            $state = $this->get('State');
-            $canDo = «com.componentHelperClassName»::getActions('«Slug.nameExtensionBind("com", com.name)»', '«details»', $this->state->get('filter.category_id'));
-            $user  = Factory::getUser();
+    def CharSequence genAdminViewAddtoolbar() {
+        // Add static language for all the status changes.
+        Slug.addLanguage(com.languages, newArrayList("com", com.name, "N", "ITEMS", "PUBLISHED"), StaticLanguage.ITEMS_PUBLISHED.value)
+        Slug.addLanguage(com.languages, newArrayList("com", com.name, "N", "ITEMS", "UNPUBLISHED"), StaticLanguage.ITEMS_UNPUBLISHED.value)
+        Slug.addLanguage(com.languages, newArrayList("com", com.name, "N", "ITEMS", "ARCHIVED"), StaticLanguage.ITEMS_ARCHIVED.value)
+        Slug.addLanguage(com.languages, newArrayList("com", com.name, "N", "ITEMS", "TRASHED"), StaticLanguage.ITEMS_TRASHED.value)
         
-            // Get the toolbar object instance
-            $toolbar = Toolbar::getInstance('toolbar');
-
-            ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
-        
-            if ($canDo->get('core.create') || count($user->getAuthorisedCategories('com_content', 'core.create')) > 0)
+        return '''
+            /**
+             * Add the page title and toolbar.
+             *
+             * @since 1.6
+             * @generated
+             */
+            protected function addToolbar()
             {
-                $toolbar->addNew('«details».add');
-            }
-        
-            if ($canDo->get('core.edit.state') || $canDo->get('core.execute.transition'))
-            {
-                $dropdown = $toolbar->dropdownButton('status-group')
-                    ->text('JTOOLBAR_CHANGE_STATUS')
-                    ->toggleSplit(false)
-                    ->icon('fa fa-globe')
-                    ->buttonClass('btn btn-info')
-                    ->listCheck(true);
+                $canDo = «com.componentHelperClassName»::getActions(
+                    '«Slug.nameExtensionBind("com", com.name)»',
+                    '«details»',
+                    $this->state->get('filter.«mainEntity.primaryKey.name»')
+                );
 
-                $childBar = $dropdown->getChildToolbar();
+                $app    = Factory::getApplication();
+                $user   = $app->getIdentity();
+            
+                // Get the toolbar object instance
+                $toolbar = Toolbar::getInstance('toolbar');
 
-
-                if ($canDo->get('core.execute.transition'))
-                {
-                    $childBar->publish('«indexpage.name».publish')->listCheck(true);
-
-                    $childBar->unpublish('«indexpage.name».unpublish')->listCheck(true);
+                ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
+            
+                if ($canDo->get('core.create') || count($user->getAuthorisedCategories('com_content', 'core.create')) > 0) {
+                    $toolbar->addNew('«details».add');
                 }
-
-                if ($canDo->get('core.edit.state'))
-                {
-                    $childBar->standardButton('featured')
-                        ->text('JFEATURE')
-                        ->task('«indexpage.name».featured')
+            
+                if ($canDo->get('core.edit.state') || $canDo->get('core.execute.transition')) {
+                    $dropdown = $toolbar->dropdownButton('status-group')
+                        ->text('JTOOLBAR_CHANGE_STATUS')
+                        ->toggleSplit(false)
+                        ->icon('fa fa-globe')
+                        ->buttonClass('btn btn-info')
                         ->listCheck(true);
 
-                    $childBar->standardButton('unfeatured')
-                        ->text('JUNFEATURE')
-                        ->task('«indexpage.name».unfeatured')
+                    $childBar = $dropdown->getChildToolbar();
+
+                    if ($canDo->get('core.execute.transition')) {
+                        $childBar->publish('«indexpage.name».publish')->listCheck(true);
+
+                        $childBar->unpublish('«indexpage.name».unpublish')->listCheck(true);
+                    }
+
+                    if ($canDo->get('core.execute.transition')) {
+                        $childBar->archive('«indexpage.name».archive')->listCheck(true);
+                    }
+
+                    if ($canDo->get('core.execute.transition')) {
+                        $childBar->trash('«indexpage.name».trash')->listCheck(true);
+                    }
+                }
+
+                // Add a batch button
+                if ($user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name)»')
+                    && $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name)»')
+                    && $user->authorise('core.execute.transition', '«Slug.nameExtensionBind("com", com.name)»')
+                ) {
+                    $toolbar->popupButton('batch')
+                        ->text('JTOOLBAR_BATCH')
+                        ->selector('collapseModal')
                         ->listCheck(true);
                 }
 
-                if ($canDo->get('core.execute.transition'))
-                {
-                    $childBar->archive('«indexpage.name».archive')->listCheck(true);
+                if ($this->state->get('filter.condition') == «com.name.toFirstUpper»Component::CONDITION_TRASHED && $canDo->get('core.delete')) {
+                    $toolbar->delete('«indexpage.name».delete')
+                        ->text('JTOOLBAR_EMPTY_TRASH')
+                        ->message('JGLOBAL_CONFIRM_DELETE')
+                        ->listCheck(true);
                 }
 
-                if ($canDo->get('core.edit.state'))
-                {
-                    $childBar->checkin('«indexpage.name».checkin')->listCheck(true);
+                if ($user->authorise('core.admin', '«Slug.nameExtensionBind("com", com.name)»') || $user->authorise('core.options', '«Slug.nameExtensionBind("com", com.name)»')) {
+                    $toolbar->preferences('«Slug.nameExtensionBind("com", com.name)»');
                 }
-
-                if ($canDo->get('core.execute.transition'))
-                {
-                    $childBar->trash('«indexpage.name».trash')->listCheck(true);
-                }
-           }
-
-            // Add a batch button
-            if ($user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name)»')
-                && $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name)»')
-                && $user->authorise('core.execute.transition', '«Slug.nameExtensionBind("com", com.name)»'))
-            {
-                $toolbar->popupButton('batch')
-                    ->text('JTOOLBAR_BATCH')
-                    ->selector('collapseModal')
-                    ->listCheck(true);
             }
-
-            if ($this->state->get('filter.condition') == «com.name.toFirstUpper»Component::CONDITION_TRASHED && $canDo->get('core.delete'))
-            {
-                $toolbar->delete('«indexpage.name».delete')
-                    ->text('JTOOLBAR_EMPTY_TRASH')
-                    ->message('JGLOBAL_CONFIRM_DELETE')
-                    ->listCheck(true);
-            }
-
-            if ($user->authorise('core.admin', '«Slug.nameExtensionBind("com", com.name)»') || $user->authorise('core.options', '«Slug.nameExtensionBind("com", com.name)»'))
-            {
-                $toolbar->preferences('«Slug.nameExtensionBind("com", com.name)»');
-            }
-
-            $toolbar->help('JHELP_CONTENT_ARTICLE_MANAGER');
-        }
-    '''
+        '''
+    }
 
     def private CharSequence genAdminViewLayoutFilters() '''
         <?php
@@ -333,54 +308,64 @@ class IndexPageTemplateAdminHelper {
     '''
 
     def private CharSequence genAdminViewLayoutData(EList<ExtendedAttribute> column) '''
-        <?php if (empty($this->items)) : ?>
+        <?php
+        if (empty($this->items)) : ?>
             <div class="alert alert-warning">
                 <?php echo JText::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
             </div>
-        <?php else : ?>
+        <?php
+        else : ?>
             <table class="table table-striped" id="«indexpage.name.toFirstUpper»List">
+                <caption id="captionTable" class="sr-only">
+                    <?php
+                    echo Text::_('«Slug.addLanguage(com.languages, newArrayList("COM", com.name, "TABLE", "CAPTION"), '''Table of «indexpage.name»''')»'); ?>,
+                    <?php
+                    echo Text::_('JGLOBAL_SORTED_BY'); ?>
+                </caption>
                 <thead>
                     <tr>
-                        <?php if (isset($this->items[0]) && property_exists($this->items[0], 'ordering')) : ?>
-                        <th width="1%" class="nowrap center hidden-phone">
-                            <?php echo HTMLHelper::_(
-                                'grid.sort',
-                                '<i class="icon-menu-2"></i>',
-                                '«this.mainEntity.name».ordering',
-                                $listDirn,
-                                $listOrder,
-                                null,
-                                'asc',
-                                'JGRID_HEADING_ORDERING'
-                            ); ?>
-                        </th>
+                        <?php
+                        if (isset($this->items[0]) && property_exists($this->items[0], 'ordering')) : ?>
+                            <th scope="col" style="width:1%" class="text-center d-none d-md-table-cell">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    '',
+                                    '«this.mainEntity.name».ordering',
+                                    $listDirn,
+                                    $listOrder,
+                                    null,
+                                    'asc',
+                                    'JGRID_HEADING_ORDERING',
+                                    'icon-menu-2'
+                                ); ?>
+                            </th>
                         <?php $columns++; ?>
-                        <?php endif; ?>
-                        <th width="1%" class="hidden-phone">
-                            <input
-                                type="checkbox"
-                                name="checkall-toggle"
-                                value=""
-                                title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>"
-                                onclick="Joomla.checkAll(this)"
-                            />
-                        </th>
-                        <?php if (isset($this->items[0]) && property_exists($this->items[0], 'state')) : ?>
-                        <th width="1%" class="nowrap center">
-                            <?php echo HTMLHelper::_(
-                                'grid.sort',
-                                'JSTATUS',
-                                '«this.mainEntity.name».state',
-                                $listDirn,
-                                $listOrder
-                            ); ?>
-                        </th>
+                        <?php
+                        endif; ?>
+                        <td style="width:1%" class="text-center">
+                            <?php echo HTMLHelper::_('grid.checkall'); ?>
+                        </td>
+                        <?php
+                        if (isset($this->items[0]) && property_exists($this->items[0], 'state')) : ?>
+                            <th scope="col" style="width:1%; min-width:85px" class="text-center">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
+                                    'JSTATUS',
+                                    '«this.mainEntity.name».state',
+                                    $listDirn,
+                                    $listOrder
+                                ); ?>
+                            </th>
                         <?php $columns++; ?>
-                        <?php endif; ?>
+                        <?php
+                        endif; ?>
                         «FOR ExtendedAttribute attr : column»
-                            <th class='left'>
-                                <?php echo HTMLHelper::_(
-                                    'grid.sort',
+                            <th scope="col">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'searchtools.sort',
                                     '«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»',
                                     '«this.mainEntity.name».«attr.name»',
                                     $listDirn,
@@ -391,58 +376,68 @@ class IndexPageTemplateAdminHelper {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($this->items as $i => $item) :
+                    <?php
+                    foreach ($this->items as $i => $item) :
                         $ordering   = ($listOrder == '«this.mainEntity.name.toLowerCase».ordering');
                         $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                         $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                         $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                         $canChange  = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-                    ?>
-                    <tr class="row<?php echo $i % 2; ?>">
-                        <?php if (isset($this->items[0]->ordering)) : ?>
-                        <td class="order nowrap center hidden-phone">
-                            <?php if ($canChange) :
+                        ?>
+                        <tr class="row<?php echo $i % 2; ?>">
+                        <?php
+                        if (isset($this->items[0]->ordering)) : ?>
+                            <td class="order nowrap center hidden-phone">
+                            <?php
+                            if ($canChange) :
                                 $disableClassName = '';
                                 $disabledLabel    = '';
-                                if (!$saveOrder) :
-                                    $disabledLabel    = JText::_('JORDERINGDISABLED');
-                                    $disableClassName = 'inactive tip-top';
-                                endif; ?>
-                            <span class="sortable-handler hasTooltip <?php echo $disableClassName?>"
+                            if (!$saveOrder) :
+                                $disabledLabel    = JText::_('JORDERINGDISABLED');
+                                $disableClassName = 'inactive tip-top';
+                            endif; ?>
+                                <span class="sortable-handler hasTooltip <?php echo $disableClassName?>"
                                   title="<?php echo $disabledLabel?>">
                                 <i class="icon-menu"></i>
-                            </span>
-                            <input type="text"
+                                </span>
+                                <input type="text"
                                    style="display:none"
                                    name="order[]"
                                    size="5"
                                    value="<?php echo $item->ordering;?>"
                                    class="width-20 text-area-order" />
-                            <?php else : ?>
-                            <span class="sortable-handler inactive" >
-                                <i class="icon-menu"></i>
-                            </span>
-                            <?php endif; ?>
-                        </td>
-                        <?php endif; ?>
+                            <?php
+                            else : ?>
+                                <span class="sortable-handler inactive" >
+                                    <i class="icon-menu"></i>
+                                </span>
+                            <?php
+                            endif; ?>
+                            </td>
+                        <?php
+                        endif; ?>
                         <td class="center hidden-phone">
                             <?php echo HTMLHelper::_('grid.id', $i, $item->«mainEntity.primaryKey.name»); ?>
                         </td>
-                        <?php if (isset($this->items[0]->state)) : ?>
-                        <td class="center">
-                            <?php echo HTMLHelper::_(
-                                'jgrid.published',
-                                $item->state,
-                                $i,
-                                '«indexpage.name.toLowerCase».',
-                                $canChange,
-                                'cb'
-                            ); ?>
-                        </td>
-                        <?php endif; ?>
+                        <?php
+                        if (isset($this->items[0]->state)) : ?>
+                            <td class="center">
+                                <?php
+                                echo HTMLHelper::_(
+                                    'jgrid.published',
+                                    $item->state,
+                                    $i,
+                                    '«indexpage.name.toLowerCase».',
+                                    $canChange,
+                                    'cb'
+                                ); ?>
+                            </td>
+                        <?php
+                        endif; ?>
                         «genAdminModelAttributeReference(column, indexpage, com)»
-                    </tr>
-                    <?php endforeach; ?>
+                        </tr>
+                    <?php
+                    endforeach; ?>
                 </tbody>
                 <tfoot>
                     <tr>
@@ -452,7 +447,8 @@ class IndexPageTemplateAdminHelper {
                     </tr>
                 </tfoot>
             </table>
-        <?php endif; ?>
+        <?php
+        endif; ?>
     '''
 
     def getextendedTableColumnListSize() {
@@ -461,31 +457,39 @@ class IndexPageTemplateAdminHelper {
 
     def CharSequence genAdminViewLayoutForm() ''' 
         <form
-            action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&view=«indexpage.name.toLowerCase»'); ?>"
+            action="<?php echo Route::_('index.php?option=«Slug.nameExtensionBind("com", com.name)»&view=«indexpage.name»'); ?>"
             method="post"
             name="adminForm"
             id="adminForm">
-            <?php if (!empty($this->sidebar)) : ?>
-            <div id="j-sidebar-container" class="span2">
-                <?php echo $this->sidebar; ?>
-            </div>
-            <div id="j-main-container" class="span10">
-            <?php else : ?>
-            <div id="j-main-container">
-            <?php endif;?>
-                «genAdminViewLayoutFilters»
-                «genAdminViewLayoutData(indexpage.extendedTableColumnList)»
-                <input type="hidden" name="task" value="" />
-                <input type="hidden" name="boxchecked" value="0" />
-                <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-                <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
-                <?php echo HTMLHelper::_('form.token'); ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <?php
+                    if (!empty($this->sidebar)) : ?>
+                        <div id="j-sidebar-container" class="span2">
+                            <?php echo $this->sidebar; ?>
+                        </div>
+                        <div id="j-main-container" class="j-main-container span10">
+                    <?php
+                    else : ?>
+                        <div id="j-main-container" class="j-main-container">
+                    <?php
+                    endif; ?>
+                        «genAdminViewLayoutFilters»
+                        «genAdminViewLayoutData(indexpage.extendedTableColumnList)»
+                        <input type="hidden" name="task" value="" />
+                        <input type="hidden" name="boxchecked" value="0" />
+                        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
+                        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
+                        <?php echo HTMLHelper::_('form.token'); ?>
+                    </div>
+                </div>
             </div>
         </form>
     '''
 
     def CharSequence genAdminViewLayoutHeader() '''
-        $user = Factory::getUser();
+        $app = Factory::getApplication();
+        $user = $app->getIdentity();
         $userId = $user->get('id');
         $listOrder = $this->state->get('list.ordering');
         $listDirn = $this->state->get('list.direction');
@@ -493,32 +497,13 @@ class IndexPageTemplateAdminHelper {
         $saveOrder = $listOrder == '«this.mainEntity.name.toLowerCase».ordering';
         $model = $this->getModel();
         if ($saveOrder) {
-            $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component';
-            HTMLHelper::_(
-                'sortablelist.sortable',
-                '«indexpage.name.toFirstUpper»List',
-                'adminForm',
-                strtolower($listDirn),
-                $saveOrderingUrl
-            );
+            $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component&' . Session::getFormToken() . '=1';
+            HTMLHelper::_('draggablelist.draggable');
         }
         ?>
-        <script type="text/javascript">
-            Joomla.orderTable = function() {
-                table = document.getElementById("sortTable");
-                direction = document.getElementById("directionTable");
-                order = table.options[table.selectedIndex].value;
-                if (order != '<?php echo $listOrder; ?>') {
-                    dirn = 'asc';
-                } else {
-                    dirn = direction.options[direction.selectedIndex].value;
-                }
-                Joomla.tableOrdering(order, dirn, '');
-             }
-        </script>
     '''
 
-    public def CharSequence genAdminModelPopulateState() '''
+    def CharSequence genAdminModelPopulateState() '''
         /**
          * Method to auto-populate the model state.
          *
@@ -548,7 +533,7 @@ class IndexPageTemplateAdminHelper {
         {
             $dbtable = $this->entitiesRef["$linkName"]["db"];
             $attribute = $this->entitiesRef["$linkName"]["refattr"];
-            $db = Factory::getDbo();
+            $db = $this->getDbo();
             $query = $db->getQuery(true);
             $key = $this->entitiesRef["$linkName"]["foreignPk"];
             $query->select($key)
@@ -563,19 +548,22 @@ class IndexPageTemplateAdminHelper {
         }
     '''
 
-    public def CharSequence genAdminModelAttributeReference(EList<ExtendedAttribute> column,
+    def CharSequence genAdminModelAttributeReference(EList<ExtendedAttribute> column,
         ExtendedDynamicPage indexpage, ExtendedComponent com) '''
         «FOR ExtendedAttribute attr : column»
             «IF Slug.isAttributeLinked(attr, indexpage)»
                 <td>
-                <?php if ($canEdit) : ?>
+                <?php
+                if ($canEdit) : ?>
                     <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»); ?>"
                     >
                         <?php echo $this->escape($item->«attr.name»); ?>
                     </a>
-                <?php else : ?>
+                <?php
+                else : ?>
                     <?php echo $this->escape($item->«attr.name»); ?>
-                <?php endif;?>
+                <?php
+                endif;?>
                 </td>
             «ELSE»
                 <td>
@@ -584,4 +572,32 @@ class IndexPageTemplateAdminHelper {
             «ENDIF»
         «ENDFOR»
     '''
+    
+    def genAdminViewSortFields(EList<ExtendedAttribute> column) {
+        var sortFields = newArrayList(
+            ''''«this.mainEntity.name».ordering' => Text::_('JGRID_HEADING_ORDERING')''',
+            ''''«this.mainEntity.name».state' => Text::_('JSTATUS')'''
+        )
+        
+        sortFields.addAll(column.map[ attr |
+            ''''«this.mainEntity.name».«attr.name»' => Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", mainEntity.name, attr.name), attr.name)»')'''
+        ])
+        
+        return '''
+        /**
+         * Returns an array of fields the table can be sorted by
+         *
+         * @return  array  Array containing the field name to sort by as the key and display text as value
+         *
+         * @since   3.0
+         */
+        protected function getSortFields()
+        {
+            return array(
+                «sortFields.join(''',
+                ''')»
+            );
+        }
+        '''
+    }
 }

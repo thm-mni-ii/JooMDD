@@ -46,7 +46,7 @@ class DetailsPageTemplateFrontEndHelper {
 
 	    // Initialise variables.
 	    $app = Factory::getApplication();
-	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
+	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit');
 
 	    // Get the user data.
 	    $data = Factory::getApplication()->input->get('jform', array(), 'array');
@@ -151,7 +151,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    $editId = (int) $app->getUserState('com_«com.name.toLowerCase».edit.«dpage.name.toLowerCase».«mainEntity.primaryKey.name»');
 	
 	    // Get the model.
-	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit', '«com.name.toFirstUpper»Model');
+	    $model = $this->getModel('«dpage.name.toFirstUpper»Edit');
 
 	    // Check in the item
 	    if ($editId) {
@@ -177,7 +177,7 @@ class DetailsPageTemplateFrontEndHelper {
 	    //Checking if the user can remove object
 	    $user = Factory::getUser();
 	    if ($user->authorise('core.delete', 'com_«com.name.toLowerCase»')) {
-	        $model = $this->getModel('«dpage.name.toFirstUpper»', '«com.name.toFirstUpper»Model');
+	        $model = $this->getModel('«dpage.name.toFirstUpper»');
 	
 	        // Get the user data.
 	        $id = $app->input->getInt('«mainEntity.primaryKey.name»', 0);
@@ -245,10 +245,9 @@ class DetailsPageTemplateFrontEndHelper {
 	'''
 	
 	def CharSequence generateSiteModelgetTable()'''
-	public function getTable($type = '«dpage.entities.get(0).name.toFirstUpper»', $prefix = '«com.name.toFirstUpper»Table', $config = array())
+	public function getTable($name = '«dpage.entities.get(0).name»', $prefix = '', $config = array())
 	{
-	    $this->addTablePath(JPATH_COMPONENT_ADMINISTRATOR . '/tables');
-	    return Table::getInstance($type, $prefix, $config);
+	    return parent::getTable($name, $prefix, $config);
 	}
 	'''
 	
@@ -591,7 +590,7 @@ class DetailsPageTemplateFrontEndHelper {
 	        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
 	        «Slug.generateEntytiesSiteInputRefrence(ref,com)»
 	        «ENDFOR»
-	        <?php if (Factory::getUser()->authorise('core.admin', '«com.name»')) : ?>
+	        <?php if ($app->getIdentity()->authorise('core.admin', '«com.name»')) : ?>
 	            <?php echo HTMLHelper::_(
 	                'bootstrap.addTab',
 	                'myTab',
@@ -740,8 +739,8 @@ class DetailsPageTemplateFrontEndHelper {
                 $query->select(
                     "distinct " .
                     $this->getState(
-                    'list.select',
-                    '«query.mainSelect»'
+                        'list.select',
+                        '«query.mainSelect»'
                     )
                 );
                 «query.getListQuery(dpage, mainEntity, '''<\/br>''', false)»
