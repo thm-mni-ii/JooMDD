@@ -9,6 +9,7 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Select
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.StaticLanguage
 
 /**
  * This class contains the templates to generate the necessary code for backend view templates (index pages).
@@ -78,7 +79,6 @@ class IndexPageTemplateAdminHelper {
         {
             if (empty($config['filter_fields'])) {
                 $config['filter_fields'] = array(
-                    '«mainEntity.primaryKey.name»', '«indexpage.entities.get(0).name».«mainEntity.primaryKey.name»',
                     'ordering', '«indexpage.entities.get(0).name».ordering',
                     'state', '«indexpage.entities.get(0).name».state',
                     'created_by', '«indexpage.entities.get(0).name».created_by',
@@ -217,100 +217,89 @@ class IndexPageTemplateAdminHelper {
         }
     '''
 
-    def CharSequence genAdminViewAddtoolbar() '''
-        /**
-         * Add the page title and toolbar.
-         *
-         * @since 1.6
-         * @generated
-         */
-        protected function addToolbar()
-        {
-            $canDo = «com.componentHelperClassName»::getActions(
-                '«Slug.nameExtensionBind("com", com.name)»',
-                '«details»',
-                $this->state->get('filter.«mainEntity.primaryKey.name»')
-            );
-
-            $app    = Factory::getApplication();
-            $user   = $app->getIdentity();
+    def CharSequence genAdminViewAddtoolbar() {
+        // Add static language for all the status changes.
+        Slug.addLanguage(com.languages, newArrayList("com", com.name, "N", "ITEMS", "PUBLISHED"), StaticLanguage.ITEMS_PUBLISHED.value)
+        Slug.addLanguage(com.languages, newArrayList("com", com.name, "N", "ITEMS", "UNPUBLISHED"), StaticLanguage.ITEMS_UNPUBLISHED.value)
+        Slug.addLanguage(com.languages, newArrayList("com", com.name, "N", "ITEMS", "ARCHIVED"), StaticLanguage.ITEMS_ARCHIVED.value)
+        Slug.addLanguage(com.languages, newArrayList("com", com.name, "N", "ITEMS", "TRASHED"), StaticLanguage.ITEMS_TRASHED.value)
         
-            // Get the toolbar object instance
-            $toolbar = Toolbar::getInstance('toolbar');
+        return '''
+            /**
+             * Add the page title and toolbar.
+             *
+             * @since 1.6
+             * @generated
+             */
+            protected function addToolbar()
+            {
+                $canDo = «com.componentHelperClassName»::getActions(
+                    '«Slug.nameExtensionBind("com", com.name)»',
+                    '«details»',
+                    $this->state->get('filter.«mainEntity.primaryKey.name»')
+                );
 
-            ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
-        
-            if ($canDo->get('core.create') || count($user->getAuthorisedCategories('com_content', 'core.create')) > 0) {
-                $toolbar->addNew('«details».add');
-            }
-        
-            if ($canDo->get('core.edit.state') || $canDo->get('core.execute.transition')) {
-                $dropdown = $toolbar->dropdownButton('status-group')
-                    ->text('JTOOLBAR_CHANGE_STATUS')
-                    ->toggleSplit(false)
-                    ->icon('fa fa-globe')
-                    ->buttonClass('btn btn-info')
-                    ->listCheck(true);
+                $app    = Factory::getApplication();
+                $user   = $app->getIdentity();
+            
+                // Get the toolbar object instance
+                $toolbar = Toolbar::getInstance('toolbar');
 
-                $childBar = $dropdown->getChildToolbar();
-
-
-                if ($canDo->get('core.execute.transition')) {
-                    $childBar->publish('«indexpage.name».publish')->listCheck(true);
-
-                    $childBar->unpublish('«indexpage.name».unpublish')->listCheck(true);
+                ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", indexpage.name), indexpage.name)»'));
+            
+                if ($canDo->get('core.create') || count($user->getAuthorisedCategories('com_content', 'core.create')) > 0) {
+                    $toolbar->addNew('«details».add');
                 }
-
-                if ($canDo->get('core.edit.state')) {
-                    $childBar->standardButton('featured')
-                        ->text('JFEATURE')
-                        ->task('«indexpage.name».featured')
+            
+                if ($canDo->get('core.edit.state') || $canDo->get('core.execute.transition')) {
+                    $dropdown = $toolbar->dropdownButton('status-group')
+                        ->text('JTOOLBAR_CHANGE_STATUS')
+                        ->toggleSplit(false)
+                        ->icon('fa fa-globe')
+                        ->buttonClass('btn btn-info')
                         ->listCheck(true);
 
-                    $childBar->standardButton('unfeatured')
-                        ->text('JUNFEATURE')
-                        ->task('«indexpage.name».unfeatured')
+                    $childBar = $dropdown->getChildToolbar();
+
+                    if ($canDo->get('core.execute.transition')) {
+                        $childBar->publish('«indexpage.name».publish')->listCheck(true);
+
+                        $childBar->unpublish('«indexpage.name».unpublish')->listCheck(true);
+                    }
+
+                    if ($canDo->get('core.execute.transition')) {
+                        $childBar->archive('«indexpage.name».archive')->listCheck(true);
+                    }
+
+                    if ($canDo->get('core.execute.transition')) {
+                        $childBar->trash('«indexpage.name».trash')->listCheck(true);
+                    }
+                }
+
+                // Add a batch button
+                if ($user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name)»')
+                    && $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name)»')
+                    && $user->authorise('core.execute.transition', '«Slug.nameExtensionBind("com", com.name)»')
+                ) {
+                    $toolbar->popupButton('batch')
+                        ->text('JTOOLBAR_BATCH')
+                        ->selector('collapseModal')
                         ->listCheck(true);
                 }
 
-                if ($canDo->get('core.execute.transition')) {
-                    $childBar->archive('«indexpage.name».archive')->listCheck(true);
+                if ($this->state->get('filter.condition') == «com.name.toFirstUpper»Component::CONDITION_TRASHED && $canDo->get('core.delete')) {
+                    $toolbar->delete('«indexpage.name».delete')
+                        ->text('JTOOLBAR_EMPTY_TRASH')
+                        ->message('JGLOBAL_CONFIRM_DELETE')
+                        ->listCheck(true);
                 }
 
-                if ($canDo->get('core.edit.state')) {
-                    $childBar->checkin('«indexpage.name».checkin')->listCheck(true);
-                }
-
-                if ($canDo->get('core.execute.transition')) {
-                    $childBar->trash('«indexpage.name».trash')->listCheck(true);
+                if ($user->authorise('core.admin', '«Slug.nameExtensionBind("com", com.name)»') || $user->authorise('core.options', '«Slug.nameExtensionBind("com", com.name)»')) {
+                    $toolbar->preferences('«Slug.nameExtensionBind("com", com.name)»');
                 }
             }
-
-            // Add a batch button
-            if ($user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name)»')
-                && $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name)»')
-                && $user->authorise('core.execute.transition', '«Slug.nameExtensionBind("com", com.name)»')
-            ) {
-                $toolbar->popupButton('batch')
-                    ->text('JTOOLBAR_BATCH')
-                    ->selector('collapseModal')
-                    ->listCheck(true);
-            }
-
-            if ($this->state->get('filter.condition') == «com.name.toFirstUpper»Component::CONDITION_TRASHED && $canDo->get('core.delete')) {
-                $toolbar->delete('«indexpage.name».delete')
-                    ->text('JTOOLBAR_EMPTY_TRASH')
-                    ->message('JGLOBAL_CONFIRM_DELETE')
-                    ->listCheck(true);
-            }
-
-            if ($user->authorise('core.admin', '«Slug.nameExtensionBind("com", com.name)»') || $user->authorise('core.options', '«Slug.nameExtensionBind("com", com.name)»')) {
-                $toolbar->preferences('«Slug.nameExtensionBind("com", com.name)»');
-            }
-
-            $toolbar->help('JHELP_CONTENT_ARTICLE_MANAGER');
-        }
-    '''
+        '''
+    }
 
     def private CharSequence genAdminViewLayoutFilters() '''
         <?php

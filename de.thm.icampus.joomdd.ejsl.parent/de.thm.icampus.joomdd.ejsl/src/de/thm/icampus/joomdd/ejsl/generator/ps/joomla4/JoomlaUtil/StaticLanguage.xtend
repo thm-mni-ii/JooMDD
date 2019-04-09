@@ -29,16 +29,25 @@ class StaticLanguage {
     static StaticLanguageValue ORDERING_DESC = new StaticLanguageValue("ORDERING_DESC", "Ordering description")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEM_SAVED_SUCCESSFULLY = new StaticLanguageValue("ITEM_SAVED_SUCCESSFULLY", "The data are successfully saved.")
+    static StaticLanguageValue ITEM_SAVED_SUCCESSFULLY = new StaticLanguageValue("ITEM_SAVED_SUCCESSFULLY", "The data is successfully saved.")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEM_DELETED_SUCCESSFULLY = new StaticLanguageValue("ITEM_DELETED_SUCCESSFULLY", "The data are successfully deleted.")
+    static StaticLanguageValue ITEM_DELETED_SUCCESSFULLY = new StaticLanguageValue("ITEM_DELETED_SUCCESSFULLY", "The data is successfully deleted.")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue DELETE_MESSAGE = new StaticLanguageValue("DELETE_MESSAGE", "Do you want to delete the data?")
     
     @Accessors(PUBLIC_GETTER)
-    static StaticLanguageValue ITEMS_PUBLISHED = new StaticLanguageValue("ITEMS_PUBLISHED", "The data are successfully published.")
+    static StaticLanguageValue ITEMS_PUBLISHED = new StaticLanguageValue("ITEMS_PUBLISHED", "The data is successfully published.")
+    
+    @Accessors(PUBLIC_GETTER)
+    static StaticLanguageValue ITEMS_UNPUBLISHED = new StaticLanguageValue("ITEMS_UNPUBLISHED", "The data is successfully unpublished.")
+    
+    @Accessors(PUBLIC_GETTER)
+    static StaticLanguageValue ITEMS_ARCHIVED = new StaticLanguageValue("ITEMS_ARCHIVED", "The data is successfully archived.")
+    
+    @Accessors(PUBLIC_GETTER)
+    static StaticLanguageValue ITEMS_TRASHED = new StaticLanguageValue("ITEMS_TRASHED", "The data is successfully trashed.")
     
     @Accessors(PUBLIC_GETTER)
     static StaticLanguageValue TEMPLATE_LAYOUT_DESC = new StaticLanguageValue("TEMPLATE_LAYOUT_DESC", "Choice a layout for the indexpage.")

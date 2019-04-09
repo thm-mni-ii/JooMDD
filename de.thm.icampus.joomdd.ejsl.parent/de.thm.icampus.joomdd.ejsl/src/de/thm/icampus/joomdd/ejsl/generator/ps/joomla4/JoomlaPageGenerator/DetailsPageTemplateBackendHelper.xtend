@@ -203,9 +203,6 @@ class DetailsPageTemplateBackendHelper {
 
                 ToolbarHelper::cancel('«dpage.name».cancel', 'JTOOLBAR_CLOSE');
             }
-
-            ToolbarHelper::divider();
-            ToolbarHelper::help('JHELP_COMPONENTS_CONTACTS_CONTACTS_EDIT');
         }
     '''
 

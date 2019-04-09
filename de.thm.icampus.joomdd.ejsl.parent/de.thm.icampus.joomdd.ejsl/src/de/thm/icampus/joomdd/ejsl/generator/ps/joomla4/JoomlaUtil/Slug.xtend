@@ -957,28 +957,6 @@ public class Slug  {
 		return null
 	}
 	
-	static def CharSequence genLinkedInfo(DynamicPage page, Component com)'''
- 	    private $entitiesRef = array(
- 	        «FOR Link linkItem: page.links»
- 	        «switch linkItem {
-     		    InternalLink :{
-     			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
-     				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
-     				    '''
-     				    "«linkItem.name»" => array(
-     				        "db"=> "#__«com.name»_«ref.entity.name»",
-     				        "refattr" => array(
-     				            «Slug.generateAttributeAndRefernce(ref)»
-     				        ),
-     				        "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name»"
-     				    ),'''	
-     			    }				
-     		    }	
-     	    }»
-     	    «ENDFOR»
- 	    null);
- 	'''
-	
 	def static CharSequence generateAttributeAndRefernce(Reference reference) {
 		var StringBuffer result = new StringBuffer
 		

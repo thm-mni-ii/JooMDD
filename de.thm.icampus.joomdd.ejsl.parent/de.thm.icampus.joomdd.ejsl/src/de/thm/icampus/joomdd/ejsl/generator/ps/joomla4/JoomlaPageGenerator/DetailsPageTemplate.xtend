@@ -549,10 +549,10 @@ class DetailsPageTemplate extends DynamicPageTemplate {
         HTMLHelper::_('behavior.formvalidation');
         HTMLHelper::_('formbehavior.chosen', 'select');
         
-        //Load admin language file
-        $lang = Factory::getLanguage();
+        $app = Factory::getApplication();
+        $lang = $app->getLanguage();
         $lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
-        $doc = Factory::getDocument();
+        $doc = $app->getDocument();
         
         ?>
         
@@ -570,8 +570,8 @@ class DetailsPageTemplate extends DynamicPageTemplate {
         
         «Slug.generateUses(newArrayList("Factory", "ComponentHelper", "Uri", "Text", "Route"))»
         
-        //Load admin language file
-        $lang = Factory::getLanguage();
+        $app = Factory::getApplication();
+        $lang = $app->getLanguage();
         $lang->load('«Slug.nameExtensionBind("com", com.name).toLowerCase»', JPATH_ADMINISTRATOR);
         $params = ComponentHelper::getParams('«com.extensionName»');
         $image_path = $params->get('«dpage.name»_image_path');

@@ -125,7 +125,6 @@ class IndexPageTemplate extends DynamicPageTemplate {
          */
         class «ipage.name.toFirstUpper»Model extends ListModel
         {
-            «Slug.genLinkedInfo(ipage,com)»
             «helperAdmin.genAdminModelConstruct»
             «helperAdmin.genAdminModelGetItem»
             «helperAdmin.genAdminModelPopulateState»
@@ -237,9 +236,6 @@ class IndexPageTemplate extends DynamicPageTemplate {
          */
         class «ipage.name.toFirstUpper»Model extends ListModel
         {
-            «IF !ipage.entities.get(0).references.empty»
-                «Slug.genLinkedInfo(ipage,com)»
-            «ENDIF»
             «helperAdmin.genAdminModelConstruct»
             «helperAdmin.genAdminModelGetItem»
             «helperAdmin.genAdminModelGetListQuery()»
