@@ -23,7 +23,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.AbstractGenerator
 class EntityGenerator extends AbstractGenerator {
 
     EList<ExtendedEntity> entities
-    ExtendedComponent extensions
+    ExtendedComponent extendedComponent
     ExtendedDynamicPage page
     String path
     IFileSystemAccess2 fsa
@@ -36,21 +36,21 @@ class EntityGenerator extends AbstractGenerator {
         this.fsa = fsa
     }
 
-    new(ExtendedComponent extensions, 
+    new(ExtendedComponent extendedComponent, 
         String path, 
         IFileSystemAccess2 fsa, 
         boolean isBackenSection
     ) {
         this.entities = new BasicEList<ExtendedEntity>
-        this.entities = extensions.allExtendedEntity
-        this.extensions = extensions
+        this.entities = extendedComponent.allExtendedEntity
+        this.extendedComponent = extendedComponent
         this.path = path
         this.fsa = fsa
         this.isBackendSection = isBackenSection
     }
 
     new(ExtendedDynamicPage page, 
-        ExtendedComponent extensions, 
+        ExtendedComponent extendedComponent, 
         String path, 
         IFileSystemAccess2 fsa,
         boolean isBackend
@@ -60,80 +60,29 @@ class EntityGenerator extends AbstractGenerator {
         this.page = page
         this.path = path
         this.fsa = fsa
-        this.extensions = extensions
+        this.extendedComponent = extendedComponent
         this.isBackendSection = isBackend
 
     }
 
     override dogenerate() {
-        if (extensions !== null && page === null) {
-            var EntityGeneratorHandler client = new EntityGeneratorHandler(fsa)
-            client.generateJoomlaComponenteElements(extensions, path, isBackendSection)
+        var EntityGeneratorHandler client = new EntityGeneratorHandler(fsa)
+        
+        if (extendedComponent !== null && page === null) {
+            client.generateJoomlaComponenteElements(this.extendedComponent.allExtendedEntity, this.extendedComponent, this.path, this.isBackendSection)
         } else if (page !== null) {
             var EList<ExtendedEntity> pageEntities = PlattformUtil.getAllReferenceOfEntity(
                 page.extendedEntityList.get(0)
             )
             pageEntities.add(page.extendedEntityList.get(0))
             
-            var JoomlaEntityGenerator joomExt
-            joomExt = new JoomlaEntityGenerator(pageEntities, extensions.name, true)
-            joomExt.dogenerate(path + "sql", fsa)
-           
-            for (ExtendedEntity ent : pageEntities) {
-                var TableGeneratorTemplate table = new TableGeneratorTemplate(extensions, ent)
-                table.dogenerate(path + "Table", fsa)
-            }
-            
-            for (ExtendedEntity ent : pageEntities) {
-                var FieldsGenerator fieldsEntity = new FieldsGenerator(extensions, ent)
-                fieldsEntity.dogenerate(path + "Field", fsa)
-                for (ExtendedReference ref : ent.allExtendedReferences) {
-                    switch ref.upper {
-                        case "1": {
-                            var FieldsGenerator fields = new FieldsGenerator(ref, extensions, ent)
-                            fields.dogenerate(path + "Field/", fsa)
-                        }
-                        case "*",
-                        case "-1": {
-                            var FieldsCardinalityGenerator fields
-                            fields = new FieldsCardinalityGenerator(ref, extensions, ent)
-                            fields.dogenerate(path + "Field/", fsa)
-                        }
-                    }
-                }
-            }
+            client.generateJoomlaComponenteElements(pageEntities, this.extendedComponent, this.path, this.isBackendSection)
         } else {
             var Component comp = EJSLFactory.eINSTANCE.createComponent
             comp.name = "ExtensionsName"
             var ExtendedComponent extComp = new ExtendedComponentImpl(comp)
-
-            var JoomlaEntityGenerator joomExt
-            joomExt = new JoomlaEntityGenerator(entities, "<Extensions_name>", false)
-            joomExt.dogenerate(path + "sql", fsa)
             
-            for (ExtendedEntity ent: entities) {
-                var TableGeneratorTemplate table = new TableGeneratorTemplate(extComp, ent)
-                table.dogenerate(path + "Table", fsa)
-            }
-            
-            for (ExtendedEntity ent: entities) {
-                var FieldsGenerator fieldsEntity = new FieldsGenerator(extComp, ent)
-                fieldsEntity.dogenerate(path + "Field/", fsa)
-                for (ExtendedReference ref : ent.allExtendedReferences) {
-                    switch ref.upper {
-                        case "1": {
-                            var FieldsGenerator fields = new FieldsGenerator(ref, extComp, ent)
-                            fields.dogenerate(path + "Field/", fsa)
-                        }
-                        case "*",
-                        case "-1": {
-                            var FieldsCardinalityGenerator fields
-                            fields = new FieldsCardinalityGenerator(ref, extComp, ent)
-                            fields.dogenerate(path + "Field/", fsa)
-                        }
-                    }
-                }
-            }
+            client.generateJoomlaComponenteElements(this.entities, extComp, this.path, this.isBackendSection)
         }
     }
     

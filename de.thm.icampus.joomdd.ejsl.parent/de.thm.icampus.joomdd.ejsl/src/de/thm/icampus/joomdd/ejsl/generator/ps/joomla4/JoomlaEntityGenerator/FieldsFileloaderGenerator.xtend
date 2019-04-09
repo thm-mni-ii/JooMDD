@@ -12,13 +12,17 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.Slug
  * @author Dieudonne Timma, Dennis Priefer
  */
 class FieldsFileloaderGenerator extends FieldsGenerator {
+    
+    String section
 	
-	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
-		super(ref, component, from)
+	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from, String section) {
+		super(ref, component, from, section)
+		this.section = section
 	}
 	
-	new(ExtendedComponent component) {
-		super(component)
+	new(ExtendedComponent component, String section) {
+		super(component, section)
+		this.section = section
 	}
 	
 	/**
@@ -28,7 +32,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		<?php
 		«Slug.generateFileDocAdmin(com)»
 		
-		«Slug.generateNamespace(com.name, "Administrator", "Field")»
+		«Slug.generateNamespace(com.name, this.section, "Field")»
 		
 		«Slug.generateRestrictedAccess()»
 		
@@ -39,7 +43,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class JFormFieldFileloader extends FormField
+		class FileloaderField extends FormField
 		{
 		    protected function getInput()
 		    {
@@ -70,7 +74,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		<?php
 		«Slug.generateFileDocAdmin(com)»
 
-	    «Slug.generateNamespace(com.name, "Administrator", "Field")»
+	    «Slug.generateNamespace(com.name, this.section, "Field")»
 
 		«Slug.generateRestrictedAccess()»
 
@@ -81,7 +85,7 @@ class FieldsFileloaderGenerator extends FieldsGenerator {
 		 * The parameter for configuration of the path, type, or format are
 		 * in the manifest file.
 		 */
-		class JFormFieldImageloader extends FormField
+		class ImageloaderField extends FormField
 		{
 		    protected function getInput()
 		    {

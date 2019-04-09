@@ -187,7 +187,7 @@ public abstract class DynamicPageTemplate extends AbstractPageGenerator {
      */
     def CharSequence xmlAdminFields(ExtendedDynamicPage page, ExtendedComponent component, String name) '''
         <?xml version="1.0" encoding="utf-8"?>
-        <form>
+        <form addfieldprefix="Joomla\Component\«component.name.toFirstUpper»\Administrator\Field">
             <field name="created_by" type="hidden" default="" 
                 label="JGLOBAL_FIELD_CREATED_BY_LABEL"
                 description="JGLOBAL_FIELD_CREATED_BY_DESC"  /> 

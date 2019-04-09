@@ -19,9 +19,11 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedRefer
 class FieldsCardinalityGenerator extends FieldsGenerator {
     
 	ExtendedReference foreignReference
+	String section
 	
-	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from) {
-		super(ref, component, from)
+	new(ExtendedReference ref, ExtendedComponent component, ExtendedEntity from, String section) {	    
+		super(ref, component, from, section)
+        this.section = section
 		setForeignElemente()
 	}
 	
@@ -29,17 +31,17 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		foreignReference = new ExtendedReferenceImpl((mainRef.entity.references.filter[t | t.entity.name != entFrom.instance.name]).get(0), mainRef.entity)
 	}
 	
-	public override CharSequence genRefrenceField()'''
+	override CharSequence genRefrenceField()'''
 		<?php
 		«Slug.generateFileDocAdmin(com)»
 		
-		«Slug.generateNamespace(com.name, "Administrator", "Field")»
+		«Slug.generateNamespace(com.name, this.section, "Field")»
 		
 		«Slug.generateRestrictedAccess()»
 		
 		«Slug.generateUses(newArrayList("Text", "Uri", "FormField", "Factory"))»
 		
-		class JFormField«nameField.toFirstUpper» extends FormField
+		class «nameField.toFirstUpper»Field extends FormField
 		{
 		    protected $referenceStruct = array("table" => "«Slug.databaseName(com.name, entFrom.name)»",
 		        "mappingTable"=> "«Slug.databaseName(com.name,mainRef.entity.name)»",
@@ -227,7 +229,7 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	'''
 	override dogenerate(String path, IFileSystemAccess access) {
 		if(this.mainRef !== null) {
-            access.generateFile(newArrayList(path, getnameField.toLowerCase + ".php").join("/"), genRefrenceField)
+            access.generateFile(newArrayList(path, getnameField + "Field.php").join("/"), genRefrenceField)
 		}
 	}
 }
