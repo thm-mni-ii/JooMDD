@@ -1216,35 +1216,39 @@ public class Slug  {
 	   var otherEntity = Slug.getOtherEntityToMapping(reference)   
 	    
 	   return '''
-    	    <?php if (Factory::getUser()->authorise('core.admin', '«com.name»')) : ?>
-    	    <?php echo HTMLHelper::_(
-    	        'bootstrap.addTab',
-    	        'myTab',
-    	        '«otherEntity.name»',
-    	        Text::_('«languageKey»', true)
-    	    ); ?>
-    	    <div class="control-group">
-    	        <div class="control-label">
-    	            <?php echo $this->form->getLabel('«reference.entity.name»_id'); ?>
+    	    <?php
+    	    if ($app->getIdentity()->authorise('core.admin', '«com.name»')) : ?>
+    	    <?php
+    	        echo HTMLHelper::_(
+    	            'bootstrap.addTab',
+    	            'myTab',
+    	            '«otherEntity.name»',
+    	            Text::_('«languageKey»', true)
+    	        ); ?>
+    	        <div class="control-group">
+    	            <div class="control-label">
+    	                <?php echo $this->form->getLabel('«reference.entity.name»_id'); ?>
+    	            </div>
+    	            <div class="controls">
+    	                <?php echo $this->form->getInput('«reference.entity.name»_id'); ?>
+    	            </div>
     	        </div>
-    	        <div class="controls">
-    	            <?php echo $this->form->getInput('«reference.entity.name»_id'); ?>
+    	        «FOR attribute: Slug.getOtherAttribute(reference)»
+    	        <div class="control-group">
+    	            <div class="controls">
+    	                <?php echo $this->form->getInput('«attribute.name»'); ?>
+    	            </div>
     	        </div>
-    	    </div>
-    	    «FOR attribute: Slug.getOtherAttribute(reference)»
-    	    <div class="control-group">
-    	        <div class="controls">
-    	            <?php echo $this->form->getInput('«attribute.name»'); ?>
-    	        </div>
-    	    </div>
-    	    «ENDFOR»
-    	    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-    	    <?php endif; ?>
+    	        «ENDFOR»
+    	    <?php
+    	        echo HTMLHelper::_('bootstrap.endTab'); ?>
+    	    <?php
+    	    endif; ?>
     	'''
     }
 	
 	def static CharSequence generateEntytiesSiteInputRefrence(ExtendedReference reference,ExtendedComponent com) '''
-		<?php if (Factory::getUser()->authorise('core.admin', '«com.name»')) : ?>
+		<?php if ($app->getIdentity()->authorise('core.admin', '«com.name»')) : ?>
 		<?php echo HTMLHelper::_(
 		    'bootstrap.addTab',
 		    'myTab',

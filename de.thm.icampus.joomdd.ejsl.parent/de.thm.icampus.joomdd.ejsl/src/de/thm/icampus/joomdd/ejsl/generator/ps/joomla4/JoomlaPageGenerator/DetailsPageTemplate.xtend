@@ -122,9 +122,8 @@ class DetailsPageTemplate extends DynamicPageTemplate {
         
         «Slug.generateRestrictedAccess()»
         
-        «Slug.generateUses(newArrayList("ControllerForm", "Text", "ComponentHelper", "HelperMedia", "Route", "Factory", "MVCFactoryInterface"))»
+        «Slug.generateUses(newArrayList("ControllerForm"))»
         
-        jimport('joomla.filesystem.file');
         /**
          * «dpage.name.toFirstUpper» controller class.
          * @generated
@@ -411,8 +410,8 @@ class DetailsPageTemplate extends DynamicPageTemplate {
         HTMLHelper::_('formbehavior.chosen', 'select');
         HTMLHelper::_('behavior.keepalive');
         
-        // Import CSS
-        $document = Factory::getDocument();
+        $app        = Factory::getApplication();
+        $document   = $app->getDocument();
         $document->addStyleSheet('components/«Slug.nameExtensionBind("com", com.name.toLowerCase)»/assets/css/«com.name.toLowerCase».css');
         ?>
         

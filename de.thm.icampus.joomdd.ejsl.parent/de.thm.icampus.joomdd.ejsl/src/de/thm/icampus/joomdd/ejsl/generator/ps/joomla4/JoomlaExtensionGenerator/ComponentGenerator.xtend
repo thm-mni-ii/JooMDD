@@ -738,8 +738,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        parent::__construct($config, $factory, $app, $input);
 		
 		        // Guess the Text message prefix. Defaults to the option.
-		        if (empty($this->extension))
-		        {
+		        if (empty($this->extension)) {
 		            $this->extension = $this->input->get('extension', '«this.name»');
 		        }
 		    }
@@ -766,8 +765,7 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		        $id      = $this->input->getInt('id');
 		
 		        // Get and render the view.
-		        if ($view = $this->getView($vName, $vFormat))
-		        {
+		        if ($view = $this->getView($vName, $vFormat)) {
 		            // Get the model for the view.
 		            $model = $this->getModel($vName, 'Administrator', array('name' => $vName . '.' . substr($this->extension, 4)));
 		

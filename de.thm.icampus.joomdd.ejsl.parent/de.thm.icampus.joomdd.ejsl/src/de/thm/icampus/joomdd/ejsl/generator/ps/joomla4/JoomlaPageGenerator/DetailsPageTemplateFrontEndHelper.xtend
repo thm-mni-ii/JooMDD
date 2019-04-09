@@ -590,7 +590,7 @@ class DetailsPageTemplateFrontEndHelper {
 	        «FOR ExtendedReference ref: dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
 	        «Slug.generateEntytiesSiteInputRefrence(ref,com)»
 	        «ENDFOR»
-	        <?php if (Factory::getUser()->authorise('core.admin', '«com.name»')) : ?>
+	        <?php if ($app->getIdentity()->authorise('core.admin', '«com.name»')) : ?>
 	            <?php echo HTMLHelper::_(
 	                'bootstrap.addTab',
 	                'myTab',
@@ -739,8 +739,8 @@ class DetailsPageTemplateFrontEndHelper {
                 $query->select(
                     "distinct " .
                     $this->getState(
-                    'list.select',
-                    '«query.mainSelect»'
+                        'list.select',
+                        '«query.mainSelect»'
                     )
                 );
                 «query.getListQuery(dpage, mainEntity, '''<\/br>''', false)»

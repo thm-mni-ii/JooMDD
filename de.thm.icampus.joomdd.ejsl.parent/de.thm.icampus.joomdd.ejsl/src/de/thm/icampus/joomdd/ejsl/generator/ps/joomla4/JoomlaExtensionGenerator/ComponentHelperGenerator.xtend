@@ -81,7 +81,8 @@ class ComponentHelperGenerator extends AbstractExtensionGenerator {
 
             $result = new CMSObject;
 
-            $user = Factory::getUser();
+            $app    = Factory::getApplication();
+            $user   = $app->getIdentity();
 
             $actions = Access::getActionsFromFile(
                 JPATH_ADMINISTRATOR . '/components/' . $component . '/access.xml', '/access/section[@name="component"]/'

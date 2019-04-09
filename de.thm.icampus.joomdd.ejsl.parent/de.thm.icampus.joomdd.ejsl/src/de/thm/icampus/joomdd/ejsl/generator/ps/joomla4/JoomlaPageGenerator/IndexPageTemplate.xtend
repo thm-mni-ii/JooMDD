@@ -213,13 +213,10 @@ class IndexPageTemplate extends DynamicPageTemplate {
         
         «Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html", "Text"))»
         
-        HTMLHelper::addIncludePath(JPATH_COMPONENT.'/helpers/html');
         HTMLHelper::_('bootstrap.tooltip');
         HTMLHelper::_('behavior.multiselect');
         HTMLHelper::_('formbehavior.chosen', 'select');
         
-        // Import CSS
-        $document = Factory::getDocument();
         $columns = «helperAdmin.getextendedTableColumnListSize + 1»;
         «helperAdmin.genAdminViewLayoutHeader»
         «helperAdmin.genAdminViewLayoutForm»

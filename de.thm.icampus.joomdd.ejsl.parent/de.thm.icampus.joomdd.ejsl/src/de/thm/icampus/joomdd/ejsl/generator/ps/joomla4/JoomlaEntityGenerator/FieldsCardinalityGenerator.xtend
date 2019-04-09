@@ -73,11 +73,14 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 	def private genGetInput()'''
 		protected function getInput()
 		{
-		    $html = array();
-		    $document = Factory::getDocument();
-		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setmultipleforeignkeys.js');
-		    $input = Factory::getApplication()->input;
+		    $html                         = array();
+		    $app                          = Factory::getApplication();
+		    $document                     = $app->getDocument();
+		    $input                        = $app->input;
 		    $«entFrom.primaryKey.name» = intval($input->get('«entFrom.primaryKey.name»'));
+		    
+		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setmultipleforeignkeys.js');
+
 		    if (empty($«entFrom.primaryKey.name»)) {
 		        $alldata = $this->getAllData();
 		        $html[] = "<select

@@ -70,7 +70,7 @@ class ExtentionScriptGenerator {
 		    $params->set('upload_maxsize', 10);
 		    $params->set(
 		        'accept_format',
-		        "bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png," +
+		        "bmp,csv,doc,gif,ico,jpg,jpeg,odg,odp,ods,odt,pdf,png," .
 		        "ppt,swf,txt,xcf,xls,BMP,CSV,DOC,GIF,ICO,JPG,JPEG,ODG,ODP,ODS,ODT,PDF,PNG,PPT,SWF,TXT,XCF,XLS"
 		    );
 		    «FOR ExtendedPage pag: com.allExtendedPage.filter[t | t.extendedDynamicPageInstance!==null && 

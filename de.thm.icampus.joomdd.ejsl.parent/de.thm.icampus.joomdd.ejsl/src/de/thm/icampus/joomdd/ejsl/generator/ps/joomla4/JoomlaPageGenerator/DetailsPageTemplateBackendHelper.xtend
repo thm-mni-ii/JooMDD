@@ -36,7 +36,7 @@ class DetailsPageTemplateBackendHelper {
             if (empty($table->«mainEntity.primaryKey.name»)) {
                 // Set ordering to the last item if not set
                 if ($table->ordering === '') {
-                    $db = Factory::getDbo();
+                    $db = $this->getDbo();
                     $query = $db->getQuery(true);
                     $query->select("MAX(ordering)")->from("#__«com.name»_«mainEntity.name»");
                     $db->setQuery($query);
@@ -144,9 +144,10 @@ class DetailsPageTemplateBackendHelper {
          */
         protected function addToolbar()
         {
-            Factory::getApplication()->input->set('hidemainmenu', true);
-            
-            $user       = Factory::getUser();
+            $app        = Factory::getApplication();
+            $app->input->set('hidemainmenu', true);
+
+            $user       = $app->getIdentity();
             $userId     = $user->id;
             $isNew      = ($this->item->«mainEntity.primaryKey.name» == 0);
             $checkedOut = !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
@@ -157,48 +158,41 @@ class DetailsPageTemplateBackendHelper {
             ToolBarHelper::title(Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»'), '«dpage.name.toLowerCase».png');
         
             // Build the actions for new and existing records.
-            if ($isNew)
-            {
+            if ($isNew) {
                 // For new records, check the create permission.
-                if ($canDo->get('core.create'))
-                {
+                if ($canDo->get('core.create')) {
                     ToolbarHelper::apply('«dpage.name».apply');
         
-                        ToolbarHelper::saveGroup(
-                            [
-                                ['save', '«dpage.name».save'],
-                                ['save2new', '«dpage.name».save2new']
-                            ],
-                            'btn-success'
-                        );
-                    }
-        
-                    ToolbarHelper::cancel('«dpage.name».cancel');
+                    ToolbarHelper::saveGroup(
+                        [
+                            ['save', '«dpage.name».save'],
+                            ['save2new', '«dpage.name».save2new']
+                        ],
+                        'btn-success'
+                    );
                 }
-            else
-            {
+
+                ToolbarHelper::cancel('«dpage.name».cancel');
+            } else {
                 // Since it's an existing record, check the edit permission, or fall back to edit own if the owner.
                 $itemEditable = $canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_by == $userId);
 
                 $toolbarButtons = [];
 
                 // Can't save the record if it's checked out and editable
-                if (!$checkedOut && $itemEditable)
-                {
+                if (!$checkedOut && $itemEditable) {
                     ToolbarHelper::apply('«dpage.name».apply');
 
                     $toolbarButtons[] = ['save', '«dpage.name».save'];
 
                     // We can save this record, but check the create permission to see if we can return to make a new one.
-                    if ($canDo->get('core.create'))
-                    {
+                    if ($canDo->get('core.create')) {
                         $toolbarButtons[] = ['save2new', '«dpage.name».save2new'];
                     }
                 }
 
                 // If checked out, we can still save
-                if ($canDo->get('core.create'))
-                {
+                if ($canDo->get('core.create')) {
                     $toolbarButtons[] = ['save2copy', '«dpage.name».save2copy'];
                 }
 
@@ -227,7 +221,7 @@ class DetailsPageTemplateBackendHelper {
             $this->form = $this->get('Form');
         
             if (count($errors = $this->get('Errors'))) {
-            throw new Exception(implode("\n", $errors));
+                throw new Exception(implode("\n", $errors));
             }
         
             $this->addToolbar();
@@ -245,7 +239,8 @@ class DetailsPageTemplateBackendHelper {
               class="form-validate">
         
             <div class="form-horizontal">
-                <?php echo HTMLHelper::_(
+                <?php
+                echo HTMLHelper::_(
                     'bootstrap.startTabSet',
                     'myTab',
                     array(
@@ -253,11 +248,12 @@ class DetailsPageTemplateBackendHelper {
                     )
                 ); ?>
         
-                <?php echo HTMLHelper::_(
-            'bootstrap.addTab',
-            'myTab',
-            'general',
-            Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)
+                <?php
+                echo HTMLHelper::_(
+                    'bootstrap.addTab',
+                    'myTab',
+                    'general',
+                    Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "TITLE", dpage.name), dpage.name)»', true)
                 ); ?>
                 <div class="row-fluid">
                     <div class="span10 form-horizontal">
@@ -280,14 +276,16 @@ class DetailsPageTemplateBackendHelper {
                             «IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
                                 <input type="hidden" id="jform[title]" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
                             «ENDIF»
-                            <input type="hidden" name="jform[checked_out]" value="<?php
+                            <input type="hidden" name="jform[checked_out]" value="
+                            <?php
                             if (isset($this->item->checked_out)) {
                                 echo $this->item->checked_out;
                             } else {
                                 echo Factory::getUser()->id;
                             } ?>"
                             />
-                            <input type="hidden" name="jform[checked_out_time]" value="<?php
+                            <input type="hidden" name="jform[checked_out_time]" value="
+                            <?php
                             if (isset($this->item->checked_out_time)) {
                                 echo $this->item->checked_out_time;
                             } else {
@@ -295,33 +293,43 @@ class DetailsPageTemplateBackendHelper {
                             } ?>"
                             />    
                             <?php
-                            if (empty($this->item->created_by)) {?>
-                            <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
-                            <?php } else { ?>
-                            <input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
-                            <?php } ?>
+                            if (empty($this->item->created_by)) { ?>
+                                <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
+                            <?php
+                            } else { ?>
+                                <input type="hidden" name="jform[created_by]" value="<?php echo $this->item->created_by; ?>" />
+                            <?php
+                            } ?>
                             «Slug.generateEntytiesInputAttribute(dpage.extendedEditedFieldsList, dpage.extendedEntityList.get(0))»
                         </fieldset>
                     </div>
                 </div>
-                <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+                <?php
+                    echo HTMLHelper::_('bootstrap.endTab'); ?>
                 «FOR ExtendedReference ref : dpage.extendedEntityList.get(0).allExtendedReferences.filter[t | t.upper.equalsIgnoreCase("*") || t.upper.equalsIgnoreCase("-1")]»
                     «Slug.generateEntytiesBackendInputRefrence(ref,com)»
                 «ENDFOR» 
-                <?php if (Factory::getUser()->authorise('core.admin', '«com.name.toLowerCase»')) : ?>
-                    <?php echo HTMLHelper::_(
+                <?php
+                if ($app->getIdentity()->authorise('core.admin', '«com.name.toLowerCase»')) : ?>
+                    <?php
+                    echo HTMLHelper::_(
                         'bootstrap.addTab',
                         'myTab',
                         'permissions',
                         JText::_('JGLOBAL_ACTION_PERMISSIONS_LABEL', true)
                     ); ?>
-                    <?php echo $this->form->getInput('rules'); ?>
-                    <?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-                <?php endif; ?>
+                    <?php
+                    echo $this->form->getInput('rules'); ?>
+                    <?php
+                    echo HTMLHelper::_('bootstrap.endTab'); ?>
+                <?php
+                endif; ?>
         
-                <?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
+                <?php
+                echo HTMLHelper::_('bootstrap.endTabSet'); ?>
                 <input type="hidden" name="task" value="" />
-                <?php echo HTMLHelper::_('form.token'); ?>
+                <?php
+                echo HTMLHelper::_('form.token'); ?>
             </div>
         </form>
     '''

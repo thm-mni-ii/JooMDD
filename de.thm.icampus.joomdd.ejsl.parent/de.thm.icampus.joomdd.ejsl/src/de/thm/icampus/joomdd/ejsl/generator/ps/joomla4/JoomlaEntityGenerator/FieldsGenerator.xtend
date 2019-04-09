@@ -147,17 +147,19 @@ class FieldsGenerator {
 		 */
 		protected function getInput()
 		{
-		    $tempsTable = str_replace("'", "\"", $this->getAttribute("tables"));
-		    $tempsAttr = str_replace("'", "\"", $this->getAttribute("referenced_keys"));
-		    $this->referenceStruct = json_decode($tempsTable);
+		    $tempsTable               = str_replace("'", "\"", $this->getAttribute("tables"));
+		    $tempsAttr                = str_replace("'", "\"", $this->getAttribute("referenced_keys"));
+		    $this->referenceStruct    = json_decode($tempsTable);
 		    $this->keysAndForeignKeys = json_decode($tempsAttr, true);
-		    $html = array();
-		    $document = Factory::getDocument();
+		    $html                     = array();
+		    $app                      = Factory::getApplication();
+		    $document                 = $app->getDocument();
+		    $input                    = $app->input;
+		    $this->primary_key        = $this->getAttribute("primary_key_name");
+		    $id                       = intval($input->get($this->primary_key));
+
 		    $document->addScript(Uri::root() . '/media/«Slug.nameExtensionBind("com", com.name).toLowerCase»/js/setforeignkeys.js');
-		    $input = Factory::getApplication()->input;
-		    
-		    $this->primary_key = $this->getAttribute("primary_key_name");
-		    $id = intval($input->get($this->primary_key));
+
 		    if (empty($id)) {
 		        $alldata = $this->getAllData();
 		        $html[] = "<select
@@ -308,15 +310,18 @@ class FieldsGenerator {
     	{
     	    $dbo = Factory::getDbo();
     	    $query = $dbo->getQuery(true);
-    	    $query->select("DISTINCT «query.mainSelect»")
-    	        ->from("«query.mainTable»")
-    	        ->where("«textColumn» IS NOT NULL")
-    	        ->where("«textColumn» <> ''")
-    	        ->order("$textColumn ASC");
+    	    $query->select(
+    	        "DISTINCT «query.mainSelect»"
+    	    )
+    	    ->from("«query.mainTable»")
+    	    ->where("«textColumn» IS NOT NULL")
+    	    ->where("«textColumn» <> ''")
+    	    ->order("$textColumn ASC");
 
     	    «query.createSelectAndJoins(entFrom.allExtendedReferences, entFrom.name)»
     	    $dbo->setQuery($query);
     	    $result = $dbo->loadObjectList();
+
     	    return $result;
     	}
     	'''
@@ -365,12 +370,16 @@ class FieldsGenerator {
     		        $table = "#__«component.name»_" . $entity;
     		        $dbo = Factory::getDbo();
     		        $query = $dbo->getQuery(true);
-    		        $query->select("DISTINCT «query.mainSelect»")
-    		               ->from("«query.mainTable»")
-    		               ->join(«usersJoin»)
-    		               ->order("«orderColumn» ASC");
+    		        $query->select(
+    		            "DISTINCT «query.mainSelect»"
+    		        )
+    		        ->from("«query.mainTable»")
+    		        ->join(«usersJoin»)
+    		        ->order("«orderColumn» ASC");
+    		        
     		        $dbo->setQuery($query);
     		        $dataList = $dbo->loadObjectList();
+
     		        return array_merge(parent::getOptions(), $dataList);
     		    }
     		}
