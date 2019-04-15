@@ -378,7 +378,6 @@ class IndexPageTemplateAdminHelper {
                 <tbody>
                     <?php
                     foreach ($this->items as $i => $item) :
-                        $ordering   = ($listOrder == '«this.mainEntity.name.toLowerCase».ordering');
                         $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                         $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                         $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
@@ -478,8 +477,6 @@ class IndexPageTemplateAdminHelper {
                         «genAdminViewLayoutData(indexpage.extendedTableColumnList)»
                         <input type="hidden" name="task" value="" />
                         <input type="hidden" name="boxchecked" value="0" />
-                        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-                        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
                         <?php echo HTMLHelper::_('form.token'); ?>
                     </div>
                 </div>
