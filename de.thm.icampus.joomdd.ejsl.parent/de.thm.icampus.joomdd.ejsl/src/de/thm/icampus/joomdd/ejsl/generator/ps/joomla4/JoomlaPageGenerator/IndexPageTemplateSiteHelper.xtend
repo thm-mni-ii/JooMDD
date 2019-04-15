@@ -139,7 +139,6 @@ class IndexPageTemplateSiteHelper {
 		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 		HTMLHelper::_('bootstrap.tooltip');
 		HTMLHelper::_('behavior.multiselect');
-		HTMLHelper::_('formbehavior.chosen', 'select');
 		
 		$user = Factory::getUser();
 		$userId = $user->get('id');

@@ -214,7 +214,6 @@ class IndexPageTemplate extends DynamicPageTemplate {
         
         HTMLHelper::_('bootstrap.tooltip');
         HTMLHelper::_('behavior.multiselect');
-        HTMLHelper::_('formbehavior.chosen', 'select');
         
         $columns = «helperAdmin.getextendedTableColumnListSize + 1»;
         «helperAdmin.genAdminViewLayoutHeader»
