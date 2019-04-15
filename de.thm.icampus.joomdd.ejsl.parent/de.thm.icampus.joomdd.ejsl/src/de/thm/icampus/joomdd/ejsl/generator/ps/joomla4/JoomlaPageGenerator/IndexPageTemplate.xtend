@@ -210,10 +210,11 @@ class IndexPageTemplate extends DynamicPageTemplate {
     def CharSequence generateAdminViewLayoutBackend() ''' 
         «generateFileDoc(ipage,com)»
         
-        «Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html", "Text"))»
+        «Slug.generateUses(newArrayList("LayoutHelper", "Route", "Factory", "Html", "Text", "Session"))»
         
         HTMLHelper::_('bootstrap.tooltip');
         HTMLHelper::_('behavior.multiselect');
+        HTMLHelper::_('behavior.tabstate');
         
         $columns = «helperAdmin.getextendedTableColumnListSize + 1»;
         «helperAdmin.genAdminViewLayoutHeader»
@@ -350,6 +351,8 @@ class IndexPageTemplate extends DynamicPageTemplate {
                     onchange="this.form.submit();"
                 >
                     <option value="">JGLOBAL_SORT_BY</option>
+                    <option value="«ipage.entities.get(0).name».ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+                    <option value="«ipage.entities.get(0).name».ordering DESC">JGRID_HEADING_ORDERING_ASC</option>
                     «FOR ExtendedAttribute attr : ipage.extendedTableColumnList»
                     <option value="«ipage.entities.get(0).name».«attr.name» ASC">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", attr.entity.name, attr.name.toUpperCase, "ASC"), '''«attr.name» ascending''')»</option>
                     <option value="«ipage.entities.get(0).name».«attr.name» DESC">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", attr.entity.name, attr.name.toUpperCase, "DESC"), '''«attr.name» descending''')»</option>
