@@ -300,52 +300,70 @@ class IndexPageTemplate extends DynamicPageTemplate {
 
     def CharSequence generateModelForms(String section) '''
         <?xml version="1.0" encoding="utf-8"?>
-            <form addfieldprefix="Joomla\Component\«com.name.toFirstUpper»\«section»\Field">
-                <fields name="filter">
-                    <field
-                        name="search"
-                        type="text"
-                        label="«Slug.addLanguage(com.languages, newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_LABEL)»"
-                        description="«Slug.addLanguage(com.languages, newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_DESC)»"
-                        hint="JSEARCH_FILTER"
-                    />
-                    <field
-                        name="state"
-                        type="status"
-                        label="JOPTION_SELECT_PUBLISHED"
-                        description="JOPTION_SELECT_PUBLISHED_DESC"
-                        onchange="this.form.submit();">
-                        <option value="">JOPTION_SELECT_PUBLISHED</option>
-                    </field>
-                    <field
-                        name="created_by"
-                        type="«com.name.toLowerCase»user"
-                        label="JGLOBAL_FIELD_CREATED_BY_LABEL"
-                        description="JGLOBAL_FIELD_CREATED_BY_DESC"
-                        entity="«ipage.extendedEntityList.get(0).name»"
-                        onchange="this.form.submit();">
-                        <option value="">JOPTION_SELECT_AUTHOR</option>
-                    </field>
-                    «FOR ExtendedAttribute attr : ipage.extendFiltersList»
-                        «var valueColumn = ipage.getValueColumn(attr, com.allExtendedEntity)»
-                        «var textColumn = ipage.getTextColumn(attr, com.allExtendedEntity)»
-                        <field
-                            name="«attr.name»"
-                            type="«textColumn.type»"
-                            label="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "LABEL"), attr.name)»"
-                            description="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
-                            valueColumn="«valueColumn»"
-                            textColumn="«textColumn»"
-                            onchange="this.form.submit();">
-                            <option value="">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
-                        </field>
-                    «ENDFOR»
-                    «Slug.generateFilterFields(ipage, com.languages, com, '''com_«com.name»''', false, false, false, true)»
-                </fields>
-                <fields name="list">
-                    <field name="limit" id="limit" class="input-medium" default="25" onchange="this.form.submit();" type="limitbox" >
+        <form addfieldprefix="Joomla\Component\«com.name.toFirstUpper»\«section»\Field">
+            <fields name="filter">
+                <field
+                    name="search"
+                    type="text"
+                    label="«Slug.addLanguage(com.languages, newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_LABEL)»"
+                    description="«Slug.addLanguage(com.languages, newArrayList("com", com.name, ipage.name), StaticLanguage.SEARCH_DESC)»"
+                    hint="JSEARCH_FILTER"
+                />
+                <field
+                    name="state"
+                    type="status"
+                    label="JOPTION_SELECT_PUBLISHED"
+                    description="JOPTION_SELECT_PUBLISHED_DESC"
+                    onchange="this.form.submit();">
+                    <option value="">JOPTION_SELECT_PUBLISHED</option>
                 </field>
+                <field
+                    name="created_by"
+                    type="«com.name.toLowerCase»user"
+                    label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+                    description="JGLOBAL_FIELD_CREATED_BY_DESC"
+                    entity="«ipage.extendedEntityList.get(0).name»"
+                    onchange="this.form.submit();">
+                    <option value="">JOPTION_SELECT_AUTHOR</option>
+                </field>
+                «FOR ExtendedAttribute attr : ipage.extendFiltersList»
+                    «var valueColumn = ipage.getValueColumn(attr, com.allExtendedEntity)»
+                    «var textColumn = ipage.getTextColumn(attr, com.allExtendedEntity)»
+                    <field
+                        name="«attr.name»"
+                        type="«textColumn.type»"
+                        label="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "LABEL"), attr.name)»"
+                        description="«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", attr.name, "DESC"), StaticLanguage.getCommonDescriptionFor(attr.name))»"
+                        valueColumn="«valueColumn»"
+                        textColumn="«textColumn»"
+                        onchange="this.form.submit();">
+                        <option value="">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FILTER", "SELECT", attr.name), '''- Select «attr.name» -''')»</option>
+                    </field>
+                «ENDFOR»
+                «Slug.generateFilterFields(ipage, com.languages, com, '''com_«com.name»''', false, false, false, true)»
             </fields>
+            <fields name="list">
+                <field
+                    name="fullordering"
+                    type="list"
+                    label="JGLOBAL_SORT_BY"
+                    default="«ipage.extendedEntityList.get(0).name».«ipage.extendedEntityList.get(0).primaryKey.name» ASC"
+                    onchange="this.form.submit();"
+                >
+                    <option value="">JGLOBAL_SORT_BY</option>
+                    «FOR ExtendedAttribute attr : ipage.extendedTableColumnList»
+                    <option value="«ipage.entities.get(0).name».«attr.name» ASC">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", attr.entity.name, attr.name.toUpperCase, "ASC"), '''«attr.name» ascending''')»</option>
+                    <option value="«ipage.entities.get(0).name».«attr.name» DESC">«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", attr.entity.name, attr.name.toUpperCase, "DESC"), '''«attr.name» descending''')»</option>
+                    «ENDFOR»
+                </field>
+                <field
+                    name="limit"
+                    type="limitbox"
+                    label="JGLOBAL_LIST_LIMIT"
+                    default="25"
+                    onchange="this.form.submit();"
+                />
+        </fields>
         </form>
     '''
 }

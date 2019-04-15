@@ -273,22 +273,12 @@ class DetailsPageTemplateBackendHelper {
                             «IF !dpage.extendedEditedFieldsList.isNullOrEmpty && (dpage.extendedEditedFieldsList.filter[t | t.extendedAttribute.name.equalsIgnoreCase("title")]).size == 0»
                                 <input type="hidden" id="jform[title]" value="<?php echo $this->item->«dpage.extendedEditedFieldsList.get(0).attribute.name»; ?>" />
                             «ENDIF»
-                            <input type="hidden" name="jform[checked_out]" value="
-                            <?php
-                            if (isset($this->item->checked_out)) {
-                                echo $this->item->checked_out;
-                            } else {
-                                echo Factory::getUser()->id;
-                            } ?>"
-                            />
-                            <input type="hidden" name="jform[checked_out_time]" value="
-                            <?php
-                            if (isset($this->item->checked_out_time)) {
-                                echo $this->item->checked_out_time;
-                            } else {
-                                echo date("Y-m-d H:i:s");
-                            } ?>"
-                            />    
+                            <input type="hidden" name="jform[checked_out]" value="<?php echo isset($this->item->checked_out) ?
+                                                            $this->item->checked_out :
+                                                            Factory::getUser()->id; ?>"/>
+                            <input type="hidden" name="jform[checked_out_time]" value="<?php echo isset($this->item->checked_out_time) ?
+                                                            $this->item->checked_out_time :
+                                                            date("Y-m-d H:i:s"); ?>"/>    
                             <?php
                             if (empty($this->item->created_by)) { ?>
                                 <input type="hidden" name="jform[created_by]" value="<?php echo Factory::getUser()->id; ?>" />
