@@ -276,17 +276,6 @@ class IndexPageTemplateAdminHelper {
                     }
                 }
 
-                // Add a batch button
-                if ($user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name)»')
-                    && $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name)»')
-                    && $user->authorise('core.execute.transition', '«Slug.nameExtensionBind("com", com.name)»')
-                ) {
-                    $toolbar->popupButton('batch')
-                        ->text('JTOOLBAR_BATCH')
-                        ->selector('collapseModal')
-                        ->listCheck(true);
-                }
-
                 if ($this->state->get('filter.condition') == «com.name.toFirstUpper»Component::CONDITION_TRASHED && $canDo->get('core.delete')) {
                     $toolbar->delete('«indexpage.name».delete')
                         ->text('JTOOLBAR_EMPTY_TRASH')
