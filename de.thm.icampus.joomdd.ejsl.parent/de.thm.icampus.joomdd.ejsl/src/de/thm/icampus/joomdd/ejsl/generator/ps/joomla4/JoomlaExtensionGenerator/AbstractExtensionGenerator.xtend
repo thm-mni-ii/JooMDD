@@ -83,7 +83,7 @@ abstract public class AbstractExtensionGenerator  {
 		while (p.endsWith("/")) {
 			p = p.substring(0, p.length - 1);
 		}
-		generateFile(p.toLowerCase + "/index.html", indexHtml)
+		generateFile(p + "/index.html", indexHtml)
 	}
 
 	def static CharSequence indexHtml() '''

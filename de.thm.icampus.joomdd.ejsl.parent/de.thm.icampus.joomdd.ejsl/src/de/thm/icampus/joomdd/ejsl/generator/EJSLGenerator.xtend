@@ -110,7 +110,7 @@ class EJSLGenerator extends AbstractGenerator {
                 outputFolder = workspacePath + "/" + sessionID + "/src-gen"
             }
         } else {
-        	platform = config.getProperty("platform", "j4")
+        	platform = config.getProperty("platform", "j3")
             outputFolder = config.getProperty("outputFolder")
         }
         
