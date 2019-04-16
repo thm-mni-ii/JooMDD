@@ -139,7 +139,6 @@ class IndexPageTemplateSiteHelper {
 		HTMLHelper::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 		HTMLHelper::_('bootstrap.tooltip');
 		HTMLHelper::_('behavior.multiselect');
-		HTMLHelper::_('formbehavior.chosen', 'select');
 		
 		$user = Factory::getUser();
 		$userId = $user->get('id');
@@ -228,8 +227,6 @@ class IndexPageTemplateSiteHelper {
 	    «ENDIF»
 	    <input type="hidden" name="task" value=""/>
 	    <input type="hidden" name="boxchecked" value="0"/>
-	    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>"/>
-	    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>"/>
 	    <?php echo HTMLHelper::_('form.token'); ?>
 	</form>
 	<script type="text/javascript">

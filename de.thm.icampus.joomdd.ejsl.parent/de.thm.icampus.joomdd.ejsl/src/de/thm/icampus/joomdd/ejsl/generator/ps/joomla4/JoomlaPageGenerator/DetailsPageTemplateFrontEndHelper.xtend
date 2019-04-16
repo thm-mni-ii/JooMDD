@@ -654,7 +654,7 @@ class DetailsPageTemplateFrontEndHelper {
 		case "image": {
 		'''
 		<tr>
-		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
+		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?></th>
 		    <td>
 		        <img id='<?php  echo $this->item->«attr.name»; ?>' name= '<?php  echo $this->item->«attr.name»; ?>'src='<?php echo $image_path . '/'. $this->item->«attr.name»; ?>' />
 		    </td>
@@ -663,7 +663,7 @@ class DetailsPageTemplateFrontEndHelper {
 		case "file": {
 		'''
 		<tr>
-		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»»'); ?></th>
+		    <th><?php echo Text::_('«Slug.addLanguage(com.languages, newArrayList("com", com.name, "FORM", "LBL", e.name, attr.name), attr.name)»'); ?></th>
 		    <td>
 		        <a id='<?php  echo $this->item->«attr.name»; ?>' name= '<?php  echo $this->item->«attr.name»; ?>' href="<?php echo $file_path . '/'. $this->item->«attr.name»; ?>">
 		            <img src='<?php echo $iconpath . '/'. explode('.',$this->item->«attr.name»)[0]; ?>' />'<?php  echo $this->item->«attr.name»; ?>'

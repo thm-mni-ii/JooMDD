@@ -407,7 +407,6 @@ class DetailsPageTemplate extends DynamicPageTemplate {
         HTMLHelper::addIncludePath(JPATH_COMPONENT . '/Helper/html');
         HTMLHelper::_('behavior.tooltip');
         HTMLHelper::_('behavior.formvalidation');
-        HTMLHelper::_('formbehavior.chosen', 'select');
         HTMLHelper::_('behavior.keepalive');
         
         $app        = Factory::getApplication();
@@ -547,7 +546,6 @@ class DetailsPageTemplate extends DynamicPageTemplate {
         HTMLHelper::_('behavior.keepalive');
         HTMLHelper::_('behavior.tooltip');
         HTMLHelper::_('behavior.formvalidation');
-        HTMLHelper::_('formbehavior.chosen', 'select');
         
         $app = Factory::getApplication();
         $lang = $app->getLanguage();

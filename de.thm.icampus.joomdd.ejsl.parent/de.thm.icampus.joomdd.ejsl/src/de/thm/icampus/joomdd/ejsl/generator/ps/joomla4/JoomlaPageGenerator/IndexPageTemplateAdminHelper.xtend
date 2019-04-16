@@ -276,17 +276,6 @@ class IndexPageTemplateAdminHelper {
                     }
                 }
 
-                // Add a batch button
-                if ($user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name)»')
-                    && $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name)»')
-                    && $user->authorise('core.execute.transition', '«Slug.nameExtensionBind("com", com.name)»')
-                ) {
-                    $toolbar->popupButton('batch')
-                        ->text('JTOOLBAR_BATCH')
-                        ->selector('collapseModal')
-                        ->listCheck(true);
-                }
-
                 if ($this->state->get('filter.condition') == «com.name.toFirstUpper»Component::CONDITION_TRASHED && $canDo->get('core.delete')) {
                     $toolbar->delete('«indexpage.name».delete')
                         ->text('JTOOLBAR_EMPTY_TRASH')
@@ -375,10 +364,9 @@ class IndexPageTemplateAdminHelper {
                         «ENDFOR»
                     </tr>
                 </thead>
-                <tbody>
+                <tbody <?php if ($saveOrder) :?> class="js-draggable" data-url="<?php echo $saveOrderingUrl; ?>" data-direction="<?php echo strtolower($listDirn); ?>" data-nested="true"<?php endif; ?>>
                     <?php
                     foreach ($this->items as $i => $item) :
-                        $ordering   = ($listOrder == '«this.mainEntity.name.toLowerCase».ordering');
                         $canCreate  = $user->authorise('core.create', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                         $canEdit    = $user->authorise('core.edit', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
                         $canCheckin = $user->authorise('core.manage', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
@@ -386,33 +374,26 @@ class IndexPageTemplateAdminHelper {
                         ?>
                         <tr class="row<?php echo $i % 2; ?>">
                         <?php
-                        if (isset($this->items[0]->ordering)) : ?>
-                            <td class="order nowrap center hidden-phone">
-                            <?php
-                            if ($canChange) :
-                                $disableClassName = '';
-                                $disabledLabel    = '';
-                            if (!$saveOrder) :
-                                $disabledLabel    = JText::_('JORDERINGDISABLED');
-                                $disableClassName = 'inactive tip-top';
-                            endif; ?>
-                                <span class="sortable-handler hasTooltip <?php echo $disableClassName?>"
-                                  title="<?php echo $disabledLabel?>">
-                                <i class="icon-menu"></i>
+                        if (isset($this->items[0]) && property_exists($this->items[0], 'ordering')) : ?>
+                            <td class="order text-center d-none d-md-table-cell">
+                                <?php
+                                $iconClass = '';
+                                if (!$canChange)
+                                {
+                                    $iconClass = ' inactive';
+                                }
+                                elseif (!$saveOrder)
+                                {
+                                    $iconClass = ' inactive tip-top hasTooltip" title="' . HTMLHelper::_('tooltipText', 'JORDERINGDISABLED');
+                                }
+                                ?>
+                                <span class="sortable-handler<?php echo $iconClass; ?>">
+                                    <span class="icon-menu" aria-hidden="true"></span>
                                 </span>
-                                <input type="text"
-                                   style="display:none"
-                                   name="order[]"
-                                   size="5"
-                                   value="<?php echo $item->ordering;?>"
-                                   class="width-20 text-area-order" />
-                            <?php
-                            else : ?>
-                                <span class="sortable-handler inactive" >
-                                    <i class="icon-menu"></i>
-                                </span>
-                            <?php
-                            endif; ?>
+                                <?php if ($canChange && $saveOrder) : ?>
+                                    <input type="text" style="display:none" name="order[]" size="5"
+                                        value="<?php echo $item->ordering; ?>" class="width-20 text-area-order">
+                                <?php endif; ?>
                             </td>
                         <?php
                         endif; ?>
@@ -478,8 +459,6 @@ class IndexPageTemplateAdminHelper {
                         «genAdminViewLayoutData(indexpage.extendedTableColumnList)»
                         <input type="hidden" name="task" value="" />
                         <input type="hidden" name="boxchecked" value="0" />
-                        <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-                        <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
                         <?php echo HTMLHelper::_('form.token'); ?>
                     </div>
                 </div>
@@ -494,7 +473,7 @@ class IndexPageTemplateAdminHelper {
         $listOrder = $this->state->get('list.ordering');
         $listDirn = $this->state->get('list.direction');
         $canOrder = $user->authorise('core.edit.state', '«Slug.nameExtensionBind("com", com.name).toLowerCase»');
-        $saveOrder = $listOrder == '«this.mainEntity.name.toLowerCase».ordering';
+        $saveOrder = $listOrder == '«this.mainEntity.name».ordering';
         $model = $this->getModel();
         if ($saveOrder) {
             $saveOrderingUrl = 'index.php?option=«Slug.nameExtensionBind("com", com.name).toLowerCase»&task=«indexpage.name.toLowerCase()».saveOrderAjax&tmpl=component&' . Session::getFormToken() . '=1';
