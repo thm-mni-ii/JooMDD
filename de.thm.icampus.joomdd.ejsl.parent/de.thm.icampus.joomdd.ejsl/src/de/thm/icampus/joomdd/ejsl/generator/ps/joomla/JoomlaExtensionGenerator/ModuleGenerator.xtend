@@ -67,8 +67,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	}
 
 	override generate() {
-		generateFile(path + name + ".xml", this.extMod.xmlContent)
-		generateFile(path + name + ".php", this.extMod.phpContent)
+		generateFile(path + name.toLowerCase + ".xml", this.extMod.xmlContent)
+		generateFile(path + name.toLowerCase + ".php", this.extMod.phpContent)
 		generateFile(path + "helper.php", helperPHP(extMod, extMod.pageRef.page as DynamicPage))
 		generateFile(path + "tmpl/default.php", defaultTemplate())
 		
