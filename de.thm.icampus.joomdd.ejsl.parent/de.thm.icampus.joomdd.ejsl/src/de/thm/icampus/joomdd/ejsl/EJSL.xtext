@@ -284,7 +284,7 @@ ExtensionPackage returns ExtensionPackage:
 	{ExtensionPackage}
 	'ExtensionPackage' name=MYID 
 	'{'
-		'Manifestation' '{' (manifest=Manifestation) '}'
+		'Manifest' '{' (manifest=Manifest) '}'
 		('languages' '{' (languages+=Language)* '}')?
 		'extensions' '{' (extensions+=Extension)+ '}'
 	'}'
@@ -294,7 +294,7 @@ Component returns Component:
 	{Component}
 	'Component' name=MYID 
 	'{'
-		'Manifestation' '{' (manifest=Manifestation) '}'
+		'Manifest' '{' (manifest=Manifest) '}'
 		('globalParameters' '{' (globalParamter+=ParameterGroup)* '}')?
 		('languages' '{' (languages+=Language)* '}')?
 		'sections' '{' (sections+=Section)+ '}'
@@ -337,7 +337,7 @@ Module returns Module:
 	{Module}
 	'Module' name=MYID 
 	'{'
-		'Manifestation' '{' (manifest=Manifestation) '}'
+		'Manifest' '{' (manifest=Manifest) '}'
 		('languages' '{' (languages+=Language)* '}')?
 		(pageRef=PageReference)?
 	'}'	
@@ -347,7 +347,7 @@ Plugin returns Plugin:
 	{Plugin}
 	'Plugin' name=MYID 
 	'{'
-		'Manifestation' '{' (manifest=Manifestation) '}'
+		'Manifest' '{' (manifest=Manifest) '}'
 		('languages' '{' (languages+=Language)* '}')?
 		'pluginType =' type=PluginKinds
 		('*entities =' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
@@ -359,7 +359,7 @@ Library returns Library:
 	{Library}
 	'Library' name=MYID
 	'{'
-		'Manifestation' '{' (manifest=Manifestation) '}'
+		'Manifest' '{' (manifest=Manifest) '}'
 		('languages' '{' (languages+=Language)* '}')?
 		('*entities = ' entities+=[Entity|QualifiedName] (',' entities+=[Entity|QualifiedName])*)?
 		('classes' '{' (classes+=Class)* '}')?
@@ -406,7 +406,7 @@ Template returns Template:
 	{Template}
 	'Template' name=MYID
 	'{'
-		'Manifestation' '{' (manifest=Manifestation) '}'
+		'Manifest' '{' (manifest=Manifest) '}'
 		('languages' '{' (languages+=Language)* '}')?
 		('parameters' '{' (localparameters+=Parameter)* '}')?
 		('positions' '{' (positions+=Position)* '}')?
@@ -414,8 +414,8 @@ Template returns Template:
 	'}'
 ;
 
-Manifestation returns Manifestation:
-	{Manifestation}
+Manifest returns Manifest:
+	{Manifest}
 	'authors' '{' (authors+=Author)+ '}'
 	('creationDate =' creationdate=DATE)?
 	('copyright =' copyright=STRING)?
