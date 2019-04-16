@@ -9,7 +9,6 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 import de.thm.icampus.joomdd.ejsl.eJSL.Author
-import de.thm.icampus.joomdd.ejsl.eJSL.Manifestation
 import de.thm.icampus.joomdd.ejsl.eJSL.Language
 import de.thm.icampus.joomdd.ejsl.eJSL.Component
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
@@ -26,8 +25,8 @@ import de.thm.icampus.joomdd.ejsl.eJSL.Page
 import de.thm.icampus.joomdd.ejsl.validation.elements.EntityValidator
 import de.thm.icampus.joomdd.ejsl.validation.elements.ManifestValidator
 import de.thm.icampus.joomdd.ejsl.validation.elements.PageValidator
-import de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator 
-  
+import de.thm.icampus.joomdd.ejsl.validation.elements.SectionValidator import de.thm.icampus.joomdd.ejsl.eJSL.Manifest
+
 /**
  * Custom quickfixes.
  *
@@ -120,7 +119,7 @@ class EJSLQuickfixProvider extends DefaultQuickfixProvider {
 			element, context |
 			
 			val doubleAuthor = element as Author				// cast element as author
-			val man = doubleAuthor.eContainer as Manifestation	// get the manifestation from the author
+			val man = doubleAuthor.eContainer as Manifest	// get the manifestation from the author
 			man.authors.remove(doubleAuthor)					// delete the doubled author
 		]
 	}

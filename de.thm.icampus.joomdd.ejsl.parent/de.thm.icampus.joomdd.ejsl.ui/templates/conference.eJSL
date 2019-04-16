@@ -191,7 +191,7 @@ eJSLModel "Conference" {
         }
         extensions {
             Component MyConference {
-                Manifestation {
+                Manifest {
                     authors {
                         Author "John Doe" {
                             authorEmail = "john.doe@example.org"
@@ -239,7 +239,7 @@ eJSLModel "Conference" {
                 }
             } 
             Module Talks {
-            	Manifestation {
+            	Manifest {
                     authors {
                         Author "John Doe" {
                             authorEmail = "john.doe@example.org"
