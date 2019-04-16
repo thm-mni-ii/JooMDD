@@ -533,12 +533,11 @@ class IndexPageTemplateAdminHelper {
             «IF Slug.isAttributeLinked(attr, indexpage)»
                 <td>
                 <?php
-                if ($canEdit) : ?>
-                    <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»); ?>"
-                    >
-                        <?php echo $this->escape($item->«attr.name»); ?>
-                    </a>
-                <?php
+                if ($canEdit) : 
+                    echo HTMLHelper::link(
+                        «Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»,
+                        $this->escape($item->«attr.name»)
+                    );
                 else : ?>
                     <?php echo $this->escape($item->«attr.name»); ?>
                 <?php

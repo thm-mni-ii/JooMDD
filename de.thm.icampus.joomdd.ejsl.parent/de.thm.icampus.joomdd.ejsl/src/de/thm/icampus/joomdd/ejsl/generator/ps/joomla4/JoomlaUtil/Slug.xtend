@@ -883,57 +883,33 @@ public class Slug  {
 		return false
 	}
 	
-	def static String linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures) 
-	'''«FOR Link lk: page.links»
-    	    «IF lk.linkedAttribute !== null»
-        	    «IF lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)»
-            	    «switch lk {
-            		    ExternalLink : {
-            			    '''«(new LinkGeneratorHandler(lk, '', compname, valuefeatures )).generateLink»'''
-            		    }
-            		    InternalLink: {
-            		        if ((lk as InternalLink).target instanceof DetailsPage) {
-            		            if ((page.instance as DynamicPage).entities.get(0).name.equals((lk.target as DynamicPage).entities.get(0).name)) {
-                                    '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«page.extendedEntityList.get(0).primaryKey.name»='.(int) $item->«page.extendedEntityList.get(0).primaryKey.name» '''
-                                } else {
-            		   	            var ExtendedAttribute idRef = Slug.getAttributeForForeignID(attribute, page)
-            		    	        var Entity entityRef = Slug.getEntityForForeignID(attribute, page)
-            		    	
-            			            if (idRef !== null) {
-            				            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $item->«idRef.name»'''	
-            				        } else {
-            				 	        '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«Slug.getPrimaryKeys(entityRef).name»='.(int) $model->getIdOfReferenceItem("«(lk as InternalLink).name»", $item)'''
-            		 	            }
-            		 	        }
-                            } else {
-            		            '''«(new LinkGeneratorHandler(lk, '', compname.toLowerCase, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
-            		        }
-                        }
-                    }»
-        	    «ENDIF»
-    	    «ENDIF»
-	    «ENDFOR»'''
-	
-	def static Entity getEntityForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage) {
-		for (ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences) {
-			if (ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)) {
-				return ref.destinationEntity
-			}
-		}
-	}
-	
-	def static ExtendedAttribute getAttributeForForeignID(ExtendedAttribute attr, ExtendedDynamicPage dynPage){
-		for (ExtendedReference ref: dynPage.extendedEntityList.get(0).allExtendedReferences){
-			if (ref.extendedAttributes.get(0).name.equalsIgnoreCase(attr.name)) {
-				for (ExtendedAttribute refAttr: ref.referencedExtendedAttributes) {
-					if (refAttr.name.equalsIgnoreCase("id")) {
-						return ref.extendedAttributes.get(ref.referencedExtendedAttributes.indexOf(refAttr))
-					}
-				}
-			}
-		}
-		return null
-	}
+	def static String linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures) {
+        var link = page.links.findFirst[ link |
+            link.linkedAttribute.name.equals(attribute.name)
+        ]
+        
+        if (link !== null) {
+            switch link {
+                ExternalLink: {
+                    '''«(new LinkGeneratorHandler(link, '', compname, valuefeatures )).generateLink»'''
+                }
+                
+                InternalLink: {
+                    var target = link.target
+                                    
+                    if (target instanceof DetailsPage) {
+                        //TODO: There might be more than one entity.
+                        var primaryKeyName = target.entities.get(9).primaryKeys.name
+                        '''«(new LinkGeneratorHandler(link, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«primaryKeyName»='.(int) $item->«primaryKeyName» '''
+                    } else {
+                        '''«(new LinkGeneratorHandler(link, '', compname.toLowerCase, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
+                    }
+                }
+            }
+        } else {
+            throw new UnsupportedOperationException    
+        }
+    }
 	
 	def static Boolean isLinkedAttributeReference(Attribute attribute, DynamicPage page) {
 		for (Entity e: page.entities) {

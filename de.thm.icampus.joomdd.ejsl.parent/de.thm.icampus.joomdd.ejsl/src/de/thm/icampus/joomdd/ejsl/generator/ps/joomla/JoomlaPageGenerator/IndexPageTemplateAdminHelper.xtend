@@ -547,20 +547,22 @@ class IndexPageTemplateAdminHelper {
     public  def CharSequence genAdminModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, ExtendedComponent com )'''
         «FOR ExtendedAttribute attr : column»
         «IF Slug.isAttributeLinked(attr, indexpage)»
-        <td>
-        <?php if ($canEdit) : ?>
-            <a href="<?php echo JRoute::_(«Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»); ?>"
-            >
+            <td>
+            <?php
+            if ($canEdit) :
+                echo HTMLHelper::link(
+                    «Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»,
+                    $this->escape($item->«attr.name»)
+                );
+            else : ?>
                 <?php echo $this->escape($item->«attr.name»); ?>
-            </a>
-        <?php else : ?>
-            <?php echo $this->escape($item->«attr.name»); ?>
-        <?php endif;?>
-        </td>
+            <?php
+            endif;?>
+            </td>
         «ELSE»
-        <td>
-            <?php echo $item->«attr.name»; ?>
-        </td>
+            <td>
+                <?php echo $item->«attr.name»; ?>
+            </td>
         «ENDIF»
         «ENDFOR»
     '''
