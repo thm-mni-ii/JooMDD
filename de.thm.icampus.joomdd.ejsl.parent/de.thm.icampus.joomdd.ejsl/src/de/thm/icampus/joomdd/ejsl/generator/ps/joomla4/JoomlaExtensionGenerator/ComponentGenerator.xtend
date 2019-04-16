@@ -54,9 +54,9 @@ public class ComponentGenerator extends AbstractExtensionGenerator {
 		this.extendedComp.name = Slug.slugify(extendedComp.name)
 		this.path = path
 		this.updatePath = updatePath
-		this.sitePath = newArrayList(path, "components", this.extendedComp.extensionName).join("/").toLowerCase
-		this.adminPath = newArrayList(path, "administrator", "components", this.extendedComp.extensionName).join("/").toLowerCase
-		this.mediaPath = newArrayList(path, "media", extendedComp.extensionName).join("/").toLowerCase
+		this.sitePath = newArrayList(path, "components", this.extendedComp.extensionName).join("/")
+		this.adminPath = newArrayList(path, "administrator", "components", this.extendedComp.extensionName).join("/")
+		this.mediaPath = newArrayList(path, "media", extendedComp.extensionName).join("/")
 	}
 	
 	/**

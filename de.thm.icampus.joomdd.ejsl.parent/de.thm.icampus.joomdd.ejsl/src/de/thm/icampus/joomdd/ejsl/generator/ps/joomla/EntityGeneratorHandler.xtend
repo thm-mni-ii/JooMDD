@@ -44,7 +44,7 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 	private def generateFields(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var FieldsGenerator fieldEntity = new FieldsGenerator(comp, ent)
-			generateFile( path + "models/fields/" + ent.name.toLowerCase + ".php",fieldEntity.genFieldsForEntity)
+			generateFile( path + "models/fields/" + ent.name.toLowerCase + ".php", fieldEntity.genFieldsForEntity)
 			for(ExtendedReference ref: ent.allExtendedReferences){
 				switch ref.upper{
 				    case "1":{
@@ -69,7 +69,7 @@ class EntityGeneratorHandler extends AbstractExtensionGenerator {
 	private def generateTable(ExtendedComponent comp, String path){
 		for (ExtendedEntity ent : comp.allExtendedEntity.filter[t | t !== null]) {
 			var TableGeneratorTemplate table = new TableGeneratorTemplate(comp, ent)
-			generateFile(path + "tables/"+ent.name.toLowerCase+".php", table.genClassTable)
+			generateFile(path + "tables/" + ent.name.toLowerCase + ".php", table.genClassTable)
 		}
 	}
 	
