@@ -119,7 +119,7 @@ eJSLModel "Simple" {
 		}
 		extensions {
 			Component GameRanking {
-				Manifestation {
+				Manifest {
 					authors {
 						Author "Peter Janauschek" {
 							authoremail = "peter.janauschek@mni.thm.de"

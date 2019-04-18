@@ -495,7 +495,7 @@ eJSLModel "Weblinks" {
 	
 		extensions {
 			Component myexter222 {
-				Manifestation {
+				Manifest {
 					authors {
 						Author "Joomla! Project" {
 							authoremail = "admin@joomlaf.org"
@@ -778,7 +778,7 @@ eJSLModel "Weblinks" {
 				}
 			}
 			Module weblinks {
-				Manifestation {
+				Manifest {
 					authors {
 						Author "Joomla! Project" {
 							authoremail = "admin@joomla.org"

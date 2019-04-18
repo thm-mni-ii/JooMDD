@@ -311,7 +311,7 @@ eJSLModel "Shop" {
 		}
 	extensions {
 			Component ExampleShop {  
-				Manifestation {
+				Manifest {
 					authors {
 						Author "John Doe" {
 							authorEmail = "John.Doe@example.de"
@@ -358,7 +358,7 @@ eJSLModel "Shop" {
 				} 
 			} 
 			Module Customers{   
-				Manifestation { 
+				Manifest { 
 					authors {
 						Author "John Doe" {
 							authorEmail = "John.Doe@example.de"
@@ -380,7 +380,7 @@ eJSLModel "Shop" {
 				*Page :Shop.Customers from :  ExampleShop data backendDAO
 			}  
 			ExtensionPackage Shop {  
-				Manifestation {              
+				Manifest {              
 					authors {     
 						Author "John Doe" {      
 							authorEmail = "John.Doe@example.de"
@@ -400,7 +400,7 @@ eJSLModel "Shop" {
 					}
 				}extensions {
 					Component ExampleShop {  
-				Manifestation {
+				Manifest {
 					authors {
 						Author "John Doe" {
 							authorEmail = "John.Doe@example.de"
@@ -447,7 +447,7 @@ eJSLModel "Shop" {
 				}
 			}
 			Module Customers{  
-				Manifestation { 
+				Manifest { 
 					authors {
 						Author "John Doe" {
 							authorEmail = "John.Doe@example.de"

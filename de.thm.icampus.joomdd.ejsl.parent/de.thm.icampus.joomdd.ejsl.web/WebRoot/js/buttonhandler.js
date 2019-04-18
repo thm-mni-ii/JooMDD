@@ -38,6 +38,16 @@ require(["jquery","alert"], function($, alert) {
 		}
 	}
 	
+	// Handle the cursor position when exiting the full screen mode.
+	document.addEventListener("fullscreenchange", function() {
+		if (document.fullscreen === false) {
+			setTimeout(function() {
+		  		var editor = ace.edit("xtext-editor");
+				var cursorPosition = editor.getCursorPosition();
+				editor.gotoLine(cursorPosition.row + 1, cursorPosition.column);
+			}, 50);
+		}
+	});
 	
 	// Load example chosen template in text editor
 	$(".templates").click(function(){

@@ -371,7 +371,7 @@ eJSLModel "AgendaModel"
 	}
 	extensions {
 		Component JoomMdd {
-			Manifestation {
+			Manifest {
 				authors {
 					Author "Dieudonne Timma"
 					{

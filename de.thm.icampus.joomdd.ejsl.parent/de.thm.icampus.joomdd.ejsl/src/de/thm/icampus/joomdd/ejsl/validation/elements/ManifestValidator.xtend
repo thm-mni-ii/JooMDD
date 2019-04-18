@@ -2,12 +2,12 @@ package de.thm.icampus.joomdd.ejsl.validation.elements
 
 import de.thm.icampus.joomdd.ejsl.eJSL.Author
 import de.thm.icampus.joomdd.ejsl.eJSL.EJSLPackage
-import de.thm.icampus.joomdd.ejsl.eJSL.Manifestation
 import java.util.HashSet
 import java.util.regex.Pattern
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
+import de.thm.icampus.joomdd.ejsl.eJSL.Manifest
 
 /**
  * This class contains custom validation rules about manifests.
@@ -46,7 +46,7 @@ class ManifestValidator extends AbstractDeclarativeValidator {
 	 * Checks if the name of an author is used more than once in a manifestation.
 	 */
 	@Check
-	def checkManifestationAuthorsAreUnique(Manifestation manifest) {
+	def checkManifestationAuthorsAreUnique(Manifest manifest) {
 		var authors = new HashSet<String>
 
 		if (manifest.authors !== null) {

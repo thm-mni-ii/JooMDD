@@ -291,7 +291,7 @@ eJSLModel "Brueckenkurs"{
 		}
 		extensions {
 			Component Brueckenkurs{
-				Manifestation {
+				Manifest {
 					authors {
 						Author "Dieudonne Timma"
 						{
