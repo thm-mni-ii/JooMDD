@@ -245,7 +245,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("Uri", "Html"))»
+		«Slug.generateUses(newArrayList("Uri", "Html", "Factory"))»
 		
 		// No direct access to this file
 		defined('_JEXEC') or die;
@@ -256,8 +256,12 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 * require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php>';
 		 * $baseurl = Uri::base();
 		 */
+
+		$db       = Factory::getDbo();
+		$user     = Factory::getUser();
+		$canEdit  = $user->authorise('core.edit', '«extMod.extendedComponentName»');
 		?>
-		
+
 		<?php if (count($items) !== 1) : ?>
 		<ul class="«extMod.name»<?php echo $moduleclass_sfx; ?>">
 		    <?php foreach ($items as $item) : ?>
@@ -269,8 +273,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		        <?php else : ?>
 		            «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
 		            «IF !attr.name.equalsIgnoreCase("params")»
-		            <?php $«attr.name» = $item->«attr.name»;?>
-		            <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
+		            «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»
 		            «ENDIF»
 		            «ENDFOR»
 		        «ENDIF»
@@ -282,33 +285,37 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		<?php else : 
 		    $item = array_shift($items); ?>
 		    <div class="«extMod.pageRef.page.name»item">
-		        «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
-		        «IF !attr.name.equalsIgnoreCase("params")»
-		        <?php $«attr.name» = $item->«attr.name»;?>
-		        <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
-		        «ENDIF»
-		        «ENDFOR»
+		    «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+		    «IF !attr.name.equalsIgnoreCase("params")»
+		        «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»
+		    «ENDIF»
+		    «ENDFOR»
 		    </div>
 		<?php endif; ?>
 		'''
 	}
 	
-	def checkLinkOfAttributes(ExtendedAttribute attribute, EList<Link> listLink) {
-		var String result = attribute.name.toString
-		if(extMod.pageRef.sect === null || extMod.pageRef.pagescr === null)
-		return "$" + result;
-		
-		for(Link lk: listLink) {
+    def checkLinkOfAttributes(ExtendedAttribute attribute, EList<Link> listLink) {
+        var String result = '''<?php echo $db->escape($item->«attribute.name.toString»); ?>'''
+        
+        if(extMod.pageRef.sect === null || extMod.pageRef.pagescr === null) {
+            return result
+        }
+        
+        for(Link lk: listLink) {
             if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
-                return '''HTMLHelper::_(
-                    'link',
-                    «Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")»,
-                    $item->«attribute.name»
-                )'''
+                return '''
+                    «Slug.linkOfAttribut(
+                        attribute,
+                        extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,
+                        extMod.extendedComponentName,
+                        "$item->",
+                        "$db"
+                    )»'''
             }
-		}
-		return "$" + result;
-	}
+        }
+        return result
+    }
 	
 	def CharSequence helperPHP(Module modul, DynamicPage mpage) {
 		'''

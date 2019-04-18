@@ -867,40 +867,112 @@ public class Slug  {
 		return false
 	}
 	
-	def static String linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures) {
-	    var link = page.links.findFirst[ link |
-	        link.linkedAttribute.name.equals(attribute.name)
-	    ]
-	    
-	    if (link !== null) {
-	        switch link {
+	def static String linkOfAttribut(ExtendedAttribute attribute, ExtendedDynamicPage  page, String compname, String valuefeatures, String escapeObject) {
+        val attributeName = attribute.name
+        
+        var link = page.links.findFirst[ link |
+            link.linkedAttribute.name.equals(attributeName)
+        ]
+        
+        var completeLink = ''''''
+        
+        if (link !== null) {
+            switch link {
                 ExternalLink: {
-                    '''«(new LinkGeneratorHandler(link, '', compname, valuefeatures )).generateLink»'''
+                    completeLink = '''«(new LinkGeneratorHandler(link, '', compname, valuefeatures )).generateLink»'''
                 }
                 
                 InternalLink: {
                     var target = link.target
                                     
                     if (target instanceof DetailsPage) {
-                        //TODO: There might be more than one entity.
-                        var entity = target.entities.get(0)
+                        var primaryKeyName = ''''''
+                        var primaryKeyValueName = ''''''
                         
-                        var primaryKeyAttribute = entity.attributes.findFirst[ attr |
-                            attr.isIsprimary
-                        ]
+                        // There might be more than one entity.
+                        var targetEntity = target.entities.get(0)
                         
-                        var primaryKeyName = primaryKeyAttribute.name
-                        
-                        '''«(new LinkGeneratorHandler(link, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«primaryKeyName»='.(int) $item->«primaryKeyName» '''
+                        // If the entities are equal we can use the primary key of the attribute's entity.
+                        if (targetEntity.name.equals(attribute.entity.name)) {
+                            var entity = attribute.entity
+                            var primaryKeyAttribute = Slug.getPrimaryKey(entity)
+                            primaryKeyName = primaryKeyAttribute.name
+                            primaryKeyValueName = primaryKeyName
+                            
+                            completeLink = Slug.getHTMLHelperLink(
+                                '''«(new LinkGeneratorHandler(link, '', compname.toLowerCase, valuefeatures )).generateLink» . '&«primaryKeyName»='.(int) $item->«primaryKeyValueName» ''',
+                                '''«valuefeatures»«attributeName»''',
+                                escapeObject
+                            )   
+                        } else {
+                            // We have a reference.
+                            var primaryKeyAttribute = Slug.getPrimaryKey(targetEntity)
+                            primaryKeyName = primaryKeyAttribute.name
+                            var reference = searchLinkedAttributeReference(attribute, page)
+                            
+                            if (reference !== null) {
+                                primaryKeyValueName = reference.referenceIDAttribute
+                                
+                                completeLink = Slug.getHTMLHelperLink(
+                                    '''«(new LinkGeneratorHandler(link, '', compname.toLowerCase, valuefeatures)).generateLink» . '&«primaryKeyName»='.(int) $item->«primaryKeyValueName» ''',
+                                    '''«valuefeatures»«attributeName»''',
+                                    escapeObject
+                                )   
+                            } else {
+                                // Handle mapping table reference
+                                var listVariableName = '''$«attribute.name.toFirstLower»List'''
+                                completeLink = '''
+                                    «listVariableName» = array();
+                                    foreach ($item->«attribute.name» as $key=>$value) {
+                                        «listVariableName»[] = «Slug.getHTMLHelperLink(
+                                            '''«(new LinkGeneratorHandler(link, '', compname.toLowerCase, '''$item->''', attribute.name )).generateLink» . '&«primaryKeyName»='.(int) $key''',
+                                            '''$value''',
+                                            escapeObject,
+                                            false
+                                        )»
+                                    }
+                                    echo implode(" ", «listVariableName»);
+                                '''
+                            }
+                        }
                     } else {
-                        '''«(new LinkGeneratorHandler(link, '', compname.toLowerCase, valuefeatures )).generateLink» . '&filter.search='. $item->«attribute.name»'''
+                        completeLink = Slug.getHTMLHelperLink(
+                            '''«(new LinkGeneratorHandler(link, '', compname.toLowerCase, valuefeatures )).generateLink» . '&filter.search='. $item->«attributeName»''',
+                            '''«valuefeatures»«attributeName»''',
+                            escapeObject
+                        )
                     }
                 }
             }
-	    } else {
-	        throw new UnsupportedOperationException    
-	    }
-	}
+        } else {
+            throw new UnsupportedOperationException
+        }
+        
+        return '''
+           <td>
+           <?php
+           if ($canEdit) :
+               «completeLink»
+           else : ?>
+               <?php echo «escapeObject»->escape($item->«attribute.name»); ?>
+           <?php
+           endif;?>
+           </td>
+        '''
+    }
+    
+    def private static getHTMLHelperLink(String completeLink, String attribute, String escapeObject) {
+        return Slug.getHTMLHelperLink(completeLink, attribute, escapeObject, true)
+    }
+    
+    def static getHTMLHelperLink(String completeLink, String attribute, String escapeObject, boolean echo) {
+        return '''
+        «IF echo»echo «ENDIF»HTMLHelper::link(
+           «completeLink.trim»,
+           «escapeObject»->escape(«attribute»)
+        );
+        '''
+    }
 	
 	def static Boolean isLinkedAttributeReference(Attribute attribute, DynamicPage page) {
 		for (Entity e: page.entities) {
@@ -913,38 +985,38 @@ public class Slug  {
 		return false
 	}
 	
-	def static Reference searchLinkedAttributeReference(Attribute attribute, DynamicPage page) {
-		for (Entity e: page.entities) {
-			for (Reference ref: e.references) {
-				if (ref.attribute.get(0).name.equalsIgnoreCase(attribute.name)) {
-				    return ref
-				}
-			}
-		}
-		return null
-	}
+	def static ExtendedReference searchLinkedAttributeReference(Attribute attribute, ExtendedDynamicPage page) {
+        for (ExtendedEntity entity: page.extendedEntityList) {
+            for (ExtendedReference reference: entity.allExtendedReferences) {
+                if (reference.referenceAttribute.equals(attribute.name)) {
+                    return reference
+                }
+            }
+        }
+        return null
+    }
 	
-	static def CharSequence genLinkedInfo(DynamicPage page, Component com)'''
- 	    private $entitiesRef = array(
- 	        «FOR Link linkItem: page.links»
- 	        «switch linkItem {
-     		    InternalLink :{
-     			    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
-     				    var Reference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
-     				    '''
-     				    "«linkItem.name»" => array(
-     				        "db"=> "#__«com.name»_«ref.entity.name»",
-     				        "refattr" => array(
-     				            «Slug.generateAttributeAndRefernce(ref)»
-     				        ),
-     				        "foreignPk" => "«Slug.getPrimaryKeys(ref.entity).name»"
-     				    ),'''	
-     			    }				
-     		    }	
-     	    }»
-     	    «ENDFOR»
- 	    null);
- 	'''
+	static def CharSequence genLinkedInfo(ExtendedDynamicPage page, Component com)'''
+        private $entitiesRef = array(
+            «FOR Link linkItem: page.links»
+            «switch linkItem {
+                InternalLink :{
+                    if (isLinkedAttributeReference(linkItem.linkedAttribute, page)) {
+                        var ExtendedReference ref = Slug.searchLinkedAttributeReference(linkItem.linkedAttribute, page);
+                        '''
+                        "«linkItem.name»" => array(
+                            "db"=> "#__«com.name»_«ref.entity.name»",
+                            "refattr" => array(
+                                «Slug.generateAttributeAndRefernce(ref)»
+                            ),
+                            "foreignPk" => "«Slug.getPrimaryKey(ref.entity).name»"
+                        ),'''   
+                    }               
+                }   
+            }»
+            «ENDFOR»
+        null);
+    '''
 	
 	def static CharSequence generateAttributeAndRefernce(Reference reference) {
 		var StringBuffer result = new StringBuffer
@@ -1236,14 +1308,12 @@ public class Slug  {
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php endif; ?>
 	'''
-	
-	def static Attribute getPrimaryKeys(Entity entity) {
-		for(Attribute attr: entity.attributes) {
-			if(attr.isIsprimary) {
-                return attr
-			}
-		}
-	}
+		
+    def static Attribute getPrimaryKey(Entity entity) {
+        entity.attributes.findFirst[ attribute | 
+            attribute.isIsprimary
+        ]
+    }
 	
 	def static void deleteFolder(String folder) {
 	    var File root = new File(folder)
