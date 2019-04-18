@@ -170,8 +170,9 @@ class IndexPageTemplateAdminHelper extends IndexPageTemplateHelper {
             
             var multiValueStatementHandling = '''
             $item->«idFieldName» = json_decode($item->«idFieldName»);
+            $item->«valueFieldName» = json_decode($item->«valueFieldName»);
             if (is_array($item->«idFieldName»)) {
-                $item->«valueFieldName» = array_combine($item->«idFieldName», ($item->«valueFieldName»));
+                $item->«valueFieldName» = array_combine($item->«idFieldName», $item->«valueFieldName»);
             } else {
                 $item->«valueFieldName» = array();
             }
