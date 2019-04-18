@@ -293,22 +293,27 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		'''
 	}
 	
-	def checkLinkOfAttributes(ExtendedAttribute attribute, EList<Link> listLink) {
-		var String result = attribute.name.toString
-		if(extMod.pageRef.sect === null || extMod.pageRef.pagescr === null)
-		return "$" + result;
-		
-		for(Link lk: listLink) {
+    def checkLinkOfAttributes(ExtendedAttribute attribute, EList<Link> listLink) {
+        var String result = '''<?php echo $db->escape($item->«attribute.name.toString»); ?>'''
+        
+        if(extMod.pageRef.sect === null || extMod.pageRef.pagescr === null) {
+            return result
+        }
+        
+        for(Link lk: listLink) {
             if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
-                return '''HTMLHelper::_(
-                    'link',
-                    «Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName.toLowerCase, "$item->")»,
-                    $item->«attribute.name»
-                )'''
+                return '''
+                    «Slug.linkOfAttribut(
+                        attribute,
+                        extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,
+                        extMod.extendedComponentName,
+                        "$item->",
+                        "$db"
+                    )»'''
             }
-		}
-		return "$" + result;
-	}
+        }
+        return result
+    }
 	
 	def CharSequence helperPHP(Module modul, DynamicPage mpage) {
 		'''

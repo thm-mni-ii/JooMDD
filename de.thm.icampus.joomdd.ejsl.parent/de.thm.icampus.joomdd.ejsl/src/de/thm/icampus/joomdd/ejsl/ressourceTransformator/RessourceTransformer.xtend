@@ -44,6 +44,10 @@ import java.util.List
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
 import de.thm.icampus.joomdd.ejsl.eJSL.impl.AttributeImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
+import java.util.Collection
+import org.eclipse.emf.ecore.EStructuralFeature.Setting
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.emf.ecore.EObject
 
 /**
  * this class transforme and complete the ejsl model for the generator.
@@ -822,9 +826,20 @@ class RessourceTransformer {
                         mappingEntity.attributes.addAll(copy_attributeFromEntity)
                         
                         copy_attributeToEntity.addAll(copyAttribute(ref.entity, attributeToEntity))
+                        mappingEntity.attributes.addAll(copy_attributeToEntity)
+                        
                         renameOldReference(to_rename_attributeFromEntity, copy_attributeToEntity)
                         renameOldReference(to_rename_attributeToEntity, copy_attributeFromEntity)
-                        mappingEntity.attributes.addAll(copy_attributeToEntity)
+    
+                        // Replace an attribute in all ContextLinks
+                        var toRenameAttribute = to_rename_attributeToEntity.get(0)
+                        var toRenameReplacementAttribute = copy_attributeFromEntity.get(0)
+                        replaceAttributeInContextLinks(toRenameAttribute, toRenameReplacementAttribute)
+                        
+                        // Replace an attribute in all ContextLinks
+                        var fromRenameAttribute = to_rename_attributeFromEntity.get(0)
+                        var fromRenameReplacementAttribute = copy_attributeToEntity.get(0)
+                        replaceAttributeInContextLinks(fromRenameAttribute, fromRenameReplacementAttribute)
                         
                         ent.attributes.removeAll(ref.attribute)
 
@@ -861,6 +876,23 @@ class RessourceTransformer {
             }
         }
         entitiesList.addAll(newEntity)
+    }
+
+    /**
+     * This method replaces an given attribute with an replacement attribute in all ContextLinks
+     */
+    def replaceAttributeInContextLinks(Attribute toReplaceAttribute, Attribute replacementAttribute) {
+        var Collection<Setting> references = EcoreUtil.UsageCrossReferencer.find(toReplaceAttribute, toReplaceAttribute.eResource)
+        for (Setting setting : references) {
+            var EObject source = setting.getEObject();
+            if (source instanceof ContextLink) {
+                source.linkedAttribute = replacementAttribute
+            }
+            
+            if (source instanceof LinkParameter) {
+                source.attvalue = replacementAttribute
+            }
+        }
     }
 
     def EList<Attribute> searchUniqueAttribute(Entity entity) {

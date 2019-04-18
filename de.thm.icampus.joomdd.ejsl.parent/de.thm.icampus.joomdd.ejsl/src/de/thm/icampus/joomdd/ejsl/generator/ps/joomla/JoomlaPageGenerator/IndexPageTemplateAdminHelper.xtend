@@ -9,13 +9,14 @@ import org.eclipse.emf.common.util.EList
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
 
 /**
  * This class contains the templates to generate the necessary code for backend view templates (index pages).
  * 
  * @author Dieudonne Timma, Dennis Priefer
  */
-class IndexPageTemplateAdminHelper {
+class IndexPageTemplateAdminHelper extends IndexPageTemplateHelper {
     
     ExtendedDynamicPage indexpage
 	ExtendedComponent  com
@@ -152,22 +153,59 @@ class IndexPageTemplateAdminHelper {
         '''
     }    
     
-	def CharSequence genAdminModelGetItem()'''
-		/**
-		 * Method to get a single record.
-		 *
-		 * @param   integer  The id of the primary key.
-		 *
-		 * @return  mixed    Object on success, false on failure.
-		 * @since   1.6
-		 * @generated
-		 */
-		public function getItems()
-		{
-		    $items = parent::getItems();
-		    return $items;
-		}
-	'''
+    def CharSequence genAdminModelGetItem() {
+        val entityName = this.indexpage.extendedEntityList.get(0).name
+        var multiValueElementList = newArrayList
+        
+	    // TODO: There might be more than one entity.
+	    for (extendedReference : this.indexpage.extendedEntityList.get(0).allExtendedReferences.filter[reference |
+            reference.entity instanceof MappingEntity
+        ]){
+            val reference = extendedReference.destinationEntity.references.findFirst[ r | 
+                r.entity.name.equals(entityName) === false
+            ]
+            
+            var valueFieldName = reference.attribute.get(0).name
+            var idFieldName = reference.attribute.get(1).name
+            
+            var multiValueStatementHandling = '''
+            $item->«idFieldName» = json_decode($item->«idFieldName»);
+            if (is_array($item->«idFieldName»)) {
+                $item->«valueFieldName» = array_combine($item->«idFieldName», ($item->«valueFieldName»));
+            } else {
+                $item->«valueFieldName» = array();
+            }
+            
+            unset($item->«idFieldName»);
+            '''
+            
+            multiValueElementList.add(multiValueStatementHandling)
+        }
+        
+	    return '''
+	    /**
+	    * Method to get a single record.
+	    *
+	    * @param   integer  The id of the primary key.
+	    *
+	    * @return  mixed    Object on success, false on failure.
+	    * @since   1.6
+	    * @generated
+	    */
+	    public function getItems()
+	    {
+	        $items = parent::getItems();
+	        «IF multiValueElementList.size > 0»
+	        foreach ($items as $item) {
+	           «multiValueElementList.join('''
+	           
+	           ''')»
+	        }
+	        «ENDIF»
+	        return $items;
+	    }
+    	'''
+	}
 
 	def CharSequence genAdminModelSaveOrder()'''
 	    /**
@@ -421,7 +459,7 @@ class IndexPageTemplateAdminHelper {
                             ); ?>
                         </td>
                         <?php endif; ?>
-                        «genAdminModelAttributeReference(column, indexpage, com)»
+                        «genModelAttributeReference(column, indexpage, com)»
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -542,28 +580,5 @@ class IndexPageTemplateAdminHelper {
             $result = $db->loadObject();
             return intval($result->$key);
         }
-    '''
-    
-    public  def CharSequence genAdminModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, ExtendedComponent com )'''
-        «FOR ExtendedAttribute attr : column»
-        «IF Slug.isAttributeLinked(attr, indexpage)»
-            <td>
-            <?php
-            if ($canEdit) :
-                echo HTMLHelper::link(
-                    «Slug.linkOfAttribut(attr, indexpage,  com.name, "$item->").trim»,
-                    $this->escape($item->«attr.name»)
-                );
-            else : ?>
-                <?php echo $this->escape($item->«attr.name»); ?>
-            <?php
-            endif;?>
-            </td>
-        «ELSE»
-            <td>
-                <?php echo $item->«attr.name»; ?>
-            </td>
-        «ENDIF»
-        «ENDFOR»
     '''
 }
