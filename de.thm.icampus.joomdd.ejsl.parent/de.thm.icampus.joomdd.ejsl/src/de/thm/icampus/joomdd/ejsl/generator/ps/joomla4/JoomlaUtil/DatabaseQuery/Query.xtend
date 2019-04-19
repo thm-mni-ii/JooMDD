@@ -287,6 +287,9 @@ class Query {
                 throw new UnsupportedOperationException
             }
             
+            var destinationReferenceEntity = destinationReference.entity
+            var primaryKeyName = Slug.getPrimaryKey(destinationReferenceEntity).name
+            
             var destinationEntityName = destinationReference.entity.name
             var destinationAlias = getUniqueAlias(destinationEntityName)
             query += createJoin(destinationReference, destinationAlias, mappingAlias)
@@ -294,9 +297,10 @@ class Query {
             var referencedAttributeName = destinationReference.referencedAttribute
             
             query = '''
-                
+            
                 // Select the referenced field «destinationAlias».«referencedAttributeName»
-                $query->select('GROUP_CONCAT(«destinationAlias».«referencedAttributeName» SEPARATOR "«separator»") AS «referenceEntityName»_«referencedAttributeName»');
+                $query->select('CONCAT(\'[\', GROUP_CONCAT(CONCAT(\'"\', «destinationAlias».«primaryKeyName», \'"\')), \']\') AS «referenceEntityName»_«primaryKeyName»');
+                $query->select('CONCAT(\'[\', GROUP_CONCAT(CONCAT(\'"\', «destinationAlias».«referencedAttributeName», \'"\')), \']\') AS «referenceEntityName»_«referencedAttributeName»');
                 «query»'''
             queries.add(query)
         }

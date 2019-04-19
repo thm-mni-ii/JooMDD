@@ -166,8 +166,8 @@ class FieldsCardinalityGenerator extends FieldsGenerator {
 		    $db = Factory::getDbo();
 		    $query = $db->getQuery(true);
 		
-		    $query->select("B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name» ,«ENDFOR»
-		    (case when B.«Slug.getPrimaryKeys(mainRef.destinationEntity).name» <> 0 then 'selected' else ' ' end) as selected ")
+		    $query->select("B.«Slug.getPrimaryKey(mainRef.destinationEntity).name»,«FOR foreignAttr : foreignReference.attribute»A.« foreignReference.attributerefereced.get(foreignReference.attribute.indexOf(foreignAttr)).name» as «foreignAttr.name» ,«ENDFOR»
+		    (case when B.«Slug.getPrimaryKey(mainRef.destinationEntity).name» <> 0 then 'selected' else ' ' end) as selected ")
 		        ->from($this->referenceStruct['foreignTable'] . " as A")
 		        ->leftJoin("(select * from " . $this->referenceStruct['mappingTable'] . " as C 
 		            where C.«mainRef.referencedIDAttribute» = '$item->«mainRef.referenceIDAttribute»') as B 

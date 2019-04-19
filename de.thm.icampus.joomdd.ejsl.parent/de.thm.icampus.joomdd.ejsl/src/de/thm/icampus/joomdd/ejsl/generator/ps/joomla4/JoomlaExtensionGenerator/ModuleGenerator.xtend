@@ -24,6 +24,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Select
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla module.
@@ -67,8 +68,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 	}
 
 	override generate() {
-		generateFile(path + name + ".xml", this.extMod.xmlContent)
-		generateFile(path + name + ".php", this.extMod.phpContent)
+		generateFile(path + name.toLowerCase + ".xml", this.extMod.xmlContent)
+		generateFile(path + name.toLowerCase + ".php", this.extMod.phpContent)
 		generateFile('''«path»Helper/«helperClassName».php''', helperPHP(extMod, extMod.pageRef.page as DynamicPage))
 		generateFile(path + "tmpl/default.php", defaultTemplate())
 		
@@ -244,7 +245,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		
 		«Slug.generateRestrictedAccess()»
 		
-		«Slug.generateUses(newArrayList("Uri", "Html"))»
+		«Slug.generateUses(newArrayList("Uri", "Html", "Factory"))»
 		
 		// No direct access to this file
 		defined('_JEXEC') or die;
@@ -255,6 +256,10 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		 * require_once JPATH_ROOT . '/components/com_<nameOfComponent>/helpers/<nameOfComponentHelper.php>';
 		 * $baseurl = Uri::base();
 		 */
+		
+		$db       = Factory::getDbo();
+		$user     = Factory::getUser();
+		$canEdit  = $user->authorise('core.edit', '«extMod.extendedComponentName»');
 		?>
 		
 		<?php if (count($items) !== 1) : ?>
@@ -268,8 +273,7 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		        <?php else : ?>
 		            «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
 		            «IF !attr.name.equalsIgnoreCase("params")»
-		            <?php $«attr.name» = $item->«attr.name»;?>
-		            <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
+		                 «checkLinkOfAttributes(attr)»
 		            «ENDIF»
 		            «ENDFOR»
 		        «ENDIF»
@@ -278,36 +282,46 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    </li>
 		    <?php endforeach; ?>
 		</ul>
-		<?php else : 
+		<?php else :
 		    $item = array_shift($items); ?>
 		    <div class="«extMod.pageRef.page.name»item">
-		        «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
-		        «IF !attr.name.equalsIgnoreCase("params")»
-		        <?php $«attr.name» = $item->«attr.name»;?>
-		        <?php echo «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»; ?>
-		        «ENDIF»
-		        «ENDFOR»
+		    «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+		    «IF !attr.name.equalsIgnoreCase("params")»
+		        «checkLinkOfAttributes(attr)»
+		    «ENDIF»
+		    «ENDFOR»
 		    </div>
 		<?php endif; ?>
-		'''
+        '''
 	}
 	
-	def checkLinkOfAttributes(ExtendedAttribute attribute, EList<Link> listLink) {
-		var String result = attribute.name.toString
-		if(extMod.pageRef.sect === null || extMod.pageRef.pagescr === null)
-		return "$" + result;
-		
-		for(Link lk: listLink) {
-            if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
-                return '''HTMLHelper::_(
-                    'link',
-                    «Slug.linkOfAttribut(attribute, extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,  extMod.extendedComponentName, "$item->")»,
-                    $item->«attribute.name»
-                )'''
-            }
-		}
-		return "$" + result;
-	}
+    def checkLinkOfAttributes(ExtendedAttribute attribute) {
+        var String result = '''<?php echo $db->escape($item->«attribute.name.toString»); ?>'''
+        
+        if(extMod.pageRef.sect === null || extMod.pageRef.pagescr === null) {
+            return result
+        }
+        
+        result = '''
+        «IF Slug.isAttributeLinked(attribute, this.dynpage)»
+            «Slug.linkOfAttribut(attribute, this.dynpage, this.com, "$item->", "$db")»
+        «ELSE»
+            «IF attribute.entity instanceof MappingEntity»
+            «var listVariableName = '''$«attribute.name.toFirstLower»List'''»
+            <?php
+                «listVariableName» = array();
+                foreach ($item->«attribute.name» as $value) { ?>
+                    <?php «listVariableName»[] = $db->escape($value); ?>
+                <?php
+                }
+                echo implode(" ", «listVariableName»); ?>
+            «ELSE»
+                <?php echo $db->escape($item->«attribute.name»); ?>
+            «ENDIF»
+        «ENDIF»
+        '''
+        return result
+    }
 	
 	def CharSequence helperPHP(Module modul, DynamicPage mpage) {
 		'''
@@ -406,6 +420,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		var indexpage = extendedDynamicPage
 		var ExtendedEntity mainEntity = extendedDynamicPage.extendedEntityList.get(0)
 
+        var multiValueElementList = Slug.getMultiValueElements(this.dynpage)
+
 		return '''
 		/**
 		 * @param
@@ -424,6 +440,14 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    $db->setQuery($query, $start, $limit);
 		    
 		    $items = $db->loadObjectList();
+		    «IF multiValueElementList.size > 0»
+		    foreach ($items as $item) {
+		        «multiValueElementList.join('''
+		        
+		        ''')»
+		    }
+		    «ENDIF»
+
 		    return $items;
 		}
 		

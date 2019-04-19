@@ -85,7 +85,7 @@ class TableGeneratorTemplate {
  		        "foreignkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attribute, ', ')»),
  		        "refkey" => array(«Slug.transformAttributeListInString('''"''',"",ref.attributerefereced, ', ')»),
  		        "name" => "#__«com.name»_«ref.sourceEntity.name»",
- 		        "foreignPrimaryKeys" => '«Slug.getPrimaryKeys(ref.destinationEntity).name.toLowerCase»'
+ 		        "foreignPrimaryKeys" => '«Slug.getPrimaryKey(ref.destinationEntity).name.toLowerCase»'
  		    );
  		    array_push($this->foreigntableOption, $temp_«ent.getAllExtendedReferencesToEntity.indexOf(ref)»);
  		    «ENDFOR»
