@@ -14,7 +14,7 @@ import de.thm.icampus.joomdd.ejsl.generator.ps.joomla4.JoomlaUtil.StaticLanguage
  * 
  * @author Dieudonne Timma, Dennis Priefer
  */
-class IndexPageTemplateSiteHelper {
+class IndexPageTemplateSiteHelper extends IndexPageTemplateHelper {
     
     ExtendedDynamicPage indexpage
 	ExtendedComponent  com
@@ -268,23 +268,8 @@ class IndexPageTemplateSiteHelper {
 	                </a>
 	            </td>
 	        <?php endif; ?>
-	        «genSiteModelAttributeReference(indexpage.extendedTableColumnList, indexpage,com)»
+	        «genModelAttributeReference(indexpage.extendedTableColumnList, indexpage,com)»
 	        </tr>
 	    <?php endforeach; ?>
-	'''
-	
-    public def CharSequence genSiteModelAttributeReference(EList<ExtendedAttribute>column, ExtendedDynamicPage indexpage, Component com )'''
-        «FOR ExtendedAttribute attr : column»
-        <td>
-            «IF Slug.isAttributeLinked(attr, indexpage)»
-            <a href="<?php echo Route::_(«Slug.linkOfAttribut(attr, indexpage, com.name, "$item->").trim»); ?>"
-            >
-                <?php echo $this->escape($item->«attr.name»); ?>
-            </a>
-            «ELSE»
-            <?php echo $item->«attr.name»; ?>
-            «ENDIF»
-        </td>
-		«ENDFOR»
 	'''
 }

@@ -24,6 +24,7 @@ import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedExtension.ExtendedCompone
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Query
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Select
 import de.thm.icampus.joomdd.ejsl.generator.ps.joomla.JoomlaUtil.DatabaseQuery.Column
+import de.thm.icampus.joomdd.ejsl.generator.pi.util.MappingEntity
 
 /**
  * This class contains the templates to generate the necessary folders and files for a Joomla module.
@@ -271,12 +272,12 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		            <?php // itemlist is empty ;?>
 		        «IF !(dynpage.entities.isEmpty)»
 		        <?php else : ?>
-		            «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
-		            «IF !attr.name.equalsIgnoreCase("params")»
-		            «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»
-		            «ENDIF»
-		            «ENDFOR»
-		        «ENDIF»
+                    «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+                    «IF !attr.name.equalsIgnoreCase("params")»
+                         «checkLinkOfAttributes(attr)»
+                    «ENDIF»
+                    «ENDFOR»
+                «ENDIF»
 		        <?php endif; ?>
 		        </div>
 		    </li>
@@ -285,35 +286,41 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		<?php else : 
 		    $item = array_shift($items); ?>
 		    <div class="«extMod.pageRef.page.name»item">
-		    «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
-		    «IF !attr.name.equalsIgnoreCase("params")»
-		        «checkLinkOfAttributes(attr, extMod.pageRef.page.links)»
-		    «ENDIF»
-		    «ENDFOR»
+            «FOR ExtendedAttribute attr : dynpage.extendedTableColumnList»
+            «IF !attr.name.equalsIgnoreCase("params")»
+                «checkLinkOfAttributes(attr)»
+            «ENDIF»
+            «ENDFOR»
 		    </div>
 		<?php endif; ?>
 		'''
 	}
 	
-    def checkLinkOfAttributes(ExtendedAttribute attribute, EList<Link> listLink) {
+    def checkLinkOfAttributes(ExtendedAttribute attribute) {
         var String result = '''<?php echo $db->escape($item->«attribute.name.toString»); ?>'''
         
         if(extMod.pageRef.sect === null || extMod.pageRef.pagescr === null) {
             return result
         }
         
-        for(Link lk: listLink) {
-            if(lk !== null && lk.linkedAttribute.name.equalsIgnoreCase(attribute.name)) {
-                return '''
-                    «Slug.linkOfAttribut(
-                        attribute,
-                        extMod.extendedPageReference.extendedPage.extendedDynamicPageInstance,
-                        extMod.extendedComponentName,
-                        "$item->",
-                        "$db"
-                    )»'''
-            }
-        }
+        result = '''
+        «IF Slug.isAttributeLinked(attribute, this.dynpage)»
+            «Slug.linkOfAttribut(attribute, this.dynpage, this.com, "$item->", "$db")»
+        «ELSE»
+            «IF attribute.entity instanceof MappingEntity»
+            «var listVariableName = '''$«attribute.name.toFirstLower»List'''»
+            <?php
+                «listVariableName» = array();
+                foreach ($item->«attribute.name» as $value) { ?>
+                    <?php «listVariableName»[] = $db->escape($value); ?>
+                <?php
+                }
+                echo implode(" ", «listVariableName»); ?>
+            «ELSE»
+                <?php echo $db->escape($item->«attribute.name»); ?>
+            «ENDIF»
+        «ENDIF»
+        '''
         return result
     }
 	
@@ -412,6 +419,8 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		var indexpage = extendedDynamicPage
 		var ExtendedEntity mainEntity = extendedDynamicPage.extendedEntityList.get(0)
 
+        var multiValueElementList = Slug.getMultiValueElements(this.dynpage)
+        
 		return '''
 		/**
 		 * @param
@@ -430,6 +439,14 @@ public class ModuleGenerator extends AbstractExtensionGenerator {
 		    $db->setQuery($query, $start, $limit);
 		    
 		    $items = $db->loadObjectList();
+		    «IF multiValueElementList.size > 0»
+		    foreach ($items as $item) {
+		        «multiValueElementList.join('''
+		        
+		        ''')»
+		    }
+            «ENDIF»
+
 		    return $items;
 		}
 		

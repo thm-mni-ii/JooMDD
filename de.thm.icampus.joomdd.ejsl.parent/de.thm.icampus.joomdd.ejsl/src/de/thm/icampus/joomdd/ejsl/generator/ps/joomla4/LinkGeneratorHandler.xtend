@@ -19,9 +19,19 @@ public class LinkGeneratorHandler {
     String sect = ''
     String compname
     String valueF
+    String currentAttributeName = ''''''
 
     new(Link link, String section, String componentname, String vaLueFeatures) {
+        newInstance(link, section, componentname, vaLueFeatures, '''''')
+    }
+
+    new(Link link, String section, String componentname, String vaLueFeatures, String currentAttributeName) {
+        newInstance(link, section, componentname, vaLueFeatures, currentAttributeName)
+    }
+
+    private def newInstance(Link link, String section, String componentname, String vaLueFeatures, String currentAttributeName) {
         this.link = link
+        this.currentAttributeName = currentAttributeName
         
         if (section.equalsIgnoreCase('BackendSection')) {
             sect = section            
@@ -43,7 +53,7 @@ public class LinkGeneratorHandler {
             }
             InternalLink: {
                 if (link instanceof ContextLink) {
-                    var ContextLinkGenerator intern = new ContextLinkGenerator(link, valueF)
+                    var ContextLinkGenerator intern = new ContextLinkGenerator(link, valueF, currentAttributeName)
                     return intern.generateLink(sect, compname)
                 } else {
                     var InternalLinkGenerator intern = new InternalLinkGenerator(link)

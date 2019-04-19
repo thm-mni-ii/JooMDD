@@ -48,6 +48,7 @@ import de.thm.icampus.joomdd.ejsl.eJSL.EJSLFactory
 import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedEntity.impl.ExtendedReferenceImpl
 import de.thm.icampus.joomdd.ejsl.generator.pi.util.FKAttribute
 import java.util.List
+import de.thm.icampus.joomdd.ejsl.generator.pi.ExtendedPage.ExtendedPage
 
 /**
  * This class contains templates which are often used in different contexts.
@@ -1428,5 +1429,43 @@ public class Slug  {
             </field>
             «ENDFOR»
             '''
+    }
+    
+    /**
+     * This method collects all Elements with multiple values.
+     * 
+     */
+    def static getMultiValueElements(ExtendedDynamicPage page) {
+        
+        val entityName = page.extendedEntityList.get(0).name
+        var multiValueElementList = newArrayList
+        
+        // TODO: There might be more than one entity.
+        for (extendedReference : page.extendedEntityList.get(0).allExtendedReferences.filter[reference |
+            reference.entity instanceof MappingEntity
+        ]){
+            val reference = extendedReference.destinationEntity.references.findFirst[ r | 
+                r.entity.name.equals(entityName) === false
+            ]
+            
+            var valueFieldName = reference.attribute.get(0).name
+            var idFieldName = reference.attribute.get(1).name
+            
+            var multiValueStatementHandling = '''
+            $item->«idFieldName» = json_decode($item->«idFieldName»);
+            $item->«valueFieldName» = json_decode($item->«valueFieldName»);
+            if (is_array($item->«idFieldName»)) {
+                $item->«valueFieldName» = array_combine($item->«idFieldName», $item->«valueFieldName»);
+            } else {
+                $item->«valueFieldName» = array();
+            }
+            
+            unset($item->«idFieldName»);
+            '''
+            
+            multiValueElementList.add(multiValueStatementHandling)
+        }
+        
+        return multiValueElementList
     }
 }
