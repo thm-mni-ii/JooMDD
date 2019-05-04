@@ -251,7 +251,7 @@ require(["jquery","alert"], function($, alert) {
 			});
 
 			// Upload of an existing extension
-			$('#uploadExtension').click(function(){
+			$('#uploadExtensionSubmit').click(function(){
 				var input = $("#uploadExtensionFile")[0].files[0];
 				alert.showloadmodal();
 				$.ajax({ url:"/reverse-loader/?filename=" + input.name,
