@@ -181,7 +181,7 @@ require(["jquery","alert"], function($, alert) {
             generatePromise.then( (value) => {
                 alert.closeloadmodal();
                 treeloader.reload(); // Success!
-                //location.reload();
+                // location.reload();
                 alert.showSuccess("Code successful generated.")
             }, (reason) => {
                 alert.closeloadmodal();
@@ -206,14 +206,15 @@ require(["jquery","alert"], function($, alert) {
 					  data: {manifest: encodeURI(data[0]), model:modelName},
 					  success: function(data) {
 						  alert.closeloadmodal();
-					    if(data){
-					    	treeloader.reload()
-					    }else{
-                            alert.showError("The uploaded extension cannot be extracted. " +
+						  if(data){
+							  alert.showSuccess("Model information successful extracted.")
+							  treeloader.reload()
+						  }else{
+							  alert.showError("The uploaded extension cannot be extracted. " +
 								"Please select a valid manifest file before clicking this button!");
-					    }
+						  }
 					  }
-					});
+				});
 			}
 		});
 
@@ -257,8 +258,8 @@ require(["jquery","alert"], function($, alert) {
 				$.ajax({ url:"/reverse-loader/?filename=" + input.name,
 						method:"PUT",
 						dataType: 'application/zip',
-						 contentType: "multipart/form-data",
-						 processData: false,
+						contentType: "multipart/form-data",
+						processData: false,
 						data:input,
 						complete:function(data){
 							alert.closeloadmodal();

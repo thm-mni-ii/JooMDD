@@ -20,6 +20,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import de.thm.icampus.joomdd.ejsl.web.util.Helper
 import java.net.URLDecoder
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import com.google.common.base.CharMatcher
+import org.eclipse.jetty.util.StringUtil
 
 /**
  * @author Dieudonne Timma
@@ -40,24 +44,35 @@ class ReverseLoader extends HttpServlet {
 		var String target = workspaceUserPath + "/src/" + model
 		
 		var ServletContext context = this.servletContext;
-
-		var String rootPath = context.getRealPath("/") + "/jar";
+        
+		var String rootPath = CharMatcher.is('/').trimTrailingFrom(context.getRealPath("/")) + "/jar";
 		var String jarPath = rootPath + "/jext2ejsl.jar"
-		var String cmd = '''java -jar "«jarPath»" -m "«manifest»" -o "«target»" -no-gui'''
 
 		resp.status = HttpServletResponse.SC_OK
 		resp.setHeader('Cache-Control', 'no-cache')
 		resp.contentType = 'text/x-json'
 		val gson = new Gson
 		try{
-			var Process proc = Runtime.getRuntime().exec(cmd);
-			while(proc.alive){
-				
-			}
+		    var ProcessBuilder pb = new ProcessBuilder("java", "-jar", '''«jarPath»''', "-m", '''«manifest»''', "-o", '''«target»''', "-no-gui")
+            pb.redirectErrorStream(true) // equivalent of 2>&1
+		    		    
+			var Process proc = pb.start()
+			proc.waitFor
+			
 			var int status = proc.exitValue
-			if(status ==0){
+			if(status == 0){
 				gson.toJson(true, resp.writer)
-			}else{
+			} else {
+                try {
+                    var BufferedReader b = new BufferedReader(new InputStreamReader(proc.getErrorStream()))
+                    var String line;
+                    if ((line = b.readLine()) !== null)
+                    {
+                        println(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace()
+                }     
 				gson.toJson(false, resp.writer)
 			}
 			
