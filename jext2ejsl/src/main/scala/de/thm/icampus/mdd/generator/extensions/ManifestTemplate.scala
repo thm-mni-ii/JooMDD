@@ -16,7 +16,7 @@ trait ManifestTemplate extends BasicTemplate {
 
     toTemplate(
       s"""
-         |Manifestation {
+         |Manifest {
          |    authors ${rep(manifest.authors, authorPartial)}
          |    copyright = "${manifest.copyright.copyright}"
          |    $authorOpt
