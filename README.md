@@ -26,7 +26,7 @@ If you want to use JooMDD within your IDE (Eclipse, PhpStorm, IntelliJ IDEA), yo
 - **PhpStorm:** 
 <https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/updateSites/PhpStorm/ideaRepository/updatePlugins.xml>
 - **IntelliJ IDEA:** 
-<https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/updateSites/IntelliJIDEA/ideaRepository/updatePlugins.xml>
+<https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/updateSites/IntelliJ/ideaRepository/updatePlugins.xml>
 
 
 # Documentation
