@@ -22,11 +22,11 @@ The easiest and quickest way to try out JooMDD is to use our [***JooMDD web edit
 
 If you want to use JooMDD within your IDE (Eclipse, PhpStorm, IntelliJ IDEA), you caan use one of the following update sites to install the respective IDE plugins:
 
-- **Eclipse:**  <https://raw.githubusercontent.com/icampus/JooMDD/master/Eclipse/JooMDDUpdateSite/site.xml>
-- **PhpStorm:**
-<https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/updatePlugins.xml>
+- **Eclipse:**  <https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/updateSites/Eclipse/site.xml>
+- **PhpStorm:** 
+<https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/updateSites/PhpStorm/ideaRepository/updatePlugins.xml>
 - **IntelliJ IDEA:** 
-<https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJIDEA/ideaRepository/updatePlugins.xml>
+<https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/updateSites/IntelliJIDEA/ideaRepository/updatePlugins.xml>
 
 
 # Documentation
