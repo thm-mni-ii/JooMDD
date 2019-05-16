@@ -74,7 +74,7 @@ task parsePhpStormUpdatePluginsXml{
 		list.plugin[0].replaceNode{	
 			plugin(
 				id:"de.thm.icampus.joomdd.ejsl.phpstorm", 
-				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/"
+				url:"https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/"
 				 + "PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"
 				 + version +".zip",
 				version: version){}
@@ -101,7 +101,7 @@ task parseIntelliJUpdatePluginsXml{
 		list.plugin[0].replaceNode{	
 			plugin(
 				id:"de.thm.icampus.joomdd.ejsl.idea", 
-				url:"https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+ version +".zip",
+				url:"https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/updateSites/IntelliJ/ideaRepository/de.thm.icampus.joomdd.ejsl.idea-"+ version +".zip",
 				version: version ){}
 		}
 		list.plugin[0].appendNode(xml)
