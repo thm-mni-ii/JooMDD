@@ -74,7 +74,7 @@ task parsePhpStormUpdatePluginsXml{
 		list.plugin[0].replaceNode{	
 			plugin(
 				id:"de.thm.icampus.joomdd.ejsl.phpstorm", 
-				url:"https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/"
+				url:"https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/updateSites"
 				 + "PhpStorm/ideaRepository/de.thm.icampus.joomdd.ejsl.phpstorm-"
 				 + version +".zip",
 				version: version){}
