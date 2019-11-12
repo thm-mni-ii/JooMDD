@@ -68,6 +68,6 @@ This project is distributed under the GPL (GNU General Public License) version 3
 the [License details](https://github.com/priefyou/JooMDD/blob/master/LICENSE).
 
 ***
-[![II Logo](https://mni.thm.de/images/MNI_content/Forschung/Logos_Institute/ii-01.png)]((https://mni.thm.de/forschung/institute-a-gruppen/ii/ii-ueberblick))
+[![II Logo](https://www.thm.de/_thm/logos/mni-ii.svg)]((https://mni.thm.de/forschung/institute-a-gruppen/ii/ii-ueberblick))
 
 This project is organized by the [Institute for Information Sciences](https://mni.thm.de/forschung/institute-a-gruppen/ii/ii-ueberblick).
