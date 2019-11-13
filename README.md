@@ -70,4 +70,4 @@ the [License details](https://github.com/priefyou/JooMDD/blob/master/LICENSE).
 ***
 [![II Logo](https://www.thm.de/_thm/logos/mni-ii.svg)]((https://mni.thm.de/forschung/institute-a-gruppen/ii/ii-ueberblick))
 
-This project is organized by the [Institute for Information Sciences](https://mni.thm.de/forschung/institute-a-gruppen/ii/ii-ueberblick).
+This project is organized by the [Institute for Information Sciences](https://www.thm.de/mni/forschung/institute-gruppen/ii/ii-ueberblick.html).
