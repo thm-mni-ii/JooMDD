@@ -191,21 +191,32 @@ inv uniqueLangKeys:
 -- self.extensions.languages->forAll(l | l.keyvaluepairs.name->forAll(kvn | l.keyvaluepairs.name->count(kvn) = 1))
 self.extensions.languages->forAll(l | l.keyvaluepairs->forAll(kvn1, kvn2 | kvn1 <> kvn2 implies kvn1.name <> kvn2.name))
 
--- TODO
--- Check URL and eMail pattern
-
 -- Unique extension names for extensions of same type
 inv uniqueExtNames:
 self.extensions->forAll(e1, e2 | e1 <> e2 and e1.oclIsTypeOf(e2.oclType()) implies e1.name <> e2.name)
 
 -- Check for valid data mapping for modules and components (is component existing...)
 inv validCompModMapping:
-self
+self.extensions->
+forAll(e | e.oclIsTypeOf(Module) and e.oclAsType(Module).pageRef->notEmpty() 
+	implies Component.allInstances().name->includes(e.oclAsType(Module).pageRef.pagescr.ref.name)
+)
 
 -- Check if not more than one backend and frontend is defined
--- Check if *Entity is required in Plugin (PluginKind: not every Plugin requires an entity)
--- Check if library classes are unique
--- Check if class method names are unique in libraries
+inv atomicBackFrontEnd:
+self.extensions->forAll(e  | e.oclIsTypeOf(Component) 
+	implies e.oclAsType(Component).sections->select(s | s.oclIsTypeOf(FrontendSection))->size() <= 1 and 
+	e.oclAsType(Component).sections->select(s | s.oclIsTypeOf(BackendSection))->size() = 1
+)
 
+context Library
+-- Check if library classes are unique
+inv uniqueLibClass:
+self.classes->notEmpty() implies self.classes->forAll(c1, c2 |  c1 <> c2 implies c1.name <> c2.name)
+
+context Class
+-- Check if class method names are unique in libraries
+inv uniqueLibMethNames:
+self.oclContainer.oclIsTypeOf(Library) implies self.methods->forAll(m1, m2 | m1 <> m2 implies m1.name <> m2.name)
 
 endpackage
