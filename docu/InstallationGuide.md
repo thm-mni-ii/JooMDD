@@ -20,7 +20,7 @@ Install the JooMDD tools through the use of the following update site within the
 
 3. Then you can specify an optional name and insert the path of the JooMDD update site as location. CLick <kbd>Add</kbd> to add the new repository.
    Please use the following URL as update site location:
- <https://raw.githubusercontent.com/icampus/JooMDD/master/Eclipse/JooMDDUpdateSite/site.xml>
+ <https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/Eclipse/JooMDDUpdateSite/site.xml>
    
    <img src="img/eclipse_add_repository_url.PNG" alt="Eclipse add repository">
 
@@ -40,10 +40,10 @@ Install the JooMDD tools through the use of the following update site within the
 
 ## PhpStorm ##
 1. Install the *Xtext IDEA Core* and JooMDD plugin from our repository using the following JooMDD update site (alternatively you can download the plugins from this repository and install them manually into your IDE):
-JooMDD update site (PhpStorm): <https://raw.githubusercontent.com/icampus/JooMDD/master/PhpStorm/ideaRepository/updatePlugins.xml>.
+JooMDD update site (PhpStorm): <https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/PhpStorm/ideaRepository/updatePlugins.xml>.
 2. Restart PhpStorm.
 
 ## IntelliJ IDEA ##
 1. Install the *Xtext IDEA Core* and JooMDD plugin from our repository using the following JooMDD update site (alternatively you can download the plugins from this repository and install them manually into your IDE):
-JooMDD update site (IntelliJ IDEA): <https://raw.githubusercontent.com/icampus/JooMDD/master/IntelliJIDEA/ideaRepository/updatePlugins.xml>.
+JooMDD update site (IntelliJ IDEA): <https://raw.githubusercontent.com/thm-mni-ii/JooMDD/master/IntelliJIDEA/ideaRepository/updatePlugins.xml>.
 2. Restart IntelliJ.
